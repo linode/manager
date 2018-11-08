@@ -42,7 +42,7 @@ class Backups extends Page {
         if (this.backupInstances.length < 1) {
             expect(this.description.isVisible()).toBe(true);
         }
-        
+
         expect(this.heading.isVisible()).toBe(true);
         expect(this.manualSnapshotHeading.isVisible()).toBe(true);
         expect(this.manualDescription.isVisible()).toBe(true);

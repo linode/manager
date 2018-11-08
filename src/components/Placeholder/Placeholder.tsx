@@ -38,8 +38,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   copy: {
     textAlign: 'center',
-    maxWidth: 350,
+    maxWidth: '85%',
     marginTop: -theme.spacing.unit * 3,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 500,
+    }
   },
   icon: {
     '&.animate' : {
@@ -80,7 +83,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
-  copy?: string;
+  copy?: string | React.ReactNode;
   title?: string;
   buttonProps?: ButtonProps;
   className?: string;

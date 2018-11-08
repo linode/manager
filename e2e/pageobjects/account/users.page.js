@@ -71,10 +71,7 @@ class Users extends Page {
     }
 
     delete(userConfig) {
-        const user = this.userRow(userConfig.username);
-
-        this.selectActionMenuItem(user, 'Delete');
-
+        this.userTableActionMenu(userConfig.username,'Delete');
         this.dialogTitle.waitForText(constants.wait.normal);
         this.dialogConfirmDelete.waitForVisible(constants.wait.normal);
         this.dialogConfirmCancel.waitForVisible(constants.wait.normal);
@@ -88,19 +85,32 @@ class Users extends Page {
     }
 
     viewPermissions(username) {
-        const user = this.userRow(username);
-        this.selectActionMenuItem(user, 'User Permissions');
+        this.userTableActionMenu(username,'User Permissions');
     }
 
     viewProfile(username) {
-        const user = this.userRow(username);
-        this.selectActionMenuItem(user, 'User Profile');
+        this.userTableActionMenu(username,'User Profile');
     }
 
-    userRow(username) {
-        const user = this.userRows
-            .filter(user => user.$(this.username.selector).getText() === username);
-        return user[0];
+    userTableActionMenu(username, actionMenuSelection){
+        this.getTableDetails(undefined, this.userActionMenu.selector, username).click();
+        this.actionMenuItem.waitForVisible(constants.wait.normal);
+        const menuSelection = $(`[data-qa-action-menu-item="${actionMenuSelection}"]`);
+        menuSelection.waitForVisible(constants.wait.normal);
+        menuSelection.click();
+    }
+
+    getTableDetails(index,tableselector,tableKey = undefined){
+        let indexOfRow;
+        if( index === undefined && tableKey !== undefined){
+            browser.waitUntil(() => {
+                indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
+                return indexOfRow >= 0;
+            }, constants.wait.normal);
+        }else{
+            indexOfRow = index;
+        }
+        return $$(`${this.userRow.selector} ${tableselector}`)[indexOfRow];
     }
 }
 

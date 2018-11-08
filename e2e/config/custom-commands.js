@@ -121,7 +121,7 @@ exports.browserCommands = () => {
     });
 
     /*
-    * Executes a Javascript Click event via the browser console. 
+    * Executes a Javascript Click event via the browser console.
     * Useful when an element is not clickable via browser.click()
     * @param { String } elementToClick Selector to execute click event on
     * @returns { undefined } Returns nothing
@@ -155,6 +155,19 @@ exports.browserCommands = () => {
             browser.waitForVisible(elementToClick);
             return browser.click(elementToClick).state === 'success';
         }, timeout);
+    });
+
+    browser.addCommand('tryClick', function(elementToClick, timeout=5000) {
+        let errorObject;
+        browser.waitUntil(function() {
+            try {
+                browser.click(elementToClick);
+                return true;
+            } catch (err) {
+                errorObject = err;
+                return false;
+            }
+        }, timeout, `failed to click ${elementToClick} due to ${JSON.stringify(errorObject)}`);
     });
 
     /* Continuously try to set a value on a given selector

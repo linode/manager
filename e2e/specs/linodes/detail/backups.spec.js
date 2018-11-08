@@ -45,9 +45,9 @@ describe('Linode Detail - Backups Suite', () => {
     it('should fail to take a snapshot without a name', () => {
         Backups.snapshotButton.click();
 
-        const toastMsg = 'Snapshot label must be a string of 1 to 255 characters';
+        const toastMsg = 'A snapshot label is required.';
         Backups.toastDisplays(toastMsg);
-        browser.waitForExist('[data-qa-toast]', constants.wait.short, true);
+        browser.waitForExist('[data-qa-toast]', constants.wait.normal, true);
     });
 
     it('should cancel backups', () => {

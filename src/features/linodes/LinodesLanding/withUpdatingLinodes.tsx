@@ -69,7 +69,7 @@ const withUpdatingLinodes = (WrappedComponent: React.ComponentType<PropsIn>) => 
       ) {
         this.setState({
           linodeIDs: data.map(l => l.id),
-          data,
+          data: this.state.data.length !== 0 ? this.state.data : data,
         });
       }
     }
