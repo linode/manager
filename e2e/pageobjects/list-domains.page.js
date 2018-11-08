@@ -17,8 +17,8 @@ class ListDomains extends Page {
     get createSoaEmail() { return $('[data-qa-soa-email]'); }
     get createDomainName() { return $('[data-qa-domain-name]'); }
     get cloneDomainName() { return $('[data-qa-clone-name]'); }
-    get cancel() { return $(this.cancelButton); }
-    get submit() { return $(this.submitButton); }
+    get cancel() { return $(this.cancelButton.selector); }
+    get submit() { return $(this.submitButton.selector); }
 
     baseElemsDisplay(placeholder) {
         if (placeholder) {

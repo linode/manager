@@ -13,8 +13,8 @@ export const dialogMap = {
 export class OauthCreateDrawer {
     get title() { return $('[data-qa-drawer-title]'); }
     get label() { return $('[data-qa-add-label] input'); }
-    get submit() { return $(this.submitButton); }
-    get cancel() { return $(this.cancelButton); }
+    get submit() { return $(this.submitButton.selector); }
+    get cancel() { return $(this.cancelButton.selector); }
     get callbackUrl() { return $('[data-qa-callback] input'); }
     get public() { return $('[data-qa-public]'); }
 
@@ -57,16 +57,16 @@ export class TokenCreateDrawer {
     get readPermission() { return $('[data-qa-perm-read-radio]'); }
     get rwPermission() { return $('[data-qa-perm-rw-radio]'); }
 
-    get submit() { return $(this.submitButton); }
-    get cancel() { return $(this.cancelButton); }
+    get submit() { return $(this.submitButton.selector); }
+    get cancel() { return $(this.cancelButton.selector); }
     get closeDialog() { return $('[data-qa-close-dialog]'); }
 
 
     baseElemsDisplay() {
-        expect(this.noneColumn.isVisible()).toBe(true); 
+        expect(this.noneColumn.isVisible()).toBe(true);
         expect(this.readColumn.isVisible()).toBe(true);
-        expect(this.rwColumn.isVisible()).toBe(true); 
-        expect(this.label.isVisible()).toBe(true); 
+        expect(this.rwColumn.isVisible()).toBe(true);
+        expect(this.label.isVisible()).toBe(true);
 
         expect(this.account.isVisible()).toBe(true);
         expect(this.domain.isVisible()).toBe(true);
@@ -104,7 +104,7 @@ export class TokenCreateDrawer {
 export class Profile extends Page {
     get profileHeader() { return $('[data-qa-profile-header]'); }
     get apiTokensTab() { return $('[data-qa-tab="API Tokens"]'); }
-    
+
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
     get oauthClientsTab() { return $('[data-qa-tab="My Apps"]'); }
@@ -163,7 +163,7 @@ export class Profile extends Page {
         browser.waitForText('[data-qa-drawer-title]', constants.wait.normal);
         browser.waitForVisible('[data-qa-add-label]', constants.wait.normal);
     }
-    
+
     selectActionMenu(row, item) {
         browser.click(`[data-qa-table-row="${row}"] [data-qa-action-menu]`);
         browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);

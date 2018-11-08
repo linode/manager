@@ -8,7 +8,7 @@ export class SshKeys extends Page {
     get drawerKeyLabel() { return $('[data-qa-label-field] input'); }
     get drawerPublicKey() { return $('[data-qa-ssh-key-field] textarea'); }
 
-    get submitKeyButton() { return $(this.submitButton); }
+    get submitKeyButton() { return $(this.submitButton.selector); }
 
     get publicKeyRow() { return $('[data-qa-content-row]'); }
     get publicKeyRows() { return $$('[data-qa-content-row]'); }

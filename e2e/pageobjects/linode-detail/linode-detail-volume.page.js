@@ -15,8 +15,8 @@ export class VolumeDetail extends Page {
     get attachToLinode() { return $('[data-qa-enhanced-select="Select a Linode"]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }
-    get submit() { return $(this.submitButton); }
-    get cancel() { return $(this.cancelButton); }
+    get submit() { return $(this.submitButton.selector); }
+    get cancel() { return $(this.cancelButton.selector); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
@@ -180,7 +180,7 @@ export class VolumeDetail extends Page {
 
         const dialogTitle = $('[data-qa-dialog-title]');
         const dialogConfirm = $('[data-qa-confirm]');
-        const dialogCancel = $(this.cancelButton);
+        const dialogCancel = $(this.cancelButton.selector);
         const dialogContent = $('[data-qa-dialog-content]');
 
         dialogTitle.waitForVisible(constants.wait.normal);
@@ -241,7 +241,7 @@ export class VolumeDetail extends Page {
 
         const dialogTitle = $('[data-qa-dialog-title]');
         const dialogConfirm = $('[data-qa-confirm]');
-        const dialogCancel = $(this.cancelButton);
+        const dialogCancel = $(this.cancelButton.selector);
 
         expect(dialogTitle.isVisible()).toBe(true);
         expect(dialogTitle.getText()).toBe('Delete Volume');

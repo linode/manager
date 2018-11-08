@@ -9,7 +9,7 @@ class UserDetail extends Page {
     get deleteButton() { return $('[data-qa-confirm-delete]'); }
     get usernameField() { return $('[data-qa-username]'); }
     get emailField() { return $('[data-qa-email]'); }
-    get saveButton() { return $(this.submitButton); }
+    get saveButton() { return $(this.submitButton.selector); }
     get usernameWarning() { return $(`${this.usernameField.selector} p`); }
 
     baseElementsDisplay(owner) {

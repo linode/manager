@@ -7,7 +7,7 @@ class Resize extends Page {
     get currentSelection() { return $('[data-qa-current-container] [data-qa-selection-card]'); }
     get tierTabs() { return $$('[data-qa-tab]'); }
     get planCards() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]'); }
-    get submit() { return $(this.submitButton); }
+    get submit() { return $(this.submitButton.selector); }
 
     landingElemsDisplay() {
         const subHeader = 'Current Plan';
