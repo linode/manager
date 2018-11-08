@@ -165,5 +165,8 @@ export const enableAllBackups = () => async (dispatch: Dispatch<State>, getState
         dispatch(handleEnableSuccess(success));
       }
       dispatch(requestLinodesWithoutBackups());
-    });
+    })
+    .catch(() => dispatch(
+      handleEnableError([{linodeId: 0, reason: "There was an error enabling backups."}])
+    ));
 }

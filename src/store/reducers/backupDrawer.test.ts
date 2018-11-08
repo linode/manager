@@ -80,17 +80,15 @@ describe("Redux backups", () => {
       expect(newState).toHaveProperty('enableSuccess', false)
     });
   });
-  describe("magic error reducer", () => {
-    it("should accumulate success and error responses", async () => {
-      const initialValue = { success: [], errors: []};
-      const accumulator = await Bluebird.reduce(linodes, B.reducer, initialValue);
-      expect(accumulator).toEqual({
-        success: [1],
-        errors: [{
-          linodeId: linode2.id,
-          reason: "Backups could not be enabled for this Linode."
-        }]
-      });
+  describe("magic error reducer", async () => {
+    const initialValue = { success: [], errors: []};
+    const accumulator = await Bluebird.reduce(linodes, B.reducer, initialValue);
+    expect(accumulator).toEqual({
+      success: [1],
+      errors: [{
+        linodeId: linode2.id,
+        reason: "Backups could not be enabled for this Linode."
+      }]
     });
   });
 });
