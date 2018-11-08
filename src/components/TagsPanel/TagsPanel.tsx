@@ -143,8 +143,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         /*
          * The end goal is to display to the user a list of auto-suggestions
          * when they start typing in a new tag, but we don't want to display
-         * tags that are already applied to this specific Linode because there cannot
-         * be duplicates on one Linode.
+         * tags that are already applied because there cannot
+         * be duplicates.
          */
         const filteredTags = response.data.filter((eachTag: Tag) => {
           return !tags.some((alreadyAppliedTag: string) => {
@@ -185,9 +185,9 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       ]
     }, () => {
       /*
-      * Update the linode with the new list of tags (which is the previous list but
+      * Update the new list of tags (which is the previous list but
       * with the deleted tag filtered out). It's important to note that the Tag is *not*
-      * being deleted here - it's just being removed from the Linode
+      * being deleted here - it's just being removed from the list
       */
       const tagsWithoutDeletedTag = tags.filter((eachTag: string) => {
         return this.state.listDeletingTags.indexOf(eachTag) === -1;
@@ -243,7 +243,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         this.setState({ tagInputValue: '' })
         /*
         * Filter out the new tag out of the auto-suggestion list
-        * since we can't attach this tag to the Linode anymore
+        * since we can't attach this tag anymore
         */
         const cloneTagSuggestions = clone(tagsToSuggest) || [];
         const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
