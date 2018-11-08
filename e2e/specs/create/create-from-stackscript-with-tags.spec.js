@@ -31,14 +31,14 @@ describe('Create Linode From StackScript - Tags Suite', () => {
 
     it('should create a new tag to the linode', () => {
         newTag = timestamp();
-       
+
        // Terrible Selector, but it seems to work for now:
-       ConfigureLinode.multiSelect.$('..').$('input').setValue(newTag);
+       ConfigureLinode.tagsMultiSelect.$('..').$('input').setValue(newTag);
        ConfigureLinode.selectOption.waitForVisible(constants.wait.normal);
        ConfigureLinode.selectOption.click();
        ConfigureLinode.selectOption.waitForVisible(constants.wait.normal, true);
        ConfigureLinode.multiOption.waitForVisible(constants.wait.normal);
-       
+
        expect(ConfigureLinode.multiOption.getText()).toBe(newTag);
     });
 
@@ -46,7 +46,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
         ConfigureLinode.multiOption.click();
         existingTag = ConfigureLinode.selectOptions[0].getText();
         ConfigureLinode.selectOptions[0].click();
-        
+
         browser.waitUntil(function() {
             const tagsAdded = $$(ConfigureLinode.multiOption.selector).length === 2;
             const tagsIncludeExisting =
@@ -80,7 +80,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
 
     it('should display the tagged linode created from a stackscript on list linodes', () => {
         const tagsDisplayed = ListLinodes.tags.map(t => t.getText());
-        
+
         expect(tagsDisplayed).toContain(existingTag);
         expect(tagsDisplayed).toContain(newTag);
     });

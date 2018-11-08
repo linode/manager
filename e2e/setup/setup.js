@@ -13,7 +13,10 @@ const getAxiosInstance = function(token) {
         }),
         baseURL: API_ROOT,
         timeout: 10000,
-        headers: { 'Authorization': `Bearer ${token}`},
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'User-Agent': 'WebdriverIO',
+        },
       });
     } else if (!token && axiosInstance === undefined) {
        throw new Error("getting axiosInstance without having initialized it");
@@ -99,7 +102,7 @@ exports.removeAllLinodes = token => {
 
         return getAxiosInstance(token).get(linodesEndpoint)
             .then(res => {
-                const promiseArray = 
+                const promiseArray =
                     res.data.data.map(l => removeInstance(l, linodesEndpoint));
 
                 Promise.all(promiseArray).then(function(res) {
@@ -115,7 +118,7 @@ exports.removeAllLinodes = token => {
 exports.createLinode = (token, password, linodeLabel, tags) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
-        
+
         const linodeConfig = {
             backups_enabled: false,
             booted: true,
@@ -200,7 +203,7 @@ exports.removeAllVolumes = token => {
         }
 
         return getAxiosInstance(token).get(endpoint).then(res => {
-            const removeVolumesArray = 
+            const removeVolumesArray =
                 res.data.data.map(v => removeVolume(v, endpoint));
 
             Promise.all(removeVolumesArray).then(function(res) {
@@ -245,7 +248,8 @@ exports.getMyStackScripts = token => {
         getAxiosInstance(token).get(endpoint, {
             headers: {
                 'Authorization': `Bearer ${token}`,
-                'X-Filter': `{"username":"${browser.options.testUser}","+order_by":"deployments_total","+order":"desc"}`
+                'X-Filter': `{"username":"${browser.options.testUser}","+order_by":"deployments_total","+order":"desc"}`,
+                'User-Agent': 'WebdriverIO',
             }
         })
         .then(response => resolve(response.data))
@@ -277,7 +281,8 @@ exports.getPrivateImages = token => {
             return getAxiosInstance(token).get(endpoint, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'X-Filter': '{"is_public":false}'
+                    'X-Filter': '{"is_public":false}',
+                    'User-Agent': 'WebdriverIO',
                 }
             })
             .then(response => resolve(response.data))

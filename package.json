@@ -127,7 +127,7 @@
     "selenium": "npx selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "npx wdio ./e2e/config/wdio.conf.js",
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
-    "e2e:modified": "yarn e2e --spec=$(git diff --name-only upstream/develop | grep 'spec.js' | tr '\n' ',' | sed 's/.$//')",
+    "e2e:modified": "yarn e2e --spec=$(git diff --name-only upstream/develop | egrep 'e2e\/specs\/.*\/*spec.js' | tr '\n' ',' | sed 's/.$//')",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb"
   },
@@ -194,6 +194,7 @@
     "wdio-jasmine-framework": "0.3.5",
     "wdio-junit-reporter": "^0.4.2",
     "wdio-selenium-standalone-service": "^0.0.10",
+    "wdio-spec-reporter": "^0.1.5",
     "webdriverio": "4.12.0",
     "why-did-you-update": "^0.1.1",
     "yargs": "11.0.0"
