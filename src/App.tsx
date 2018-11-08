@@ -38,9 +38,13 @@ import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
-const Account = DefaultLoader({
-  loader: () => import('src/features/Account'),
-});
+// const Account = DefaultLoader({
+//   loader: () => import('src/features/Account'),
+// });
+
+const Billing = DefaultLoader({
+  loader: () => import('src/features/Billing'),
+})
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes'),
@@ -83,7 +87,7 @@ const Users = DefaultLoader({
 });
 
 const InvoiceDetail = DefaultLoader({
-  loader: () => import('src/features/Account/InvoiceDetail'),
+  loader: () => import('src/features/Billing/InvoiceDetail'),
 });
 
 const Longview = DefaultLoader({
@@ -333,7 +337,7 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/longview" component={Longview} />
                               <Route exact path="/images" component={Images} />
                               <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/billing" component={Account} />
+                              <Route exact path="/billing" component={Billing} />
                               <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
                               <Route path="/users" component={Users} />
                               <Route exact path="/support/tickets" component={SupportTickets} />
