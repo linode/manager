@@ -17,7 +17,7 @@ class Backups extends Page {
     get weekdaySelect() { return $('[data-qa-weekday-select]'); }
     get saveScheduleButton() { return $('[data-qa-schedule]'); }
     get cancelDescription() { return $('[data-qa-cancel-desc]'); }
-    get cancelButton() { return $('[data-qa-cancel]'); }
+    get cancelButton() { return $(this.cancelButton.selector); }
     get cancelDialogTitle() { return $('[data-qa-dialog-title]'); }
     get cancelConfirm() { return $('[data-qa-confirm-cancel]'); }
     get cancelDialogClose() { return $('[data-qa-cancel-cancel]'); }

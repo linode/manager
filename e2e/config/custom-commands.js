@@ -10,6 +10,8 @@ const {
     removeDomain,
     getMyStackScripts,
     removeStackScript,
+    getUserProfile,
+    updateUserProfile
 } = require('../setup/setup');
 
 const {
@@ -185,5 +187,15 @@ exports.browserCommands = () => {
 
     browser.addCommand('deleteAll', function async(token) {
         return deleteAll(token).then(() => {});
+    });
+
+    browser.addCommand('getUserProfile', function async(token) {
+        return getUserProfile(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('updateUserProfile', function async(token,profileData) {
+        return updateUserProfile(token,profileData)
+            .then(res => res);
     });
 }
