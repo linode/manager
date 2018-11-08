@@ -56,14 +56,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    marginTop: '8px',
+    marginBottom: '8px'
   },
   backButton: {
-    margin: '2px 0 0 -16px',
+    margin: '-6px 0 0 -16px',
     '& svg': {
       width: 34,
       height: 34,
     },
+    padding:0
   },
   label: {
     marginBottom: theme.spacing.unit,
@@ -398,28 +400,50 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item className={classes.titleWrapper}>
+        
+        <Grid container className={classes.titleWrapper}>
+          
+          <Grid item>
             <IconButton
               onClick={this.onBackButtonClick}
               className={classes.backButton}
-            >
+            >  
               <KeyboardArrowLeft />
-            </IconButton>
-            <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
-              {`#${ticket.id}: ${ticket.summary}`}
-              <Chip className={classNames({
-                [classes.status]: true,
-                [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-                [classes.closed]: ticket.status === 'closed',
-              })}
-              label={ticket.status} />
-            </Typography>
+            
+            </IconButton>            
+          </Grid>
+
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
+                  
+                  {`#${ticket.id}: ${ticket.summary}`}
+                  
+                  <Chip className={classNames({
+                    [classes.status]: true,
+                    [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+                    [classes.closed]: ticket.status === 'closed',
+                  })}
+                  label={ticket.status} />
+                </Typography>
+              </Grid>
+
+              <Grid item style={{ paddingTop:0 }}>
+                <Typography variant="caption">
+                  {`Last updated by ${ticket.updated_by} at ${ticket.updated}`} 
+                </Typography>
+              </Grid>
+            </Grid>
+          
           </Grid>
         </Grid>
+        
         {ticket.entity && this.renderEntityLabelWithIcon()}
+        
         {/* Show message if the ticket has been closed through the link on this page. */}
         {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
+        
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description &&
