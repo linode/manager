@@ -7,12 +7,16 @@ import Typography from '@material-ui/core/Typography';
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root' | 'button';
+type ClassNames = 'root'
+  | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
     margin: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit * 3}px 0`,
+    [theme.breakpoints.down('md')]: {
+      marginTop: -theme.spacing.unit * 3,
+    },
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -29,7 +33,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, onSubmit } = props;
   return (
     <Paper className={classes.root} >
-      <Grid container>
+      <Grid container direction="column">
         <Grid item>
           <Typography variant="title">
             Back Up Your Data
