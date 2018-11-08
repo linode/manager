@@ -13,8 +13,8 @@ export const dialogMap = {
 export class OauthCreateDrawer {
     get title() { return $('[data-qa-drawer-title]'); }
     get label() { return $('[data-qa-add-label] input'); }
-    get submit() { return $('[data-qa-submit]'); }
-    get cancel() { return $('[data-qa-cancel]'); }
+    get submit() { return $(this.submitButton); }
+    get cancel() { return $(this.cancelButton); }
     get callbackUrl() { return $('[data-qa-callback] input'); }
     get public() { return $('[data-qa-public]'); }
 
@@ -57,8 +57,8 @@ export class TokenCreateDrawer {
     get readPermission() { return $('[data-qa-perm-read-radio]'); }
     get rwPermission() { return $('[data-qa-perm-rw-radio]'); }
 
-    get submit() { return $('[data-qa-submit]'); }
-    get cancel() { return $('[data-qa-cancel]'); }
+    get submit() { return $(this.submitButton); }
+    get cancel() { return $(this.cancelButton); }
     get closeDialog() { return $('[data-qa-close-dialog]'); }
 
 

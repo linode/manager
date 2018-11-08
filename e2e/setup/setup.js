@@ -370,3 +370,31 @@ exports.deleteUser = (token, username) => {
             });
     });
 }
+
+exports.getUserProfile = (token) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/profile';
+
+        return getAxiosInstance(token)
+        .get(endpoint)
+        .then(response => resolve(response.data))
+        .catch(error => {
+            console.error('Error', error);
+            reject(error);
+        });
+    });
+}
+
+exports.updateUserProfile = (token, profileData) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/profile';
+
+        return getAxiosInstance(token)
+            .put(endpoint,profileData)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error", error);
+                reject(error);
+            });
+    });
+}

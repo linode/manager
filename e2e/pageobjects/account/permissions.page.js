@@ -38,8 +38,7 @@ class Permissions extends Page {
     get specificGrant() { return $('[data-qa-specific-grant]'); }
     get specifcGrants() { return $$('[data-qa-specific-grant]'); }
 
-    get saveButton() { return $('[data-qa-submit]'); }
-    get cancelButton() { return $('[data-qa-cancel]'); }
+    get saveButton() { return $(this.submitButton); } 
     get unrestrictedMsg() { return $('[data-qa-unrestricted-msg'); }
 
     baseElementsDisplay(restricted) {
@@ -53,8 +52,8 @@ class Permissions extends Page {
             expect(this.billingPermissionRead.isVisible()).toBe(true);
             expect(this.billingPermissionWrite.isVisible()).toBe(true);
             expect(this.restrictAccess.isVisible()).toBe(true);
-            expect($$('[data-qa-submit]').length).toBe(2);
-            expect($$('[data-qa-cancel]').length).toBe(2);
+            expect($$(this.submitButton).length).toBe(2);
+            expect($$(this.cancelButton).length).toBe(2);
             expect(this.restrictAccess.getAttribute('data-qa-restrict-access')).toBe('true');
         } else {
             expect(this.unrestrictedMsg.isVisible()).toBe(true);

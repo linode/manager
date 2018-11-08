@@ -27,8 +27,8 @@ export class SupportTickets extends Page {
     get ticketSummary() { return $('[data-qa-ticket-summary] input'); }
     get ticketDescription() { return $('[data-qa-ticket-description] textarea'); }
 
-    get submit() { return $('[data-qa-submit]'); }
-    get cancel() { return $('[data-qa-cancel]'); }
+    get submit() { return $(this.submitButton); }
+    get cancel() { return $(this.cancelButton); }
 
     baseElemsDisplay() {
         this.supportHeader.waitForVisible(constants.wait.normal);

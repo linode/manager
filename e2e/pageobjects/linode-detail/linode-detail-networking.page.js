@@ -32,9 +32,9 @@ class Networking extends Page {
 
     // drawer elements
     get serviceNotice() { return $('[data-qa-service-notice]'); }
-    get allocate() { return $('[data-qa-submit]'); }
-    get submit() { return $('[data-qa-submit]'); }
-    get cancel() { return $('[data-qa-cancel]'); }
+    get allocate() { return $(this.submitButton); }
+    get submit() { return $(this.submitButton); }
+    get cancel() { return $(this.cancelButton); }
 
     // view ip elements
     get configIpHeading() { return $('[data-qa-ip-address-heading]'); }
