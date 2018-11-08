@@ -120,19 +120,19 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) { return; }
 
     getDomain(domainId)
-      .then((data) => {
+      .then((data: Linode.Domain) => {
         this.setState({ domain: data });
       })
       .catch(console.error);
   }
 
-  handleUpdateTags(tagsList: string[]) {
+  handleUpdateTags = (tagsList: string[]) => {
     const { domain } = this.state;
     return updateDomain(
       domain.id,
       { domain: domain.domain, tags: tagsList }
     )
-      .then(data => {
+      .then((data: Linode.Domain) => {
         this.setState({
           domain: data,
         })
@@ -197,7 +197,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         <AppBar position="static" color="default">
           <TagsPanel
             tags={domain.tags}
-            updateTags={(tagsList) => this.handleUpdateTags(tagsList)}
+            updateTags={this.handleUpdateTags}
           />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
