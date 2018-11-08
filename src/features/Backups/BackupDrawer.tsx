@@ -124,6 +124,7 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title="Enable All Backups"
         open={this.props.open}
+        onClose={close}
       >
         <Grid container direction={'column'} >
           <Grid item>
@@ -142,7 +143,10 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
             <BackupsTable linodes={linodesWithBackups} loading={loading} />
           </Grid>
           <Grid item>
-            <DisplayPrice price={this.getTotalPrice(linodesWithBackups)} />
+            <DisplayPrice
+              price={this.getTotalPrice(linodesWithBackups)}
+              interval="mo"
+            />
           </Grid>
           {/* <Grid item>
             <AutoEnroll

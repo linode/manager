@@ -17,7 +17,6 @@ type ClassNames = 'root' | 'container';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    marginTop: theme.spacing.unit * 2,
     width: '100%',
   },
   container: {
@@ -54,7 +53,7 @@ const renderLinodes = (linodes: ExtendedLinode[]) =>
       <TableRow>
         <TableCell >{linode.label}</TableCell>
         <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-        <TableCell >{`${displayPrice(getPrice(linode.typeInfo))} / month`}</TableCell>
+        <TableCell >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
       </TableRow>
       {/* @todo need error handling pattern for displaying individual
        * errors for each Linode */}
@@ -70,7 +69,12 @@ const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linodes, loading } = props;
 
   return (
-    <Table tableClass={classes.root} isResponsive={false} >
+    <Table
+      tableClass={classes.root}
+      isResponsive={false}
+      border
+      spacingTop={16}
+    >
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Label">Label</TableCell>

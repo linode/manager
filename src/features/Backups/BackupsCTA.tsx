@@ -7,13 +7,16 @@ import Typography from '@material-ui/core/Typography';
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
-    margin: theme.spacing.unit,
+    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit * 3}px 0`,
   },
+  button: {
+    marginTop: theme.spacing.unit,
+  }
 });
 
 interface Props {
@@ -26,7 +29,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, onSubmit } = props;
   return (
     <Paper className={classes.root} >
-      <Grid container justify="center">
+      <Grid container>
         <Grid item>
           <Typography variant="title">
             Back Up Your Data
@@ -38,7 +41,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button type="primary" onClick={onSubmit}>Enable Now</Button>
+          <Button type="primary" className={classes.button} onClick={onSubmit}>Enable Now</Button>
         </Grid>
       </Grid>
 
