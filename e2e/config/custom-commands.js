@@ -185,6 +185,10 @@ exports.browserCommands = () => {
         }, timeout);
     });
 
+    browser.addCommand('deleteAll', function async(token) {
+        return deleteAll(token).then(() => {});
+    });
+
     browser.addCommand('getUserProfile', function async(token) {
         return getUserProfile(token)
             .then(res => res);
