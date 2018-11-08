@@ -1,3 +1,4 @@
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -11,6 +12,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import AddCircle from '@material-ui/icons/AddCircle';
 
 import TagsPanelItem from './TagsPanelItem';
+
+import { getTags } from 'src/services/tags';
+
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import Select from 'src/components/EnhancedSelect/Select';
 
@@ -97,11 +102,8 @@ interface Item {
   value: string;
 }
 
-interface Tags {
-  tagsQueuedForDeletion: string[];
-  tagsAlreadyApplied: string[];
-  // tags that will appear in the auto-suggest dropdown (AKA tags that exist but aren't applied to this linode)
-  tagsToSuggest: Item[];
+interface Tag {
+  label: string
 }
 
 interface ActionMeta {
@@ -118,11 +120,8 @@ interface State {
 }
 
 export interface Props {
-  tags: Tags;
-  onDeleteTag: (value: string) => void;
-  onCreateTag: (value: Item, actionMeta: ActionMeta) => void;
-  tagInputValue: string;
-  tagError: string;
+  tags: string[];
+  updateTags: (tags: string[]) => Promise<void>;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -137,6 +136,35 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     listDeletingTags: [],
   };
 
+  componentDidMount() {
+    const { tags } = this.props;
+    getTags()
+      .then(response => {
+        /*
+         * The end goal is to display to the user a list of auto-suggestions
+         * when they start typing in a new tag, but we don't want to display
+         * tags that are already applied to this specific Linode because there cannot
+         * be duplicates on one Linode.
+         */
+        const filteredTags = response.data.filter((eachTag: Tag) => {
+          return !tags.some((alreadyAppliedTag: string) => {
+            return alreadyAppliedTag === eachTag.label;
+          })
+        })
+        /*
+         * reshaping them for the purposes of being passed to the Select component
+         */
+        const reshapedTags = filteredTags.map((eachTag: Tag) => {
+          return {
+            label: eachTag.label,
+            value: eachTag.label
+          }
+        });
+        this.setState({ tagsToSuggest: reshapedTags })
+      })
+      .catch(e => e)
+  }
+
   toggleTagInput = () => {
     this.setState({
       tagError: '',
@@ -144,31 +172,122 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     })
   }
 
+  handleDeleteTag = (label: string) => {
+
+    const { tags, updateTags } = this.props;
+    /*
+     * Add this tag to the current list of tags that are queued for deletion
+     */
+    this.setState({
+      listDeletingTags: [
+        ...this.state.listDeletingTags,
+        label
+      ]
+    }, () => {
+      /*
+      * Update the linode with the new list of tags (which is the previous list but
+      * with the deleted tag filtered out). It's important to note that the Tag is *not*
+      * being deleted here - it's just being removed from the Linode
+      */
+      const tagsWithoutDeletedTag = tags.filter((eachTag: string) => {
+        return this.state.listDeletingTags.indexOf(eachTag) === -1;
+      });
+      updateTags(tagsWithoutDeletedTag)
+        .then(() => {
+          /*
+          * Remove this tag from the current list of tags that are queued for deletion
+          */
+        const cloneTagSuggestions = clone(this.state.tagsToSuggest) || [];
+          this.setState({
+            tagsToSuggest: [
+              {
+                value: label,
+                label,
+              },
+              ...cloneTagSuggestions
+            ],
+            listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label),
+          })
+        })
+        .catch(e => {
+          sendToast(`Could not delete Tag: ${label}`, 'error');
+          /*
+          * Remove this tag from the current list of tags that are queued for deletion
+          */
+          this.setState({
+            listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label)
+          })
+        })
+
+    })
+  }
+
+  handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
+    const { tagsToSuggest } = this.state;
+    const { tags, updateTags } = this.props;
+    /*
+     * This comes from the react-select API
+     * basically, we only want to make a request if the user is either
+     * hitting the enter button or choosing a selection from the dropdown
+     */
+    if (actionMeta.action !== 'select-option'
+      && actionMeta.action !== 'create-option') { return; }
+
+    this.setState({
+      tagError: '',
+    });
+
+    updateTags([...tags, value.label])
+      .then(() => {
+        // set the input value to blank on submit
+        this.setState({ tagInputValue: '' })
+        /*
+        * Filter out the new tag out of the auto-suggestion list
+        * since we can't attach this tag to the Linode anymore
+        */
+        const cloneTagSuggestions = clone(tagsToSuggest) || [];
+        const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
+          return eachTag.label !== value.label;
+        });
+        this.setState({
+          tagsToSuggest: filteredTags
+        })
+      })
+      .catch(e => {
+        const APIErrors = pathOr(
+          'Error while creating tag',
+          ['response', 'data', 'errors'],
+          e);
+        // display the first error in the array or a generic one
+        this.setState({ tagError: APIErrors[0].reason || 'Error while creating tag' })
+      })
+  }
+
   render() {
     const {
-      tags: { tagsToSuggest, tagsAlreadyApplied, tagsQueuedForDeletion },
-      tagError,
-      onCreateTag,
-      onDeleteTag,
-      tagInputValue,
+      tags,
       classes
     } = this.props;
 
     const {
       isCreatingTag,
+      listDeletingTags,
+      tagsToSuggest,
+      tagInputValue,
+      tagError,
     } = this.state;
   
     return (
       <div className={classes.root}>
-        {tagsAlreadyApplied.map(eachTag => {
+        {tags.map(eachTag => {
           return (
             <TagsPanelItem
               key={eachTag}
               label={eachTag}
               tagLabel={eachTag}
-              onDelete={onDeleteTag}
+              onDelete={this.handleDeleteTag}
               className={classes.tag}
-              loading={tagsQueuedForDeletion.some((inProgressTag) => {
+              loading={listDeletingTags.some((inProgressTag) => {
                 /*
                  * The tag is getting deleted if it appears in the state
                  * which holds the list of tags queued for deletion 
@@ -180,7 +299,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         })}
         {(isCreatingTag)
           ? <Select
-              onChange={onCreateTag}
+              onChange={this.handleCreateTag}
               options={tagsToSuggest}
               variant='creatable'
               errorText={tagError}

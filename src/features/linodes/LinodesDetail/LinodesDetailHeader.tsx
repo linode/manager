@@ -1,4 +1,4 @@
-import { clone, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import 'rxjs/add/observable/timer';
@@ -15,7 +15,6 @@ import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgra
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 
 import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
-import { getTags } from 'src/services/tags';
 
 import { requestNotifications } from 'src/store/reducers/notifications';
 
@@ -46,67 +45,20 @@ interface Props {
   notifications?: Linode.Notification[];
 }
 
-interface Item {
-  label: string;
-  value: string;
-}
-
-interface Tag {
-  label: string
-}
-
 interface State {
-  tagsToSuggest?: Item[];
-  tagError: string;
-  tagInputValue: string;
-  listDeletingTags: string[];
   hasScheduledMigration: boolean;
-}
-
-interface ActionMeta {
-  action: string;
 }
 
 type CombinedProps = Props & StateProps & DispatchProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
-    tagsToSuggest: [],
-    tagError: '',
-    tagInputValue: '',
-    listDeletingTags: [],
     hasScheduledMigration: false,
   }
 
   componentDidMount() {
-    const { linode } = this.props;
     const { getNotifications } = this.props.actions;
     getNotifications();
-    getTags()
-      .then(response => {
-        /*
-         * The end goal is to display to the user a list of auto-suggestions
-         * when they start typing in a new tag, but we don't want to display
-         * tags that are already applied to this specific Linode because there cannot
-         * be duplicates on one Linode.
-         */
-        const filteredTags = response.data.filter((eachTag: Tag) => {
-          return !linode.tags.some((alreadyAppliedTag: string) => {
-            return alreadyAppliedTag === eachTag.label;
-          })
-        })
-        /*
-         * reshaping them for the purposes of being passed to the Select component
-         */
-        const reshapedTags = filteredTags.map((eachTag: Tag) => {
-          return {
-            label: eachTag.label,
-            value: eachTag.label
-          }
-        });
-        this.setState({ tagsToSuggest: reshapedTags })
-      })
-      .catch(e => e)
   }
 
   migrate = (type: string) => {
@@ -136,96 +88,14 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     this.props.labelInput.onEdit(value)
   }
 
-  handleDeleteTag = (label: string) => {
+  handleUpdateTag(tagsList: string[]) {
     const { linode } = this.props;
-    /*
-     * Add this tag to the current list of tags that are queued for deletion
-     */
-    this.setState({
-      listDeletingTags: [
-        ...this.state.listDeletingTags,
-        label
-      ]
-    })
-    /*
-     * Update the linode with the new list of tags (which is the previous list but
-     * with the deleted tag filtered out). It's important to note that the Tag is *not*
-     * being deleted here - it's just being removed from the Linode
-     */
-    const linodeTagsWithoutDeletedTag = linode.tags.filter((eachTag: string) => {
-      return eachTag !== label
-    })
-    updateLinode(linode.id, { tags: linodeTagsWithoutDeletedTag })
-      .then(() => {
-        linode.update();
-        /*
-        * Remove this tag from the current list of tags that are queued for deletion
-        */
-       const cloneTagSuggestions = clone(this.state.tagsToSuggest) || [];
-        this.setState({
-          tagsToSuggest: [
-            {
-              value: label,
-              label,
-            },
-            ...cloneTagSuggestions
-          ],
-          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label),
-        })
-      })
-      .catch(e => {
-        sendToast(`Could not delete Tag: ${label}`);
-        /*
-        * Remove this tag from the current list of tags that are queued for deletion
-        */
-        this.setState({
-          listDeletingTags: this.state.listDeletingTags.filter(eachTag => eachTag !== label)
-        })
-      })
-  }
-
-  handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
-    const { tagsToSuggest } = this.state;
-    /*
-     * This comes from the react-select API
-     * basically, we only want to make a request if the user is either
-     * hitting the enter button or choosing a selection from the dropdown
-     */
-    if (actionMeta.action !== 'select-option'
-      && actionMeta.action !== 'create-option') { return; }
-
-    this.setState({
-      tagError: '',
-    });
-
-    const { linode } = this.props;
-    updateLinode(
+    return updateLinode(
       linode.id,
-      { tags: [...linode.tags, value.label] }
+      { tags: tagsList }
     )
       .then(() => {
         linode.update();
-        // set the input value to blank on submit
-        this.setState({ tagInputValue: '' })
-        /*
-        * Filter out the new tag out of the auto-suggestion list
-        * since we can't attach this tag to the Linode anymore
-        */
-        const cloneTagSuggestions = clone(tagsToSuggest) || [];
-        const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
-          return eachTag.label !== value.label;
-        });
-        this.setState({
-          tagsToSuggest: filteredTags
-        })
-      })
-      .catch(e => {
-        const APIErrors = pathOr(
-          'Error while creating tag',
-          ['response', 'data', 'errors'],
-          e);
-        // display the first error in the array or a generic one
-        this.setState({ tagError: APIErrors[0].reason || 'Error while creating tag' })
       })
   }
 
@@ -238,8 +108,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       url,
       openConfigDrawer,
     } = this.props;
-
-
 
     return (
       <React.Fragment>
@@ -267,15 +135,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           }}
         />
         <TagsPanel
-          tags={{
-            tagsQueuedForDeletion: this.state.listDeletingTags,
-            tagsAlreadyApplied: linode.tags,
-            tagsToSuggest: this.state.tagsToSuggest || []
-          }}
-          onDeleteTag={this.handleDeleteTag}
-          onCreateTag={this.handleCreateTag}
-          tagInputValue={this.state.tagInputValue}
-          tagError={this.state.tagError}
+          tags={linode.tags}
+          updateTags={this.handleUpdateTag.bind(this)}
         />
         <TabsAndStatusBarPanel
           url={url}
