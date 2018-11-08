@@ -32,7 +32,7 @@ describe("DisplayPrice component", () => {
     expect(component.find('WithStyles(Typography)')).toHaveLength(2);
     expect(component.containsMatchingElement(
       <Typography>
-        &nbsp;/mo
+        /mo
       </Typography>
     )).toBeTruthy();
   });
