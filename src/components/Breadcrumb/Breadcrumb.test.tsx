@@ -21,8 +21,10 @@ describe('Breadcrumb component', () => {
 
   it('renders editable text when given editable props', () => {
     wrapper.setProps({
-      onEdit: jest.fn(),
-      onCancel: jest.fn()
+      onEditHandlers: {
+        onEdit: jest.fn(),
+        onCancel: jest.fn()
+      }
     });
     expect(wrapper.find('[data-qa-static-text]')).toHaveLength(0);
     expect(wrapper.find('[data-qa-editable-text]')).toHaveLength(1);
@@ -35,8 +37,7 @@ describe('Breadcrumb component', () => {
   it('renders label link when given prop', () => {
     wrapper.setProps({
       labelLink: '/summary',
-      onEdit: undefined,
-      onCancel: undefined
+      onEditHandlers: undefined
     });
     expect(wrapper.find('[data-qa-label-link]')).toHaveLength(1);
   });

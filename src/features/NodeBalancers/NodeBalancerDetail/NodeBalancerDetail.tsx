@@ -178,9 +178,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               linkText="NodeBalancers"
               label={nodeBalancerLabel}
               labelLink={this.getLabelLink()}
-              onEdit={this.updateLabel}
-              onCancel={this.cancelUpdate}
-              errorText={apiErrorText}
+              onEditHandlers={{
+                onEdit: this.updateLabel,
+                onCancel: this.cancelUpdate,
+                errorText: apiErrorText
+              }}
             />
           </Grid>
         </Grid>

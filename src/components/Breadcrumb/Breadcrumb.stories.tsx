@@ -29,8 +29,10 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
           linkTo={this.state.linkTo}
           linkText={this.state.linkText}
           label={this.state.text}
-          onEdit={this.onEdit}
-          onCancel={this.onCancel}
+          onEditHandlers={{
+            onEdit: this.onEdit,
+            onCancel: this.onCancel
+          }}
           labelLink={this.props.labelLink}
         />
       </React.Fragment>

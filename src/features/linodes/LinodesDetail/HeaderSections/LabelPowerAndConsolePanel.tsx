@@ -92,9 +92,11 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
           linkText="Linodes"
           label={labelInput.label}
           labelLink={getLabelLink()}
-          errorText={labelInput.errorText}
-          onEdit={labelInput.onEdit}
-          onCancel={labelInput.onCancel}
+          onEditHandlers={{
+            onEdit: labelInput.onEdit,
+            onCancel: labelInput.onCancel,
+            errorText: labelInput.errorText
+          }}
         />
       </Grid>
       <Grid item className={classes.cta}>

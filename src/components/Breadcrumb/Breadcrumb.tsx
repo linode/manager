@@ -51,23 +51,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   }
 });
-
+interface EditableProps {
+  onCancel: () => void;
+  onEdit: (value: string) => void;
+  errorText?: string;
+}
 export interface Props {
   linkTo: string;
   linkText: string;
   label: string;
   labelLink?: string | undefined;
-  errorText?: string;
-  onCancel?: () => void;
-  onEdit?: (value: string) => void;
+  onEditHandlers?: EditableProps
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linkTo, linkText, label } = props;
-
-  const isEditable = Boolean(props.onCancel && props.onEdit);
 
   const labelText = (
     <Typography
@@ -96,15 +96,15 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         </Typography>
       </IconButton>
       </Link>
-      {isEditable
+      {props.onEditHandlers
         ?
         <EditableText
           role="header"
           variant="headline"
           text={label}
-          errorText={props.errorText!}
-          onEdit={props.onEdit!}
-          onCancel={props.onCancel!}
+          errorText={props.onEditHandlers!.errorText}
+          onEdit={props.onEditHandlers!.onEdit}
+          onCancel={props.onEditHandlers!.onCancel}
           labelLink={props.labelLink}
           data-qa-editable-text
         />
