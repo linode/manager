@@ -7,7 +7,7 @@ import { getAll } from 'src/utilities/getAll';
 
 // HELPERS
 
-const getAllLinodes = getAll(getLinodes);
+export const getAllLinodes = getAll(getLinodes);
 
 // TYPES
 type Linode = Linode.Linode;
@@ -134,7 +134,7 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
  *  errors: BackupError[] Accumulated errors.
  * }
  */
-const reducer = (accumulator: Accumulator, thisLinode: Linode.Linode) => {
+export const reducer = (accumulator: Accumulator, thisLinode: Linode.Linode) => {
   return enableBackups(thisLinode.id).then((e) => ({
     ...accumulator,
     success: [...accumulator.success, e]
@@ -158,7 +158,7 @@ export const enableAllBackups = () => async (dispatch: Dispatch<State>, getState
   dispatch(handleEnable());
   Bluebird.reduce(linodes, reducer, { success: [], errors: []})
     .then(({ success, errors }) => {
-      if (!isEmpty(errors)) {
+      if (errors && !isEmpty(errors)) {
         dispatch(handleEnableError(errors));
       }
       else {
