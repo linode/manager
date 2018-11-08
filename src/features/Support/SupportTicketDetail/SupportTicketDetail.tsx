@@ -19,6 +19,7 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CircleProgress from 'src/components/CircleProgress';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -431,7 +432,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
               <Grid item style={{ paddingTop:0 }}>
                 <Typography variant="caption">
-                  {`Last updated by ${ticket.updated_by} at ${ticket.updated}`} 
+                  {`Last updated by ${ticket.updated_by} at `}
+                  <DateTimeDisplay date={ticket.updated} /> 
                 </Typography>
               </Grid>
             </Grid>
