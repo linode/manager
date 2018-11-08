@@ -88,7 +88,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     this.props.labelInput.onEdit(value)
   }
 
-  handleUpdateTag(tagsList: string[]) {
+  handleUpdateTags(tagsList: string[]) {
     const { linode } = this.props;
     return updateLinode(
       linode.id,
@@ -136,7 +136,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
         />
         <TagsPanel
           tags={linode.tags}
-          updateTags={this.handleUpdateTag.bind(this)}
+          updateTags={(tagsList) => this.handleUpdateTags(tagsList)}
         />
         <TabsAndStatusBarPanel
           url={url}

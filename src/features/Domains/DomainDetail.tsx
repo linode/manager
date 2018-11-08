@@ -126,7 +126,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       .catch(console.error);
   }
 
-  handleUpdateTag(tagsList: string[]) {
+  handleUpdateTags(tagsList: string[]) {
     const { domain } = this.state;
     return updateDomain(
       domain.id,
@@ -136,7 +136,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         this.setState({
           domain: data,
         })
-      })
+      });
   }
 
 
@@ -197,8 +197,8 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         <AppBar position="static" color="default">
           <TagsPanel
             tags={domain.tags}
-            updateTags={this.handleUpdateTag.bind(this)}
-            />
+            updateTags={(tagsList) => this.handleUpdateTags(tagsList)}
+          />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}
