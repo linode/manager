@@ -62,10 +62,10 @@ interface StateProps {
   loading: boolean;
   enabling: boolean;
   backupLoadError: string;
-  linodesWithBackups: ExtendedLinode[];
+  linodesWithoutBackups: ExtendedLinode[];
   backupsLoading: boolean;
   enableSuccess: boolean;
-  enableErrors?: string;
+  enableErrors?: BackupError[];
 }
 
 interface State {
@@ -77,13 +77,15 @@ type CombinedProps = DispatchProps
   & TypesContextProps
   & WithStyles<ClassNames>;
 
-class BackupDrawer extends React.Component<CombinedProps, State> {
+export class BackupDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     backupsToggle: false,
   };
 
   componentDidMount() {
-    this.props.actions.getLinodesWithoutBackups();
+    if (isEmpty(this.props.linodesWithoutBackups)) {
+      this.props.actions.getLinodesWithoutBackups();
+    }
   }
 
   componentDidUpdate() {
@@ -105,8 +107,8 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
     this.setState({ backupsToggle: !this.state.backupsToggle });
   }
 
-  getTotalPrice = (linodes: LinodeWithTypeInfo[]) => {
-    return linodes.reduce((prevValue: number, linode: LinodeWithTypeInfo) => {
+  getTotalPrice = (linodes: ExtendedLinode[]) => {
+    return linodes.reduce((prevValue: number, linode: ExtendedLinode) => {
       return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
     }, 0)
   }
@@ -117,13 +119,20 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { actions: { close }, enableErrors, enabling, linodesWithBackups, loading } = this.props;
+    const {
+      actions: { close },
+      enableErrors,
+      enabling,
+      linodesWithoutBackups,
+      loading,
+      open,
+    } = this.props;
     // const { backupsToggle } = this.state;
-    const linodeCount = linodesWithBackups.length;
+    const linodeCount = linodesWithoutBackups.length;
     return (
       <Drawer
         title="Enable All Backups"
-        open={this.props.open}
+        open={open}
         onClose={close}
       >
         <Grid container direction={'column'} >
@@ -134,17 +143,17 @@ class BackupDrawer extends React.Component<CombinedProps, State> {
               to <strong>{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
             </Typography>
           </Grid>
-          {!isEmpty(enableErrors) &&
+          {enableErrors && !isEmpty(enableErrors) &&
             <Grid item>
               <Notice error>There was an error enabling backups for some of your Linodes.</Notice>
             </Grid>
           }
           <Grid item>
-            <BackupsTable linodes={linodesWithBackups} loading={loading} />
+            <BackupsTable linodes={linodesWithoutBackups} loading={loading} />
           </Grid>
           <Grid item>
             <DisplayPrice
-              price={this.getTotalPrice(linodesWithBackups)}
+              price={this.getTotalPrice(linodesWithoutBackups)}
               interval="mo"
             />
           </Grid>
@@ -197,7 +206,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 /* Attaches a full type object to each Linode. Needed to calculate
 * price and label information in BackupsTable.tsx.
 */
-const addTypeInfo = (types: Linode.LinodeType[], linodes: Linode.Linode[]) =>
+export const addTypeInfo = (types: Linode.LinodeType[], linodes: Linode.Linode[]) =>
   linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {
@@ -207,7 +216,7 @@ const addTypeInfo = (types: Linode.LinodeType[], linodes: Linode.Linode[]) =>
   });
 
 /* Attaches an error object to each Linode */
-const addErrors = (errors: BackupError[], linodes: LinodeWithTypeInfo[]) =>
+export const addErrors = (errors: BackupError[], linodes: LinodeWithTypeInfo[]) =>
   linodes.map((linode: LinodeWithTypeInfo) => {
     const linodeError = errors.find((error) => Number(error.linodeId) === Number(linode.id));
     return {
@@ -217,7 +226,7 @@ const addErrors = (errors: BackupError[], linodes: LinodeWithTypeInfo[]) =>
   });
 
   /* Add type and error info to each Linode, so that it's available when rendering each Linode later */
-  const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], types: Linode.LinodeType[]) => {
+  export const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], types: Linode.LinodeType[]) => {
     const linodesWithTypes = addTypeInfo(types, linodes);
     return addErrors(errors, linodesWithTypes);
   }
@@ -233,7 +242,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     open: path(['backups','open'], state),
     loading: pathOr(false, ['backups','loading'], state),
     enabling: pathOr(false, ['backups','enabling'], state),
-    linodesWithBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
+    linodesWithoutBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
   })
 };
 

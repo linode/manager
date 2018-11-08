@@ -1,4 +1,4 @@
-import { pathOr } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -7,7 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 import CircleProgress from 'src/components/CircleProgress';
-import { displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
+import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 
@@ -34,6 +34,11 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const displayPrice = (price: string | number) => {
+  if (typeof price === 'string') { return price; }
+  return _displayPrice(price);
+}
+
 const getLabel = (type?: Linode.LinodeType) =>
   pathOr('Unknown', ['label'], type);
 
@@ -50,7 +55,7 @@ const renderLoading = (container: string) =>
 const renderLinodes = (linodes: ExtendedLinode[]) =>
   linodes && linodes.map((linode: ExtendedLinode, idx: number) =>
     <React.Fragment key={idx}>
-      <TableRow>
+      <TableRow data-qa-linodes >
         <TableCell >{linode.label}</TableCell>
         <TableCell >{getLabel(linode.typeInfo)}</TableCell>
         <TableCell >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
@@ -65,7 +70,7 @@ const renderLinodes = (linodes: ExtendedLinode[]) =>
       </React.Fragment>
   )
 
-const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
+export const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linodes, loading } = props;
 
   return (
@@ -83,7 +88,7 @@ const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {loading && linodes.length === 0
+        {loading && isEmpty(linodes)
           ? renderLoading(classes.container)
           : renderLinodes(linodes)
         }

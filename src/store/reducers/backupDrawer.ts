@@ -36,7 +36,6 @@ export const ENABLE_SUCCESS = '@manager/backups/ENABLE_SUCCESS'
 export const ENABLE_ERROR = '@manager/backups/ENABLE_ERROR'
 export const RESET_ERRORS = '@manager/backups/RESET_ERRORS'
 export const RESET_SUCCESS = '@manager/backups/RESET_SUCCESS'
-export const ADD_ERROR = '@manager/backups/ADD_ERROR'
 
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
@@ -58,8 +57,6 @@ export const handleResetError: ActionCreator = () => ({ type: RESET_ERRORS });
 export const handleOpen: ActionCreator = () => ({ type: OPEN });
 
 export const handleClose: ActionCreator = () => ({ type: CLOSE });
-
-export const addError: ActionCreator = (data: BackupError) => ({ type: ADD_ERROR, data });
 
 // DEFAULT STATE
 export const defaultState: State = {
@@ -107,9 +104,6 @@ export default (state: State = defaultState, action: Action) => {
 
     case RESET_SUCCESS:
       return { ...state, lastUpdated: Date.now(), enableSuccess: false, }
-
-    case ADD_ERROR:
-      return { ...state, enableErrors: [...state.enableErrors, action.data]}
 
     default:
       return state;
