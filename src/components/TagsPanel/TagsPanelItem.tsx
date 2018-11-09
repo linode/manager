@@ -29,7 +29,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
  * Abstraction of the Tag component for the purposes of passing the
  * delete payload to the onDelete function
  */
-class LinodeTag extends React.Component<CombinedProps, {}> {
+class TagsPanelItem extends React.Component<CombinedProps, {}> {
   handleDelete = () => {
     const { onDelete } = this.props;
     /*
@@ -59,4 +59,4 @@ class LinodeTag extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(LinodeTag);
+export default styled(TagsPanelItem);
