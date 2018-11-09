@@ -4,7 +4,7 @@ import Page from './page';
 
 class Volumes extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
-    get configDrawerClose() { return $('[data-qa-cancel]'); }
+    get configDrawerClose() { return $(this.cancelButton.selector); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeCellLabel() { return $('[data-qa-volume-cell-label]') }
@@ -42,7 +42,7 @@ class Volumes extends Page {
 
         const dialogTitle = $('[data-qa-dialog-title]');
         const dialogConfirm = $('[data-qa-confirm]');
-        const dialogCancel = $('[data-qa-cancel]');
+        const dialogCancel = $(this.cancelButton.selector);
 
         expect(dialogTitle.isVisible()).toBe(true);
         expect(dialogTitle.getText()).toBe('Delete Volume');
