@@ -5,7 +5,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { append, clamp, filter, lensPath, over, path, set, view, when } from 'ramda';
+import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
@@ -417,7 +417,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       //   return prevState;
       // }
 
-      set(L.size, clamp(10, MAX_VOLUME_SIZE, +e.target.value || 0)),
+      set(L.size, +e.target.value || 0),
     ]);
   }
 

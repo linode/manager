@@ -1,4 +1,4 @@
-import { append, clamp, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
+import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -382,7 +382,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       (prevState) => prevState.volumeDrawer.size > MAX_VOLUME_SIZE,
       over(L.volumeDrawer.errors, append({ field: 'size', reason: `Size cannot be over ${MAX_VOLUME_SIZE}.` })),
     ),
-    set(L.volumeDrawer.size, clamp(10, MAX_VOLUME_SIZE, +newSize || 0)),
+    set(L.volumeDrawer.size, +newSize || 0),
   ]);
 
   /** Create / Edit / Resize / Cloning */
