@@ -57,6 +57,8 @@ export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) =>
     )
 };
 
+BackupLinodes.displayName = "BackupLinodes";
+
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled<Props>(BackupLinodes);
