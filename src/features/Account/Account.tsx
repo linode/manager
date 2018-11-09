@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { matchPath, Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
@@ -58,6 +58,7 @@ class Account extends React.Component<Props> {
           <Route exact path={`${url}/settings`} component={GlobalSettings} />
           <Route exact path={`${url}/billing`} component={Billing} />
           <Route exact path={`${url}/users`} component={Users} />
+          <Redirect to={`${url}/settings`} />
         </Switch>
       </React.Fragment>
     );

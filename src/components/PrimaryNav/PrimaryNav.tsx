@@ -4,13 +4,11 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
@@ -33,6 +31,7 @@ const primaryLinks: PrimaryLink[] = [
   { display: 'Longview', href: '/longview' },
   { display: 'StackScripts', href: '/stackscripts' },
   { display: 'Images', href: '/images' },
+  { display: 'Account', href: '/account'},
 ];
 
 type ClassNames =
@@ -287,7 +286,7 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, toggleTheme, closeMenu, managed } = this.props;
+    const { classes, toggleTheme, managed } = this.props;
     const { expandedMenus } = this.state;
     const themeName = (this.props.theme as any).name;
 
@@ -321,70 +320,6 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
             )}>
 
               {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
-
-              <ListItem
-                data-menu-name="account"
-                focusRipple={true}
-                button
-                component="li"
-                role="menuitem"
-                onClick={this.expandMenutItem}
-                className={classNames({
-                  [classes.listItem]: true,
-                  [classes.listItemAccount]: true,
-                  [classes.collapsible]: true,
-                })}
-              >
-                <ListItemText
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.account
-                      || this.linkIsActive('/billing') === true
-                      || this.linkIsActive('/users') === true,
-                  })}
-                >
-                  <KeyboardArrowRight className={classes.arrow} />
-                  Account
-                </ListItemText>
-              </ListItem>
-              <Collapse
-                in={expandedMenus.account
-                  || (this.linkIsActive('/billing') === true)
-                  || (this.linkIsActive('/users') === true)}
-                timeout="auto"
-                component="ul"
-                unmountOnExit
-                className={classes.sublinkPanel}
-              >
-                <li role="menuitem">
-                  <Link
-                    to="/billing"
-                    className={classNames({
-                      [classes.sublink]: true,
-                      [classes.sublinkActive]: this.linkIsActive('/billing') === true,
-                    })}
-                    onClick={closeMenu}
-                  >
-                    Account &amp; Billing
-                </Link>
-                </li>
-                <li role="menuitem">
-                  <Link
-                    to="/users"
-                    className={classNames({
-                      [classes.sublink]: true,
-                      [classes.sublinkActive]: this.linkIsActive('/users') === true,
-                    })}
-                    onClick={closeMenu}
-                  >
-                    Users
-                </Link>
-                </li>
-              </Collapse>
-
-              <Divider className={classes.divider} />
 
               <ListItem
                 button

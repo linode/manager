@@ -10,9 +10,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
 
-interface Props {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = {} & WithStyles<ClassNames>;
 
 const GlobalSettings: React.StatelessComponent<CombinedProps> = (props) =>{
   return(

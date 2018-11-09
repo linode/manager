@@ -6,18 +6,20 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'footnote';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  footnote: {
+    fontSize: 14,
+  },
 });
 
 interface StateProps {
@@ -32,85 +34,67 @@ interface DispatchProps {
   }
 }
 
-interface State {
-  toggled: boolean;
-}
-
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
-class AutoBackups extends React.Component<CombinedProps, State> {
-  state: State = {
-    toggled: this.props.backups_enabled || false,
-  };
+const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
-  toggle = () => {
-    const { toggled } = this.state;
-    this.setState({ toggled: !toggled});
+  const { backups_enabled, classes, error } = props;
+
+  const toggle = () => {
+    const { updateAccount } = props.actions;
+    updateAccount({ backups_enabled: !backups_enabled })
   }
 
-  handleSubmit = () => {
-    const { toggled } = this.state;
-    const { updateAccount } = this.props.actions;
-    updateAccount({ backups_enabled: toggled })
-  }
-
-  renderActions = () => {
-    const { loading } = this.props;
-    return (
-      <ActionsPanel>
-        <Button type="primary" onClick={this.handleSubmit} loading={loading}>Save</Button>
-      </ActionsPanel>
-    );
-  };
-
-  render() {
-    const { toggled } = this.state;
-    return (
-      <React.Fragment>
-        <ExpansionPanel
-          heading="Backup Auto Enrollment"
-          actions={this.renderActions}
-        >
-          <Grid container direction="column">
+  return (
+    <React.Fragment>
+      <ExpansionPanel
+        heading="Backup Auto Enrollment"
+      >
+        <Grid container direction="column" className={classes.root}>
+          <Grid item>
+            <Typography variant="title">
+              Back Up All New Linodes
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body1">
+              This controls whether Linode Backups are enabled, by default, for all Linodes when
+              they are initially created. For each Linode with Backups enabled, your account will
+              be billed the additional hourly rate noted on the
+              <a href="https://linode.com/backups">{` Backups pricing page`}</a>.
+            </Typography>
+          </Grid>
+          {error &&
             <Grid item>
-              <Typography variant="title">
-                Back Up All New Linodes
-              </Typography>
+              <Notice error text="There was an error updating your account settings." />
+            </Grid>
+          }
+          <Grid item container direction="row" alignItems="center">
+            <Grid item>
+              <Toggle
+                onChange={toggle}
+                checked={backups_enabled}
+              />
             </Grid>
             <Grid item>
-              <Typography variant="body1">
-                This controls whether Linode Backups are enabled, by default, for all Linodes when
-                they are initially created. For each Linode with Backups enabled, your account will
-                be billed the additional hourly rate noted on the
-                <a href="https://linode.com/backups">{` Backups pricing page`}</a>.
-              </Typography>
-            </Grid>
-            <Grid item container direction="row" alignItems="center">
-              <Grid item>
-                <Toggle
-                  onChange={this.toggle}
-                  checked={toggled}
-                />
-              </Grid>
-              <Grid item>
-              <Typography variant="body1">
-                {toggled
-                  ? "Auto Enroll All New Linodes in Backups"
-                  : "Don't Enroll New Linodes in Backups Automatically"
-                }
-              </Typography>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Typography variant="body1">
-                For existing Linodes without backups, <a>enable now</a>.
-              </Typography>
+            <Typography variant="body1">
+              {backups_enabled
+                ? "Auto Enroll All New Linodes in Backups"
+                : "Don't Enroll New Linodes in Backups Automatically"
+              }
+            </Typography>
             </Grid>
           </Grid>
-        </ExpansionPanel>
-      </React.Fragment>
-    );
-  }
+          {/* Uncomment after BackupDrawer is merged */}
+          {/* <Grid item>
+            <Typography variant="body1" className={classes.footnote}>
+              For existing Linodes without backups, <a>enable now</a>.
+            </Typography>
+          </Grid> */}
+        </Grid>
+      </ExpansionPanel>
+    </React.Fragment>
+  );
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
@@ -134,6 +118,6 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 const enhanced: any = compose(
   styled,
   connected
-)(AutoBackups)
+)(AutoBackups);
 
 export default enhanced;
