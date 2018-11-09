@@ -19,12 +19,15 @@ describe('Account - Users Suite', () => {
     });
 
     it('should display root user in the table', () => {
-        expect(Users.getTableDetails(0,Users.username.selector).getText()).toBe(browser.options.testUser);
-        expect(Users.getTableDetails(0,Users.userRestriction.selector).getText()).toMatch(/unrestricted/ig);
+        const rootUserName = Users.getTableDetails(0,Users.username.selector);
+        const rootUserRestrictions = Users.getTableDetails(0,Users.userRestriction.selector);
+        expect(rootUserName.getText()).toBe(browser.options.testUser);
+        expect(rootUserRestrictions.getText()).toMatch(/unrestricted/ig);
     });
 
     it('should disable Delete action menu item for root user', () => {
-        Users.getTableDetails(0,Users.userActionMenu.selector).click();
+        const rootUserActionMenu = Users.getTableDetails(0,Users.userActionMenu.selector);
+        rootUserActionMenu.click();
         Users.actionMenuItem.waitForVisible(constants.wait.normal);
 
         const deleteToolTip = $('[data-qa-action-menu-item="Delete"] [data-qa-tooltip]');

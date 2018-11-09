@@ -2,8 +2,12 @@ const { constants } = require('../../constants');
 
 import Profile from '../../pageobjects/profile';
 import Auth from '../../pageobjects/profile/auth.page';
-
-describe('Profile - Two Factor Authentication Suite', () => {
+/*
+The API can get rate limited by the SUDS service
+and enabling/disabling TFA so quickly can hit those limits pretty easily.
+Becasue of this, we need to remove this test.
+*/
+xdescribe('Profile - Two Factor Authentication Suite', () => {
     const serviceError = 'Invalid token. Two-factor auth not enabled. Please try again.';
 
     beforeAll(() => {
