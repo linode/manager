@@ -50,10 +50,10 @@ export default (state: AccountSettingsState = DEFAULT_STATE, action: Action) => 
       return { ...state, loading: false, lastUpdated: Date.now(), error: action.error };
 
     case SUCCESS:
-      return { ...state, loading: false, error: undefined, lastUpdated: Date.now(), data: action.data };
+      return { ...state, loading: false, error: undefined, updateError: undefined, lastUpdated: Date.now(), data: action.data };
 
     case UPDATE:
-      return { ...state, loading: false, error: undefined, lastUpdated: Date.now(), data: action.data };
+      return { ...state, loading: false, error: undefined, updateError: undefined, lastUpdated: Date.now(), data: action.data };
 
     case UPDATE_ERROR:
       return { ...state, loading: false, error: undefined, lastUpdated: Date.now(), updateError: action.error }

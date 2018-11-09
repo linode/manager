@@ -1,6 +1,5 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
-
-
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -22,15 +21,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   backups_enabled: boolean;
-  error: any;
+  errors?: Linode.ApiFieldError[];
   handleToggle: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const displayError = (errors: Linode.ApiFieldError[]) => {
+  return pathOr(
+    "There was an error updating your account settings.",
+    ['response', 'data', 'errors', 0, 'reason'],
+    errors
+    )
+}
+
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
-  const { backups_enabled, classes, error, handleToggle } = props;
+  const { backups_enabled, classes, errors, handleToggle } = props;
 
   return (
     <React.Fragment>
@@ -51,9 +58,9 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               <a href="https://linode.com/backups">{` Backups pricing page`}</a>.
             </Typography>
           </Grid>
-          {error &&
+          {errors &&
             <Grid item>
-              <Notice error text="There was an error updating your account settings." />
+              <Notice error text={displayError(errors)} />
             </Grid>
           }
           <Grid item container direction="row" alignItems="center">

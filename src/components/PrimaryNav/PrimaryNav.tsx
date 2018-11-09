@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import { compose, path } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -437,7 +437,7 @@ interface StateProps {
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
   /** Account Settings */
-  managed: path(['data', 'managed'], state.__resources.accountSettings),
+  managed: pathOr(false, ['data', 'managed'], state.__resources.accountSettings),
 });
 
 export const connected = connect(mapStateToProps, undefined);

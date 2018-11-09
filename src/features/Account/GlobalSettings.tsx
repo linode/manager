@@ -1,4 +1,4 @@
-import { compose, pathOr } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
@@ -20,6 +20,7 @@ interface StateProps {
   loading: boolean;
   backups_enabled: boolean;
   error?: Error;
+  updateError?: Linode.ApiFieldError[];
 }
 
 interface DispatchProps {
@@ -38,7 +39,7 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
   }
 
   render() {
-    const { backups_enabled, error, loading } = this.props;
+    const { backups_enabled, error, loading, updateError } = this.props;
 
     if (loading) { return <CircleProgress /> }
     if (error) { return <ErrorState errorText={"There was an error retrieving your account data."} /> }
@@ -46,7 +47,7 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
     return(
       <AutoBackups
         backups_enabled={backups_enabled}
-        error={error}
+        errors={updateError}
         handleToggle={this.handleToggle}
       />
     )
@@ -56,7 +57,8 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
   loading: pathOr(false, ['__resources', 'accountSettings','loading'], state),
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
-  error: pathOr(undefined, ['__resources', 'accountSettings','error'], state)
+  error: path(['__resources', 'accountSettings','error'], state),
+  updateError: path(['__resources', 'accountSettings','updateError'], state),
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
