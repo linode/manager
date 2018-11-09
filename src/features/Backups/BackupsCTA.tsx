@@ -1,4 +1,6 @@
+import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -6,6 +8,8 @@ import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
+import { handleOpen } from 'src/store/reducers/backupDrawer';
+
 
 type ClassNames = 'root'
   | 'button';
@@ -23,14 +27,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   }
 });
 
-interface Props {
-  onSubmit: () => void;
-}
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, onSubmit } = props;
+  const { classes, linodesWithoutBackups, managed, actions: { openBackupsDrawer }  } = props;
+
+  if (managed || (linodesWithoutBackups && isEmpty(linodesWithoutBackups))) { return null; }
+
   return (
     <Paper className={classes.root} >
       <Grid container direction="column">
@@ -45,7 +49,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button type="primary" className={classes.button} onClick={onSubmit}>Enable Now</Button>
+          <Button type="primary" className={classes.button} onClick={openBackupsDrawer}>Enable Now</Button>
         </Grid>
       </Grid>
 
@@ -53,6 +57,38 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
+interface StateProps {
+  linodesWithoutBackups: Linode.Linode[];
+  managed: boolean;
+}
+
+interface DispatchProps {
+  actions: {
+    openBackupsDrawer: () => void;
+  }
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  linodesWithoutBackups: pathOr([],['backups','data'], state),
+  managed: pathOr(false, ['__resources','accountSettings','data','managed'], state)
+})
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      openBackupsDrawer: () => dispatch(handleOpen()),
+    }
+  };
+};
+
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(BackupsCTA);
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+const enhanced: any = compose(
+  styled,
+  connected
+)(BackupsCTA)
+
+export default enhanced;

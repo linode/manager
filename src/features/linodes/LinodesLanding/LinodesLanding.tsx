@@ -1,7 +1,7 @@
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose, isEmpty, pathOr } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -21,7 +21,7 @@ import { BackupsCTA } from 'src/features/Backups';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
-import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { clearSidebar, setSidebarComponent } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
@@ -125,7 +125,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { typesLastUpdated, typesLoading, typesRequest } = this.props;
-    const { getLinodesWithoutBackups, openBackupsDrawer } = this.props.actions;
+    const { getLinodesWithoutBackups, setSidebar } = this.props.actions;
 
     this.mounted = true;
 
@@ -139,9 +139,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
      */
 
     getLinodesWithoutBackups();
-    if (this.shouldRenderBackupsCTA()) {
-      this.props.actions.setSidebar([<BackupsCTA key={0} onSubmit={openBackupsDrawer}/>])
-    }
+    /* Set the BackupsCTA in the docs sidebar. It will only
+    * render itself for customers who have backups in need of Linodes.
+    */
+   setSidebar([<BackupsCTA key={0} />])
 
 
     if (typesLastUpdated === 0 && !typesLoading) {
@@ -152,24 +153,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
     this.props.actions.clearSidebar();
-  }
-
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { openBackupsDrawer, setSidebar  } = this.props.actions;
-    /* Set the BackupsCTA in the docs sidebar if the user
-    * a) has Linodes without backups enabled and
-    * b) does not have Managed.
-    * Logic for b can be removed after ARB-925 is resolved.
-    */
-    if (prevProps.linodesWithoutBackups.length === 0 &&
-        this.shouldRenderBackupsCTA()) {
-        setSidebar([<BackupsCTA key={0} onSubmit={openBackupsDrawer}/>])
-    }
-  }
-
-  shouldRenderBackupsCTA = () => {
-    const { linodesWithoutBackups, managed } = this.props;
-    return !isEmpty(linodesWithoutBackups) && !managed;
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -443,7 +426,6 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     getLinodesWithoutBackups: () => void;
-    openBackupsDrawer: () => void;
     clearSidebar: () => void;
     setSidebar: (components: JSX.Element[]) => void;
   }
@@ -469,7 +451,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   return {
     actions: {
       getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
-      openBackupsDrawer: () => dispatch(handleOpen()),
       clearSidebar: () => dispatch(clearSidebar()),
       setSidebar: (components: JSX.Element[]) => dispatch(setSidebarComponent(components))
     }

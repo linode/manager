@@ -92,7 +92,8 @@ export default (state: State = defaultState, action: Action) => {
       return { ...state, enabling: true, enableErrors: [], enableSuccess: false, lastUpdated: Date.now() };
 
     case ENABLE_SUCCESS:
-      return { ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true, };
+      return { ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true,
+        data: state.data!.filter((linode: Linode) => !action.data.includes(linode.id)) };
 
     case ENABLE_ERROR:
       return { ...state, enabling: false, lastUpdated: Date.now(), enableErrors: action.data };

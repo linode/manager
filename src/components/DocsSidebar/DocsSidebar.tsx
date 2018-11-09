@@ -33,43 +33,41 @@ type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
 const styled = withStyles(styles, { withTheme: true });
 
-class DocsSidebar extends React.Component<CombinedProps>  {
-  render() {
-    const { classes, sections, docs, style, isSticky } = this.props;
+const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
+  const { classes, sections, docs, style, isSticky } = props;
 
-    if (docs.length === 0) {
-      return null;
-    }
-
-    let stickyStyles;
-    if (isSticky) {
-      stickyStyles = {
-        ...style,
-        paddingTop: 24,
-      };
-    }
-
-    return (
-      <Grid container item style={stickyStyles} className={classes.root}>
-        <Grid item>
-          {sections}
-        </Grid>
-        <Grid item>
-        <Typography
-          role="header"
-          variant="title"
-          className={classes.title}
-          data-qa-sidebar-title
-        >
-          Linode Docs
-        </Typography>
-        {
-          docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)
-        }
-        </Grid>
-      </Grid>
-    );
+  if (docs.length === 0) {
+    return null;
   }
+
+  let stickyStyles;
+  if (isSticky) {
+    stickyStyles = {
+      ...style,
+      paddingTop: 24,
+    };
+  }
+
+  return (
+    <Grid container item style={stickyStyles} className={classes.root}>
+      <Grid item>
+        {sections}
+      </Grid>
+      <Grid item>
+      <Typography
+        role="header"
+        variant="title"
+        className={classes.title}
+        data-qa-sidebar-title
+      >
+        Linode Docs
+      </Typography>
+      {
+        docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)
+      }
+      </Grid>
+    </Grid>
+  );
 }
 
 export default styled<Props>(DocsSidebar);

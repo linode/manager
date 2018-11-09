@@ -55,6 +55,7 @@ describe("Redux backups", () => {
       );
       expect(newState).toHaveProperty('enabling', false);
       expect(newState).toHaveProperty('enableSuccess', true);
+      expect(newState.data).not.toContain(linode1);
     });
     it("should handle ENABLE_ERROR", () => {
       const newState = backups(

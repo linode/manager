@@ -21,7 +21,6 @@ import {
   handleResetSuccess,
   requestLinodesWithoutBackups,
 } from 'src/store/reducers/backupDrawer';
-import { clearSidebar } from 'src/store/reducers/sidebar';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
 // import AutoEnroll from './AutoEnroll';
@@ -52,7 +51,6 @@ interface DispatchProps {
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
-    clearSidebar: () => void;
   },
 }
 
@@ -104,7 +102,6 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
       );
       dismissSuccess();
       close();
-      this.props.actions.clearSidebar();
     }
   }
 
@@ -197,7 +194,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
-      clearSidebar: () => dispatch(clearSidebar())
     }
   };
 };
