@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath, Redirect, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tab from '@material-ui/core/Tab';
@@ -23,9 +23,9 @@ class Account extends React.Component<Props> {
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Global Settings', routeName: `${this.props.match.url}/settings` },
     { title: 'Billing Info', routeName: `${this.props.match.url}/billing` },
     { title: 'Users', routeName: `${this.props.match.url}/users` },
+    { title: 'Global Settings', routeName: `${this.props.match.url}/settings` },
   ];
 
   render() {
@@ -55,10 +55,10 @@ class Account extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
-          <Route exact path={`${url}/settings`} component={GlobalSettings} />
           <Route exact path={`${url}/billing`} component={Billing} />
           <Route exact path={`${url}/users`} component={Users} />
-          <Redirect to={`${url}/settings`} />
+          <Route exact path={`${url}/settings`} component={GlobalSettings} />
+          <Route exact path={`${url}`} component={Billing} />
         </Switch>
       </React.Fragment>
     );

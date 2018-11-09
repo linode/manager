@@ -1,6 +1,5 @@
-import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+
 
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -10,7 +9,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 
 
 type ClassNames = 'root' | 'footnote';
@@ -22,28 +20,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
 });
 
-interface StateProps {
-  loading: boolean;
+interface Props {
   backups_enabled: boolean;
-  error?: Error;
+  error: any;
+  handleToggle: () => void;
 }
 
-interface DispatchProps {
-  actions: {
-    updateAccount: (data: Partial<Linode.AccountSettings>) => void;
-  }
-}
-
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
-  const { backups_enabled, classes, error } = props;
-
-  const toggle = () => {
-    const { updateAccount } = props.actions;
-    updateAccount({ backups_enabled: !backups_enabled })
-  }
+  const { backups_enabled, classes, error, handleToggle } = props;
 
   return (
     <React.Fragment>
@@ -72,7 +59,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item container direction="row" alignItems="center">
             <Grid item>
               <Toggle
-                onChange={toggle}
+                onChange={handleToggle}
                 checked={backups_enabled}
               />
             </Grid>
@@ -86,38 +73,17 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
             </Grid>
           </Grid>
           {/* Uncomment after BackupDrawer is merged */}
-          {/* <Grid item>
+          <Grid item>
             <Typography variant="body1" className={classes.footnote}>
               For existing Linodes without backups, <a>enable now</a>.
             </Typography>
-          </Grid> */}
+          </Grid>
         </Grid>
       </ExpansionPanel>
     </React.Fragment>
   );
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
-  loading: pathOr(false, ['__resources', 'accountSettings','loading'], state),
-  backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
-  error: pathOr(undefined, ['__resources', 'accountSettings','error'], state)
-});
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
-  return {
-    actions: {
-      updateAccount: (data: Partial<Linode.AccountSettings>) => dispatch(updateAccountSettings(data)),
-    }
-  };
-};
-
 const styled = withStyles(styles, { withTheme: true });
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const enhanced: any = compose(
-  styled,
-  connected
-)(AutoBackups);
-
-export default enhanced;
+export default styled(AutoBackups);
