@@ -50,8 +50,11 @@ class DocsSidebar extends React.Component<CombinedProps>  {
     }
 
     return (
-      <Grid item style={stickyStyles} className={classes.root}>
-        {sections}
+      <Grid container item style={stickyStyles} className={classes.root}>
+        <Grid item>
+          {sections}
+        </Grid>
+        <Grid item>
         <Typography
           role="header"
           variant="title"
@@ -63,6 +66,7 @@ class DocsSidebar extends React.Component<CombinedProps>  {
         {
           docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)
         }
+        </Grid>
       </Grid>
     );
   }

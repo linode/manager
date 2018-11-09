@@ -42,7 +42,7 @@ const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
           <Typography variant="body1" >
             Enroll all future Linodes in backups. Your account will be billed
             the additional hourly rate noted on the
-            <a href="https://www.linode.com/backups"> Backups pricing page</a>.
+            <a href="https://www.linode.com/backups" target="_blank"> Backups pricing page</a>.
           </Typography>
           </Grid>
       </Grid>

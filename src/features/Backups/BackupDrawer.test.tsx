@@ -1,21 +1,33 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { linode1, linode3 } from 'src/__data__/linodes';
+import { linode1, linode2, linode3 } from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
+import { getTypeInfo } from 'src/utilities/typesHelpers';
 
 import {
   addErrors,
   addTypeInfo,
   BackupDrawer,
   enhanceLinodes,
+  ExtendedLinode,
+  getTotalPrice,
 } from './BackupDrawer';
 
 const linodes = [linode1, linode3];
+
 const error = {
   linodeId: linode1.id,
   reason: "Error"
 }
+
+const linode1Type = getTypeInfo(linode1.type, types.types);
+const linode2Type = getTypeInfo(linode2.type, types.types);
+
+const extendedLinodes: ExtendedLinode[] = [
+  {...linode1, typeInfo: linode1Type, linodeError: error},
+  {...linode2, typeInfo: linode2Type, linodeError: error},
+]
 
 // Props for shallow rendering
 
@@ -74,6 +86,20 @@ describe("BackupDrawer component", () => {
         {...linode1, typeInfo: undefined, linodeError: undefined},
         {...linode3, typeInfo: undefined, linodeError: undefined}
       ]);
+    });
+  });
+  describe("getTotalPrice function", () => {
+    const price = linode1Type!.addons.backups.price.monthly +
+      linode2Type!.addons.backups.price.monthly;
+    it("should return the total monthly backups price for all Linodes", () => {
+      expect(getTotalPrice(extendedLinodes)).toEqual(price);
+    });
+    it("should ignore Linodes with undefined typeInfo or backup pricing", () => {
+      extendedLinodes.push({...linode3, typeInfo: undefined, linodeError: error});
+      expect(getTotalPrice(extendedLinodes)).toEqual(price);
+    });
+    it("should return 0 if no pricing information is passed in", () => {
+      expect(getTotalPrice(linodes)).toEqual(0);
     });
   });
   describe("Backup Drawer", () => {

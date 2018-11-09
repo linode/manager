@@ -1,4 +1,4 @@
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -6,12 +6,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
-import CircleProgress from 'src/components/CircleProgress';
-import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRowLoading from 'src/components/TableRowLoading';
 
 import { ExtendedLinode } from './BackupDrawer';
+import BackupLinodes from './BackupLinodes';
 
 type ClassNames = 'root' | 'container';
 
@@ -34,42 +34,6 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const displayPrice = (price: string | number) => {
-  if (typeof price === 'string') { return price; }
-  return _displayPrice(price);
-}
-
-const getLabel = (type?: Linode.LinodeType) =>
-  pathOr('Unknown', ['label'], type);
-
-const getPrice = (type?: Linode.LinodeType) =>
-  pathOr("Unavailable",['addons', 'backups', 'price', 'monthly'], type);
-
-const renderLoading = (container: string) =>
-  <TableRow className={container} >
-    <TableCell>
-      <CircleProgress mini />
-    </TableCell>
-  </TableRow>
-
-const renderLinodes = (linodes: ExtendedLinode[]) =>
-  linodes && linodes.map((linode: ExtendedLinode, idx: number) =>
-    <React.Fragment key={idx}>
-      <TableRow data-qa-linodes >
-        <TableCell >{linode.label}</TableCell>
-        <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-        <TableCell >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
-      </TableRow>
-      {/* @todo need error handling pattern for displaying individual
-       * errors for each Linode */}
-      {/* {linode.linodeError &&
-        <TableRow>
-          <TableCell>{linode.linodeError.reason}</TableCell>
-        </TableRow>
-      } */}
-      </React.Fragment>
-  )
-
 export const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linodes, loading } = props;
 
@@ -89,8 +53,8 @@ export const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => 
       </TableHead>
       <TableBody>
         {loading && isEmpty(linodes)
-          ? renderLoading(classes.container)
-          : renderLinodes(linodes)
+          ? <TableRowLoading colSpan={12} />
+          : <BackupLinodes linodes={linodes} />
         }
       </TableBody>
     </Table>

@@ -32,13 +32,12 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
+export interface ExtendedLinode extends LinodeWithTypeInfo {
+  linodeError?: BackupError;
+}
 
 export interface LinodeWithTypeInfo extends Linode.Linode {
   typeInfo?: Linode.LinodeType;
-}
-
-export interface ExtendedLinode extends LinodeWithTypeInfo {
-  linodeError?: BackupError;
 }
 
 interface TypesContextProps {
@@ -77,6 +76,12 @@ type CombinedProps = DispatchProps
   & TypesContextProps
   & WithStyles<ClassNames>;
 
+
+export const getTotalPrice = (linodes: ExtendedLinode[]) => {
+  return linodes.reduce((prevValue: number, linode: ExtendedLinode) => {
+    return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
+  }, 0)
+}
 export class BackupDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     backupsToggle: false,
@@ -105,12 +110,6 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
 
   toggleBackups = () => {
     this.setState({ backupsToggle: !this.state.backupsToggle });
-  }
-
-  getTotalPrice = (linodes: ExtendedLinode[]) => {
-    return linodes.reduce((prevValue: number, linode: ExtendedLinode) => {
-      return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
-    }, 0)
   }
 
   handleSubmit = () => {
@@ -153,7 +152,7 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <DisplayPrice
-              price={this.getTotalPrice(linodesWithoutBackups)}
+              price={getTotalPrice(linodesWithoutBackups)}
               interval="mo"
             />
           </Grid>

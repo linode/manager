@@ -77,7 +77,7 @@ export default (state: State = defaultState, action: Action) => {
       return { ...state, lastUpdated: Date.now(), open: true };
 
     case CLOSE:
-      return { ...state, lastUpdated: Date.now(), open: false };
+      return { ...state, lastUpdated: Date.now(), open: false, error: undefined, enableErrors: [] };
 
     case LOAD:
       return { ...state, loading: true };
@@ -93,8 +93,6 @@ export default (state: State = defaultState, action: Action) => {
 
     case ENABLE_SUCCESS:
       return { ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true, };
-        /* remove Linodes that were included in our success accumulator. */
-      // data: state.data!.filter((linode: Linode) => !action.data.includes(linode.id)) };
 
     case ENABLE_ERROR:
       return { ...state, enabling: false, lastUpdated: Date.now(), enableErrors: action.data };

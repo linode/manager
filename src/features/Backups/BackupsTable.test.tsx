@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import * as linodes from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
-import CircleProgress from 'src/components/CircleProgress';
+import TableRowLoading from 'src/components/TableRowLoading';
 
 import { ExtendedLinode } from './BackupDrawer';
 import { BackupsTable } from './BackupsTable';
@@ -27,13 +27,13 @@ describe("BackupsTable component", () => {
   });
   it("should display a loading spinner", () => {
     expect(component.containsMatchingElement(
-      <CircleProgress mini />
+      <TableRowLoading colSpan={12} />
     )).toBeTruthy();
   });
   it("should display linodes", () => {
+    expect(component.find('WithStyles(BackupLinodes)')).toHaveLength(0);
     component.setProps({ linodes: [linode1, linode2], loading: false });
-    expect(component.find('[data-qa-linodes]'))
-      .toHaveLength(2);
+    expect(component.find('WithStyles(BackupLinodes)')).toHaveLength(1);
   });
 });
 

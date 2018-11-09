@@ -24,13 +24,15 @@ describe("Redux backups", () => {
         .toHaveProperty('open', true);
     });
     it("should handle CLOSE", () => {
-      expect(backups(
-        {...B.defaultState, open: true }, B.handleClose()))
-        .toHaveProperty('open', false);
+      const newState = backups(
+        {...B.defaultState, open: true, error: apiError, enableErrors: [error] }, B.handleClose());
+        expect(newState).toHaveProperty('open', false);
+        expect(newState).toHaveProperty('error', undefined);
+        expect(newState).toHaveProperty('enableErrors', []);
     });
     it("should handle ERROR", () => {
       const newState = backups(
-        {...B.defaultState, loading: true }, B.handleError('Error'));
+        {...B.defaultState, loading: true, }, B.handleError('Error'));
       expect(newState).toHaveProperty('loading', false);
       expect(newState).toHaveProperty('error', 'Error');
     });
@@ -53,8 +55,6 @@ describe("Redux backups", () => {
       );
       expect(newState).toHaveProperty('enabling', false);
       expect(newState).toHaveProperty('enableSuccess', true);
-      // Currently this functionality is commented out in the reducer.
-      // expect(newState.data).not.toContain(linode1);
     });
     it("should handle ENABLE_ERROR", () => {
       const newState = backups(
