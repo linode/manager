@@ -53,6 +53,7 @@ const styles: StyleRulesCallback = (theme) => ({
     maxHeight: 48,
     position: 'relative',
     top: 1,
+    left: -2.
   },
   initial: {
     border: '1px solid transparent',
