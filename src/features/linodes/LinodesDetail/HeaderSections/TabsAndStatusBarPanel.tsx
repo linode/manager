@@ -4,7 +4,7 @@ import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import {
   StyleRulesCallback,
-  
+
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';

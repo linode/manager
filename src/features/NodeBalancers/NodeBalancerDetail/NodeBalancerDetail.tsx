@@ -1,16 +1,14 @@
-import { compose, pathOr } from 'ramda';
+import { compose, last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import  KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
+import Breadcrumb from 'src/components/Breadcrumb';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import EditableText from 'src/components/EditableText';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
@@ -122,9 +120,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     this.setState({ ApiError: undefined, labelInput: this.state.nodeBalancer.label });
   }
 
-  handleGoBack = () => {
-    const { history } = this.props;
-    history.push('/nodebalancers')
+
+  getLabelLink = (): string | undefined => {
+    return last(location.pathname.split('/')) !== 'summary'
+      ? 'summary'
+      : undefined;
   }
 
   static docs: Linode.Doc[] = [
@@ -173,19 +173,16 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
-            <IconButton
-              onClick={this.handleGoBack}
-              className={classes.backButton}
-            >
-              <KeyboardArrowLeft />
-            </IconButton>
-            <EditableText
-              variant="headline"
-              text={nodeBalancerLabel}
-              onEdit={this.updateLabel}
-              onCancel={this.cancelUpdate}
-              errorText={apiErrorText}
-              data-qa-label
+            <Breadcrumb
+              linkTo="/nodebalancers"
+              linkText="NodeBalancers"
+              label={nodeBalancerLabel}
+              labelLink={this.getLabelLink()}
+              onEditHandlers={{
+                onEdit: this.updateLabel,
+                onCancel: this.cancelUpdate,
+                errorText: apiErrorText
+              }}
             />
           </Grid>
         </Grid>
