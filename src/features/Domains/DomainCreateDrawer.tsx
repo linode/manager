@@ -12,6 +12,7 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
+import TagsInput from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
@@ -41,6 +42,7 @@ interface State {
   type: 'master' | 'slave';
   soaEmail: string;
   cloneName: string;
+  tags: string[];
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   master_ips: string[];
@@ -146,6 +148,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-soa-email
           />
         }
+        <TagsInput />
         {mode === 'create' && type === 'slave' &&
           <React.Fragment>
             {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP addresses must be valid IPv4 addresses.`} />}
@@ -210,7 +213,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   create = () => {
     const { onSuccess } = this.props;
-    const { domain, type, soaEmail, master_ips } = this.state;
+    const { domain, type, soaEmail, master_ips, tags } = this.state;
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
 
@@ -228,8 +231,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     }
 
     const data = type === 'master'
-      ? { domain, type, soa_email: soaEmail }
-      : { domain, type, master_ips: finalMasterIPs }
+      ? { domain, type, tags, soa_email: soaEmail }
+      : { domain, type, tags, master_ips: finalMasterIPs }
 
     this.setState({ submitting: true });
     createDomain(data)
@@ -299,6 +302,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value })
+
+  updateTags = (tags: string[]) =>
+    this.setState({ tags })
+
 
   updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') =>
     this.setState({ type: value })

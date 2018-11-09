@@ -1,1 +1,1 @@
-export { default, Props as TagsInputProps } from './TagsInput';
+export { default } from './TagsInput';
