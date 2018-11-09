@@ -14,6 +14,7 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   history: null,
   userSSHKeys: [],
+  accountBackups: false,
   tagObject: {
     accountTags: [],
     selectedTags: [],

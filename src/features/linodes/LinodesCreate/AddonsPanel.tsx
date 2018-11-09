@@ -1,4 +1,6 @@
+import { compose } from 'ramda';
 import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -74,18 +76,17 @@ const styled = withStyles(styles, { withTheme: true });
 
 interface Props {
   backups: boolean;
+  accountBackups: boolean;
   backupsMonthly: number | null;
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
+type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 class AddonsPanel extends React.Component<CombinedProps> {
-  renderBackupsPrice() {
+  renderBackupsPrice = () => {
     const { classes, backupsMonthly } = this.props;
-
     return backupsMonthly && (
       <Grid item className={classes.subLabel}>
         <Typography variant="caption">
@@ -95,8 +96,22 @@ class AddonsPanel extends React.Component<CombinedProps> {
     );
   }
 
+  renderHelpText = () => {
+    const { accountBackups } = this.props;
+    return accountBackups
+      ? <React.Fragment>
+          You have enabled automatic backups for your account. This Linode will automatically
+          have backups enabled. To change this setting, <Link to={'/account/settings'}>click here.</Link>
+        </React.Fragment>
+      : <React.Fragment>
+          Three backup slots are executed and rotated automatically: a daily backup, a 2-7
+          day old backup, and an 8-14 day old backup. Plans are priced according to the
+          Linode plan selected above.
+        </React.Fragment>
+  }
+
   render() {
-    const { classes, changeBackups, changePrivateIP } = this.props;
+    const { accountBackups, classes, changeBackups, changePrivateIP } = this.props;
 
     return (
       <Paper className={classes.root} data-qa-add-ons>
@@ -108,17 +123,16 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 className={classes.label}
                 control={
                   <CheckBox
-                    checked={this.props.backups}
+                    checked={accountBackups || this.props.backups}
                     onChange={() => changeBackups()}
+                    disabled={accountBackups}
                   />
                 }
                 label="Backups"
               />
               {this.renderBackupsPrice()}
               <Typography variant="caption" className={classes.caption}>
-                Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-                day old backup, and an 8-14 day old backup. Plans are priced according to the
-                Linode plan selected above.
+                {this.renderHelpText()}
               </Typography>
             </Grid>
           </Grid>
@@ -147,4 +161,11 @@ class AddonsPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled(RenderGuard<CombinedProps>(AddonsPanel));
+
+const enhanced: any = compose(
+  styled,
+  withRouter,
+  RenderGuard,
+)(AddonsPanel)
+
+export default enhanced;

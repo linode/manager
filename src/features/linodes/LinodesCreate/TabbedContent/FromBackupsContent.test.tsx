@@ -8,6 +8,7 @@ import { FromBackupsContent } from './FromBackupsContent';
 const mockProps = {
   linodes: [],
   types: [],
+  accountBackups: false,
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),
   getTypeInfo: jest.fn(),
@@ -32,6 +33,7 @@ const mockPropsWithNotice = {
     level: 'warning' as 'warning' | 'error',
   },
   linodes: [],
+  accountBackups: false,
   types: [],
   extendLinodes: jest.fn(),
   getBackupsMonthlyPrice: jest.fn(),

@@ -14,6 +14,7 @@ const mockProps = {
   getRegionInfo: jest.fn(),
   getTypeInfo: jest.fn(),
   history: null,
+  accountBackups: false,
 };
 
 describe('FromImageContent', () => {
