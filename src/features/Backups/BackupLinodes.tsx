@@ -17,12 +17,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  linodes: any[];
+  linodes: ExtendedLinode[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const displayPrice = (price: string | number) => {
+export const displayPrice = (price: string | number) => {
   if (typeof price === 'string') { return price; }
   return _displayPrice(price);
 }
@@ -33,7 +33,7 @@ const getLabel = (type?: Linode.LinodeType) =>
 const getPrice = (type?: Linode.LinodeType) =>
   pathOr("Unavailable",['addons', 'backups', 'price', 'monthly'], type);
 
-const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) => {
+export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) => {
   const { linodes } = props;
   return (
     <React.Fragment>
