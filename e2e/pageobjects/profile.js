@@ -10,7 +10,7 @@ export const dialogMap = {
     confirm: '[data-qa-button-confirm]',
 }
 
-export class OauthCreateDrawer {
+export class OauthCreateDrawer extends Page {
     get title() { return $('[data-qa-drawer-title]'); }
     get label() { return $('[data-qa-add-label] input'); }
     get submit() { return $(this.submitButton.selector); }
@@ -33,7 +33,7 @@ export class OauthCreateDrawer {
     }
 }
 
-export class TokenCreateDrawer {
+export class TokenCreateDrawer extends Page {
     get title() { return $('[data-qa-drawer-title]'); }
     get accessColumn() { return $$('[data-qa-perm-access]'); }
     get noneColumn() { return $('[data-qa-perm-none]'); }
