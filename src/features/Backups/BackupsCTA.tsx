@@ -19,7 +19,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     padding: theme.spacing.unit * 2,
     margin: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit * 3}px 0`,
     [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing.unit * 3,
+      marginTop: -theme.spacing.unit,
+      width: '100%',
     },
   },
   button: {

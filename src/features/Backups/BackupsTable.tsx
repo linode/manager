@@ -40,7 +40,6 @@ export const BackupsTable: React.StatelessComponent<CombinedProps> = (props) => 
   return (
     <Table
       tableClass={classes.root}
-      isResponsive={false}
       border
       spacingTop={16}
     >

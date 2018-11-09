@@ -8,19 +8,27 @@ import Grid from 'src/components/Grid';
 
 import DocComponent, { Doc } from './DocComponent';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root'
+  | 'title'
+  | 'gridItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     [theme.breakpoints.down('md')]: {
       position: 'relative !important',
       left: `${theme.spacing.unit}px !important`,
+      width: '100%',
     },
   },
   title: {
     fontSize: '1.5rem',
     color: theme.color.green,
   },
+  gridItem: {
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    }
+  }
 });
 
 interface Props {
@@ -50,10 +58,10 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
 
   return (
     <Grid container item style={stickyStyles} className={classes.root}>
-      <Grid item>
+      <Grid item className={classes.gridItem}>
         {sections}
       </Grid>
-      <Grid item>
+      <Grid item className={classes.gridItem}>
       <Typography
         role="header"
         variant="title"
