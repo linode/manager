@@ -19,7 +19,6 @@ interface ActionMeta {
 export interface TagObject {
   actions: TagActionsObject;
   errors?: Linode.ApiFieldError[];
-  accountTags: Item[];
   selectedTags: Item[];
   newTags: Item[];
 }
@@ -31,7 +30,6 @@ interface Props {
 }
 
 const L = {
-  accountTags: lensPath(['tagObject','accountTags']),
   selectedTags: lensPath(['tagObject', 'selectedTags']),
   newTags: lensPath(['tagObject','newTags']),
   errors: lensPath(['tagObject', 'errors']),
@@ -64,8 +62,8 @@ class TagsInput extends React.Component<Props> {
   }
 
   state = {
-    tagObject: {
-      accountTags: [],
+    accountTags: [],
+      tagObject: {
       selectedTags: [],
       newTags: [],
       errors: [],
@@ -78,10 +76,10 @@ class TagsInput extends React.Component<Props> {
   componentDidMount() {
     getTags()
       .then((response) => {
-        const tags: Item[] = response.data.map((tag:Tag) => { 
+        const accountTags: Item[] = response.data.map((tag:Tag) => { 
           return { label: tag.label, value: tag.label }
         });
-        this.setState(set(L.accountTags, tags));
+        this.setState({ accountTags });
       })
       .catch((errors) => {
         const defaultError = [{ reason: 'There was an error retrieving your tags.' }];
@@ -102,7 +100,8 @@ class TagsInput extends React.Component<Props> {
 
   render() {
     if (!this.state.tagObject) { return null; }
-    const { accountTags, actions, errors, selectedTags } = this.state.tagObject;
+    const { accountTags } = this.state;
+    const { actions, errors } = this.state.tagObject;
     const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
     // Label refers to the tag label, not the Linode label
     const labelError = hasErrorFor('label');
