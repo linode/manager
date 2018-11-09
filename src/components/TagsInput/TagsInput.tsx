@@ -11,7 +11,6 @@ import composeState from 'src/utilities/composeState';
 export interface TagActionsObject {
   addTag: (selected:Item[]) => void;
   createTag: (inputValue:string) => void;
-  getLinodeTagList: () => string[];
 }
 
 export interface TagObject {
@@ -63,11 +62,6 @@ class TagsInput extends React.Component<Props> {
     ])
   }
 
-  getLinodeTagList = () : string[] => {
-    const { selectedTags } = this.state.tagObject;
-    return this.getTagList(selectedTags);
-  }
-
   tagToItem = (tag:string) => {
     return { value: tag, label: tag }
   }
@@ -81,7 +75,6 @@ class TagsInput extends React.Component<Props> {
       actions: {
         addTag: this.addTag,
         createTag: this.createTag,
-        getLinodeTagList: this.getLinodeTagList,
       }
     }
   }
@@ -106,9 +99,8 @@ class TagsInput extends React.Component<Props> {
 
 
   getEmptyMessage = (value:NoOptionsMessageProps) => {
-    const { getLinodeTagList } = this.state.tagObject!.actions;
-    const tags = getLinodeTagList();
-    if (tags.includes(value.inputValue)) { return 'This tag is already selected.'}
+    const { value: tags } = this.props;
+    if (tags.map(tag => tag.value).includes(value.inputValue)) { return 'This tag is already selected.'}
     else { return "No results." }
   }
 

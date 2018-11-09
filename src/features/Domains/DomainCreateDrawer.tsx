@@ -67,6 +67,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     type: 'master',
     soaEmail: '',
     cloneName: '',
+    tags: [],
     submitting: false,
     errors: [],
     master_ips: [],
