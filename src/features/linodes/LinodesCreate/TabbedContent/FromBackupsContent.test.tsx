@@ -110,7 +110,7 @@ describe('FromBackupsContent', () => {
     });
 
     it('should render SelectAddOns panel', () => {
-      expect(component.find('WithStyles(WithTheme(WithRenderGuard(AddonsPanel)))')).toHaveLength(1);
+      expect(component.find('WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))')).toHaveLength(1);
     });
   });
 });

@@ -78,6 +78,6 @@ describe('FromImageContent', () => {
 
   it('should render SelectAddOns panel', () => {
     expect(componentWithLinodes
-      .find('WithStyles(WithTheme(WithRenderGuard(AddonsPanel)))')).toHaveLength(1);
+      .find('WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))')).toHaveLength(1);
   });
 });

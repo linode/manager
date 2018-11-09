@@ -14,7 +14,7 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   history: null,
   userSSHKeys: [],
-  accountBackups: false,
+  accountBackups: true,
   tagObject: {
     accountTags: [],
     selectedTags: [],
@@ -109,6 +109,6 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(component.find('WithStyles(WithTheme(WithRenderGuard(AddonsPanel)))')).toHaveLength(1);
+    expect(component.find('WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))')).toHaveLength(1);
   });
 });
