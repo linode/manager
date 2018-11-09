@@ -18,6 +18,7 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { Item } from 'src/components/EnhancedSelect/Select';
 
 type ClassNames = 'root' | 'masterIPErrorNotice';
 
@@ -42,7 +43,7 @@ interface State {
   type: 'master' | 'slave';
   soaEmail: string;
   cloneName: string;
-  tags: string[];
+  tags: Item[];
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   master_ips: string[];
@@ -93,7 +94,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, open, mode } = this.props;
-    const { type, domain, soaEmail, cloneName, errors, submitting } = this.state;
+    const { type, domain, soaEmail, cloneName, errors, submitting, tags } = this.state;
 
     const errorFor = getAPIErrorFor(this.errorResources, errors);
 
@@ -148,7 +149,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-soa-email
           />
         }
-        <TagsInput />
+        <TagsInput
+            value={tags}
+            onChange={this.updateTags}
+          />
         {mode === 'create' && type === 'slave' &&
           <React.Fragment>
             {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP addresses must be valid IPv4 addresses.`} />}
@@ -213,7 +217,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   create = () => {
     const { onSuccess } = this.props;
-    const { domain, type, soaEmail, master_ips, tags } = this.state;
+    const { domain, type, soaEmail, master_ips } = this.state;
+    const tags = this.state.tags.map(tag => tag.value);
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
 
