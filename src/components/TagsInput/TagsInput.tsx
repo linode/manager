@@ -9,8 +9,11 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import composeState from 'src/utilities/composeState';
 
 export interface TagActionsObject {
-  addTag: (selected:Item[]) => void;
   createTag: (inputValue:string) => void;
+}
+
+interface ActionMeta {
+  action: string;
 }
 
 export interface TagObject {
@@ -22,8 +25,9 @@ export interface TagObject {
 }
 
 interface Props {
-  tagObject?: TagObject;
   tagError?: string;
+  value: Item[];
+  onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
 }
 
 const L = {
@@ -36,13 +40,6 @@ const L = {
 
 class TagsInput extends React.Component<Props> {
   composeState = composeState;
-
-  addTag = (selected:Item[]) => {
-    this.composeState([
-      set(L.selectedTags, selected),
-      set(L.errors, undefined)
-    ]);
-  }
 
   createTag = (inputValue:string) => {
     const { newTags, selectedTags } = this.state.tagObject;
@@ -73,7 +70,6 @@ class TagsInput extends React.Component<Props> {
       newTags: [],
       errors: [],
       actions: {
-        addTag: this.addTag,
         createTag: this.createTag,
       }
     }
