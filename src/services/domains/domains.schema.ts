@@ -10,6 +10,7 @@ const domainSchemaBase = object().shape({
     .required('Domain is required.')
     .matches(/([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/, 'Domain is not valid.'),
   status: mixed().oneOf(['disabled', 'active', 'edit_mode', 'has_errors']),
+  tags: array(),
   description: string()
     .min(1, 'Description must be between 1 and 255 characters.')
     .max(255, 'Description must be between 1 and 255 characters.'),
