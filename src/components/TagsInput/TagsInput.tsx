@@ -53,7 +53,7 @@ class TagsInput extends React.Component<Props> {
   componentDidMount() {
     getTags()
       .then((response) => {
-        const accountTags: Item[] = response.data.map((tag: Tag) => { 
+        const accountTags: Item[] = response.data.map((tag: Tag) => {
           return { label: tag.label, value: tag.label }
         });
         this.setState({ accountTags });
