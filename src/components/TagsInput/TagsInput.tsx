@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { concat, lensPath, pathOr, set } from 'ramda';
+import { concat } from 'ramda';
 
 import Select, { Item, NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
 
@@ -9,19 +9,8 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 
-export interface TagActionsObject {
-  createTag: (inputValue:string) => void;
-}
-
 export interface ActionMeta {
   action: string;
-}
-
-export interface TagObject {
-  actions: TagActionsObject;
-  errors?: Linode.ApiFieldError[];
-  selectedTags: Item[];
-  newTags: Item[];
 }
 
 export interface Props {
@@ -30,32 +19,23 @@ export interface Props {
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
 }
 
-const L = {
-  selectedTags: lensPath(['tagObject', 'selectedTags']),
-  newTags: lensPath(['tagObject','newTags']),
-  errors: lensPath(['tagObject', 'errors']),
-};
-
-
 class TagsInput extends React.Component<Props> {
   composeState = composeState;
 
   createTag = (inputValue:string) => {
-    const { newTags, selectedTags } = this.state.tagObject;
-    this.setState(set(L.errors, undefined));
+    const { newTags, selectedTags } = this.state;
+    this.setState({ errors: undefined });
     if (inputValue.length < 3 || inputValue.length > 25) {
-      this.setState(set(L.errors, 
-        [{'field': 'label', 'reason': 'Length must be 3-25 characters'}]
-      ));
+      this.setState({errors: [{'field': 'label', 'reason': 'Length must be 3-25 characters'}] });
       return;
     }
     const newTag: Item = this.tagToItem(inputValue);
-    const tags = concat(newTags, [newTag]);
-    const linodeTags = concat(selectedTags, [newTag]);
-    this.composeState([
-      set(L.newTags, tags),
-      set(L.selectedTags, linodeTags)
-    ])
+    const updatedTags = concat(newTags, [newTag]);
+    const updatedSelectedTags = concat(selectedTags, [newTag]);
+    this.setState({
+      tags: updatedTags,
+      selectedTags: updatedSelectedTags,
+    });
   }
 
   tagToItem = (tag:string) => {
@@ -64,14 +44,9 @@ class TagsInput extends React.Component<Props> {
 
   state = {
     accountTags: [],
-      tagObject: {
-      selectedTags: [],
-      newTags: [],
-      errors: [],
-      actions: {
-        createTag: this.createTag,
-      }
-    }
+    selectedTags: [],
+    newTags: [],
+    errors: [],
   }
 
   componentDidMount() {
@@ -84,7 +59,7 @@ class TagsInput extends React.Component<Props> {
       })
       .catch((errors) => {
         const defaultError = [{ reason: 'There was an error retrieving your tags.' }];
-        this.setState(set(L.errors, pathOr(defaultError, ['response', 'data', 'errors'], errors)));
+        this.setState({error: defaultError});
       })
   }
 
@@ -100,9 +75,7 @@ class TagsInput extends React.Component<Props> {
   }
 
   render() {
-    if (!this.state.tagObject) { return null; }
-    const { accountTags } = this.state;
-    const { actions, errors } = this.state.tagObject;
+    const { accountTags, errors } = this.state;
     const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
     // Label refers to the tag label, not the Linode label
     const labelError = hasErrorFor('label');
@@ -118,7 +91,7 @@ class TagsInput extends React.Component<Props> {
         errorText={labelError || tagError || generalError}
         value={value}
         onChange={onChange}
-        createNew={actions.createTag}
+        createNew={this.createTag}
         noOptionsMessage={this.getEmptyMessage}
       />
     )
