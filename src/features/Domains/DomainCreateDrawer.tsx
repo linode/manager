@@ -12,7 +12,7 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import TagsInput, { ActionMeta } from 'src/components/TagsInput';
+import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
@@ -35,11 +35,6 @@ interface Props {
   mode: 'clone' | 'create';
   cloneID?: number;
   domain?: string;
-}
-
-interface Tag {
-  value: string;
-  label: string;
 }
 
 interface State {
@@ -313,12 +308,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value })
 
-  updateTags = (selected: Tag | Tag[], actionMeta: ActionMeta) => {
-    if (!Array.isArray(selected)) {
-      this.setState({ tags: [ selected ] })
-    } else {
-      this.setState({ tags: selected })
-    }
+  updateTags = (selected: Tag[]) => {
+    this.setState({ tags: selected })
   }
 
 

@@ -4,38 +4,40 @@ import { concat } from 'ramda';
 
 import Select, { Item, NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
 
-import { getTags, Tag } from 'src/services/tags';
+import { getTags } from 'src/services/tags';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 
-export interface ActionMeta {
-  action: string;
+export interface Tag {
+  value: string;
+  label: string;
 }
 
 export interface Props {
   tagError?: string;
   value: Item[];
-  onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
+  onChange: (selected: Item | Item[]) => void;
 }
 
 class TagsInput extends React.Component<Props> {
   composeState = composeState;
 
   createTag = (inputValue:string) => {
-    const { newTags, selectedTags } = this.state;
+    const { accountTags } = this.state;
+    const { value, onChange } = this.props;
     this.setState({ errors: undefined });
     if (inputValue.length < 3 || inputValue.length > 25) {
       this.setState({errors: [{'field': 'label', 'reason': 'Length must be 3-25 characters'}] });
       return;
     }
     const newTag: Item = this.tagToItem(inputValue);
-    const updatedTags = concat(newTags, [newTag]);
-    const updatedSelectedTags = concat(selectedTags, [newTag]);
+    const updatedTags = concat(accountTags, [newTag]);
+    const updatedSelectedTags = concat(value, [newTag]);
     this.setState({
-      tags: updatedTags,
-      selectedTags: updatedSelectedTags,
+      accountTags: updatedTags,
     });
+    onChange(updatedSelectedTags);
   }
 
   tagToItem = (tag:string) => {
@@ -45,14 +47,13 @@ class TagsInput extends React.Component<Props> {
   state = {
     accountTags: [],
     selectedTags: [],
-    newTags: [],
     errors: [],
   }
 
   componentDidMount() {
     getTags()
       .then((response) => {
-        const accountTags: Item[] = response.data.map((tag:Tag) => { 
+        const accountTags: Item[] = response.data.map((tag: Tag) => { 
           return { label: tag.label, value: tag.label }
         });
         this.setState({ accountTags });
