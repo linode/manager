@@ -12,13 +12,12 @@ import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import TagsInput from 'src/components/TagsInput';
+import TagsInput, { ActionMeta } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Item } from 'src/components/EnhancedSelect/Select';
 
 type ClassNames = 'root' | 'masterIPErrorNotice';
 
@@ -38,12 +37,17 @@ interface Props {
   domain?: string;
 }
 
+interface Tag {
+  value: string;
+  label: string;
+}
+
 interface State {
   domain: string;
   type: 'master' | 'slave';
   soaEmail: string;
   cloneName: string;
-  tags: Item[];
+  tags: Tag[];
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   master_ips: string[];
@@ -242,7 +246,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     this.setState({ submitting: true });
     createDomain(data)
-      .then((domainData) => {
+      .then((domainData: Linode.Domain) => {
         if (!this.mounted) { return; }
         this.reset();
         onSuccess(domainData);
@@ -309,8 +313,14 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value })
 
-  updateTags = (tags: string[]) =>
-    this.setState({ tags })
+  updateTags = (selected: Tag | Tag[], actionMeta: ActionMeta) => {
+    if (!Array.isArray(selected)) {
+      this.setState({ tags: [ selected ] })
+    } else {
+      this.setState({ tags: selected })
+    }
+  }
+
 
 
   updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') =>

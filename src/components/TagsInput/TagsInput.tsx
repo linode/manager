@@ -2,17 +2,18 @@ import * as React from 'react';
 
 import { concat, lensPath, pathOr, set } from 'ramda';
 
-import Select, { NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
+import Select, { Item, NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
+
 import { getTags, Tag } from 'src/services/tags';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import composeState from 'src/utilities/composeState';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
 
 export interface TagActionsObject {
   createTag: (inputValue:string) => void;
 }
 
-interface ActionMeta {
+export interface ActionMeta {
   action: string;
 }
 
@@ -23,7 +24,7 @@ export interface TagObject {
   newTags: Item[];
 }
 
-interface Props {
+export interface Props {
   tagError?: string;
   value: Item[];
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
