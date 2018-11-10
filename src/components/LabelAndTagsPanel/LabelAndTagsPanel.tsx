@@ -44,7 +44,7 @@ interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   isForm?: IsFormProps;
-  tagsInputProps: TagInputProps;
+  tagsInputProps?: TagInputProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -77,7 +77,7 @@ class InfoPanel extends React.Component<CombinedProps> {
                 {error && <Notice text={error} error />}
                 <TextField data-qa-label-panel {...labelFieldProps} />
               </div>
-              <TagsInput {...tagsInputProps} />
+              {tagsInputProps && <TagsInput {...tagsInputProps} />}
               {!!isForm.action &&
                 <ActionsPanel
                   className={isForm ? classes.expPanelButton : ''}
@@ -97,7 +97,7 @@ class InfoPanel extends React.Component<CombinedProps> {
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} data-qa-label-input />
-              <TagsInput {...tagsInputProps} />
+              {tagsInputProps && <TagsInput {...tagsInputProps} />}
             </div>
           </Paper>
         }

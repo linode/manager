@@ -122,7 +122,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
           <FormControlLabel value="master" label="Master" control={<Radio />} />
           <FormControlLabel value="slave" label="Slave" control={<Radio />} />
         </RadioGroup>
-
         <TextField
           errorText={(mode === 'create' || '') && errorFor('domain')}
           value={domain}
@@ -140,6 +139,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-clone-name
           />
         }
+        <TagsInput
+          value={tags}
+          onChange={this.updateTags}
+        />
         {mode === 'create' && type === 'master' &&
           <TextField
             errorText={errorFor('soa_email')}
@@ -149,10 +152,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-soa-email
           />
         }
-        <TagsInput
-            value={tags}
-            onChange={this.updateTags}
-          />
         {mode === 'create' && type === 'slave' &&
           <React.Fragment>
             {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP addresses must be valid IPv4 addresses.`} />}
