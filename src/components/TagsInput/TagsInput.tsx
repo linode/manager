@@ -14,13 +14,18 @@ export interface Tag {
   label: string;
 }
 
+export interface State {
+  accountTags: Item[],
+  errors: Linode.ApiFieldError[] | undefined,
+}
+
 export interface Props {
   tagError?: string;
   value: Item[];
-  onChange: (selected: Item | Item[]) => void;
+  onChange: (selected: Item[]) => void;
 }
 
-class TagsInput extends React.Component<Props> {
+class TagsInput extends React.Component<Props, State> {
   composeState = composeState;
 
   createTag = (inputValue:string) => {
@@ -44,9 +49,8 @@ class TagsInput extends React.Component<Props> {
     return { value: tag, label: tag }
   }
 
-  state = {
+  state: State = {
     accountTags: [],
-    selectedTags: [],
     errors: [],
   }
 
@@ -60,7 +64,7 @@ class TagsInput extends React.Component<Props> {
       })
       .catch((errors) => {
         const defaultError = [{ reason: 'There was an error retrieving your tags.' }];
-        this.setState({error: defaultError});
+        this.setState({errors: defaultError});
       })
   }
 
