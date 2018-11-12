@@ -4,11 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 
 import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import AddCircle from '@material-ui/icons/AddCircle';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
