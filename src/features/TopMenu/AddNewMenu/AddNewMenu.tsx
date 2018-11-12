@@ -150,36 +150,22 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.wrapper}>
-        <Hidden xsDown>
-          <Button
-            variant="raised"
-            color="primary"
-            aria-owns={anchorEl ? 'add-new-menu' : undefined}
-            aria-expanded={anchorEl ? true : undefined}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-            className={classes.button}
-            data-qa-add-new-menu-button
-          >
-            Create {
-              anchorEl
-                ? <KeyboardArrowUp className={classes.caret} />
-                : <KeyboardArrowDown className={classes.caret} />
-            }
-          </Button>
-        </Hidden>
-        <Hidden smUp>
-          <IconButton
-            aria-owns={anchorEl ? 'add-new-menu' : undefined}
-            aria-expanded={anchorEl ? true : undefined}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-            className={classes.mobileButton}
-            data-qa-add-new-menu-button
-          >
-            <AddCircle className={classes.mobileCreate} />
-          </IconButton>
-        </Hidden>
+        <Button
+          variant="raised"
+          color="primary"
+          aria-owns={anchorEl ? 'add-new-menu' : undefined}
+          aria-expanded={anchorEl ? true : undefined}
+          aria-haspopup="true"
+          onClick={this.handleClick}
+          className={classes.button}
+          data-qa-add-new-menu-button
+        >
+          Create {
+            anchorEl
+              ? <KeyboardArrowUp className={classes.caret} />
+              : <KeyboardArrowDown className={classes.caret} />
+          }
+        </Button>
         <Menu
           id="add-new-menu"
           anchorEl={anchorEl}
