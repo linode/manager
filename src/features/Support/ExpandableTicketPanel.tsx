@@ -47,7 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
     padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit,
     position: 'relative',
     '& p': {
       margin: 0,
@@ -86,9 +85,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     minWidth: 60,
   },
   userCol: {
-    minWidth: 100,
-    paddingRight: theme.spacing.unit * 4,
-
+    minWidth: 200,
+    paddingRight: `${theme.spacing.unit * 4}px !important`,
   },
   descCol: {},
   expCol: {
@@ -311,8 +309,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 </Grid>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
-                  {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-                  <Typography><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
+                  {data.from_linode && <Typography variant="caption">Linode Expert</Typography>}
+                  <Typography variant="caption" style={{ marginTop: 8 }}><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
                   </Grid>
                 </Grid>
               </Grid>

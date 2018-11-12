@@ -19,6 +19,7 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CircleProgress from 'src/components/CircleProgress';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -52,18 +53,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    marginTop: '8px',
+    marginBottom: '8px'
   },
   backButton: {
-    margin: '2px 0 0 -16px',
+    margin: '-6px 0 0 -16px',
     '& svg': {
       width: 34,
       height: 34,
     },
+    padding:0
   },
   label: {
     marginBottom: theme.spacing.unit,
@@ -395,31 +397,58 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return null;
     }
 
+    // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
+    // details.  For more info see the below link.
+    // https://github.com/linode/manager/pull/4056/files/b0977c6e397e42720479478db96df56022618151#r232298065
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item className={classes.titleWrapper}>
+        
+        <Grid container className={classes.titleWrapper}>
+          
+          <Grid item>
             <IconButton
               onClick={this.onBackButtonClick}
               className={classes.backButton}
-            >
+            >  
               <KeyboardArrowLeft />
-            </IconButton>
-            <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
-              {`#${ticket.id}: ${ticket.summary}`}
-              <Chip className={classNames({
-                [classes.status]: true,
-                [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-                [classes.closed]: ticket.status === 'closed',
-              })}
-              label={ticket.status} />
-            </Typography>
+            
+            </IconButton>            
+          </Grid>
+
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item style={{ paddingBottom: 0 }}>
+                <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
+                  
+                  {`#${ticket.id}: ${ticket.summary}`}
+                  
+                  <Chip className={classNames({
+                    [classes.status]: true,
+                    [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+                    [classes.closed]: ticket.status === 'closed',
+                  })}
+                  label={ticket.status} />
+                </Typography>
+              </Grid>
+
+              <Grid item style={{ paddingTop: 0 }}>
+                <Typography variant="caption">
+                  {ticket.status === 'closed' ? 'Closed' : 'Last updated'}
+                  {` by ${ticket.updated_by} at `}
+                  <DateTimeDisplay value={ticket.updated} /> 
+                </Typography>
+              </Grid>
+            </Grid>
+          
           </Grid>
         </Grid>
+        
         {ticket.entity && this.renderEntityLabelWithIcon()}
+        
         {/* Show message if the ticket has been closed through the link on this page. */}
         {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
+        
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description &&
