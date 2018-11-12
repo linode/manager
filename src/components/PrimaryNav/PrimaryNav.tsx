@@ -5,6 +5,8 @@ import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -50,7 +52,8 @@ type ClassNames =
   | 'toggle'
   | 'switchText'
   | 'spacer'
-  | 'listItemAccount';
+  | 'listItemAccount'
+  | 'divider';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuGrid: {
@@ -81,6 +84,10 @@ type ClassNames =
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
     '&:hover': {
       borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -177,6 +184,9 @@ type ClassNames =
   spacer: {
     padding: 25,
   },
+  divider: {
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+  },
 });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
@@ -235,6 +245,14 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
 
   goToHelp = () => {
     this.navigate('/support');
+  }
+
+  goToProfile = () => {
+    this.navigate('/profile');
+  }
+
+  logOut = () => {
+    this.navigate('/logout');
   }
 
   renderPrimaryLink(primaryLink: PrimaryLink) {
@@ -329,7 +347,7 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
                 >
                   <KeyboardArrowRight className={classes.arrow} />
                   Account
-              </ListItemText>
+                </ListItemText>
               </ListItem>
               <Collapse
                 in={expandedMenus.account
@@ -366,8 +384,11 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
                 </li>
               </Collapse>
 
+              <Divider className={classes.divider} />
+
               <ListItem
                 button
+                component="li"
                 focusRipple={true}
                 onClick={this.goToHelp}
                 className={classNames({
@@ -386,8 +407,58 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
                   })}
                 >
                   Get Help
-              </ListItemText>
+                </ListItemText>
               </ListItem>
+
+              <Hidden mdUp>
+                <Divider className={classes.divider} />
+                <ListItem
+                  button
+                  component="li"
+                  focusRipple={true}
+                  onClick={this.goToProfile}
+                  className={classNames({
+                    [classes.listItem]: true,
+                    [classes.collapsible]: true,
+                    [classes.active]: this.linkIsActive('/profile') === true,
+                  })}
+                >
+                  <ListItemText
+                    disableTypography={true}
+                    className={classNames({
+                      [classes.linkItem]: true,
+                      [classes.activeLink]:
+                        expandedMenus.support
+                        || this.linkIsActive('/profile') === true,
+                    })}
+                  >
+                    My Profile
+                  </ListItemText>
+                </ListItem>
+                <ListItem
+                  button
+                  component="li"
+                  focusRipple={true}
+                  onClick={this.logOut}
+                  className={classNames({
+                    [classes.listItem]: true,
+                    [classes.collapsible]: true,
+                    [classes.active]: this.linkIsActive('/logout') === true,
+                  })}
+                >
+                  <ListItemText
+                    disableTypography={true}
+                    className={classNames({
+                      [classes.linkItem]: true,
+                      [classes.activeLink]:
+                        expandedMenus.support
+                        || this.linkIsActive('/logout') === true,
+                    })}
+                  >
+                    Log Out
+                  </ListItemText>
+                </ListItem>
+              </Hidden>
 
               <div className={classes.spacer} />
 
