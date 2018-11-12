@@ -73,14 +73,21 @@ namespace Linode {
     };
   }
 
-  export type Grants = GlobalGrants & {
-    [key: string]: Grant[];
-  }
+  export type GrantType =
+    'linode'
+    | 'domain'
+    | 'nodebalancer'
+    | 'image'
+    | 'longview'
+    | 'stackscript'
+    | 'volume';
+
+  export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 
   export interface NetworkUtilization {
-   billable: number;
-   used: number;
-   quota: number;
+    billable: number;
+    used: number;
+    quota: number;
   }
 }
 
