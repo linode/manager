@@ -1,6 +1,6 @@
 // TYPES
 interface State {
-  components: JSX.Element[];
+  backupsCTA: boolean;
 }
 
 interface Action {
@@ -12,27 +12,27 @@ interface Action {
 type ActionCreator = (...args: any[]) => Action;
 
 // ACTIONS
-export const SET = '@manager/sidebar/SET'
-export const CLEAR = '@manager/sidebar/CLEAR'
+export const SET_CTA = '@manager/sidebar/SET'
+export const CLEAR_CTA = '@manager/sidebar/CLEAR'
 
 // ACTION CREATORS
-export const setSidebarComponent: ActionCreator = (data: JSX.Element[]) => ({ type: SET, data });
+export const addBackupsToSidebar: ActionCreator = () => ({ type: SET_CTA });
 
-export const clearSidebar: ActionCreator = () => ({ type: CLEAR });
+export const clearSidebar: ActionCreator = () => ({ type: CLEAR_CTA });
 
 // DEFAULT STATE
 export const defaultState: State = {
-  components: []
+  backupsCTA: false,
 };
 
 // REDUCER
 export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
-    case SET:
-      return { components: action.data};
+    case SET_CTA:
+      return { backupsCTA: true};
 
-    case CLEAR:
-      return { components: [] } ;
+    case CLEAR_CTA:
+      return { backupsCTA: false } ;
 
     default:
       return state;

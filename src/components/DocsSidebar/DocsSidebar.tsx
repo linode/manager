@@ -5,6 +5,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import { BackupsCTA } from 'src/features/Backups';
 
 import DocComponent, { Doc } from './DocComponent';
 
@@ -33,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   docs: Doc[];
-  sections?: JSX.Element[];
+  backupsCTA?: boolean;
   isSticky?: boolean;
 }
 
@@ -42,7 +43,7 @@ type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 const styled = withStyles(styles, { withTheme: true });
 
 const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
-  const { classes, sections, docs, style, isSticky } = props;
+  const { backupsCTA, classes, docs, style, isSticky } = props;
 
   if (docs.length === 0) {
     return null;
@@ -58,9 +59,11 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
 
   return (
     <Grid container item style={stickyStyles} className={classes.root}>
-      <Grid item className={classes.gridItem}>
-        {sections}
-      </Grid>
+      {backupsCTA &&
+        <Grid item className={classes.gridItem}>
+          <BackupsCTA />
+        </Grid>
+      }
       <Grid item className={classes.gridItem}>
       <Typography
         role="header"

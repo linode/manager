@@ -24,7 +24,7 @@ declare interface VolumeDrawerState {
 }
 
 declare interface SidebarState {
-  components: JSX.Element[];
+  backupsCTA: boolean;
 }
 
 

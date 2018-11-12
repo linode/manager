@@ -1,8 +1,8 @@
 export {
+  addBackupsToSidebar,
   default,
   defaultState,
-  SET,
-  CLEAR,
-  setSidebarComponent,
+  SET_CTA,
+  CLEAR_CTA,
   clearSidebar,
 } from './sidebar';

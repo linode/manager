@@ -17,12 +17,11 @@ import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { withTypes } from 'src/context/types';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
-import { BackupsCTA } from 'src/features/Backups';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
-import { clearSidebar, setSidebarComponent } from 'src/store/reducers/sidebar';
+import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
@@ -142,7 +141,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     /* Set the BackupsCTA in the docs sidebar. It will only
     * render itself for customers who have backups in need of Linodes.
     */
-   setSidebar([<BackupsCTA key={0} />])
+    setSidebar();
 
 
     if (typesLastUpdated === 0 && !typesLoading) {
@@ -427,7 +426,7 @@ interface DispatchProps {
   actions: {
     getLinodesWithoutBackups: () => void;
     clearSidebar: () => void;
-    setSidebar: (components: JSX.Element[]) => void;
+    setSidebar: () => void;
   }
 }
 
@@ -452,7 +451,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
     actions: {
       getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
       clearSidebar: () => dispatch(clearSidebar()),
-      setSidebar: (components: JSX.Element[]) => dispatch(setSidebarComponent(components))
+      setSidebar: () => dispatch(addBackupsToSidebar())
     }
   };
 };

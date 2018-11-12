@@ -1,31 +1,28 @@
-import * as React from 'react';
 import sidebar, {
-  CLEAR,
+  addBackupsToSidebar,
+  CLEAR_CTA,
   clearSidebar,
   defaultState,
-  SET,
-  setSidebarComponent,
+  SET_CTA,
 } from './sidebar';
-
-const comp = <div/>;
 
 describe("Redux sidebar", () => {
   describe("Sidebar reducer", () => {
-    it("should handle SET", () => {
-      expect(sidebar(defaultState, { type: SET, data: [comp]}))
-        .toEqual({ components: [comp]});
+    it("should handle SET_CTA", () => {
+      expect(sidebar(defaultState, { type: SET_CTA }))
+        .toEqual({ backupsCTA: true });
     });
     it("should handle CLEAR", () => {
-      expect(sidebar({ components: [comp]}, { type: CLEAR }))
+      expect(sidebar({ backupsCTA: true}, { type: CLEAR_CTA }))
         .toEqual(defaultState);
     });
   });
   describe("Action creators", () => {
-    it("clearSidebar should call CLEAR", () => {
-      expect(clearSidebar()).toEqual({ type: CLEAR });
+    it("clearSidebar should call CLEAR_CTA", () => {
+      expect(clearSidebar()).toEqual({ type: CLEAR_CTA });
     });
   });
-  it("setSideBarComponent should pass an array of JSX elements", () => {
-    expect(setSidebarComponent([comp])).toEqual({ type: SET, data: [comp]});
+  it("setSideBarComponent should set backupsCTA to true", () => {
+    expect(addBackupsToSidebar()).toEqual({ type: SET_CTA });
   });
 });

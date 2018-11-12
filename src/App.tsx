@@ -301,12 +301,12 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen } = this.state;
     const {
+      backupsCTA,
       classes,
       documentation,
       toggleTheme,
       profileLoading,
       profileError,
-      sidebarComponents
     } = this.props;
 
     const hasDoc = documentation.length > 0;
@@ -356,7 +356,7 @@ export class App extends React.Component<CombinedProps, State> {
                                   return (
                                     <DocsSidebar
                                       docs={documentation}
-                                      sections={sidebarComponents}
+                                      backupsCTA={backupsCTA}
                                       {...props}
                                     />
                                   )
@@ -424,7 +424,7 @@ interface StateProps {
   userId?: number;
 
   documentation: Linode.Doc[];
-  sidebarComponents: JSX.Element[];
+  backupsCTA: boolean;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
@@ -435,7 +435,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
   documentation: state.documentation,
 
-  sidebarComponents: pathOr([], ['sidebar','components'], state)
+  backupsCTA: pathOr([], ['sidebar','backupCTA'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
