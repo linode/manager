@@ -141,7 +141,9 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
           </Grid>
           {enableErrors && !isEmpty(enableErrors) &&
             <Grid item>
-              <Notice error>There was an error enabling backups for some of your Linodes.</Notice>
+              <Notice error spacingBottom={0} >
+                There was an error enabling backups for some of your Linodes.
+              </Notice>
             </Grid>
           }
           <Grid item>
