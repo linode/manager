@@ -159,7 +159,7 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="caption" data-qa-node-hostname>
+                <Typography variant="body1" data-qa-node-hostname>
                   {hostname}
                 </Typography>
               </Grid>

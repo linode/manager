@@ -287,7 +287,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         {this.headCell()}
         <TableCell parentColumn="Plan">
           {!typesLoading &&
-            <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
+            <Typography variant="body1">{displayType(linodeType, typesData || [])}</Typography>
           }
         </TableCell>
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>

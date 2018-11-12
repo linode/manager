@@ -40,7 +40,7 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
           }
           {headerAction &&
             <Grid item className={'py0'}>
-              <Typography variant="caption" className={classes.headerAction}>
+              <Typography variant="body1" className={classes.headerAction}>
                 {headerAction()}
               </Typography>
             </Grid>

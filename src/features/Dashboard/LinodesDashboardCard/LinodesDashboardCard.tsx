@@ -182,7 +182,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
                     </Typography>
                   </Grid>
                   <Grid item>
-                    <Typography variant="caption" data-qa-linode-plan>
+                    <Typography variant="body1" data-qa-linode-plan>
                       { typesData && displayType(type, typesData || []) }
                     </Typography>
                   </Grid>

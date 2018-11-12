@@ -65,7 +65,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
           >
             Delete
           </Button>
-          <Typography variant="caption">
+          <Typography variant="body1">
             Deleting a Linode will result in permanent data loss.
           </Typography>
         </ExpansionPanel>

@@ -163,34 +163,37 @@ const themeDefaults: ThemeOptions = {
     fontSize: 16,
     headline: {
       color: primaryColors.headline,
-      fontSize: '1rem',
+      fontSize: '1.25rem',
+      lineHeight: '1.75rem',
       fontFamily: 'LatoWebBold',
       [breakpoints.up('lg')]: {
         fontSize: '1.5rem',
+        lineHeight: '1.875rem',
       },
     },
     title: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
       fontFamily: 'LatoWebBold',
-      lineHeight: '1.35417em',
+      lineHeight: '1.5rem',
     },
     subheading: {
       color: primaryColors.headline,
       fontSize: '1rem',
       fontFamily: 'LatoWebBold',
-      lineHeight: '1.2em',
+      lineHeight: '1rem',
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: '0.875rem',
+      lineHeight: '1rem',
     },
     body2: {
-      fontSize: '.78rem',
-      lineHeight: '1.3em',
+      fontSize: '0.875rem',
+      lineHeight: '1rem',
     },
     caption: {
-      fontSize: '.9rem',
-      lineHeight: '1.3em',
+      fontSize: '0.625rem',
+      lineHeight: '0.625rem',
       color: primaryColors.text,
     },
     display2: {

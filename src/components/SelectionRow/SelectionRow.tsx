@@ -178,7 +178,7 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
               {renderLabel()}
             </a>
           }
-          <Typography variant="caption">{description}</Typography>
+          <Typography variant="body1">{description}</Typography>
         </TableCell>
         <TableCell>
           <Typography
