@@ -310,7 +310,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
                   {data.from_linode && <Typography variant="caption">Linode Expert</Typography>}
-                  <Typography variant="caption"><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
+                  <Typography variant="caption" style={{ marginTop: 8 }}><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
                   </Grid>
                 </Grid>
               </Grid>
