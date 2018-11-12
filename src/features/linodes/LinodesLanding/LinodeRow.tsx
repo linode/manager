@@ -11,6 +11,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import Tags from 'src/components/Tags';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
@@ -138,7 +139,6 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
-  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -209,10 +209,10 @@ class LinodeRow extends React.Component<CombinedProps, State> {
               </Typography>
             </Grid>
           </Grid>
-          <div className={classes.tagWrapper}>
-            {this.props.renderTagsAndMoreTags(linodeTags)}
-          </div>
-          </Link>
+        </Link>
+        <div className={classes.tagWrapper}>
+          <Tags tags={linodeTags} />
+        </div>
       </TableCell>
     );
   }

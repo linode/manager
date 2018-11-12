@@ -24,6 +24,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import Tags from 'src/components/Tags';
 import { Domains } from 'src/documentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
@@ -35,6 +36,7 @@ import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 type ClassNames = 'root'
   | 'title'
   | 'domain'
+  | 'tagWrapper'
   | 'domainRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -47,6 +49,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   domainRow: {
     height: 75,
+  },
+  tagWrapper: {
+    marginTop: theme.spacing.unit / 2,
+    '& [class*="MuiChip"]': {
+      cursor: 'pointer',
+    },
   },
 });
 
@@ -337,6 +345,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             <Link to={`/domains/${domain.id}`}>
               {domain.domain}
             </Link>
+            <div className={classes.tagWrapper}>
+              <Tags tags={domain.tags} />
+            </div>
           </TableCell>
           <TableCell parentColumn="Type" data-qa-domain-type>{domain.type}</TableCell>
           <TableCell>
