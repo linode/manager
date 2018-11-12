@@ -2,7 +2,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
@@ -12,13 +11,15 @@ import TableRow from 'src/components/TableRow';
 
 import { ExtendedLinode } from './BackupDrawer';
 
-type ClassNames = 'root' | 'error';
+type ClassNames = 'root'
+| 'error';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   error: {
     color: theme.color.red,
-  }
+    fontSize: 13,
+  },
 });
 
 interface Props {
@@ -42,27 +43,26 @@ export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) =>
   const { classes, linodes } = props;
   return (
     <React.Fragment>
-      {linodes && linodes.map((linode: ExtendedLinode, idx: number) =>
-        <React.Fragment key={idx}>
+      {linodes && linodes.map((linode: ExtendedLinode, idx: number) => {
+        const error = pathOr('', ['linodeError', 'reason'], linode);
+        return <React.Fragment key={idx}>
           <TableRow data-qa-linodes >
             <TableCell>
-              <div>
-                <Tooltip title={pathOr('', ['linodeError', 'reason'], linode)}>
-                  <Typography
-                    variant="body1"
-                    className={linode.linodeError && classes.error}
-                  >
-                    {linode.label}
-                  </Typography>
-                </Tooltip>
-              </div>
+              <Typography variant="body1" >
+                {linode.label}
+              </Typography>
+              {error &&
+                <Typography variant="caption" className={classes.error}>
+                  {error}
+                </Typography>
+              }
             </TableCell>
 
             <TableCell >{getLabel(linode.typeInfo)}</TableCell>
             <TableCell >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
           </TableRow>
         </React.Fragment>
-      )}
+      })}
     </React.Fragment>
     )
 };
