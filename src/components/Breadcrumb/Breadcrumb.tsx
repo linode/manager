@@ -1,3 +1,4 @@
+import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -57,10 +58,12 @@ interface EditableProps {
   errorText?: string;
 }
 export interface Props {
-  linkTo: string;
+  // linkTo will be passed in to a <Link /> component, so we borrow the
+  // LocationDescriptor interface from the history module
+  linkTo: LocationDescriptor;
   linkText: string;
   label: string;
-  labelLink?: string | undefined;
+  labelLink?: string;
   onEditHandlers?: EditableProps
 }
 

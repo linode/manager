@@ -6,18 +6,17 @@ import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
-import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -223,17 +222,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       });
   }
 
-  onBackButtonClick = () => {
-    const { ticket } = this.state;
-    if (!ticket) { this.props.history.push('/support/tickets'); }
-    else {
-      this.props.history.push({
-        pathname: '/support/tickets',
-        state:{ openFromRedirect: ['open','new'].includes(ticket.status)}
-      });
-    }
-  }
-
   onCreateReplySuccess = (newReply:Linode.SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
     getGravatarUrlFromHash(newReply.gravatar_id)
@@ -403,52 +391,33 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        
-        <Grid container className={classes.titleWrapper}>
-          
-          <Grid item>
-            <IconButton
-              onClick={this.onBackButtonClick}
-              className={classes.backButton}
-            >  
-              <KeyboardArrowLeft />
-            
-            </IconButton>            
-          </Grid>
-
-          <Grid item>
-            <Grid container direction="column">
-              <Grid item style={{ paddingBottom: 0 }}>
-                <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
-                  
-                  {`#${ticket.id}: ${ticket.summary}`}
-                  
-                  <Chip className={classNames({
-                    [classes.status]: true,
-                    [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-                    [classes.closed]: ticket.status === 'closed',
-                  })}
-                  label={ticket.status} />
-                </Typography>
-              </Grid>
-
-              <Grid item style={{ paddingTop: 0 }}>
-                <Typography variant="caption">
-                  {ticket.status === 'closed' ? 'Closed' : 'Last updated'}
-                  {` by ${ticket.updated_by} at `}
-                  <DateTimeDisplay value={ticket.updated} /> 
-                </Typography>
-              </Grid>
-            </Grid>
-          
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+          <Grid item className={classes.titleWrapper}>
+            <Breadcrumb
+              linkTo={{
+                pathname: '/support/tickets',
+                // If the ticket is "open" or "new", the "Open Tickets" tab
+                // should be active on when we go back to SupportTicketsLanding
+                state: { openFromRedirect: ['open','new'].includes(ticket.status) }
+              }}
+              linkText="Support Tickets"
+              label={`#${ticket.id}: ${ticket.summary}`}
+              data-qa-breadcrumb
+            />
+              <Chip className={classNames({
+                [classes.status]: true,
+                [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+                [classes.closed]: ticket.status === 'closed',
+              })}
+              label={ticket.status} />
           </Grid>
         </Grid>
-        
+
         {ticket.entity && this.renderEntityLabelWithIcon()}
-        
+
         {/* Show message if the ticket has been closed through the link on this page. */}
         {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
-        
+
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description &&
