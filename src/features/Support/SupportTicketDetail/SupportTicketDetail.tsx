@@ -397,6 +397,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return null;
     }
 
+    // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
+    // details.  For more info see the below link.
+    // https://github.com/linode/manager/pull/4056/files/b0977c6e397e42720479478db96df56022618151#r232298065
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
