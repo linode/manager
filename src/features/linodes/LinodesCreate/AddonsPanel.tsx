@@ -96,20 +96,6 @@ class AddonsPanel extends React.Component<CombinedProps> {
     );
   }
 
-  renderHelpText = () => {
-    const { accountBackups } = this.props;
-    return accountBackups
-      ? <React.Fragment>
-          You have enabled automatic backups for your account. This Linode will automatically
-          have backups enabled. To change this setting, <Link to={'/account/settings'}>click here.</Link>
-        </React.Fragment>
-      : <React.Fragment>
-          Three backup slots are executed and rotated automatically: a daily backup, a 2-7
-          day old backup, and an 8-14 day old backup. Plans are priced according to the
-          Linode plan selected above.
-        </React.Fragment>
-  }
-
   render() {
     const { accountBackups, classes, changeBackups, changePrivateIP } = this.props;
 
@@ -124,7 +110,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 control={
                   <CheckBox
                     checked={accountBackups || this.props.backups}
-                    onChange={() => changeBackups()}
+                    onChange={changeBackups}
                     disabled={accountBackups}
                   />
                 }
@@ -132,7 +118,17 @@ class AddonsPanel extends React.Component<CombinedProps> {
               />
               {this.renderBackupsPrice()}
               <Typography variant="caption" className={classes.caption}>
-                {this.renderHelpText()}
+                {accountBackups
+                  ? <React.Fragment>
+                      You have enabled automatic backups for your account. This Linode will automatically
+                      have backups enabled. To change this setting, <Link to={'/account/settings'}>click here.</Link>
+                    </React.Fragment>
+                  : <React.Fragment>
+                      Three backup slots are executed and rotated automatically: a daily backup, a 2-7
+                      day old backup, and an 8-14 day old backup. Plans are priced according to the
+                      Linode plan selected above.
+                    </React.Fragment>
+                }
               </Typography>
             </Grid>
           </Grid>

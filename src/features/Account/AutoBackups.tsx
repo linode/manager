@@ -43,6 +43,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
     <React.Fragment>
       <ExpansionPanel
         heading="Backup Auto Enrollment"
+        defaultExpanded={true}
       >
         <Grid container direction="column" className={classes.root}>
           <Grid item>
@@ -80,11 +81,11 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
             </Grid>
           </Grid>
           {/* Uncomment after BackupDrawer is merged */}
-          <Grid item>
+          {/* <Grid item>
             <Typography variant="body1" className={classes.footnote}>
               For existing Linodes without backups, <a>enable now</a>.
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>
       </ExpansionPanel>
     </React.Fragment>
