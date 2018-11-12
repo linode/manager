@@ -2,18 +2,23 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableRow from '@material-ui/core/TableRow';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 
 import { ExtendedLinode } from './BackupDrawer';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'error';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  error: {
+    color: theme.color.red,
+  }
 });
 
 interface Props {
@@ -31,27 +36,32 @@ const getLabel = (type?: Linode.LinodeType) =>
   pathOr('Unknown', ['label'], type);
 
 const getPrice = (type?: Linode.LinodeType) =>
-  pathOr("Unavailable",['addons', 'backups', 'price', 'monthly'], type);
+  pathOr('Unavailable',['addons', 'backups', 'price', 'monthly'], type);
 
 export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) => {
-  const { linodes } = props;
+  const { classes, linodes } = props;
   return (
     <React.Fragment>
       {linodes && linodes.map((linode: ExtendedLinode, idx: number) =>
         <React.Fragment key={idx}>
           <TableRow data-qa-linodes >
-            <TableCell >{linode.label}</TableCell>
+            <TableCell>
+              <div>
+                <Tooltip title={pathOr('', ['linodeError', 'reason'], linode)}>
+                  <Typography
+                    variant="body1"
+                    className={linode.linodeError && classes.error}
+                  >
+                    {linode.label}
+                  </Typography>
+                </Tooltip>
+              </div>
+            </TableCell>
+
             <TableCell >{getLabel(linode.typeInfo)}</TableCell>
             <TableCell >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
           </TableRow>
-          {/* @todo need error handling pattern for displaying individual
-          * errors for each Linode */}
-          {/* {linode.linodeError &&
-            <TableRow>
-              <TableCell>{linode.linodeError.reason}</TableCell>
-            </TableRow>
-          } */}
-          </React.Fragment>
+        </React.Fragment>
       )}
     </React.Fragment>
     )
