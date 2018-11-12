@@ -40,11 +40,7 @@ const specsToRun = () => {
 
 const specs = specsToRun();
 
-const selectedReporters = ['dot'];
-
-if (argv.log) {
-    selectedReporters.push('junit');
-}
+const selectedReporters = argv.log ? ['spec', 'junit'] : ['dot'];
 
 const getRunnerCount = () => {
     const userCount = keysIn(process.env).filter(users => users.includes('MANAGER_USER')).length;

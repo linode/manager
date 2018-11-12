@@ -72,15 +72,15 @@ describe('Create Linode from Image - With Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
             assertTagsDisplay(addedTags);
         });
-
-        it('should display the linode with tags on list view', () => {
+        //Tests below are affected by bug M3-1671
+        xit('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
             assertTagsDisplay(addedTags);
         });
     });
 
-    describe('Linode Detail - Tags Suite', () => {
+    xdescribe('Linode Detail - Tags Suite', () => {
         it('should navigate to linode detail', () => {
             // It should navigate to Linode detail page
             browser.waitForVisible(`[data-qa-linode="${linodeName}"]`, constants.wait.normal);

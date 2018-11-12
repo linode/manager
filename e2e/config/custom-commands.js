@@ -10,6 +10,8 @@ const {
     removeDomain,
     getMyStackScripts,
     removeStackScript,
+    getUserProfile,
+    updateUserProfile
 } = require('../setup/setup');
 
 const {
@@ -121,7 +123,7 @@ exports.browserCommands = () => {
     });
 
     /*
-    * Executes a Javascript Click event via the browser console. 
+    * Executes a Javascript Click event via the browser console.
     * Useful when an element is not clickable via browser.click()
     * @param { String } elementToClick Selector to execute click event on
     * @returns { undefined } Returns nothing
@@ -157,6 +159,19 @@ exports.browserCommands = () => {
         }, timeout);
     });
 
+    browser.addCommand('tryClick', function(elementToClick, timeout=5000) {
+        let errorObject;
+        browser.waitUntil(function() {
+            try {
+                browser.click(elementToClick);
+                return true;
+            } catch (err) {
+                errorObject = err;
+                return false;
+            }
+        }, timeout, `failed to click ${elementToClick} due to ${JSON.stringify(errorObject)}`);
+    });
+
     /* Continuously try to set a value on a given selector
     *  for a given timeout. Returns once the value has been successfully set
     * @param { String } selector to target (usually an input)
@@ -172,5 +187,15 @@ exports.browserCommands = () => {
 
     browser.addCommand('deleteAll', function async(token) {
         return deleteAll(token).then(() => {});
+    });
+
+    browser.addCommand('getUserProfile', function async(token) {
+        return getUserProfile(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('updateUserProfile', function async(token,profileData) {
+        return updateUserProfile(token,profileData)
+            .then(res => res);
     });
 }

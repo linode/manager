@@ -73,7 +73,9 @@ exports.login = (username, password, credFilePath) => {
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
     browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
 
-    exports.storeToken(credFilePath, username);
+    if (credFilePath) {
+        exports.storeToken(credFilePath, username);
+    }
 }
 
 exports.checkoutCreds = (credFilePath, specFile) => {

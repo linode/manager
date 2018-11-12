@@ -58,10 +58,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     zIndex: 3,
     animation: 'fadeIn .3s ease-in-out forwards',
-    '& [class*="MuiFormControl"]': {
+    '& .error-for-scroll > div': {
       width: 'auto',
     },
-    '& [class*="MuiInput-formControl"]': {
+    '& .input': {
       minHeight: 'auto',
       border: 0,
       backgroundColor: 'transparent',
@@ -71,14 +71,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         color: theme.color.grey1,
       },
     },
-    '& [class*="MuiFormHelperText-error"]': {
+    '& .error-for-scroll p': {
       padding: theme.spacing.unit,
       marginLeft: 12,
+      marginTop: 0,
       position: 'absolute',
-      top: theme.spacing.unit * 4,
       boxShadow: '0 0 5px #ddd',
       backgroundColor: theme.bg.offWhite,
       lineHeight: 1.2,
+      zIndex: 5.
     },
     '& .react-select__input': {
       fontSize: '.9rem',
@@ -110,7 +111,7 @@ interface ActionMeta {
 interface Props {
   tags: Tags;
   onDeleteTag: (value: string) => void;
-  toggleCreateTag: () => void;
+  toggleTagInput: () => void;
   onCreateTag: (value: Item, actionMeta: ActionMeta) => void;
   tagInputValue: string;
   isCreatingTag: boolean;
@@ -124,7 +125,7 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
     tags: { tagsToSuggest, tagsAlreadyAppliedToLinode, tagsQueuedForDeletion },
     tagError,
     onCreateTag,
-    toggleCreateTag,
+    toggleTagInput,
     onDeleteTag,
     tagInputValue,
     isCreatingTag,
@@ -157,12 +158,13 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
             options={tagsToSuggest}
             variant='creatable'
             errorText={tagError}
-            onBlur={toggleCreateTag}
+            onBlur={toggleTagInput}
             placeholder="Create or Select a Tag"
             value={tagInputValue}
             createOptionPosition="first"
             autoFocus
             className={classes.selectTag}
+            blurInputOnSelect={false}
         />
         :
         <Tooltip
@@ -170,7 +172,7 @@ const TagsPanel: React.StatelessComponent<CombinedProps> = (props) => {
           placement="right"
         >
           <IconButton
-            onClick={toggleCreateTag}
+            onClick={toggleTagInput}
             className={classes.addButton}
           >
             <AddCircle data-qa-add-tag />

@@ -6,6 +6,10 @@ import { Props as SelectProps } from 'react-select/lib/Select';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 
+/* TODO will be refactoring enhanced select to be an abstraction. 
+Styles added in this file and the below imports will be utilized for the abstraction. */ 
+import DropdownIndicator from './components/DropdownIndicator';
+import LoadingIndicator from './components/LoadingIndicator';
 import MultiValue from './components/MultiValue';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
@@ -65,7 +69,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       margin: '-1px 0 0 0',
       borderRadius: 0,
       boxShadow: 'none',
-      border: `1px solid ${theme.palette.divider}`,
+      border: `1px solid ${theme.palette.primary.main}`,
       maxWidth: 415,
     },
     '& .react-select__menu-list': {
@@ -77,7 +81,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       color: theme.palette.text.primary,
       backgroundColor: theme.bg.white,
       cursor: 'pointer',
-      padding: '10px 8px',
+      padding: '12px',
+      fontSize: '0.9rem',
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
@@ -97,16 +102,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       display: 'none',
     },
     '& .react-select__dropdown-indicator': {
-      '& svg': {
-        color: '#999',
-      },
     },
     '& [class*="MuiFormHelperText-error"]': {
       paddingBottom: theme.spacing.unit,
     },
   },
   input: {
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     padding: 0,
     display: 'flex',
     color: theme.palette.text.primary,
@@ -234,6 +236,8 @@ const _components = {
   Placeholder,
   MultiValue,
   Option,
+  DropdownIndicator,
+  LoadingIndicator
 };
 
 type CombinedProps = EnhancedSelectProps
@@ -275,6 +279,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
       noOptionsMessage,
       onMenuClose,
       onBlur,
+      blurInputOnSelect,
       ...restOfProps
     } = this.props;
 
@@ -306,7 +311,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         {...restOfProps}
         isClearable={isClearable  || true }
         isSearchable
-        blurInputOnSelect
+        blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
         defaultOptions
         cacheOptions={false}

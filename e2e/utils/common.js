@@ -2,7 +2,14 @@ const crypto = require('crypto');
 const { argv } = require('yargs');
 const { constants } = require('../constants');
 const { readToken } = require('./config-utils');
-const { getPrivateImages, removeImage, getPublicKeys, removePublicKey } = require('../setup/setup');
+const {
+    getPrivateImages,
+    removeImage,
+    getPublicKeys,
+    removePublicKey,
+    updateUserProfile,
+    getUserProfile
+} = require('../setup/setup');
 
 import ConfigureLinode from '../pageobjects/configure-linode';
 import ListLinodes from '../pageobjects/list-linodes';
@@ -55,7 +62,7 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[]) => 
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
-    
+
     if (linodeLabel) {
         browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, constants.wait.long);
         browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-status="running"]`, constants.wait.minute * 3);
@@ -122,4 +129,16 @@ export const apiRemoveSshKeys = () => {
     const userKeys = getPublicKeys(token).data;
 
     userKeys.forEach(key => removePublicKey(token, key.id));
+}
+
+export const getProfile = () => {
+    const token = readToken(browser.options.testUser);
+    const profile = browser.getUserProfile(token);
+    return profile;
+}
+
+export const updateProfile = (profileDate) => {
+    const token = readToken(browser.options.testUser);
+    const profile = browser.updateUserProfile(token,profileDate);
+    return profile;
 }

@@ -28,7 +28,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
             label: 'Something-NotLegit',
         }
         const invalidConfig = merge(linode, invalidLabel);
-        const serviceError = 'label must not contain any special characters. Only a-z0-9.-_ allowed';
+        const serviceError = `Label can't contain special characters, uppercase characters, or whitespace.`;
 
         NodeBalancers.configure(invalidConfig, {
             label: `NB-${new Date().getTime()}`,
@@ -51,7 +51,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
     });
 
     it('should fail to create a configuration with an invalid. ip', () => {
-        const invalidIp = { privateIp:'192.168.1.1'};
+        const invalidIp = { privateIp:'192.168.1.1' };
         const invalidConfig = merge(linode, invalidIp);
         const serviceError = 'This address is not allowed.';
 

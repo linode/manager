@@ -32,8 +32,13 @@ describe('Create - Volume Suite', () => {
 
     it('should display global volume create drawer', () => {
         ListLinodes.addVolumeMenu.click();
-
         VolumeDetail.defaultDrawerElemsDisplay();
+    });
+
+    it('should display minimum and maximum volume size', () => {
+        const volumeHelpText = $$(`${VolumeDetail.size.selector} p`)[1];
+        expect(volumeHelpText.isVisible()).toBe(true);
+        expect(volumeHelpText.getText()).toEqual('A single volume can range from 10 GiB to 10,240 GiB in size.');
         VolumeDetail.closeVolumeDrawer();
     });
 
@@ -53,10 +58,10 @@ describe('Create - Volume Suite', () => {
     it('should create without attaching to a linode', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
         testVolume['region'] = 'us-east';
-        
+
         VolumeDetail.createVolume(testVolume, 'header');
         browser.url(constants.routes.volumes);
-        
+
         browser.waitUntil(function() {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
         }, constants.wait.normal);

@@ -10,8 +10,7 @@ class ConfigureImage extends Page {
     get diskSelect() { return $('[data-qa-disk-select]'); }
     get label() { return $('[data-qa-image-label]'); }
     get description() { return $('[data-qa-image-description]'); }
-    get createButton() { return $('[data-qa-submit]'); }
-    get cancelButton() { return $('[data-qa-cancel]'); }
+    get createButton() { return $(this.submitButton.selector); }
     get linodesMenuItems() { return $$('[data-qa-linode-menu-item]'); }
     get diskMenuItems() { return $$('[data-qa-disk-menu-item]'); }
 

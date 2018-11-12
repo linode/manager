@@ -15,8 +15,8 @@ export class VolumeDetail extends Page {
     get attachToLinode() { return $('[data-qa-enhanced-select="Select a Linode"]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }
-    get submit() { return $('[data-qa-submit]'); }
-    get cancel() { return $('[data-qa-cancel]'); }
+    get submit() { return $(this.submitButton.selector); }
+    get cancel() { return $(this.cancelButton.selector); }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
@@ -28,7 +28,6 @@ export class VolumeDetail extends Page {
     get volumeSelect() { return $('[data-qa-volume-select] span'); }
     get volumeOptions() { return $$('[data-value]'); }
     get attachButton() { return $('[data-qa-confirm-attach]'); }
-    get cancelButton() { return $('[data-qa-cancel]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
     get copyToolTips() { return $$('[data-qa-copy-tooltip]'); }
     get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
@@ -106,10 +105,10 @@ export class VolumeDetail extends Page {
 
         if (volume.hasOwnProperty('region')) {
             this.region.waitForVisible();
-            this.region.click(); 
+            this.region.click();
             browser.waitForVisible('[data-qa-attach-to-region]');
             browser.click(`[data-qa-attach-to-region="${volume.region}"]`);
-            
+
             browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
             browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);
         }
@@ -123,7 +122,7 @@ export class VolumeDetail extends Page {
 
             optionToSelect[0].click();
         }
-        // this.region.setValue(volume.region); 
+        // this.region.setValue(volume.region);
         this.submit.click();
 
         if (volume.hasOwnProperty('attachedLinode')) {
@@ -165,15 +164,15 @@ export class VolumeDetail extends Page {
         browser.jsClick('[data-qa-volume-select] div div div');
 
         browser.waitForVisible('[data-value]', constants.wait.normal);
-        
+
         const options = this.volumeOptions.map(v => v.getText());
         const optToClick = this.volumeOptions.filter(opt => opt.getText() === volume.label);
 
         optToClick[0].click();
         optToClick[0].waitForVisible(constants.wait.normal, true);
 
-        browser.click('[data-qa-submit]');
-        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);   
+        browser.click(this.submitButton);
+        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);
     }
 
     detachVolume(volume) {
@@ -181,7 +180,7 @@ export class VolumeDetail extends Page {
 
         const dialogTitle = $('[data-qa-dialog-title]');
         const dialogConfirm = $('[data-qa-confirm]');
-        const dialogCancel = $('[data-qa-cancel]');
+        const dialogCancel = $(this.cancelButton.selector);
         const dialogContent = $('[data-qa-dialog-content]');
 
         dialogTitle.waitForVisible(constants.wait.normal);
@@ -242,7 +241,7 @@ export class VolumeDetail extends Page {
 
         const dialogTitle = $('[data-qa-dialog-title]');
         const dialogConfirm = $('[data-qa-confirm]');
-        const dialogCancel = $('[data-qa-cancel]');
+        const dialogCancel = $(this.cancelButton.selector);
 
         expect(dialogTitle.isVisible()).toBe(true);
         expect(dialogTitle.getText()).toBe('Delete Volume');
@@ -267,7 +266,7 @@ export class VolumeDetail extends Page {
         const vFsPath = this.volumeFsPath;
 
         const volumesDisplayed = volumes.map((v) => {
-            return [v.$(vLabel.selector).getText(), 
+            return [v.$(vLabel.selector).getText(),
             v.$(vSize.selector).getText()]
         });
         expect(volumesDisplayed).toContain([volume.label, volume.size]);
