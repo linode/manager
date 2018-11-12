@@ -1,7 +1,13 @@
+const { keysIn } = require('lodash');
 const { merge } = require('ramda');
 const { argv } = require('yargs');
 const wdioMaster = require('./wdio.conf.js');
 const { browserConf } = require('./browser-config');
+const {
+    login
+} = require('../utils/config-utils');
+const { browserCommands } = require('./custom-commands');
+
 const selectedBrowser = () => {
     if (argv.browser) {
         return browserConf[argv.browser];
@@ -13,14 +19,25 @@ const selectedBrowser = () => {
 }
 
 const seleniumSettings = require('./selenium-config');
-const specsToRun = argv.story ? [ `./src/components/${argv.story}/${argv.story}.spec.js` ] : ['./src/components/**/*.spec.js'];
 const servicesToStart = process.env.DOCKER ? [] : ['selenium-standalone'];
 
 exports.config = merge(wdioMaster.config, {
-    specs: ['./e2e/setup/setup.spec.js', './e2e/specs/accessibility/*.spec.js'],
+    specs: ['./e2e/specs/accessibility/*.spec.js'],
+    exclude: [
+    ],
     capabilities: [selectedBrowser()],
     maxInstances: process.env.DOCKER || argv.debug ?  1 : 4,
     services: servicesToStart,
     seleniumInstallArgs: seleniumSettings,
     seleniumArgs: seleniumSettings,
+    onPrepare: () => {},
+    before: function(caps, specs) {
+        // Load up our custom commands
+        require('babel-register');
+        browserCommands();
+
+        login(process.env.MANAGER_USER, process.env.MANAGER_PASS, false);
+    },
+    after: () => {},
+    onComplete: () => {},
 });

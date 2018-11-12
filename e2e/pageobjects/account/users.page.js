@@ -106,7 +106,7 @@ class Users extends Page {
             browser.waitUntil(() => {
                 indexOfRow = this.userRows.findIndex(row => row.getText().includes(tableKey));
                 return indexOfRow >= 0;
-            }, constants.wait.normal);
+            }, constants.wait.long);
         }else{
             indexOfRow = index;
         }

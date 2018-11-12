@@ -6,14 +6,14 @@ import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
+import DisplayPrice from 'src/components/DisplayPrice';
+
 
 type ClassNames = 'root'
   | 'checkoutSection'
   | 'noBorder'
   | 'sidebarTitle'
-  | 'detail'
-  | 'price'
-  | 'per';
+  | 'detail';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
@@ -53,14 +53,6 @@ type ClassNames = 'root'
     color: theme.color.headline,
     lineHeight: '1.5em',
   },
-  price: {
-    fontSize: '1.5rem',
-    color: theme.color.green,
-    display: 'inline-block',
-  },
-  per: {
-    display: 'inline-block',
-  },
 });
 
 interface Props {
@@ -73,8 +65,6 @@ interface Props {
 }
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
-
-const displayPrice = (v: number) => `$${v.toFixed(2)}`;
 
 class CheckoutBar extends React.Component<CombinedProps> {
 
@@ -131,12 +121,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
         }
         {
           <div className={`${classes.checkoutSection} ${classes.noBorder}`} data-qa-total-price>
-            <Typography role="header" variant="subheading" className={classes.price}>
-              {displayPrice(calculatedPrice!)}
-            </Typography>
-            <Typography role="header" variant="subheading" className={classes.per}>
-              &nbsp;/mo
-            </Typography>
+            <DisplayPrice price={calculatedPrice ? calculatedPrice : 0} interval="mo" />
           </div>
         }
 
