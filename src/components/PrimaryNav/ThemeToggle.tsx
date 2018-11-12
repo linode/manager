@@ -1,13 +1,13 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   switchText: {
     color: '#777',
     fontSize: '.8rem',
@@ -42,10 +42,9 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
-const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, toggleTheme } = props;
-
-  const themeName = props.theme.name;
+export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, toggleTheme, theme } = props;
+  const { name: themeName } = theme;
 
   return (
     <div className={classes.switchWrapper}>

@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import { compose, path } from 'ramda';
+import { path, pathSatisfies } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ type ClassNames =
   | 'sublinkActive'
   | 'sublinkPanel';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   activeLink: {
     color: 'white',
     '& $arrow': {
@@ -101,7 +101,7 @@ type CombinedProps =
   & StateProps
   & WithStyles<ClassNames>;
 
-const AccountNavigation: React.StatelessComponent<CombinedProps> = (props) => {
+export const AccountNavigation: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     hasAccountAccess,
     classes,
@@ -181,7 +181,6 @@ const AccountNavigation: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
 
 interface StateProps {
   hasAccountAccess: boolean;
@@ -206,12 +205,13 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
   /** Check the grants! */
   return {
-    hasAccountAccess: Boolean(profile.grants.global.account_access),
+    hasAccountAccess: pathSatisfies((access) => access !== null, ['grants', 'global', 'account_access'], profile),
   }
 };
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose(connected, styled);
+const styled = withStyles(styles);
 
-export default enhanced(AccountNavigation);
+
+export default connected(styled(AccountNavigation));
