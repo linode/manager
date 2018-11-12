@@ -30,11 +30,11 @@ export const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => 
   const { classes, interval, price } = props;
   return (
     <React.Fragment>
-      <Typography role="header" variant="subheading" className={classes.price}>
+      <Typography role="header" variant="subheading" className={classes.price} qa-data-price={displayPrice(price)} >
         {displayPrice(price)}
       </Typography>
       {interval &&
-        <Typography role="header" variant="subheading" className={classes.per}>
+        <Typography role="header" variant="subheading" className={classes.per} qa-data-billing-interval={interval} >
           &nbsp;/{interval}
         </Typography>
       }
