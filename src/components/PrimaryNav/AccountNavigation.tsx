@@ -187,7 +187,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => {
-  const profile = path<Linode.Profile>(['state', '__resources', 'profile', 'data'], state);
+  const profile = path<Linode.Profile>(['__resources', 'profile', 'data'], state);
 
   /** Data hasnt loaded yes, lock it down. */
   if (!profile) {
