@@ -53,7 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   titleWrapper: {
     display: 'flex',
@@ -416,7 +415,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
           <Grid item>
             <Grid container direction="column">
-              <Grid item>
+              <Grid item style={{ paddingBottom: 0 }}>
                 <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
                   
                   {`#${ticket.id}: ${ticket.summary}`}
@@ -430,7 +429,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
                 </Typography>
               </Grid>
 
-              <Grid item style={{ paddingTop:0 }}>
+              <Grid item style={{ paddingTop: 0 }}>
                 <Typography variant="caption">
                   {ticket.status === 'closed' ? 'Closed' : 'Last updated'}
                   {` by ${ticket.updated_by} at `}

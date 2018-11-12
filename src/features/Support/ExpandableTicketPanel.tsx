@@ -47,7 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
     padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit,
     position: 'relative',
     '& p': {
       margin: 0,
@@ -86,9 +85,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     minWidth: 60,
   },
   userCol: {
-    minWidth: 100,
-    paddingRight: theme.spacing.unit * 4,
-
+    minWidth: 200,
+    paddingRight: `${theme.spacing.unit * 4}px !important`,
   },
   descCol: {},
   expCol: {
