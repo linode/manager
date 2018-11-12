@@ -74,10 +74,10 @@ export const defaultState: State = {
 export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case OPEN:
-      return { ...state, lastUpdated: Date.now(), open: true };
+      return { ...state, lastUpdated: Date.now(), open: true, error: undefined, enableErrors: [] };
 
     case CLOSE:
-      return { ...state, lastUpdated: Date.now(), open: false, error: undefined, enableErrors: [] };
+      return { ...state, lastUpdated: Date.now(), open: false, };
 
     case LOAD:
       return { ...state, loading: true };
@@ -133,17 +133,17 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
  *  errors: BackupError[] Accumulated errors.
  * }
  */
-export const reducer = (accumulator: Accumulator, thisLinode: Linode.Linode) => {
-  return enableBackups(thisLinode.id).then((e) => ({
+export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: number) => {
+  return enableBackups(linodeId).then(() => ({
     ...accumulator,
-    success: [...accumulator.success, e]
+    success: [...accumulator.success, linodeId]
     }))
     .catch((error) => {
       const reason = pathOr('Backups could not be enabled for this Linode.',
         ['response','data','errors', 0, 'reason'], error);
       return {
       ...accumulator,
-      errors: [...accumulator.errors, { linodeId: thisLinode.id, reason }]
+      errors: [...accumulator.errors, { linodeId, reason }]
   }})
 }
 
@@ -152,10 +152,10 @@ export const reducer = (accumulator: Accumulator, thisLinode: Linode.Linode) => 
 *  When complete, it will dispatch appropriate actions to handle the result, depending
 *  on whether or not any errors occurred.
 */
-export const enableAllBackups = () => async (dispatch: Dispatch<State>, getState: () => State) => {
-  const linodes = pathOr([],['backups', 'data'], getState());
+export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () => State) => {
+  const linodeIDs = pathOr([],['backups', 'data'], getState()).map((linode: Linode.Linode) => linode.id);
   dispatch(handleEnable());
-  Bluebird.reduce(linodes, reducer, { success: [], errors: []})
+  Bluebird.reduce(linodeIDs, gatherResponsesAndErrors, { success: [], errors: []})
     .then(({ success, errors }) => {
       if (errors && !isEmpty(errors)) {
         dispatch(handleEnableError(errors));
