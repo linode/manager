@@ -4,6 +4,7 @@ import { compose, Dispatch } from 'redux';
 
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups, getLinodes } from 'src/services/linodes';
+import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
 import { getAll } from 'src/utilities/getAll';
 
 // HELPERS
@@ -206,9 +207,10 @@ export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () =
   const backups_enabled = pathOr(false,['backups', 'autoEnroll'], getState());
   dispatch(handleAutoEnroll());
   updateAccountSettings({ backups_enabled })
-  .then(() => {
+  .then((response) => {
     dispatch(handleAutoEnrollSuccess());
     dispatch(enableAllBackups());
+    dispatch(handleUpdate(response))
   })
   .catch((errors) => {
     const defaultError = "Your account settings could not be updated. Please try again.";
