@@ -45,7 +45,6 @@ interface Props {
   selectedId: number | undefined;
   selectedUsername?: string;
   error?: string;
-  shrinkPanel?: boolean;
   onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   publicImages: Linode.Image[];
@@ -75,7 +74,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  tabs = [
+  createTabs = [
     {
       title: 'My StackScripts',
       render: () => <SelectStackScriptPanelContent
@@ -106,6 +105,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     {
       title: 'Community StackScripts',
       render: () => <SelectStackScriptPanelContent
+        isCommunityStackScripts={true}
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
@@ -118,9 +118,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     },
   ];
 
-  myTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
-  linodeTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
-  communityTabIndex = this.tabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
+  myTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
+  linodeTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
+  communityTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
 
   /*
   ** init tab needs to be set if we're being navigated from another page
@@ -166,15 +166,15 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { error, noHeader, shrinkPanel, classes } = this.props;
+    const { error, noHeader, classes } = this.props;
 
     return (
       <TabbedPanel
         error={error}
         rootClass={classes.root}
-        shrinkTabContent={(shrinkPanel) ? classes.creating : classes.selecting}
+        shrinkTabContent={classes.creating}
         header={(noHeader) ? "" : "Select StackScript"}
-        tabs={this.tabs}
+        tabs={this.createTabs}
         initTab={this.getInitTab()}
         handleTabChange={this.handleTabChange}
       />

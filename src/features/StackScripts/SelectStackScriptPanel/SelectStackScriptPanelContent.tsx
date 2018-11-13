@@ -62,6 +62,7 @@ interface Props {
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   currentUser: string;
   isLinodeStackScripts?: boolean;
+  isCommunityStackScripts?: boolean;
   publicImages: Linode.Image[];
   selectedStackScriptIDFromQuery: number | undefined;
   shouldPreSelectStackScript: boolean;
@@ -551,7 +552,12 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   }
 
   handleSearch = (value: string) => {
-    const { request, currentUser, isLinodeStackScripts } = this.props;
+    const {
+      request,
+      currentUser,
+      isLinodeStackScripts,
+      isCommunityStackScripts
+    } = this.props;
     const { currentFilter } = this.state;
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
@@ -559,9 +565,16 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
 
     let filter: any;
 
-    if (lowerCaseValue.includes('username:')
+    /**
+     * only allow for advanced search if we're on the community
+     * stackscripts tab
+     */
+    if (!!isCommunityStackScripts &&
+      (
+        lowerCaseValue.includes('username:')
       || lowerCaseValue.includes('label:')
-      || lowerCaseValue.includes('description:')) {
+        || lowerCaseValue.includes('description:'))
+    ) {
       /**
        * In this case, we have a search term that looks similar to the
        * following: "username:hello world"
