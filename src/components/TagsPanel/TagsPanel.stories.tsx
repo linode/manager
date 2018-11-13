@@ -4,12 +4,14 @@ import * as React from 'react';
 import  axios from 'axios';
 import  MockAdapter from 'axios-mock-adapter';
 
+import { API_ROOT } from '../../constants';
+
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import TagsPanel from './TagsPanel';
 
 const mock = new MockAdapter(axios);
 
-const API_REQUEST = 'https://api.linode.com/v4/tags';
+const API_REQUEST = `${API_ROOT}/tags`;
 
 interface Props {
   tags: string[];
