@@ -126,10 +126,10 @@ describe("BackupDrawer component", () => {
       component.setProps({ enableErrors: [error]});
       expect(component.find('WithStyles(Notice)')).toHaveLength(1);
     });
-    it("should call enableBackups on submit", () => {
+    it("should call enrollAutoBackups on submit", () => {
       const button = component.find('[data-qa-submit]');
       button.simulate('click');
-      expect(actions.enable).toHaveBeenCalled();
+      expect(actions.enroll).toHaveBeenCalled();
     });
     it("should close the drawer on Cancel", () => {
       const cancel = component.find('[data-qa-cancel]');

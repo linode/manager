@@ -21,10 +21,16 @@ mockFn.mockReturnValueOnce(Promise.reject());
 describe("Redux backups", () => {
   describe("reducer", () => {
     it("should handle OPEN", () => {
-      const newState = backups({...B.defaultState, error: apiError, enableErrors: [error]}, B.handleOpen());
+      const newState = backups(
+        {...B.defaultState,
+          error: apiError,
+          enableErrors: [error],
+          autoEnrollError: "Error"
+        }, B.handleOpen());
         expect(newState).toHaveProperty('open', true);
         expect(newState).toHaveProperty('error', undefined);
         expect(newState).toHaveProperty('enableErrors', []);
+        expect(newState).toHaveProperty('autoEnrollError', undefined);
     });
     it("should handle CLOSE", () => {
       const newState = backups(
@@ -81,6 +87,36 @@ describe("Redux backups", () => {
         B.handleResetSuccess()
       )
       expect(newState).toHaveProperty('enableSuccess', false)
+    });
+    it("should handle AUTO_ENROLL", () => {
+      const newState = backups(
+        B.defaultState,
+        B.handleAutoEnroll()
+      )
+      expect(newState).toHaveProperty('enrolling', true)
+    });
+    it("should handle AUTO_ENROLL_TOGGLE", () => {
+      const newState = backups(
+        {...B.defaultState, autoEnroll: false },
+        B.handleAutoEnrollToggle()
+      )
+      expect(newState).toHaveProperty('autoEnroll', true);
+      expect(backups(newState, B.handleAutoEnrollToggle()))
+        .toHaveProperty('autoEnroll', false);
+    });
+    it("should handle AUTO_ENROLL_SUCCESS", () => {
+      const newState = backups(
+        {...B.defaultState, enrolling: true },
+        B.handleAutoEnrollSuccess()
+      )
+      expect(newState).toHaveProperty('enrolling', false)
+    });
+    it("should handle AUTO_ENROLL_ERROR", () => {
+      const newState = backups(
+        {...B.defaultState, enableSuccess: true },
+        B.handleAutoEnrollError('Error')
+      )
+      expect(newState).toHaveProperty('autoEnrollError', 'Error')
     });
   });
   describe("magic error reducer", () => {
