@@ -38,6 +38,8 @@ const actions = {
   dismissError: jest.fn(),
   dismissSuccess: jest.fn(),
   clearSidebar: jest.fn(),
+  enroll: jest.fn(),
+  toggle: jest.fn(),
 }
 
 const classes = { root: ''}
@@ -55,6 +57,9 @@ const props = {
   enableErrors: [],
   typesLoading: false,
   typesData: types.types,
+  enrolling: false,
+  autoEnroll: false,
+  autoEnrollError: undefined,
 }
 
 const component = shallow(

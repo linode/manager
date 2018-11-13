@@ -80,12 +80,11 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
             </Grid>
           </Grid>
-          {/* Uncomment after BackupDrawer is merged */}
-          {/* <Grid item>
+          <Grid item>
             <Typography variant="body1" className={classes.footnote}>
               For existing Linodes without backups, <a>enable now</a>.
             </Typography>
-          </Grid> */}
+          </Grid>
         </Grid>
       </ExpansionPanel>
     </React.Fragment>

@@ -59,7 +59,7 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
   const { accountBackups, classes, linodesWithoutBackups, openBackupDrawer } = props;
 
   // Don't display if neither section is relevant.
-  if (!Boolean(linodesWithoutBackups) && !accountBackups) { return null; }
+  if (!Boolean(linodesWithoutBackups) && accountBackups) { return null; }
 
   return (
     <DashboardCard>
@@ -69,20 +69,17 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
-      {/* @todo should this section be conditionally rendered? */}
-      {!accountBackups &&
-        <Link to="/account/settings">
-          <Paper className={classes.section} >
-            <Typography variant="subheading" className={classes.itemTitle} >
-              Linode Backup Auto-Enrollment
-            </Typography>
-            <Typography variant="caption" >
-              If you enable this global setting, new Linodes will be automatically enrolled
-              in the Backups service unless you explicitly disable the setting.
-            </Typography>
-          </Paper>
-        </Link>
-      }
+      <Link to="/account/settings">
+        <Paper className={classes.section} >
+          <Typography variant="subheading" className={classes.itemTitle} >
+            Linode Backup Auto-Enrollment
+          </Typography>
+          <Typography variant="caption" >
+            If you enable this global setting, new Linodes will be automatically enrolled
+            in the Backups service.
+          </Typography>
+        </Paper>
+      </Link>
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
         <Paper className={classes.section} onClick={openBackupDrawer} >

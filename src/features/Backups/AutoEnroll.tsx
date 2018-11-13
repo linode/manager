@@ -5,6 +5,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 import Typography from '@material-ui/core/Typography';
 
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'header';
@@ -22,15 +23,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   enabled: boolean;
+  error?: string;
   toggle: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, enabled, toggle } = props;
+  const { classes, enabled, error, toggle } = props;
   return (
     <Paper className={classes.root}>
+      {error &&
+        <Grid item>
+          <Notice error text={error} />
+        </Grid>
+      }
       <Grid container direction="row" wrap="nowrap">
         <Grid item>
           <Toggle checked={enabled} onChange={toggle} />
@@ -44,7 +51,7 @@ const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
             the additional hourly rate noted on the
             <a href="https://www.linode.com/backups" target="_blank"> Backups pricing page</a>.
           </Typography>
-          </Grid>
+        </Grid>
       </Grid>
     </Paper>
   );
