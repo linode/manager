@@ -83,8 +83,11 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
             Enable Backups for Existing Linodes
           </Typography>
           <Typography variant="caption" >
-            You currently have {linodesWithoutBackups} Linodes without backups.
-            Enable backups to protect your data.
+            {
+              `You currently have
+              ${linodesWithoutBackups} ${linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'}
+              without backups. Enable backups to protect your data.`
+            }
           </Typography>
         </Paper>
       }
