@@ -1,10 +1,13 @@
-import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import * as Bluebird from 'bluebird';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+
+import Hidden from '@material-ui/core/Hidden';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -18,7 +21,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
+import { getLinodeBackups, getLinodes } from 'src/services/linodes';
 import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
@@ -430,8 +433,8 @@ mapStateToProps = (state, ownProps) => {
 
   return {
     data: linodes.map(addNotificationToLinode(notifications)),
-    linodesWithoutBackups: pathOr([],['backups','data'], state),
-    managed: pathOr(false, ['__resources','accountSettings','data','managed'], state)
+    linodesWithoutBackups: pathOr([], ['backups', 'data'], state),
+    managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state)
   }
 };
 
@@ -447,8 +450,50 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
+const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => null | string = (response) => {
+  const { automatic, snapshot } = response;
+  return [
+    ...automatic,
+    snapshot.current,
+    snapshot.in_progress,
+  ]
+    /** Filter null entries. */
+    .filter(Boolean)
+
+    /** Filter unsuccessful/in-progress backups */
+    .filter((backup: Linode.LinodeBackup) => backup.status === 'successful')
+
+    /** Just make sure the backup isnt null somehow. */
+    .filter((backup: Linode.LinodeBackup) => typeof backup.finished === 'string')
+
+    /** Return the highest value date. */
+    .reduce((result: null | string, { finished }: Linode.LinodeBackup) => {
+      if (result === null) { return finished; }
+
+      if (new Date(finished) > new Date(result)) { return finished; }
+
+      return result;
+    }, null);
+};
+
+const requestMostRecentBackupForLinode: (linode: Linode.Linode) => Promise<Linode.EnhancedLinode> =
+  (linode: Linode.Linode) =>
+    linode.backups.enabled === false
+      ? Promise.resolve(linode)
+      : getLinodeBackups(linode.id)
+        .then(backupsResponse => ({
+          ...linode,
+          mostRecentBackup: mostRecentFromResponse(backupsResponse),
+        }));
+
 const paginated = Pagey((ownProps, params, filters) =>
-  getLinodes(params, filters));
+  getLinodes(params, filters)
+    .then((response) => {
+
+      return Bluebird.map(response.data, requestMostRecentBackupForLinode)
+        .then(linodes => ({ ...response, data: linodes }));
+    })
+);
 
 const data = compose(
   paginated,

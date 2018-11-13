@@ -7,6 +7,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
@@ -16,10 +17,8 @@ import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-
 import { getType } from 'src/services/linodes';
-
+import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
@@ -136,6 +135,7 @@ interface Props {
   linodeBackups: Linode.LinodeBackups;
   linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
+  mostRecentBackup?: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
@@ -223,7 +223,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
         {this.headCell()}
-        <TableCell colSpan={4}>
+        <TableCell colSpan={5}>
           {typeof value === 'number' &&
             <div className={classes.status}>
               {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
@@ -273,6 +273,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       typesLoading,
       typesData,
       linodeType,
+      mostRecentBackup
     } = this.props;
 
     return (
@@ -288,6 +289,17 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Plan">
           {!typesLoading &&
             <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
+          }
+        </TableCell>
+        <TableCell parentColumn="Last Backup">
+          {
+            <Typography variant="caption">
+              {
+                mostRecentBackup
+                  ? <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={"never"} />
+                  : 'never'
+              }
+            </Typography>
           }
         </TableCell>
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
