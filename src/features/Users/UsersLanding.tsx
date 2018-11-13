@@ -191,9 +191,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   renderUserRow = (user: Linode.User) => {
     const { classes } = this.props;
     return (
-      <TableRow key={user.username} data-qa-user-row rowLink={`/users/${user.username}`}>
+      <TableRow key={user.username} data-qa-user-row rowLink={`/account/users/${user.username}`}>
         <TableCell parentColumn="Username" data-qa-username>
-          <Link to={`/users/${user.username}`} title={user.username}>
+          <Link to={`/account/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
               {user.gravatarUrl === undefined
                 ? <div className={classes.emptyImage} />
