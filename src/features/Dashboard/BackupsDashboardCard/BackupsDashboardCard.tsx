@@ -48,7 +48,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  accountBackups: boolean,
   linodesWithoutBackups: number,
   openBackupDrawer: () => void,
 }
@@ -56,10 +55,7 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const { accountBackups, classes, linodesWithoutBackups, openBackupDrawer } = props;
-
-  // Don't display if neither section is relevant.
-  if (!Boolean(linodesWithoutBackups) && accountBackups) { return null; }
+  const { classes, linodesWithoutBackups, openBackupDrawer } = props;
 
   return (
     <DashboardCard>
