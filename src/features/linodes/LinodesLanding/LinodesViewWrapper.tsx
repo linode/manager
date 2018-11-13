@@ -165,6 +165,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                     linodeNotification={linode.notification}
                     linodeLabel={linode.label}
                     linodeBackups={linode.backups}
+                    linodeBackup={linode.backup}
                     linodeTags={linode.tags}
                     linodeRecentEvent={linode.recentEvent}
                     openConfigDrawer={openConfigDrawer}

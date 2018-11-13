@@ -14,6 +14,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { formatBackupDate } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
@@ -162,6 +163,7 @@ interface Props {
   linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
+  linodeBackup: Linode.LinodeBackup;
   linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
@@ -288,11 +290,12 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   }
 
   renderLastBackup = () => {
-    const {linodeId, classes, linodeBackups} = this.props;
-    const backupsExist = (linodeBackups && linodeBackups.last_backup);
+    const {linodeId, classes, linodeBackups, linodeBackup} = this.props;
+    const backupsExist = (linodeBackups && linodeBackups.enabled);
+    const backup = (linodeBackup && linodeBackup.created);
     if (backupsExist) {
       return (
-        <Typography variant="caption">{linodeBackups.last_backup}</Typography>
+        <Typography variant="caption">{formatBackupDate(backup)}</Typography>
       )    
     } else {
       return (
