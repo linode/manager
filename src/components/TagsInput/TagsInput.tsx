@@ -5,7 +5,6 @@ import { concat } from 'ramda';
 import Select, { Item, NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
 
 import { getTags } from 'src/services/tags';
-import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 
@@ -26,27 +25,19 @@ export interface Props {
 }
 
 class TagsInput extends React.Component<Props, State> {
-  composeState = composeState;
-
   createTag = (inputValue:string) => {
-    const { accountTags } = this.state;
     const { value, onChange } = this.props;
-    this.setState({ errors: undefined });
+    const newTag = { value: inputValue, label: inputValue };
+    const updatedSelectedTags = concat(value, [newTag]);
+
     if (inputValue.length < 3 || inputValue.length > 25) {
       this.setState({errors: [{'field': 'label', 'reason': 'Length must be 3-25 characters'}] });
-      return;
+    } else {
+      this.setState({
+        errors: undefined,
+      });
+      onChange(updatedSelectedTags);
     }
-    const newTag: Item = this.tagToItem(inputValue);
-    const updatedTags = concat(accountTags, [newTag]);
-    const updatedSelectedTags = concat(value, [newTag]);
-    this.setState({
-      accountTags: updatedTags,
-    });
-    onChange(updatedSelectedTags);
-  }
-
-  tagToItem = (tag:string) => {
-    return { value: tag, label: tag }
   }
 
   state: State = {
@@ -67,11 +58,6 @@ class TagsInput extends React.Component<Props, State> {
         this.setState({errors: defaultError});
       })
   }
-
-  getTagList = (tags:Item[]) : string[] => {
-    return tags.map((tag:Item) => tag.label);
-  }
-
 
   getEmptyMessage = (value:NoOptionsMessageProps) => {
     const { value: tags } = this.props;

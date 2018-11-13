@@ -139,10 +139,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-clone-name
           />
         }
-        <TagsInput
-          value={tags}
-          onChange={this.updateTags}
-        />
         {mode === 'create' && type === 'master' &&
           <TextField
             errorText={errorFor('soa_email')}
@@ -175,6 +171,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         }
+        <TagsInput
+          value={tags}
+          onChange={this.updateTags}
+        />
         <ActionsPanel>
           {!submitting
             ? <Button

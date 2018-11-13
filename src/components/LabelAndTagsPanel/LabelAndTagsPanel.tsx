@@ -3,9 +3,6 @@ import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TagsInput, { TagInputProps } from 'src/components/TagsInput';
@@ -34,16 +31,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 const styled = withStyles(styles, { withTheme: true });
 
-interface IsFormProps {
-  action?: () => void;
-  isSubmitting: boolean;
-  success: string | undefined;
-}
-
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
-  isForm?: IsFormProps;
   tagsInputProps?: TagInputProps;
 }
 
@@ -59,48 +49,17 @@ class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, error, labelFieldProps, isForm, tagsInputProps } = this.props;
+    const { classes, error, labelFieldProps, tagsInputProps } = this.props;
 
     return (
       <React.Fragment>
-        {!!isForm // will either be a form that will save the settings or a card
-          ? <Paper style={{ padding: 24 }}>
-              <Grid item xs={12}>
-                {isForm.success &&
-                  <Notice
-                    success
-                    text={isForm.success}
-                  />
-                }
-              </Grid>
-              <div className={!isForm ? classes.inner : ''}>
-                {error && <Notice text={error} error />}
-                <TextField data-qa-label-panel {...labelFieldProps} />
-              </div>
-              {tagsInputProps && <TagsInput {...tagsInputProps} />}
-              {!!isForm.action &&
-                <ActionsPanel
-                  className={isForm ? classes.expPanelButton : ''}
-                >
-                  <Button
-                    onClick={isForm.action}
-                    type="primary"
-                    disabled={isForm.isSubmitting}
-                    data-qa-label-save
-                  >
-                    Save
-                </Button>
-                </ActionsPanel>
-              }
-            </Paper>
-          : <Paper className={classes.root} data-qa-label-header>
+          <Paper className={classes.root} data-qa-label-header>
             <div className={classes.inner}>
               {error && <Notice text={error} error />}
               <TextField {...labelFieldProps} data-qa-label-input />
               {tagsInputProps && <TagsInput {...tagsInputProps} />}
             </div>
           </Paper>
-        }
       </React.Fragment>
     );
   }
