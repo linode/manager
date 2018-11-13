@@ -1,5 +1,4 @@
 import * as classNames from 'classnames';
-import { compose, path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -16,8 +15,9 @@ import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import ThemeToggle from './ThemeToggle';
 
 interface PrimaryLink {
-  display: string,
-  href: string,
+  display: string;
+  href: string;
+  key: string;
 };
 
 type ClassNames =
@@ -158,7 +158,7 @@ interface State {
 
 type CombinedProps = Props & StateProps;
 
-class PrimaryNav extends React.Component<CombinedProps, State> {
+export class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
     drawerOpen: false,
     expandedMenus: {
@@ -186,27 +186,55 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   createMenuItems = () => {
-    const { hasAccountAccess } = this.props;
+    const {
+      hasAccountAccess,
+      // isLongviewEnabled,
+      isManagedAccount,
+    } = this.props;
 
     const primaryLinks = [
-      { display: 'Dashboard', href: '/dashboard' },
-      { display: 'Linodes', href: '/linodes' },
-      { display: 'Volumes', href: '/volumes' },
-      { display: 'NodeBalancers', href: '/nodebalancers' },
-      { display: 'Domains', href: '/domains' },
-      { display: 'Managed', href: '/managed' },
-      { display: 'Longview', href: '/longview' },
-      { display: 'StackScripts', href: '/stackscripts' },
-      { display: 'Images', href: '/images' },
+      { display: 'Dashboard', href: '/dashboard', key: 'dashboard' }
     ];
 
-    if (hasAccountAccess) {
-      primaryLinks.push({ display: 'Account', href: '/account' });
+    // if (canAccessLinodes) {
+    primaryLinks.push({ display: 'Linodes', href: '/linodes', key: 'linodes' });
+    // }
+
+    // if (canAccessVolumes) {
+    primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
+    // }
+
+    // if (canAccessNodeBalancers) {
+    primaryLinks.push({ display: 'NodeBalancers', href: '/nodebalancers', key: 'nodebalancers' });
+    // }
+
+    // if (canAccessDomains) {
+    primaryLinks.push({ display: 'Domains', href: '/domains', key: 'domains' });
+    // }
+
+    // if (isLongviewEnabled) {
+    primaryLinks.push({ display: 'Longview', href: '/longview', key: 'longview' });
+    // }
+
+    if (isManagedAccount) {
+      primaryLinks.push({ display: 'Managed', href: '/managed', key: 'managed' });
     }
 
-    this.setState({
-      primaryLinks,
-    })
+    // if(canAccessStackscripts){
+    primaryLinks.push({ display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' });
+    // }
+
+    // if(canAccessImages){
+    primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
+    // }
+
+    if (hasAccountAccess) {
+      primaryLinks.push({ display: 'Account', href: '/account', key: 'account' });
+    }
+
+    primaryLinks.push({ display: 'Get Help', href: '/support', key: 'support' });
+
+    this.setState({ primaryLinks });
   };
 
   navigate = (href: string) => {
@@ -242,14 +270,14 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
     this.navigate('/logout');
   }
 
-  renderPrimaryLink = (primaryLink: PrimaryLink) => {
+  renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes } = this.props;
 
     return (
       <ListItem
         key={primaryLink.display}
         button
-        divider
+        divider={!isLast}
         component="li"
         role="menuitem"
         focusRipple={true}
@@ -258,6 +286,7 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
           ${classes.listItem}
           ${this.linkIsActive(primaryLink.href) && classes.active}
         `}
+        data-qa-nav-item={primaryLink.key}
       >
         <ListItemText
           primary={primaryLink.display}
@@ -300,31 +329,8 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
             [classes.fadeContainer]: true,
           })}>
 
-            {this.state.primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
-
-            <ListItem
-              button
-              component="li"
-              focusRipple={true}
-              onClick={this.goToHelp}
-              className={classNames({
-                [classes.listItem]: true,
-                [classes.collapsible]: true,
-                [classes.active]: this.linkIsActive('/support') === true,
-              })}
-            >
-              <ListItemText
-                disableTypography={true}
-                className={classNames({
-                  [classes.linkItem]: true,
-                  [classes.activeLink]:
-                    expandedMenus.support
-                    || this.linkIsActive('/support') === true,
-                })}
-              >
-                Get Help
-              </ListItemText>
-            </ListItem>
+            {this.state.primaryLinks.map((primaryLink, id, arr) =>
+              this.renderPrimaryLink(primaryLink, id === arr.length - 1))}
 
             <Hidden mdUp>
               <Divider className={classes.divider} />
@@ -386,39 +392,47 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   hasAccountAccess: boolean;
+  isManagedAccount: boolean;
+  // isLongviewEnabled: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => {
-  const profile = path<Linode.Profile>(['__resources', 'profile', 'data'], state);
-  const accountAccess = path<Linode.Grants>(['grants', 'global', 'account_access'], profile);
+const userHasAccountAccess = (profile: Linode.Profile) => {
+  if (profile.restricted === false) {
+    return true;
+  }
 
-  /** Data hasnt loaded yes, lock it down. */
-  if (!profile) {
+  const { grants } = profile;
+  if (!grants) {
+    return false;
+  }
+
+  return Boolean(grants.global.account_access)
+};
+
+const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
+
+// const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => {
+  const account = state.__resources.accountSettings.data;
+  const profile = state.__resources.profile.data;
+
+  if (!account || !profile) {
     return {
       hasAccountAccess: false,
+      isManagedAccount: false,
+      // isLongviewEnabled: false,
     }
   }
 
-  /** If they're unrestricted, they can do w/e they want. */
-  if (profile.restricted === false) {
-    return {
-      hasAccountAccess: true,
-    }
-  }
-
-  /** Check the grants! */
   return {
-    hasAccountAccess: Boolean(accountAccess),
+    hasAccountAccess: userHasAccountAccess(profile),
+    isManagedAccount: accountHasManaged(account),
+    // isLongviewEnabled: accountHasLongviewSubscription(account),
   }
 };
 
 
 const connected = connect(mapStateToProps);
 
-const enhanced: any = compose(
-  withStyles(styles),
-  withRouter,
-  connected,
-);
-
-export default enhanced(PrimaryNav);
+export default withStyles(styles)(withRouter(connected(PrimaryNav)));
