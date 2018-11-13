@@ -146,6 +146,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                 <TableRow>
                   <TableCell>Linode</TableCell>
                   <TableCell>Plan</TableCell>
+                  <TableCell>Last Backup</TableCell>
                   <TableCell>IP Addresses</TableCell>
                   <TableCell>Region</TableCell>
                   <TableCell />

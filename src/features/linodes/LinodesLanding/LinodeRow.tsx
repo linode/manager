@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import Backup from '@material-ui/icons/Backup';
 
 import Flag from 'src/assets/icons/flag.svg';
 import Grid from 'src/components/Grid';
@@ -26,7 +27,9 @@ import RegionIndicator from './RegionIndicator';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
+  | 'planCell'
   | 'ipCell'
+  | 'backupCell'
   | 'ipCellWrapper'
   | 'regionCell'
   | 'actionCell'
@@ -35,7 +38,10 @@ type ClassNames = 'bodyRow'
   | 'status'
   | 'link'
   | 'linkButton'
-  | 'tagWrapper';
+  | 'tagWrapper'
+  | 'backupIcon'
+  | 'backupWrapper'
+  | 'noBackupText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
@@ -52,7 +58,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       },
     },
     ipCell: {
-      width: '30%',
+      width: '25%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
+    },
+    planCell: {
+      width: '15%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
+    },
+    backupCell: {
+      width: '15%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       },
@@ -62,13 +80,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       flexDirection: 'column',
     },
     regionCell: {
-      width: '15%',
+      width: '10%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       },
     },
     actionCell: {
-      width: '10%',
+      width: '5%',
       textAlign: 'right',
       '& button': {
         width: 30,
@@ -115,6 +133,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       '& [class*="MuiChip"]': {
         cursor: 'pointer',
       },
+    },
+    backupIcon: {
+      fontSize: 18,
+      fill: theme.palette.primary.main,
+    },
+    backupWrapper: {
+      display: 'flex',
+      alignContent: 'center',
+    },
+    noBackupText: {
+      marginRight: '8px',
     },
   });
 };
@@ -223,7 +252,7 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
         {this.headCell()}
-        <TableCell colSpan={4}>
+        <TableCell colSpan={5}>
           {typeof value === 'number' &&
             <div className={classes.status}>
               {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
@@ -258,6 +287,32 @@ class LinodeRow extends React.Component<CombinedProps, State> {
     return null;
   }
 
+  renderLastBackup = () => {
+    const {linodeId, classes, linodeBackups} = this.props;
+    const backupsExist = (linodeBackups && linodeBackups.last_backup);
+    if (backupsExist) {
+      return (
+        <Typography variant="caption">{linodeBackups.last_backup}</Typography>
+      )    
+    } else {
+      return (
+        <div className={classes.backupWrapper}>
+          <Typography variant="caption" className={classes.noBackupText}>Never</Typography>
+          <Tooltip title="Enable Backups">
+              <a
+              aria-label={'Enable Backups'}
+              href={`/linodes/${linodeId}/backup`}
+              >
+              <Backup
+              className={`${classes.backupIcon}`}
+              />
+          </a>
+          </Tooltip>
+        </div>
+      )
+    }
+  }
+
   loadedState = () => {
     const {
       linodeId,
@@ -285,10 +340,13 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         arial-label={linodeLabel}
       >
         {this.headCell()}
-        <TableCell parentColumn="Plan">
+        <TableCell parentColumn="Plan" className={classes.planCell}>
           {!typesLoading &&
             <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
           }
+        </TableCell>
+        <TableCell parentColumn="Last Backup" className={classes.backupCell}>
+          {this.renderLastBackup()}
         </TableCell>
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
