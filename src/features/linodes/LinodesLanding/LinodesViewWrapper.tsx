@@ -1,8 +1,6 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
 
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
-
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,9 +12,8 @@ import ShowMore from 'src/components/ShowMore';
 import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
-
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
 
@@ -146,6 +143,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                 <TableRow>
                   <TableCell>Linode</TableCell>
                   <TableCell>Plan</TableCell>
+                  <TableCell>Last Backup</TableCell>
                   <TableCell>IP Addresses</TableCell>
                   <TableCell>Region</TableCell>
                   <TableCell />
@@ -169,6 +167,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                     openConfigDrawer={openConfigDrawer}
                     toggleConfirmation={toggleConfirmation}
                     renderTagsAndMoreTags={this.renderTagsAndMoreTags}
+                    mostRecentBackup={linode.mostRecentBackup}
                   />,
                 )}
               </TableBody>
