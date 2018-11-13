@@ -17,7 +17,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const TheApplicationIsOnFire: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Dialog open>
-      <DialogTitle>Opps!</DialogTitle>
+      <DialogTitle>Oh snap!</DialogTitle>
       <DialogContent>
         Something went terribly wrong. Did you try {<ReloadLink />}?
       </DialogContent>
