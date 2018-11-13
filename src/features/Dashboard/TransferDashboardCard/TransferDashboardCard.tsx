@@ -138,7 +138,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                     {used}
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant="body1"
                     className={classes.quota}
                     data-qa-transfer-quota
                   >

@@ -26,7 +26,7 @@ class Example extends React.Component<{}, { value?: string }> {
   }
 }
 
-storiesOf('Forms/Toggle', module)
+storiesOf('Toggle', module)
   .addDecorator(ThemeDecorator)
   .add('Interactive', () => (
     <Example />

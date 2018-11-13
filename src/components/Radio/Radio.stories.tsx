@@ -31,7 +31,7 @@ class Example extends React.Component<{}, { value?: string }> {
   }
 }
 
-storiesOf('Forms/Radio', module)
+storiesOf('Radio', module)
   .addDecorator(ThemeDecorator)
   .add('Interactive', () => (
     <Example />

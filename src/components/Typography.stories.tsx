@@ -1,12 +1,11 @@
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 
-import Typography from '@material-ui/core/Typography';
 import { default as MDivider } from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 
 import Button from 'src/components/Button';
 import Placeholder from 'src/components/Placeholder';
-
 import ThemeDecorator from '../utilities/storybookDecorators';
 
 const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />;
@@ -89,7 +88,7 @@ storiesOf('Typography', module)
         </Typography>
         <Divider />
         <Typography variant="caption" gutterBottom>
-            Caption. Implemented using the 'caption' variant. Utilized for helper info on some form elements (ex. password strength indicator), secondary descriptions, and some notifications.
+            Caption. Implemented using the 'caption' variant. Utilized for helper info on some form elements (ex. password strength indicator) and secondary descriptions (ex. search result items).
         </Typography>
         <Divider />
         <Typography gutterBottom>

@@ -433,7 +433,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               </Grid>
 
               <Grid item style={{ paddingTop: 0 }}>
-                <Typography variant="caption">
+                <Typography variant="body1">
                   {ticket.status === 'closed' ? 'Closed' : 'Last updated'}
                   {` by ${ticket.updated_by} at `}
                   <DateTimeDisplay value={ticket.updated} /> 

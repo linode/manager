@@ -4,7 +4,7 @@ import * as React from 'react';
 import ThemeDecorator from '../utilities/storybookDecorators';
 import TextField from './TextField';
 
-storiesOf('Forms/TextField', module)
+storiesOf('TextField', module)
 .addDecorator(ThemeDecorator)
 .add('Normal', () => (
   <TextField

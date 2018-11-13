@@ -202,7 +202,7 @@ class Notifier extends React.Component<CombinedProps, State> {
             >
               <Grid item xs={9} lg={10}>
                 <Typography
-                  variant="caption"
+                  variant="body1"
                   className={classes.content}
                   data-qa-toast-message
                 >
