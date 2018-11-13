@@ -1,13 +1,13 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { AccountDetail } from './AccountDetail';
+import { BillingDetail } from './BillingDetail';
 
 import { account } from 'src/__data__/account';
 
 describe('Account Landing', () => {
   const component = shallow(
-      <AccountDetail
+      <BillingDetail
         classes={{
           root: '',
           heading: '',

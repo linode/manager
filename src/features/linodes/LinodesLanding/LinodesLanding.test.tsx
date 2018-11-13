@@ -27,6 +27,13 @@ const paginationProps = {
   onDelete: jest.fn(),
 };
 
+const actions = {
+  getLinodesWithoutBackups: jest.fn(),
+  openBackupsDrawer: jest.fn(),
+  clearSidebar: jest.fn(),
+  setSidebar: jest.fn(),
+}
+
 describe('ListLinodes', () => {
   let linodes: Linode.Linode[];
 
@@ -49,6 +56,9 @@ describe('ListLinodes', () => {
             typesRequest={jest.fn}
             typesLoading={false}
             typesLastUpdated={1}
+            actions={actions}
+            linodesWithoutBackups={[]}
+            managed={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -71,6 +81,9 @@ describe('ListLinodes', () => {
             typesRequest={jest.fn}
             typesLoading={false}
             typesLastUpdated={1}
+            actions={actions}
+            linodesWithoutBackups={[]}
+            managed={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -97,6 +110,9 @@ describe('ListLinodes', () => {
             typesRequest={jest.fn}
             typesLoading={false}
             typesLastUpdated={1}
+            actions={actions}
+            linodesWithoutBackups={[]}
+            managed={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

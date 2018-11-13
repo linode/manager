@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { withAccount } from 'src/features/Account/context';
+import { withAccount } from 'src/features/Billing/context';
 import { saveCreditCard } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';

@@ -1,6 +1,7 @@
 export {
   getAccountInfo,
   getAccountSettings,
+  updateAccountSettings,
   updateAccountInfo,
   getNetworkUtilization,
 } from './account';
