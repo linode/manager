@@ -415,7 +415,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose(
+const enhanced: any = compose(
   withStyles(styles),
   withRouter,
   connected,
