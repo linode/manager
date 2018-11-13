@@ -1,5 +1,5 @@
 import * as moment from 'moment-timezone';
-import { compose, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 
@@ -72,9 +72,4 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<any, any, any>(
-  styled,
-  connected,
-);
-
-export default enhanced(DateTimeDisplay);
+export default connected(styled(DateTimeDisplay));
