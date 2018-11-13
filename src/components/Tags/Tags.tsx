@@ -37,7 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class Tags extends React.Component<CombinedProps, {}> {
-  renderTag = (tags: string[]) => {
+  renderTags = (tags: string[]) => {
     const { classes } = this.props;
     return tags.map(eachTag => {
       return (
@@ -55,7 +55,7 @@ class Tags extends React.Component<CombinedProps, {}> {
     return (
       <ShowMore
         items={tags}
-        render={this.renderTag}
+        render={this.renderTags}
       />
     )
   }
@@ -63,21 +63,9 @@ class Tags extends React.Component<CombinedProps, {}> {
   render() {
     const { tags } = this.props;
     const [visibleTags, additionalTags] = splitAt(3, tags);
-    const { classes } = this.props;
     return (
       <React.Fragment>
-        {
-          visibleTags.map((eachTag: string) => {
-            return (
-              <Tag
-                label={eachTag}
-                key={eachTag}
-                className={classes.tag}
-                clickable={false}
-              />
-            )
-          })
-        }
+        { this.renderTags(visibleTags) }
         {!!additionalTags.length && this.renderMoreTags(additionalTags)}
       </React.Fragment>
     )

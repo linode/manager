@@ -344,10 +344,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <TableCell parentColumn="Domain" data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>
               {domain.domain}
+              <div className={classes.tagWrapper}>
+                <Tags tags={domain.tags} />
+              </div>
             </Link>
-            <div className={classes.tagWrapper}>
-              <Tags tags={domain.tags} />
-            </div>
           </TableCell>
           <TableCell parentColumn="Type" data-qa-domain-type>{domain.type}</TableCell>
           <TableCell>

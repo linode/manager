@@ -343,7 +343,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             {imageLabel}
           </div>
           <div className={classes.cardSection}>
-            <Tags tags={linodeTags}></Tags>
+            <Tags tags={linodeTags} />
           </div>
         </div>
       </CardContent>
