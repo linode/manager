@@ -164,7 +164,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
   helperText: React.StatelessComponent<{}> = () =>
     <Typography variant="body1">
-      A single Volume can range from 10 to 10240 gibibytes in size and costs
+      A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
       $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
     </Typography>
 

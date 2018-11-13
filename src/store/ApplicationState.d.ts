@@ -4,7 +4,9 @@ declare interface ApplicationState {
     accountSettings: RequestableData<Linode.AccountSettings>
   },
   authentication: AuthState;
+  backups: RequestableData<Linode.Linode[]>;
   documentation: DocumentationState;
+  sidebar: SidebarState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
@@ -19,6 +21,22 @@ declare type DocumentationState = Linode.Doc[];
 
 declare interface VolumeDrawerState {
   mode: string;
+}
+
+declare interface SidebarState {
+  backupsCTA: boolean;
+}
+
+
+declare interface BackupError {
+  linodeId: number;
+  reason: string;
+}
+declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
+  open: boolean;
+  enabling: boolean;
+  enableErrors: BackupError[];
+  enableSuccess: boolean;
 }
 
 declare interface RequestableData<D> {

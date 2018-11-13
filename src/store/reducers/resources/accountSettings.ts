@@ -63,7 +63,6 @@ export default (state: AccountSettingsState = DEFAULT_STATE, action: Action) => 
   }
 };
 
-
 export const requestAccountSettings = () => (dispatch: Dispatch<AccountSettingsState>) => {
   dispatch(startRequest());
   getAccountSettings()
