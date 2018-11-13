@@ -15,7 +15,6 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import { withTypes } from 'src/context/types';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
@@ -402,16 +401,6 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
 
 export const styled = withStyles(styles, { withTheme: true });
 
-const typesContext = withTypes(({
-  lastUpdated: typesLastUpdated,
-  loading: typesLoading,
-  request: typesRequest,
-}) => ({
-  typesRequest,
-  typesLoading,
-  typesLastUpdated,
-}));
-
 interface LinodeWithNotifications extends Linode.Linode {
   notifications?: Linode.Notification[];
 }
@@ -463,7 +452,6 @@ const paginated = Pagey((ownProps, params, filters) =>
 
 const data = compose(
   paginated,
-  typesContext,
   connected,
   withUpdatingLinodes,
 );
