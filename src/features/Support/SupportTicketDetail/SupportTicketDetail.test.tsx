@@ -83,7 +83,7 @@ describe('Support Ticket Detail', () => {
     });
 
     it('contains label', () => {
-      expect(breadcrumbProps.label).toBe('#0: TEST Support Ticket');
+      expect(breadcrumbProps.labelTitle).toBe('#0: TEST Support Ticket');
     });
   });
 });

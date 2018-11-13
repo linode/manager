@@ -18,7 +18,6 @@ import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -26,6 +25,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { getTicket, getTicketReplies } from 'src/services/support';
+import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
@@ -357,7 +357,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   render() {
-    const { classes, profileUsername } = this.props;
+    const { classes, profileUsername, timezone } = this.props;
     const { errors, loading, replies, ticket, ticketCloseSuccess } = this.state;
     const ticketId = this.props.match.params.ticketId;
     /*
@@ -385,13 +385,16 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return null;
     }
 
+    // Format date for header
+    const formattedDate = formatDate(ticket.updated, { timezone });
+
     // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
     // details.  For more info see the below link.
     // https://github.com/linode/manager/pull/4056/files/b0977c6e397e42720479478db96df56022618151#r232298065
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8, marginBottom: 8 }}>
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
               linkTo={{
@@ -401,15 +404,18 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
                 state: { openFromRedirect: ['open','new'].includes(ticket.status) }
               }}
               linkText="Support Tickets"
-              label={`#${ticket.id}: ${ticket.summary}`}
+              labelTitle={`#${ticket.id}: ${ticket.summary}`}
+              labelSubtitle={
+                `${ticket.status === 'closed' ? 'Closed' : 'Last updated'} by ${ticket.updated_by} at ${formattedDate}`
+              }
               data-qa-breadcrumb
             />
-              <Chip className={classNames({
-                [classes.status]: true,
-                [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-                [classes.closed]: ticket.status === 'closed',
-              })}
-              label={ticket.status} />
+            <Chip className={classNames({
+              [classes.status]: true,
+              [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+              [classes.closed]: ticket.status === 'closed',
+            })}
+            label={ticket.status} />
           </Grid>
         </Grid>
 
@@ -460,11 +466,13 @@ const requestAndMapGravatar = (acc: any, id: string) => {
 const styled = withStyles(styles, { withTheme: true });
 
 interface StateProps {
+  timezone: string;
   profileUsername?: string;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
+  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
+  profileUsername: path(['data', 'username'], state.__resources.profile)
 });
 
 const matchGravatarURLToReply = (gravatarMap: {[ key: string]: string }) => (reply: Linode.SupportReply) =>
