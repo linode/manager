@@ -32,7 +32,7 @@ storiesOf('Typography', module)
             Tertiary Heading
         </Typography>
         <Typography variant="body1" gutterBottom>
-            Implemented using the 'subheading' variant. Utilized for sub-section headings, 
+            Implemented using the 'subheading' variant. Utilized for sub-section headings. 
         </Typography>
         <Divider />
         <Typography variant="display2" gutterBottom>
