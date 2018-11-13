@@ -176,7 +176,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             <Breadcrumb
               linkTo="/nodebalancers"
               linkText="NodeBalancers"
-              label={nodeBalancerLabel}
+              labelTitle={nodeBalancerLabel}
               labelLink={this.getLabelLink()}
               onEditHandlers={{
                 onEdit: this.updateLabel,

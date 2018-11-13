@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import EditableText from 'src/components/EditableText';
+import LabelText from './LabelText';
 
 type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'underlineOnHover';
 
@@ -62,26 +63,16 @@ export interface Props {
   // LocationDescriptor interface from the history module
   linkTo: LocationDescriptor;
   linkText: string;
-  label: string;
+  labelTitle: string;
   labelLink?: string;
+  labelSubtitle?: string;
   onEditHandlers?: EditableProps
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linkTo, linkText, label } = props;
-
-  const labelText = (
-    <Typography
-      role="header"
-      variant="headline"
-      className={classes.labelText}
-      data-qa-static-text
-    >
-      {label}
-    </Typography>
-  );
+  const { classes, linkTo, linkText, labelTitle } = props;
 
   return (
     <React.Fragment>
@@ -104,18 +95,19 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         <EditableText
           role="header"
           variant="headline"
-          text={label}
+          text={labelTitle}
           errorText={props.onEditHandlers!.errorText}
           onEdit={props.onEditHandlers!.onEdit}
           onCancel={props.onEditHandlers!.onCancel}
           labelLink={props.labelLink}
           data-qa-editable-text
         />
-        : props.labelLink
-          ? <Link to={props.labelLink!} data-qa-label-link>
-              <span className={classes.underlineOnHover}>{labelText}</span>
-            </Link>
-          :  labelText
+        : <LabelText
+            title={props.labelTitle}
+            subtitle={props.labelSubtitle}
+            titleLink={props.labelLink}
+            data-qa-labeltext
+          />
       }
     </React.Fragment>
   );

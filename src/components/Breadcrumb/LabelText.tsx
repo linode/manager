@@ -1,0 +1,69 @@
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles,
+} from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+type ClassNames = 'root' | 'labelTitle' | 'labelSubtitle' | 'underlineOnHover';
+
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  root: {},
+  labelTitle: {
+    padding: '5px 10px',
+
+  },
+  labelSubtitle: {
+    marginLeft: '10px'
+  },
+  underlineOnHover: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline',
+      color: theme.color.black,
+    },
+  }
+});
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  titleLink?: string;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+export const LabelText: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, title, subtitle, titleLink } = props;
+
+  const labelTitle = (
+    <Typography
+      role="header"
+      variant="headline"
+      className={classes.labelTitle}
+      data-qa-label-title
+    >
+      {title}
+    </Typography>
+  );
+
+  return (
+    <div style={{display: 'block'}}>
+      {titleLink
+        ? <Link to={titleLink!} data-qa-label-link>
+            <span className={classes.underlineOnHover}>{labelTitle}</span>
+          </Link>
+        :  labelTitle}
+      {subtitle &&
+        <Typography variant="caption" className={classes.labelSubtitle} data-qa-label-subtitle>
+          {subtitle}
+        </Typography>
+      }
+    </div>
+  );
+};
+
+const styled = withStyles(styles, { withTheme: true });
+export default styled<Props>(LabelText);

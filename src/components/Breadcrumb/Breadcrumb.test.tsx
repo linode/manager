@@ -8,15 +8,23 @@ describe('Breadcrumb component', () => {
     <Breadcrumb
       linkTo="/linodes"
       linkText="Linodes"
-      label="MyTestLinode"
+      labelTitle="MyTestLinode"
 
-      classes={{root: '', backButton: '', linkText: '', labelText: '', underlineOnHover: ''}}
+      classes={{root: '', backButton: 'backButton', linkText: '', labelText: '', underlineOnHover: ''}}
     />
   );
 
-  it('renders static text when not given editable props', () => {
-    expect(wrapper.find('[data-qa-static-text]')).toHaveLength(1);
-    expect(wrapper.find('[data-qa-editable-text]')).toHaveLength(0);
+  it('contains back icon', () => {
+    expect(wrapper.find('WithStyles(IconButton)')).toHaveLength(1);
+    expect(wrapper.find('WithStyles(IconButton)').hasClass('backButton')).toBeTruthy();
+  });
+
+  it('contains link text', () => {
+    expect(wrapper.find('[data-qa-link-text]')).toHaveLength(1);
+  });
+
+  it('renders labelText without editable props', () => {
+    expect(wrapper.find('[data-qa-labeltext]')).toHaveLength(1);
   });
 
   it('renders editable text when given editable props', () => {
@@ -26,19 +34,7 @@ describe('Breadcrumb component', () => {
         onCancel: jest.fn()
       }
     });
-    expect(wrapper.find('[data-qa-static-text]')).toHaveLength(0);
+    expect(wrapper.find('[data-qa-label-title]')).toHaveLength(0);
     expect(wrapper.find('[data-qa-editable-text]')).toHaveLength(1);
-  });
-
-  it('doesn\'t render label link when not given prop', () => {
-    expect(wrapper.find('[data-qa-label-link]')).toHaveLength(0);
-  });
-
-  it('renders label link when given prop', () => {
-    wrapper.setProps({
-      labelLink: '/summary',
-      onEditHandlers: undefined
-    });
-    expect(wrapper.find('[data-qa-label-link]')).toHaveLength(1);
   });
 });
