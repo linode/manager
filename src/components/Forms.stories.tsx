@@ -9,9 +9,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 
 import ThemeDecorator from '../utilities/storybookDecorators';
 import CheckBox from './CheckBox';
+import MenuItem from './MenuItem';
 import Radio from './Radio';
 import Select from './Select';
-import MenuItem from './MenuItem';
 import TextField from './TextField';
 
 class ExampleSelect extends React.Component {

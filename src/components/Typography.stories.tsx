@@ -43,7 +43,6 @@ storiesOf('Typography', module)
         </Typography>
         <Divider />
         <Placeholder
-        icon={false}
         title="Placeholder/Null Heading"
         copy="This is a separate component utilized for null state headings."
         />
