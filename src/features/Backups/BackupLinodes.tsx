@@ -47,7 +47,7 @@ export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) =>
         const error = pathOr('', ['linodeError', 'reason'], linode);
         return <React.Fragment key={idx}>
           <TableRow data-qa-linodes >
-            <TableCell>
+            <TableCell parentColumn="Label">
               <Typography variant="body1" >
                 {linode.label}
               </Typography>
@@ -58,8 +58,8 @@ export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) =>
               }
             </TableCell>
 
-            <TableCell >{getLabel(linode.typeInfo)}</TableCell>
-            <TableCell >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
+            <TableCell parentColumn="Plan" >{getLabel(linode.typeInfo)}</TableCell>
+            <TableCell parentColumn="Price" >{`${displayPrice(getPrice(linode.typeInfo))}/mo`}</TableCell>
           </TableRow>
         </React.Fragment>
       })}

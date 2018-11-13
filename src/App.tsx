@@ -435,7 +435,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
   documentation: state.documentation,
 
-  backupsCTA: pathOr([], ['sidebar','backupCTA'], state)
+  backupsCTA: pathOr(false, ['sidebar','backupsCTA'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
