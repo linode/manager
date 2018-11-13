@@ -7,7 +7,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
@@ -19,13 +18,15 @@ import { displayType } from 'src/features/linodes/presentation';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { getType } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import IPAddress from './IPAddress';
-import LinodeActionMenu from './LinodeActionMenu';
-import LinodeStatusIndicator from './LinodeStatusIndicator';
-import RegionIndicator from './RegionIndicator';
+import IPAddress from '../IPAddress';
+import LinodeActionMenu from '../LinodeActionMenu';
+import LinodeStatusIndicator from '../LinodeStatusIndicator';
+import RegionIndicator from '../RegionIndicator';
+import BackupCell from './BackupCell';
 
 type ClassNames = 'bodyRow'
   | 'linodeCell'
+  | 'planCell'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'regionCell'
@@ -52,7 +53,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       },
     },
     ipCell: {
-      width: '30%',
+      width: '25%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      },
+    },
+    planCell: {
+      width: '15%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       },
@@ -62,13 +69,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       flexDirection: 'column',
     },
     regionCell: {
-      width: '15%',
+      width: '10%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       },
     },
     actionCell: {
-      width: '10%',
+      width: '5%',
       textAlign: 'right',
       '& button': {
         width: 30,
@@ -286,22 +293,12 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         arial-label={linodeLabel}
       >
         {this.headCell()}
-        <TableCell parentColumn="Plan">
+        <TableCell parentColumn="Plan" className={classes.planCell}>
           {!typesLoading &&
             <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
           }
         </TableCell>
-        <TableCell parentColumn="Last Backup">
-          {
-            <Typography variant="caption">
-              {
-                mostRecentBackup
-                  ? <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={"never"} />
-                  : 'never'
-              }
-            </Typography>
-          }
-        </TableCell>
+        <BackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={linodeIpv4} copyRight />
