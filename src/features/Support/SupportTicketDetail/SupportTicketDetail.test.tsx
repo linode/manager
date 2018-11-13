@@ -34,7 +34,6 @@ describe('Support Ticket Detail', () => {
     );
   });
   describe('render', () => {
-
     it('renders a CircleProgress component when loading', () => {
       wrapper.setState({ loading: true });
       expect(wrapper.find('WithStyles(circleProgressComponent)')).toHaveLength(1);

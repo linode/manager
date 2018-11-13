@@ -1,4 +1,3 @@
-
   export const supportTicket: Linode.SupportTicket = {
     "updated_by": "test-account",
     "closed": null,

@@ -14,7 +14,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import EditableText from 'src/components/EditableText';
 import LabelText from './LabelText';
 
-type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'underlineOnHover';
+type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -45,12 +45,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   labelText: {
     padding: '5px 10px'
-  },
-  underlineOnHover: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-      color: theme.color.black,
-    },
   }
 });
 interface EditableProps {
