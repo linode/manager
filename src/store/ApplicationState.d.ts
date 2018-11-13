@@ -28,6 +28,10 @@ declare interface RequestableData<D> {
   error?: Error | Linode.ApiFieldError[];
 }
 
+declare interface AccountSettingsState extends RequestableData<Linode.AccountSettings> {
+  updateError?: Linode.ApiFieldError[];
+}
+
 declare interface FeaturesState {
   linodeDetail: {
     volumes: RequestableData<Linode.Volume[]>

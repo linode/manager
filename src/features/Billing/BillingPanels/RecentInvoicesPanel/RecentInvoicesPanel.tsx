@@ -102,9 +102,9 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
 
   renderRow = (item: Linode.Invoice) => {
     return (
-      <TableRow key={`invoice-${item.id}`} rowLink={`billing/invoices/${item.id}`} data-qa-invoice>
+      <TableRow key={`invoice-${item.id}`} rowLink={`/account/billing/invoices/${item.id}`} data-qa-invoice>
         <TableCell parentColumn="Date Created" data-qa-invoice-date><DateTimeDisplay value={item.date}/></TableCell>
-        <TableCell parentColumn="Description" data-qa-invoice-desc><Link to={`billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
+        <TableCell parentColumn="Description" data-qa-invoice-desc><Link to={`/account/billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
         <TableCell parentColumn="Amount" data-qa-invoice-amount>${item.total}</TableCell>
       </TableRow>
     );

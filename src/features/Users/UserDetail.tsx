@@ -137,7 +137,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
   visitUsers = () => {
     const { history } = this.props;
-    history.push('/users');
+    history.push('/account/users');
   }
 
   onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {

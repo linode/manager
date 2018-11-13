@@ -10,7 +10,7 @@ import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { withAccount } from 'src/features/Account/context';
+import { withAccount } from 'src/features/Billing/context';
 import { Requestable } from 'src/requestableContext';
 import { updateAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';

@@ -95,7 +95,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container justify="space-between">
               <Grid item className={classes.titleWrapper}>
-                <Link to={`/billing`}>
+                <Link to={`/account/billing`}>
                   <IconButton className={classes.backButton}>
                     <KeyboardArrowLeft />
                   </IconButton>

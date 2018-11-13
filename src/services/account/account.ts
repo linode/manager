@@ -1,14 +1,14 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from 'src/services';
 
-import { updateAccountSchema } from './account.schema';
+import { updateAccountSchema, UpdateAccountSettingsSchema } from './account.schema';
 
 /**
  * getAccountInfo
  *
  * Return account information,
  * including contact and billing info.
- * 
+ *
  */
 export const getAccountInfo = () =>
   Request<Linode.Account>(
@@ -21,7 +21,7 @@ export const getAccountInfo = () =>
  * updateAccountInfo
  *
  * Update your contact or billing information.
- * 
+ *
  */
 export const updateAccountInfo = (data: Partial<Linode.Account>) =>
   Request<Linode.Account>(
@@ -35,7 +35,7 @@ export const updateAccountInfo = (data: Partial<Linode.Account>) =>
  * getNetworkUtilization
  *
  * Return your current network transfer quota and usage.
- * 
+ *
  */
 export const getNetworkUtilization = () =>
   Request<Linode.NetworkUtilization>(
@@ -48,7 +48,7 @@ export const getNetworkUtilization = () =>
  * getAccountSettings
  *
  * Retrieve general account-level settings.
- * 
+ *
  */
 export const getAccountSettings = () =>
   Request<Linode.AccountSettings>(
@@ -56,3 +56,17 @@ export const getAccountSettings = () =>
     setMethod('GET')
   )
   .then(response => response.data);
+
+/**
+ * updateAccountSettings
+ *
+ * Update a user's account settings.
+ *
+ */
+export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) =>
+Request<Linode.AccountSettings>(
+  setURL(`${API_ROOT}/account/settings`),
+  setMethod('PUT'),
+  setData(data, UpdateAccountSettingsSchema)
+)
+.then(response => response.data);

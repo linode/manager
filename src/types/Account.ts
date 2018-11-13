@@ -28,7 +28,9 @@ namespace Linode {
     managed: boolean;
     longview_subscription: string | null;
     network_helper: boolean;
+    backups_enabled: boolean;
   }
+
   interface CreditCard {
     expiry: string;
     last_four: string;
