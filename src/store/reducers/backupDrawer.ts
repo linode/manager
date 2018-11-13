@@ -210,7 +210,8 @@ export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () =
   .then((response) => {
     dispatch(handleAutoEnrollSuccess());
     dispatch(enableAllBackups());
-    dispatch(handleUpdate(response))
+    // Have to let the rest of the store know that the backups setting has been updated.
+    dispatch(handleUpdate(response));
   })
   .catch((errors) => {
     const defaultError = "Your account settings could not be updated. Please try again.";
