@@ -58,13 +58,13 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
 };
 
 const maybeRequestGrants: (response: Linode.Profile) => Promise<Linode.Profile>
-  = async (profile) => {
+  = (profile) => {
     if (profile.restricted === false) {
-      return profile;
+      return Promise.resolve(profile);
     }
 
-    const grants = await getMyGrants();
-    return ({ ...profile, grants });
+    return getMyGrants()
+      .then(grants => ({ ...profile, grants }));
   };
 
 export const requestProfile = () => (dispatch: Dispatch<State>) => {
