@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { lensPath, path, set } from 'ramda';
+import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -18,6 +18,7 @@ import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 
+import BackupDrawer from 'src/features/Backups';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -299,7 +300,14 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen } = this.state;
-    const { classes, documentation, toggleTheme, profileLoading, profileError } = this.props;
+    const {
+      backupsCTA,
+      classes,
+      documentation,
+      toggleTheme,
+      profileLoading,
+      profileError,
+    } = this.props;
 
     const hasDoc = documentation.length > 0;
 
@@ -348,6 +356,7 @@ export class App extends React.Component<CombinedProps, State> {
                                   return (
                                     <DocsSidebar
                                       docs={documentation}
+                                      backupsCTA={backupsCTA}
                                       {...props}
                                     />
                                   )
@@ -368,6 +377,7 @@ export class App extends React.Component<CombinedProps, State> {
                     data-qa-beta-notice />
                   <ToastNotifications />
                   <VolumeDrawer />
+                  <BackupDrawer />
                 </div>
               </RegionsProvider>
             </TypesProvider>
@@ -414,6 +424,7 @@ interface StateProps {
   userId?: number;
 
   documentation: Linode.Doc[];
+  backupsCTA: boolean;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
@@ -423,6 +434,8 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation,
+
+  backupsCTA: pathOr(false, ['sidebar','backupsCTA'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
