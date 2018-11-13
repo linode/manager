@@ -15,7 +15,7 @@ export interface Tag {
 
 export interface State {
   accountTags: Item[],
-  errors: Linode.ApiFieldError[] | undefined,
+  errors: Linode.ApiFieldError[],
 }
 
 export interface Props {
@@ -34,7 +34,7 @@ class TagsInput extends React.Component<Props, State> {
       this.setState({errors: [{'field': 'label', 'reason': 'Length must be 3-25 characters'}] });
     } else {
       this.setState({
-        errors: undefined,
+        errors: [],
       });
       onChange(updatedSelectedTags);
     }
