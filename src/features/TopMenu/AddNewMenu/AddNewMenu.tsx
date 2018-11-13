@@ -4,11 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 
 import Button from '@material-ui/core/Button';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import AddCircle from '@material-ui/icons/AddCircle';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 
@@ -150,36 +147,22 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.wrapper}>
-        <Hidden xsDown>
-          <Button
-            variant="raised"
-            color="primary"
-            aria-owns={anchorEl ? 'add-new-menu' : undefined}
-            aria-expanded={anchorEl ? true : undefined}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-            className={classes.button}
-            data-qa-add-new-menu-button
-          >
-            Create {
-              anchorEl
-                ? <KeyboardArrowUp className={classes.caret} />
-                : <KeyboardArrowDown className={classes.caret} />
-            }
-          </Button>
-        </Hidden>
-        <Hidden smUp>
-          <IconButton
-            aria-owns={anchorEl ? 'add-new-menu' : undefined}
-            aria-expanded={anchorEl ? true : undefined}
-            aria-haspopup="true"
-            onClick={this.handleClick}
-            className={classes.mobileButton}
-            data-qa-add-new-menu-button
-          >
-            <AddCircle className={classes.mobileCreate} />
-          </IconButton>
-        </Hidden>
+        <Button
+          variant="raised"
+          color="primary"
+          aria-owns={anchorEl ? 'add-new-menu' : undefined}
+          aria-expanded={anchorEl ? true : undefined}
+          aria-haspopup="true"
+          onClick={this.handleClick}
+          className={classes.button}
+          data-qa-add-new-menu-button
+        >
+          Create {
+            anchorEl
+              ? <KeyboardArrowUp className={classes.caret} />
+              : <KeyboardArrowDown className={classes.caret} />
+          }
+        </Button>
         <Menu
           id="add-new-menu"
           anchorEl={anchorEl}
