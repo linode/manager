@@ -18,7 +18,7 @@ class LinodeDetail extends Page {
     get setPowerOff() { return $('[data-qa-set-power="powerOff"]'); }
     get setPowerOn() { return $('[data-qa-set-power="powerOn"]'); }
     get linodeLabel() { return $('[data-qa-label]'); }
-    get editLabel() { return $('[data-qa-editable-text]'); }
+    get editLabel() { return $(this.breadcrumbEditableText.selector); }
 
     changeName(name) {
         this.linodeLabel.waitForVisible();
