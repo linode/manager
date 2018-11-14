@@ -29,6 +29,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',
+    alignItems: 'center',
+    marginTop: 5,
   },
   backButton: {
     margin: '5px 0 0 -16px',
