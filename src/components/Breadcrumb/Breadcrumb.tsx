@@ -92,7 +92,8 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
       <Link to={linkTo} data-qa-link>
         <IconButton
           className={classes.backButton}
-          >
+          tabIndex={-1}
+        >
         <KeyboardArrowLeft />
         <Typography
           variant="subheading"
