@@ -35,7 +35,7 @@ interface State<T={}> {
 }
 
 export interface PaginationProps<T> extends State<T> {
-  handlePageChange: (v: number) => void;
+  handlePageChange: (v: number, showSpinner?: boolean) => void;
   handlePageSizeChange: (v: number) => void;
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
@@ -105,12 +105,23 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ pageSize, page: 1 }, () => { this.request() });
     };
 
-    public handlePageChange = (page: number) => {
-      this.setState({ page }, () => { this.request() });
+    public handlePageChange = (page: number, showSpinner?: boolean) => {
+      /**
+       * change the page, make the request, and set loading state if specified
+       */
+      if (showSpinner) { this.setState({ loading: true }) };
+      this.setState({ page }, () => {
+        this.request()
+          .then(() => {
+            if (this.state.loading) {
+              this.setState({ loading: false })
+            }
+          })
+      });
     };
 
     public handleOrderChange = (orderBy: string, order: 'asc' | 'desc' = 'asc') => {
-      this.setState({ orderBy, order }, () => this.request());
+      this.setState({ orderBy, order, page: 1 }, () => this.request());
     };
 
     public render() {

@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 
 interface Props {
   sortOrder: 'asc' | 'desc';
-  handleClick: () => void;
+  handleClick: (v: string) => void;
   currentFilter?: string;
 }
 
@@ -47,8 +47,8 @@ const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
         </TableSortCell>
         <TableSortCell
           direction={sortOrder}
-          active={currentFilter === 'deploys'}
-          label="deploys"
+          active={currentFilter === 'deployments_active'}
+          label="deployments_active"
           handleClick={handleClick}
           data-qa-stackscript-active-deploy-header
         >
@@ -56,8 +56,8 @@ const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
         </TableSortCell>
         <TableSortCell
           direction={sortOrder}
-          active={currentFilter === 'revision'}
-          label="revision"
+          active={currentFilter === 'updated'}
+          label="updated"
           handleClick={handleClick}
           data-qa-stackscript-revision-header
         >

@@ -40,7 +40,12 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.type !== this.props.type) {
-      this.props.request();
+      /**
+       * handle page change handles the request as well
+       * so no need to run this.props.request()
+       * Also set loading state back to true
+       */
+      this.props.handlePageChange(1, true);
     }
   }
 
@@ -51,6 +56,7 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
       count,
       handlePageSizeChange,
       handlePageChange,
+      handleOrderChange,
       data: stackScripts,
       loading,
       error,
@@ -64,7 +70,7 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
           <TableHeader
             sortOrder={order}
             currentFilter={orderBy}
-            handleClick={() => null}
+            handleClick={handleOrderChange}
           />
           <TableBody>
             <StackScriptTableRow
@@ -76,13 +82,15 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
             />
           </TableBody>
         </Table>
-        <PaginationFooter
-          count={count}
-          page={page}
-          pageSize={pageSize}
-          handlePageChange={handlePageChange}
-          handleSizeChange={handlePageSizeChange}
-        />
+        {!loading &&
+          <PaginationFooter
+            count={count}
+            page={page}
+            pageSize={pageSize}
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+          />
+        }
       </React.Fragment>
     );
   }
