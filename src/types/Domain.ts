@@ -44,7 +44,7 @@ namespace Linode {
     'SRV' |
     'TXT';
 
-  export interface Record {
+  export interface DomainRecord {
     id: number;
     name: string;
     port: number;

@@ -66,21 +66,37 @@ namespace Linode {
     permissions: GrantLevel;
     label: string;
   }
+  export type GlobalGrantTypes =
+    'add_linodes' |
+    'add_longview' |
+    'longview_subscription' |
+    'account_access' |
+    'cancel_account' |
+    'add_domains' |
+    'add_stackscripts' |
+    'add_nodebalancers' |
+    'add_images' |
+    'add_volumes';
 
   export interface GlobalGrants {
-    global: {
-      [key: string]: boolean | GrantLevel,
-    };
+    global: Record<GlobalGrantTypes, boolean | GrantLevel>;
   }
 
-  export type Grants = GlobalGrants & {
-    [key: string]: Grant[];
-  }
+  export type GrantType =
+    'linode'
+    | 'domain'
+    | 'nodebalancer'
+    | 'image'
+    | 'longview'
+    | 'stackscript'
+    | 'volume';
+
+  export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
 
   export interface NetworkUtilization {
-   billable: number;
-   used: number;
-   quota: number;
+    billable: number;
+    used: number;
+    quota: number;
   }
 }
 
