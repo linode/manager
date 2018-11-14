@@ -50,11 +50,11 @@ const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (props) =>
     triggerDelete
   } = props;
 
-  if (loading) { return <TableRowLoading colSpan={5} /> }
+  if (loading) { return <TableRowLoading colSpan={6} /> }
 
-  if (error) { return <TableRowError message="Error loading StackScripts" colSpan={5} /> }
+  if (error) { return <TableRowError message="Error loading StackScripts" colSpan={6} /> }
 
-  if (stackScripts && stackScripts.length === 0) { return <TableRowEmptyState colSpan={5} /> }
+  if (stackScripts && stackScripts.length === 0) { return <TableRowEmptyState colSpan={6} /> }
 
   return (
     <React.Fragment>

@@ -7,7 +7,9 @@ import TableRow from '@material-ui/core/TableRow';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    textAlign: 'center',
+  },
 });
 
 export interface Props {
@@ -18,9 +20,10 @@ export interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const TableRowEmptyState: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes } = props;
   return (
     <TableRow>
-      <TableCell colSpan={props.colSpan} style={{ textAlign: 'center' }}>{props.message || 'No items to display.'}</TableCell>
+      <TableCell colSpan={props.colSpan} className={classes.root}>{props.message || 'No items to display.'}</TableCell>
     </TableRow>
 
   );

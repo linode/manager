@@ -63,7 +63,7 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Table aria-label="List of StackScripts">
+        <Table aria-label="List of StackScripts" border>
           <TableHeader
             sortOrder={order}
             currentFilter={orderBy}

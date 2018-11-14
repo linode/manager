@@ -12,10 +12,18 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'activeDeploys'
+  | 'lastRevision';;
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
+  activeDeploys: {
+    minWidth: 140,
+  },
+  lastRevision: {
+    minWidth: 130,
+  }
 });
 
 interface Props {
@@ -30,7 +38,8 @@ const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     sortOrder,
     handleClick,
-    currentFilter
+    currentFilter,
+    classes,
   } = props;
 
   return (
@@ -51,6 +60,7 @@ const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
           label="deployments_active"
           handleClick={handleClick}
           data-qa-stackscript-active-deploy-header
+          className={classes.activeDeploys}
         >
           Active Deploys
         </TableSortCell>
@@ -60,6 +70,7 @@ const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
           label="updated"
           handleClick={handleClick}
           data-qa-stackscript-revision-header
+          className={classes.lastRevision}
         >
           Last Revision
         </TableSortCell>

@@ -37,6 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   searchBar: {
     marginTop: 0,
+    marginBottom: theme.spacing.unit,
     backgroundColor: theme.color.white,
   },
 });
