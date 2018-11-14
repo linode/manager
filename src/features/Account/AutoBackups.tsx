@@ -85,12 +85,14 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               />
             </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="body1" className={classes.footnote}>
-              {`For existing Linodes without backups, `}
-              <span className={classes.link} onClick={openBackupsDrawer}>enable now</span>.
-            </Typography>
-          </Grid>
+          {!backups_enabled &&
+            <Grid item>
+              <Typography variant="body1" className={classes.footnote}>
+                {`For existing Linodes without backups, `}
+                <span className={classes.link} onClick={openBackupsDrawer}>enable now</span>.
+              </Typography>
+            </Grid>
+          }
         </Grid>
       </ExpansionPanel>
     </React.Fragment>
