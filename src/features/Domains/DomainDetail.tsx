@@ -171,7 +171,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             <Breadcrumb
               linkTo="/domains"
               linkText="Domains"
-              label={domain.domain}
+              labelTitle={domain.domain}
             />
           </Grid>
         </Grid>
