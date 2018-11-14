@@ -19,6 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       position: 'relative !important',
       left: `${theme.spacing.unit}px !important`,
       width: '100%',
+      paddingTop: theme.spacing.unit * 3,
     },
   },
   title: {
