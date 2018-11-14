@@ -23,9 +23,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginTop: 0,
     padding: theme.spacing.unit * 4,
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 3,
-    },
   },
   card: {
     [theme.breakpoints.down('sm')]: {
@@ -54,6 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   poolUsageProgress: {
     marginRight: theme.spacing.unit * 4,
+    height: 'auto',
   },
   circleChildren: {
     textAlign: 'center',
