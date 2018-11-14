@@ -329,13 +329,20 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.domains) {
       const domainsByLabel = this.state.domains.filter(
-        domain => domain.domain.toLowerCase().includes(queryLower),
+        domain => {
+          const matchingTags = this.getMatchingTags(domain.tags, queryLower);
+          const bool = or(
+            domain.domain.toLowerCase().includes(queryLower),
+            matchingTags.length > 0
+          )
+          return bool;
+        }
       );
       searchResults.push(...(domainsByLabel.map(domain => ({
         label: domain.domain,
         value: domain.id,
         data: {
-          tags: [],
+          tags: domain.tags,
           description: domain.description || domain.status,
           /* TODO: Update this with the Domains icon! */
           Icon: NodebalIcon,

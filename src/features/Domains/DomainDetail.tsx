@@ -12,8 +12,9 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getDomain, getDomainRecords } from 'src/services/domains';
+import { getDomain, getDomainRecords, updateDomain } from 'src/services/domains';
 
 import DomainRecords from './DomainRecords';
 
@@ -117,11 +118,25 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) { return; }
 
     getDomain(domainId)
-      .then((data) => {
+      .then((data: Linode.Domain) => {
         this.setState({ domain: data });
       })
       .catch(console.error);
   }
+
+  handleUpdateTags = (tagsList: string[]) => {
+    const { domain } = this.state;
+    return updateDomain(
+      domain.id,
+      { tags: tagsList }
+    )
+      .then((data: Linode.Domain) => {
+        this.setState({
+          domain: data,
+        })
+      });
+  }
+
 
   goToDomains = () => {
     this.props.history.push('/domains');
@@ -176,6 +191,10 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
+          <TagsPanel
+            tags={domain.tags}
+            updateTags={this.handleUpdateTags}
+          />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}

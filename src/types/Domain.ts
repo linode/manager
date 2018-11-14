@@ -9,6 +9,7 @@ namespace Linode {
     expire_sec: number;
     ttl_sec: number;
     status: DomainStatus;
+    tags: string[];
     master_ips: string[];
     axfr_ips: string[];
     group: string;

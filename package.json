@@ -25,6 +25,7 @@
     "algoliasearch": "^3.30.0",
     "autoprefixer": "7.1.6",
     "axios": "^0.18.0",
+    "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
     "browser-detect": "^0.2.28",
     "case-sensitive-paths-webpack-plugin": "2.1.1",

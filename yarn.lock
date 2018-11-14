@@ -1919,6 +1919,13 @@ axe-core@^3.1.1:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-3.1.1.tgz#c00515481b2abc47a87a3cbcd6ba2ae2d78d027f"
   integrity sha512-5/JPwRqOMDnEqonolatT9/i+aOTYCpTEHR4rqmYjWRn+oiZdRHbYv8MC+HNLEtP0I3mkC3glAF8fRkfKHrUOtw==
 
+axios-mock-adapter@^1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/axios-mock-adapter/-/axios-mock-adapter-1.15.0.tgz#fbc06825d8302c95c3334d21023bba996255d45d"
+  integrity sha1-+8BoJdgwLJXDM00hAju6mWJV1F0=
+  dependencies:
+    deep-equal "^1.0.1"
+
 axios@^0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.18.0.tgz#32d53e4851efdc0a11993b6cd000789d70c05102"

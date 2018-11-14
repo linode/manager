@@ -17,6 +17,7 @@ export interface LinodeCloneData {
   type?: string | null;
   label?: string | null;
   backups_enabled?: boolean | null;
+  tags?: string[] | null;
 }
 
 export interface RebuildRequest {

@@ -7,9 +7,9 @@ export const importZoneSchema = object({
 
 const domainSchemaBase = object().shape({
   domain: string()
-    .required('Domain is required.')
     .matches(/([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/, 'Domain is not valid.'),
   status: mixed().oneOf(['disabled', 'active', 'edit_mode', 'has_errors']),
+  tags: array(),
   description: string()
     .min(1, 'Description must be between 1 and 255 characters.')
     .max(255, 'Description must be between 1 and 255 characters.'),
@@ -22,6 +22,9 @@ const domainSchemaBase = object().shape({
 });
 
 export const createDomainSchema = domainSchemaBase.shape({
+  domain: string()
+    .required('Domain is required.')
+    .matches(/([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/, 'Domain is not valid.'),
   type: mixed()
     .required()
     .oneOf(['master', 'slave']),
