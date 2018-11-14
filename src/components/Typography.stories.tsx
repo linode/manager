@@ -100,19 +100,3 @@ storiesOf('Typography', module)
         <Divider />
     </React.Fragment>
 ));
-
-storiesOf('Typography', module) 
-.addDecorator(ThemeDecorator)
-.add('Buttons', () => (
-    <React.Fragment>
-        <Button type="primary" data-qa-button="primary">Primary</Button>
-        <Divider />
-        <Button type="secondary" data-qa-button="secondary">Secondary</Button>
-        <Divider />
-        <Button type="cancel" data-qa-button="cancel">Cancel</Button>
-        <Divider />
-        <Button type="remove" data-qa-button="remove"/>
-        <Divider />
-    </React.Fragment>
-));
-

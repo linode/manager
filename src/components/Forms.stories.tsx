@@ -186,21 +186,21 @@ storiesOf('Forms', module)
         <TextField
             label="Email"
             placeholder="Email"
-            inputType="email"
+            type="email"
         >
             Email Input
         </TextField>
         <TextField
             label="Number"
             placeholder="Number"
-            inputType="number"
+            type="number"
         >
             Number Input
         </TextField>
         <TextField
             label="Tel"
             placeholder="Telephone"
-            inputType="tel"
+            type="tel"
         >
             Telephone Input
         </TextField>
