@@ -25,7 +25,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   toggleLabel: {
     display: 'flex',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    marginLeft: 0,
+    marginBottom: theme.spacing.unit,
   },
   toggleLabelText: {
     marginTop: 12

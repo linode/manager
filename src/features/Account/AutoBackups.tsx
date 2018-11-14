@@ -71,7 +71,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item container direction="row" alignItems="center">
             <Grid item>
               <FormControlLabel
-                className="toggleLabel"
+                // className="toggleLabel"
                 control={
                   <Toggle
                     onChange={handleToggle}
