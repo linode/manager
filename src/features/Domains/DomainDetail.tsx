@@ -128,7 +128,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     const { domain } = this.state;
     return updateDomain(
       domain.id,
-      { domain: domain.domain, tags: tagsList }
+      { tags: tagsList }
     )
       .then((data: Linode.Domain) => {
         this.setState({
