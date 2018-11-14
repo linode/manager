@@ -1,6 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
@@ -69,18 +70,19 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
           }
           <Grid item container direction="row" alignItems="center">
             <Grid item>
-              <Toggle
-                onChange={handleToggle}
-                checked={backups_enabled}
+              <FormControlLabel
+                className="toggleLabel"
+                control={
+                  <Toggle
+                    onChange={handleToggle}
+                    checked={backups_enabled}
+                  />
+                }
+                label={backups_enabled
+                  ? "Enabled (Auto Enroll All New Linodes in Backups)"
+                  : "Disabled (Don't Enroll New Linodes in Backups Automatically)"
+                }
               />
-            </Grid>
-            <Grid item>
-            <Typography variant="body1">
-              {backups_enabled
-                ? "Enabled (Auto Enroll All New Linodes in Backups)"
-                : "Disabled (Don't Enroll New Linodes in Backups Automatically)"
-              }
-            </Typography>
             </Grid>
           </Grid>
           <Grid item>
