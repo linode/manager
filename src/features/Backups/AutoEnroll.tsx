@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
+export const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, enabled, error, toggle } = props;
   return (
     <Paper className={classes.root}>
@@ -59,6 +59,7 @@ const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
               <Toggle
                 checked={enabled}
                 onChange={toggle}
+                data-qa-enable-toggle
               />
             }
             label={
