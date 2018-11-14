@@ -14,16 +14,17 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import EditableText from 'src/components/EditableText';
 import LabelText from './LabelText';
 
-type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText';
+type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'subtitleLinkText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   backButton: {
-    margin: '5px 0 0 0',
+    margin: '0',
     width: 'auto',
+    height: 'auto',
     '& svg': {
-      width: 26,
-      height: 26,
+      width: 20,
+      height: 20,
     },
   },
   linkText: {
@@ -43,8 +44,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       display: 'none',
     },
   },
+  subtitleLinkText: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    color: '#3683DC',
+    textDecoration: 'underline',
+    borderColor: theme.color.grey,
+    '&:after': {
+      content: "'|'",
+      display: 'inline-block',
+      padding: '0 0 0 8px',
+      color: theme.color.grey1,
+    },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
+  },
   labelText: {
-    padding: '5px 10px'
+    padding: '2px 10px'
   }
 });
 interface EditableProps {

@@ -10,7 +10,7 @@ describe('Breadcrumb component', () => {
       linkText="Linodes"
       labelTitle="MyTestLinode"
 
-      classes={{root: '', backButton: 'backButton', linkText: '', labelText: ''}}
+      classes={{root: '', backButton: 'backButton', linkText: '', labelText: '', subtitleLinkText: ''}}
     />
   );
 

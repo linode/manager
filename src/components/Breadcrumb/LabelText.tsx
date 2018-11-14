@@ -13,11 +13,11 @@ type ClassNames = 'root' | 'labelTitle' | 'labelSubtitle' | 'underlineOnHover';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   labelTitle: {
-    padding: '5px 10px',
-
+    padding: '0 10px',
+    lineHeight: '1.5rem',
   },
   labelSubtitle: {
-    marginLeft: '10px'
+    margin: '8px 0 0 10px'
   },
   underlineOnHover: {
     '&:hover, &:focus': {
