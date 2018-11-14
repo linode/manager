@@ -1,17 +1,14 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
-import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import Tags from 'src/components/Tags';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
@@ -20,12 +17,12 @@ import { getType } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
-import LinodeStatusIndicator from '../LinodeStatusIndicator';
 import RegionIndicator from '../RegionIndicator';
 import BackupCell from './BackupCell';
+import HeadCell from './HeadCell';
 
-type ClassNames = 'bodyRow'
-  | 'linodeCell'
+type ClassNames =
+  'bodyRow'
   | 'planCell'
   | 'ipCell'
   | 'ipCellWrapper'
@@ -34,24 +31,15 @@ type ClassNames = 'bodyRow'
   | 'actionInner'
   | 'flag'
   | 'status'
-  | 'link'
   | 'linkButton'
-  | 'tagWrapper';
+  ;
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     bodyRow: {
       height: 77,
     },
-    linodeCell: {
-      width: '30%',
-      '& h3': {
-        transition: theme.transitions.create(['color']),
-      },
-      [theme.breakpoints.down('sm')]: {
-        width: '100%'
-      },
-    },
+
     ipCell: {
       width: '25%',
       [theme.breakpoints.down('sm')]: {
@@ -102,9 +90,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       color: theme.palette.text.primary,
       fontSize: '.92rem',
     },
-    link: {
-      display: 'block',
-    },
+
     linkButton: {
       padding: 0,
       width: '100%',
@@ -116,13 +102,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
         },
       },
     },
-    tagWrapper: {
-      marginTop: theme.spacing.unit / 2,
-      marginLeft: theme.spacing.unit * 4,
-      '& [class*="MuiChip"]': {
-        cursor: 'pointer',
-      },
-    },
+
   });
 };
 
@@ -200,36 +180,26 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       .catch((e: Error) => e)
   }
 
-  headCell = () => {
-    const { linodeId, linodeStatus, linodeLabel, linodeTags, classes } = this.props;
-
-    return (
-      <TableCell parentColumn="Linode" className={classes.linodeCell}>
-        <Link to={`/linodes/${linodeId}`} className={classes.link}>
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item className="py0">
-              <LinodeStatusIndicator status={linodeStatus} />
-            </Grid>
-            <Grid item className="py0">
-              <Typography role="header" variant="subheading" data-qa-label>
-                {linodeLabel}
-              </Typography>
-            </Grid>
-          </Grid>
-          <div className={classes.tagWrapper}>
-            <Tags tags={linodeTags} />
-          </div>
-        </Link>
-      </TableCell>
-    );
-  }
-
   loadingState = () => {
-    const { linodeId, linodeStatus, linodeRecentEvent, classes } = this.props;
+    const {
+      classes,
+      linodeId,
+      linodeLabel,
+      linodeRecentEvent,
+      linodeStatus,
+      linodeTags,
+    } = this.props;
+
     const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
+
     return (
       <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
-        {this.headCell()}
+        <HeadCell
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          linodeTags={linodeTags}
+          linodeStatus={linodeStatus}
+        />
         <TableCell colSpan={5}>
           {typeof value === 'number' &&
             <div className={classes.status}>
@@ -267,20 +237,21 @@ class LinodeRow extends React.Component<CombinedProps, State> {
 
   loadedState = () => {
     const {
+      classes,
+      linodeBackups,
       linodeId,
-      linodeStatus,
       linodeIpv4,
       linodeIpv6,
-      linodeRegion,
       linodeLabel,
-      linodeBackups,
-      classes,
+      linodeRegion,
+      linodeStatus,
+      linodeTags,
+      linodeType,
+      mostRecentBackup,
       openConfigDrawer,
       toggleConfirmation,
-      typesLoading,
       typesData,
-      linodeType,
-      mostRecentBackup
+      typesLoading,
     } = this.props;
 
     return (
@@ -292,7 +263,12 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         rowLink={`/linodes/${linodeId}`}
         arial-label={linodeLabel}
       >
-        {this.headCell()}
+        <HeadCell
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          linodeTags={linodeTags}
+          linodeStatus={linodeStatus}
+        />
         <TableCell parentColumn="Plan" className={classes.planCell}>
           {!typesLoading &&
             <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
