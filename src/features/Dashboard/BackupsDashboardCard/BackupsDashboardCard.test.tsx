@@ -13,6 +13,7 @@ const classes = {
   section: '',
   sectionLink: '',
   title: '',
+  ctaLink: '',
 }
 
 const props = {
