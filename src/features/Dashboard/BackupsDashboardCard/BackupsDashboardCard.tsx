@@ -97,27 +97,28 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
       </Link>
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
-        <Paper
-          onClick={openBackupDrawer}
-          data-qa-backup-existing
-          className={classNames(
-            {
-              [classes.section]: true,
-              [classes.sectionLink]: true
-            }
-          )}
-        >
-          <Typography variant="subheading" className={classes.itemTitle} >
-            Enable Backups for Existing Linodes
-          </Typography>
-          <Typography variant="caption" data-qa-linodes-message>
-            {
-              `You currently have
-              ${linodesWithoutBackups} ${linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'}
-              without backups. Enable backups to protect your data.`
-            }
-          </Typography>
-        </Paper>
+        <a onClick={openBackupDrawer}>
+          <Paper
+            data-qa-backup-existing
+            className={classNames(
+              {
+                [classes.section]: true,
+                [classes.sectionLink]: true
+              }
+            )}
+          >
+            <Typography variant="subheading" className={classes.itemTitle} >
+              Enable Backups for Existing Linodes
+            </Typography>
+            <Typography variant="caption" data-qa-linodes-message>
+              {
+                `You currently have
+                ${linodesWithoutBackups} ${linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'}
+                without backups. Enable backups to protect your data.`
+              }
+            </Typography>
+          </Paper>
+        </a>
       }
     </DashboardCard>
   );
