@@ -16,7 +16,8 @@ type ClassNames = 'root'
 | 'icon'
 | 'section'
 | 'sectionLink'
-| 'title';
+| 'title'
+| 'ctaLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -50,6 +51,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     justifyContent: 'center',
     padding: `${theme.spacing.unit}px !important`,
   },
+  ctaLink: {
+    display: 'block',
+  },
 });
 
 interface Props {
@@ -78,7 +82,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
-      <Link to="/account/settings" data-qa-account-link>
+      <Link to="/account/settings" data-qa-account-link className={classes.ctaLink}>
         <Paper className={classNames(
           {
             [classes.section]: true,
@@ -97,7 +101,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
       </Link>
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
-        <a onClick={openBackupDrawer} data-qa-backup-existing>
+        <a onClick={openBackupDrawer} data-qa-backup-existing className={classes.ctaLink} href="javascript:;">
           <Paper
             className={classNames(
               {
