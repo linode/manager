@@ -2,7 +2,9 @@ import * as Bluebird from 'bluebird';
 import { isEmpty, pathOr } from 'ramda';
 import { compose, Dispatch } from 'redux';
 
+import { updateAccountSettings } from 'src/services/account';
 import { enableBackups, getLinodes } from 'src/services/linodes';
+import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
 import { getAll } from 'src/utilities/getAll';
 
 // HELPERS
@@ -36,6 +38,12 @@ export const ENABLE_SUCCESS = '@manager/backups/ENABLE_SUCCESS'
 export const ENABLE_ERROR = '@manager/backups/ENABLE_ERROR'
 export const RESET_ERRORS = '@manager/backups/RESET_ERRORS'
 export const RESET_SUCCESS = '@manager/backups/RESET_SUCCESS'
+export const AUTO_ENROLL = '@manager/backups/AUTO_ENROLL'
+export const AUTO_ENROLL_SUCCESS = '@manager/backups/AUTO_ENROLL_SUCCESS'
+export const AUTO_ENROLL_ERROR = '@manager/backups/AUTO_ENROLL_ERROR'
+export const AUTO_ENROLL_TOGGLE = '@manager/backups/AUTO_ENROLL_TOGGLE'
+
+
 
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
@@ -58,6 +66,15 @@ export const handleOpen: ActionCreator = () => ({ type: OPEN });
 
 export const handleClose: ActionCreator = () => ({ type: CLOSE });
 
+export const handleAutoEnroll: ActionCreator = () => ({ type: AUTO_ENROLL });
+
+export const handleAutoEnrollSuccess: ActionCreator = () => ({ type: AUTO_ENROLL_SUCCESS });
+
+export const handleAutoEnrollError: ActionCreator = (error: string) => ({ type: AUTO_ENROLL_ERROR, data: error });
+
+export const handleAutoEnrollToggle: ActionCreator = () => ({ type: AUTO_ENROLL_TOGGLE });
+
+
 // DEFAULT STATE
 export const defaultState: State = {
   lastUpdated: 0,
@@ -68,13 +85,17 @@ export const defaultState: State = {
   error: undefined,
   enableErrors: [],
   enableSuccess: false,
+  autoEnroll: false,
+  autoEnrollError: undefined,
+  enrolling: false,
 };
 
 // REDUCER
 export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case OPEN:
-      return { ...state, lastUpdated: Date.now(), open: true, error: undefined, enableErrors: [] };
+      return { ...state, lastUpdated: Date.now(), open: true,
+        error: undefined, enableErrors: [], autoEnrollError: undefined, autoEnroll: false };
 
     case CLOSE:
       return { ...state, lastUpdated: Date.now(), open: false, };
@@ -104,6 +125,18 @@ export default (state: State = defaultState, action: Action) => {
     case RESET_SUCCESS:
       return { ...state, lastUpdated: Date.now(), enableSuccess: false, }
 
+    case AUTO_ENROLL:
+     return {...state, enrolling: true }
+
+    case AUTO_ENROLL_TOGGLE:
+     return {...state, autoEnroll: !state.autoEnroll }
+
+    case AUTO_ENROLL_SUCCESS:
+     return {...state, autoEnrollError: undefined, enrolling: false }
+
+    case AUTO_ENROLL_ERROR:
+     return {...state, autoEnrollError: action.data, enrolling: false }
+
     default:
       return state;
   }
@@ -121,7 +154,7 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
 }
 
 /**
- * reducer
+ * gatherResponsesAndErrors
  *
  * This magic is needed to accumulate errors from any failed requests, since
  * we need to enable backups for each Linode individually. The final response
@@ -168,4 +201,25 @@ export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () =
     .catch(() => dispatch(
       handleEnableError([{linodeId: 0, reason: "There was an error enabling backups."}])
     ));
+}
+
+/* Dispatches an async action that will set the backups_enabled account setting.
+*  When complete, it will dispatch appropriate actions to handle the result, including
+* updating state.__resources.accountSettings.data.backups_enabled.
+*/
+export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () => State) => {
+  const backups_enabled = pathOr(false,['backups', 'autoEnroll'], getState());
+  dispatch(handleAutoEnroll());
+  updateAccountSettings({ backups_enabled })
+    .then((response) => {
+      dispatch(handleAutoEnrollSuccess());
+      dispatch(enableAllBackups());
+      // Have to let the rest of the store know that the backups setting has been updated.
+      dispatch(handleUpdate(response));
+    })
+    .catch((errors) => {
+      const defaultError = "Your account settings could not be updated. Please try again.";
+      const finalError =  pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
+      dispatch(handleAutoEnrollError(finalError));
+    });
 }

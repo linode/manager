@@ -1,4 +1,4 @@
-import { compose, path, pathOr } from 'ramda';
+import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
@@ -6,6 +6,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/
 
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
+import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 
 import AutoBackups from './AutoBackups';
@@ -20,12 +21,14 @@ interface StateProps {
   loading: boolean;
   backups_enabled: boolean;
   error?: Error;
+  linodesWithoutBackups: Linode.Linode[];
   updateError?: Linode.ApiFieldError[];
 }
 
 interface DispatchProps {
   actions: {
     updateAccount: (data: Partial<Linode.AccountSettings>) => void;
+    openBackupsDrawer: () => void;
   }
 }
 
@@ -39,7 +42,14 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
   }
 
   render() {
-    const { backups_enabled, error, loading, updateError } = this.props;
+    const {
+      actions: { openBackupsDrawer },
+      backups_enabled,
+      error,
+      loading,
+      linodesWithoutBackups,
+      updateError
+    } = this.props;
 
     if (loading) { return <CircleProgress /> }
     if (error) { return <ErrorState errorText={"There was an error retrieving your account data."} /> }
@@ -49,6 +59,8 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
         backups_enabled={backups_enabled}
         errors={updateError}
         handleToggle={this.handleToggle}
+        openBackupsDrawer={openBackupsDrawer}
+        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
       />
     )
   }
@@ -59,12 +71,14 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   error: path(['__resources', 'accountSettings','error'], state),
   updateError: path(['__resources', 'accountSettings','updateError'], state),
+  linodesWithoutBackups: pathOr([], ['backups', 'data'], state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
   return {
     actions: {
       updateAccount: (data: Partial<Linode.AccountSettings>) => dispatch(updateAccountSettings(data)),
+      openBackupsDrawer: () => dispatch(handleOpen())
     }
   };
 };

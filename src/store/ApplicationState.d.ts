@@ -37,6 +37,9 @@ declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   enabling: boolean;
   enableErrors: BackupError[];
   enableSuccess: boolean;
+  autoEnroll: boolean;
+  autoEnrollError?: string;
+  enrolling: boolean;
 }
 
 declare interface RequestableData<D> {

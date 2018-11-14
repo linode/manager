@@ -1,11 +1,15 @@
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 
+import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
@@ -20,11 +24,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+interface StateProps {
+  accountBackups: boolean;
+  linodesWithoutBackups: Linode.Linode[];
+  managed: boolean;
+  backupError?: Error;
+}
 
-class Dashboard extends React.Component<CombinedProps, {}> {
+interface DispatchProps {
+  actions: {
+    getLinodesWithoutBackups: () => void;
+    openBackupDrawer: () => void;
+  }
+}
+
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+
+export class Dashboard extends React.Component<CombinedProps, {}> {
 
   render() {
+    const {
+      accountBackups,
+      actions: { openBackupDrawer },
+      backupError,
+      linodesWithoutBackups,
+      managed,
+    } = this.props;
     return (
       <Grid container spacing={24}>
         <DocumentTitleSegment segment="Dashboard" />
@@ -39,6 +64,13 @@ class Dashboard extends React.Component<CombinedProps, {}> {
         </Grid>
         <Grid item xs={12} md={5}>
           <TransferDashboardCard />
+          {(!managed && !backupError) &&
+            <BackupsDashboardCard
+              accountBackups={accountBackups}
+              linodesWithoutBackups={linodesWithoutBackups.length}
+              openBackupDrawer={openBackupDrawer}
+            />
+          }
           <BlogDashboardCard />
         </Grid>
       </Grid>
@@ -46,6 +78,29 @@ class Dashboard extends React.Component<CombinedProps, {}> {
   }
 }
 
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
+  linodesWithoutBackups: pathOr([],['backups', 'data'], state),
+  managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
+  backupError: pathOr(false, ['backups', 'error'], state),
+});
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
+      openBackupDrawer: () => dispatch(handleOpen())
+    }
+  };
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(Dashboard);
+const enhanced: any = compose(
+  styled,
+  connected,
+)(Dashboard);
+
+export default enhanced;
