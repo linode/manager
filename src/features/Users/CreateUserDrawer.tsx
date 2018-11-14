@@ -68,7 +68,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         if (!user.restricted) {
           addUser(user);
         } else {
-          push(`/users/${username}/permissions`, { newUsername: user.username });
+          push(`/account/users/${username}/permissions`, { newUsername: user.username });
         }
       })
       .catch((errResponse) => {

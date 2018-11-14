@@ -22,7 +22,7 @@ describe('Account - Restricted User Suite', () => {
     it('should navigate to user permissions page on creation', () => {
         expect(Users.userPermissionsTab.isVisible()).toBe(true);
         expect(Users.userPermissionsTab.getAttribute('aria-selected')).toBe('true');
-        expect(browser.getUrl()).toContain(`/users/${userConfig.username}/permissions`);
+        expect(browser.getUrl()).toContain(`/account/users/${userConfig.username}/permissions`);
     });
 
     it('should navigate back to user listing on click back arrow', () => {
