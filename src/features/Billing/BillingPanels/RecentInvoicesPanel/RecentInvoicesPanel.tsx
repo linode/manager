@@ -29,17 +29,7 @@ interface Props extends PaginationProps<Linode.Invoice> {}
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
-  mounted: boolean = false;
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  render() {
+    render() {
     const {
       data,
       page,
@@ -94,7 +84,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
   handleExpansion = (e: any, expanded: boolean) => {
     if (expanded && !this.props.data) {
       this.setState({ loading: true });
-      this.props.request();
+      this.props.handleOrderChange('date', 'desc');
     }
   };
 

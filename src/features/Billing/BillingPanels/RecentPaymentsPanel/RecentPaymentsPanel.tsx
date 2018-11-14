@@ -101,7 +101,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
 
   handleExpansion = (e: any, expanded: boolean) => {
     if (expanded && !this.props.data) {
-      this.props.request();
+      this.props.handleOrderChange('date', 'desc');
     }
   }
 }
