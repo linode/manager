@@ -11,6 +11,7 @@ const classes = {
   icon: '',
   itemTitle: '',
   section: '',
+  sectionLink: '',
   title: '',
 }
 

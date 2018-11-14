@@ -1,4 +1,4 @@
-import { compose, path, pathOr } from 'ramda';
+import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 
@@ -21,6 +21,7 @@ interface StateProps {
   loading: boolean;
   backups_enabled: boolean;
   error?: Error;
+  linodesWithoutBackups: Linode.Linode[];
   updateError?: Linode.ApiFieldError[];
 }
 
@@ -46,6 +47,7 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
       backups_enabled,
       error,
       loading,
+      linodesWithoutBackups,
       updateError
     } = this.props;
 
@@ -58,6 +60,7 @@ class GlobalSettings extends React.Component<CombinedProps,{}> {
         errors={updateError}
         handleToggle={this.handleToggle}
         openBackupsDrawer={openBackupsDrawer}
+        hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
       />
     )
   }
@@ -68,6 +71,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   error: path(['__resources', 'accountSettings','error'], state),
   updateError: path(['__resources', 'accountSettings','updateError'], state),
+  linodesWithoutBackups: pathOr([], ['backups', 'data'], state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {

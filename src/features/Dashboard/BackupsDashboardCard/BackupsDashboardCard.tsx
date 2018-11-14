@@ -15,6 +15,7 @@ type ClassNames = 'root'
 | 'header'
 | 'icon'
 | 'section'
+| 'sectionLink'
 | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -37,6 +38,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   section: {
     padding: theme.spacing.unit * 3,
     borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+  sectionLink: {
+    cursor: 'pointer',
   },
   title: {
     background: theme.bg.offWhite,
@@ -72,7 +76,13 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
         </Typography>
       </Paper>
       <Link to="/account/settings" data-qa-account-link>
-        <Paper className={classes.section} >
+        <Paper className={classNames(
+          {
+            [classes.section]: true,
+            [classes.sectionLink]: true
+          }
+          )}
+        >
           <Typography variant="subheading" className={classes.itemTitle} >
             Linode Backup Auto-Enrollment
           </Typography>
@@ -84,7 +94,16 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
       </Link>
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
-        <Paper className={classes.section} onClick={openBackupDrawer} data-qa-backup-existing >
+        <Paper
+          onClick={openBackupDrawer}
+          data-qa-backup-existing
+          className={classNames(
+            {
+              [classes.section]: true,
+              [classes.sectionLink]: true
+            }
+          )}
+        >
           <Typography variant="subheading" className={classes.itemTitle} >
             Enable Backups for Existing Linodes
           </Typography>

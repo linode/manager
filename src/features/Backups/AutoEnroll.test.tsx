@@ -10,7 +10,7 @@ const props = {
   error: undefined,
   toggle: jest.fn(),
   classes: {
-    root: '', header: '', toggleLabel: '', toggleLabelText: '',
+    root: '', header: '', icon: '', toggleLabel: '', toggleLabelText: '',
   }
 }
 

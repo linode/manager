@@ -4,6 +4,7 @@ import * as React from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -11,20 +12,27 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
 
-type ClassNames = 'root' | 'footnote' | 'link';
+type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   footnote: {
     fontSize: 14,
+    cursor: 'pointer',
   },
   link: {
     textDecoration: 'underline',
+  },
+  icon: {
+    display: 'inline-block',
+    fontSize: '0.8em',
+    marginLeft: theme.spacing.unit / 3,
   }
 });
 
 interface Props {
   backups_enabled: boolean;
+  hasLinodesWithoutBackups: boolean;
   errors?: Linode.ApiFieldError[];
   handleToggle: () => void;
   openBackupsDrawer: () => void;
@@ -42,7 +50,14 @@ const displayError = (errors: Linode.ApiFieldError[]) => {
 
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
-  const { backups_enabled, classes, errors, handleToggle, openBackupsDrawer } = props;
+  const {
+    backups_enabled,
+    classes,
+    errors,
+    hasLinodesWithoutBackups,
+    handleToggle,
+    openBackupsDrawer
+  } = props;
 
   return (
     <React.Fragment>
@@ -60,7 +75,10 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
             <Typography variant="body1">
               This controls whether Linode Backups are enabled, by default, for all Linodes when
               they are initially created. For each Linode with Backups enabled, your account will
-              be billed the additional hourly rate noted on the <a href="https://linode.com/backups">{` Backups pricing page`}</a>.
+              be billed the additional hourly rate noted on the
+              <a href="https://linode.com/backups" target="_blank">{` Backups pricing page`}
+                <OpenInNew className={classes.icon} />
+              </a>.
             </Typography>
           </Grid>
           {errors &&
@@ -85,7 +103,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               />
             </Grid>
           </Grid>
-          {!backups_enabled &&
+          {!backups_enabled && hasLinodesWithoutBackups &&
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}

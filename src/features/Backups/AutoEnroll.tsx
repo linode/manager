@@ -4,6 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -11,6 +12,7 @@ import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root'
   | 'header'
+  | 'icon'
   | 'toggleLabel'
   | 'toggleLabelText';
 
@@ -22,6 +24,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   header: {
     marginBottom: theme.spacing.unit,
     fontSize: 17
+  },
+  icon: {
+    display: 'inline-block',
+    fontSize: '0.8em',
   },
   toggleLabel: {
     display: 'flex',
@@ -68,9 +74,16 @@ export const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
                   Auto Enroll All New Linodes in Backups
                 </Typography>
                 <Typography variant="caption" >
-                  Enroll all future Linodes in backups. Your account will be billed
-                  the additional hourly rate noted on the
-                  <a href="https://www.linode.com/backups" target="_blank"> Backups pricing page</a>.
+                  {
+                    `Enroll all future Linodes in backups. Your account will be billed
+                    the additional hourly rate noted on the `
+                  }
+                  <a href="https://www.linode.com/backups"
+                    target="_blank"
+                  >
+                    Backups pricing page <OpenInNew className={classes.icon} />.
+                  </a>
+
                 </Typography>
               </div>
             }
