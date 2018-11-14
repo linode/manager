@@ -1,4 +1,4 @@
-import { pathSatisfies } from 'ramda';
+import { equals, pathSatisfies } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/observable/fromPromise';
 import 'rxjs/add/operator/concatMap';
@@ -63,13 +63,10 @@ const withUpdatingLinodes = (WrappedComponent: React.ComponentType<PropsIn>) => 
       const { data } = this.props;
       const { data: prevData } = prevProps;
 
-      if (
-        data && data.length > 0
-        && data !== prevData
-      ) {
+      if (data && !equals(prevData, data)) {
         this.setState({
           linodeIDs: data.map(l => l.id),
-          data: this.state.data.length !== 0 ? this.state.data : data,
+          data,
         });
       }
     }
