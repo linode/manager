@@ -24,6 +24,7 @@ import { getImages } from 'src/services/images';
 import { getLinodeBackups, getLinodes } from 'src/services/linodes';
 import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
+import { mostRecentFromResponse } from 'src/utilities/backups';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
@@ -449,32 +450,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 };
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => null | string = (response) => {
-  const { automatic, snapshot } = response;
-  return [
-    ...automatic,
-    snapshot.current,
-    snapshot.in_progress,
-  ]
-    /** Filter null entries. */
-    .filter(Boolean)
-
-    /** Filter unsuccessful/in-progress backups */
-    .filter((backup: Linode.LinodeBackup) => backup.status === 'successful')
-
-    /** Just make sure the backup isnt null somehow. */
-    .filter((backup: Linode.LinodeBackup) => typeof backup.finished === 'string')
-
-    /** Return the highest value date. */
-    .reduce((result: null | string, { finished }: Linode.LinodeBackup) => {
-      if (result === null) { return finished; }
-
-      if (new Date(finished) > new Date(result)) { return finished; }
-
-      return result;
-    }, null);
-};
 
 const requestMostRecentBackupForLinode: (linode: Linode.Linode) => Promise<Linode.EnhancedLinode> =
   (linode: Linode.Linode) =>
