@@ -4,8 +4,9 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import { compose } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 
 import TableBody from '@material-ui/core/TableBody';
 
@@ -31,7 +32,8 @@ interface Props {
 
 type CombinedProps = Props
   & PaginationProps<Linode.StackScript.Response>
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & StateProps;
 
 class StackScriptTable extends React.Component<CombinedProps, {}> {
   componentDidMount() {
@@ -96,31 +98,42 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
   }
 }
 
-const whichRequest = (type: 'linode' | 'own' | 'community') => {
+const whichRequest = (type: 'linode' | 'own' | 'community', username: string) => {
   if (type === 'linode') {
     return (params: any, filters: any) => getStackScriptsByUser('linode', params, filters)
   }
 
   if (type === 'own') {
-    return (params: any, filters: any) => getStackScriptsByUser('mmckenna', params, filters)
+    return (params: any, filters: any) => getStackScriptsByUser(username, params, filters)
   }
 
   else {
-    return (params: any, filters: any) => getCommunityStackscripts('mmckenna', params, filters)
+    return (params: any, filters: any) => getCommunityStackscripts(username, params, filters)
   }
 }
 
-const updatedRequest = (ownProps: Props, params: any, filters: any) =>
-  whichRequest(ownProps.type)(params, filters)
+const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) =>
+  whichRequest(ownProps.type, ownProps.username)(params, filters)
     .then(response => response);
 
 const paginated = Pagey(updatedRequest);
 
 const styled = withStyles(styles, { withTheme: true });
 
+interface StateProps {
+  username: string;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+  username: pathOr('', ['data', 'username'], state.__resources.profile),
+});
+
+const connected = connect(mapStateToProps);
+
 const enhanced = compose(
+  connected,
+  styled,
   paginated,
-  styled
 )
 
 export default enhanced(StackScriptTable);
