@@ -17,7 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginRight: - theme.spacing.unit,
     position: 'relative',
     [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing.unit * 2,
+      marginLeft: theme.spacing.unit,
     },
     '&.active $icon': {
       backgroundColor: theme.palette.text.primary,

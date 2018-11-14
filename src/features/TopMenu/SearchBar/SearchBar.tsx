@@ -64,20 +64,28 @@ type ClassNames =
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
+    '& .react-select__menu-list': {
+      padding: 0,
+      overflowX: 'hidden',
+    },
     '& .react-select__control': {
       backgroundColor: 'transparent',
     },
     '& .react-select__value-container': {
       overflow: 'hidden',
+      '& p': {
+        fontSize: '1rem'
+      }
     },
     '& .react-select__indicators': {
       display: 'none',
     },
     '& .react-select__menu': {
-      marginTop: 16,
+      marginTop: 12,
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
       maxHeight: 325,
       overflowY: 'auto',
+      border: 0,
     }
   },
   navIconHide: {
@@ -438,6 +446,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             isClearable={false}
             isMulti={false}
             value={null}
+            menuIsOpen={true}
           />
           <IconButton
             color="inherit"
