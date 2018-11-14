@@ -39,7 +39,7 @@ interface DispatchProps {
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
-class Dashboard extends React.Component<CombinedProps, {}> {
+export class Dashboard extends React.Component<CombinedProps, {}> {
 
   render() {
     const {

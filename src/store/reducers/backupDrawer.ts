@@ -211,15 +211,15 @@ export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () =
   const backups_enabled = pathOr(false,['backups', 'autoEnroll'], getState());
   dispatch(handleAutoEnroll());
   updateAccountSettings({ backups_enabled })
-  .then((response) => {
-    dispatch(handleAutoEnrollSuccess());
-    dispatch(enableAllBackups());
-    // Have to let the rest of the store know that the backups setting has been updated.
-    dispatch(handleUpdate(response));
-  })
-  .catch((errors) => {
-    const defaultError = "Your account settings could not be updated. Please try again.";
-    const finalError =  pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
-    dispatch(handleAutoEnrollError(finalError));
-  });
+    .then((response) => {
+      dispatch(handleAutoEnrollSuccess());
+      dispatch(enableAllBackups());
+      // Have to let the rest of the store know that the backups setting has been updated.
+      dispatch(handleUpdate(response));
+    })
+    .catch((errors) => {
+      const defaultError = "Your account settings could not be updated. Please try again.";
+      const finalError =  pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
+      dispatch(handleAutoEnrollError(finalError));
+    });
 }
