@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
+export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linodesWithoutBackups, openBackupDrawer } = props;
 
   return (
@@ -71,7 +71,7 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
-      <Link to="/account/settings">
+      <Link to="/account/settings" data-qa-account-link>
         <Paper className={classes.section} >
           <Typography variant="subheading" className={classes.itemTitle} >
             Linode Backup Auto-Enrollment
@@ -84,11 +84,11 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
       </Link>
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
-        <Paper className={classes.section} onClick={openBackupDrawer} >
+        <Paper className={classes.section} onClick={openBackupDrawer} data-qa-backup-existing >
           <Typography variant="subheading" className={classes.itemTitle} >
             Enable Backups for Existing Linodes
           </Typography>
-          <Typography variant="caption" >
+          <Typography variant="caption" data-qa-linodes-message>
             {
               `You currently have
               ${linodesWithoutBackups} ${linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'}
@@ -100,6 +100,8 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
     </DashboardCard>
   );
 };
+
+BackupsDashboardCard.displayName = "BackupsDashboardCard";
 
 const styled = withStyles(styles, { withTheme: true });
 

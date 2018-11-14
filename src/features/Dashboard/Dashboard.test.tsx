@@ -1,8 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { linode1, linode2 } from 'src/__data__/linodes';
-
 import { Dashboard } from './Dashboard';
 
 const props = {
@@ -10,7 +8,7 @@ const props = {
     getLinodesWithoutBackups: jest.fn(),
     openBackupDrawer: jest.fn(),
   },
-  linodesWithoutBackups: [linode1, linode2],
+  linodesWithoutBackups: [],
   managed: false,
   backupError: undefined,
   classes: { root: ''}
