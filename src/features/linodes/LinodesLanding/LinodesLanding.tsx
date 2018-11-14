@@ -21,14 +21,14 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
-import { getLinodeBackups, getLinodes } from 'src/services/linodes';
+import { getLinodes } from 'src/services/linodes';
 import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
-import { mostRecentFromResponse } from 'src/utilities/backups';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
+import requestMostRecentBackupForLinode from './requestMostRecentBackupForLinode';
 import ToggleBox from './ToggleBox';
 import withUpdatingLinodes from './withUpdatingLinodes';
 
@@ -450,16 +450,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 };
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const requestMostRecentBackupForLinode: (linode: Linode.Linode) => Promise<Linode.EnhancedLinode> =
-  (linode: Linode.Linode) =>
-    linode.backups.enabled === false
-      ? Promise.resolve(linode)
-      : getLinodeBackups(linode.id)
-        .then(backupsResponse => ({
-          ...linode,
-          mostRecentBackup: mostRecentFromResponse(backupsResponse),
-        }));
 
 const paginated = Pagey((ownProps, params, filters) =>
   getLinodes(params, filters)
