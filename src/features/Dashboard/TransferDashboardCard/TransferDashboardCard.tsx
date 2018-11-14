@@ -11,6 +11,7 @@ import { getNetworkUtilization } from 'src/services/account';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root'
+  | 'card'
   | 'grid'
   | 'poolUsageProgress'
   | 'circleChildren'
@@ -20,9 +21,15 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
+    marginTop: 0,
     padding: theme.spacing.unit * 4,
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing.unit * 3,
+    },
+  },
+  card: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0
     },
   },
   grid: {
@@ -112,7 +119,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     const poolUsagePct = ((used / quota) * 100) < 1 ? 1 : (used / quota) * 100;
 
     return (
-      <DashboardCard>
+      <DashboardCard className={classes.card}>
         <Paper className={classes.root}>
           <Grid
             container

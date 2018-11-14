@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -59,7 +60,12 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
 
   return (
     <DashboardCard>
-      <Paper className={[classes.section, classes.title].join(' ')} >
+      <Paper className={classNames(
+        {
+          [classes.section]: true,
+          [classes.title]: true
+        }
+      )}>
         <Backup className={classes.icon} />
         <Typography className={classes.header} variant="headline">
           Back Up Your Data and Keep it Safe
@@ -91,7 +97,6 @@ const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) =>
           </Typography>
         </Paper>
       }
-
     </DashboardCard>
   );
 };
