@@ -39,8 +39,18 @@ describe('Create - Volume Suite', () => {
         const volumeHelpText = $$(`${VolumeDetail.size.selector} p`)[1];
         expect(volumeHelpText.isVisible()).toBe(true);
         expect(volumeHelpText.getText()).toEqual('A single volume can range from 10 GiB to 10,240 GiB in size.');
+    });
+
+    it('should display volume price dynamically based on size', () => {
+        [200, 333, 450].forEach( (price) => {
+            $(`${VolumeDetail.size.selector} input`).setValue(price);
+            const volumePrice = price * 0.1;
+            expect(VolumeDetail.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
+            expect(VolumeDetail.volumePriceBillingInterval.getText()).toContain('mo');
+        });
         VolumeDetail.closeVolumeDrawer();
     });
+
 
     it('should display form error on create without a label', () => {
         VolumeDetail.createVolume(testVolume, 'header');
