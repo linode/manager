@@ -70,6 +70,9 @@ type ClassNames =
     '& .react-select__value-container': {
       overflow: 'hidden',
     },
+    '& .react-select__indicators': {
+      display: 'none',
+    },
     '& .react-select__menu': {
       marginTop: 16,
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
