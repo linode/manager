@@ -11,12 +11,12 @@ import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
 
-import MakeAPaymentPanel from './AccountPanels/MakeAPaymentPanel';
-import RecentInvoicesPanel from './AccountPanels/RecentInvoicesPanel';
-import RecentPaymentsPanel from './AccountPanels/RecentPaymentsPanel';
-import SummaryPanel from './AccountPanels/SummaryPanel';
-import UpdateContactInformationPanel from './AccountPanels/UpdateContactInformationPanel';
-import UpdateCreditCardPanel from './AccountPanels/UpdateCreditCardPanel';
+import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
+import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
+import RecentPaymentsPanel from './BillingPanels/RecentPaymentsPanel';
+import SummaryPanel from './BillingPanels/SummaryPanel';
+import UpdateContactInformationPanel from './BillingPanels/UpdateContactInformationPanel';
+import UpdateCreditCardPanel from './BillingPanels/UpdateCreditCardPanel';
 import { AccountProvider } from './context';
 
 type ClassNames = 'root' | 'heading';
@@ -52,7 +52,7 @@ const L = {
   },
 };
 
-export class AccountDetail extends React.Component<CombinedProps, State> {
+export class BillingDetail extends React.Component<CombinedProps, State> {
   static docs = [
     BillingAndPayments,
     AccountsAndPasswords,
@@ -136,5 +136,5 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
   styled,
-  setDocs(AccountDetail.docs),
-)(AccountDetail);
+  setDocs(BillingDetail.docs),
+)(BillingDetail);

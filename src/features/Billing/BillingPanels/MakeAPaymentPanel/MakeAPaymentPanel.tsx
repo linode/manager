@@ -18,7 +18,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import { withAccount } from 'src/features/Account/context';
+import { withAccount } from 'src/features/Billing/context';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import { executePaypalPayment, makePayment, stagePaypalPayment }
@@ -86,7 +86,7 @@ interface PaypalScript {
   isScriptLoadSucceed?: boolean;
   isScriptLoaded?: boolean;
   onScriptLoaded?: () => void;
-} 
+}
 
 interface AccountContextProps {
   accountLoading: boolean;
@@ -145,8 +145,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   handleTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       success: false,
-      successMessage: '', 
-      type: e.target.value as 'CREDIT_CARD' | 'PAYPAL' 
+      successMessage: '',
+      type: e.target.value as 'CREDIT_CARD' | 'PAYPAL'
     });
   }
 
@@ -210,11 +210,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   });
 
   closeDialog = () => {
-    this.setState({ 
+    this.setState({
       errors: undefined,
       dialogOpen: false,
       success: true,
-      successMessage: 'Payment Cancelled' 
+      successMessage: 'Payment Cancelled'
     });
   }
 
@@ -270,11 +270,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   * This point of this function is to pass the payment_id,
   * which is returned from /account/payments/paypal
   * and then pass is to the Paypal login button
-  * 
+  *
   * Linode's API is handling all the logic of staging the Paypal payment
   * so that we don't have to create any sale client-side
-  * 
-  * See documentation: 
+  *
+  * See documentation:
   * https://github.com/paypal/paypal-checkout/blob/master/docs/button.md#advanced-integration
   */
   payment = (data: any, actions: any) => {
@@ -291,7 +291,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       usd: (+usd).toFixed(2)
     })
       .then((response: any) => {
-        this.setState({ 
+        this.setState({
           submitting: false,
           paymentID: response.payment_id
          })
@@ -313,12 +313,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    * /account/payment/paypal/execute
    * @param actions - handers to do more things. Optional argument that we
    * don't really need
-   * 
-   * See documentation: 
+   *
+   * See documentation:
    * https://github.com/paypal/paypal-checkout/blob/master/docs/button.md#advanced-integration
    */
   onAuthorize = (data: Paypal.AuthData) => {
-    this.setState({ 
+    this.setState({
       dialogOpen: true,
       payerID: data.payerID,
      });
@@ -326,8 +326,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   /*
   * User was navigated to Paypal's site and then cancelled the payment
-  *    
-  * See documentation: 
+  *
+  * See documentation:
   * https://github.com/paypal/paypal-checkout/blob/master/docs/button.md#advanced-integration
   */
   onCancel = () => {
@@ -467,9 +467,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel className={classes.actionPanel}>
         {this.state.type === 'PAYPAL'
-          ? 
+          ?
           <React.Fragment>
-            {!paypalSubmitEnabled && 
+            {!paypalSubmitEnabled &&
               <Tooltip
                 title={'You need a minimum amount of $5.00 to enable the payment.'}
                 data-qa-help-tooltip
@@ -479,7 +479,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                 <div className={classes.paypalMask} />
               </Tooltip>
             }
-            
+
               <div data-qa-paypal-button className={classNames(
                 {
                   [classes.paypalButtonWrapper]: true,
@@ -499,7 +499,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   }}
                 />
               </div>
-            
+
           </React.Fragment>
           : <Button
             type="primary"

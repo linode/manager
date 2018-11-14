@@ -113,3 +113,9 @@ export const UpdateGrantSchema = object({
   stackscript: array().of(GrantSchema),
   volume: array().of(GrantSchema),
 });
+
+export const UpdateAccountSettingsSchema = object({
+  network_helper: boolean(),
+  backups_enabled: boolean(),
+  managed: boolean(),
+});

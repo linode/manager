@@ -1,14 +1,14 @@
 import * as classNames from 'classnames';
-import { compose, path } from 'ramda';
+import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
@@ -31,6 +31,7 @@ const primaryLinks: PrimaryLink[] = [
   { display: 'Longview', href: '/longview' },
   { display: 'StackScripts', href: '/stackscripts' },
   { display: 'Images', href: '/images' },
+  { display: 'Account', href: '/account'},
 ];
 
 type ClassNames =
@@ -50,7 +51,8 @@ type ClassNames =
   | 'toggle'
   | 'switchText'
   | 'spacer'
-  | 'listItemAccount';
+  | 'listItemAccount'
+  | 'divider';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuGrid: {
@@ -81,6 +83,10 @@ type ClassNames =
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
     '&:hover': {
       borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -177,6 +183,9 @@ type ClassNames =
   spacer: {
     padding: 25,
   },
+  divider: {
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+  },
 });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
@@ -237,6 +246,14 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
     this.navigate('/support');
   }
 
+  goToProfile = () => {
+    this.navigate('/profile');
+  }
+
+  logOut = () => {
+    this.navigate('/logout');
+  }
+
   renderPrimaryLink(primaryLink: PrimaryLink) {
     const { classes, managed } = this.props;
 
@@ -269,7 +286,7 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, toggleTheme, closeMenu, managed } = this.props;
+    const { classes, toggleTheme, managed } = this.props;
     const { expandedMenus } = this.state;
     const themeName = (this.props.theme as any).name;
 
@@ -305,69 +322,8 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
               {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
 
               <ListItem
-                data-menu-name="account"
-                focusRipple={true}
                 button
                 component="li"
-                role="menuitem"
-                onClick={this.expandMenutItem}
-                className={classNames({
-                  [classes.listItem]: true,
-                  [classes.listItemAccount]: true,
-                  [classes.collapsible]: true,
-                })}
-              >
-                <ListItemText
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.account
-                      || this.linkIsActive('/billing') === true
-                      || this.linkIsActive('/users') === true,
-                  })}
-                >
-                  <KeyboardArrowRight className={classes.arrow} />
-                  Account
-              </ListItemText>
-              </ListItem>
-              <Collapse
-                in={expandedMenus.account
-                  || (this.linkIsActive('/billing') === true)
-                  || (this.linkIsActive('/users') === true)}
-                timeout="auto"
-                component="ul"
-                unmountOnExit
-                className={classes.sublinkPanel}
-              >
-                <li role="menuitem">
-                  <Link
-                    to="/billing"
-                    className={classNames({
-                      [classes.sublink]: true,
-                      [classes.sublinkActive]: this.linkIsActive('/billing') === true,
-                    })}
-                    onClick={closeMenu}
-                  >
-                    Account &amp; Billing
-                </Link>
-                </li>
-                <li role="menuitem">
-                  <Link
-                    to="/users"
-                    className={classNames({
-                      [classes.sublink]: true,
-                      [classes.sublinkActive]: this.linkIsActive('/users') === true,
-                    })}
-                    onClick={closeMenu}
-                  >
-                    Users
-                </Link>
-                </li>
-              </Collapse>
-
-              <ListItem
-                button
                 focusRipple={true}
                 onClick={this.goToHelp}
                 className={classNames({
@@ -386,8 +342,58 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
                   })}
                 >
                   Get Help
-              </ListItemText>
+                </ListItemText>
               </ListItem>
+
+              <Hidden mdUp>
+                <Divider className={classes.divider} />
+                <ListItem
+                  button
+                  component="li"
+                  focusRipple={true}
+                  onClick={this.goToProfile}
+                  className={classNames({
+                    [classes.listItem]: true,
+                    [classes.collapsible]: true,
+                    [classes.active]: this.linkIsActive('/profile') === true,
+                  })}
+                >
+                  <ListItemText
+                    disableTypography={true}
+                    className={classNames({
+                      [classes.linkItem]: true,
+                      [classes.activeLink]:
+                        expandedMenus.support
+                        || this.linkIsActive('/profile') === true,
+                    })}
+                  >
+                    My Profile
+                  </ListItemText>
+                </ListItem>
+                <ListItem
+                  button
+                  component="li"
+                  focusRipple={true}
+                  onClick={this.logOut}
+                  className={classNames({
+                    [classes.listItem]: true,
+                    [classes.collapsible]: true,
+                    [classes.active]: this.linkIsActive('/logout') === true,
+                  })}
+                >
+                  <ListItemText
+                    disableTypography={true}
+                    className={classNames({
+                      [classes.linkItem]: true,
+                      [classes.activeLink]:
+                        expandedMenus.support
+                        || this.linkIsActive('/logout') === true,
+                    })}
+                  >
+                    Log Out
+                  </ListItemText>
+                </ListItem>
+              </Hidden>
 
               <div className={classes.spacer} />
 
@@ -431,7 +437,7 @@ interface StateProps {
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
   /** Account Settings */
-  managed: path(['data', 'managed'], state.__resources.accountSettings),
+  managed: pathOr(false, ['data', 'managed'], state.__resources.accountSettings),
 });
 
 export const connected = connect(mapStateToProps, undefined);

@@ -26,6 +26,7 @@ import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -58,6 +59,7 @@ interface Props {
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
   selectedRegionIDFromLinode?: string;
+  accountBackups: boolean;
 }
 
 interface State {
@@ -274,7 +276,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const { errors, selectedBackupID, selectedDiskSize, selectedLinodeID, tags,
       selectedTypeID, selectedRegionID, label, backups, linodesWithBackups, privateIP,
     selectedBackupInfo, isMakingRequest } = this.state;
-    const { extendLinodes, getBackupsMonthlyPrice, classes,
+    const { accountBackups, extendLinodes, getBackupsMonthlyPrice, classes,
        notice, types, getRegionInfo, getTypeInfo } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -284,6 +286,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const regionInfo = selectedRegionID && getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
+
+    const hasBackups = backups || accountBackups;
 
     return (
       <React.Fragment>
@@ -355,6 +359,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         />
         <AddonsPanel
           backups={backups}
+          accountBackups={accountBackups}
           changeBackups={this.handleToggleBackups}
           changePrivateIP={this.handleTogglePrivateIP}
           backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
@@ -388,16 +393,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     displaySections.push(typeInfo);
                   }
 
-                  if (backups && typeInfo && typeInfo.backupsMonthly) {
-                    displaySections.push({
-                      title: 'Backups Enabled',
-                      ...(typeInfo.backupsMonthly &&
-                        { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                    });
+                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+                    displaySections.push(renderBackupsDisplaySection(accountBackups, typeInfo.backupsMonthly));
                   }
 
                   let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                  if (backups && typeInfo && typeInfo.backupsMonthly) {
+                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
                     calculatedPrice += typeInfo.backupsMonthly;
                   }
 
