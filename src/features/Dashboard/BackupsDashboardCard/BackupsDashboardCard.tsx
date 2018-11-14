@@ -53,14 +53,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  linodesWithoutBackups: number,
-  openBackupDrawer: () => void,
+  accountBackups: boolean;
+  linodesWithoutBackups: number;
+  openBackupDrawer: () => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linodesWithoutBackups, openBackupDrawer } = props;
+  const { accountBackups, classes, linodesWithoutBackups, openBackupDrawer } = props;
+
+  if (accountBackups && !linodesWithoutBackups) { return null; }
 
   return (
     <DashboardCard>

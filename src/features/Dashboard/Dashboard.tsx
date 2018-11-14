@@ -25,6 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface StateProps {
+  accountBackups: boolean;
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
@@ -43,6 +44,7 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
 
   render() {
     const {
+      accountBackups,
       actions: { openBackupDrawer },
       backupError,
       linodesWithoutBackups,
@@ -64,6 +66,7 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
           <TransferDashboardCard />
           {(!managed && !backupError) &&
             <BackupsDashboardCard
+              accountBackups={accountBackups}
               linodesWithoutBackups={linodesWithoutBackups.length}
               openBackupDrawer={openBackupDrawer}
             />
@@ -76,9 +79,10 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   linodesWithoutBackups: pathOr([],['backups', 'data'], state),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
-  backupError: pathOr(false, ['backups', 'error'], state)
+  backupError: pathOr(false, ['backups', 'error'], state),
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {

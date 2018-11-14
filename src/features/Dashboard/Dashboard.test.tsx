@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Dashboard } from './Dashboard';
 
 const props = {
+  accountBackups: false,
   actions: {
     getLinodesWithoutBackups: jest.fn(),
     openBackupDrawer: jest.fn(),
@@ -20,7 +21,7 @@ const component = shallow(
 
 describe("Dashboard view", () => {
   describe("Backups CTA card", () => {
-    it("should always display for non-managed users", () => {
+    it("display for non-managed users", () => {
       expect(component.find('WithStyles(withRouter(BackupsDashboardCard))')).toHaveLength(1);
     });
     it("should never display for managed users", () => {

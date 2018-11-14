@@ -59,6 +59,7 @@ interface DispatchProps {
 }
 
 interface StateProps {
+  accountBackups: boolean;
   open: boolean;
   loading: boolean;
   enabling: boolean;
@@ -111,6 +112,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
   render() {
     const {
+      accountBackups,
       actions: { close, enroll, toggle },
       autoEnroll,
       autoEnrollError,
@@ -152,13 +154,16 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               interval="mo"
             />
           </Grid>
-          <Grid item>
-            <AutoEnroll
-              enabled={autoEnroll}
-              error={autoEnrollError}
-              toggle={toggle}
-            />
-          </Grid>
+          {/* Don't show this if the setting is already active. */}
+          {!accountBackups &&
+            <Grid item>
+              <AutoEnroll
+                enabled={autoEnroll}
+                error={autoEnrollError}
+                toggle={toggle}
+              />
+            </Grid>
+          }
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
@@ -232,6 +237,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   const enableErrors = pathOr([], ['backups','enableErrors'], state);
   const linodes = pathOr([], ['backups','data'], state);
   return ({
+    accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
     backupLoadError: path(['backups','error'], state),
     backupsLoading: path(['backups','loading'], state),
     enableErrors,

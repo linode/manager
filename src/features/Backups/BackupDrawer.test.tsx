@@ -45,6 +45,7 @@ const actions = {
 const classes = { root: ''}
 
 const props = {
+  accountBackups: false,
   actions,
   classes,
   open: true,
