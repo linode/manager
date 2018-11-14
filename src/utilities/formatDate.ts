@@ -1,6 +1,7 @@
 import * as moment from 'moment-timezone';
 
 import { ISO_FORMAT } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
@@ -33,8 +34,9 @@ export const formatDate = (date: string, options: FormatDateOptions = {}): strin
     // Unknown error was causing this to crash in rare situations.
     time = moment.utc(date).tz(options.timezone || 'GMT');
   }
-  catch {
+  catch(e) {
     // Better to return a blank date than an error or incorrect information.
+    reportException(e);
     return null;
   }
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
