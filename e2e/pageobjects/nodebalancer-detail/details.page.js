@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class NodeBalancerDetail extends Page {
-    get label() { return $('[data-qa-label]'); }
+    get label() { return $('[data-qa-editable-text]'); }
     get summaryTab() { return $('[data-qa-tab="Summary"]'); }
     get configsTab() { return $('[data-qa-tab="Configurations"]'); }
     get settingsTab() { return $('[data-qa-tab="Settings"]'); }
@@ -19,7 +19,7 @@ class NodeBalancerDetail extends Page {
     baseElemsDisplay() {
         this.label.waitForVisible(constants.wait.normal);
         this.summaryHeading.waitForText(constants.wait.normal);
-        this.summaryTab.waitForVisible();
+        this.summaryTab.waitForVisible(constants.wait.normal);
         expect(this.summaryTab.getAttribute('aria-selected')).toBe('true');
         expect(this.configsTab.isVisible()).toBe(true);
         expect(this.settingsTab.isVisible()).toBe(true);
