@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class NodeBalancerDetail extends Page {
-    get label() { return $('[data-qa-editable-text]'); }
+    get label() { return $(this.breadcrumbEditableText.selector); }
     get summaryTab() { return $('[data-qa-tab="Summary"]'); }
     get configsTab() { return $('[data-qa-tab="Configurations"]'); }
     get settingsTab() { return $('[data-qa-tab="Settings"]'); }

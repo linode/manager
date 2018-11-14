@@ -25,6 +25,7 @@ const AddNewLink: React.StatelessComponent<CombinedProps> = (props) => {
       disabled={disabled}
       left={left}
       className={className}
+      data-test-foo
     >
       {display || label}
     </IconTextLink>
