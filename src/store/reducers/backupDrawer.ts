@@ -154,7 +154,7 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
 }
 
 /**
- * reducer
+ * gatherResponsesAndErrors
  *
  * This magic is needed to accumulate errors from any failed requests, since
  * we need to enable backups for each Linode individually. The final response
@@ -203,6 +203,10 @@ export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () =
     ));
 }
 
+/* Dispatches an async action that will set the backups_enabled account setting.
+*  When complete, it will dispatch appropriate actions to handle the result, including
+* updating state.__resources.accountSettings.data.backups_enabled.
+*/
 export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () => State) => {
   const backups_enabled = pathOr(false,['backups', 'autoEnroll'], getState());
   dispatch(handleAutoEnroll());
