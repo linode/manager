@@ -159,7 +159,7 @@ class UserDetail extends React.Component<CombinedProps> {
       history,
       match: { path },
       profileUsername,
-      actions: { updateCurrenUser }
+      actions: { updateCurrentUser }
     } = this.props;
 
     const {
@@ -192,7 +192,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflec that change at the global level.
          */
         if (profileUsername === originalUsername) {
-          updateCurrenUser(user);
+          updateCurrentUser(user);
         }
 
         /**
@@ -319,13 +319,13 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 interface DispatchProps {
   actions: {
-    updateCurrenUser: (user: Linode.User) => void;
+    updateCurrentUser: (user: Linode.User) => void;
   }
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
-    updateCurrenUser: (u: Linode.User) =>
+    updateCurrentUser: (u: Linode.User) =>
       dispatch(
         handleUpdate(u)
       ),

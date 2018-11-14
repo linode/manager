@@ -21,14 +21,14 @@ import DomainRecords from './DomainRecords';
 interface State {
   error?: Error;
   domain: Linode.Domain;
-  records: Linode.Record[];
+  records: Linode.DomainRecord[];
 }
 
 type RouteProps = RouteComponentProps<{ domainId?: number }>;
 
 interface PreloadedProps {
   domain: PromiseLoaderResponse<Linode.Domain>;
-  records: PromiseLoaderResponse<Linode.Record>;
+  records: PromiseLoaderResponse<Linode.DomainRecord>;
 }
 
 type ClassNames = 'root'
