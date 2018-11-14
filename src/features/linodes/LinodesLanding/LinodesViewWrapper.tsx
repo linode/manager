@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
-
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,7 +10,7 @@ import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
 
@@ -70,6 +68,7 @@ class LinodesViewWrapper extends React.Component<Props, {}> {
                 <TableRow>
                   <TableCell>Linode</TableCell>
                   <TableCell>Plan</TableCell>
+                  <TableCell>Last Backup</TableCell>
                   <TableCell>IP Addresses</TableCell>
                   <TableCell>Region</TableCell>
                   <TableCell />
@@ -92,6 +91,7 @@ class LinodesViewWrapper extends React.Component<Props, {}> {
                     linodeRecentEvent={linode.recentEvent}
                     openConfigDrawer={openConfigDrawer}
                     toggleConfirmation={toggleConfirmation}
+                    mostRecentBackup={linode.mostRecentBackup}
                   />,
                 )}
               </TableBody>

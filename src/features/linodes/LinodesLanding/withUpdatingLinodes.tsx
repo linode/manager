@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { events$ } from 'src/events';
 import { getLinode } from 'src/services/linodes';
+import requestMostRecentBackupForLinode from './requestMostRecentBackupForLinode';
 
 interface PropsIn {
   data?: Linode.Linode[];
@@ -16,6 +17,11 @@ interface State {
   linodeIDs: number[];
   data: Linode.Linode[];
 }
+
+const requestBackupsWhenFinished = (status: string | 'finished') => (response: Linode.Linode) =>
+  status !== "finished"
+    ? Promise.resolve(response)
+    : requestMostRecentBackupForLinode(response);
 
 const withUpdatingLinodes = (WrappedComponent: React.ComponentType<PropsIn>) => {
   class WithUpdatingLinode extends React.Component<PropsIn, State> {
@@ -39,6 +45,7 @@ const withUpdatingLinodes = (WrappedComponent: React.ComponentType<PropsIn>) => 
         .concatMap((event) => Observable.fromPromise(
           getLinode(event.entity!.id)
             .then((response) => response.data)
+            .then(requestBackupsWhenFinished(event.status))
             .then(linode => ({ ...linode, recentEvent: event }))
         ))
 

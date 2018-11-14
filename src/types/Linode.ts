@@ -24,6 +24,7 @@ namespace Linode {
   export interface EnhancedLinode extends Linode.Linode {
     recentEvent?: Linode.Event;
     notification?: string;
+    mostRecentBackup?: string;
   }
 
   export interface LinodeAlerts {
