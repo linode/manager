@@ -96,7 +96,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         <KeyboardArrowLeft />
         <Typography
           variant="subheading"
-          className={classes.linkText}
+          className={props.labelSubtitle ? classes.subtitleLinkText : classes.linkText}
           data-qa-link-text
         >
           {linkText}
