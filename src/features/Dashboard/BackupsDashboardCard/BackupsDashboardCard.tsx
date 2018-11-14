@@ -78,23 +78,25 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
-      <Link to="/account/settings" data-qa-account-link>
-        <Paper className={classNames(
-          {
-            [classes.section]: true,
-            [classes.sectionLink]: true
-          }
-          )}
-        >
-          <Typography variant="subheading" className={classes.itemTitle} >
-            Linode Backup Auto-Enrollment
-          </Typography>
-          <Typography variant="caption" >
-            If you enable this global setting, new Linodes will be automatically enrolled
-            in the Backups service.
-          </Typography>
-        </Paper>
-      </Link>
+      {!accountBackups &&
+        <Link to="/account/settings" data-qa-account-link>
+          <Paper className={classNames(
+            {
+              [classes.section]: true,
+              [classes.sectionLink]: true
+            }
+            )}
+          >
+            <Typography variant="subheading" className={classes.itemTitle} >
+              Linode Backup Auto-Enrollment
+            </Typography>
+            <Typography variant="caption" >
+              If you enable this global setting, new Linodes will be automatically enrolled
+              in the Backups service.
+            </Typography>
+          </Paper>
+        </Link>
+      }
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
         <a onClick={openBackupDrawer} data-qa-backup-existing>
