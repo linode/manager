@@ -31,6 +31,7 @@ import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 
+import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -165,6 +166,7 @@ interface State {
   welcomeBanner: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
+  hasError: boolean;
 }
 
 type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
@@ -247,7 +249,12 @@ export class App extends React.Component<CombinedProps, State> {
       },
       update: () => null, /** @todo */
     },
+    hasError: false,
   };
+
+  componentDidCatch() {
+    this.setState({ hasError: true });
+  }
 
   componentDidMount() {
     const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
@@ -303,7 +310,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { menuOpen } = this.state;
+    const { menuOpen, hasError } = this.state;
     const {
       backupsCTA,
       classes,
@@ -315,12 +322,16 @@ export class App extends React.Component<CombinedProps, State> {
 
     const hasDoc = documentation.length > 0;
 
+    if (profileError || hasError) {
+      return <TheApplicationIsOnFire />;
+    }
+
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
 
-        {profileLoading === false && !profileError &&
+        {profileLoading === false &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
