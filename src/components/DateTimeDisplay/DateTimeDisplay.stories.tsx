@@ -9,7 +9,8 @@ import Radio from 'src/components/Radio';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
-import { DateTimeDisplay, TimeInterval } from './DateTimeDisplay';
+import { TimeInterval } from 'src/utilities/formatDate';
+import { DateTimeDisplay } from './DateTimeDisplay';
 
 interface State {
   time: any;
@@ -34,14 +35,12 @@ class Example extends React.Component<{},State> {
           <DateTimeDisplay
             value={"2018-07-20T04:23:17"}
             timezone={'America/New_York'}
-            classes={{root:''}}
           />
         </p>
         <p>{'You have been on this page since: '}
           <DateTimeDisplay
             value={this.state.time}
             timezone={'America/New_York'}
-            classes={{root:''}}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -49,7 +48,6 @@ class Example extends React.Component<{},State> {
           <DateTimeDisplay
             value={moment().subtract(5,'minutes').format()}
             timezone={'America/New_York'}
-            classes={{root:''}}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -57,7 +55,6 @@ class Example extends React.Component<{},State> {
           <DateTimeDisplay
             value={moment().day(-4).format()}
             timezone={'America/New_York'}
-            classes={{root:''}}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -65,7 +62,6 @@ class Example extends React.Component<{},State> {
           <DateTimeDisplay
             value={moment().day(-25).format()}
             timezone={'America/New_York'}
-            classes={{root:''}}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -73,7 +69,6 @@ class Example extends React.Component<{},State> {
           <DateTimeDisplay
             value={moment().subtract(11,'months').format()}
             timezone={'America/New_York'}
-            classes={{root:''}}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
@@ -81,7 +76,6 @@ class Example extends React.Component<{},State> {
           <DateTimeDisplay
             value={moment('1-8-1935').format()}
             timezone={'America/New_York'}
-            classes={{root:''}}
             humanizeCutoff={this.state.cutoff}
           />
         </p>

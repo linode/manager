@@ -90,7 +90,7 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
         <Breadcrumb
           linkTo="/linodes"
           linkText="Linodes"
-          label={labelInput.label}
+          labelTitle={labelInput.label}
           labelLink={getLabelLink()}
           onEditHandlers={{
             onEdit: labelInput.onEdit,

@@ -7,10 +7,9 @@ import { DateTimeDisplay } from './DateTimeDisplay';
 const APIDate = "2018-07-20T04:23:17";
 
 const component = shallow(
-  <DateTimeDisplay 
+  <DateTimeDisplay
     value={APIDate}
     timezone={"America/New_York"}
-    classes={{ root: '' }}
   />)
 
 describe("DateTimeDisplay component", () => {
@@ -22,16 +21,16 @@ describe("DateTimeDisplay component", () => {
   });
 
   describe("Humanized dates", () => {
-    describe("should output humanized strings if the date is earlier than the cutoff", () => {
-      component.setProps({ 
+    it("should output humanized strings if the date is earlier than the cutoff", () => {
+      component.setProps({
         value: moment().subtract(5,'minutes'),
         humanizeCutoff: 'day',
       });
       expect(component.text()).toContain('5 minutes ago');
     });
-    describe("should output ISO strings if the date is older than the cutoff", () => {
+    it("should output ISO strings if the date is older than the cutoff", () => {
       const almostOneWeek = moment().subtract(6,'days');
-      component.setProps({ 
+      component.setProps({
         value: almostOneWeek,
         humanizeCutoff: 'month',
       });
@@ -39,7 +38,7 @@ describe("DateTimeDisplay component", () => {
       component.setProps({ humanizeCutoff: 'day' });
       expect(component.text()).toContain(almostOneWeek.year());
     });
-    describe("should always output formatted text if humanizedCutoff is set to never", () => {
+    it("should always output formatted text if humanizedCutoff is set to never", () => {
       const aLongTimeAgo = moment().subtract(10,'years');
       component.setProps({
         value: aLongTimeAgo,

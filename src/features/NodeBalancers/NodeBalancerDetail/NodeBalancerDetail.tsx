@@ -29,6 +29,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',
+    alignItems: 'center',
+    marginTop: 5,
   },
   backButton: {
     margin: '5px 0 0 -16px',
@@ -176,7 +178,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             <Breadcrumb
               linkTo="/nodebalancers"
               linkText="NodeBalancers"
-              label={nodeBalancerLabel}
+              labelTitle={nodeBalancerLabel}
               labelLink={this.getLabelLink()}
               onEditHandlers={{
                 onEdit: this.updateLabel,
