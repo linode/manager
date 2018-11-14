@@ -6,13 +6,12 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 
 import Flag from 'src/assets/icons/flag.svg';
-import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { displayType } from 'src/features/linodes/presentation';
-import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 import { getType } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import IPAddress from '../IPAddress';
@@ -20,6 +19,7 @@ import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import BackupCell from './BackupCell';
 import HeadCell from './HeadCell';
+import LinodeRowLoading from './LinodeRowLoading';
 
 type ClassNames =
   'bodyRow'
@@ -30,9 +30,7 @@ type ClassNames =
   | 'actionCell'
   | 'actionInner'
   | 'flag'
-  | 'status'
-  | 'linkButton'
-  ;
+  | 'linkButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
@@ -84,13 +82,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
         opacity: .75,
       },
     },
-    status: {
-      textTransform: 'capitalize',
-      marginBottom: theme.spacing.unit,
-      color: theme.palette.text.primary,
-      fontSize: '.92rem',
-    },
-
     linkButton: {
       padding: 0,
       width: '100%',
@@ -178,38 +169,6 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         }
       })
       .catch((e: Error) => e)
-  }
-
-  loadingState = () => {
-    const {
-      classes,
-      linodeId,
-      linodeLabel,
-      linodeRecentEvent,
-      linodeStatus,
-      linodeTags,
-    } = this.props;
-
-    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
-
-    return (
-      <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
-        <HeadCell
-          linodeId={linodeId}
-          linodeLabel={linodeLabel}
-          linodeTags={linodeTags}
-          linodeStatus={linodeStatus}
-        />
-        <TableCell colSpan={5}>
-          {typeof value === 'number' &&
-            <div className={classes.status}>
-              {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
-            </div>
-          }
-          <LinearProgress value={value} />
-        </TableCell>
-      </TableRow>
-    );
   }
 
   renderFlag = () => {
@@ -302,10 +261,24 @@ class LinodeRow extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const {
+      linodeId,
+      linodeLabel,
+      linodeRecentEvent,
+      linodeStatus,
+      linodeTags,
+    } = this.props;
+
     const loading = linodeInTransition(this.props.linodeStatus, this.props.linodeRecentEvent);
 
     return loading
-      ? this.loadingState()
+      ? <LinodeRowLoading
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          linodeRecentEvent={linodeRecentEvent}
+          linodeStatus={linodeStatus}
+          linodeTags={linodeTags}
+        />
       : this.loadedState();
   }
 }
