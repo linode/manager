@@ -110,10 +110,19 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
     }
   }
 
+  handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { actions: { enable, enroll }, accountBackups } = this.props;
+    if (accountBackups) {
+      enable();
+    } else {
+      enroll();
+    }
+  }
+
   render() {
     const {
       accountBackups,
-      actions: { close, enroll, toggle },
+      actions: { close, toggle },
       autoEnroll,
       autoEnrollError,
       enableErrors,
@@ -167,7 +176,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
-                onClick={enroll}
+                onClick={this.handleSubmit}
                 loading={loading || enabling || enrolling}
                 type="primary"
                 data-qa-submit
