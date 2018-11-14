@@ -446,7 +446,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
             isClearable={false}
             isMulti={false}
             value={null}
-            menuIsOpen={true}
           />
           <IconButton
             color="inherit"
