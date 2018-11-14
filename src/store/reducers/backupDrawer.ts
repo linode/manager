@@ -95,7 +95,7 @@ export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case OPEN:
       return { ...state, lastUpdated: Date.now(), open: true,
-        error: undefined, enableErrors: [], autoEnrollError: undefined, };
+        error: undefined, enableErrors: [], autoEnrollError: undefined, autoEnroll: false };
 
     case CLOSE:
       return { ...state, lastUpdated: Date.now(), open: false, };
