@@ -12,7 +12,7 @@ const durationMap = {
   'never': () => moment.duration(1000,'years'),
 }
 
-export const shouldHumanize = (time: any, cutoff?: TimeInterval): boolean => {
+export const shouldHumanize = (time: moment.Moment, cutoff?: TimeInterval): boolean => {
   // If cutoff is not provided, use the default ISO output.
   if (!cutoff) { return false; }
   const duration = durationMap[cutoff]();
