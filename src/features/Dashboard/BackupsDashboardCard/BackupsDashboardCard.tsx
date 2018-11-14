@@ -97,9 +97,8 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
       </Link>
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) &&
-        <a onClick={openBackupDrawer}>
+        <a onClick={openBackupDrawer} data-qa-backup-existing>
           <Paper
-            data-qa-backup-existing
             className={classNames(
               {
                 [classes.section]: true,
