@@ -1,3 +1,4 @@
+import { clone } from 'ramda';
 import * as React from 'react';
 
 /**
@@ -32,6 +33,8 @@ interface State<T={}> {
   data?: T[];
   orderBy?: string;
   order: 'asc' | 'desc';
+  filter: any;
+  searching: boolean;
 }
 
 export interface PaginationProps<T> extends State<T> {
@@ -39,6 +42,7 @@ export interface PaginationProps<T> extends State<T> {
   handlePageSizeChange: (v: number) => void;
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
+  handleSearch: (newFilter: any) => void;
   onDelete: () => void;
 }
 
@@ -54,6 +58,8 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       error: undefined,
       orderBy: undefined,
       order: asc,
+      filter: {},
+      searching: false,
     }
 
     private onDelete = () => {
@@ -80,7 +86,10 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     };
 
     private request = (map?: Function) => {
-      const filters = {};
+      /**
+       * we might potentially have a search term to filter by
+       */
+      const filters = clone(this.state.filter);
 
       if (this.state.orderBy) {
         filters['+order_by'] = this.state.orderBy;
@@ -124,6 +133,13 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ orderBy, order, page: 1 }, () => this.request());
     };
 
+    public handleSearch = (filter: any) => {
+      this.setState({ filter, page: 1, searching: true }, () => {
+        return this.request()
+          .then(() => this.setState({ searching: false }))
+      });
+    }
+
     public render() {
       return React.createElement(Component, {
         ...this.props,
@@ -132,6 +148,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         handlePageSizeChange: this.handlePageSizeChange,
         request: this.request,
         handleOrderChange: this.handleOrderChange,
+        handleSearch: this.handleSearch,
         onDelete: this.onDelete,
       });
     }

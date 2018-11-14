@@ -4,21 +4,15 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
 
 import TableBody from '@material-ui/core/TableBody';
 
-import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 
-import { getCommunityStackscripts, getStackScriptsByUser }
-  from '../../SelectStackScriptPanel/stackScriptUtils';
-
 import TableHeader from './TableHeader';
-import StackScriptTableRow from './TableRow';
+import StackScriptTableRows from './TableRows';
 
 type ClassNames = 'root';
 
@@ -27,29 +21,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  type: 'linode' | 'own' | 'community'
+  type: 'linode' | 'own' | 'community';
+  count: number;
+  error?: Error;
+  loading: boolean;
+  page: number;
+  pageSize: number;
+  data?: Linode.StackScript.Response[];
+  orderBy?: string;
+  order: 'asc' | 'desc';
+  handlePageChange: (v: number, showSpinner?: boolean) => void;
+  handlePageSizeChange: (v: number) => void;
+  handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
+  currentUser: string;
+  triggerDelete: (stackScriptID: number, stackScriptLabel: string) => void;
+  triggerMakePublic: (stackScriptID: number, stackScriptLabel: string) => void;
 }
 
 type CombinedProps = Props
-  & PaginationProps<Linode.StackScript.Response>
   & WithStyles<ClassNames>
-  & StateProps;
 
 class StackScriptTable extends React.Component<CombinedProps, {}> {
-  componentDidMount() {
-    this.props.request();
-  }
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.type !== this.props.type) {
-      /**
-       * handle page change handles the request as well
-       * so no need to run this.props.request()
-       * Also set loading state back to true
-       */
-      this.props.handlePageChange(1, true);
-    }
-  }
 
   render() {
     const {
@@ -63,7 +55,10 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
       loading,
       error,
       order,
-      orderBy
+      orderBy,
+      currentUser,
+      triggerDelete,
+      triggerMakePublic
     } = this.props;
 
     return (
@@ -75,7 +70,10 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
             handleClick={handleOrderChange}
           />
           <TableBody>
-            <StackScriptTableRow
+            <StackScriptTableRows
+              triggerDelete={triggerDelete}
+              triggerMakePublic={triggerMakePublic}
+              currentUser={currentUser}
               stackScript={{
                 loading,
                 error,
@@ -98,42 +96,6 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
   }
 }
 
-const whichRequest = (type: 'linode' | 'own' | 'community', username: string) => {
-  if (type === 'linode') {
-    return (params: any, filters: any) => getStackScriptsByUser('linode', params, filters)
-  }
-
-  if (type === 'own') {
-    return (params: any, filters: any) => getStackScriptsByUser(username, params, filters)
-  }
-
-  else {
-    return (params: any, filters: any) => getCommunityStackscripts(username, params, filters)
-  }
-}
-
-const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) =>
-  whichRequest(ownProps.type, ownProps.username)(params, filters)
-    .then(response => response);
-
-const paginated = Pagey(updatedRequest);
-
 const styled = withStyles(styles, { withTheme: true });
 
-interface StateProps {
-  username: string;
-}
-
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile),
-});
-
-const connected = connect(mapStateToProps);
-
-const enhanced = compose(
-  connected,
-  styled,
-  paginated,
-)
-
-export default enhanced(StackScriptTable);
+export default styled(StackScriptTable);
