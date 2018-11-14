@@ -52,7 +52,7 @@ const styles: StyleRulesCallback = (theme) => ({
     alignItems: 'center',
     maxHeight: 48,
     position: 'relative',
-    top: 1,
+    top: 0,
     left: -2.
   },
   initial: {

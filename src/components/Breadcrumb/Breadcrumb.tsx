@@ -23,8 +23,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 'auto',
     height: 'auto',
     '& svg': {
-      width: 20,
-      height: 20,
+      position: 'relative',
+      top: 2,
+      width: 24,
+      height: 24,
     },
   },
   linkText: {
