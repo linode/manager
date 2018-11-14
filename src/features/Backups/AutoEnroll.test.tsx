@@ -28,13 +28,4 @@ describe("AutoEnroll display component", () => {
       <Notice error text="Error" />
     )).toBeTruthy();
   });
-  it("should toggle the enabled value on click", () => {
-    component.find('[data-qa-enable-toggle]').simulate('click');
-    expect(props.toggle).toHaveBeenCalled();
-  });
-  it("should reflect the enabled state (passed from Redux)", () => {
-    expect(component.find('WithStyles(LinodeSwitchControl)').props()).toHaveProperty('checked', true);
-    component.setProps({ enabled: false });
-    expect(component.find('WithStyles(LinodeSwitchControl)').props()).toHaveProperty('checked', false);
-  });
 });
