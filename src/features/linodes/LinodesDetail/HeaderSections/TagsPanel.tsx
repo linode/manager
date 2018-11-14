@@ -54,6 +54,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     top: 6,
   },
   selectTag: {
+    marginTop: theme.spacing.unit / 2,
+    height: '48px',
     width: 'auto',
     position: 'relative',
     zIndex: 3,

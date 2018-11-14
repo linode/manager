@@ -56,13 +56,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   userWrapper: {
     marginRight: theme.spacing.unit,
     borderRadius: '50%',
-    width: '46px',
-    height: '46px',
+    width: '42px',
+    height: '42px',
     transition: theme.transitions.create(['box-shadow']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: 0,
-      width: '40px',
-      height: '40px',
+      width: '30px',
+      height: '30px',
     },
   },
   leftIcon: {
@@ -72,7 +72,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   username: {
     transition: theme.transitions.create(['color']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
