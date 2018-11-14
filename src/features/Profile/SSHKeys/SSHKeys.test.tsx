@@ -46,6 +46,7 @@ describe('SSHKeys', () => {
       <SSHKeys
         classes={{ root: '' }}
         {...pageyProps}
+        loading={true}
         data={undefined}
         timezone={'GMT'}
       />
@@ -59,6 +60,7 @@ describe('SSHKeys', () => {
       <SSHKeys
         classes={{ root: '' }}
         {...pageyProps}
+        error={new Error('error here')}
         data={undefined}
         timezone={'GMT'}
       />
