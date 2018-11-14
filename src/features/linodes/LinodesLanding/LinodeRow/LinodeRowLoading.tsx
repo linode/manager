@@ -1,10 +1,12 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { transitionText } from 'src/features/linodes/transitions';
-import HeadCell from './HeadCell';
+import LinodeRowHeadCell from './LinodeRowHeadCell';
 
 type ClassNames = 'bodyRow' | 'status';
 
@@ -44,7 +46,7 @@ const LinodeRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
-      <HeadCell
+      <LinodeRowHeadCell
         linodeId={linodeId}
         linodeLabel={linodeLabel}
         linodeTags={linodeTags}

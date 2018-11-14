@@ -41,7 +41,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const BackupCell: React.StatelessComponent<CombinedProps> = (props) => {
+const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, mostRecentBackup, linodeId } = props;
 
   return (
@@ -75,4 +75,4 @@ const BackupCell: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(BackupCell);
+export default styled(LinodeRowBackupCell);

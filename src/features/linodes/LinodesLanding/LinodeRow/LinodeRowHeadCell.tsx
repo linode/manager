@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const HeadCell: React.StatelessComponent<CombinedProps> = (props) => {
+const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
     linodeId,
@@ -74,4 +74,4 @@ const HeadCell: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(HeadCell);
+export default styled(LinodeRowHeadCell);

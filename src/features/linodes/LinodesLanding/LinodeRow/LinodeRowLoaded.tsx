@@ -12,8 +12,8 @@ import { displayType } from 'src/features/linodes/presentation';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
-import BackupCell from './BackupCell';
-import HeadCell from './HeadCell';
+import LinodeRowBackupCell from './LinodeRowBackupCell';
+import LinodeRowHeadCell from './LinodeRowHeadCell';
 
 type ClassNames =
   'actionCell'
@@ -119,7 +119,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
       rowLink={`/linodes/${linodeId}`}
       arial-label={linodeLabel}
     >
-      <HeadCell
+      <LinodeRowHeadCell
         linodeId={linodeId}
         linodeLabel={linodeLabel}
         linodeTags={linodeTags}
@@ -130,7 +130,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
           <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
         }
       </TableCell>
-      <BackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
+      <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
       <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
         <div className={classes.ipCellWrapper}>
           <IPAddress ips={linodeIpv4} copyRight />
