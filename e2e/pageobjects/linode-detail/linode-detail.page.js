@@ -17,14 +17,16 @@ class LinodeDetail extends Page {
     get setPowerReboot() { return $('[data-qa-set-power="reboot"]'); }
     get setPowerOff() { return $('[data-qa-set-power="powerOff"]'); }
     get setPowerOn() { return $('[data-qa-set-power="powerOn"]'); }
-    get linodeLabel() { return $('[data-qa-label]'); }
+    get linodeLabel() { return $(this.breadcrumbEditableText.selector); }
     get editLabel() { return $(this.breadcrumbEditableText.selector); }
 
     changeName(name) {
         this.linodeLabel.waitForVisible();
-        this.editLabel.click();
-        browser.setValue('[data-qa-label] input', name);
-        browser.click('[data-qa-save-edit]');
+        this.editLabel.moveToObject();
+        this.breadcrumbEditButton.waitForVisible(constants.wait.normal);
+        this.breadcrumbEditButton.click();
+        this.breadcrumbEditableText.$('input').setValue(name);
+        this.breadcrumbSaveEdit.click();
         browser.waitUntil(function() {
             return this.linodeLabel.getText() === name;
         }, constants.wait.normal);
