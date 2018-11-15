@@ -7,12 +7,16 @@ import {
 import * as React from 'react';
 
 import Typography from '@material-ui/core/Typography';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root'
   | 'label'
-  | 'stackScriptUsername';
+  | 'stackScriptUsername'
+  | 'labelWrapper'
+  | 'linkIcon'
+  | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
@@ -22,6 +26,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   stackScriptUsername: {
     color: theme.color.grey1,
   },
+  labelWrapper: {
+    display: 'flex',
+  },
+  linkIcon: {
+    marginLeft: '.5em',
+    width: '10%'
+  },
+  title: {
+    flexGrow: 1
+  }
 });
 
 interface Props {
@@ -45,21 +59,26 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Typography role="header" variant="subheading">
-        {stackScriptUsername &&
-          <label
-            htmlFor={`${stackScriptId}`}
-            className={`${classes.label} ${classes.stackScriptUsername}`}>
-            {stackScriptUsername} /&nbsp;
-      </label>
-        }
-        <label
-          htmlFor={`${stackScriptId}`}
-          className={classes.label}>
-          {label}
-        </label>
-      </Typography>
-      <Typography variant="caption">{truncateText(description, 100)}</Typography>
+      <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptId}`}>
+        <div className={classes.labelWrapper}>
+          <Typography className={classes.title} role="header" variant="subheading">
+            {stackScriptUsername &&
+              <label
+                htmlFor={`${stackScriptId}`}
+                className={`${classes.label} ${classes.stackScriptUsername}`}>
+                {stackScriptUsername} /&nbsp;
+            </label>
+            }
+            <label
+              htmlFor={`${stackScriptId}`}
+              className={classes.label}>
+              {label}
+            </label>
+          </Typography>
+          <OpenInNew className={classes.linkIcon} />
+        </div>
+        <Typography variant="caption">{truncateText(description, 100)}</Typography>
+      </a>
     </React.Fragment>
   )
 };
