@@ -80,14 +80,6 @@ const SupportTicketDetail = DefaultLoader({
   loader: () => import('src/features/Support/SupportTicketDetail'),
 })
 
-const InvoiceDetail = DefaultLoader({
-  loader: () => import('src/features/Billing/InvoiceDetail'),
-});
-
-const UserDetail = DefaultLoader({
-  loader: () => import('src/features/Users/UserDetail'),
-});
-
 const Longview = DefaultLoader({
   loader: () => import('src/features/Longview'),
 });
@@ -352,8 +344,6 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/longview" component={Longview} />
                               <Route exact path="/images" component={Images} />
                               <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/account/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                              <Route path="/account/users/:username" component={UserDetail} />
                               <Route path="/account" component={Account} />
                               <Route exact path="/support/tickets" component={SupportTickets} />
                               <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />

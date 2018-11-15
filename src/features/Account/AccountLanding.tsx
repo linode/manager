@@ -14,7 +14,7 @@ import GlobalSettings from './GlobalSettings';
 
 type Props = RouteComponentProps<{}>;
 
-class Account extends React.Component<Props> {
+class AccountLanding extends React.Component<Props> {
   handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
@@ -65,4 +65,4 @@ class Account extends React.Component<Props> {
   }
 }
 
-export default withRouter(Account);
+export default withRouter(AccountLanding);

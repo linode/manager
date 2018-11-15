@@ -1,3 +1,4 @@
+import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,17 +12,21 @@ import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import EditableText from 'src/components/EditableText';
+import LabelText from './LabelText';
 
-type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'underlineOnHover';
+type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'subtitleLinkText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   backButton: {
-    margin: '5px 0 0 0',
+    margin: '0',
     width: 'auto',
+    height: 'auto',
     '& svg': {
-      width: 26,
-      height: 26,
+      position: 'relative',
+      top: 2,
+      width: 24,
+      height: 24,
     },
   },
   linkText: {
@@ -41,14 +46,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       display: 'none',
     },
   },
-  labelText: {
-    padding: '5px 10px'
-  },
-  underlineOnHover: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-      color: theme.color.black,
+  subtitleLinkText: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    color: '#3683DC',
+    textDecoration: 'underline',
+    borderColor: theme.color.grey,
+    '&:after': {
+      content: "'|'",
+      display: 'inline-block',
+      padding: '0 0 0 8px',
+      color: theme.color.grey1,
     },
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
+  },
+  labelText: {
+    padding: '2px 10px'
   }
 });
 interface EditableProps {
@@ -57,39 +72,32 @@ interface EditableProps {
   errorText?: string;
 }
 export interface Props {
-  linkTo: string;
+  // linkTo will be passed in to a <Link /> component, so we borrow the
+  // LocationDescriptor interface from the history module
+  linkTo: LocationDescriptor;
   linkText: string;
-  label: string;
-  labelLink?: string | undefined;
+  labelTitle: string;
+  labelLink?: string;
+  labelSubtitle?: string;
   onEditHandlers?: EditableProps
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linkTo, linkText, label } = props;
-
-  const labelText = (
-    <Typography
-      role="header"
-      variant="headline"
-      className={classes.labelText}
-      data-qa-static-text
-    >
-      {label}
-    </Typography>
-  );
+  const { classes, linkTo, linkText, labelTitle } = props;
 
   return (
     <React.Fragment>
       <Link to={linkTo} data-qa-link>
         <IconButton
           className={classes.backButton}
-          >
+          tabIndex={-1}
+        >
         <KeyboardArrowLeft />
         <Typography
           variant="subheading"
-          className={classes.linkText}
+          className={props.labelSubtitle ? classes.subtitleLinkText : classes.linkText}
           data-qa-link-text
         >
           {linkText}
@@ -101,18 +109,19 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         <EditableText
           role="header"
           variant="headline"
-          text={label}
+          text={labelTitle}
           errorText={props.onEditHandlers!.errorText}
           onEdit={props.onEditHandlers!.onEdit}
           onCancel={props.onEditHandlers!.onCancel}
           labelLink={props.labelLink}
           data-qa-editable-text
         />
-        : props.labelLink
-          ? <Link to={props.labelLink!} data-qa-label-link>
-              <span className={classes.underlineOnHover}>{labelText}</span>
-            </Link>
-          :  labelText
+        : <LabelText
+            title={props.labelTitle}
+            subtitle={props.labelSubtitle}
+            titleLink={props.labelLink}
+            data-qa-labeltext
+          />
       }
     </React.Fragment>
   );
