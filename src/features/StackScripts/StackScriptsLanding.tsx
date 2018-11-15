@@ -15,7 +15,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
 
-import StackScriptPanel from './Panel/StackScriptPanel';
+import StackScriptPanel from './LandingPanel/StackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
