@@ -1,5 +1,6 @@
 import { compose, filter, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 
@@ -68,6 +69,7 @@ type CombinedProps = TypesContextProps
   & RegionsContextProps
   & WithStyles<ClassNames>
   & PreloadedProps
+  & StateProps
   & RouteComponentProps<{}>;
 
 interface State {
@@ -215,6 +217,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
             history={this.props.history}
+            accountBackups={this.props.accountBackups}
             handleDisablePasswordField={this.handleDisablePasswordField}
           />
         );
@@ -241,6 +244,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
+            accountBackups={this.props.accountBackups}
             history={this.props.history}
           />
         );
@@ -263,6 +267,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             extendLinodes={this.extendLinodes}
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
+            accountBackups={this.props.accountBackups}
             history={this.props.history}
           />
         );
@@ -280,6 +285,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
             history={this.props.history}
+            accountBackups={this.props.accountBackups}
             selectedStackScriptFromQuery={this.state.selectedStackScriptIDFromQueryString}
             selectedTabFromQuery={this.state.selectedStackScriptTabFromQueryString}
             handleDisablePasswordField={this.handleDisablePasswordField}
@@ -364,6 +370,8 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                 onChange={this.handleTabChange}
                 indicatorColor="primary"
                 textColor="primary"
+                scrollable
+                scrollButtons="on"
               >
                 {
                   this.tabs.map((tab, idx) =>
@@ -422,6 +430,16 @@ const regionsContext = withRegions(({
   )(regionsData || [])
 }))
 
+interface StateProps {
+  accountBackups: boolean;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, CombinedProps, ApplicationState> = (state) => ({
+  accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
+});
+
+const connected = connect(mapStateToProps);
+
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose(
@@ -430,4 +448,5 @@ export default compose(
   typesContext,
   styled,
   withRouter,
+  connected
 )(LinodeCreate);

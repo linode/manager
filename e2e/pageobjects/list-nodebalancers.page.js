@@ -17,7 +17,7 @@ class ListNodeBalancers extends Page {
     get cancel() { return $('[data-qa-cancel-cancel]'); }
 
     baseElemsDisplay() {
-        this.nodeBalancerElem.waitForVisible(constants.wait.normal);
+        this.nodeBalancerElem.waitForVisible(constants.wait.long);
         expect(this.nodeBalancers.length).toBeGreaterThan(0);
         expect(this.addNodeBalancer.isVisible()).toBe(true);
 
@@ -41,7 +41,7 @@ class ListNodeBalancers extends Page {
         expect(this.dialogContent.getText()).toBe(removeMsg);
         expect(this.confirm.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        
+
         this.confirm.click();
         this.dialogTitle.waitForVisible(constants.wait.normal, true);
         this.nodeBalancerElem.waitForVisible(constants.wait.normal, true);
@@ -50,7 +50,7 @@ class ListNodeBalancers extends Page {
     showConfigurations(nodeBalancerElem) {
         this.selectActionMenuItem(nodeBalancerElem, 'Configurations');
         browser.waitForVisible('[data-qa-tab="Configurations"]', constants.wait.normal);
-        
+
         const configTab = $('[data-qa-tab="Configurations"]');
         expect(configTab.getAttribute('aria-selected')).toBe('true');
     }

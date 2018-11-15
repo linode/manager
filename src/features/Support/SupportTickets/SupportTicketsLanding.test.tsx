@@ -8,14 +8,13 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 describe('Support Tickets Landing', () => {
   const component = shallow(
     <SupportTicketsLanding
-      classes={{ root: '', title: '' }}
+      classes={{ root: '', title: '', titleWrapper: '' }}
       {...reactRouterProps}
     />
   )
 
   it('title of page should read "Customer Support"', () => {
-    const titleText = component.find('WithStyles(Typography)[variant="headline"]')
-    .children().text();
+    const titleText = component.find('[data-qa-breadcrumb]').prop('labelTitle');
     expect(titleText).toBe('Customer Support');
   });
 

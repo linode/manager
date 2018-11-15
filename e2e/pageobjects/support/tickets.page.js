@@ -5,7 +5,7 @@ import Page from '../page';
 export class SupportTickets extends Page {
     get openTicketsTab() { return $('[data-qa-tab="Open Tickets"]'); }
     get closedTicketsTab() { return $('[data-qa-tab="Closed Tickets"]'); }
-    get supportHeader() { return $('[data-qa-title]'); }
+    get supportHeader() { return $('[data-qa-label-title]'); }
     get openTicketButton() { return $('[data-qa-icon-text-link="Open New Ticket"]'); }
 
     get supportCreateDateHeader() { return $('[data-qa-support-date-header]'); }
@@ -21,14 +21,14 @@ export class SupportTickets extends Page {
     get supportEntity() { return $('[data-qa-support-entity]'); }
     get supportCreateDate() { return $('[data-qa-support-date]'); }
     get supportUpdateDate() { return $('[data-qa-support-updated]'); }
-    
+
     get ticketHelpText() { return $('[data-qa-support-ticket-helper-text]'); }
     get ticketEntityType() { return $('[data-qa-ticket-entity-type]'); }
     get ticketSummary() { return $('[data-qa-ticket-summary] input'); }
     get ticketDescription() { return $('[data-qa-ticket-description] textarea'); }
 
-    get submit() { return $('[data-qa-submit]'); }
-    get cancel() { return $('[data-qa-cancel]'); }
+    get submit() { return $(this.submitButton.selector); }
+    get cancel() { return $(this.cancelButton.selector); }
 
     baseElemsDisplay() {
         this.supportHeader.waitForVisible(constants.wait.normal);

@@ -70,7 +70,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
 });
 
 const handleClick = (e: any) => {
-  e.stopPropogation();
+  e.stopPropagation();
 }
 
 type CombinedProps = MenuItemProps & Props & WithStyles<CSSClasses>;

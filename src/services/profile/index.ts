@@ -2,6 +2,7 @@ export {
   getProfile,
   listGrants,
   updateProfile,
+  getMyGrants
 } from './profile';
 
 export {

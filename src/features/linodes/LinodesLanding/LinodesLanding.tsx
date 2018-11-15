@@ -1,10 +1,13 @@
+import * as Bluebird from 'bluebird';
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import Hidden from '@material-ui/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { compose } from 'ramda';
-import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -15,15 +18,17 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import { withTypes } from 'src/context/types';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
+import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
+import requestMostRecentBackupForLinode from './requestMostRecentBackupForLinode';
 import ToggleBox from './ToggleBox';
 import withUpdatingLinodes from './withUpdatingLinodes';
 
@@ -67,6 +72,7 @@ type CombinedProps =
   TypesContextProps
   & PaginationProps<Linode.Linode>
   & StateProps
+  & DispatchProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
   & SetDocsProps;
@@ -121,13 +127,25 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { typesLastUpdated, typesLoading, typesRequest } = this.props;
+    const { getLinodesWithoutBackups, setSidebar } = this.props.actions;
 
     this.mounted = true;
 
     /** Get the Linodes using the request handler provided by Pagey. */
     this.props.request();
 
-    this.getImages()
+    this.getImages();
+
+    /** Check if the user has any Linodes without backups enabled
+     * (This also pre-populates the Backups drawer with these Linodes)
+     */
+
+    getLinodesWithoutBackups();
+    /* Set the BackupsCTA in the docs sidebar. It will only
+    * render itself for customers who have backups in need of Linodes.
+    */
+    setSidebar();
+
 
     if (typesLastUpdated === 0 && !typesLoading) {
       typesRequest();
@@ -136,6 +154,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   componentWillUnmount() {
     this.mounted = false;
+    this.props.actions.clearSidebar();
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -334,8 +353,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         >
           <Typography>
             {bootOption === 'reboot'
-              ? 'Are you sure you want to reboot your Linode'
-              : 'Are you sure you want to power down your Linode'
+              ? 'Are you sure you want to reboot your Linode?'
+              : 'Are you sure you want to power down your Linode?'
             }
           </Typography>
         </ConfirmationDialog>
@@ -375,7 +394,7 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
   }
 
   /*
-  * If local stroage exists, set the view based on that
+  * If local storage exists, set the view based on that
   */
   if (views.linode.get() !== null) {
     return views.linode.get();
@@ -386,22 +405,22 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
 
 export const styled = withStyles(styles, { withTheme: true });
 
-const typesContext = withTypes(({
-  lastUpdated: typesLastUpdated,
-  loading: typesLoading,
-  request: typesRequest,
-}) => ({
-  typesRequest,
-  typesLoading,
-  typesLastUpdated,
-}));
-
 interface LinodeWithNotifications extends Linode.Linode {
   notifications?: Linode.Notification[];
 }
 
 interface StateProps {
   data: LinodeWithNotifications[];
+  linodesWithoutBackups: Linode.Linode[];
+  managed: boolean;
+}
+
+interface DispatchProps {
+  actions: {
+    getLinodesWithoutBackups: () => void;
+    clearSidebar: () => void;
+    setSidebar: () => void;
+  }
 }
 
 /**
@@ -415,17 +434,34 @@ mapStateToProps = (state, ownProps) => {
 
   return {
     data: linodes.map(addNotificationToLinode(notifications)),
+    linodesWithoutBackups: pathOr([], ['backups', 'data'], state),
+    managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state)
   }
 };
 
-const connected = connect(mapStateToProps);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
+      clearSidebar: () => dispatch(clearSidebar()),
+      setSidebar: () => dispatch(addBackupsToSidebar())
+    }
+  };
+};
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const paginated = Pagey((ownProps, params, filters) =>
-  getLinodes(params, filters));
+  getLinodes(params, filters)
+    .then((response) => {
+
+      return Bluebird.map(response.data, requestMostRecentBackupForLinode)
+        .then(linodes => ({ ...response, data: linodes }));
+    })
+);
 
 const data = compose(
   paginated,
-  typesContext,
   connected,
   withUpdatingLinodes,
 );

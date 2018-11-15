@@ -72,7 +72,7 @@ class ConfigureLinode extends Page {
         this.notice.waitForVisible();
         const notices = $$(this.notice.selector);
 
-        const cloneSLA = 'This newly created Linode wil be created with the same password and SSH Keys (if any) as the original Linode';
+        const cloneSLA = 'This newly created Linode will be created with the same password and SSH Keys (if any) as the original Linode.';
         const cloneFromHeader = 'Select Linode to Clone From';
         const selectLinodePanelText = $$('[data-qa-select-linode-header]').map(h => h.getText());
 

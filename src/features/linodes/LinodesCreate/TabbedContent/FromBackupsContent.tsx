@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
+import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { createLinode, getLinodeBackups } from 'src/services/linodes';
@@ -25,7 +26,7 @@ import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import tagsHoc, { TagObject } from '../tagsHoc';
+import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -58,9 +59,7 @@ interface Props {
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
   selectedRegionIDFromLinode?: string;
-
-  /* From HOC */
-  tagObject: TagObject;
+  accountBackups: boolean;
 }
 
 interface State {
@@ -79,6 +78,7 @@ interface State {
   selectedBackupInfo: Info;
   isMakingRequest: boolean;
   backupInfo: Info;
+  tags: Tag[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -121,6 +121,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     selectedBackupInfo: undefined,
     isMakingRequest: false,
     backupInfo: undefined,
+    tags: [],
   };
 
   mounted: boolean = false;
@@ -179,6 +180,10 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.setState({ label: e.target.value });
   }
 
+  handleChangeTags = (selected: Tag[]) => {
+    this.setState({ tags: selected })
+  }
+
   handleToggleBackups = () => {
     this.setState({ backups: !this.state.backups });
   }
@@ -203,8 +208,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   createLinode = () => {
-    const { history, tagObject } = this.props;
-    const { getLinodeTagList } = tagObject.actions;
+    const { history } = this.props;
     const {
       selectedRegionID,
       selectedTypeID,
@@ -212,6 +216,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       backups,
       privateIP,
       selectedBackupID,
+      tags,
     } = this.state;
 
     this.setState({ isMakingRequest: true });
@@ -223,7 +228,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       label: label ? label : null, /* optional */
       backups_enabled: backups, /* optional */
       booted: true,
-      tags: getLinodeTagList(),
+      tags: tags.map((item: Tag) => item.value),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
@@ -268,11 +273,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { errors, selectedBackupID, selectedDiskSize, selectedLinodeID,
+    const { errors, selectedBackupID, selectedDiskSize, selectedLinodeID, tags,
       selectedTypeID, selectedRegionID, label, backups, linodesWithBackups, privateIP,
     selectedBackupInfo, isMakingRequest } = this.state;
-    const { extendLinodes, getBackupsMonthlyPrice, classes,
-       notice, types, getRegionInfo, getTypeInfo, tagObject } = this.props;
+    const { accountBackups, extendLinodes, getBackupsMonthlyPrice, classes,
+       notice, types, getRegionInfo, getTypeInfo } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
@@ -281,6 +286,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const regionInfo = selectedRegionID && getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
+
+    const hasBackups = backups || accountBackups;
 
     return (
       <React.Fragment>
@@ -337,18 +344,22 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           updateFor={[selectedTypeID, selectedDiskSize, errors]}
         />
         <LabelAndTagsPanel
-          tagObject={tagObject}
-          tagError={hasErrorFor('tag')}
           labelFieldProps={{
             label: 'Linode Label',
             value: label || '',
             onChange: this.handleSelectLabel,
             errorText: hasErrorFor('label'),
           }}
-          updateFor={[label, tagObject, errors]}
+          tagsInputProps={{
+            value: tags,
+            onChange: this.handleChangeTags,
+            tagError: hasErrorFor('tag'),
+          }}
+          updateFor={[tags, label, errors]}
         />
         <AddonsPanel
           backups={backups}
+          accountBackups={accountBackups}
           changeBackups={this.handleToggleBackups}
           changePrivateIP={this.handleTogglePrivateIP}
           backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
@@ -382,16 +393,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     displaySections.push(typeInfo);
                   }
 
-                  if (backups && typeInfo && typeInfo.backupsMonthly) {
-                    displaySections.push({
-                      title: 'Backups Enabled',
-                      ...(typeInfo.backupsMonthly &&
-                        { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                    });
+                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+                    displaySections.push(renderBackupsDisplaySection(accountBackups, typeInfo.backupsMonthly));
                   }
 
                   let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                  if (backups && typeInfo && typeInfo.backupsMonthly) {
+                  if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
                     calculatedPrice += typeInfo.backupsMonthly;
                   }
 
@@ -417,7 +424,4 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<any,any,any>(
-  styled,
-  tagsHoc)
-  (FromBackupsContent);
+export default styled(FromBackupsContent);

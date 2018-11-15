@@ -5,6 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import ButtonBase from '@material-ui/core/ButtonBase';
+import Hidden from '@material-ui/core/Hidden';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
@@ -55,13 +56,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   userWrapper: {
     marginRight: theme.spacing.unit,
     borderRadius: '50%',
-    width: '46px',
-    height: '46px',
+    width: '42px',
+    height: '42px',
     transition: theme.transitions.create(['box-shadow']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: 0,
-      width: '40px',
-      height: '40px',
+      width: '30px',
+      height: '30px',
     },
   },
   leftIcon: {
@@ -71,7 +72,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   username: {
     transition: theme.transitions.create(['color']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
@@ -188,38 +189,40 @@ export class UserMenu extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ButtonBase
-          onClick={this.handleMenu}
-          className={` ${classes.button} ${anchorEl && 'active'}`}
-          data-qa-user-menu
-        >
-          {username &&
-            <React.Fragment>
-              {this.renderAvatar()}
-              <span className={classes.username}>
-                {username && username}
-              </span>
-            </React.Fragment>
-          }
-        </ButtonBase>
-        <Menu
-          anchorEl={anchorEl}
-          getContentAnchorEl={undefined}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={open}
-          onClose={this.handleClose}
-          className={classes.menu}
-        >
-          <MenuItem key="placeholder" className={classes.hidden} />
-          {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
-        </Menu>
+        <Hidden smDown>
+          <ButtonBase
+            onClick={this.handleMenu}
+            className={` ${classes.button} ${anchorEl && 'active'}`}
+            data-qa-user-menu
+          >
+            {username &&
+              <React.Fragment>
+                {this.renderAvatar()}
+                <span className={classes.username}>
+                  {username && username}
+                </span>
+              </React.Fragment>
+            }
+          </ButtonBase>
+          <Menu
+            anchorEl={anchorEl}
+            getContentAnchorEl={undefined}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={open}
+            onClose={this.handleClose}
+            className={classes.menu}
+          >
+            <MenuItem key="placeholder" className={classes.hidden} />
+            {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
+          </Menu>
+        </Hidden>
       </React.Fragment>
     );
   }

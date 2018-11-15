@@ -11,7 +11,7 @@ import Request,
 import { createRecordSchema, updateRecordSchema } from './records.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
-type Record = Linode.Record;
+type DomainRecord = Linode.DomainRecord;
 
 /**
  * Returns a paginated list of Records configured on a Domain in Linode's DNS Manager.
@@ -20,7 +20,7 @@ type Record = Linode.Record;
  * @param params { object }
  */
 export const getDomainRecords = (domainId: number, params?: any) =>
-  Request<Page<Record>>(
+  Request<Page<DomainRecord>>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setParams(params),
     setMethod('GET'),
@@ -34,7 +34,7 @@ export const getDomainRecords = (domainId: number, params?: any) =>
  * @param recordId { number } The ID of the Record you are accessing.
  */
 export const getDomainRecord = (domainId: number, recordId: number) =>
-  Request<Record>(
+  Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('GET'),
   )
@@ -46,8 +46,8 @@ export const getDomainRecord = (domainId: number, recordId: number) =>
  * @param domainId { number } The ID of the Domain we are accessing Records for.
  * @param data { object } Options for type, name, etc.
  */
-export const createDomainRecord = (domainId: number, data: Partial<Record>) =>
-  Request<Record>(
+export const createDomainRecord = (domainId: number, data: Partial<DomainRecord>) =>
+  Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setMethod('POST'),
     setData(data, createRecordSchema),
@@ -64,8 +64,8 @@ export const createDomainRecord = (domainId: number, data: Partial<Record>) =>
 export const updateDomainRecord = (
   domainId: number,
   recordId: number,
-  data: Partial<Record>,
-  ) => Request<Record>(
+  data: Partial<DomainRecord>,
+  ) => Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('PUT'),
     setData(data, updateRecordSchema),

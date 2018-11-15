@@ -9,8 +9,7 @@ class UserDetail extends Page {
     get deleteButton() { return $('[data-qa-confirm-delete]'); }
     get usernameField() { return $('[data-qa-username]'); }
     get emailField() { return $('[data-qa-email]'); }
-    get saveButton() { return $('[data-qa-submit]'); }
-    get cancelButton() { return $('[data-qa-cancel]'); }
+    get saveButton() { return $(this.submitButton.selector); }
     get usernameWarning() { return $(`${this.usernameField.selector} p`); }
 
     baseElementsDisplay(owner) {
@@ -31,6 +30,7 @@ class UserDetail extends Page {
 
 
     updateUsername(username) {
+        this.usernameField.$('input').clearElement();
         this.usernameField.$('input').setValue(username);
         this.saveButton.click();
     }

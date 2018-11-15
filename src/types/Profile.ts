@@ -11,6 +11,7 @@ namespace Linode {
     authorized_keys: string[];
     two_factor_auth: boolean;
     restricted: boolean;
+    grants?: Linode.Grants;
   }
 
   interface Referrals {

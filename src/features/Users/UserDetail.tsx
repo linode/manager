@@ -137,7 +137,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
   visitUsers = () => {
     const { history } = this.props;
-    history.push('/users');
+    history.push('/account/users');
   }
 
   onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,7 +159,7 @@ class UserDetail extends React.Component<CombinedProps> {
       history,
       match: { path },
       profileUsername,
-      actions: { updateCurrenUser }
+      actions: { updateCurrentUser }
     } = this.props;
 
     const {
@@ -192,7 +192,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflec that change at the global level.
          */
         if (profileUsername === originalUsername) {
-          updateCurrenUser(user);
+          updateCurrentUser(user);
         }
 
         /**
@@ -289,6 +289,8 @@ class UserDetail extends React.Component<CombinedProps> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
+            scrollable
+            scrollButtons="on"
           >
             {this.tabs
               .map(tab => <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}
@@ -317,13 +319,13 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 interface DispatchProps {
   actions: {
-    updateCurrenUser: (user: Linode.User) => void;
+    updateCurrentUser: (user: Linode.User) => void;
   }
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
-    updateCurrenUser: (u: Linode.User) =>
+    updateCurrentUser: (u: Linode.User) =>
       dispatch(
         handleUpdate(u)
       ),

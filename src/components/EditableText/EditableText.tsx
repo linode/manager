@@ -1,5 +1,6 @@
 import * as classnames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -25,7 +26,8 @@ type ClassNames = 'root'
 | 'close'
 | 'headline'
 | 'title'
-| 'editIcon';
+| 'editIcon'
+| 'underlineOnHover';
 
 const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
@@ -42,24 +44,28 @@ const styles: StyleRulesCallback = (theme) => ({
     border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
+    textDecoration: 'inherit'
   },
   container: {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
     maxHeight: 48,
+    position: 'relative',
+    top: 0,
+    left: -2.
   },
   initial: {
     border: '1px solid transparent',
     '&:hover, &:focus': {
-      border: '1px solid #abadaf',
       '& $editIcon': {
-        position: 'relative',
-        top: 0,
-        left: 0,
+        opacity: 1,
       },
       '& $icon': {
         color: theme.color.grey1,
+        '&:hover': {
+          color: theme.color.black,
+        },
       },
     },
   },
@@ -113,16 +119,17 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   editIcon: {
     [theme.breakpoints.up('sm')]: {
-      position: 'absolute',
-      top: '-9999px',
-      left: '-9999px',
+      opacity: 0,
       '&:focus': {
-        position: 'relative',
-        top: 0,
-        left: 0,
+        opacity: 1,
       },
     },
   },
+  underlineOnHover: {
+    '&:hover, &:focus': {
+      textDecoration: 'underline !important',
+    },
+  }
 });
 
 interface Props {
@@ -130,6 +137,7 @@ interface Props {
   onCancel: () => void;
   text: string;
   errorText?: string;
+  labelLink?: string;
 }
 
 interface State {
@@ -141,7 +149,7 @@ type PassThroughProps = Props & TextFieldProps & TypographyProps;
 
 type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
 
-class EditableText extends React.Component<FinalProps, State> {
+export class EditableText extends React.Component<FinalProps, State> {
   state: State = {
     isEditing: Boolean(this.props.errorText),
     text: this.props.text,
@@ -186,23 +194,30 @@ class EditableText extends React.Component<FinalProps, State> {
     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
   }
 
+
   render() {
-    const { classes, onEdit, errorText, ...rest } = this.props;
+    const { classes, labelLink, onEdit, errorText, ...rest } = this.props;
     const { isEditing, text } = this.state;
+
+    const labelText = (
+      <Typography className={classes.root} { ...rest } data-qa-editable-text>
+        {this.state.text}
+      </Typography>
+    );
 
     return (
       !isEditing
         ? (
             <div className={`${classes.container} ${classes.initial}`}>
               <React.Fragment>
-                <Typography
-                  className={classes.root}
-                  onClick={this.toggleEditing}
-                  {...rest}
-                  data-qa-editable-text
-                >
-                  {text}
-                </Typography>
+                {!!labelLink
+                  ?
+                    <Link to={labelLink!} className={classes.underlineOnHover}>
+                      {labelText}
+                    </Link>
+                  :
+                    labelText
+                }
                 <Button
                   className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}

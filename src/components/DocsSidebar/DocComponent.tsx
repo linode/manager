@@ -22,10 +22,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   title: {},
   titleLink: {
-    textDecoration: 'none',
     color: theme.color.headline,
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
+    textDecoration: 'underline',
+    '&:hover': {
+      color: theme.color.black,
     },
   },
   body: {

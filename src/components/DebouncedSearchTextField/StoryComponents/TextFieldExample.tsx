@@ -31,7 +31,7 @@ class Example extends React.Component<Props, State> {
           isSearching: false,
         });
       },
-      2000
+      800
     )
   }
 
@@ -45,7 +45,7 @@ class Example extends React.Component<Props, State> {
         />
         <ul>
           {this.state.list.map((eachThing: string) => {
-            return <li key={eachThing}>{eachThing}</li>
+            return <li key={eachThing} data-qa-list-item>{eachThing}</li>
           })}
         </ul>
       </React.Fragment>

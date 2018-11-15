@@ -14,7 +14,10 @@ const getAxiosInstance = function(token) {
       }),
       baseURL: API_ROOT,
       timeout: 10000,
-      headers: { 'Authorization': `Bearer ${token}`},
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'User-Agent': 'WebdriverIO',
+      },
     });
     return axiosInstance;
 }
@@ -27,7 +30,7 @@ exports.removeAllLinodes = token => {
         const removeInstance = (linode, endpoint) => {
             return getAxiosInstance(token).delete(`${endpoint}/${linode.id}`)
                 .then(res => {
-                    
+
                 })
                 .catch((error) => {
                     console.error('Error was', error);
@@ -37,7 +40,7 @@ exports.removeAllLinodes = token => {
 
         return getAxiosInstance(token).get(linodesEndpoint)
             .then(res => {
-                const promiseArray = 
+                const promiseArray =
                     res.data.data.map(l => removeInstance(l, linodesEndpoint));
 
                 Promise.all(promiseArray)
@@ -81,7 +84,7 @@ exports.removeAllVolumes = token => {
 
         return getAxiosInstance(token).get(endpoint).then(volumesResponse => {
             return exports.pause(volumesResponse).then(res => {
-                const removeVolumesArray = 
+                const removeVolumesArray =
                     res.data.data.map(v => removeVolume(v, endpoint));
 
                 Promise.all(removeVolumesArray).then(function(res) {

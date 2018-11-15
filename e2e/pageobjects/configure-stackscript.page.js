@@ -17,7 +17,6 @@ class ConfigureStackScript extends Page {
     get script() { return $('[data-qa-stackscript-script]'); }
     get revisionNote() { return $('[data-qa-stackscript-revision]'); }
     get saveButton() { return $('[data-qa-save]'); }
-    get cancelButton() { return $('[data-qa-cancel]'); }
     get imageTags() { return $$('[data-qa-tag]'); }
 
     save() {

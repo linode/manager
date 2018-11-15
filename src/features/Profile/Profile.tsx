@@ -56,6 +56,8 @@ class Profile extends React.Component<Props> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
+            scrollable
+            scrollButtons="on"
           >
             {this.tabs
               .map(tab => <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}

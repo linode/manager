@@ -17,3 +17,10 @@ export const account: Linode.Account = {
   "phone": "2151231234",
   "company": "mmckenna"
 }
+
+export const accountSettings: Linode.AccountSettings = {
+  backups_enabled: true,
+  managed: false,
+  longview_subscription: null,
+  network_helper: false,
+}

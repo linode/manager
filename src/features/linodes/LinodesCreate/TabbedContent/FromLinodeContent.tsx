@@ -10,6 +10,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { cloneLinode } from 'src/services/linodes';
@@ -21,6 +22,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import { renderBackupsDisplaySection } from './utils';
+
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -58,6 +61,7 @@ interface State {
   privateIP: boolean;
   password: string | null;
   isMakingRequest: boolean;
+  tags: Tag[];
 }
 
 interface Props {
@@ -70,6 +74,7 @@ interface Props {
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
   getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
+  accountBackups: boolean;
 }
 
 const errorResources = {
@@ -92,6 +97,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     privateIP: false,
     isMakingRequest: false,
     selectedLinodeID: undefined,
+    tags: [],
   };
 
   mounted: boolean = false;
@@ -116,6 +122,10 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     this.setState({ label: e.target.value });
   }
 
+  handleChangeTags = (selected: Tag[]) => {
+    this.setState({ tags: selected })
+  }
+
   handleTypePassword = (value: string) => {
     this.setState({ password: value });
   }
@@ -137,6 +147,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       label, // optional
       backups, // optional
       privateIP,
+      tags,
     } = this.state;
 
     this.setState({ isMakingRequest: true });
@@ -146,6 +157,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       type: selectedTypeID,
       label: label ? label : null,
       backups_enabled: backups,
+      tags: tags.map((item: Tag) => item.value),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
@@ -177,10 +189,10 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { errors, backups, privateIP, label, selectedLinodeID,
-      selectedRegionID, selectedTypeID, selectedDiskSize, isMakingRequest } = this.state;
+    const { errors, backups, privateIP, label, selectedLinodeID, tags,
+      selectedRegionID, selectedTypeID, selectedDiskSize, isMakingRequest, } = this.state;
 
-    const { notice, types, linodes, regions, extendLinodes, getBackupsMonthlyPrice,
+    const { accountBackups, notice, types, linodes, regions, extendLinodes, getBackupsMonthlyPrice,
       getTypeInfo, getRegionInfo, classes } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -189,6 +201,8 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     const regionInfo = getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
+
+    const hasBackups = backups || accountBackups;
 
     return (
       <React.Fragment>
@@ -245,10 +259,16 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                     onChange: this.handleTypeLabel,
                     errorText: hasErrorFor('label'),
                   }}
-                  updateFor={[label]}
+                  tagsInputProps={{
+                    value: tags,
+                    onChange: this.handleChangeTags,
+                    tagError: hasErrorFor('tag'),
+                  }}
+                  updateFor={[tags, label, errors]}
                 />
                 <AddonsPanel
                   backups={backups}
+                  accountBackups={accountBackups}
                   backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
                   privateIP={privateIP}
                   changeBackups={this.handleToggleBackups}
@@ -274,16 +294,12 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                         displaySections.push(typeInfo);
                       }
 
-                      if (backups && typeInfo && typeInfo.backupsMonthly) {
-                        displaySections.push({
-                          title: 'Backups Enabled',
-                          ...(typeInfo.backupsMonthly &&
-                            { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                        });
+                      if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+                        displaySections.push(renderBackupsDisplaySection(accountBackups, typeInfo.backupsMonthly));
                       }
 
                       let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                      if (backups && typeInfo && typeInfo.backupsMonthly) {
+                      if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
                         calculatedPrice += typeInfo.backupsMonthly;
                       }
 

@@ -4,7 +4,7 @@ import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import {
   StyleRulesCallback,
-  
+
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -75,7 +75,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
           indicatorColor="primary"
           textColor="primary"
           scrollable
-          scrollButtons="off"
+          scrollButtons="on"
         >
           {tabs.map(tab =>
             <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}

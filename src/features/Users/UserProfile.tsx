@@ -151,7 +151,7 @@ class UserProfile extends React.Component<CombinedProps> {
     });
     deleteUser(username)
       .then(() => {
-        push(`/users`, { deletedUsername: username });
+        push(`/account/users`, { deletedUsername: username });
       })
       .catch(() => {
         this.setState({

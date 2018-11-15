@@ -5,8 +5,7 @@ import CheckoutSummary from '../../pageobjects/checkout-summary';
 
 describe('Create Linode - Configure Linode Suite', () => {
     beforeAll(() => {
-        Create.menuButton.click();
-        Create.linode();
+        ConfigureLinode.selectGlobalCreateItem('Linode');
     });
 
     it('should display configure elements', () => {
@@ -43,7 +42,7 @@ describe('Create Linode - Configure Linode Suite', () => {
                 return r.getAttribute('aria-selected').includes('true');
             }, 10000);
         });
-        browser.waitForVisible('[data-qa-selection-card]');
+        browser.waitForVisible('[data-qa-tp="Region"] [data-qa-selection-card]');
     });
 
     it('should select a specific image', () => {

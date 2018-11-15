@@ -57,6 +57,7 @@ class Billing extends Page {
 
     updateElemsDisplay() {
         this.updateContact.waitForVisible(constants.wait.normal);
+        this.updateFirstName.waitForVisible(constants.wait.normal);
 
         // expect(this.updateCompany.isVisible()).toBe(true);
         expect(this.updateFirstName.isVisible()).toBe(true);
@@ -88,7 +89,7 @@ class Billing extends Page {
             expect(inv.$(this.amount.selector).getText()).toMatch(/\$\d/);
         });
     }
-    
+
     expandUpdateContact() {
         this.expandPanel('Update Contact Information');
         this.updateElemsDisplay();

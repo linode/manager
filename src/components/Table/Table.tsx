@@ -52,6 +52,8 @@ interface Props {
   tableClass?: string;
   border?: boolean;
   isResponsive?: boolean; // back-door for tables that don't need to be responsive
+  spacingTop?: 0 | 8 | 16 | 24;
+  spacingBottom?: 0 | 8 | 16 | 24;
 }
 
 type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
@@ -66,6 +68,8 @@ class WrappedTable extends React.Component<CombinedProps> {
       tableClass,
       border,
       noOverflow,
+      spacingTop,
+      spacingBottom,
       ...rest
     } = this.props;
 
@@ -74,10 +78,15 @@ class WrappedTable extends React.Component<CombinedProps> {
         className={classNames(
           {
             [classes.root]: !noOverflow,
-            [classes.responsive]: !(isResponsive === false) // must be explicity set to false
+            [classes.responsive]: !(isResponsive === false), // must be explicity set to false
+            [classes.border]: border
           },
           className
         )}
+        style={{
+          marginTop: spacingTop !== undefined ? spacingTop : 0,
+          marginBottom: spacingBottom !== undefined ? spacingBottom : 0
+        }}
       >
         <Table className={tableClass} {...rest}>{this.props.children}</Table>
       </div>

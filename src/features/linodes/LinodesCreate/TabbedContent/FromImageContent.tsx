@@ -10,6 +10,7 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
@@ -22,7 +23,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import tagsHoc, { TagObject } from '../tagsHoc';
+import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -51,10 +52,10 @@ interface Props {
   getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
   getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
+  accountBackups: boolean;
 
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
-  tagObject: TagObject;
   handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
@@ -69,6 +70,7 @@ interface State {
   password: string | null;
   isMakingRequest: boolean;
   initTab?: number;
+  tags: Tag[];
 }
 
 export type TypeInfo = {
@@ -99,6 +101,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     privateIP: false,
     isMakingRequest: false,
     initTab: pathOr(null, ['history', 'location', 'state', 'initTab'], this.props),
+    tags: [],
   };
 
   mounted: boolean = false;
@@ -117,6 +120,10 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
   handleTypeLabel = (e: any) => {
     this.setState({ label: e.target.value });
+  }
+
+  handleChangeTags = (selected: Tag[]) => {
+    this.setState({ tags: selected })
   }
 
   handleTypePassword = (value: string) => {
@@ -139,8 +146,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   createNewLinode = () => {
-    const { history, tagObject, userSSHKeys } = this.props;
-    const { getLinodeTagList } = tagObject.actions;
+    const { history, userSSHKeys } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -149,6 +155,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       password,
       backups,
       privateIP,
+      tags,
     } = this.state;
 
     this.setState({ isMakingRequest: true });
@@ -163,14 +170,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       backups_enabled: backups, /* optional */
       booted: true,
       authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
-      tags: getLinodeTagList()
+      tags: tags.map((item: Tag) => item.value),
     })
-      .then((linode) => {
+      .then((linode: Linode.Linode) => {
         if (privateIP) { allocatePrivateIP(linode.id); }
         resetEventsPolling();
         history.push('/linodes');
       })
-      .catch((error) => {
+      .catch((error: any) => {
         if (!this.mounted) { return; }
 
         this.setState(() => ({
@@ -195,13 +202,13 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { errors, backups, privateIP, label, selectedImageID,
+    const { errors, backups, privateIP, label, selectedImageID, tags,
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
-      
-    const { classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo, tagObject, userSSHKeys } = this.props;
-        
+
+    const { accountBackups, classes, notice, types, regions, images, getBackupsMonthlyPrice,
+      getRegionInfo, getTypeInfo, userSSHKeys } = this.props;
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
@@ -211,6 +218,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     const regionInfo = getRegionInfo(selectedRegionID);
 
     const typeInfo = getTypeInfo(selectedTypeID);
+
+    const hasBackups = backups || accountBackups;
 
     return (
       <React.Fragment>
@@ -249,15 +258,18 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             updateFor={[selectedTypeID, errors]}
           />
           <LabelAndTagsPanel
-            tagObject={tagObject}
-            tagError={hasErrorFor('tag')}
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
-            updateFor={[tagObject, label, errors]}
+            tagsInputProps={{
+              value: tags,
+              onChange: this.handleChangeTags,
+              tagError: hasErrorFor('tag'),
+            }}
+            updateFor={[tags, label, errors]}
           />
           <AccessPanel
            /* disable the password field if we haven't selected an image */
@@ -270,6 +282,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
           />
           <AddonsPanel
             backups={backups}
+            accountBackups={accountBackups}
             backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
@@ -299,16 +312,12 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
                   displaySections.push(typeInfo);
                 }
 
-                if (backups && typeInfo && typeInfo.backupsMonthly) {
-                  displaySections.push({
-                    title: 'Backups Enabled',
-                    ...(typeInfo.backupsMonthly &&
-                      { details: `$${typeInfo.backupsMonthly.toFixed(2)} / monthly` }),
-                  });
+                if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+                  displaySections.push(renderBackupsDisplaySection(accountBackups, typeInfo.backupsMonthly));
                 }
 
                 let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                if (backups && typeInfo && typeInfo.backupsMonthly) {
+                if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
                   calculatedPrice += typeInfo.backupsMonthly;
                 }
 
@@ -333,6 +342,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(styled, userSSHKeyHoc, tagsHoc);
+const enhanced = compose(styled, userSSHKeyHoc);
 
 export default enhanced(FromImageContent) as any;

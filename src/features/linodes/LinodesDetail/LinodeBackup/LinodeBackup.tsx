@@ -361,24 +361,22 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   Placeholder = (): JSX.Element | null => {
     const { enabling } = this.state;
     const backupsMonthlyPrice = path<number>(
-      ['type', 'response', 'addons', 'backups', 'price'],
+      ['types', 'response', 'addons', 'backups', 'price', 'monthly'],
       this.props,
     );
 
-    const enableText = backupsMonthlyPrice
-      ? backupsMonthlyPrice
-        ? `Enable Backups $${backupsMonthlyPrice.toFixed(2)}/mo`
-        : `Enable Backups`
-      : `Enable Backups`;
+    const backupPlaceholderText = backupsMonthlyPrice
+      ? <React.Fragment>Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups for just <strong>${backupsMonthlyPrice} per month</strong>, click below.</React.Fragment>
+      : 'Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups just click below.'
 
     return (
       <Placeholder
         icon={VolumeIcon}
         title="Backups"
-        copy="Take automatic snapshots of the files on your Linode"
+        copy={backupPlaceholderText}
         buttonProps={{
           onClick: () => this.enableBackups(),
-          children: enableText,
+          children: 'Enable Backups',
           loading: enabling,
         }}
       />

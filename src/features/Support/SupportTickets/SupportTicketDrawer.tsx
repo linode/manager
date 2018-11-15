@@ -1,11 +1,11 @@
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import MenuItem from 'src/components/MenuItem';
@@ -46,6 +46,7 @@ interface State {
   data: Item[];
   inputValue: string;
   loading: boolean;
+  submitting: boolean;
   ticket: Ticket;
   errors?: Linode.ApiFieldError[];
 }
@@ -103,6 +104,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     errors: undefined,
     inputValue: '',
     loading: false,
+    submitting: false,
     ticket: this.defaultTicket,
   };
 
@@ -242,7 +244,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       });
       return;
     }
-    this.setState({ errors: undefined });
+    this.setState({ 
+      errors: undefined,
+      submitting: true
+    });
     createSupportTicket({
       description,
       summary,
@@ -253,6 +258,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         this.setState({
           errors: undefined,
+          submitting: false,
           ticket: this.defaultTicket
         });
         this.close();
@@ -261,7 +267,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
         this.setState({
-          errors: pathOr(err, ['response', 'data', 'errors'], errors)
+          errors: pathOr(err, ['response', 'data', 'errors'], errors),
+          submitting: false
         })
       })
   }
@@ -273,7 +280,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { data, errors, inputValue, ticket } = this.state;
+    const { data, errors, inputValue, submitting, ticket } = this.state;
     const requirementsMet = (ticket.description.length > 0 && ticket.summary.length > 0);
 
     const hasErrorFor = getAPIErrorFor({
@@ -364,16 +371,15 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           <Button
             onClick={this.onSubmit}
             disabled={!requirementsMet}
-            variant="raised"
-            color="primary"
+            loading={submitting}
+            type="primary"
             data-qa-submit
           >
             Open Ticket
           </Button>
           <Button
             onClick={this.close}
-            variant="raised"
-            color="secondary"
+            type="secondary"
             className="cancel"
             data-qa-cancel
           >
