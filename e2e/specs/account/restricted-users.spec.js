@@ -29,7 +29,7 @@ describe('Account - Restricted User Suite', () => {
         Users.backButton.click();
         Users.baseElementsDisplay();
 
-        expect(browser.getUrl()).toBe(`${browser.options.baseUrl}/${constants.routes.account.users}`);
+        expect(browser.getUrl()).toBe(browser.options.baseUrl.concat(constants.routes.account.users));
     });
 
     it('should display user as restricted in users table', () => {
