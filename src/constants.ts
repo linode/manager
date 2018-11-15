@@ -31,6 +31,8 @@ export const DISABLE_EVENT_THROTTLE =
 
 export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
+export const MAX_VOLUME_SIZE = 10240;
+
 export const ZONES = {
   'us-east': 'newark',
   'us-east-1a': 'newark',

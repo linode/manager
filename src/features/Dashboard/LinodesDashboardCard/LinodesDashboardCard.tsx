@@ -34,7 +34,9 @@ type ClassNames =
   | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    marginTop: 0
+  },
   linodeWrapper: {
     display: 'inline-flex',
     width: 'auto',
@@ -119,8 +121,9 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <DashboardCard title="Linodes" headerAction={this.renderAction}>
+      <DashboardCard title="Linodes" headerAction={this.renderAction} className={classes.root}>
         <Paper>
           <Table>
             <TableBody>

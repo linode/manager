@@ -1,5 +1,5 @@
 import { shim } from 'promise.prototype.finally';
-import { lensPath, path, set } from 'ramda';
+import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -18,6 +18,7 @@ import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 
+import BackupDrawer from 'src/features/Backups';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -30,6 +31,7 @@ import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 
+import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -77,14 +79,6 @@ const SupportTickets = DefaultLoader({
 const SupportTicketDetail = DefaultLoader({
   loader: () => import('src/features/Support/SupportTicketDetail'),
 })
-
-const Users = DefaultLoader({
-  loader: () => import('src/features/Users'),
-});
-
-const InvoiceDetail = DefaultLoader({
-  loader: () => import('src/features/Account/InvoiceDetail'),
-});
 
 const Longview = DefaultLoader({
   loader: () => import('src/features/Longview'),
@@ -164,6 +158,7 @@ interface State {
   welcomeBanner: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
+  hasError: boolean;
 }
 
 type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
@@ -246,7 +241,12 @@ export class App extends React.Component<CombinedProps, State> {
       },
       update: () => null, /** @todo */
     },
+    hasError: false,
   };
+
+  componentDidCatch() {
+    this.setState({ hasError: true });
+  }
 
   componentDidMount() {
     const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
@@ -302,17 +302,28 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { menuOpen } = this.state;
-    const { classes, documentation, toggleTheme, profileLoading, profileError } = this.props;
+    const { menuOpen, hasError } = this.state;
+    const {
+      backupsCTA,
+      classes,
+      documentation,
+      toggleTheme,
+      profileLoading,
+      profileError,
+    } = this.props;
 
     const hasDoc = documentation.length > 0;
+
+    if (profileError || hasError) {
+      return <TheApplicationIsOnFire />;
+    }
 
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
 
-        {profileLoading === false && !profileError &&
+        {profileLoading === false &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
@@ -333,9 +344,7 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/longview" component={Longview} />
                               <Route exact path="/images" component={Images} />
                               <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/billing" component={Account} />
-                              <Route exact path="/billing/invoices/:invoiceId" component={InvoiceDetail} />
-                              <Route path="/users" component={Users} />
+                              <Route path="/account" component={Account} />
                               <Route exact path="/support/tickets" component={SupportTickets} />
                               <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
                               <Route path="/profile" component={Profile} />
@@ -353,6 +362,7 @@ export class App extends React.Component<CombinedProps, State> {
                                   return (
                                     <DocsSidebar
                                       docs={documentation}
+                                      backupsCTA={backupsCTA}
                                       {...props}
                                     />
                                   )
@@ -373,6 +383,7 @@ export class App extends React.Component<CombinedProps, State> {
                     data-qa-beta-notice />
                   <ToastNotifications />
                   <VolumeDrawer />
+                  <BackupDrawer />
                 </div>
               </RegionsProvider>
             </TypesProvider>
@@ -419,6 +430,7 @@ interface StateProps {
   userId?: number;
 
   documentation: Linode.Doc[];
+  backupsCTA: boolean;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
@@ -428,6 +440,8 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation,
+
+  backupsCTA: pathOr(false, ['sidebar','backupsCTA'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);

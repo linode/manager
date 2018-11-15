@@ -32,6 +32,7 @@ type ClassNames = 'root'
   | 'formattedText'
   | 'hivelyContainer'
   | 'hivelyLink'
+  | 'hivelyLinkIcon'
   | 'hivelyImage';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -46,7 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
     padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit,
     position: 'relative',
     '& p': {
       margin: 0,
@@ -85,9 +85,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     minWidth: 60,
   },
   userCol: {
-    minWidth: 100,
-    paddingRight: theme.spacing.unit * 4,
-
+    minWidth: 200,
+    paddingRight: `${theme.spacing.unit * 4}px !important`,
   },
   descCol: {},
   expCol: {
@@ -128,7 +127,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 3,
+  },
+  hivelyLinkIcon: {
+    display: 'inline-block',
+    marginRight: theme.spacing.unit,
   }
 });
 
@@ -238,21 +241,21 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     return (
       <div className={classes.hivelyContainer}>
         <Divider />
-        <a className={classes.hivelyLink} href={href + '3'}>How did I do?</a>
+        <a className={classes.hivelyLink} href={href + '3'} target="_blank">How did I do?</a>
         <span>
-          <a href={href + '3'}>
+          <a href={href + '3'} target="_blank" className={classes.hivelyLinkIcon}>
             <img
               className={classes.hivelyImage}
               src={"https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png"}
             />
           </a>
-          <a href={href + '2'}>
+          <a href={href + '2'} target="_blank" className={classes.hivelyLinkIcon}>
             <img
               className={classes.hivelyImage}
               src={"https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png"}
             />
           </a>
-          <a href={href + '1'}>
+          <a href={href + '1'} target="_blank" className={classes.hivelyLinkIcon}>
             <img
               className={classes.hivelyImage}
               src={"https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png"}
@@ -306,8 +309,8 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
                 </Grid>
                 <Grid item>
                   <Typography className={classes.userName}>{data.username}</Typography>
-                  {data.from_linode && <Typography variant="body1">Linode Expert</Typography>}
-                  <Typography><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
+                  {data.from_linode && <Typography variant="caption">Linode Expert</Typography>}
+                  <Typography variant="caption" style={{ marginTop: 8 }}><DateTimeDisplay value={data.date} humanizeCutoff={'month'} /></Typography>
                   </Grid>
                 </Grid>
               </Grid>

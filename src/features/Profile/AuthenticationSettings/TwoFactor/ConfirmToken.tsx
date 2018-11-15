@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import {
     StyleRulesCallback,
-    
+
     WithStyles,
     withStyles,
   } from '@material-ui/core/styles';
@@ -38,7 +38,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ConfirmToken: React.StatelessComponent<CombinedProps> = (props) => {
-  const { 
+  const {
     classes,
     token,
     error,
@@ -47,7 +47,7 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = (props) => {
     submitting,
     twoFactorConfirmed,
     onCancel } = props;
-  
+
   return (
     <React.Fragment>
       <Typography
@@ -80,11 +80,11 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = (props) => {
           Cancel
         </Button>
         {twoFactorConfirmed &&
-          <Notice 
+          <Notice
             warning
             spacingTop={8}
             className={classes.warning}
-            
+
             text={"Confirming a new key will invalidate codes generated from any previous key."}
           />
         }

@@ -1,37 +1,24 @@
 import * as classNames from 'classnames';
-import { compose, path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 
-import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 import Grid from 'src/components/Grid';
-import Toggle from 'src/components/Toggle';
-
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import ThemeToggle from './ThemeToggle';
 
 interface PrimaryLink {
-  display: string,
-  href: string,
+  display: string;
+  href: string;
+  key: string;
 };
-
-const primaryLinks: PrimaryLink[] = [
-  { display: 'Dashboard', href: '/dashboard' },
-  { display: 'Linodes', href: '/linodes' },
-  { display: 'Volumes', href: '/volumes' },
-  { display: 'NodeBalancers', href: '/nodebalancers' },
-  { display: 'Domains', href: '/domains' },
-  { display: 'Managed', href: '/managed' },
-  { display: 'Longview', href: '/longview' },
-  { display: 'StackScripts', href: '/stackscripts' },
-  { display: 'Images', href: '/images' },
-];
 
 type ClassNames =
   'menuGrid'
@@ -46,13 +33,11 @@ type ClassNames =
   | 'sublinkActive'
   | 'arrow'
   | 'sublinkPanel'
-  | 'switchWrapper'
-  | 'toggle'
-  | 'switchText'
   | 'spacer'
-  | 'listItemAccount';
+  | 'listItemAccount'
+  | 'divider';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuGrid: {
     minHeight: 64,
     width: '100%',
@@ -81,6 +66,10 @@ type ClassNames =
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: 10,
+      paddingBottom: 10,
+    },
     '&:hover': {
       borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -148,34 +137,11 @@ type ClassNames =
     margin: '0 4px 0 -7px',
     transition: theme.transitions.create(['transform']),
   },
-  switchWrapper: {
-    padding: '16px 40px 0 34px',
-    alignItems: 'center',
-    marginTop: 'auto',
-    width: 'calc(100% - 20px)',
-    justifyContent: 'center',
-    display: 'flex',
-  },
-  toggle: {
-    '& > span:last-child': {
-      backgroundColor: '#f4f4f4 !important',
-      opacity: 0.38,
-    },
-    '&.darkTheme .square': {
-      fill: '#444 !important',
-    },
-  },
-  switchText: {
-    color: '#777',
-    fontSize: '.8rem',
-    transition: theme.transitions.create(['color']),
-    '&.active': {
-      transition: theme.transitions.create(['color']),
-      color: '#C9CACB',
-    },
-  },
   spacer: {
     padding: 25,
+  },
+  divider: {
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
   },
 });
 
@@ -186,39 +152,98 @@ interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
 
 interface State {
   drawerOpen: boolean;
-  expandedMenus: {
-    [key: string]: boolean;
-  };
+  expandedMenus: Record<string, boolean>;
+  primaryLinks: PrimaryLink[];
 }
 
 type CombinedProps = Props & StateProps;
 
-class PrimaryNav extends React.Component<CombinedProps, State> {
+export class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
     drawerOpen: false,
     expandedMenus: {
       account: false,
       support: false,
     },
+    primaryLinks: [],
   };
 
   mounted: boolean = false;
 
   componentDidMount() {
     this.mounted = true;
+    this.createMenuItems();
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
-  navigate(href: string) {
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.hasAccountAccess !== this.props.hasAccountAccess) {
+      this.createMenuItems();
+    }
+  }
+
+  createMenuItems = () => {
+    const {
+      hasAccountAccess,
+      // isLongviewEnabled,
+      isManagedAccount,
+    } = this.props;
+
+    const primaryLinks = [
+      { display: 'Dashboard', href: '/dashboard', key: 'dashboard' }
+    ];
+
+    // if (canAccessLinodes) {
+    primaryLinks.push({ display: 'Linodes', href: '/linodes', key: 'linodes' });
+    // }
+
+    // if (canAccessVolumes) {
+    primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
+    // }
+
+    // if (canAccessNodeBalancers) {
+    primaryLinks.push({ display: 'NodeBalancers', href: '/nodebalancers', key: 'nodebalancers' });
+    // }
+
+    // if (canAccessDomains) {
+    primaryLinks.push({ display: 'Domains', href: '/domains', key: 'domains' });
+    // }
+
+    // if (isLongviewEnabled) {
+    primaryLinks.push({ display: 'Longview', href: '/longview', key: 'longview' });
+    // }
+
+    if (isManagedAccount) {
+      primaryLinks.push({ display: 'Managed', href: '/managed', key: 'managed' });
+    }
+
+    // if(canAccessStackscripts){
+    primaryLinks.push({ display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' });
+    // }
+
+    // if(canAccessImages){
+    primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
+    // }
+
+    if (hasAccountAccess) {
+      primaryLinks.push({ display: 'Account', href: '/account', key: 'account' });
+    }
+
+    primaryLinks.push({ display: 'Get Help', href: '/support', key: 'support' });
+
+    this.setState({ primaryLinks });
+  };
+
+  navigate = (href: string) => {
     const { history, closeMenu } = this.props;
     history.push(href);
     closeMenu();
   }
 
-  linkIsActive(href: string) {
+  linkIsActive = (href: string) => {
     return isPathOneOf([href], this.props.location.pathname);
   }
 
@@ -237,16 +262,22 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
     this.navigate('/support');
   }
 
-  renderPrimaryLink(primaryLink: PrimaryLink) {
-    const { classes, managed } = this.props;
+  goToProfile = () => {
+    this.navigate('/profile');
+  }
 
-    if (primaryLink.display === 'Managed' && !managed) { return; }
+  logOut = () => {
+    this.navigate('/logout');
+  }
+
+  renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
+    const { classes } = this.props;
 
     return (
       <ListItem
         key={primaryLink.display}
         button
-        divider
+        divider={!isLast}
         component="li"
         role="menuitem"
         focusRipple={true}
@@ -255,6 +286,7 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
           ${classes.listItem}
           ${this.linkIsActive(primaryLink.href) && classes.active}
         `}
+        data-qa-nav-item={primaryLink.key}
       >
         <ListItemText
           primary={primaryLink.display}
@@ -269,9 +301,8 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, toggleTheme, closeMenu, managed } = this.props;
+    const { classes, toggleTheme } = this.props;
     const { expandedMenus } = this.state;
-    const themeName = (this.props.theme as any).name;
 
     return (
       <React.Fragment>
@@ -293,87 +324,25 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
               </Link>
             </div>
           </Grid>
+          <div className={classNames({
+            ['fade-in-table']: true,
+            [classes.fadeContainer]: true,
+          })}>
 
-          {managed !== undefined &&
-            <div className={classNames(
-              'fade-in-table',
-              {
-                [classes.fadeContainer]: true,
-              }
-            )}>
+            {this.state.primaryLinks.map((primaryLink, id, arr) =>
+              this.renderPrimaryLink(primaryLink, id === arr.length - 1))}
 
-              {primaryLinks.map(primaryLink => this.renderPrimaryLink(primaryLink))}
-
+            <Hidden mdUp>
+              <Divider className={classes.divider} />
               <ListItem
-                data-menu-name="account"
-                focusRipple={true}
                 button
                 component="li"
-                role="menuitem"
-                onClick={this.expandMenutItem}
-                className={classNames({
-                  [classes.listItem]: true,
-                  [classes.listItemAccount]: true,
-                  [classes.collapsible]: true,
-                })}
-              >
-                <ListItemText
-                  disableTypography={true}
-                  className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.account
-                      || this.linkIsActive('/billing') === true
-                      || this.linkIsActive('/users') === true,
-                  })}
-                >
-                  <KeyboardArrowRight className={classes.arrow} />
-                  Account
-              </ListItemText>
-              </ListItem>
-              <Collapse
-                in={expandedMenus.account
-                  || (this.linkIsActive('/billing') === true)
-                  || (this.linkIsActive('/users') === true)}
-                timeout="auto"
-                component="ul"
-                unmountOnExit
-                className={classes.sublinkPanel}
-              >
-                <li role="menuitem">
-                  <Link
-                    to="/billing"
-                    className={classNames({
-                      [classes.sublink]: true,
-                      [classes.sublinkActive]: this.linkIsActive('/billing') === true,
-                    })}
-                    onClick={closeMenu}
-                  >
-                    Account &amp; Billing
-                </Link>
-                </li>
-                <li role="menuitem">
-                  <Link
-                    to="/users"
-                    className={classNames({
-                      [classes.sublink]: true,
-                      [classes.sublinkActive]: this.linkIsActive('/users') === true,
-                    })}
-                    onClick={closeMenu}
-                  >
-                    Users
-                </Link>
-                </li>
-              </Collapse>
-
-              <ListItem
-                button
                 focusRipple={true}
-                onClick={this.goToHelp}
+                onClick={this.goToProfile}
                 className={classNames({
                   [classes.listItem]: true,
                   [classes.collapsible]: true,
-                  [classes.active]: this.linkIsActive('/support') === true,
+                  [classes.active]: this.linkIsActive('/profile') === true,
                 })}
               >
                 <ListItemText
@@ -382,42 +351,39 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
                     [classes.linkItem]: true,
                     [classes.activeLink]:
                       expandedMenus.support
-                      || this.linkIsActive('/support') === true,
+                      || this.linkIsActive('/profile') === true,
                   })}
                 >
-                  Get Help
-              </ListItemText>
+                  My Profile
+                </ListItemText>
               </ListItem>
-
-              <div className={classes.spacer} />
-
-              <div className={classes.switchWrapper}>
-                <span className={`
-                ${classes.switchText}
-                ${themeName === 'lightTheme' ? 'active' : ''}
-              `}>
-                  Light
-              </span>
-              <Toggle
-                onChange={toggleTheme}
-                checked={themeName !== 'lightTheme'}
-                className={`
-                  ${classes.toggle}
-                  ${themeName}
-                `}
-                />
-                <span
-                  className={`
-                  ${classes.switchText}
-                  ${themeName === 'darkTheme' ? 'active' : ''}
-                `}
-                  style={{ marginLeft: 4 }}
+              <ListItem
+                button
+                component="li"
+                focusRipple={true}
+                onClick={this.logOut}
+                className={classNames({
+                  [classes.listItem]: true,
+                  [classes.collapsible]: true,
+                  [classes.active]: this.linkIsActive('/logout') === true,
+                })}
+              >
+                <ListItemText
+                  disableTypography={true}
+                  className={classNames({
+                    [classes.linkItem]: true,
+                    [classes.activeLink]:
+                      expandedMenus.support
+                      || this.linkIsActive('/logout') === true,
+                  })}
                 >
-                  Dark
-              </span>
-              </div>
-            </div>
-          }
+                  Log Out
+                </ListItemText>
+              </ListItem>
+            </Hidden>
+            <div className={classes.spacer} />
+            <ThemeToggle toggleTheme={toggleTheme} />
+          </div>
         </Grid>
       </React.Fragment>
     );
@@ -425,19 +391,48 @@ class PrimaryNav extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  /** Account Settings */
-  managed?: boolean;
+  hasAccountAccess: boolean;
+  isManagedAccount: boolean;
+  // isLongviewEnabled: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
-  /** Account Settings */
-  managed: path(['data', 'managed'], state.__resources.accountSettings),
-});
+const userHasAccountAccess = (profile: Linode.Profile) => {
+  if (profile.restricted === false) {
+    return true;
+  }
 
-export const connected = connect(mapStateToProps, undefined);
+  const { grants } = profile;
+  if (!grants) {
+    return false;
+  }
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  withStyles(styles, { withTheme: true }),
-  withRouter,
-  connected,
-)(PrimaryNav);
+  return Boolean(grants.global.account_access)
+};
+
+const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
+
+// const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
+
+const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => {
+  const account = state.__resources.accountSettings.data;
+  const profile = state.__resources.profile.data;
+
+  if (!account || !profile) {
+    return {
+      hasAccountAccess: false,
+      isManagedAccount: false,
+      // isLongviewEnabled: false,
+    }
+  }
+
+  return {
+    hasAccountAccess: userHasAccountAccess(profile),
+    isManagedAccount: accountHasManaged(account),
+    // isLongviewEnabled: accountHasLongviewSubscription(account),
+  }
+};
+
+
+const connected = connect(mapStateToProps);
+
+export default withStyles(styles)(withRouter(connected(PrimaryNav)));

@@ -1,9 +1,8 @@
 import { compose, Dispatch } from 'redux';
 
-import { getAccountSettings } from 'src/services/account';
+import { getAccountSettings, updateAccountSettings as _update} from 'src/services/account';
 
 // TYPES
-type State = RequestableData<Linode.AccountSettings>;
 
 interface Action {
   type: string;
@@ -18,6 +17,7 @@ export const LOAD = '@manager/account/LOAD'
 export const ERROR = '@manager/account/ERROR'
 export const SUCCESS = '@manager/account/SUCCESS'
 export const UPDATE = '@manager/account/UPDATE'
+export const UPDATE_ERROR = '@manager/account/UPDATE_ERROR'
 
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
@@ -28,16 +28,20 @@ export const handleSuccess: ActionCreator = (data: Linode.AccountSettings) => ({
 
 export const handleUpdate: ActionCreator = (data: Linode.AccountSettings) => ({ type: UPDATE, data });
 
+export const handleUpdateError: ActionCreator = (error: Error) => ({ type: UPDATE_ERROR, error });
+
+
 // DEFAULT STATE
-export const DEFAULT_STATE: State = {
+export const DEFAULT_STATE: AccountSettingsState = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
   error: undefined,
+  updateError: undefined,
 };
 
 // REDUCER
-export default (state: State = DEFAULT_STATE, action: Action) => {
+export default (state: AccountSettingsState = DEFAULT_STATE, action: Action) => {
   switch (action.type) {
     case LOAD:
       return { ...state, loading: true };
@@ -46,20 +50,28 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
       return { ...state, loading: false, lastUpdated: Date.now(), error: action.error };
 
     case SUCCESS:
-      return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
+      return { ...state, loading: false, error: undefined, updateError: undefined, lastUpdated: Date.now(), data: action.data };
 
     case UPDATE:
-      return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
+      return { ...state, loading: false, error: undefined, updateError: undefined, lastUpdated: Date.now(), data: action.data };
+
+    case UPDATE_ERROR:
+      return { ...state, loading: false, error: undefined, lastUpdated: Date.now(), updateError: action.error }
 
     default:
       return state;
   }
 };
 
-
-export const requestAccountSettings = () => (dispatch: Dispatch<State>) => {
+export const requestAccountSettings = () => (dispatch: Dispatch<AccountSettingsState>) => {
   dispatch(startRequest());
   getAccountSettings()
     .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));
 };
+
+export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) => (dispatch: Dispatch<AccountSettingsState>) => {
+  _update(data)
+    .then(compose(dispatch, handleUpdate))
+    .catch(compose(dispatch, handleUpdateError));
+}

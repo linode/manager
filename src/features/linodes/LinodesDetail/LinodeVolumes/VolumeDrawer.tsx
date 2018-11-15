@@ -3,27 +3,33 @@ import * as React from 'react';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 import { getVolumes } from 'src/services/volumes';
 import { formatRegion } from 'src/utilities';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root' | 'suffix';
+type ClassNames = 'root' | 'suffix' | 'pricePanel';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   suffix: {
     fontSize: '.9rem',
     marginRight: theme.spacing.unit,
+  },
+  pricePanel: {
+    marginTop: theme.spacing.unit * 2,
   },
 });
 
@@ -124,11 +130,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       disabled={disabled}
       errorText={getAPIErrorFor(jawn, this.props.errors)('size')}
       label="Size"
+      type="number"
       onChange={this.onSizeChange}
       value={this.props.size}
-      helperText={'Maximum: 10240'}
+      helperText={`Maximum: ${MAX_VOLUME_SIZE} GiB`}
       InputProps={{
-        endAdornment: <span className={this.props.classes.suffix}>GB</span>,
+        endAdornment: <span className={this.props.classes.suffix}>GiB</span>,
       }}
     />
   );
@@ -155,9 +162,16 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     />
   );
 
+  helperText: React.StatelessComponent<{}> = () =>
+    <Typography variant="body1">
+      A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
+      $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
+    </Typography>
+
   createForm = () => {
     return (
       <React.Fragment>
+        <this.helperText />
         <this.labelField />
         <this.sizeField />
       </React.Fragment>
@@ -169,7 +183,12 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
   }
 
   resizeForm = () => {
-    return <this.sizeField />
+    return (
+      <React.Fragment>
+        <this.helperText />
+        <this.sizeField />
+      </React.Fragment>
+    )
   }
 
   cloneForm = () => {
@@ -254,6 +273,17 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  renderPrice = () => {
+    const { classes, mode, size } = this.props;
+    const price = size * 0.1;
+    if (!['create', 'resize'].includes(mode)) { return null; }
+    return (
+      <div className={classes.pricePanel} >
+        <DisplayPrice price={price} interval="mo" />
+      </div>
+    )
+  }
+
   render() {
     const { open, title, onClose } = this.props;
     return (
@@ -289,6 +319,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         {mode === 'resize' && this.resizeForm()}
         {mode === 'clone' && this.cloneForm()}
         {mode === 'attach' && this.attachForm()}
+        {this.renderPrice()}
         <this.actions updateFor={[]} />
       </React.Fragment>
     );

@@ -6,18 +6,17 @@ import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import Chip from '@material-ui/core/Chip';
-import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -26,6 +25,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { getTicket, getTicketReplies } from 'src/services/support';
+import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
@@ -52,18 +52,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginTop: '8px',
+    marginBottom: '8px'
   },
   backButton: {
-    margin: '2px 0 0 -16px',
+    margin: '-6px 0 0 -16px',
     '& svg': {
       width: 34,
       height: 34,
     },
+    padding:0
   },
   label: {
     marginBottom: theme.spacing.unit,
@@ -221,17 +223,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       });
   }
 
-  onBackButtonClick = () => {
-    const { ticket } = this.state;
-    if (!ticket) { this.props.history.push('/support/tickets'); }
-    else {
-      this.props.history.push({
-        pathname: '/support/tickets',
-        state:{ openFromRedirect: ['open','new'].includes(ticket.status)}
-      });
-    }
-  }
-
   onCreateReplySuccess = (newReply:Linode.SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
     getGravatarUrlFromHash(newReply.gravatar_id)
@@ -367,7 +358,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   }
 
   render() {
-    const { classes, profileUsername } = this.props;
+    const { classes, profileUsername, timezone } = this.props;
     const { errors, loading, replies, ticket, ticketCloseSuccess } = this.state;
     const ticketId = this.props.match.params.ticketId;
     /*
@@ -395,31 +386,45 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
       return null;
     }
 
+    // Format date for header
+    const formattedDate = formatDate(ticket.updated, { timezone });
+
+    // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
+    // details.  For more info see the below link.
+    // https://github.com/linode/manager/pull/4056/files/b0977c6e397e42720479478db96df56022618151#r232298065
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8, marginBottom: 8 }}>
           <Grid item className={classes.titleWrapper}>
-            <IconButton
-              onClick={this.onBackButtonClick}
-              className={classes.backButton}
-            >
-              <KeyboardArrowLeft />
-            </IconButton>
-            <Typography role="header" variant="headline" className={classes.title} data-qa-domain-title>
-              {`#${ticket.id}: ${ticket.summary}`}
-              <Chip className={classNames({
-                [classes.status]: true,
-                [classes.open]: ticket.status === 'open' || ticket.status === 'new',
-                [classes.closed]: ticket.status === 'closed',
-              })}
-              label={ticket.status} />
-            </Typography>
+            <Breadcrumb
+              linkTo={{
+                pathname: '/support/tickets',
+                // If the ticket is "open" or "new", the "Open Tickets" tab
+                // should be active on when we go back to SupportTicketsLanding
+                state: { openFromRedirect: ['open','new'].includes(ticket.status) }
+              }}
+              linkText="Support Tickets"
+              labelTitle={`#${ticket.id}: ${ticket.summary}`}
+              labelSubtitle={
+                `${ticket.status === 'closed' ? 'Closed' : 'Last updated'} by ${ticket.updated_by} at ${formattedDate}`
+              }
+              data-qa-breadcrumb
+            />
+            <Chip className={classNames({
+              [classes.status]: true,
+              [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+              [classes.closed]: ticket.status === 'closed',
+            })}
+            label={ticket.status} />
           </Grid>
         </Grid>
+
         {ticket.entity && this.renderEntityLabelWithIcon()}
+
         {/* Show message if the ticket has been closed through the link on this page. */}
         {ticketCloseSuccess && <Notice success text={"Ticket has been closed."}/>}
+
         <Grid container direction="column" justify="center" alignItems="center" className={classes.listParent} >
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description &&
@@ -462,11 +467,13 @@ const requestAndMapGravatar = (acc: any, id: string) => {
 const styled = withStyles(styles, { withTheme: true });
 
 interface StateProps {
+  timezone: string;
   profileUsername?: string;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
+  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
+  profileUsername: path(['data', 'username'], state.__resources.profile)
 });
 
 const matchGravatarURLToReply = (gravatarMap: {[ key: string]: string }) => (reply: Linode.SupportReply) =>

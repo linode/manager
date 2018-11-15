@@ -21,11 +21,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     justifyContent: 'center',
     position: 'relative',
     width: '100%',
-    margin: '0 auto',
+    margin: '0 auto 20px',
     [theme.breakpoints.up('md')]: {
-      top: '8vh',
-      height: '100%',
       flex: 1,
+      height: 300,
     },
   },
   progress: {
@@ -56,6 +55,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   noTopMargin: {
     [theme.breakpoints.up('md')]: {
       top: 0,
+      height: 'auto',
     },
   },
   mini: {

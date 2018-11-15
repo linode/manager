@@ -1,17 +1,14 @@
+import { last } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 
-import EditableText from 'src/components/EditableText';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/Grid';
 
 import LinodePowerControl from '../LinodePowerControl';
@@ -78,27 +75,28 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linode, launchLish, openConfigDrawer, labelInput } = props;
 
+  const getLabelLink = (): string | undefined => {
+    return last(location.pathname.split('/')) !== 'summary'
+      ? 'summary'
+      : undefined;
+  }
+
   return (
     <Grid
       container
       justify="space-between"
     >
       <Grid item className={classes.titleWrapper}>
-        <Link to={`/linodes`}>
-          <IconButton
-            className={classes.backButton}
-          >
-            <KeyboardArrowLeft />
-          </IconButton>
-        </Link>
-        <EditableText
-          role="header"
-          variant="headline"
-          text={labelInput.label}
-          errorText={labelInput.errorText}
-          onEdit={labelInput.onEdit}
-          onCancel={labelInput.onCancel}
-          data-qa-label
+        <Breadcrumb
+          linkTo="/linodes"
+          linkText="Linodes"
+          labelTitle={labelInput.label}
+          labelLink={getLabelLink()}
+          onEditHandlers={{
+            onEdit: labelInput.onEdit,
+            onCancel: labelInput.onCancel,
+            errorText: labelInput.errorText
+          }}
         />
       </Grid>
       <Grid item className={classes.cta}>

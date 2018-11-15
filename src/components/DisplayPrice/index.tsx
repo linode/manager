@@ -1,0 +1,1 @@
+export { default, displayPrice }  from './DisplayPrice';
