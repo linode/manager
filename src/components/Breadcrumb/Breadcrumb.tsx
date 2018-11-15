@@ -35,6 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     color: '#3683DC',
     textDecoration: 'underline',
     borderColor: theme.color.grey,
+    whiteSpace: 'nowrap',
     '&:after': {
       content: "''",
       display: 'inline-block',
@@ -52,6 +53,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     color: '#3683DC',
     textDecoration: 'underline',
     borderColor: theme.color.grey,
+    whiteSpace: 'nowrap',
     '&:after': {
       content: "'|'",
       display: 'inline-block',
