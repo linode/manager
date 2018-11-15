@@ -588,7 +588,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           error={Boolean(sizeError)}
           errorText={sizeError}
           disabled={mode === modes.CLONING || mode === modes.EDITING}
-          helperText={`A single volume can range from 10 GiB to 10,240 GiB in size.`}
+          helperText={`A single volume can range from 10 GiB to 1,240 GiB in size.`}
           InputProps={{
             endAdornment:
               <InputAdornment position="end">
