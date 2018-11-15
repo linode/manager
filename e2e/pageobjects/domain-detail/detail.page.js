@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class DomainDetail extends Page {
-    get domainTitle() { return $('[data-qa-domain-title]'); }
+    get domainTitle() { return $(this.breadcrumbStaticText.selector); }
     get addNsRecordButton() { return $('[data-qa-icon-text-link="Add a NS Record"]'); }
     get nsDrawerNameServer() { return $('[data-qa-target="Name Server"] input'); }
     get nsDrawerSubdomain() { return $('[data-qa-target="Subdomain"] input'); }

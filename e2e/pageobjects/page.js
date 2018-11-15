@@ -40,6 +40,14 @@ export default class Page {
     get submitButton () { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
 
+    // Breadcrumb Component
+    get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
+    get breadcrumbStaticText() { return $('[data-qa-static-text]'); }
+    get breadcrumbBackLink() { return $('[data-qa-link]'); }
+    get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
+    get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
+    get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
+
     constructor() {
         this.pageTitle = 'Base page';
     }

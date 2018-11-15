@@ -27,8 +27,9 @@ exports.constants = {
 		createStackScript: '/stackscripts/create',
 		images: '/images',
 		account: {
-			billing: '/billing',
-			users: '/users',
+			billing: '/account/billing',
+			users: '/account/users',
+			globalSettings: '/account/settings',
 		},
 		profile: {
 			auth: '/profile/auth',
