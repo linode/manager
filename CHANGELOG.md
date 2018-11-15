@@ -4,6 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [0.39.0] - 2018.11.15
+
+## Breaking:
+- User management has been merged into the account section.
+  - The Account & Billing and Users navigation items have been removed in favor of just "Account".
+  - This caused breaking changes to the URL pattern.
+    - /users -> account/users
+    - /users/stevemcqueen -> /account/users/stevemcqueen
+    - /users/stevemcqueen/permissions -> /account/users/stevemcqueen/permissions
+
+# Added:
+- Domains can now be tagged and will be included in search results when searching for tags.
+- Linode Backups
+  - Users can now enable automatic backups for all existing Linodes which do not have backups.
+  - Users can now enroll in automatic backups for all newly created Linodes.
+  - Added backup information and actions on the dashboard.
+  - Added time since last backup to the list view of user's Linodes.
+- Pricing information has been added to the;
+  - Volume creation drawer
+  - Volumes call to action placeholder
+  - Backups call to action placeholder
+- Updated by/closed by details to support tickets.
+- Breadcrumb navigation to Linodes, NodeBalancers, Domains, and Support Tickets.
+
+# Changed:
+- We're now preventing users from submitting the create a support ticket form until all necessary
+  information has been provided.
+- Hide the "current credit card" if there is no credit card on file.
+- The CPU chart on the Linode detail page has been updated to scale the to usage.
+- Details about a Linode and Domains are no longer tucked away in accordions.
+- Payments and invoices are now sorted by descending date (newest first).
+- We've made some mobile friendly adjustments to the display of our menu!
+- Documentation links now have a persistent underline to make it clear they're links.
+- Providing feedback via Hively now opens in a new window.
+- Made tab navigation much easier on mobile.
+- Enhanced select styles are now visually consistent with regular selects.
+
+# Fixed:
+- Side navigation was hidden for certain users.
+- Toggling between grid and list view on the Linodes screen would not persist event progress information.
+- Attempting to delete the active user would crash the application. (Hey, it's better than deleting yourself!)
+- TTL can now be set/changed for MX records.
+- Booting from a user created configuration was failing.
+- H1s are now used only once per page site-wide.
+
 ## [0.38.0] - 2018.11.05
 
 ### Added:
