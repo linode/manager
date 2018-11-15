@@ -41,6 +41,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   bodyRow: {
     height: 77,
+    '&:hover .backupIcon': {
+      fill: theme.palette.primary.main,
+    },
   },
   ipCell: {
     width: '25%',
@@ -113,7 +116,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow
       key={linodeId}
-      className={`${classes.bodyRow} 'fade-in-table'`}
+      className={`${classes.bodyRow}`}
       data-qa-loading
       data-qa-linode={linodeLabel}
       rowLink={`/linodes/${linodeId}`}

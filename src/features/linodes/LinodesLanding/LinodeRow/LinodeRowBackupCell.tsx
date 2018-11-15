@@ -12,12 +12,13 @@ type ClassNames =
   'icon'
   | 'noBackupText'
   | 'root'
-  | 'wrapper';
+  | 'wrapper'
+  | 'backupLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   icon: {
     fontSize: 18,
-    fill: theme.palette.primary.main,
+    fill: theme.color.grey1,
   },
   noBackupText: {
     marginRight: '8px',
@@ -32,6 +33,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     alignContent: 'center',
   },
+  backupLink: {
+    display: 'flex'
+  }
 });
 
 interface Props {
@@ -55,14 +59,15 @@ const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = (props) => 
           )
           : (
             <div className={classes.wrapper}>
-              <Typography variant="caption" className={classes.noBackupText}>Never</Typography>
               <Tooltip title="Enable Backups">
                 <a
                   aria-label={'Enable Backups'}
                   href={`/linodes/${linodeId}/backup`}
+                  className={classes.backupLink}
                 >
+                  <Typography variant="caption" className={classes.noBackupText}>Never</Typography>
                   <Backup
-                    className={`${classes.icon}`}
+                    className={`${classes.icon} backupIcon`}
                   />
                 </a>
               </Tooltip>
