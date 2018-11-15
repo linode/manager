@@ -4,7 +4,7 @@ import * as React from 'react';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Tags from './Tags';
   
-storiesOf('Tags List', module)
+storiesOf('Tags', module)
   .addDecorator(ThemeDecorator)
   .add('Tags list without show more', () => {
     return <Tags tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']} />
