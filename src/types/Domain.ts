@@ -9,6 +9,7 @@ namespace Linode {
     expire_sec: number;
     ttl_sec: number;
     status: DomainStatus;
+    tags: string[];
     master_ips: string[];
     axfr_ips: string[];
     group: string;
@@ -44,7 +45,7 @@ namespace Linode {
     'SRV' |
     'TXT';
 
-  export interface Record {
+  export interface DomainRecord {
     id: number;
     name: string;
     port: number;

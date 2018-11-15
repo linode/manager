@@ -27,7 +27,7 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           title: 'User Profile',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
-            push(`/users/${username}`)
+            push(`/account/users/${username}`)
             e.preventDefault();
           },
         },
@@ -35,7 +35,7 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           title: 'User Permissions',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
-            push(`/users/${username}/permissions`)
+            push(`/account/users/${username}/permissions`)
             e.preventDefault();
           },
         },

@@ -28,7 +28,7 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
         <Breadcrumb
           linkTo={this.state.linkTo}
           linkText={this.state.linkText}
-          label={this.state.text}
+          labelTitle={this.state.text}
           onEditHandlers={{
             onEdit: this.onEdit,
             onCancel: this.onCancel
@@ -48,7 +48,7 @@ storiesOf('Breadcrumb', module)
         <Breadcrumb
           linkTo={'/linodes'}
           linkText={'Linodes'}
-          label={'Static text'}
+          labelTitle={'Static text'}
         />
       </div>
     </StaticRouter>
@@ -59,7 +59,30 @@ storiesOf('Breadcrumb', module)
         <Breadcrumb
           linkTo="/linodes"
           linkText="Linodes"
-          label="Static text"
+          labelTitle="Static text"
+          labelLink="/summary"
+        />
+      </div>
+    </StaticRouter>
+  )).add('Static text with subtitle', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Breadcrumb
+          linkTo="/linodes"
+          linkText="Linodes"
+          labelTitle="Static text"
+          labelSubtitle="A label subtitle"
+        />
+      </div>
+    </StaticRouter>
+  )).add('Static text with link, subtitle', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Breadcrumb
+          linkTo="/linodes"
+          linkText="Linodes"
+          labelTitle="Static text"
+          labelSubtitle="A label subtitle"
           labelLink="/summary"
         />
       </div>

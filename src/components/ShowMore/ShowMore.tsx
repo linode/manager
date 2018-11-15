@@ -55,13 +55,15 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
     this.setState({
       anchorEl: event.currentTarget,
       classes: this.props.classes.chip + ' active',
     });
   }
 
-  handleClose = () => {
+  handleClose = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
     this.setState({ anchorEl: undefined, classes: this.props.classes.chip });
   }
 

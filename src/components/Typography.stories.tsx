@@ -4,7 +4,6 @@ import * as React from 'react';
 import { default as MDivider } from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-import Button from 'src/components/Button';
 import Placeholder from 'src/components/Placeholder';
 import ThemeDecorator from '../utilities/storybookDecorators';
 

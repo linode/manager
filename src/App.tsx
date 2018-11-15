@@ -31,6 +31,7 @@ import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 
+import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -78,10 +79,6 @@ const SupportTickets = DefaultLoader({
 const SupportTicketDetail = DefaultLoader({
   loader: () => import('src/features/Support/SupportTicketDetail'),
 })
-
-const InvoiceDetail = DefaultLoader({
-  loader: () => import('src/features/Billing/InvoiceDetail'),
-});
 
 const Longview = DefaultLoader({
   loader: () => import('src/features/Longview'),
@@ -161,6 +158,7 @@ interface State {
   welcomeBanner: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
+  hasError: boolean;
 }
 
 type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
@@ -243,7 +241,12 @@ export class App extends React.Component<CombinedProps, State> {
       },
       update: () => null, /** @todo */
     },
+    hasError: false,
   };
+
+  componentDidCatch() {
+    this.setState({ hasError: true });
+  }
 
   componentDidMount() {
     const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
@@ -299,7 +302,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { menuOpen } = this.state;
+    const { menuOpen, hasError } = this.state;
     const {
       backupsCTA,
       classes,
@@ -311,12 +314,16 @@ export class App extends React.Component<CombinedProps, State> {
 
     const hasDoc = documentation.length > 0;
 
+    if (profileError || hasError) {
+      return <TheApplicationIsOnFire />;
+    }
+
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
 
-        {profileLoading === false && !profileError &&
+        {profileLoading === false &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
@@ -337,7 +344,6 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/longview" component={Longview} />
                               <Route exact path="/images" component={Images} />
                               <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/account/billing/invoices/:invoiceId" component={InvoiceDetail} />
                               <Route path="/account" component={Account} />
                               <Route exact path="/support/tickets" component={SupportTickets} />
                               <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />

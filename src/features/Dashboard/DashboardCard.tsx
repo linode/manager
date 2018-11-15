@@ -1,5 +1,6 @@
 import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 
@@ -20,16 +21,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   title?: string;
+  className?: string;
   headerAction?: () => JSX.Element | JSX.Element[] | null;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const { title, headerAction, classes } = props;
+  const { title, headerAction, classes, className } = props;
   return (
-    <Grid container className={classes.container} data-qa-card={title}>
-      <Grid item xs={12}>
+    <Grid
+      container
+      className={classNames(
+        className,
+        {
+        [classes.container]: true,
+      })}
+      data-qa-card={title}>
+      <Grid item xs={12} className={!title || !headerAction ? 'p0' : ''}>
         <Grid container justify="space-between" alignItems="flex-start">
           {title && 
             <Grid item className={'py0'}>
