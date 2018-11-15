@@ -1,10 +1,13 @@
-import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import * as Bluebird from 'bluebird';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+
+import Hidden from '@material-ui/core/Hidden';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -15,7 +18,6 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import { withTypes } from 'src/context/types';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
@@ -26,6 +28,7 @@ import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
+import requestMostRecentBackupForLinode from './requestMostRecentBackupForLinode';
 import ToggleBox from './ToggleBox';
 import withUpdatingLinodes from './withUpdatingLinodes';
 
@@ -402,16 +405,6 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
 
 export const styled = withStyles(styles, { withTheme: true });
 
-const typesContext = withTypes(({
-  lastUpdated: typesLastUpdated,
-  loading: typesLoading,
-  request: typesRequest,
-}) => ({
-  typesRequest,
-  typesLoading,
-  typesLastUpdated,
-}));
-
 interface LinodeWithNotifications extends Linode.Linode {
   notifications?: Linode.Notification[];
 }
@@ -441,8 +434,8 @@ mapStateToProps = (state, ownProps) => {
 
   return {
     data: linodes.map(addNotificationToLinode(notifications)),
-    linodesWithoutBackups: pathOr([],['backups','data'], state),
-    managed: pathOr(false, ['__resources','accountSettings','data','managed'], state)
+    linodesWithoutBackups: pathOr([], ['backups', 'data'], state),
+    managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state)
   }
 };
 
@@ -459,11 +452,16 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const paginated = Pagey((ownProps, params, filters) =>
-  getLinodes(params, filters));
+  getLinodes(params, filters)
+    .then((response) => {
+
+      return Bluebird.map(response.data, requestMostRecentBackupForLinode)
+        .then(linodes => ({ ...response, data: linodes }));
+    })
+);
 
 const data = compose(
   paginated,
-  typesContext,
   connected,
   withUpdatingLinodes,
 );

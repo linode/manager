@@ -52,16 +52,14 @@ const styles: StyleRulesCallback = (theme) => ({
     alignItems: 'center',
     maxHeight: 48,
     position: 'relative',
-    top: 1,
+    top: 0,
     left: -2.
   },
   initial: {
     border: '1px solid transparent',
     '&:hover, &:focus': {
       '& $editIcon': {
-        position: 'relative',
-        top: 0,
-        left: 0,
+        opacity: 1,
       },
       '& $icon': {
         color: theme.color.grey1,
@@ -121,13 +119,9 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   editIcon: {
     [theme.breakpoints.up('sm')]: {
-      position: 'absolute',
-      top: '-9999px',
-      left: '-9999px',
+      opacity: 0,
       '&:focus': {
-        position: 'relative',
-        top: 0,
-        left: 0,
+        opacity: 1,
       },
     },
   },

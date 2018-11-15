@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Flag from 'src/assets/icons/flag.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
+import Tags from 'src/components/Tags';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
@@ -217,7 +218,6 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
-  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -343,7 +343,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             {imageLabel}
           </div>
           <div className={classes.cardSection}>
-            {this.props.renderTagsAndMoreTags(linodeTags)}
+            <Tags tags={linodeTags} />
           </div>
         </div>
       </CardContent>

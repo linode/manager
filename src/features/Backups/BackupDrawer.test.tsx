@@ -38,11 +38,14 @@ const actions = {
   dismissError: jest.fn(),
   dismissSuccess: jest.fn(),
   clearSidebar: jest.fn(),
+  enroll: jest.fn(),
+  toggle: jest.fn(),
 }
 
 const classes = { root: ''}
 
 const props = {
+  accountBackups: false,
   actions,
   classes,
   open: true,
@@ -55,6 +58,9 @@ const props = {
   enableErrors: [],
   typesLoading: false,
   typesData: types.types,
+  enrolling: false,
+  autoEnroll: false,
+  autoEnrollError: undefined,
 }
 
 const component = shallow(
@@ -121,10 +127,10 @@ describe("BackupDrawer component", () => {
       component.setProps({ enableErrors: [error]});
       expect(component.find('WithStyles(Notice)')).toHaveLength(1);
     });
-    it("should call enableBackups on submit", () => {
+    it("should call enrollAutoBackups on submit", () => {
       const button = component.find('[data-qa-submit]');
       button.simulate('click');
-      expect(actions.enable).toHaveBeenCalled();
+      expect(actions.enroll).toHaveBeenCalled();
     });
     it("should close the drawer on Cancel", () => {
       const cancel = component.find('[data-qa-cancel]');

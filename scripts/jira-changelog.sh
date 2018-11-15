@@ -1,8 +1,11 @@
 #!/bin/bash
 
-CHANGES_WITH_TIX=$(git log --color=always --oneline $1...$2 | egrep -i '(M3-[0-9]*)')
-CHANGES_WITHOUT_TIX=$(git log --color=always --oneline $1...$2 | egrep -iv '(M3-[0-9]*)')
-JQL_QUERY=$(echo "key in ($(git log --color=always --oneline $1...$2 | egrep -oi --color=always '(M3-[0-9]*)' | tr '\n' ',' | sed 's/.$//'))" )
+# Compare first tag/commit argument to Second commit/tag argument OR head
+COMPARE_TO=${2:-HEAD}
+
+CHANGES_WITH_TIX=$(git log --color=always --no-merges --oneline $1...$COMPARE_TO | egrep -i '(M3(-|\s)[0-9]*)')
+CHANGES_WITHOUT_TIX=$(git log --color=always --no-merges --oneline $1...$COMPARE_TO | egrep -iv '(M3(-|\s)[0-9]*)')
+JQL_QUERY=$(echo "key in ($(git log --color=always --no-merges --oneline $1...$COMPARE_TO | egrep -oi --color=always '(M3(-|\s)[0-9]*)' | tr '\n' ',' | sed 's/.$//' | tr ' ' '-'))" )
 
 echo -e "Tracked Changes in $1:\n"
 echo "$CHANGES_WITH_TIX"

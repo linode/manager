@@ -1,8 +1,10 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -10,19 +12,30 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
 
-type ClassNames = 'root' | 'footnote';
+type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   footnote: {
     fontSize: 14,
+    cursor: 'pointer',
   },
+  link: {
+    textDecoration: 'underline',
+  },
+  icon: {
+    display: 'inline-block',
+    fontSize: '0.8em',
+    marginLeft: theme.spacing.unit / 3,
+  }
 });
 
 interface Props {
   backups_enabled: boolean;
+  hasLinodesWithoutBackups: boolean;
   errors?: Linode.ApiFieldError[];
   handleToggle: () => void;
+  openBackupsDrawer: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -37,7 +50,14 @@ const displayError = (errors: Linode.ApiFieldError[]) => {
 
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
-  const { backups_enabled, classes, errors, handleToggle } = props;
+  const {
+    backups_enabled,
+    classes,
+    errors,
+    hasLinodesWithoutBackups,
+    handleToggle,
+    openBackupsDrawer
+  } = props;
 
   return (
     <React.Fragment>
@@ -56,7 +76,9 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               This controls whether Linode Backups are enabled, by default, for all Linodes when
               they are initially created. For each Linode with Backups enabled, your account will
               be billed the additional hourly rate noted on the
-              <a href="https://linode.com/backups">{` Backups pricing page`}</a>.
+              <a href="https://linode.com/backups" target="_blank">{` Backups pricing page`}
+                <OpenInNew className={classes.icon} />
+              </a>.
             </Typography>
           </Grid>
           {errors &&
@@ -66,26 +88,29 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
           }
           <Grid item container direction="row" alignItems="center">
             <Grid item>
-              <Toggle
-                onChange={handleToggle}
-                checked={backups_enabled}
+              <FormControlLabel
+                // className="toggleLabel"
+                control={
+                  <Toggle
+                    onChange={handleToggle}
+                    checked={backups_enabled}
+                  />
+                }
+                label={backups_enabled
+                  ? "Enabled (Auto Enroll All New Linodes in Backups)"
+                  : "Disabled (Don't Enroll New Linodes in Backups Automatically)"
+                }
               />
             </Grid>
-            <Grid item>
-            <Typography variant="body1">
-              {backups_enabled
-                ? "Enabled (Auto Enroll All New Linodes in Backups)"
-                : "Disabled (Don't Enroll New Linodes in Backups Automatically)"
-              }
-            </Typography>
-            </Grid>
           </Grid>
-          {/* Uncomment after BackupDrawer is merged */}
-          {/* <Grid item>
-            <Typography variant="body1" className={classes.footnote}>
-              For existing Linodes without backups, <a>enable now</a>.
-            </Typography>
-          </Grid> */}
+          {!backups_enabled && hasLinodesWithoutBackups &&
+            <Grid item>
+              <Typography variant="body1" className={classes.footnote}>
+                {`For existing Linodes without backups, `}
+                <a className={classes.link} onClick={openBackupsDrawer}>enable now</a>.
+              </Typography>
+            </Grid>
+          }
         </Grid>
       </ExpansionPanel>
     </React.Fragment>

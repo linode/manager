@@ -1,7 +1,7 @@
-import { prop } from 'ramda';
 import { compose, Dispatch } from 'redux';
 
-import { getProfile } from 'src/services/profile';
+import { getMyGrants, getProfile } from 'src/services/profile';
+
 
 // TYPES
 type State = RequestableData<Linode.Profile>;
@@ -57,11 +57,22 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
   }
 };
 
+const maybeRequestGrants: (response: Linode.Profile) => Promise<Linode.Profile>
+  = (profile) => {
+    if (profile.restricted === false) {
+      return Promise.resolve(profile);
+    }
+
+    return getMyGrants()
+      .then(grants => ({ ...profile, grants }));
+  };
 
 export const requestProfile = () => (dispatch: Dispatch<State>) => {
 
   dispatch(startRequest());
   getProfile()
-    .then(compose(dispatch, handleSuccess, prop('data')))
+    .then(response => response.data)
+    .then(maybeRequestGrants)
+    .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));
 };

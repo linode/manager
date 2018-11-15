@@ -21,14 +21,14 @@ import DomainRecords from './DomainRecords';
 interface State {
   error?: Error;
   domain: Linode.Domain;
-  records: Linode.Record[];
+  records: Linode.DomainRecord[];
 }
 
 type RouteProps = RouteComponentProps<{ domainId?: number }>;
 
 interface PreloadedProps {
   domain: PromiseLoaderResponse<Linode.Domain>;
-  records: PromiseLoaderResponse<Linode.Record>;
+  records: PromiseLoaderResponse<Linode.DomainRecord>;
 }
 
 type ClassNames = 'root'
@@ -128,13 +128,13 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     const { domain } = this.state;
     return updateDomain(
       domain.id,
-      { domain: domain.domain, tags: tagsList }
+      { tags: tagsList }
     )
-      .then((data: Linode.Domain) => {
-        this.setState({
-          domain: data,
-        })
-      });
+    .then((data: Linode.Domain) => {
+      this.setState({
+        domain: data,
+      })
+    });
   }
 
 
@@ -186,7 +186,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             <Breadcrumb
               linkTo="/domains"
               linkText="Domains"
-              label={domain.domain}
+              labelTitle={domain.domain}
             />
           </Grid>
         </Grid>
