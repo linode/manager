@@ -353,8 +353,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         >
           <Typography>
             {bootOption === 'reboot'
-              ? 'Are you sure you want to reboot your Linode'
-              : 'Are you sure you want to power down your Linode'
+              ? 'Are you sure you want to reboot your Linode?'
+              : 'Are you sure you want to power down your Linode?'
             }
           </Typography>
         </ConfirmationDialog>
