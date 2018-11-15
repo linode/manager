@@ -59,7 +59,10 @@ const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = (props) => 
           )
           : (
             <div className={classes.wrapper}>
-              <Tooltip title="Enable Backups">
+              <Tooltip 
+                title="Enable Backups"
+                placement={'right'}
+              >
                 <a
                   aria-label={'Enable Backups'}
                   href={`/linodes/${linodeId}/backup`}
