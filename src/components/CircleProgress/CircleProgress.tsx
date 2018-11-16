@@ -55,6 +55,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   noTopMargin: {
     [theme.breakpoints.up('md')]: {
       top: 0,
+      height: 'auto',
     },
   },
   mini: {
