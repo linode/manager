@@ -74,7 +74,7 @@ const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
                   />
                 }
                 label={networkHelperEnabled
-                  ? "Enabled"
+                  ? "Enabled (default behavior)"
                   : "Disabled"
                 }
               />
