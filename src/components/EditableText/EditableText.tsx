@@ -9,7 +9,7 @@ import { TextFieldProps } from '@material-ui/core/TextField';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import Check from '@material-ui/icons/Check';
 import Close from '@material-ui/icons/Close';
-import ModeEdit from '@material-ui/icons/ModeEdit';
+import Edit from '@material-ui/icons/Edit';
 
 import TextField from '../TextField';
 
@@ -223,7 +223,7 @@ export class EditableText extends React.Component<FinalProps, State> {
                   onClick={this.toggleEditing}
                   data-qa-edit-button
                 >
-                  <ModeEdit className={`${classes.icon} ${classes.edit}`}/>
+                  <Edit className={`${classes.icon} ${classes.edit}`}/>
                 </Button>
               </React.Fragment>
             </div>
