@@ -231,16 +231,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       });
       return;
     }
-    /* A whitespace reply text (e.g. '    ') will pass the API,
-    * but we will filter out blank responses from the list. Prevent the user
-    * from submitting blank replies to avoid confusion.
-    */
-    if (description.trim() === '') {
-      this.setState({
-        errors: [{'field':'description', 'reason':'Description can\'t be blank.'}],
-      });
-      return;
-    }
     this.setState({
       errors: undefined,
       submitting: true
