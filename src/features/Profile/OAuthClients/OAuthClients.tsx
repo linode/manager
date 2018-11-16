@@ -1,16 +1,13 @@
-import { compose, path } from 'ramda';
-import * as React from 'react';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-
 import Typography from '@material-ui/core/Typography';
-
+import { compose, path } from 'ramda';
+import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -26,7 +23,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { LinodeAPI } from 'src/documentation';
 import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 
@@ -240,7 +236,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    
+
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
     return (

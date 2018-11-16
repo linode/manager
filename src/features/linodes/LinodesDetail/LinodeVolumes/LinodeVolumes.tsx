@@ -1,22 +1,20 @@
+import Paper from '@material-ui/core/Paper';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -35,7 +33,6 @@ import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, re
 import { handleUpdate } from 'src/store/reducers/features/linodeDetail/volumes';
 import composeState from 'src/utilities/composeState';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import { withLinode } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
 import VolumeDrawer, { Modes, Props as VolumeDrawerProps } from './VolumeDrawer';

@@ -1,13 +1,11 @@
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import { assocPath, compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky'
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -19,11 +17,9 @@ import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { createLinode } from 'src/services/linodes';
-
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
@@ -205,7 +201,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   handleChangeTags = (selected: Tag[]) => {
     this.setState({ tags: selected })
   }
-  
+
   handleTypePassword = (value: string) => {
     this.setState({ password: value });
   }

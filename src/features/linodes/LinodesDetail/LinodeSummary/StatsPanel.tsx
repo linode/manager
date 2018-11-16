@@ -1,10 +1,8 @@
-import * as React from 'react';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 
 type ClassNames = 'root' | 'spinner' | 'title';

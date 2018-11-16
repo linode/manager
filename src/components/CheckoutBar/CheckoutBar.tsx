@@ -1,13 +1,10 @@
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
-
-import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DisplayPrice from 'src/components/DisplayPrice';
-
 
 type ClassNames = 'root'
   | 'checkoutSection'

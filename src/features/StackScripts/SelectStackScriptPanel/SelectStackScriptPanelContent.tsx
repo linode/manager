@@ -1,25 +1,17 @@
+import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
-
-import {
-  deleteStackScript,
-  getStackScript,
-  updateStackScript
-} from 'src/services/stackscripts';
-
+import { deleteStackScript, getStackScript, updateStackScript } from 'src/services/stackscripts';
 import StackScriptTableHead from './PanelContent/StackScriptTableHead';
 import StackScriptsSection from './StackScriptsSection';
 
@@ -565,7 +557,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       /**
        * In this case, we have a search term that looks similar to the
        * following: "username:hello world"
-       * 
+       *
        * In this case, we need to craft the filter so that the request is
        * aware that we only want to search by username
        */

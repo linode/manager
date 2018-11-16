@@ -1,16 +1,13 @@
-import * as React from 'react';
-
 import ExpansionPanel, { ExpansionPanelProps } from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails, { ExpansionPanelDetailsProps } from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary, { ExpansionPanelSummaryProps } from '@material-ui/core/ExpansionPanelSummary';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography, { TypographyProps } from '@material-ui/core/Typography';
-
+import * as React from 'react';
 import Minus from 'src/assets/icons/minus-square.svg';
 import Plus from 'src/assets/icons/plus-square.svg';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
-
 import Notice from '../Notice';
 
 type ClassNames = 'root'

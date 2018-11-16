@@ -1,9 +1,8 @@
+import ListItem from '@material-ui/core/ListItem';
+import Typography from '@material-ui/core/Typography';
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import ListItem from '@material-ui/core/ListItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames =
   | 'critical'

@@ -1,11 +1,10 @@
-import * as React from 'react';
-
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'actions';
 

@@ -1,14 +1,9 @@
-import * as React from 'react';
-
-import { equals } from 'ramda';
-
-import * as classNames from 'classnames';
-
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
-
 import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-
+import * as classNames from 'classnames';
+import { equals } from 'ramda';
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'

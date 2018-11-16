@@ -1,14 +1,11 @@
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
-
 import AutoBackups from './AutoBackups';
 
 type ClassNames = 'root';

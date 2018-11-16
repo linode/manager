@@ -1,7 +1,6 @@
 import { equals } from 'ramda';
 import * as React from 'react';
-
-import { withTheme, WithTheme } from '@material-ui/core/styles';
+import { withTheme, WithTheme } from 'src/components/core/styles';
 
 interface RenderGuardProps {
   updateFor?: any[];

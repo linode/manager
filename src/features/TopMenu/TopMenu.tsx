@@ -1,11 +1,9 @@
-import * as React from 'react';
-
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserEventsMenu from './UserEventsMenu';

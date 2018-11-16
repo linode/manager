@@ -1,9 +1,7 @@
+import Radio, { RadioProps } from '@material-ui/core/Radio';
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import Radio, { RadioProps } from '@material-ui/core/Radio';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 

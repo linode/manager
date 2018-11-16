@@ -1,27 +1,21 @@
-import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
-
-import { Divider } from '../../../../node_modules/@material-ui/core';
-
 import filterImagesByDeprecationStatus from 'src/utilities/filterImagesByDeprecationStatus';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
+import { Divider } from '../../../../node_modules/@material-ui/core';
 
 type ClassNames = 'root'
   | 'backButton'

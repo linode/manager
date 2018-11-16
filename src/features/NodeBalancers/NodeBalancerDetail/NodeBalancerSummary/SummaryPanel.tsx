@@ -1,14 +1,11 @@
-import * as React from 'react';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { formatRegion } from 'src/utilities';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
-
 
 type ClassNames = 'root'
   | 'title'

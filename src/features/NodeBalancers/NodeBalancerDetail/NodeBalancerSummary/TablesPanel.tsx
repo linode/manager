@@ -1,9 +1,7 @@
+import Typography from '@material-ui/core/Typography';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
@@ -139,7 +137,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 
     /* If the panel is opening, increment the number of open panels. Otherwise decrement.
     *  This allows us to keep track of when all of the panels are closed.
-    */ 
+    */
     const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
     this.setState({ openPanels: updatedOpenPanels });
 
@@ -264,7 +262,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           <div className={classes.graphControls}>
             <Typography role="header" variant="title" className={classes.graphTitle}>Graphs</Typography>
           </div>
-          
+
           <ExtendedExpansionPanel
             renderMainContent={this.renderConnectionsChart}
             heading={"Connections"}

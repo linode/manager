@@ -1,19 +1,17 @@
-import { compose } from 'ramda';
-import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
-
+import { compose } from 'ramda';
+import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -28,7 +26,6 @@ import Tags from 'src/components/Tags';
 import { Domains } from 'src/documentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
-
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';

@@ -1,24 +1,21 @@
-import { compose, path, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
-
+import { compose, path, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import { disableTwoFactor, getTFAToken } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import EnableTwoFactorForm from './EnableTwoFactorForm';
 
 type ClassNames = 'root'

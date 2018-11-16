@@ -1,9 +1,7 @@
 import { clone } from 'ramda';
 import * as React from 'react';
 import { Line } from 'react-chartjs-2';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { setUpCharts } from 'src/utilities/charts';
 
 setUpCharts();

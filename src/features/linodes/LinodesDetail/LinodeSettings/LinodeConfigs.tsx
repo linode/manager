@@ -1,17 +1,15 @@
-import { compose } from 'ramda';
-import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
+import { compose } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -23,7 +21,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteLinodeConfig, getLinodeConfigs } from 'src/services/linodes';
-
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 

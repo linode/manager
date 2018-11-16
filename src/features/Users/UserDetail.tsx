@@ -1,17 +1,15 @@
-import { clone, compose, path as pathRamda, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
-
 import AppBar from '@material-ui/core/AppBar';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-
+import { clone, compose, path as pathRamda, pathOr } from 'ramda';
+import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -19,7 +17,6 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import { getUser, updateUser } from 'src/services/account';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import { getGravatarUrl } from 'src/utilities/gravatar';
-
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 

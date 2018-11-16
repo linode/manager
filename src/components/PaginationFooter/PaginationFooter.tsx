@@ -1,13 +1,9 @@
-import * as React from 'react';
-
 import * as classNames from 'classnames';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
-
 import PaginationControls from '../PaginationControls';
 
 type ClassNames = 'root' | 'padded';

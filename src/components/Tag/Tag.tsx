@@ -1,9 +1,8 @@
+import Chip, { ChipProps } from '@material-ui/core/Chip';
+import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import Chip, { ChipProps } from '@material-ui/core/Chip';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Close from '@material-ui/icons/Close';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type Variants =
   'white'

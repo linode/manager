@@ -1,17 +1,15 @@
-import * as moment from 'moment';
-import { compose, path } from 'ramda';
-import * as React from 'react';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import Typography from '@material-ui/core/Typography';
-
+import * as moment from 'moment';
+import { compose, path } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
@@ -25,7 +23,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { createPersonalAccessToken, deleteAppToken, deletePersonalAccessToken, getAppTokens, getPersonalAccessTokens, updatePersonalAccessToken } from 'src/services/profile';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
 

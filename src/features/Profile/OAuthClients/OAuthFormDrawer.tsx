@@ -1,12 +1,10 @@
-import * as React from 'react';
-
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import CheckBox from 'src/components/CheckBox';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

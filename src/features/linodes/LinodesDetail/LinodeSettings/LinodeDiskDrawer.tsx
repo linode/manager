@@ -1,13 +1,11 @@
-import { clamp } from 'ramda';
-import * as React from 'react';
-
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { clamp } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -157,7 +155,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
         <Grid container direction="row">
-          <Grid item xs={12}> 
+          <Grid item xs={12}>
             {generalError && <Notice error spacingBottom={8} errorGroup="linode-disk-drawer" text={generalError} />}
           </Grid>
           <Grid item xs={12} className={classes.section}>

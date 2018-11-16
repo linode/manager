@@ -1,16 +1,13 @@
-import { pathOr } from 'ramda';
-import * as React from 'react';
-
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-
+import { pathOr } from 'ramda';
+import * as React from 'react';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 

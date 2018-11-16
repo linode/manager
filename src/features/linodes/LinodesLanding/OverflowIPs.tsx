@@ -1,9 +1,7 @@
-import * as React from 'react';
-
 import Chip from '@material-ui/core/Chip';
 import Popover from '@material-ui/core/Popover';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import IPAddress from './IPAddress';
 
 type CSSClasses =  'chip' | 'label' | 'popover';

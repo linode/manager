@@ -1,18 +1,16 @@
-import * as moment from 'moment';
-import * as React from 'react';
-
 import Button from '@material-ui/core/Button';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
+import * as moment from 'moment';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Radio from 'src/components/Radio';
 import Select from 'src/components/Select';
@@ -21,7 +19,6 @@ import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { dateFormat } from 'src/time';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
 import { Permission, permTuplesToScopeString, scopeStringToPermTuples } from './utils';
 
 type Expiry = [string, string];

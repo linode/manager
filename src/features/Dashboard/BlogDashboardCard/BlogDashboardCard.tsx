@@ -1,9 +1,9 @@
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Axios from 'axios';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { parseString } from 'xml2js';
 import DashboardCard from '../DashboardCard';
 
@@ -80,7 +80,7 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderItem = (item: BlogItem, idx: number) => {
     const { classes } = this.props;
 
-    /* 
+    /*
      * simple fix. Sometimes the description would come back with [&#8230;]
      * instead of an ellipses
      */

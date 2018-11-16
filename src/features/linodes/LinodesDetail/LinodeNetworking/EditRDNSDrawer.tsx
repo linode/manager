@@ -1,12 +1,10 @@
-import { path } from 'ramda';
-import * as React from 'react';
-
 import Button from '@material-ui/core/Button';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { path } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import { updateIP } from 'src/services/networking';

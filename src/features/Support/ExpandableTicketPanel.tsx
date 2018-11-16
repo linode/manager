@@ -1,20 +1,18 @@
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import Collapse from 'src/assets/icons/minus-square.svg';
 import Expand from 'src/assets/icons/plus-square.svg';
 import UserIcon from 'src/assets/icons/user.svg';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
-import truncateText from 'src/utilities/truncateText'
+import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root'
   | 'userWrapper'
@@ -223,7 +221,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
     * and are on tickets less than 7 days old.
     * Defaults to showing Hively if there are any errors parsing dates
     * or the date is invalid.
-    */ 
+    */
     try {
       const lastUpdated = moment(updated);
       if (!lastUpdated.isValid()) { return true; }

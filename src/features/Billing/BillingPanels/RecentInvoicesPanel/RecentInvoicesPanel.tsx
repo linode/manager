@@ -1,11 +1,9 @@
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import paginate, { PaginationProps } from 'src/components/Pagey';

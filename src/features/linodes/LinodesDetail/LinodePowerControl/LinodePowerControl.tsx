@@ -1,16 +1,14 @@
-import * as React from 'react';
-
 import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-
+import * as React from 'react';
 import PowerOn from 'src/assets/icons/powerOn.svg';
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import { powerOffLinode, powerOnLinode, rebootLinode } from 'src/features/linodes/LinodesLanding/powerActions';
 import { linodeInTransition } from 'src/features/linodes/transitions';

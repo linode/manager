@@ -1,12 +1,10 @@
-import * as React from 'react';
-
 import AppBar from '@material-ui/core/AppBar';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
-
+import * as React from 'react';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Notice from '../Notice';
 
 type ClassNames = 'root'

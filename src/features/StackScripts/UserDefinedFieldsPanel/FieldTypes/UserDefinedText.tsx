@@ -1,8 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-
 import AccessPanel from 'src/components/AccessPanel';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 

@@ -1,12 +1,10 @@
-import { compose, pathOr } from 'ramda';
-import * as React from 'react';
-
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { compose, pathOr } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SelectionCard from 'src/components/SelectionCard';
 import { withTypes } from 'src/context/types';

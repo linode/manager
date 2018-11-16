@@ -1,10 +1,7 @@
-import * as React from 'react';
-
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import * as React from 'react';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 

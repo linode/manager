@@ -1,13 +1,11 @@
-import { assoc, clamp, compose, map, path, pathOr, prop } from 'ramda';
-import * as React from 'react';
-
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { assoc, clamp, compose, map, path, pathOr, prop } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
@@ -18,7 +16,6 @@ import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeDisks, rescueLinode } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
-
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 
 type ClassNames = 'root'
@@ -141,7 +138,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
   render() {
     const { devices } = this.state;
-    const { 
+    const {
       disks: { error: disksError },
       volumes: { error: volumesError },
       classes,

@@ -1,14 +1,10 @@
+import Typography from '@material-ui/core/Typography';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-
-
 import { ExtendedLinode } from './BackupDrawer';
 
 type ClassNames = 'root'

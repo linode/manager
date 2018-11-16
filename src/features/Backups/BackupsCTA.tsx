@@ -1,15 +1,12 @@
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import Button from 'src/components/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
-
 
 type ClassNames = 'root'
   | 'button';

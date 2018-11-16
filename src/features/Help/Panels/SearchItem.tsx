@@ -1,11 +1,9 @@
-import { compose } from 'ramda';
-import * as React from 'react';
-
 import ListItem from '@material-ui/core/ListItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-
+import { compose } from 'ramda';
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect';
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -53,7 +51,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
   const getLabel = () => {
-    if (isFinal) { 
+    if (isFinal) {
       return item.label ? `Search for "${item.label}"` : 'Search';
     } else { return item.label}
   }

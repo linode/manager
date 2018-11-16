@@ -1,30 +1,18 @@
+import Typography from '@material-ui/core/Typography';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, } from 'react-redux';
-
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { connect, MapDispatchToProps } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { withTypes } from 'src/context/types';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import {
-  enableAllBackups,
-  enableAutoEnroll,
-  handleAutoEnrollToggle,
-  handleClose,
-  handleResetError,
-  handleResetSuccess,
-  requestLinodesWithoutBackups,
-} from 'src/store/reducers/backupDrawer';
+import { enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
-
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
 

@@ -1,10 +1,8 @@
-import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-
+import * as React from 'react';
 import Flag from 'src/assets/icons/flag.svg';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';

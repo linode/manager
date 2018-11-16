@@ -1,24 +1,14 @@
+import Typography from '@material-ui/core/Typography';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
-
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
-import Grid from 'src/components/Grid';
-import Tile from 'src/components/Tile';
-
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
+import Tile from 'src/components/Tile';
+import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
 type ClassNames = 'root'
 | 'wrapper'
@@ -75,7 +65,7 @@ interface State {
 type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
-  state: State = { 
+  state: State = {
     drawerOpen: false,
   };
 

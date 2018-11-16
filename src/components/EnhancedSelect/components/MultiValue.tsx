@@ -1,7 +1,7 @@
 import Chip from '@material-ui/core/Chip';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { MultiValueProps } from 'react-select/lib/components/MultiValue';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 

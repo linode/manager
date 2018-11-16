@@ -1,7 +1,3 @@
-import { compose } from 'ramda';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -9,24 +5,23 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
-
+import { compose } from 'ramda';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Flag from 'src/assets/icons/flag.svg';
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Tags from 'src/components/Tags';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-
+import { getType } from 'src/services/linodes';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-
-import { getType } from 'src/services/linodes';
-
 import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';

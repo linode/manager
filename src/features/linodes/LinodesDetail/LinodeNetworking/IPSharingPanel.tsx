@@ -1,13 +1,11 @@
+import Divider from '@material-ui/core/Divider';
+import Typography from '@material-ui/core/Typography';
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
-
-import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';

@@ -1,17 +1,10 @@
 import { compose, concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
-
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import SearchItem from './SearchItem';
 

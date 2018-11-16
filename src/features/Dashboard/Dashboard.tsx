@@ -1,14 +1,11 @@
+import Typography from '@material-ui/core/Typography';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
-
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
@@ -16,7 +13,6 @@ import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-
 
 type ClassNames = 'root';
 

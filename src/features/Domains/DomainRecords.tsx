@@ -1,25 +1,22 @@
-import { compose, equals, filter, flatten, isEmpty, lensPath, over, path, pathOr, prepend, propEq } from 'ramda';
-import * as React from 'react';
-import { Subscription } from 'rxjs/Subscription';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-
+import { compose, equals, filter, flatten, isEmpty, lensPath, over, path, pathOr, prepend, propEq } from 'ramda';
+import * as React from 'react';
+import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { deleteDomainRecord } from 'src/services/domains';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 

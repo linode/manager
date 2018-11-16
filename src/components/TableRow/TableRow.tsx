@@ -1,9 +1,8 @@
+import TableRow, { TableRowProps } from '@material-ui/core/TableRow';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableRow, { TableRowProps } from '@material-ui/core/TableRow';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 

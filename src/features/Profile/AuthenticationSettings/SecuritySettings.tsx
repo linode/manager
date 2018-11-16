@@ -1,17 +1,10 @@
-import { lensPath, pathOr, set } from 'ramda';
-import * as React from 'react';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
-import {
-  StyleRulesCallback,
-  
-  WithStyles,
-  withStyles,
-} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { lensPath, pathOr, set } from 'ramda';
+import * as React from 'react';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';

@@ -1,15 +1,14 @@
+import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     position: 'absolute',
-    left: '16px', 
+    left: '16px',
     wordWrap: 'normal',
     whiteSpace: 'nowrap',
     overflow: 'hidden',

@@ -1,4 +1,4 @@
-import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+import createBreakpoints from 'src/components/core/styles/createBreakpoints';
 import createTheme from './themeFactory';
 
 const breakpoints = createBreakpoints({});

@@ -1,16 +1,14 @@
+import AppBar from '@material-ui/core/AppBar';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 import { compose, filter, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
-
-import AppBar from '@material-ui/core/AppBar';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PromiseLoader from 'src/components/PromiseLoader';
@@ -18,11 +16,10 @@ import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { withTypes } from 'src/context/types';
+import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { parseQueryParams } from 'src/utilities/queryParams';
-
-import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
 import { ExtendedLinode } from './SelectLinodePanel';
 import { ExtendedType } from './SelectPlanPanel';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';

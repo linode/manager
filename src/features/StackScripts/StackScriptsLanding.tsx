@@ -1,12 +1,9 @@
+import Typography from '@material-ui/core/Typography';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import { compose } from 'ramda';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import AddNewLink from 'src/components/AddNewLink';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -14,7 +11,6 @@ import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
-
 import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 type ClassNames = 'root' | 'title';

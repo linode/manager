@@ -1,15 +1,13 @@
-import { compose, take } from 'ramda';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { Subscription } from 'rxjs/Subscription';
-
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Typography from '@material-ui/core/Typography';
-
+import { compose, take } from 'ramda';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Subscription } from 'rxjs/Subscription';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -17,7 +15,6 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { events$ } from 'src/events';
 import { getDomains } from 'src/services/domains';
-
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =

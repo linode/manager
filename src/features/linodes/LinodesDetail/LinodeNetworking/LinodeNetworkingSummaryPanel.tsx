@@ -1,12 +1,10 @@
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import CopyTooltip from 'src/components/CopyTooltip';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 

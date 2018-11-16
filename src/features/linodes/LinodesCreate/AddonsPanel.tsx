@@ -1,14 +1,12 @@
-import { compose } from 'ramda';
-import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
 import Divider from '@material-ui/core/Divider';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import { compose } from 'ramda';
+import * as React from 'react';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 

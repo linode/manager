@@ -1,13 +1,10 @@
-import { compose } from 'ramda';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Paper from '@material-ui/core/Paper';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-
+import { compose } from 'ramda';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -18,7 +15,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ISO_FORMAT } from 'src/constants';
-
 import { getTicketsPage } from './ticketUtils';
 
 interface Props extends PaginationProps<Linode.SupportTicket> {
@@ -82,7 +78,7 @@ class TicketList extends React.Component<CombinedProps, {}> {
     if (error) {
       return <TableRowError colSpan={6} message="We were unable to load your support tickets." />
     }
-    
+
     return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={6} />
   };
 

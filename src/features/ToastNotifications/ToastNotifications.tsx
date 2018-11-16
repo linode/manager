@@ -1,3 +1,7 @@
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Typography from '@material-ui/core/Typography';
+import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import { lensPath, over, set, tail } from 'ramda';
 import * as React from 'react';
@@ -5,13 +9,7 @@ import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Close from '@material-ui/icons/Close';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { events$ } from 'src/events';
 import toasts$, { createToast, Toast } from './toasts';

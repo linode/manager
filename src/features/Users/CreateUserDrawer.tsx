@@ -1,12 +1,10 @@
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
