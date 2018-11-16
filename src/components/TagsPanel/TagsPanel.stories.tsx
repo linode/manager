@@ -9,8 +9,6 @@ import { API_ROOT } from '../../constants';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import TagsPanel from './TagsPanel';
 
-const mock = new MockAdapter(axios);
-
 const API_REQUEST = `${API_ROOT}/tags`;
 
 interface Props {
@@ -62,6 +60,8 @@ class TagsPanelDemo extends React.Component<Props, {}> {
 storiesOf('Tags Panel', module)
   .addDecorator(ThemeDecorator)
   .addDecorator(story => {
+    const mock = new MockAdapter(axios);
+
     mock.onGet(API_REQUEST).reply(200, {
       data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({label: tag}))
     });
