@@ -130,11 +130,11 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       domain.id,
       { tags: tagsList }
     )
-      .then((data: Linode.Domain) => {
-        this.setState({
-          domain: data,
-        })
-      });
+    .then((data: Linode.Domain) => {
+      this.setState({
+        domain: data,
+      })
+    });
   }
 
 
