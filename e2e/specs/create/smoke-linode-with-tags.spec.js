@@ -80,7 +80,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         });
     });
 
-    xdescribe('Linode Detail - Tags Suite', () => {
+    describe('Linode Detail - Tags Suite', () => {
         it('should navigate to linode detail', () => {
             // It should navigate to Linode detail page
             browser.waitForVisible(`[data-qa-linode="${linodeName}"]`, constants.wait.normal);
