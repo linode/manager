@@ -103,7 +103,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               />
             </Grid>
           </Grid>
-          {!backups_enabled && hasLinodesWithoutBackups &&
+          {hasLinodesWithoutBackups &&
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}
