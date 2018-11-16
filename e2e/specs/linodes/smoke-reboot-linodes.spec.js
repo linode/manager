@@ -74,7 +74,6 @@ describe('List Linodes - Actions - Reboot Suite', () => {
 
         it('should display running status after booted', () => {
             const statusSelector = `${ListLinodes.linodeElem.selector} ${ListLinodes.status.selector}`;
-            console.log(statusSelector);
             browser.waitUntil(function() {
                 return $$(statusSelector)[0].getAttribute('data-qa-status') === 'running';
             }, rebootTimeout);
