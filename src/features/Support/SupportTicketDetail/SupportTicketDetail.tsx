@@ -2,10 +2,19 @@ import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { compose, concat, path, pathOr, slice } from 'ramda';
+import { compose, concat, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+<<<<<<< HEAD
+=======
+
+import Chip from '@material-ui/core/Chip';
+import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+
+
+>>>>>>> Refactor ticket attachments and rows
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -21,11 +30,11 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { getTicket, getTicketReplies } from 'src/services/support';
 import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
+import TicketAttachmentList from './TicketAttachmentList';
 import TicketReply from './TicketReply';
 
 type ClassNames = 'root'
@@ -38,11 +47,7 @@ type ClassNames = 'root'
   | 'status'
   | 'open'
   | 'ticketLabel'
-  | 'closed'
-  | 'attachmentPaperWrapper'
-  | 'attachmentPaper'
-  | 'attachmentRow'
-  | 'attachmentIcon';
+  | 'closed';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -93,30 +98,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   closed: {
     backgroundColor: theme.color.red,
-  },
-  attachmentPaperWrapper: {
-    overflowX: 'auto',
-  },
-  attachmentPaper: {
-    padding: `
-      12px
-      ${theme.spacing.unit * 3}px
-      0
-    `,
-    overflowX: 'auto',
-    width: 500,
-  },
-  attachmentRow: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    marginBottom: 12,
-    '&:last-child': {
-      marginBottom: 0,
-      border: 0,
-    },
-  },
-  attachmentIcon: {
-    paddingLeft: `0 !important`,
-    color: theme.palette.text.primary,
   },
 });
 
@@ -269,74 +250,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     )
   }
 
-  renderAttachments = (attachments: string[]) => {
-    const { classes } = this.props;
-
-    // create an array of icons to use
-    const icons = attachments.map((attachment, idx) => {
-      // try to find a file extension
-      const lastDotIndex = attachment.lastIndexOf('.');
-      const ext = attachment.slice(lastDotIndex + 1);
-      if (ext) {
-        if (['jpg', 'jpeg', 'png', 'bmp', 'tiff'].includes(ext.toLowerCase())) {
-          return <InsertPhoto key={idx} />;
-        }
-      }
-      return <InsertDriveFile key={idx} />;
-    })
-    return (
-      <React.Fragment>
-        {attachments.length !== 0 &&
-          <Grid item xs={12} container justify="flex-start" className="px0">
-            <Grid item xs={12}>
-              <Typography variant="subheading">Attachments</Typography>
-            </Grid>
-            <Grid item xs={12} className={classes.attachmentPaperWrapper}>
-              {this.renderAttachmentsRows(slice(0, 5, attachments), icons)}
-              {
-                (attachments.length > 5) &&
-                <div onClick={this.toggleShowMoreAttachments} style={{ display: 'inline-block' }}>
-                  <ShowMoreExpansion
-                    name={!this.state.showMoreAttachments
-                      ? "Show More Files"
-                      : "Show Less Files"
-                    }
-                  >
-                    {this.renderAttachmentsRows(slice(5, Infinity, attachments), icons)}
-                  </ShowMoreExpansion>
-                </div>
-              }
-            </Grid>
-          </Grid>
-        }
-      </React.Fragment>
-    );
-  }
-
   toggleShowMoreAttachments = () => {
     this.setState({ showMoreAttachments: !this.state.showMoreAttachments, ticketCloseSuccess: false });
-  }
-
-  renderAttachmentsRows = (attachments: string[], icons: JSX.Element[]) => {
-    const { classes } = this.props;
-    return (
-      <Paper className={classes.attachmentPaper}>
-        {attachments.map((attachment, idx) => {
-          return (
-            <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
-              <Grid item className={classes.attachmentIcon}>
-                {icons[idx]}
-              </Grid>
-              <Grid item>
-                <Typography component="span">
-                  {attachment}
-                </Typography>
-              </Grid>
-            </Grid>
-          )
-        })}
-      </Paper>
-    )
   }
 
   renderReplies = (replies: Linode.SupportReply[]) => {
@@ -432,7 +347,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             />
           }
           {replies && this.renderReplies(replies)}
-          {ticket.attachments.length > 0 && this.renderAttachments(ticket.attachments)}
+          {ticket.attachments.length > 0 &&
+            <TicketAttachmentList attachments={ticket.attachments} />
+          }
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply
