@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,8 +7,9 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
+
+import { SettingTypes } from './GlobalSettings';
 
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
@@ -33,31 +33,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
-  errors?: Linode.ApiFieldError[];
-  handleToggle: () => void;
+  handleToggle: (settingType: SettingTypes) => void;
   openBackupsDrawer: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-const displayError = (errors: Linode.ApiFieldError[]) => {
-  return pathOr(
-    "There was an error updating your account settings.",
-    ['response', 'data', 'errors', 0, 'reason'],
-    errors
-    )
-}
 
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
   const {
     backups_enabled,
     classes,
-    errors,
     hasLinodesWithoutBackups,
     handleToggle,
-    openBackupsDrawer
+    openBackupsDrawer,
   } = props;
+
+  const handleToggleBackups = () => {
+    handleToggle('backups');
+  }
 
   return (
     <React.Fragment>
@@ -81,18 +75,13 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               </a>.
             </Typography>
           </Grid>
-          {errors &&
-            <Grid item>
-              <Notice error text={displayError(errors)} />
-            </Grid>
-          }
           <Grid item container direction="row" alignItems="center">
             <Grid item>
               <FormControlLabel
                 // className="toggleLabel"
                 control={
                   <Toggle
-                    onChange={handleToggle}
+                    onChange={handleToggleBackups}
                     checked={backups_enabled}
                   />
                 }
