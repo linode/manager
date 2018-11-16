@@ -1,4 +1,4 @@
-import { compose, take } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
@@ -168,9 +168,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-const enhanced = compose(styled);
-
 const isFoundInData = (id: number, data: Linode.Domain[] = []): boolean =>
   data.reduce((result, domain) => result || domain.id === id, false);
 
-export default enhanced(DomainsDashboardCard);
+export default styled(DomainsDashboardCard) as React.ComponentType<{}>;

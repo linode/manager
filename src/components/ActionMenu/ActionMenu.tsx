@@ -152,4 +152,6 @@ class ActionMenu extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(ActionMenu);
+const styled = withStyles(styles);
+
+export default styled(ActionMenu);

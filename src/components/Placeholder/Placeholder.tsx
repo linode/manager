@@ -137,4 +137,4 @@ Placeholder.defaultProps = {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(Placeholder);
+export default styled(Placeholder);

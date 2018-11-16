@@ -82,6 +82,6 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles, { withTheme: true });
 
-export default decorate<Props>(LinodeStatusIndicator);
+export default styled(LinodeStatusIndicator);

@@ -78,4 +78,4 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   );
 }
 
-export default styled<Props>(DocsSidebar);
+export default styled(DocsSidebar);

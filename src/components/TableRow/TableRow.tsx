@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import TableRow, { TableRowProps } from 'src/components/core/TableRow';
+import _TableRow, { TableRowProps as _TableRowProps } from 'src/components/core/TableRow';
 
 type ClassNames = 'root';
 
@@ -42,9 +42,9 @@ interface Props {
   htmlFor?: string;
 }
 
-type CombinedProps = Props & TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = Props & _TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-class WrappedTableRow extends React.Component<CombinedProps> {
+class TableRow extends React.Component<CombinedProps> {
 
   rowClick = (e: any, target: string | onClickFn ) =>  {
     if (e.target.tagName === 'TD') {
@@ -60,7 +60,7 @@ class WrappedTableRow extends React.Component<CombinedProps> {
     const { classes, className, rowLink, staticContext, ...rest } = this.props;
 
     return (
-        <TableRow
+        <_TableRow
           onClick={(e) => rowLink && this.rowClick(e, rowLink)}
           hover={rowLink !== undefined}
           role={rowLink && 'link'}
@@ -72,14 +72,11 @@ class WrappedTableRow extends React.Component<CombinedProps> {
           {...rest}
         >
           {this.props.children}
-        </TableRow>
+        </_TableRow>
     );
   }
 }
 
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
-const styledTableRow = styled<CombinedProps>(WrappedTableRow);
-const routedStyledTableRow = withRouter(styledTableRow);
 
-
-export default routedStyledTableRow;
+export default styled(withRouter(TableRow));

@@ -67,4 +67,4 @@ BackupLinodes.displayName = "BackupLinodes";
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(BackupLinodes);
+export default styled(BackupLinodes);

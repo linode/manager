@@ -929,4 +929,4 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-export default withRouter(styled(preloaded(NodeBalancerConfigurations))) as any;
+export default styled(withRouter(preloaded(NodeBalancerConfigurations))) as React.ComponentType<Props>;

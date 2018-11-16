@@ -179,4 +179,4 @@ const enhanced = compose(styled);
 const isFoundInData = (id: number, data: Linode.Volume[] = []): boolean =>
   data.reduce((result, volume) => result || volume.id === id, false);
 
-export default enhanced(VolumesDashboardCard);
+export default enhanced(VolumesDashboardCard) as React.ComponentType<{}>;

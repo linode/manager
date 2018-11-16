@@ -40,4 +40,4 @@ class ExternalLink extends React.Component<CombinedProps> {
 
 const styled = withStyles<ClassNames>(styles, { withTheme: true });
 
-export default styled<CombinedProps>(ExternalLink);
+export default styled(ExternalLink);

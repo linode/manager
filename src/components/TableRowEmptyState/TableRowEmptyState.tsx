@@ -27,4 +27,4 @@ const TableRowEmptyState: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TableRowEmptyState);
+export default styled(TableRowEmptyState);

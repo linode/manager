@@ -18,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface Props extends TextFieldProps {
+type Props = TextFieldProps & {
   className: string;
 }
 

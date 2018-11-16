@@ -31,4 +31,4 @@ const severityLevelMap = {
   critical: 'error',
 };
 
-export default styled<Props>(ProductNotifications);
+export default styled(ProductNotifications);

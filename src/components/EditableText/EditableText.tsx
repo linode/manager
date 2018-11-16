@@ -136,6 +136,7 @@ interface Props {
   text: string;
   errorText?: string;
   labelLink?: string;
+  typeVariant: string;
 }
 
 interface State {
@@ -145,7 +146,7 @@ interface State {
 
 type PassThroughProps = Props & TextFieldProps & TypographyProps;
 
-type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
+type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 
 export class EditableText extends React.Component<FinalProps, State> {
   state: State = {
@@ -243,8 +244,8 @@ export class EditableText extends React.Component<FinalProps, State> {
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
                     className: classnames({
-                      [classes.headline]: this.props.variant === 'headline',
-                      [classes.title]: this.props.variant === 'title',
+                      [classes.headline]: this.props.typeVariant === 'headline',
+                      [classes.title]: this.props.typeVariant === 'title',
                       [classes.input]: true,
                     }),
                   }}
@@ -275,4 +276,6 @@ export class EditableText extends React.Component<FinalProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<PassThroughProps>(EditableText);
+const styled = withStyles(styles);
+
+export default styled(EditableText);

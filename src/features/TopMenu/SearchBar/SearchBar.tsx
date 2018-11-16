@@ -477,4 +477,4 @@ export default compose(
   styled,
   typesContext,
   withRouter,
-)(SearchBar);
+)(SearchBar) as React.ComponentType<{}>;

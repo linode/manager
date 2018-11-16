@@ -239,4 +239,4 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(SelectionCard);
+export default styled(SelectionCard) as React.ComponentType<Props>;

@@ -58,4 +58,6 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<PropsWithStyles>(DocComponent);
+const styled = withStyles(styles);
+
+export default styled(DocComponent);

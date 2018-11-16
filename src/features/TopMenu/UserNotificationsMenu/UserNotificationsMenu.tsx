@@ -215,4 +215,4 @@ const connected = connect(mapStateToProps);
 
 const enhanced = compose(styled, connected);
 
-export default enhanced(UserNotificationsMenu);
+export default enhanced(UserNotificationsMenu) as React.ComponentType<{}>;

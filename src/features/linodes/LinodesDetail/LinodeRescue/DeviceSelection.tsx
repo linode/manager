@@ -102,4 +102,4 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(DeviceSelection);
+export default styled(DeviceSelection) as React.ComponentType<Props>;

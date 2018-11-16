@@ -197,4 +197,4 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default RenderGuard<Props>(styled(CreateFromImage));
+export default styled(RenderGuard<Props>(CreateFromImage));

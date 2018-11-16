@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
-  [index: string]: any;
+  unseenCount: number
 }
 
 interface State {
@@ -57,7 +57,7 @@ interface State {
   notifications: Linode.Notification[];
 }
 
-type CombinedProps = {} & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface EventsMap {
   [index: string]: Linode.Event;
@@ -193,4 +193,4 @@ const getNumUnseenEvents = (events: Linode.Event[]) => {
   return unseenCount;
 };
 
-export default styled<Props>(UserEventsMenu);
+export default styled(UserEventsMenu);

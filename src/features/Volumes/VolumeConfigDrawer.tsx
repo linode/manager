@@ -98,4 +98,4 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(VolumeConfigDrawer);
+export default styled(VolumeConfigDrawer);

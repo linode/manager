@@ -324,4 +324,4 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TagsPanel);
+export default styled(TagsPanel);

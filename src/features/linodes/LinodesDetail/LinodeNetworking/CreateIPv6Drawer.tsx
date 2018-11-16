@@ -52,4 +52,4 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(CreateIPv6Drawer);
+export default styled(CreateIPv6Drawer);

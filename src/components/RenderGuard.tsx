@@ -8,12 +8,11 @@ interface RenderGuardProps {
 
 /* tslint:disable-next-line */
 const renderGuard = <P extends {}>(Component: React.ComponentType<P & RenderGuardProps>) => {
-  type EnhancedProps = P & RenderGuardProps & WithTheme;
 
-  class ComponentWithRenderGuard extends React.Component<EnhancedProps> {
+  class ComponentWithRenderGuard extends React.Component<RenderGuardProps & WithTheme> {
     static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
 
-    shouldComponentUpdate(nextProps: EnhancedProps) {
+    shouldComponentUpdate(nextProps: P & RenderGuardProps & WithTheme) {
       if (Array.isArray(this.props.updateFor)) {
         // don't update if the values of the updateFor Array are equal
         // this is a deep comparison
@@ -34,7 +33,7 @@ const renderGuard = <P extends {}>(Component: React.ComponentType<P & RenderGuar
     }
   };
 
-  return themed<EnhancedProps>(ComponentWithRenderGuard) as React.ComponentType<P & RenderGuardProps>;
+  return themed(ComponentWithRenderGuard) as React.ComponentType<P & RenderGuardProps>;
 }
 
 const themed = withTheme();

@@ -94,4 +94,6 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(ShowMoreExpansion);
+const styled = withStyles(styles);
+
+export default styled(ShowMoreExpansion);

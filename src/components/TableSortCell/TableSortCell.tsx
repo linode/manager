@@ -40,4 +40,4 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<CombinedProps>(TableSortCell);
+export default styled(TableSortCell);

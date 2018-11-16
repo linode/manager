@@ -29,4 +29,4 @@ const TableRowError: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TableRowError);
+export default styled(TableRowError);

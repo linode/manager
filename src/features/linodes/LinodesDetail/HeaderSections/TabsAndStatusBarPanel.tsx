@@ -95,4 +95,4 @@ const matches = (p: string) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TabsAndStatusBarPanel);
+export default styled(TabsAndStatusBarPanel);

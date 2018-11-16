@@ -111,4 +111,4 @@ UserEventsButton.defaultProps = {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(UserEventsButton);
+export default styled(UserEventsButton);

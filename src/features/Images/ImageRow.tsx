@@ -51,4 +51,4 @@ const ImageRow: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default RenderGuard<Props>(styled<Props>(ImageRow));
+export default styled(RenderGuard<Props>(ImageRow));

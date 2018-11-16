@@ -191,4 +191,4 @@ const accountContext = withAccount(({ data, errors, loading, lastUpdated }) => (
 
 const enhanced = compose(styled, accountContext);
 
-export default enhanced(SummaryPanel);
+export default enhanced(SummaryPanel) as React.ComponentType<{}>;

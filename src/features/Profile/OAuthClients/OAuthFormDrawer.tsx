@@ -108,4 +108,4 @@ OAuthCreationDrawer.defaultProps = {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(OAuthCreationDrawer);
+export default styled(OAuthCreationDrawer);

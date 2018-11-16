@@ -25,6 +25,6 @@ const LinearProgressComponent: React.StatelessComponent<CombinedProps> = (props)
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles, { withTheme: true });
 
-export default decorate<CombinedProps>(LinearProgressComponent);
+export default styled(LinearProgressComponent);

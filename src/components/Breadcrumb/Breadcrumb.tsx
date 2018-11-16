@@ -102,7 +102,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         ?
         <EditableText
           role="header"
-          variant="headline"
+          typeVariant="h6"
           text={labelTitle}
           errorText={props.onEditHandlers!.errorText}
           onEdit={props.onEditHandlers!.onEdit}
@@ -122,4 +122,4 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
 }
 
 const styled = withStyles(styles, { withTheme: true });
-export default styled<Props>(Breadcrumb);
+export default styled(Breadcrumb);

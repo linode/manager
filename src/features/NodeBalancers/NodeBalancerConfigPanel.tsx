@@ -1088,4 +1088,4 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(NodeBalancerConfigPanel);
+export default styled(NodeBalancerConfigPanel) as React.ComponentType<Props>;

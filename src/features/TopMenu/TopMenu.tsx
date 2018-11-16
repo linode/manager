@@ -85,4 +85,6 @@ class TopMenu extends React.Component<PropsWithStyles> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(TopMenu);
+const styled = withStyles(styles);
+
+export default styled(TopMenu);

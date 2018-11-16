@@ -122,4 +122,4 @@ const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(userNotificationListItem);
+export default styled(userNotificationListItem);

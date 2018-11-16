@@ -662,4 +662,4 @@ const accountContext = withAccount();
 
 const enhanced = compose(styled, accountContext);
 
-export default enhanced(UpdateContactInformationPanel);
+export default enhanced(UpdateContactInformationPanel) as React.ComponentType<{}>;

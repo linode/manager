@@ -44,4 +44,4 @@ const MigrationNotification : React.StatelessComponent<CombinedProps> = (props) 
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(MigrationNotification);
+export default styled(MigrationNotification);

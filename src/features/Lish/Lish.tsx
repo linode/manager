@@ -178,4 +178,4 @@ class Lish extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(styled(Lish));
+export default styled(withRouter(Lish));

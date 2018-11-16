@@ -99,4 +99,6 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })<Props>(DDrawer);
+const styled = withStyles(styles);
+
+export default styled(DDrawer);

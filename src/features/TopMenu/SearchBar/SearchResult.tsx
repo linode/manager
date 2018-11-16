@@ -62,4 +62,4 @@ const Option: React.StatelessComponent<CombinedProps> = (props) => {
 }
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(Option);
+export default styled(Option);

@@ -11,31 +11,31 @@ storiesOf('Tags', module)
     <Tag label="tag" />
   ))
   .add('white', () => (
-    <Tag label="tag" variant="white" />
+    <Tag label="tag" colorVariant="white" />
   ))
   .add('gray', () => (
-    <Tag label="tag" variant="gray" />
+    <Tag label="tag" colorVariant="gray" />
   ))
   .add('lightGray', () => (
-    <Tag label="tag" variant="lightGray" />
+    <Tag label="tag" colorVariant="lightGray" />
   ))
   .add('blue', () => (
-    <Tag label="tag" variant="blue" />
+    <Tag label="tag" colorVariant="blue" />
   ))
   .add('lightBlue', () => (
-    <Tag label="tag" variant="lightBlue" />
+    <Tag label="tag" colorVariant="lightBlue" />
   ))
   .add('green', () => (
-    <Tag label="tag" variant="green" />
+    <Tag label="tag" colorVariant="green" />
   ))
   .add('lightGreen', () => (
-    <Tag label="tag" variant="lightGreen" />
+    <Tag label="tag" colorVariant="lightGreen" />
   ))
   .add('yellow', () => (
-    <Tag label="tag" variant="yellow" />
+    <Tag label="tag" colorVariant="yellow" />
   ))
   .add('lightYellow', () => (
-    <Tag label="tag" variant="lightYellow" />
+    <Tag label="tag" colorVariant="lightYellow" />
   ))
   .add('editable', () => (
     <Tag label="delete-tag" onDelete={action('click')} />

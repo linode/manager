@@ -5,7 +5,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import UserEventsListItem, { UserEventsListItemProps } from './UserEventsListItem';
+import UserEventsListItem, { Props as UserEventsListItemProps } from './UserEventsListItem';
 
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'

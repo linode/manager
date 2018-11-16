@@ -28,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-export interface Props extends TextFieldProps {
+export type Props = TextFieldProps & {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
@@ -115,7 +115,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
               },
               className,
             ),
-            ...finalProps.InputProps,
+            /** @todo */
+            // ...finalProps.InputProps,
             }
           }
           SelectProps={{
@@ -144,4 +145,4 @@ class LinodeTextField extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<CombinedProps>(LinodeTextField);
+export default styled(LinodeTextField);

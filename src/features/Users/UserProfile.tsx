@@ -250,4 +250,4 @@ export const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default withRouter(connected(styled(UserProfile)));
+export default styled(withRouter(connected(UserProfile)));

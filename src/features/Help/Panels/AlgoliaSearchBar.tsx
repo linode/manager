@@ -1,7 +1,7 @@
 import { compose, concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
@@ -56,7 +56,7 @@ interface State {
   inputValue: string;
 }
 
-type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & WithTheme & RouteComponentProps<{}>;
 class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   searchIndex: any = null;
   mounted: boolean = false;

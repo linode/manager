@@ -56,4 +56,4 @@ export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(StatsPanel);
+export default styled(StatsPanel);

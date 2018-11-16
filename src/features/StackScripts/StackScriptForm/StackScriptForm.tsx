@@ -232,7 +232,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                     <Tag
                       key={selectedImage}
                       label={stripImageName(selectedImage)}
-                      variant='lightBlue'
+                      colorVariant='lightBlue'
                       onDelete={() => images.handleRemove(index)}
                       className={classes.targetTag}
                     />
@@ -310,5 +310,5 @@ const stripImageName = (image: string) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<CombinedProps>(StackScriptForm);
+export default styled(StackScriptForm);
 

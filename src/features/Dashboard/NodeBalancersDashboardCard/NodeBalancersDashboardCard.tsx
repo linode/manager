@@ -181,4 +181,4 @@ const enhanced = compose(styled);
 const isFoundInData = (id: number, data: Linode.NodeBalancer[] = []): boolean =>
   data.reduce((result, nodebalancer) => result || nodebalancer.id === id, false);
 
-export default enhanced(NodeBalancersDashboardCard);
+export default enhanced(NodeBalancersDashboardCard) as React.ComponentType<{}>;

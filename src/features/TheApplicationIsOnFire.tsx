@@ -29,4 +29,4 @@ const ReloadLink = () => <a onClick={() => { location.reload(); }}>restarting it
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(TheApplicationIsOnFire);
+export default styled(TheApplicationIsOnFire);

@@ -45,4 +45,4 @@ export const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => 
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(DisplayPrice);
+export default styled(DisplayPrice);

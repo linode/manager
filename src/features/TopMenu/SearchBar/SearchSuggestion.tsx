@@ -41,7 +41,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
       <Tag
         key={`tag-${tag}`}
         label={tag}
-        variant={selected ? 'blue' : 'lightGray'}
+        colorVariant={selected ? 'blue' : 'lightGray'}
       />
     );
   }
