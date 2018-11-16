@@ -1,3 +1,4 @@
+import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -15,7 +16,6 @@ import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
 import filterImagesByDeprecationStatus from 'src/utilities/filterImagesByDeprecationStatus';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { Divider } from '../../../../node_modules/@material-ui/core';
 
 type ClassNames = 'root'
   | 'backButton'

@@ -1,5 +1,5 @@
-import { Paper } from '@material-ui/core';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { compose, path } from 'ramda';
 import * as React from 'react';

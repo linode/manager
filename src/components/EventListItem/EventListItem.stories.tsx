@@ -1,8 +1,6 @@
+import List from '@material-ui/core/List';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import { List } from '@material-ui/core';
-
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import EventListItem from './EventListItem';
 
