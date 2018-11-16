@@ -5,7 +5,7 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import Tags from './Tags';
 
 describe('Tags list', () => {
-  it('displays "Show More" button if the tags list is more than 3', () => {
+  it('should display "Show More" button if the tags list is more than 3', () => {
     const component = mount(
       <LinodeThemeWrapper>
         <Tags
@@ -14,10 +14,10 @@ describe('Tags list', () => {
       </LinodeThemeWrapper>
     );
 
-    expect(component.find('[data-qa-show-more-chip]').length).not.toEqual(0);
+    expect(component.find('[data-qa-show-more-chip]')).not.toHaveLength(0);
   });
 
-  it('displays "Show More" button if the tags list is more than 3', () => {
+  it('shouldn\'t display the "Show More" button if the tags list contains 3 or fewer tags', () => {
     const component = mount(
       <LinodeThemeWrapper>
         <Tags
@@ -26,7 +26,7 @@ describe('Tags list', () => {
       </LinodeThemeWrapper>
     );
 
-    expect(component.find('[data-qa-show-more-chip]').length).toEqual(0);
+    expect(component.find('[data-qa-show-more-chip]')).toHaveLength(0);
   });
 
 });
