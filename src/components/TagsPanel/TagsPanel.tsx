@@ -4,7 +4,7 @@ import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import {
   StyleRulesCallback,
-  
+
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -278,7 +278,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       tagInputValue,
       tagError,
     } = this.state;
-  
+
     return (
       <div className={classes.root}>
         {tags.map(eachTag => {
@@ -292,7 +292,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               loading={listDeletingTags.some((inProgressTag) => {
                 /*
                  * The tag is getting deleted if it appears in the state
-                 * which holds the list of tags queued for deletion 
+                 * which holds the list of tags queued for deletion
                  */
                 return eachTag === inProgressTag;
               })}
@@ -312,6 +312,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               autoFocus
               className={classes.selectTag}
               blurInputOnSelect={false}
+              data-qa-tags-multiselect
           />
           :
           <Tooltip
@@ -324,11 +325,11 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             >
               <AddCircle data-qa-add-tag />
             </IconButton>
-          </Tooltip> 
+          </Tooltip>
         }
       </div>
     );
-  
+
   }
 };
 

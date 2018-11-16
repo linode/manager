@@ -97,8 +97,9 @@ describe('Create Linode from Image - With Tags Suite', () => {
             const expectedDetailTags = [...addedTags, linodeDetailTag];
 
             LinodeDetail.addTag.click();
-            LinodeDetail.multiSelect.waitForVisible(constants.wait.normal);
-            LinodeDetail.multiSelect.$('..').$('input').setValue(linodeDetailTag);
+            LinodeDetail.tagsMultiSelect.waitForVisible(constants.wait.normal);
+            LinodeDetail.tagsMultiSelect.$('..').$('input').setValue(linodeDetailTag);
+            LinodeDetail.selectOptions[0].waitForVisible(constants.wait.normal);
             LinodeDetail.selectOptions[0].click();
 
             browser.waitUntil(function() {

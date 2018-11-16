@@ -73,9 +73,10 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should display running status after booted', () => {
-            const statusSelector = `${ListLinodes.linodeElem.selector} ${ListLinodes.status.selector}`;
+            const rebootStatus = $$(`${ListLinodes.linodeElem.selector} ${ListLinodes.status.selector}`)[0];
+            rebootStatus.waitForVisible(constants.wait.normal);
             browser.waitUntil(function() {
-                return $$(statusSelector)[0].getAttribute('data-qa-status') === 'running';
+                return rebootStatus.getAttribute('data-qa-status') === 'running';
             }, rebootTimeout);
         });
 
