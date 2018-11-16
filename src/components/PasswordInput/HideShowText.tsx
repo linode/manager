@@ -1,9 +1,7 @@
-import * as React from 'react';
-
-import { TextFieldProps } from '@material-ui/core/TextField';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
+import * as React from 'react';
+import { TextFieldProps } from 'src/components/core/TextField';
 import TextField from '../TextField';
 
 interface State {

@@ -1,8 +1,7 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableCell, { TableCellProps } from 'src/components/core/TableCell';
+import TableSortLabel from 'src/components/core/TableSortLabel';
 
 type ClassNames = 'root';
 

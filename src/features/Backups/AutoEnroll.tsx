@@ -1,11 +1,9 @@
-import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-
+import * as React from 'react';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';

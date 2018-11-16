@@ -1,14 +1,6 @@
-import * as React from 'react';
-
 import { compose } from 'ramda';
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';

@@ -1,16 +1,10 @@
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import IconButton from '@material-ui/core/IconButton';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
 import LabelText from './LabelText';
 

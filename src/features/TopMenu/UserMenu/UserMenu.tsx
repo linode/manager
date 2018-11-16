@@ -3,14 +3,12 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Hidden from '@material-ui/core/Hidden';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import UserIcon from 'src/assets/icons/user.svg';
+import ButtonBase from 'src/components/core/ButtonBase';
+import Hidden from 'src/components/core/Hidden';
+import Menu from 'src/components/core/Menu';
+import MenuItem from 'src/components/core/MenuItem';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {

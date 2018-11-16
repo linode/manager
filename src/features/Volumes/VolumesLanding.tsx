@@ -3,17 +3,15 @@ import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -31,7 +29,6 @@ import { getLinodes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
-
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumeConfigDrawer from './VolumeConfigDrawer';
@@ -511,7 +508,7 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => {
              * Iterate over all the linode data and find a match between
              * the volumes linode ID and the Linode data id. If there's a match
              * it means that the Linode is attached to the volume and the Linode
-             * status and label needs needs to be appended to the result data 
+             * status and label needs needs to be appended to the result data
              */
             for (const eachLinode of linodesResponse.data) {
               if (eachLinode.id === eachVolume.linode_id) {
@@ -523,7 +520,7 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => {
               }
             }
             /*
-             * Otherwise, this volume is not attached to a Linode 
+             * Otherwise, this volume is not attached to a Linode
              */
             return eachVolume;
           });
@@ -536,7 +533,7 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => {
         .catch((err) => {
           /*
            * If getting the Linode data fails, no problem.
-           * Just return the volumes 
+           * Just return the volumes
            */
           return volumesResponse;
         });

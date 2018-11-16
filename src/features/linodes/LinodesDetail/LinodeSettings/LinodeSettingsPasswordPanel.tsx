@@ -1,10 +1,8 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';

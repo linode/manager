@@ -1,23 +1,21 @@
+import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
+import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
 import { compose, concat, path, pathOr, slice } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
-import InsertPhoto from '@material-ui/icons/InsertPhoto';
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
+import Chip from 'src/components/core/Chip';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -27,7 +25,6 @@ import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import { getTicket, getTicketReplies } from 'src/services/support';
 import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
-
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketReply from './TicketReply';
 

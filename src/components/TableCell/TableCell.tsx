@@ -1,9 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
+import Hidden from 'src/components/core/Hidden';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 
 type ClassNames = 'root'
   | 'noWrap'
@@ -46,7 +45,7 @@ export interface Props extends TableCellProps {
   className?: string;
   /*
    * parent column will either be the name of the column this
-   * TableCell is listed under 
+   * TableCell is listed under
    */
   parentColumn?: string;
 }
@@ -66,7 +65,7 @@ class WrappedTableCell extends React.Component<CombinedProps> {
             [classes.root]: true,
             [classes.noWrap]: noWrap,
             [classes.sortable]: sortable,
-            // hide the cell at small breakpoints if it's empty with no parent column 
+            // hide the cell at small breakpoints if it's empty with no parent column
             'emptyCell': !parentColumn && !this.props.children
           })}
         {...rest}

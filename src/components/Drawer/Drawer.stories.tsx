@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import Button from '@material-ui/core/Button';
+import Button from 'src/components/core/Button';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import ActionsPanel from '../ActionsPanel';
