@@ -1,9 +1,7 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableCell from 'src/components/core/TableCell';
+import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
 
 type ClassNames = 'root';

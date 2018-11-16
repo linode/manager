@@ -1,7 +1,5 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { formatRegion } from 'src/utilities';
 
 type CSSClasses =  'regionIndicator';

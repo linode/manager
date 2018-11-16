@@ -1,10 +1,8 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';

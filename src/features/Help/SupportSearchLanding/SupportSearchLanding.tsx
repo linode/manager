@@ -1,25 +1,17 @@
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import Search from '@material-ui/icons/Search';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import IconButton from '@material-ui/core/IconButton';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import {
-  StyleRulesCallback,
-
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import Search from '@material-ui/icons/Search';
-
+import IconButton from 'src/components/core/IconButton';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
 import { parseQueryParams } from 'src/utilities/queryParams';
-
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import DocumentationResults, { SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';

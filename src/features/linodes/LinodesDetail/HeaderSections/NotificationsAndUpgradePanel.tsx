@@ -1,15 +1,7 @@
 import * as React from 'react';
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
-
 import MigrationNotification from './MigrationNotification';
 
 type ClassNames = 'root' | 'link';

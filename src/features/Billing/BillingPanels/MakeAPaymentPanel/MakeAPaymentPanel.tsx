@@ -1,17 +1,16 @@
 import * as classNames from 'classnames';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import scriptLoader from 'react-async-script-loader';
 import * as ReactDOM from 'react-dom';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -19,12 +18,8 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
+import { executePaypalPayment, makePayment, stagePaypalPayment } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
-import { executePaypalPayment, makePayment, stagePaypalPayment }
-  from 'src/services/account';
-
-import scriptLoader from 'react-async-script-loader';
 
 type ClassNames = 'root'
   | 'positive'

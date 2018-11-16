@@ -1,11 +1,9 @@
+import Check from '@material-ui/icons/Check';
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import Fade from '@material-ui/core/Fade';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import Check from '@material-ui/icons/Check';
-
+import Fade from 'src/components/core/Fade';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 
 type CSSClasses =

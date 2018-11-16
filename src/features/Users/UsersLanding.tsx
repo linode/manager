@@ -3,16 +3,14 @@ import * as memoize from 'memoizee';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import Typography from '@material-ui/core/Typography';
-
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -28,7 +26,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';

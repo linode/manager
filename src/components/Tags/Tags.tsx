@@ -1,8 +1,6 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
 

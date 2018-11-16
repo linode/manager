@@ -1,8 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';

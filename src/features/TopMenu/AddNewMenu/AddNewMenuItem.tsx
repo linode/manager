@@ -1,8 +1,7 @@
 import * as React from 'react';
-
-import Divider from '@material-ui/core/Divider';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import Divider from 'src/components/core/Divider';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 type CSSClasses = 'root'
 | 'content'

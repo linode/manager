@@ -1,13 +1,11 @@
 import { compose, last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-
 import Breadcrumb from 'src/components/Breadcrumb';
+import AppBar from 'src/components/core/AppBar';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -16,7 +14,6 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';

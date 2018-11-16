@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 import VncDisplay from './VncDisplay';
 

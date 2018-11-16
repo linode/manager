@@ -1,13 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import ThemeDecorator from 'src/utilities/storybookDecorators';
-
 import TableWrapper from './Table';
 
 storiesOf('Table', module)

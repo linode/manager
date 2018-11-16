@@ -3,13 +3,9 @@ import { compose, path } from 'ramda';
 import * as Raven from 'raven-js';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-
 import UserEventsListItem, { UserEventsListItemProps } from './UserEventsListItem';
-
 
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'

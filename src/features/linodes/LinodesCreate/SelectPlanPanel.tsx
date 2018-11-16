@@ -1,8 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';

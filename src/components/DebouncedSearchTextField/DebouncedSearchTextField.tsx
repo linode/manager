@@ -1,16 +1,11 @@
-import * as React from 'react';
-
-import * as ClassNames from 'classnames';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
-
-import { debounce } from 'throttle-debounce';
-
+import * as ClassNames from 'classnames';
+import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
+import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root' | 'searchIcon';
 

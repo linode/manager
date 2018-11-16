@@ -1,6 +1,7 @@
-import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
-import createMuiTheme, { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { mergeDeepRight } from 'ramda';
+import createBreakpoints from 'src/components/core/styles/createBreakpoints';
+import createMuiTheme, { ThemeOptions } from 'src/components/core/styles/createMuiTheme';
+
 /**
  * Augmenting Palette and Palette Options
  * @todo Move status out of the palette and add it as a custom ThemeOption.

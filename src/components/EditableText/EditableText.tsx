@@ -1,16 +1,14 @@
-import * as classnames from 'classnames';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import { TextFieldProps } from '@material-ui/core/TextField';
-import Typography, { TypographyProps } from '@material-ui/core/Typography';
 import Check from '@material-ui/icons/Check';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
-
+import * as classnames from 'classnames';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import Button from 'src/components/core/Button';
+import ClickAwayListener from 'src/components/core/ClickAwayListener';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { TextFieldProps } from 'src/components/core/TextField';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
 import TextField from '../TextField';
 
 type ClassNames = 'root'

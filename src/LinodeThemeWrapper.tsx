@@ -1,7 +1,5 @@
 import * as React from 'react';
-
-import { MuiThemeProvider } from '@material-ui/core/styles';
-
+import { MuiThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
 import { theme as themeStorage } from 'src/utilities/storage';
 

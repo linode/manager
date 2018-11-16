@@ -1,15 +1,13 @@
 import { path } from 'ramda';
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import CheckBox from 'src/components/CheckBox';
+import Button from 'src/components/core/Button';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputLabel from 'src/components/core/InputLabel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';

@@ -2,14 +2,12 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
@@ -17,7 +15,6 @@ import TextField from 'src/components/TextField';
 import { deleteUser } from 'src/services/account';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
 type ClassNames = 'root' | 'inner' | 'field' | 'deleteRoot' | 'topMargin';
