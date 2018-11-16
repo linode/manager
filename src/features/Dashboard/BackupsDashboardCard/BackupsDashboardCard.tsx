@@ -1,11 +1,11 @@
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Backup from '@material-ui/icons/Backup';
 import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root'

@@ -1,13 +1,10 @@
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-
+import AppBar from 'src/components/core/AppBar';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-
 import APITokens from './APITokens';
 import AuthenticationSettings from './AuthenticationSettings';
 import DisplaySettings from './DisplaySettings';

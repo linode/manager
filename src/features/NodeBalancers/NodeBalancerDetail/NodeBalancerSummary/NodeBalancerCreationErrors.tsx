@@ -1,7 +1,7 @@
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import * as React from 'react';
+import List from 'src/components/core/List';
+import ListItem from 'src/components/core/ListItem';
+import ListItemText from 'src/components/core/ListItemText';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 

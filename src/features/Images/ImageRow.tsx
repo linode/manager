@@ -1,6 +1,6 @@
-import TableRow from '@material-ui/core/TableRow';
 import * as React from 'react';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import { formatDate } from 'src/utilities/format-date-iso8601';

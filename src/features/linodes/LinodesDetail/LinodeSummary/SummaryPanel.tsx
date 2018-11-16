@@ -1,9 +1,9 @@
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { getImages } from 'src/services/images';

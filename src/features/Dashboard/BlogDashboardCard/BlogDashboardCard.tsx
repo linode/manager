@@ -1,9 +1,9 @@
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Axios from 'axios';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { parseString } from 'xml2js';
 import DashboardCard from '../DashboardCard';
 

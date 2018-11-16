@@ -1,6 +1,6 @@
-import Chip from '@material-ui/core/Chip';
-import Popover from '@material-ui/core/Popover';
 import * as React from 'react';
+import Chip from 'src/components/core/Chip';
+import Popover from 'src/components/core/Popover';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import IPAddress from './IPAddress';
 

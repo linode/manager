@@ -1,9 +1,9 @@
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 
 type ClassNames = 'root';

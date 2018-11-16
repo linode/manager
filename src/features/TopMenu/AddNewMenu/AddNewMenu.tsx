@@ -1,5 +1,3 @@
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as React from 'react';
@@ -10,6 +8,8 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import Button from 'src/components/core/Button';
+import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';

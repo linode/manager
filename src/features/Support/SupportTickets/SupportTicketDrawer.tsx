@@ -1,9 +1,9 @@
-import Typography from '@material-ui/core/Typography';
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import MenuItem from 'src/components/MenuItem';

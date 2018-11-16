@@ -1,8 +1,8 @@
-import Hidden from '@material-ui/core/Hidden';
-import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 
 type ClassNames = 'root'
   | 'noWrap'

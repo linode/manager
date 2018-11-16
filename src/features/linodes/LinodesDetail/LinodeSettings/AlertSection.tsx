@@ -1,9 +1,9 @@
-import Divider from '@material-ui/core/Divider';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
+import Divider from 'src/components/core/Divider';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import InputAdornment from 'src/components/core/InputAdornment';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';

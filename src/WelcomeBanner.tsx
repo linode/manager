@@ -1,4 +1,3 @@
-import Typography from '@material-ui/core/Typography';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -8,6 +7,7 @@ import Streamline from 'src/assets/icons/streamline.svg';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { storage } from 'src/utilities/storage';
 

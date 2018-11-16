@@ -1,9 +1,9 @@
-import AppBar from '@material-ui/core/AppBar';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
 import * as React from 'react';
 import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
+import AppBar from 'src/components/core/AppBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import LinodeBackup from '../LinodeBackup';
 import LinodeNetworking from '../LinodeNetworking';

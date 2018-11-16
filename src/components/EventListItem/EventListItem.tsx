@@ -1,7 +1,7 @@
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import ListItemText from 'src/components/core/ListItemText';
+import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'

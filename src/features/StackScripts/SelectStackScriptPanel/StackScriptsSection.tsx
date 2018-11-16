@@ -1,9 +1,9 @@
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableRow from 'src/components/core/TableRow';
 import SelectionRow from 'src/components/SelectionRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import truncateText from 'src/utilities/truncateText';

@@ -1,7 +1,7 @@
-import Typography from '@material-ui/core/Typography';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
 import LineGraph from 'src/components/LineGraph';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';

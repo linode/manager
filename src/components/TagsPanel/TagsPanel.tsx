@@ -1,9 +1,9 @@
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import AddCircle from '@material-ui/icons/AddCircle';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Select from 'src/components/EnhancedSelect/Select';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getTags } from 'src/services/tags';

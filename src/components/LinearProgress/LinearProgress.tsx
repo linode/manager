@@ -1,5 +1,5 @@
-import LinearProgress, { LinearProgressProps } from '@material-ui/core/LinearProgress';
 import * as React from 'react';
+import LinearProgress, { LinearProgressProps } from 'src/components/core/LinearProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root';

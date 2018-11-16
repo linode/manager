@@ -1,8 +1,8 @@
-import Typography from '@material-ui/core/Typography';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';

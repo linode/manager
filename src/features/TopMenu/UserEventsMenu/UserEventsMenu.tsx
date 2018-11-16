@@ -1,5 +1,3 @@
-import ListItem from '@material-ui/core/ListItem';
-import Menu from '@material-ui/core/Menu';
 import * as moment from 'moment';
 import { assoc, compose, sort, take, values } from 'ramda';
 import * as React from 'react';
@@ -13,6 +11,8 @@ import 'rxjs/add/operator/scan';
 import 'rxjs/add/operator/withLatestFrom';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import ListItem from 'src/components/core/ListItem';
+import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { events$, init } from 'src/events';
 import { markEventSeen } from 'src/services/account';

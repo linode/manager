@@ -1,5 +1,5 @@
-import Paper from '@material-ui/core/Paper';
 import * as React from 'react';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';

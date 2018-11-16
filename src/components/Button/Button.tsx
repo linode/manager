@@ -1,8 +1,8 @@
-import Button, { ButtonProps } from '@material-ui/core/Button';
 import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
+import Button, { ButtonProps } from 'src/components/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 

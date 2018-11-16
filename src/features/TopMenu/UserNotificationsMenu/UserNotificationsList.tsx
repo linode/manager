@@ -1,8 +1,8 @@
-import Typography from '@material-ui/core/Typography';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import UserNotificationListItem from './UserNotificationListItem';
 
 

@@ -1,4 +1,3 @@
-import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import * as Bluebird from 'bluebird';
@@ -10,6 +9,7 @@ import _Control from 'react-select/lib/components/Control';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';

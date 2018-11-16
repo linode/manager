@@ -1,8 +1,8 @@
-import Button from '@material-ui/core/Button';
-import SvgIcon from '@material-ui/core/SvgIcon';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import Button from 'src/components/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import SvgIcon from 'src/components/core/SvgIcon';
 
 type CSSClasses = 'root'
 | 'active'

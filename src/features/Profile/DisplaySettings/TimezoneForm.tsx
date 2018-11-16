@@ -1,12 +1,12 @@
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import * as moment from 'moment-timezone';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { updateProfile } from 'src/services/profile';

@@ -1,6 +1,6 @@
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
 import * as React from 'react';
+import Drawer from 'src/components/core/Drawer';
+import Hidden from 'src/components/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import PrimaryNav from 'src/components/PrimaryNav';
 

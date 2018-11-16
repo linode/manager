@@ -1,7 +1,7 @@
-import Table, { TableProps } from '@material-ui/core/Table';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Table, { TableProps } from 'src/components/core/Table';
 
 type ClassNames = 'root'
   | 'border'

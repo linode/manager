@@ -1,6 +1,6 @@
-import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
+import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import SearchSuggestion from './SearchSuggestion';
 

@@ -1,9 +1,9 @@
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
+import Button from 'src/components/core/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 
 type ClassNames = 'root'

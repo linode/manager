@@ -1,8 +1,8 @@
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
 import { compose } from 'ramda';
 import * as React from 'react';
+import FormControl from 'src/components/core/FormControl';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputLabel from 'src/components/core/InputLabel';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import RenderGuard from 'src/components/RenderGuard';

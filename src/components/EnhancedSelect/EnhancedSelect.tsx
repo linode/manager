@@ -1,9 +1,9 @@
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Paper from '@material-ui/core/Paper';
 import Search from '@material-ui/icons/Search';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
+import InputAdornment from 'src/components/core/InputAdornment';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';

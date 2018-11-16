@@ -1,8 +1,8 @@
-import InputAdornment from '@material-ui/core/InputAdornment';
 import Search from '@material-ui/icons/Search';
 import * as ClassNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import InputAdornment from 'src/components/core/InputAdornment';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 import { debounce } from 'throttle-debounce';

@@ -1,7 +1,7 @@
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
+import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 

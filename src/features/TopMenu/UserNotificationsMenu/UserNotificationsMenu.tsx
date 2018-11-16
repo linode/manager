@@ -1,10 +1,10 @@
-import Menu from '@material-ui/core/Menu';
-import Typography from '@material-ui/core/Typography';
 import browser from 'browser-detect';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
+import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
 import UserAgentNotification from 'src/UserAgentNotification';

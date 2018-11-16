@@ -1,6 +1,6 @@
-import IconButton from '@material-ui/core/IconButton';
 import * as React from 'react';
 import NotificationIcon from 'src/assets/icons/bell.svg';
+import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'

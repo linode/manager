@@ -1,7 +1,7 @@
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
+import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root'

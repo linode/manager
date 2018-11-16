@@ -1,7 +1,7 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import Toggle from 'src/components/Toggle';

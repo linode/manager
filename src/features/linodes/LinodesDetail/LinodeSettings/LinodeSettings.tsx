@@ -1,6 +1,6 @@
-import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ConfigsConsumer, LinodeConsumer } from '../context';
 import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
