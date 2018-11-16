@@ -42,7 +42,7 @@ export default class Page {
 
     // Breadcrumb Component
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
-    get breadcrumbStaticText() { return $('[data-qa-static-text]'); }
+    get breadcrumbStaticText() { return $('[data-qa-label-title]'); }
     get breadcrumbBackLink() { return $('[data-qa-link]'); }
     get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
