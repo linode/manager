@@ -109,6 +109,6 @@ UserEventsButton.defaultProps = {
   disabled: false,
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(UserEventsButton);

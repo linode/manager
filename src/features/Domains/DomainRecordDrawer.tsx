@@ -573,6 +573,6 @@ const typeMap = {
   TXT: 'TXT',
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DomainRecordDrawer) as React.ComponentType<Props>;

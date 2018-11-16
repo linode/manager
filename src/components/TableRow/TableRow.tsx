@@ -77,6 +77,6 @@ class TableRow extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
 export default styled(withRouter(TableRow));

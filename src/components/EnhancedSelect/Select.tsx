@@ -345,7 +345,7 @@ class Select extends React.PureComponent<CombinedProps,{}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(Select);
 

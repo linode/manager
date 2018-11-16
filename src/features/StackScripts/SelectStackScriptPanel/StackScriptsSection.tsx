@@ -134,6 +134,6 @@ const stripImageName = (images: string[]) => {
   });
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(StackScriptsSection) as React.StatelessComponent<Props>;

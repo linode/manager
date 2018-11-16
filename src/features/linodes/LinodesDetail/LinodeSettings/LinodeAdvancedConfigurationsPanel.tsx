@@ -40,6 +40,6 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, S
   }
 }
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
 export default styled(LinodeAdvancedConfigurationsPanel);

@@ -60,6 +60,6 @@ const Option: React.StatelessComponent<CombinedProps> = (props) => {
     </MenuItem>
   )
 }
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(Option);

@@ -138,7 +138,7 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
   }
 };
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
 const enhanced = compose<any, any, any>(
   withRouter,

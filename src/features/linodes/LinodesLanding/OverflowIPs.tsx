@@ -74,4 +74,4 @@ class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(OverflowIPs);
+export default withStyles(styles)(OverflowIPs);

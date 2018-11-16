@@ -367,7 +367,7 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => getDomains(
 
 const paginated = Pagey(updatedRequest);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   setDocs(DomainsLanding.docs),

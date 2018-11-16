@@ -486,7 +486,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const documented = setDocs(VolumesLanding.docs);
 

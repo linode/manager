@@ -223,7 +223,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   (routePropsOld, routePropsNew) => {
     return routePropsOld.match.params.domainId !== routePropsNew.match.params.domainId;

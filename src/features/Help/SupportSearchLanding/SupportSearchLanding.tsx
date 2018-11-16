@@ -161,7 +161,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 const searchable = withSearch({hitsPerPage: 5, highlight: false});
 const enhanced: any = compose(
   styled,

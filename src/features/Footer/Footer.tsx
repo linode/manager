@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 type CombinedProps = WithStyles<CSSClasses>;
 

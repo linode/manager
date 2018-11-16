@@ -122,7 +122,7 @@ const setSubmitting = (v: boolean) => set(L.submitting, v);
 
 const setSuccess = (v: string) => set(L.success, v);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 

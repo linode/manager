@@ -180,7 +180,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const accountContext = withAccount(({ data, errors, loading, lastUpdated }) => ({
   errors,

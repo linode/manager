@@ -202,7 +202,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes((context) => ({
   typesLoading: context.loading,

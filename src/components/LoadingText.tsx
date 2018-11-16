@@ -30,6 +30,6 @@ const LoadingText: React.StatelessComponent<CombinedProps> = (props) => {
   return (<span className={props.classes.root} style={style} />);
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(LoadingText);

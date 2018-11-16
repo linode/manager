@@ -461,7 +461,7 @@ const requestAndMapGravatar = (acc: any, id: string) => {
     .then((result) => ({...acc, [id]: result }));
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   timezone: string;

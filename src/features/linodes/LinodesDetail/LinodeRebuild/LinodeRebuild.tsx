@@ -231,7 +231,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const preloaded = PromiseLoader({
   /** @todo filter for available */

@@ -137,6 +137,6 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(SSelect) as React.ComponentType<Props>;

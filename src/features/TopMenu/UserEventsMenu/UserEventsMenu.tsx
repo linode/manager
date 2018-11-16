@@ -170,7 +170,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined })
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const extractAndSortByCreated = compose(
   take(25),

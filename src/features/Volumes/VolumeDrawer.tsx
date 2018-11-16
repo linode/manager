@@ -736,7 +736,7 @@ const regionsContext = withRegions(({ data }) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any, any, any>(
   connected,

@@ -57,6 +57,6 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(NotificationsAndUpgradePanel);

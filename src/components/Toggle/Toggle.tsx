@@ -49,4 +49,4 @@ const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
-export default withStyles(styles, { withTheme: true })(LinodeSwitchControl);
+export default withStyles(styles)(LinodeSwitchControl);

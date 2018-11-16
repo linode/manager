@@ -440,7 +440,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export const styled = withStyles(styles, { withTheme: true });
+export const styled = withStyles(styles);
 
 export default compose(
   connected,

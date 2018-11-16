@@ -251,7 +251,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   lishAuthMethod?: string;

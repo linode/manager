@@ -203,7 +203,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export const preloaded = PromiseLoader({
   /** @todo filter for available */

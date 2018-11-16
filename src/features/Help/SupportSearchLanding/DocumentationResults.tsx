@@ -119,4 +119,4 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
   )
 }
 
-export default withStyles(styles, { withTheme: true })(DocumentationResults);
+export default withStyles(styles)(DocumentationResults);

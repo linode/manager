@@ -78,4 +78,4 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
 }
 
 
-export default withStyles(styles, { withTheme: true })(PaginationFooter);
+export default withStyles(styles)(PaginationFooter);

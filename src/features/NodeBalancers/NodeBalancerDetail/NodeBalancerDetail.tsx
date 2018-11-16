@@ -242,7 +242,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<PreloadedProps, { nodeBalancerId?: number }>(
   (routePropsOld, routePropsNew) => {
     return routePropsOld.match.params.nodeBalancerId !== routePropsNew.match.params.nodeBalancerId;

@@ -114,6 +114,6 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(LabelPowerAndConsolePanel);

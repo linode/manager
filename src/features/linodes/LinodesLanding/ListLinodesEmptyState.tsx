@@ -101,7 +101,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
 }
 const enhanced = compose(
   withRouter,
-  withStyles(styles, { withTheme: true }),
+  withStyles(styles),
 );
 
 export default enhanced(ListLinodesEmptyState);

@@ -27,6 +27,6 @@ const TheApplicationIsOnFire: React.StatelessComponent<CombinedProps> = (props) 
 
 const ReloadLink = () => <a onClick={() => { location.reload(); }}>restarting it</a>;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(TheApplicationIsOnFire);

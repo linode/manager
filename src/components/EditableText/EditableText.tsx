@@ -195,7 +195,7 @@ export class EditableText extends React.Component<FinalProps, State> {
 
 
   render() {
-    const { classes, labelLink, onEdit, errorText, ...rest } = this.props;
+    const { classes, labelLink, onEdit, errorText, typeVariant, ...rest } = this.props;
     const { isEditing, text } = this.state;
 
     const labelText = (

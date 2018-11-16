@@ -136,6 +136,6 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(SSHKeyCreationDrawer);

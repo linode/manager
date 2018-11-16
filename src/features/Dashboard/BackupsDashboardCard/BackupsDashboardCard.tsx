@@ -129,7 +129,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
 
 BackupsDashboardCard.displayName = "BackupsDashboardCard";
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced: any = compose(
   styled,

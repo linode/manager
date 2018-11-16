@@ -267,7 +267,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
 const valueUnlessOff = ({ state, value }: { state: boolean, value: number }) => state ? value : 0;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Notification Thresholds' });
 

@@ -93,6 +93,6 @@ const matches = (p: string) => {
   return Boolean(matchPath(p, { path: location.pathname }));
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(TabsAndStatusBarPanel);

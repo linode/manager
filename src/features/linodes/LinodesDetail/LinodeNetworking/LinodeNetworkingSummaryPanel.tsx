@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface Props {
   linodeRegion: string;
@@ -111,7 +111,7 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<CombinedProps> = (p
   );
 };
 
-const restyled = withStyles(styles, { withTheme: true });
+const restyled = withStyles(styles);
 
 interface StateProps {
   username?: string;

@@ -33,7 +33,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
 });
 
-const styled = withStyles<CSSClasses>(styles, { withTheme: true });
+const styled = withStyles<CSSClasses>(styles);
 
 /* tslint:disable-next-line */
 export interface Props extends ButtonProps { }

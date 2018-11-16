@@ -248,6 +248,6 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 export const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(withRouter(connected(UserProfile)));

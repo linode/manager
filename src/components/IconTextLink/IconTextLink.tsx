@@ -114,4 +114,4 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(IconTextLink);
+export default withStyles(styles)(IconTextLink);

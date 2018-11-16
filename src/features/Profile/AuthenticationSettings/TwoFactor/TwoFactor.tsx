@@ -330,7 +330,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   profile?: Linode.Profile;

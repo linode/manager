@@ -529,6 +529,6 @@ const createRequestData = (state: IPRowState, region: string) => ({
   region,
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(LinodeNetworkingIPTransferPanel);

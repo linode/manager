@@ -500,7 +500,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const getFirstPublicIPv4FromResponse = compose(
   path<string>(['address']),

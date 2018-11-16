@@ -80,7 +80,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 };
 
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

@@ -175,7 +175,7 @@ const reduceSeverity = (result: Linode.NotificationSeverity | null, { severity }
   return result;
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   notifications: Linode.Notification[];

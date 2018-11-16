@@ -137,4 +137,4 @@ class Tile extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Tile);
+export default withStyles(styles)(Tile);

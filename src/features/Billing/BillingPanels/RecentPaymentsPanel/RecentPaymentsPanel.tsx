@@ -104,7 +104,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any) => getPayments(params, { '+order_by': 'date', '+order': 'desc' })
   .then((response) => response);

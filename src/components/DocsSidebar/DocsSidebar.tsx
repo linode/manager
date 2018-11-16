@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   const { backupsCTA, classes, docs, style, isSticky } = props;

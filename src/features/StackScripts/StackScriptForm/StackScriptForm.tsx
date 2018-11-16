@@ -308,7 +308,7 @@ const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(StackScriptForm);
 

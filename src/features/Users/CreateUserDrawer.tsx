@@ -171,6 +171,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(withRouter(CreateUserDrawer));

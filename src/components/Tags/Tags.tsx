@@ -72,4 +72,4 @@ class Tags extends React.Component<CombinedProps, {}> {
 
 };
 
-export default withStyles(styles, { withTheme: true })(Tags);
+export default withStyles(styles)(Tags);

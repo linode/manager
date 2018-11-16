@@ -52,7 +52,7 @@ const NodeBalancerCreationError: React.StatelessComponent<CombinedProps> = (prop
     );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(NodeBalancerCreationError);
 

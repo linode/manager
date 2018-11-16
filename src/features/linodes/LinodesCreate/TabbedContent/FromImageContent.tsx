@@ -336,7 +336,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced = compose(styled, userSSHKeyHoc);
 

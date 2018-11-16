@@ -112,7 +112,7 @@ const createClickHandlerForNotification = (
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 UserEventsList.defaultProps = {
   events: [],

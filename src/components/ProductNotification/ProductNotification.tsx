@@ -23,7 +23,7 @@ const ProductNotifications: React.StatelessComponent<CombinedProps> = (props) =>
   return React.createElement(Notice, { flag: true, [level]: true }, text);
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const severityLevelMap = {
   minor: 'warning',
