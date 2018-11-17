@@ -1,4 +1,4 @@
-import { slice } from 'ramda';
+import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 import { compose, withHandlers, withState } from 'recompose';
 
@@ -35,6 +35,7 @@ type CombinedProps = Props & ToggleProps & WithStyles<ClassNames>;
 const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) => {
   const { attachments, classes, showMoreAttachments, toggle } = props;
 
+  if (isEmpty(attachments)) { return null; }
   // create an array of icons to use
   const icons = attachments.map((attachment, idx) => {
     // try to find a file extension
@@ -47,32 +48,29 @@ const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) =>
     }
     return <InsertDriveFile key={idx} />;
   })
+
   return (
-    <React.Fragment>
-      {attachments.length !== 0 &&
-        <Grid item xs={12} container justify="flex-start" className="px0">
-          <Grid item xs={12}>
-            <Typography variant="subheading">Attachments</Typography>
-          </Grid>
-          <Grid item xs={12} className={classes.attachmentPaperWrapper}>
-            <TicketAttachmentRow attachments={slice(0, 5, attachments)} icons={icons} />
-            {
-              (attachments.length > 5) &&
-              <div onClick={toggle} style={{ display: 'inline-block' }}>
-                <ShowMoreExpansion
-                  name={!showMoreAttachments
-                    ? "Show More Files"
-                    : "Show Less Files"
-                  }
-                >
-                  <TicketAttachmentRow attachments={slice(5, Infinity, attachments)} icons={icons} />
-                </ShowMoreExpansion>
-              </div>
-            }
-          </Grid>
-        </Grid>
-      }
-    </React.Fragment>
+    <Grid item xs={12} container justify="flex-start" className="px0">
+      <Grid item xs={12}>
+        <Typography variant="subheading">Attachments</Typography>
+      </Grid>
+      <Grid item xs={12} className={classes.attachmentPaperWrapper}>
+        <TicketAttachmentRow attachments={slice(0, 5, attachments)} icons={icons} />
+        {
+          (attachments.length > 5) &&
+          <div onClick={toggle} style={{ display: 'inline-block' }}>
+            <ShowMoreExpansion
+              name={!showMoreAttachments
+                ? "Show More Files"
+                : "Show Less Files"
+              }
+            >
+              <TicketAttachmentRow attachments={slice(5, Infinity, attachments)} icons={icons} />
+            </ShowMoreExpansion>
+          </div>
+        }
+      </Grid>
+    </Grid>
   )
 };
 

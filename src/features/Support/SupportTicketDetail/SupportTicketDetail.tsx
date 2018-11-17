@@ -34,7 +34,7 @@ import { getTicket, getTicketReplies } from 'src/services/support';
 import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
-import TicketAttachmentList from './TicketAttachmentList';
+import TicketAttachmentList from '../TicketAttachmentList';
 import TicketReply from './TicketReply';
 
 type ClassNames = 'root'
@@ -109,7 +109,6 @@ interface State {
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
   ticketCloseSuccess: boolean;
-  showMoreAttachments: boolean;
 }
 
 type CombinedProps = RouteProps & StateProps & WithStyles<ClassNames>;
@@ -118,7 +117,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   mounted: boolean = false;
   state: State = {
     loading: true,
-    showMoreAttachments: false,
     ticketCloseSuccess: false,
   }
 
@@ -250,10 +248,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     )
   }
 
-  toggleShowMoreAttachments = () => {
-    this.setState({ showMoreAttachments: !this.state.showMoreAttachments, ticketCloseSuccess: false });
-  }
-
   renderReplies = (replies: Linode.SupportReply[]) => {
     const { ticket } = this.state;
     return replies.filter((reply => reply.description.trim() !== ''))
@@ -347,9 +341,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
             />
           }
           {replies && this.renderReplies(replies)}
-          {ticket.attachments.length > 0 &&
-            <TicketAttachmentList attachments={ticket.attachments} />
-          }
+          <TicketAttachmentList attachments={ticket.attachments} />
           {/* If the ticket is open, allow users to reply to it. */}
           {['open','new'].includes(ticket.status) &&
             <TicketReply

@@ -18,6 +18,8 @@ import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
+import TicketAttachmentList from '../TicketAttachmentList';
+
 type ClassNames = 'root'
 |  'suffix'
 |  'actionPanel';
@@ -40,6 +42,7 @@ export interface Props {
 }
 
 interface State {
+  attachments: string[];
   data: Item[];
   inputValue: string;
   loading: boolean;
@@ -66,6 +69,7 @@ const L = {
   inputValue: lensPath(['inputValue']),
   data: lensPath(['data']),
   errors: lensPath(['errors']),
+  attachments: lensPath(['attachments'])
 };
 
 const entityMap = {
@@ -97,6 +101,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   state: State = {
+    attachments: [],
     data: [],
     errors: undefined,
     inputValue: '',
@@ -267,7 +272,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { data, errors, inputValue, submitting, ticket } = this.state;
+    const { attachments, data, errors, inputValue, submitting, ticket } = this.state;
     const requirementsMet = (ticket.description.length > 0 && ticket.summary.length > 0);
 
     const hasErrorFor = getAPIErrorFor({
@@ -353,6 +358,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           errorText={descriptionError}
           data-qa-ticket-description
         />
+
+        <TicketAttachmentList attachments={attachments} />
 
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
