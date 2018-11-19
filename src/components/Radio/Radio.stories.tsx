@@ -1,9 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Radio from './Radio';
 

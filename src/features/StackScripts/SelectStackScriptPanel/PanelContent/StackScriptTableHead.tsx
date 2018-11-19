@@ -1,9 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableHead from '@material-ui/core/TableHead';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableHead from 'src/components/core/TableHead';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
@@ -138,6 +136,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(StackScriptTableHead);

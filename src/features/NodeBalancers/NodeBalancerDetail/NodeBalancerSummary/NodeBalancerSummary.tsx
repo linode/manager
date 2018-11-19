@@ -1,9 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-
 import NodeBalancerCreationErrors, { ConfigOrNodeErrorResponse } from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
@@ -33,6 +30,6 @@ const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(NodeBalancerSummary);
+export default styled(NodeBalancerSummary);

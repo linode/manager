@@ -1,15 +1,12 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography, { TypographyProps } from '@material-ui/core/Typography';
-
-import Grid, { GridProps } from 'src/components/Grid';
-
 import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
+import Grid, { GridProps } from 'src/components/Grid';
 
 type ClassNames = 'root'
   | 'important'
@@ -179,9 +176,9 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         notice: true,
         ...(className && { [className]: true }),
       })}
-      style={{ 
+      style={{
         marginTop: spacingTop !== undefined ? spacingTop : 0,
-        marginBottom: spacingBottom !== undefined ? spacingBottom : 24 
+        marginBottom: spacingBottom !== undefined ? spacingBottom : 24
       }}
       {...dataAttributes}
     >
@@ -204,6 +201,6 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(Notice);
+export default styled(Notice);

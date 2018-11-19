@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Terminal } from 'xterm';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-
+import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 
 type ClassNames = 'progress' | 'message' | 'errorState';
@@ -138,7 +135,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
       /*
       * data is either going to be command line strings
       * or it's going to look like {type: 'error', reason: 'thing failed'}
-      * the latter be JSON parsed and the other cannot 
+      * the latter be JSON parsed and the other cannot
       */
       try {
         data = JSON.parse(evt.data)
@@ -235,6 +232,6 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(withRouter(Weblish));

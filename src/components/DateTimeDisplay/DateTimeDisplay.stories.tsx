@@ -2,8 +2,8 @@ import { storiesOf } from '@storybook/react';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 
 import Radio from 'src/components/Radio';
 

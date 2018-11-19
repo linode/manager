@@ -1,23 +1,13 @@
+import AddCircle from '@material-ui/icons/AddCircle';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-import {
-  StyleRulesCallback,
-
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import AddCircle from '@material-ui/icons/AddCircle';
-
-import TagsPanelItem from './TagsPanelItem';
-
-import { getTags } from 'src/services/tags';
-
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Select from 'src/components/EnhancedSelect/Select';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { getTags } from 'src/services/tags';
+import TagsPanelItem from './TagsPanelItem';
 
 type ClassNames = 'root'
   | 'tag'
@@ -333,6 +323,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(TagsPanel);
+export default styled(TagsPanel);
