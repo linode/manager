@@ -5,8 +5,8 @@ import ListStackScripts from './list-stackscripts.page';
 
 class ConfigureStackScript extends Page {
 
-    get createHeader() { return $('[data-qa-create-header]'); }
-    get editHeader() { return $('[data-qa-edit-header]'); }
+    get createHeader() { return $(this.breadcrumbStaticText.selector); }
+    get editHeader() { return $(this.breadcrumbStaticText.selector); }
     get label() { return $('[data-qa-stackscript-label]'); }
     get labelHelp() { return $('[data-qa-stackscript-label]').$('..').$(this.helpButton.selector); }
     get description() { return $('[data-qa-stackscript-description]'); }
