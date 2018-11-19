@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class Tags extends React.Component<CombinedProps, {}> {
+export class Tags extends React.Component<CombinedProps, {}> {
   renderTags = (tags: string[]) => {
     const { classes } = this.props;
     return tags.map(eachTag => {
