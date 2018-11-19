@@ -3,7 +3,7 @@ import { number, object, string } from 'yup';
 export const CreateVolumeSchema = object({
   region: string()
     .when('linode_id', {
-      is: (id) => Boolean(id),
+      is: (id) => id === undefined,
       then: string().required("Must provide a region or a Linode ID."),
     }),
   linode_id: number(),
