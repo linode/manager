@@ -1,3 +1,4 @@
+import * as Bluebird from 'bluebird';
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -19,6 +20,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
+import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { reshapeFiles } from '../ticketUtils';
 
 type ClassNames = 'root'
@@ -36,10 +38,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
+interface Accumulator {
+  success: string[];
+  errors: AttachmentError[];
+}
+
+interface AttachmentWithTarget {
+  file: FormData;
+  ticketId: number;
+}
+
 export interface Props {
   open: boolean;
   onClose: () => void;
-  onSuccess: (response: Linode.SupportTicket) => void;
+  onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
 }
 
 interface State {
@@ -245,9 +257,49 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState(set(L.files,files));
   }
 
+  attachFileReducer = (accumulator: Accumulator, attachment: AttachmentWithTarget, idx: number) => {
+    return uploadAttachment(attachment.ticketId, attachment.file)
+      .then(() => {
+        this.setState(compose(
+          /* null out an uploaded file after upload */
+          set(lensPath(['files', idx, 'file']), null),
+          set(lensPath(['files', idx, 'uploading']), false),
+          set(lensPath(['files', idx, 'uploaded']), true),
+        ));
+        return accumulator;
+      })
+      .catch((attachmentErrors: Linode.ApiFieldError[]) => {
+        /*
+        * Note! We want the first few uploads to succeed even if the last few
+        * fail! Don't try to aggregate errors!
+        */
+        this.setState(set(lensPath(['files', idx, 'uploading']), false));
+        const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
+        const newError = pathOr(error, ['response', 'data', 'errors', 0, 'reason'], attachmentErrors);
+        return {
+          ...accumulator,
+          errors: [...accumulator.errors, { error: newError, file: attachment.file.get('name')} ]
+        }
+      });
+  }
+
+  attachFiles = (ticketId: number) => {
+    const { files } = this.state;
+    const filesWithTarget: AttachmentWithTarget[] = files
+      .filter((file) => !file.uploaded)
+      .map((file, idx) => {
+        this.setState(set(lensPath(['files', idx, 'uploading']), true));
+        const formData = new FormData();
+        formData.append('file', file.file);
+        formData.append('name', file.name);
+        return { file: formData, ticketId }
+      });
+
+    return Bluebird.reduce(filesWithTarget, this.attachFileReducer, { success: [], errors: []});
+  }
+
   onSubmit = () => {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
-    const { files } = this.state;
     const { onSuccess } = this.props;
     if (!['none','general'].includes(entity_type) && !entity_id) {
       this.setState({
@@ -274,37 +326,11 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         return response;
       })
       .then((response) => {
-        /* use validation=false because we're client-side blocking blank replies by default */
-        files.map((file, idx) => {
-          if (file.uploaded) { return; }
-          this.setState(set(lensPath(['files', idx, 'uploading']), true));
-          const formData = new FormData();
-          formData.append('file', file.file);
-          uploadAttachment(response!.id, formData)
-            .then(() => {
-              this.setState(compose(
-                /* null out an uploaded file after upload */
-                set(lensPath(['files', idx, 'file']), null),
-                set(lensPath(['files', idx, 'uploading']), false),
-                set(lensPath(['files', idx, 'uploaded']), true),
-              ));
-            })
-            /*
-            * Note! We want the first few uploads to succeed even if the last few
-            * fail! Don't try to aggregate errors!
-            */
-            .catch((errors: Linode.ApiFieldError[]) => {
-              this.setState(set(lensPath(['files', idx, 'uploading']), false));
-              const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
-              const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
-              this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
-            });
-        });
-        return response;
-      })
-      .then((response) => {
-        this.close();
-        onSuccess(response!);
+        this.attachFiles(response!.id)
+          .then(({ success, errors }: Accumulator) => {
+            this.close();
+            onSuccess(response!.id, errors)
+          })
       })
       .catch((errors) => {
         if (!this.mounted) { return; }

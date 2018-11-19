@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { compose, concat, path, pathOr } from 'ramda';
+import { compose, concat, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -27,6 +27,7 @@ import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
+import AttachmentError from './AttachmentError';
 import TicketReply from './TicketReply';
 
 type ClassNames = 'root'
@@ -95,9 +96,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 type RouteProps = RouteComponentProps<{ ticketId?: number }>;
 
+export interface AttachmentError {
+  file: string;
+  error: string;
+}
+
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
+  attachmentErrors: AttachmentError[];
   replies?: Linode.SupportReply[];
   ticket?: Linode.SupportTicket;
   ticketCloseSuccess: boolean;
@@ -110,6 +117,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   state: State = {
     loading: true,
     ticketCloseSuccess: false,
+    attachmentErrors: pathOr([], ['history', 'location', 'state', 'attachmentErrors'], this.props),
   }
 
   static docs: Linode.Doc[] = [
@@ -257,7 +265,14 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   render() {
     const { classes, profileUsername, timezone } = this.props;
-    const { errors, loading, replies, ticket, ticketCloseSuccess } = this.state;
+    const {
+      attachmentErrors,
+      errors,
+      loading,
+      replies,
+      ticket,
+      ticketCloseSuccess
+    } = this.state;
     const ticketId = this.props.match.params.ticketId;
     /*
     * Including loading/error states here (rather than in a
@@ -318,7 +333,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
           </Grid>
         </Grid>
 
-
+        {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
+        {!isEmpty(attachmentErrors) &&
+          attachmentErrors.map((error, idx: number) =>
+            <AttachmentError key={idx} fileName={error.file} reason={error.error} />
+          )
+        }
 
         {ticket.entity && this.renderEntityLabelWithIcon()}
 
