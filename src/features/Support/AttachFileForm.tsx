@@ -3,6 +3,7 @@ import * as React from 'react';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import AttachFile from '@material-ui/icons/AttachFile';
+import Close from '@material-ui/icons/Close';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import Button from 'src/components/Button';
@@ -63,6 +64,7 @@ interface Props {
   files: FileAttachment[];
   handleFileSelected: any;
   updateFiles: any;
+  inlineDisplay?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -76,7 +78,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
     }
   }
 
-  removeFile = (e: React.MouseEvent<HTMLButtonElement>) => {
+  removeFile = (e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>) => {
     if (!e.target) { return; }
     const aidx = e.currentTarget.getAttribute('data-file-idx');
     if (!aidx) { return; }
@@ -97,7 +99,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   }
 
   render() {
-    const { classes, files } = this.props;
+    const { classes, files, inlineDisplay } = this.props;
     return (
       <React.Fragment>
         <input
@@ -132,17 +134,28 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
                         startAdornment:
                         <InputAdornment position="end">
                           <CloudUpload />
-                        </InputAdornment>
+                        </InputAdornment>,
+                        endAdornment:
+                          inlineDisplay &&
+                            <InputAdornment
+                              onClick={this.removeFile}
+                              position="end"
+                              data-file-idx={idx}
+                            >
+                              <Close />
+                            </InputAdornment>
                       }}
                     />
                   </Grid>
-                  <Grid item>
-                    <Button
-                      type="remove"
-                      data-file-idx={idx}
-                      onClick={this.removeFile}
-                    />
-                  </Grid>
+                  {!inlineDisplay &&
+                    <Grid item>
+                      <Button
+                        type="remove"
+                        data-file-idx={idx}
+                        onClick={this.removeFile}
+                      />
+                    </Grid>
+                  }
                   {file.uploading &&
                     <Grid item xs={12}>
                       <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>

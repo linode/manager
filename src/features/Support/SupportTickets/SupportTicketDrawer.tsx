@@ -271,7 +271,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           submitting: false,
           ticket: this.defaultTicket
         });
-        this.close();
         return response;
       })
       .then((response) => {
@@ -309,7 +308,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
               })
           })
       })
-      .then(() => onSuccess(response))
+      .then(() => {
+        this.close();
+        onSuccess(response);
+      })
       .catch((errors) => {
         if (!this.mounted) { return; }
         const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
@@ -417,6 +419,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
         {/* <TicketAttachmentList attachments={attachments} /> */}
         <AttachFileForm
+          inlineDisplay
           files={files}
           handleFileSelected={this.handleFileSelected}
           updateFiles={this.updateFiles}
