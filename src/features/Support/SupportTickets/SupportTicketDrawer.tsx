@@ -257,6 +257,9 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState(set(L.files,files));
   }
 
+  /* Reducer passed into Bluebird.reduce() below.
+  * Unfortunately, this reducer has side effects. Uploads each file and accumulates a list of
+  * any upload errors. Also tracks loading state of each individual file. */
   attachFileReducer = (accumulator: Accumulator, attachment: AttachmentWithTarget, idx: number) => {
     return uploadAttachment(attachment.ticketId, attachment.file)
       .then(() => {
@@ -283,6 +286,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
+  /* Called after the ticket is successfully completed. */
   attachFiles = (ticketId: number) => {
     const { files } = this.state;
     const filesWithTarget: AttachmentWithTarget[] = files
@@ -295,6 +299,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         return { file: formData, ticketId }
       });
 
+    /* Upload each file as an attachment, and return a Promise that will resolve to
+    *  an array of aggregated errors that may have occurred for individual uploads. */
     return Bluebird.reduce(filesWithTarget, this.attachFileReducer, { success: [], errors: []});
   }
 
@@ -329,10 +335,13 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         this.attachFiles(response!.id)
           .then(({ success, errors }: Accumulator) => {
             this.close();
+            /* Errors will be an array of errors, or empty if all attachments succeeded. */
             onSuccess(response!.id, errors)
           })
       })
       .catch((errors) => {
+        /* This block will only handle errors in creating the actual ticket; attachment
+        * errors are handled above. */
         if (!this.mounted) { return; }
         const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
         this.setState({
