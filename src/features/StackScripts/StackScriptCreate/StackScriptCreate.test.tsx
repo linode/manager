@@ -49,4 +49,17 @@ describe('StackScriptCreate', () => {
       expect(parentLink.prop('to')).toBe('/stackscripts');
     });
   });
+
+  describe('Breadcrumb', () => {
+    const breadcrumb = component.find('[data-qa-create-stackscript-breadcrumb]');
+    it('should render', () => {
+      expect(breadcrumb).toHaveLength(1);
+    });
+    it('should include "Create New StackScript" as the label title', () => {
+      expect(breadcrumb.prop('labelTitle')).toBe('Create New StackScript');
+    });
+    it('should take you back to the StackScripts page', () => {
+      expect(breadcrumb.prop('linkTo')).toBe('/stackscripts');
+    });
+  });
 });
