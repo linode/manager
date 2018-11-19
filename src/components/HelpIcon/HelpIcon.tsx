@@ -9,50 +9,17 @@ interface Props {
   className?: string;
 }
 
-interface State {
-  open: boolean;
-  anchorEl?: HTMLElement;
-  anchorReference: string;
-}
-
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
-const styled = withStyles(styles);
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class HelpIcon extends React.Component<CombinedProps, State> {
-  state = {
-    open: false,
-    anchorEl: undefined,
-    anchorReference: 'anchorEl',
-  };
+const HelpIcon: React.StatelessComponent<CombinedProps> = (props) => {
+    const { text, className } = props;
 
-  constructor(props: CombinedProps) {
-    super(props);
-  }
-
-  button = null;
-
-  handleClose = () => {
-    this.setState({
-      open: false,
-    });
-  }
-
-  handleOpen = (e: React.MouseEvent<HTMLElement>) => {
-    this.setState({
-      open: true,
-      anchorEl: e.currentTarget,
-    });
-  }
-
-  render() {
-    const { text, className } = this.props;
     return (
       <React.Fragment>
           <Tooltip
@@ -70,7 +37,8 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           </Tooltip>
       </React.Fragment>
     );
-  }
 }
+
+const styled = withStyles(styles, { withTheme: true });
 
 export default styled(HelpIcon);

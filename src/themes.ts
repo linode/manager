@@ -540,13 +540,14 @@ export const dark = createTheme({
         textDecoration: 'underline',
       },
     },
-    MuiTooltip: {
-      tooltip: {
-        backgroundColor: '#444',
-        boxShadow: '0 0 5px #222',
-        color: '#fff',
-      },
-    },
+    /** @todo Remove when tooltips are properly styled. */
+    // MuiTooltip: {
+    //   tooltip: {
+    //     backgroundColor: '#444',
+    //     boxShadow: '0 0 5px #222',
+    //     color: '#fff',
+    //   },
+    // },
     MuiTypography: {
       root: {
         '& a.black': {
