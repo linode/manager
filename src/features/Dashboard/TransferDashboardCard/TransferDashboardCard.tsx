@@ -1,16 +1,14 @@
 import * as React from 'react';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { getNetworkUtilization } from 'src/services/account';
-
 import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root'
+  | 'card'
   | 'grid'
   | 'poolUsageProgress'
   | 'circleChildren'
@@ -20,9 +18,12 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
+    marginTop: 0,
     padding: theme.spacing.unit * 4,
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit,
+  },
+  card: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0
     },
   },
   grid: {
@@ -47,6 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   poolUsageProgress: {
     marginRight: theme.spacing.unit * 4,
+    height: 'auto',
   },
   circleChildren: {
     textAlign: 'center',
@@ -112,7 +114,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     const poolUsagePct = ((used / quota) * 100) < 1 ? 1 : (used / quota) * 100;
 
     return (
-      <DashboardCard>
+      <DashboardCard className={classes.card}>
         <Paper className={classes.root}>
           <Grid
             container
@@ -176,6 +178,6 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(TransferDashboardCard);

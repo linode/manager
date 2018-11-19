@@ -67,7 +67,7 @@ describe('OAuth Clients', () => {
   });
 
   it('should display label, access, id, and callback URL for a given client', () => {
-    const testRow = wrapper.find('withRouter(WithStyles(WrappedTableRow))[data-qa-table-row="test1"]');
+    const testRow = wrapper.find('WithStyles(withRouter(TableRow))[data-qa-table-row="test1"]');
     expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-label]').children().text()).toEqual('test1')
     expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-access]').children().text()).toEqual('Private')
     expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-id]').children().text()).toEqual('test1')

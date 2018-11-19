@@ -1,11 +1,9 @@
 import * as classNames from 'classnames';
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
 import * as React from 'react';
-
-import Button, { ButtonProps } from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button, { ButtonProps } from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
@@ -15,8 +13,7 @@ import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-const TextField = (props: TextFieldProps) =>
-  <_TextField {...props} />;
+const TextField: React.StatelessComponent<TextFieldProps> = (props) => <_TextField {...props} />;
 
 type ClassNames = 'root';
 
@@ -576,6 +573,6 @@ const typeMap = {
   TXT: 'TXT',
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled(DomainRecordDrawer);
+export default styled(DomainRecordDrawer) as React.ComponentType<Props>;

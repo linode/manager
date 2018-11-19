@@ -1,17 +1,15 @@
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import { clone, compose, path as pathRamda, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-
 import UserIcon from 'src/assets/icons/user.svg';
+import AppBar from 'src/components/core/AppBar';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -19,7 +17,6 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import { getUser, updateUser } from 'src/services/account';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import { getGravatarUrl } from 'src/utilities/gravatar';
-
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
@@ -159,7 +156,7 @@ class UserDetail extends React.Component<CombinedProps> {
       history,
       match: { path },
       profileUsername,
-      actions: { updateCurrenUser }
+      actions: { updateCurrentUser }
     } = this.props;
 
     const {
@@ -192,7 +189,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflec that change at the global level.
          */
         if (profileUsername === originalUsername) {
-          updateCurrenUser(user);
+          updateCurrentUser(user);
         }
 
         /**
@@ -319,13 +316,13 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 interface DispatchProps {
   actions: {
-    updateCurrenUser: (user: Linode.User) => void;
+    updateCurrentUser: (user: Linode.User) => void;
   }
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
-    updateCurrenUser: (u: Linode.User) =>
+    updateCurrentUser: (u: Linode.User) =>
       dispatch(
         handleUpdate(u)
       ),
@@ -337,7 +334,7 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOl
   return routePropsOld.match.params.username !== routePropsNew.match.params.username;
 })
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 

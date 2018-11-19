@@ -1,27 +1,29 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
+import AppBar from 'src/components/core/AppBar';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'titleWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    wordBreak: 'break-all',
   },
 });
 
@@ -94,11 +96,14 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
-          <Grid item>
-            <Typography role="header" variant="headline" className={classes.title} data-qa-title >
-              Customer Support
-            </Typography>
+        <Grid container justify="space-between" style={{ marginTop: 8 }} updateFor={[]}>
+          <Grid item className={classes.titleWrapper}>
+            <Breadcrumb
+              linkTo='/support'
+              linkText='Get Help'
+              labelTitle='Customer Support'
+              data-qa-breadcrumb
+            />
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
@@ -135,7 +140,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any,any,any>(
   styled,

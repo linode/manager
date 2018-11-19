@@ -1,22 +1,13 @@
-import { splitAt } from 'ramda';
 import * as React from 'react';
-
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-
+import Paper from 'src/components/core/Paper';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Grid from 'src/components/Grid';
-import ShowMore from 'src/components/ShowMore';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import Tag from 'src/components/Tag';
-
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow';
 
@@ -29,78 +20,7 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-type ClassNames = 'root'
-  | 'tag';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  return ({
-    root: {},
-    tag: {
-      marginTop: theme.spacing.unit / 2,
-      marginRight: theme.spacing.unit,
-      padding: theme.spacing.unit / 2,
-      backgroundColor: theme.color.grey2,
-      color: theme.palette.text.primary,
-      fontFamily: 'LatoWeb',
-      '&:focus': {
-        backgroundColor: theme.color.grey2,
-      },
-      '& > span': {
-        position: 'relative',
-        top: -2,
-      },
-    },
-  });
-};
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
-  renderTag = (tags: string[]) => {
-    const { classes } = this.props;
-    return tags.map(eachTag => {
-      return (
-        <Tag
-          className={classes.tag}
-          label={eachTag}
-          key={eachTag}
-          clickable={false}
-        />
-      )
-    })
-  }
-
-  renderMoreTags = (tags: string[]) => {
-    return (
-      <ShowMore
-        items={tags}
-        render={this.renderTag}
-      />
-    )
-  }
-
-  renderTagsAndMoreTags = (linodeTags: string[]) => {
-    const [visibleTags, additionalTags] = splitAt(3, linodeTags);
-    const { classes } = this.props;
-    return (
-      <React.Fragment>
-        {
-          visibleTags.map(eachTag => {
-            return (
-              <Tag
-                label={eachTag}
-                key={eachTag}
-                className={classes.tag}
-                clickable={false}
-              />
-            )
-          })
-        }
-        {!!additionalTags.length && this.renderMoreTags(additionalTags)}
-      </React.Fragment>
-    )
-  }
-
+class LinodesViewWrapper extends React.Component<Props, {}> {
   renderCards = () => {
     const { linodes, images, openConfigDrawer, toggleConfirmation } = this.props;
 
@@ -127,7 +47,6 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
             linodeSpecVcpus={linode.specs.vcpus}
             linodeSpecTransfer={linode.specs.transfer}
             toggleConfirmation={toggleConfirmation}
-            renderTagsAndMoreTags={this.renderTagsAndMoreTags}
           />,
         )}
       </Grid>
@@ -146,6 +65,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                 <TableRow>
                   <TableCell>Linode</TableCell>
                   <TableCell>Plan</TableCell>
+                  <TableCell noWrap>Last Backup</TableCell>
                   <TableCell>IP Addresses</TableCell>
                   <TableCell>Region</TableCell>
                   <TableCell />
@@ -168,7 +88,7 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
                     linodeRecentEvent={linode.recentEvent}
                     openConfigDrawer={openConfigDrawer}
                     toggleConfirmation={toggleConfirmation}
-                    renderTagsAndMoreTags={this.renderTagsAndMoreTags}
+                    mostRecentBackup={linode.mostRecentBackup}
                   />,
                 )}
               </TableBody>
@@ -191,4 +111,4 @@ class LinodesViewWrapper extends React.Component<CombinedProps, {}> {
   }
 };
 
-export default withStyles(styles, { withTheme: true })(LinodesViewWrapper);
+export default LinodesViewWrapper;

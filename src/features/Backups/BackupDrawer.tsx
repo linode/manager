@@ -1,29 +1,19 @@
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, } from 'react-redux';
-
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { connect, MapDispatchToProps } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { withTypes } from 'src/context/types';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import {
-  enableAllBackups,
-  handleClose,
-  handleResetError,
-  handleResetSuccess,
-  requestLinodesWithoutBackups,
-} from 'src/store/reducers/backupDrawer';
+import { enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
-
-// import AutoEnroll from './AutoEnroll';
+import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
 
 type ClassNames = 'root';
@@ -47,14 +37,17 @@ interface TypesContextProps {
 interface DispatchProps {
   actions: {
     enable: () => void;
+    enroll: () => void;
     getLinodesWithoutBackups: () => void;
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
+    toggle: () => void;
   },
 }
 
 interface StateProps {
+  accountBackups: boolean;
   open: boolean;
   loading: boolean;
   enabling: boolean;
@@ -63,10 +56,9 @@ interface StateProps {
   backupsLoading: boolean;
   enableSuccess: boolean;
   enableErrors?: BackupError[];
-}
-
-interface State {
-  backupsToggle: boolean;
+  autoEnroll: boolean;
+  autoEnrollError?: string;
+  enrolling: boolean;
 }
 
 type CombinedProps = DispatchProps
@@ -80,10 +72,7 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
     return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
   }, 0)
 }
-export class BackupDrawer extends React.Component<CombinedProps, State> {
-  state: State = {
-    backupsToggle: false,
-  };
+export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
   componentDidMount() {
     if (isEmpty(this.props.linodesWithoutBackups)) {
@@ -93,11 +82,15 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
 
   componentDidUpdate() {
     const { close, dismissSuccess } = this.props.actions;
-    const { enableSuccess } = this.props;
+    const { autoEnroll, enableSuccess } = this.props;
 
     if (enableSuccess) {
+      const text = autoEnroll
+        ? `All of your Linodes have been enrolled in automatic backups, and
+        all new Linodes will automatically be backed up.`
+        : `All of your Linodes have been enrolled in automatic backups.`
       sendToast(
-        'All of your Linodes have been enrolled in automatic backups.',
+        text,
         'success'
       );
       dismissSuccess();
@@ -105,25 +98,28 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  toggleBackups = () => {
-    this.setState({ backupsToggle: !this.state.backupsToggle });
-  }
-
-  handleSubmit = () => {
-    const { enable } = this.props.actions;
-    enable()
+  handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { actions: { enable, enroll }, accountBackups } = this.props;
+    if (accountBackups) {
+      enable();
+    } else {
+      enroll();
+    }
   }
 
   render() {
     const {
-      actions: { close },
+      accountBackups,
+      actions: { close, toggle },
+      autoEnroll,
+      autoEnrollError,
       enableErrors,
       enabling,
+      enrolling,
       linodesWithoutBackups,
       loading,
       open,
     } = this.props;
-    // const { backupsToggle } = this.state;
     const linodeCount = linodesWithoutBackups.length;
     return (
       <Drawer
@@ -155,17 +151,21 @@ export class BackupDrawer extends React.Component<CombinedProps, State> {
               interval="mo"
             />
           </Grid>
-          {/* <Grid item>
-            <AutoEnroll
-              enabled={backupsToggle}
-              toggle={this.toggleBackups}
-            />
-          </Grid> */}
+          {/* Don't show this if the setting is already active. */}
+          {!accountBackups &&
+            <Grid item>
+              <AutoEnroll
+                enabled={autoEnroll}
+                error={autoEnrollError}
+                toggle={toggle}
+              />
+            </Grid>
+          }
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
                 onClick={this.handleSubmit}
-                loading={loading || enabling}
+                loading={loading || enabling || enrolling}
                 type="primary"
                 data-qa-submit
               >
@@ -196,6 +196,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
+      enroll: () => dispatch(enableAutoEnroll()),
+      toggle: () => dispatch(handleAutoEnrollToggle())
     }
   };
 };
@@ -232,6 +234,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   const enableErrors = pathOr([], ['backups','enableErrors'], state);
   const linodes = pathOr([], ['backups','data'], state);
   return ({
+    accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
     backupLoadError: path(['backups','error'], state),
     backupsLoading: path(['backups','loading'], state),
     enableErrors,
@@ -240,12 +243,15 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     loading: pathOr(false, ['backups','loading'], state),
     enabling: pathOr(false, ['backups','enabling'], state),
     linodesWithoutBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
+    autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
+    enrolling: pathOr(false, ['backups', 'enrolling'], state),
+    autoEnrollError: path(['backups', 'autoEnrollError'], state)
   })
 };
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => ({
   typesData,

@@ -31,6 +31,8 @@ export class VolumeDetail extends Page {
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
     get copyToolTips() { return $$('[data-qa-copy-tooltip]'); }
     get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
+    get volumePrice() { return $('[qa-data-price]'); }
+    get volumePriceBillingInterval() { return $('[qa-data-billing-interval]'); }
 
     volAttachedToLinode(linodeLabel) {
         browser.waitUntil(function() {
@@ -171,7 +173,7 @@ export class VolumeDetail extends Page {
         optToClick[0].click();
         optToClick[0].waitForVisible(constants.wait.normal, true);
 
-        browser.click(this.submitButton);
+        browser.click(this.submitButton.selector);
         browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);
     }
 

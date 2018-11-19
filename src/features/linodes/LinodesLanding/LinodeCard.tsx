@@ -1,31 +1,27 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-
 import Flag from 'src/assets/icons/flag.svg';
 import CircleProgress from 'src/components/CircleProgress';
+import Button from 'src/components/core/Button';
+import Card from 'src/components/core/Card';
+import CardActions from 'src/components/core/CardActions';
+import CardContent from 'src/components/core/CardContent';
+import CardHeader from 'src/components/core/CardHeader';
+import Divider from 'src/components/core/Divider';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Tags from 'src/components/Tags';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-
+import { getType } from 'src/services/linodes';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-
-import { getType } from 'src/services/linodes';
-
 import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
@@ -217,7 +213,6 @@ interface Props {
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
     linodeId: number, linodeLabel: string) => void;
-  renderTagsAndMoreTags: (tags: string[]) => JSX.Element;
 }
 
 interface TypesContextProps {
@@ -343,7 +338,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             {imageLabel}
           </div>
           <div className={classes.cardSection}>
-            {this.props.renderTagsAndMoreTags(linodeTags)}
+            <Tags tags={linodeTags} />
           </div>
         </div>
       </CardContent>

@@ -1,19 +1,17 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import Typography from '@material-ui/core/Typography';
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -24,10 +22,10 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import Tags from 'src/components/Tags';
 import { Domains } from 'src/documentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
-
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
@@ -35,6 +33,7 @@ import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 type ClassNames = 'root'
   | 'title'
   | 'domain'
+  | 'tagWrapper'
   | 'domainRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -47,6 +46,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   domainRow: {
     height: 75,
+  },
+  tagWrapper: {
+    marginTop: theme.spacing.unit / 2,
+    '& [class*="MuiChip"]': {
+      cursor: 'pointer',
+    },
   },
 });
 
@@ -336,6 +341,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           <TableCell parentColumn="Domain" data-qa-domain-label>
             <Link to={`/domains/${domain.id}`}>
               {domain.domain}
+              <div className={classes.tagWrapper}>
+                <Tags tags={domain.tags} />
+              </div>
             </Link>
           </TableCell>
           <TableCell parentColumn="Type" data-qa-domain-type>{domain.type}</TableCell>
@@ -359,7 +367,7 @@ const updatedRequest = (ownProps: any, params: any, filters: any) => getDomains(
 
 const paginated = Pagey(updatedRequest);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   setDocs(DomainsLanding.docs),

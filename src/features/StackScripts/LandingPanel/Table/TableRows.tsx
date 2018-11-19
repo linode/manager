@@ -132,7 +132,7 @@ const determineCanEdit = (stackScriptUser: string, currentUser: string) => {
 }
 
 const createTag: (images: string) => JSX.Element =
-  v => <Tag label={stripImageName(v)} key={v} variant="lightBlue" style={{ margin: '2px 2px' }} />;
+  v => <Tag label={stripImageName(v)} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;
 
 const createTags: (images: string[]) => JSX.Element[] =
   map(createTag);
@@ -155,6 +155,6 @@ const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(StackScriptTableRows);
+export default styled(StackScriptTableRows);

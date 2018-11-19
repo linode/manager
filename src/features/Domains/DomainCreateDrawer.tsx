@@ -1,17 +1,16 @@
 import { compose, Lens, lensPath, over, pathOr, set, view } from 'ramda';
 import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
+import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
@@ -41,6 +40,7 @@ interface State {
   type: 'master' | 'slave';
   soaEmail: string;
   cloneName: string;
+  tags: Tag[];
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
   master_ips: string[];
@@ -64,6 +64,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     type: 'master',
     soaEmail: '',
     cloneName: '',
+    tags: [],
     submitting: false,
     errors: [],
     master_ips: [],
@@ -91,7 +92,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, open, mode } = this.props;
-    const { type, domain, soaEmail, cloneName, errors, submitting } = this.state;
+    const { type, domain, soaEmail, cloneName, errors, submitting, tags } = this.state;
 
     const errorFor = getAPIErrorFor(this.errorResources, errors);
 
@@ -119,7 +120,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
           <FormControlLabel value="master" label="Master" control={<Radio />} />
           <FormControlLabel value="slave" label="Slave" control={<Radio />} />
         </RadioGroup>
-
         <TextField
           errorText={(mode === 'create' || '') && errorFor('domain')}
           value={domain}
@@ -169,6 +169,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         }
+        <TagsInput
+          value={tags}
+          onChange={this.updateTags}
+        />
         <ActionsPanel>
           {!submitting
             ? <Button
@@ -211,6 +215,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   create = () => {
     const { onSuccess } = this.props;
     const { domain, type, soaEmail, master_ips } = this.state;
+    const tags = this.state.tags.map(tag => tag.value);
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
 
@@ -228,12 +233,12 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     }
 
     const data = type === 'master'
-      ? { domain, type, soa_email: soaEmail }
-      : { domain, type, master_ips: finalMasterIPs }
+      ? { domain, type, tags, soa_email: soaEmail }
+      : { domain, type, tags, master_ips: finalMasterIPs }
 
     this.setState({ submitting: true });
     createDomain(data)
-      .then((domainData) => {
+      .then((domainData: Linode.Domain) => {
         if (!this.mounted) { return; }
         this.reset();
         onSuccess(domainData);
@@ -300,6 +305,12 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value })
 
+  updateTags = (selected: Tag[]) => {
+    this.setState({ tags: selected })
+  }
+
+
+
   updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') =>
     this.setState({ type: value })
 
@@ -309,6 +320,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   addIPField = () => this.setState(updateMasterIPsCount(v => v + 1))
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DomainCreateDrawer);

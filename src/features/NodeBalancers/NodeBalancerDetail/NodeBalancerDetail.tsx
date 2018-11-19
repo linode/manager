@@ -1,13 +1,11 @@
 import { compose, last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-
 import Breadcrumb from 'src/components/Breadcrumb';
+import AppBar from 'src/components/core/AppBar';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -16,7 +14,6 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
@@ -29,6 +26,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   titleWrapper: {
     display: 'flex',
+    alignItems: 'center',
+    marginTop: 5,
   },
   backButton: {
     margin: '5px 0 0 -16px',
@@ -176,7 +175,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             <Breadcrumb
               linkTo="/nodebalancers"
               linkText="NodeBalancers"
-              label={nodeBalancerLabel}
+              labelTitle={nodeBalancerLabel}
               labelLink={this.getLabelLink()}
               onEditHandlers={{
                 onEdit: this.updateLabel,
@@ -243,7 +242,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<PreloadedProps, { nodeBalancerId?: number }>(
   (routePropsOld, routePropsNew) => {
     return routePropsOld.match.params.nodeBalancerId !== routePropsNew.match.params.nodeBalancerId;

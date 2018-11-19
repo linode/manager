@@ -1,14 +1,7 @@
-import * as React from 'react';
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
-
+import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Tag, { Props as TagProps } from 'src/components/Tag';
 
 type ClassNames = 'root';
@@ -29,7 +22,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
  * Abstraction of the Tag component for the purposes of passing the
  * delete payload to the onDelete function
  */
-class LinodeTag extends React.Component<CombinedProps, {}> {
+class TagsPanelItem extends React.Component<CombinedProps, {}> {
   handleDelete = () => {
     const { onDelete } = this.props;
     /*
@@ -57,6 +50,6 @@ class LinodeTag extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled(LinodeTag);
+export default styled(TagsPanelItem);

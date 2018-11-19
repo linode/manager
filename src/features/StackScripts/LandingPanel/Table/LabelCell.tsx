@@ -83,7 +83,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
   )
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(LabelCell);
+export default styled(LabelCell);
 

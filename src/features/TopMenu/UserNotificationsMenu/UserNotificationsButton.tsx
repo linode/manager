@@ -1,8 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'
   | 'icon'
@@ -16,8 +15,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginRight: - theme.spacing.unit,
     position: 'relative',
-    [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing.unit * 2,
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: theme.spacing.unit,
     },
     '&.active $icon': {
       backgroundColor: theme.palette.text.primary,
@@ -93,6 +92,6 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(userNotificationButton);
+export default styled(userNotificationButton);

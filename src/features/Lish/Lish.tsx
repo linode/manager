@@ -1,14 +1,11 @@
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
-
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -179,6 +176,6 @@ class Lish extends React.Component<CombinedProps, State> {
 }
 
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default withRouter(styled(Lish));
+export default styled(withRouter(Lish));

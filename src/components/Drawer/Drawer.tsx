@@ -1,11 +1,9 @@
-import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import Drawer, { DrawerProps } from '@material-ui/core/Drawer';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Close from '@material-ui/icons/Close';
-
+import * as React from 'react';
+import Button from 'src/components/core/Button';
+import Drawer, { DrawerProps } from 'src/components/core/Drawer';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 interface Props extends DrawerProps {
@@ -101,4 +99,6 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })<Props>(DDrawer);
+const styled = withStyles(styles);
+
+export default styled(DDrawer);

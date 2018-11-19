@@ -2,44 +2,21 @@ import * as Promise from 'bluebird';
 import { append, clone, compose, defaultTo, Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { getLinodes } from 'src/services/linodes';
-import {
-  createNodeBalancerConfig,
-  createNodeBalancerConfigNode,
-  deleteNodeBalancerConfig,
-  deleteNodeBalancerConfigNode,
-  getNodeBalancerConfigNodes,
-  getNodeBalancerConfigs,
-  updateNodeBalancerConfig,
-  updateNodeBalancerConfigNode,
-} from 'src/services/nodebalancers';
+import { createNodeBalancerConfig, createNodeBalancerConfigNode, deleteNodeBalancerConfig, deleteNodeBalancerConfigNode, getNodeBalancerConfigNodes, getNodeBalancerConfigs, updateNodeBalancerConfig, updateNodeBalancerConfigNode } from 'src/services/nodebalancers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
-import {
-  lensFrom,
- } from '../NodeBalancerCreate';
-import {
-  clampNumericString,
-  createNewNodeBalancerConfig,
-  createNewNodeBalancerConfigNode,
-  NodeBalancerConfigFieldsWithStatus,
-  nodeForRequest,
-  parseAddress,
-  parseAddresses,
-  transformConfigsForRequest
-} from '../utils';
+import { lensFrom } from '../NodeBalancerCreate';
+import { clampNumericString, createNewNodeBalancerConfig, createNewNodeBalancerConfigNode, NodeBalancerConfigFieldsWithStatus, nodeForRequest, parseAddress, parseAddresses, transformConfigsForRequest } from '../utils';
 
 type ClassNames = 'root' | 'title';
 
@@ -174,7 +151,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       (acc: any, error: Linode.ApiFieldError) => {
         /**
          * Regex conditions are as follows:
-         * 
+         *
          * must match "nodes["
          * must have a digit 0-9
          * then have "]"
@@ -943,7 +920,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const preloaded = PromiseLoader<CombinedProps>({
   configs: (props) => {
@@ -952,4 +929,4 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-export default withRouter(styled(preloaded(NodeBalancerConfigurations))) as any;
+export default styled(withRouter(preloaded(NodeBalancerConfigurations))) as React.ComponentType<Props>;

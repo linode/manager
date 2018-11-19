@@ -1,7 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'price' | 'per';
 
@@ -32,11 +31,11 @@ export const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => 
   const { classes, interval, price } = props;
   return (
     <React.Fragment>
-      <Typography role="header" variant="subheading" className={classes.price}>
+      <Typography role="header" variant="subheading" className={classes.price} qa-data-price={displayPrice(price)}>
         {displayPrice(price)}
       </Typography>
       {interval &&
-        <Typography role="header" variant="subheading" className={classes.per}>
+        <Typography role="header" variant="subheading" className={classes.per} qa-data-billing-interval={interval}>
           /{interval}
         </Typography>
       }
@@ -44,6 +43,6 @@ export const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(DisplayPrice);
+export default styled(DisplayPrice);

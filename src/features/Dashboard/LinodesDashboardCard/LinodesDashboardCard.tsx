@@ -2,15 +2,13 @@ import { compose, take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
-
-import Hidden from '@material-ui/core/Hidden';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import Typography from '@material-ui/core/Typography';
-
+import Hidden from 'src/components/core/Hidden';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Table from 'src/components/core/Table';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -22,7 +20,6 @@ import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeSta
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { displayType } from 'src/features/linodes/presentation';
 import { getLinodes } from 'src/services/linodes';
-
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -34,7 +31,9 @@ type ClassNames =
   | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    marginTop: 0
+  },
   linodeWrapper: {
     display: 'inline-flex',
     width: 'auto',
@@ -119,8 +118,9 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <DashboardCard title="Linodes" headerAction={this.renderAction}>
+      <DashboardCard title="Linodes" headerAction={this.renderAction} className={classes.root}>
         <Paper>
           <Table>
             <TableBody>
@@ -202,7 +202,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes((context) => ({
   typesLoading: context.loading,
@@ -214,4 +214,4 @@ const enhanced = compose(styled, typesContext);
 const isFoundInData = (id: number, data: Linode.Linode[] = []): boolean =>
   data.reduce((result, linode) => result || linode.id === id, false);
 
-export default enhanced(LinodesDashboardCard);
+export default enhanced(LinodesDashboardCard) as React.ComponentType<{}>;

@@ -6,9 +6,7 @@ import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -17,25 +15,22 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
-
+import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import Footer from 'src/features/Footer';
+import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { requestProfile } from 'src/store/reducers/resources/profile';
-
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-
-import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
@@ -78,10 +73,6 @@ const SupportTickets = DefaultLoader({
 const SupportTicketDetail = DefaultLoader({
   loader: () => import('src/features/Support/SupportTicketDetail'),
 })
-
-const InvoiceDetail = DefaultLoader({
-  loader: () => import('src/features/Billing/InvoiceDetail'),
-});
 
 const Longview = DefaultLoader({
   loader: () => import('src/features/Longview'),
@@ -161,6 +152,7 @@ interface State {
   welcomeBanner: boolean;
   typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
+  hasError: boolean;
 }
 
 type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
@@ -243,7 +235,12 @@ export class App extends React.Component<CombinedProps, State> {
       },
       update: () => null, /** @todo */
     },
+    hasError: false,
   };
+
+  componentDidCatch() {
+    this.setState({ hasError: true });
+  }
 
   componentDidMount() {
     const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
@@ -299,7 +296,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { menuOpen } = this.state;
+    const { menuOpen, hasError } = this.state;
     const {
       backupsCTA,
       classes,
@@ -311,12 +308,16 @@ export class App extends React.Component<CombinedProps, State> {
 
     const hasDoc = documentation.length > 0;
 
+    if (profileError || hasError) {
+      return <TheApplicationIsOnFire />;
+    }
+
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">Skip to main content</a>
         <DocumentTitleSegment segment="Linode Manager" />
 
-        {profileLoading === false && !profileError &&
+        {profileLoading === false &&
           <React.Fragment>
             <TypesProvider value={this.state.typesContext}>
               <RegionsProvider value={this.state.regionsContext}>
@@ -337,7 +338,6 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/longview" component={Longview} />
                               <Route exact path="/images" component={Images} />
                               <Route path="/stackscripts" component={StackScripts} />
-                              <Route exact path="/account/billing/invoices/:invoiceId" component={InvoiceDetail} />
                               <Route path="/account" component={Account} />
                               <Route exact path="/support/tickets" component={SupportTickets} />
                               <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
@@ -440,7 +440,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export const styled = withStyles(styles, { withTheme: true });
+export const styled = withStyles(styles);
 
 export default compose(
   connected,

@@ -1,11 +1,9 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import paginate, { PaginationProps } from 'src/components/Pagey';
@@ -29,17 +27,7 @@ interface Props extends PaginationProps<Linode.Invoice> {}
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
-  mounted: boolean = false;
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  render() {
+    render() {
     const {
       data,
       page,
@@ -94,7 +82,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
   handleExpansion = (e: any, expanded: boolean) => {
     if (expanded && !this.props.data) {
       this.setState({ loading: true });
-      this.props.request();
+      this.props.handleOrderChange('date', 'desc');
     }
   };
 
@@ -111,7 +99,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) => getInvoices(params, filters)
   .then((response) => response);

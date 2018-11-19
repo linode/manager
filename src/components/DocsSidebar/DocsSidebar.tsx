@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { BackupsCTA } from 'src/features/Backups';
-
 import DocComponent, { Doc } from './DocComponent';
 
 type ClassNames = 'root'
@@ -41,7 +38,7 @@ interface Props {
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   const { backupsCTA, classes, docs, style, isSticky } = props;
@@ -82,4 +79,4 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   );
 }
 
-export default styled<Props>(DocsSidebar);
+export default styled(DocsSidebar);

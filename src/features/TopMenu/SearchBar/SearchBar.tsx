@@ -1,18 +1,16 @@
+import Close from '@material-ui/icons/Close';
+import Search from '@material-ui/icons/Search';
 import * as Bluebird from 'bluebird';
 import * as moment from 'moment';
 import { compose, isEmpty, or } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
-
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Close from '@material-ui/icons/Close';
-import Search from '@material-ui/icons/Search';
-
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
@@ -22,7 +20,6 @@ import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
-
 import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames =
@@ -64,17 +61,28 @@ type ClassNames =
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
+    '& .react-select__menu-list': {
+      padding: 0,
+      overflowX: 'hidden',
+    },
     '& .react-select__control': {
       backgroundColor: 'transparent',
     },
     '& .react-select__value-container': {
       overflow: 'hidden',
+      '& p': {
+        fontSize: '1rem'
+      }
+    },
+    '& .react-select__indicators': {
+      display: 'none',
     },
     '& .react-select__menu': {
-      marginTop: 16,
+      marginTop: 12,
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
       maxHeight: 325,
       overflowY: 'auto',
+      border: 0,
     }
   },
   navIconHide: {
@@ -318,13 +326,20 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.domains) {
       const domainsByLabel = this.state.domains.filter(
-        domain => domain.domain.toLowerCase().includes(queryLower),
+        domain => {
+          const matchingTags = this.getMatchingTags(domain.tags, queryLower);
+          const bool = or(
+            domain.domain.toLowerCase().includes(queryLower),
+            matchingTags.length > 0
+          )
+          return bool;
+        }
       );
       searchResults.push(...(domainsByLabel.map(domain => ({
         label: domain.domain,
         value: domain.id,
         data: {
-          tags: [],
+          tags: domain.tags,
           description: domain.description || domain.status,
           /* TODO: Update this with the Domains icon! */
           Icon: NodebalIcon,
@@ -450,7 +465,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes(({
   data: typesData,
@@ -462,4 +477,4 @@ export default compose(
   styled,
   typesContext,
   withRouter,
-)(SearchBar);
+)(SearchBar) as React.ComponentType<{}>;

@@ -1,9 +1,7 @@
 import * as React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import NotificationIcon from 'src/assets/icons/bell.svg';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'
   | 'icon'
@@ -21,10 +19,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   root: {
     marginRight: 6,
+    marginLeft: theme.spacing.unit / 2,
     position: 'relative',
     opacity: 1,
     transition: theme.transitions.create(['opacity']),
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
       marginLeft: theme.spacing.unit * 2,
     },
     '&:hover': {
@@ -110,6 +109,6 @@ UserEventsButton.defaultProps = {
   disabled: false,
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(UserEventsButton);
+export default styled(UserEventsButton);

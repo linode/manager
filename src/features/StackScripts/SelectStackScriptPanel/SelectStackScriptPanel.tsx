@@ -1,14 +1,11 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
-import { getCommunityStackscripts, getStackScriptsByUser } from './stackScriptUtils';
-
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
+import { getCommunityStackscripts, getStackScriptsByUser } from './stackScriptUtils';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -192,7 +189,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   connected,

@@ -1,19 +1,17 @@
 import { compose, flatten, lensPath, omit, pathOr, set } from 'ramda';
 import * as React from 'react';
-
-import Divider from '@material-ui/core/Divider';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Divider from 'src/components/core/Divider';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import MenuItem from 'src/components/core/MenuItem';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -126,7 +124,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       entity: false,
     }
   };
-  
+
   globalBooleanPerms = [
     'add_linodes',
     'add_nodebalancers',
@@ -173,7 +171,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })
         .catch((errResponse) => {
           this.setState({
-            errors: [{ reason: 
+            errors: [{ reason:
               'Unknown error occured while fetching user permissions. Try again later.'}]
           });
           scrollErrorIntoView();
@@ -190,7 +188,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       this.getUserGrants();
     }
   }
-  
+
   savePermsType = (type: string) => () => {
     const { username, clearNewUser } = this.props;
     const { grants } = this.state;
@@ -221,7 +219,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         .catch((errResponse) => {
           this.setState({
             errors: pathOr(
-              [{ reason: 
+              [{ reason:
                 'Error while updating global permissions for this user. Try again later'}],
               ['response', 'data', 'errors'],
               errResponse,
@@ -277,7 +275,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       .catch((errResponse) => {
         this.setState({
           errors: pathOr(
-            [{ reason: 
+            [{ reason:
               'Error while updating entity-specific permissions for this user. Try again later'}],
             ['response', 'data', 'errors'],
             errResponse,
@@ -421,7 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       </div>
     );
   }
-  
+
   renderActions = (
     onConfirm: () => void,
     onCancel: () => void,
@@ -484,7 +482,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }, true);
   }
 
-  entitySetAllTo = (entity: string, value: Linode.GrantLevel) => () => {
+  entitySetAllTo = (entity: Linode.GrantType, value: Linode.GrantLevel) => () => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) { return; }
     /* map entities to an array of state update functions */
@@ -507,7 +505,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     ));
   }
 
-  renderEntitySection = (entity: string) => {
+  renderEntitySection = (entity: Linode.GrantType) => {
     const { classes } = this.props;
     const { grants } = this.state;
     if (!(grants && grants[entity] && grants[entity].length)) { return null; }
@@ -637,13 +635,13 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   setAllEntitiesTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value === 'null' ? null : e.target.value;
-    this.entityPerms.map(entity =>
+    this.entityPerms.map((entity: Linode.GrantType) =>
       this.entitySetAllTo(entity, value as Linode.GrantLevel)());
     this.setState({
       setAllPerm: e.target.value as 'null' | 'read_only' | 'read_write',
     })
   }
-  
+
   renderSpecificPerms = () => {
     const { classes } = this.props;
     const { grants, success, setAllPerm, saving } = this.state;
@@ -682,7 +680,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         </Grid>
         <div className={classes.section}>
           {grants &&
-            this.entityPerms.map((entity) => {
+            this.entityPerms.map((entity: Linode.GrantType) => {
               return this.renderEntitySection(entity);
             })
           }
@@ -786,6 +784,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(UserPermissions);

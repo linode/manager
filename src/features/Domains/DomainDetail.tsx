@@ -1,33 +1,31 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
-
-import AppBar from '@material-ui/core/AppBar';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-
 import Breadcrumb from 'src/components/Breadcrumb';
+import AppBar from 'src/components/core/AppBar';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getDomain, getDomainRecords } from 'src/services/domains';
-
+import { getDomain, getDomainRecords, updateDomain } from 'src/services/domains';
 import DomainRecords from './DomainRecords';
 
 interface State {
   error?: Error;
   domain: Linode.Domain;
-  records: Linode.Record[];
+  records: Linode.DomainRecord[];
 }
 
 type RouteProps = RouteComponentProps<{ domainId?: number }>;
 
 interface PreloadedProps {
   domain: PromiseLoaderResponse<Linode.Domain>;
-  records: PromiseLoaderResponse<Linode.Record>;
+  records: PromiseLoaderResponse<Linode.DomainRecord>;
 }
 
 type ClassNames = 'root'
@@ -117,11 +115,25 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) { return; }
 
     getDomain(domainId)
-      .then((data) => {
+      .then((data: Linode.Domain) => {
         this.setState({ domain: data });
       })
       .catch(console.error);
   }
+
+  handleUpdateTags = (tagsList: string[]) => {
+    const { domain } = this.state;
+    return updateDomain(
+      domain.id,
+      { tags: tagsList }
+    )
+    .then((data: Linode.Domain) => {
+      this.setState({
+        domain: data,
+      })
+    });
+  }
+
 
   goToDomains = () => {
     this.props.history.push('/domains');
@@ -171,11 +183,15 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             <Breadcrumb
               linkTo="/domains"
               linkText="Domains"
-              label={domain.domain}
+              labelTitle={domain.domain}
             />
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
+          <TagsPanel
+            tags={domain.tags}
+            updateTags={this.handleUpdateTags}
+          />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}
@@ -207,7 +223,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   (routePropsOld, routePropsNew) => {
     return routePropsOld.match.params.domainId !== routePropsNew.match.params.domainId;

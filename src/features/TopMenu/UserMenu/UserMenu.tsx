@@ -3,14 +3,12 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Hidden from '@material-ui/core/Hidden';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import UserIcon from 'src/assets/icons/user.svg';
+import ButtonBase from 'src/components/core/ButtonBase';
+import Hidden from 'src/components/core/Hidden';
+import Menu from 'src/components/core/Menu';
+import MenuItem from 'src/components/core/MenuItem';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
@@ -56,13 +54,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   userWrapper: {
     marginRight: theme.spacing.unit,
     borderRadius: '50%',
-    width: '46px',
-    height: '46px',
+    width: '42px',
+    height: '42px',
     transition: theme.transitions.create(['box-shadow']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: 0,
-      width: '40px',
-      height: '40px',
+      width: '30px',
+      height: '30px',
     },
   },
   leftIcon: {
@@ -72,7 +70,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   username: {
     transition: theme.transitions.create(['color']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
@@ -240,6 +238,6 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   connect(mapStateToProps),
-  withStyles(styles, { withTheme: true }),
+  withStyles(styles),
   withRouter,
 )(UserMenu);

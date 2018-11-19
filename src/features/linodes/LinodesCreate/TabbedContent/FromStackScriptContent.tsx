@@ -1,32 +1,28 @@
 import { assocPath, compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { Sticky, StickyProps } from 'react-sticky'
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { Sticky, StickyProps } from 'react-sticky';
 import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { createLinode } from 'src/services/linodes';
-
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import tagsHoc, { TagObject } from '../tagsHoc';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root'
@@ -79,7 +75,6 @@ interface Props {
 
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
-  tagObject: TagObject;
   handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
@@ -99,6 +94,7 @@ interface State {
   password: string | null;
   isMakingRequest: boolean;
   compatibleImages: Linode.Image[];
+  tags: Tag[];
 }
 
 const errorResources = {
@@ -127,6 +123,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     password: '',
     isMakingRequest: false,
     compatibleImages: [],
+    tags: [],
   };
 
   mounted: boolean = false;
@@ -201,6 +198,10 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     this.setState({ label: e.target.value });
   }
 
+  handleChangeTags = (selected: Tag[]) => {
+    this.setState({ tags: selected })
+  }
+
   handleTypePassword = (value: string) => {
     this.setState({ password: value });
   }
@@ -235,8 +236,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 
   createLinode = () => {
-    const { history, tagObject, userSSHKeys } = this.props;
-    const { getLinodeTagList } = tagObject.actions;
+    const { history, userSSHKeys } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -247,6 +247,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       password,
       backups,
       privateIP,
+      tags,
     } = this.state;
 
     this.setState({ isMakingRequest: true });
@@ -262,7 +263,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       backups_enabled: backups, /* optional */
       booted: true,
       authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
-      tags: getLinodeTagList(),
+      tags: tags.map((item: Tag) => item.value),
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
@@ -302,12 +303,12 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
-      selectedStackScriptID, selectedTypeID, backups, privateIP, label,
+      selectedStackScriptID, selectedTypeID, backups, privateIP, label, tags,
       password, isMakingRequest, compatibleImages, selectedStackScriptLabel,
       selectedStackScriptUsername } = this.state;
 
     const { accountBackups, notice, getBackupsMonthlyPrice, regions, types, classes,
-      getRegionInfo, getTypeInfo, images, tagObject, userSSHKeys } = this.props;
+      getRegionInfo, getTypeInfo, images, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -416,15 +417,18 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             selectedID={selectedTypeID}
           />
           <LabelAndTagsPanel
-            tagObject={tagObject}
-            tagError={hasErrorFor('tag')}
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
               onChange: this.handleTypeLabel,
               errorText: hasErrorFor('label'),
             }}
-            updateFor={[label, tagObject, errors]}
+            tagsInputProps={{
+              value: tags,
+              onChange: this.handleChangeTags,
+              tagError: hasErrorFor('tag'),
+            }}
+            updateFor={[tags, label, errors]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
@@ -495,8 +499,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-const enhanced = compose(styled, userSSHKeyHoc, tagsHoc);
+const enhanced = compose(styled, userSSHKeyHoc);
 
 export default enhanced(FromStackScriptContent) as any;
