@@ -73,11 +73,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should display running status after booted', () => {
-            const rebootStatus = $$(`${ListLinodes.linodeElem.selector} ${ListLinodes.status.selector}`)[0];
-            rebootStatus.waitForVisible(constants.wait.normal);
-            browser.waitUntil(function() {
-                return rebootStatus.getAttribute('data-qa-status') === 'running';
-            }, rebootTimeout);
+            browser.waitForVisible('[data-qa-status="running"]', rebootTimeout);
         });
 
         it('should display all list view elements after reboot', () => {
