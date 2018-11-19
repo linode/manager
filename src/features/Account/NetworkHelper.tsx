@@ -59,8 +59,8 @@ const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
         <Grid container direction="column" className={classes.root}>
           <Grid item>
             <Typography variant="body1">
-              This controls the default setting for the Network Helper on newly created
-              Configuration Profiles.
+              Network Helper automatically deposits a static networking
+              configuration into your Linode at boot.
           </Typography>
           </Grid>
           <Grid item container direction="row" alignItems="center">
