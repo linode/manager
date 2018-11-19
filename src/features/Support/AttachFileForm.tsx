@@ -172,4 +172,4 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(AttachFileForm);
+export default styled(AttachFileForm);
