@@ -31,6 +31,7 @@
     "no-unused-expression": { "severity": "warning" },
     "object-literal-sort-keys": false,
     "only-arrow-functions": { "severity": "warning" },
+    "import-blacklist": [true, "rxjs", "@material-ui/core", "@material-ui/icons"],
     "prefer-for-of": {"severity": "warning"},
     "trailing-comma": { "severity": "warning" },
     "variable-name": false
