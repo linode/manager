@@ -24,11 +24,6 @@ describe('StackScriptUpdate', () => {
     />
   )
 
-  it('should render a title that reads "Edit StackScript', () => {
-    const titleText = component.find('WithStyles(Typography)').first().children().text();
-    expect(titleText).toBe('Edit StackScript');
-  });
-
   it(`should render a confirmation dialog with the title "Clear StackScript Configuration?"`, () => {
     const modalTitle = component.find('WithStyles(ConfirmationDialog)').prop('title');
     expect(modalTitle).toBe('Clear StackScript Configuration?');
@@ -38,17 +33,16 @@ describe('StackScriptUpdate', () => {
     expect(component.find('WithStyles(StackScriptForm)')).toHaveLength(1);
   });
 
-  describe('Back Arrow Icon Button', () => {
-
-    it('should render back array icon button', () => {
-      const backIcon = component.find('WithStyles(IconButton)').first();
-      expect(backIcon.find('pure(KeyboardArrowLeftIcon)')).toHaveLength(1);
+  describe('Breadcrumb', () => {
+    const breadcrumb = component.find('[data-qa-update-stackscript-breadcrumb]');
+    it('should render', () => {
+      expect(breadcrumb).toHaveLength(1);
     });
-
-    it('back arrow icon should link back to stackscripts landing', () => {
-      const backIcon = component.find('WithStyles(IconButton)').first();
-      const parentLink = backIcon.closest('Link');
-      expect(parentLink.prop('to')).toBe('/stackscripts');
+    it('should include "Edit StackScript" as the label title', () => {
+      expect(breadcrumb.prop('labelTitle')).toBe('Edit StackScript');
+    });
+    it('should take you back to the StackScripts page', () => {
+      expect(breadcrumb.prop('linkTo')).toBe('/stackscripts');
     });
   });
 });
