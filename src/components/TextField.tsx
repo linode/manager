@@ -108,15 +108,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
           }}
           InputProps={{
             disableUnderline: true,
-            className: classNames(
-              'input',
-              {
-              [classes.expand]: expand,
-              },
-              className,
-            ),
-            /** @todo */
-            // ...finalProps.InputProps,
+            className: classNames('input', { [classes.expand]: expand, }, className),
+            ...finalProps.InputProps,
             }
           }
           SelectProps={{
