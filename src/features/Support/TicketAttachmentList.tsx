@@ -33,12 +33,8 @@ interface Props {
 
 type CombinedProps = Props & ToggleProps & WithStyles<ClassNames>;
 
-export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) => {
-  const { attachments, classes, showMoreAttachments, toggle } = props;
-
-  if (isEmpty(attachments)) { return null; }
-  // create an array of icons to use
-  const icons = attachments.map((attachment, idx) => {
+export const addIconsToAttachments = (attachments: string[] = []) => {
+  return attachments.map((attachment, idx) => {
     // try to find a file extension
     const lastDotIndex = attachment.lastIndexOf('.');
     const ext = attachment.slice(lastDotIndex + 1);
@@ -49,6 +45,14 @@ export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (pr
     }
     return <InsertDriveFile key={idx} />;
   })
+}
+
+export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) => {
+  const { attachments, classes, showMoreAttachments, toggle } = props;
+
+  if (isEmpty(attachments)) { return null; }
+  // create an array of icons to use
+  const icons = addIconsToAttachments(attachments);
 
   return (
     <Grid item xs={12} container justify="flex-start" className="px0">
