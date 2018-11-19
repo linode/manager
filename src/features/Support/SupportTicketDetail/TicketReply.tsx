@@ -144,7 +144,9 @@ class TicketReply extends React.Component<CombinedProps, State> {
     }
   }
 
-
+  updateFiles = (files: FileAttachment[]) => {
+    this.setState({ files });
+  }
 
   render() {
     const { classes, closable, closeTicketSuccess, ticketId } = this.props;
@@ -176,6 +178,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
           <AttachFileForm
             files={files}
             handleFileSelected={this.handleFileSelected}
+            updateFiles={this.updateFiles}
           />
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button

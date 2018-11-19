@@ -13,12 +13,13 @@ import TextField from 'src/components/TextField';
 import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
-import { createSupportTicket } from 'src/services/support';
+import { createReply, createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import TicketAttachmentList from '../TicketAttachmentList';
+import AttachFileForm, { FileAttachment } from '../AttachFileForm';
+import { reshapeFiles } from '../ticketUtils';
 
 type ClassNames = 'root'
 |  'suffix'
@@ -42,13 +43,13 @@ export interface Props {
 }
 
 interface State {
-  attachments: string[];
   data: Item[];
   inputValue: string;
   loading: boolean;
   submitting: boolean;
   ticket: Ticket;
   errors?: Linode.ApiFieldError[];
+  files: FileAttachment[];
 }
 
 interface Ticket {
@@ -69,7 +70,7 @@ const L = {
   inputValue: lensPath(['inputValue']),
   data: lensPath(['data']),
   errors: lensPath(['errors']),
-  attachments: lensPath(['attachments'])
+  files: lensPath(['files'])
 };
 
 const entityMap = {
@@ -101,8 +102,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   state: State = {
-    attachments: [],
     data: [],
+    files: [],
     errors: undefined,
     inputValue: '',
     loading: false,
@@ -227,8 +228,26 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState({ inputValue });
   }
 
+  handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files.length) {
+      const reshapedFiles = reshapeFiles(files);
+      this.setState(set(L.files,
+        [
+          ...this.state.files,
+          ...reshapedFiles
+        ])
+      );
+    }
+  }
+
+  updateFiles = (files: FileAttachment[]) => {
+    this.setState(set(L.files,files));
+  }
+
   onSubmit = () => {
     const { description, entity_type, entity_id, summary } = this.state.ticket;
+    const { files } = this.state;
     const { onSuccess } = this.props;
     if (!['none','general'].includes(entity_type) && !entity_id) {
       this.setState({
@@ -246,7 +265,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       [entity_type]: Number(entity_id)
     })
       .then((response) => {
-        onSuccess(response);
         if (!this.mounted) { return; }
         this.setState({
           errors: undefined,
@@ -254,7 +272,44 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           ticket: this.defaultTicket
         });
         this.close();
+        return response;
       })
+      .then((response) => {
+        /* We need to create an empty reply to attach files to, since
+        * files don't belong to tickets */
+       if (!response) { return; }
+       /* use validation=false because we're client-side blocking blank replies by default */
+       createReply({ ticket_id: response.id, description: '  ' }, false)
+        .then((_) => {
+          /* Make sure the reply will go through before attaching files */
+          /* Send each file */
+          files.map((file, idx) => {
+            if (file.uploaded) { return ; }
+            this.setState(set(lensPath(['files', idx, 'uploading']), true));
+            const formData = new FormData();
+            formData.append('file', file.file);
+            uploadAttachment(response!.id, formData)
+              .then(() => {
+                this.setState(compose(
+                  /* null out an uploaded file after upload */
+                  set(lensPath(['files', idx, 'file']), null),
+                  set(lensPath(['files', idx, 'uploading']), false),
+                  set(lensPath(['files', idx, 'uploaded']), true),
+                ));
+              })
+              /*
+              * Note! We want the first few uploads to succeed even if the last few
+              * fail! Don't try to aggregate errors!
+              */
+              .catch((errors: Linode.ApiFieldError[]) => {
+                this.setState(set(lensPath(['files', idx, 'uploading']), false));
+                const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
+                const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
+                this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
+              })
+          })
+      })
+      .then(() => onSuccess(response))
       .catch((errors) => {
         if (!this.mounted) { return; }
         const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
@@ -263,6 +318,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           submitting: false
         })
       })
+    })
   }
 
   renderEntityTypes = () => {
@@ -272,7 +328,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { attachments, data, errors, inputValue, submitting, ticket } = this.state;
+    const { data, errors, files, inputValue, submitting, ticket } = this.state;
     const requirementsMet = (ticket.description.length > 0 && ticket.summary.length > 0);
 
     const hasErrorFor = getAPIErrorFor({
@@ -359,7 +415,12 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           data-qa-ticket-description
         />
 
-        <TicketAttachmentList attachments={attachments} />
+        {/* <TicketAttachmentList attachments={attachments} /> */}
+        <AttachFileForm
+          files={files}
+          handleFileSelected={this.handleFileSelected}
+          updateFiles={this.updateFiles}
+        />
 
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button

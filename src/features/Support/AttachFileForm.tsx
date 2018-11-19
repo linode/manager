@@ -62,6 +62,7 @@ export interface FileAttachment {
 interface Props {
   files: FileAttachment[];
   handleFileSelected: any;
+  updateFiles: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -80,13 +81,12 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
     const aidx = e.currentTarget.getAttribute('data-file-idx');
     if (!aidx) { return; }
     const idx = +aidx;
-    this.setState({
-      files: this.props.files.filter((_, i) => i !== idx),
-    }, () => {
-      if (this.inputRef.current) {
-        this.inputRef.current.value = '';
-      }
-    });
+    const newFiles = this.props.files.filter((_, i) => i !== idx)
+    if (this.inputRef.current) {
+      this.inputRef.current.value = '';
+    }
+    // Send the updated file list to the parent component's state
+    this.props.updateFiles(newFiles);
   }
 
   selectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
