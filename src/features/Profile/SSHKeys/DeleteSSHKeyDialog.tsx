@@ -96,6 +96,6 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DeleteSSHKeyDialog);

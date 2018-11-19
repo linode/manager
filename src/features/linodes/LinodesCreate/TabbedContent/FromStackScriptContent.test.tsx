@@ -89,7 +89,7 @@ describe('FromImageContent', () => {
 
   it('should render SelectImage panel if no compatibleImages', () => {
     component.setState({ compatibleImages: [{label: 'linode/centos7', is_public: true}] });
-    expect(component.find('WithTheme(WithRenderGuard(WithStyles(CreateFromImage)))')).toHaveLength(1);
+    expect(component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {

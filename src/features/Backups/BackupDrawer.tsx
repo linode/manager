@@ -251,7 +251,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => ({
   typesData,

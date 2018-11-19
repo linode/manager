@@ -214,12 +214,12 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(RenderGuard<CombinedProps>(SelectionRow));
 
 const createTag: (images: string) => JSX.Element =
-  v => <Tag label={v} key={v} variant="lightBlue" style={{ margin: '2px 2px' }} />;
+  v => <Tag label={v} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;
 
 const createTags: (images: string[]) => JSX.Element[] =
   map(createTag);

@@ -82,7 +82,7 @@ const createClickHandlerForNotification =
 
   };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced = compose<any, any, any>(styled, withRouter);
 

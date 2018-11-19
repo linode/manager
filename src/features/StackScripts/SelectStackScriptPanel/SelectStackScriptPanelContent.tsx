@@ -785,6 +785,6 @@ const generateCatchAllFilter = (searchTerm: string) => {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(SelectStackScriptPanelContent);

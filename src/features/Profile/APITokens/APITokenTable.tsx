@@ -563,7 +563,7 @@ const updateTokensResponse = (response: Linode.ResourcePage<Linode.Token>) => {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
   if (ownProps.type === 'OAuth Client Token') {

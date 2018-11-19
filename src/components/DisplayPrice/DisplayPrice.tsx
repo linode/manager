@@ -43,6 +43,6 @@ export const DisplayPrice: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(DisplayPrice);
+export default styled(DisplayPrice);

@@ -498,7 +498,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const linodeContext = withLinode((context) => ({
   linodeCreated: context.data!.created,

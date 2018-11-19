@@ -405,7 +405,7 @@ const updatedRequest = (ownProps: any, params: any, filter: any) => {
 
 const paginated = paginate(updatedRequest);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   setDocs(ImagesLanding.docs),

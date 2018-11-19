@@ -72,7 +72,7 @@ interface Props {
   status: 'grid' | 'list';
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 

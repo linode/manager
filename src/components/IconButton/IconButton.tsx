@@ -51,6 +51,6 @@ const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(IconButtonWrapper);
+export default styled(IconButtonWrapper);

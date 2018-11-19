@@ -27,4 +27,4 @@ class RegionIndicator extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(RegionIndicator);
+export default withStyles(styles)(RegionIndicator);

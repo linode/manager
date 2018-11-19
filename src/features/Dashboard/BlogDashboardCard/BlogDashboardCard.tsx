@@ -111,6 +111,6 @@ const processXMLData = compose(
   pathOr([], ['rss', 'channel', 0, 'item']),
 );
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(BlogDashboardCard);

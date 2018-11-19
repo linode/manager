@@ -51,7 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   };
 };
 
-export interface UserEventsListItemProps {
+export interface Props {
   title: string;
   content?: string;
   success?: boolean;
@@ -60,7 +60,7 @@ export interface UserEventsListItemProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CombinedProps = UserEventsListItemProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, title, content, warning, success, error, onClick } = props;
@@ -81,6 +81,6 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<UserEventsListItemProps>(userEventsListItem);
+export default styled(userEventsListItem);

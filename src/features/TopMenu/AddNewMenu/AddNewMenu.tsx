@@ -66,7 +66,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {

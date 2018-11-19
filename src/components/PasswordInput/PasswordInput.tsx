@@ -7,7 +7,7 @@ import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
-interface Props extends TextFieldProps {
+type Props = TextFieldProps & {
   value?: string;
   required?: boolean;
   disabledReason?: string;
@@ -97,4 +97,6 @@ const maybeStrength = (value?: string) => {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);
+const styled = withStyles(styles);
+
+export default styled(PasswordInput);

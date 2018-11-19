@@ -401,7 +401,7 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
   return (length >= 3) ? 'list' : 'grid';
 };
 
-export const styled = withStyles(styles, { withTheme: true });
+export const styled = withStyles(styles);
 
 interface LinodeWithNotifications extends Linode.Linode {
   notifications?: Linode.Notification[];

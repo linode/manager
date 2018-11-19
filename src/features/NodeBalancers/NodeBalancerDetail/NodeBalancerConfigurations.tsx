@@ -920,7 +920,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const preloaded = PromiseLoader<CombinedProps>({
   configs: (props) => {
@@ -929,4 +929,4 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-export default withRouter(styled(preloaded(NodeBalancerConfigurations))) as any;
+export default styled(withRouter(preloaded(NodeBalancerConfigurations))) as React.ComponentType<Props>;

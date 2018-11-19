@@ -580,7 +580,7 @@ const regionsContext = withRegions(({
   regionsLoading,
 }))
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 /* @todo: move to own file */
 export const lensFrom = (p1: (string | number)[]) => (p2: (string | number)[]) =>

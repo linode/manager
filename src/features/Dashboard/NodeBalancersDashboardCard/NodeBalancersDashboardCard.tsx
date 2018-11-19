@@ -174,11 +174,11 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced = compose(styled);
 
 const isFoundInData = (id: number, data: Linode.NodeBalancer[] = []): boolean =>
   data.reduce((result, nodebalancer) => result || nodebalancer.id === id, false);
 
-export default enhanced(NodeBalancersDashboardCard);
+export default enhanced(NodeBalancersDashboardCard) as React.ComponentType<{}>;

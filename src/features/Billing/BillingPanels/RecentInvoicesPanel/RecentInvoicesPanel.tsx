@@ -99,7 +99,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) => getInvoices(params, filters)
   .then((response) => response);

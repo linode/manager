@@ -334,7 +334,7 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOl
   return routePropsOld.match.params.username !== routePropsNew.match.params.username;
 })
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 

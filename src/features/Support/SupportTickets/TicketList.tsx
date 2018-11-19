@@ -145,7 +145,7 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   paginated,

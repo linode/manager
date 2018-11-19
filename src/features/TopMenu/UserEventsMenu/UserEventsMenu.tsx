@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
-  [index: string]: any;
+  unseenCount: number
 }
 
 interface State {
@@ -57,7 +57,7 @@ interface State {
   notifications: Linode.Notification[];
 }
 
-type CombinedProps = {} & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface EventsMap {
   [index: string]: Linode.Event;
@@ -170,7 +170,7 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined })
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const extractAndSortByCreated = compose(
   take(25),
@@ -193,4 +193,4 @@ const getNumUnseenEvents = (events: Linode.Event[]) => {
   return unseenCount;
 };
 
-export default styled<Props>(UserEventsMenu);
+export default styled(UserEventsMenu);

@@ -348,7 +348,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) => getOAuthClients(params, filters)
   .then((response) => response);

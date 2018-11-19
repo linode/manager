@@ -144,6 +144,6 @@ const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props)
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default decorate<Props>(circleProgressComponent);
+export default styled(circleProgressComponent);

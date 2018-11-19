@@ -77,6 +77,6 @@ LinodeConfigSelectionDrawer.defaultProps = {
   open: false,
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(LinodeConfigSelectionDrawer);
+export default styled(LinodeConfigSelectionDrawer);

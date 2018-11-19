@@ -93,4 +93,4 @@ const LinodeRadioControl: React.StatelessComponent<FinalProps> = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(LinodeRadioControl);
+export default withStyles(styles)(LinodeRadioControl);

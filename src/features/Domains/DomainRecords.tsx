@@ -725,6 +725,6 @@ const getNSRecords = compose<Props, Linode.DomainRecord[], Linode.DomainRecord[]
   pathOr([], ['domainRecords']),
 );
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DomainRecords);

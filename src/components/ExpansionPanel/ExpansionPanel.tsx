@@ -135,6 +135,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
     );
   }
 }
-const styled = withStyles(styles, { withTheme: true });
 
-export default RenderGuard<Props>(styled<Props>(EExpansionPanel));
+const styled = withStyles(styles);
+
+export default styled(RenderGuard<Props>(EExpansionPanel));

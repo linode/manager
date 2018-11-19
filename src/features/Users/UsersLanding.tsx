@@ -323,7 +323,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const memoizedGetGravatarURL = memoize(getGravatarUrl);
 

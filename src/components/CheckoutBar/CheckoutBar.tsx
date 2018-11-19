@@ -140,4 +140,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(CheckoutBar);
+const styled = withStyles(styles);
+
+export default styled(CheckoutBar);

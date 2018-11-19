@@ -175,7 +175,7 @@ const reduceSeverity = (result: Linode.NotificationSeverity | null, { severity }
   return result;
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   notifications: Linode.Notification[];
@@ -215,4 +215,4 @@ const connected = connect(mapStateToProps);
 
 const enhanced = compose(styled, connected);
 
-export default enhanced(UserNotificationsMenu);
+export default enhanced(UserNotificationsMenu) as React.ComponentType<{}>;

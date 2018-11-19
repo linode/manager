@@ -92,7 +92,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced: any = compose(
   styled,

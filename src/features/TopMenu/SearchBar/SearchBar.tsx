@@ -465,7 +465,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes(({
   data: typesData,
@@ -477,4 +477,4 @@ export default compose(
   styled,
   typesContext,
   withRouter,
-)(SearchBar);
+)(SearchBar) as React.ComponentType<{}>;

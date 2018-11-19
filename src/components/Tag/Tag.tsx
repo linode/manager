@@ -84,21 +84,20 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
 
 export interface Props extends ChipProps {
   label: string;
-  variant?: Variants;
+  colorVariant?: Variants;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class Tag extends React.Component<PropsWithStyles, {}> {
   static defaultProps = {
-    variant: 'gray' as Variants,
+    colorVariant: 'gray' as Variants,
   };
 
   render() {
     const {
-      variant,
+      colorVariant,
       classes,
-      theme,
       className,
       ...chipProps
     } = this.props;
@@ -107,14 +106,16 @@ class Tag extends React.Component<PropsWithStyles, {}> {
       {...chipProps}
       className={classNames({
         ...(className && { [className]: true }),
-        [classes[variant!]]: true,
+        [classes[colorVariant!]]: true,
         [classes.root]: true,
       })}
       deleteIcon={this.props.deleteIcon || <Close />}
-      classes={{ label: classes.label, deletable: classes[variant!]}}
+      classes={{ label: classes.label, deletable: classes[colorVariant!]}}
       data-qa-tag={this.props.label}
     />;
   }
 };
 
-export default withStyles(styles, { withTheme: true })<Props>(Tag);
+const styled = withStyles(styles);
+
+export default styled(Tag);

@@ -130,6 +130,6 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel));

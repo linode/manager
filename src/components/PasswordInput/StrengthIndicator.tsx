@@ -44,7 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

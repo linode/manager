@@ -85,4 +85,4 @@ class SkeletonScreen extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(SkeletonScreen);
+export default withStyles(styles)(SkeletonScreen);

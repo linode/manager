@@ -238,6 +238,6 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   connect(mapStateToProps),
-  withStyles(styles, { withTheme: true }),
+  withStyles(styles),
   withRouter,
 )(UserMenu);

@@ -103,7 +103,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 

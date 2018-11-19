@@ -226,7 +226,7 @@ const updateResponseData = (keys: Linode.SSHKey[]) => keys.map((key) => ({
   created: moment.utc(key.created).fromNow(),
 }));
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const documented = setDocs(SSHKeys.docs);
 

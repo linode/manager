@@ -128,7 +128,6 @@ const getColor = cond([
 
 const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    theme,
     classes,
     loading,
     destructive,
@@ -167,6 +166,6 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(wrappedButton);
+export default styled(wrappedButton);

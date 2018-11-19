@@ -133,4 +133,4 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(IPAddress);
+export default withStyles(styles)(IPAddress);

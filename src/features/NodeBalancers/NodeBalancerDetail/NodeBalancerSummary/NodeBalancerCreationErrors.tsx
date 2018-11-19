@@ -52,9 +52,9 @@ const NodeBalancerCreationError: React.StatelessComponent<CombinedProps> = (prop
     );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(NodeBalancerCreationError);
+export default styled(NodeBalancerCreationError);
 
 const maybeListReason = (errors?: Linode.ApiFieldError[]) => {
   if (!errors || errors.length === 0) {

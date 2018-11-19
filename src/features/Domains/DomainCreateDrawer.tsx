@@ -320,6 +320,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   addIPField = () => this.setState(updateMasterIPsCount(v => v + 1))
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DomainCreateDrawer);

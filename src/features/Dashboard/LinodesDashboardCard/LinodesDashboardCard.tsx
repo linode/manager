@@ -202,7 +202,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes((context) => ({
   typesLoading: context.loading,
@@ -214,4 +214,4 @@ const enhanced = compose(styled, typesContext);
 const isFoundInData = (id: number, data: Linode.Linode[] = []): boolean =>
   data.reduce((result, linode) => result || linode.id === id, false);
 
-export default enhanced(LinodesDashboardCard);
+export default enhanced(LinodesDashboardCard) as React.ComponentType<{}>;

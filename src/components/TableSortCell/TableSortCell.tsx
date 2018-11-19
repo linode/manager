@@ -38,6 +38,6 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
   handleClick = (v: React.MouseEvent<HTMLElement>) => this.props.handleClick(this.props.label);
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<CombinedProps>(TableSortCell);
+export default styled(TableSortCell);

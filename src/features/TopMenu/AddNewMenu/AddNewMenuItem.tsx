@@ -122,4 +122,6 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
 
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(AddNewMenuItem);
+const styled = withStyles(styles);
+
+export default styled(AddNewMenuItem);

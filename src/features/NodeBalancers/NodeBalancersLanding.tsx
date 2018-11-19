@@ -365,7 +365,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any, filter: any) => {
   /*

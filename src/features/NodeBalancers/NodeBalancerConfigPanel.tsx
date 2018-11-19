@@ -75,7 +75,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface Props {
   linodesWithPrivateIPs?: Linode.Linode[] | null;
@@ -1088,4 +1088,4 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(NodeBalancerConfigPanel);
+export default styled(NodeBalancerConfigPanel) as React.ComponentType<Props>;

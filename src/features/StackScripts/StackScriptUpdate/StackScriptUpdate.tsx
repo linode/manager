@@ -389,7 +389,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const reloaded = reloadableWithRouter<PreloadedProps, { stackScriptID?: number }>(
   (routePropsOld, routePropsNew) => {

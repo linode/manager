@@ -257,7 +257,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     .map((v: number) => <MenuItem key={v} value={v}>{String(v).padStart(2, '0')}</MenuItem>)
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const accountContext = withAccount(({ loading, errors, data, update }) => {
   if (data) {
@@ -278,4 +278,4 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
 
 const enhanced = compose(styled, accountContext)
 
-export default enhanced(UpdateCreditCardPanel);
+export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;

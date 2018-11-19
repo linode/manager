@@ -93,4 +93,4 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(LinodeCheckBox);
+export default withStyles(styles)(LinodeCheckBox);

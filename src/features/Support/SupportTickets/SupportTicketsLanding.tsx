@@ -140,7 +140,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any,any,any>(
   styled,

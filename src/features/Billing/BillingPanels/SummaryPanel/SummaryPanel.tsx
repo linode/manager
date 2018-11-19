@@ -180,7 +180,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const accountContext = withAccount(({ data, errors, loading, lastUpdated }) => ({
   errors,
@@ -191,4 +191,4 @@ const accountContext = withAccount(({ data, errors, loading, lastUpdated }) => (
 
 const enhanced = compose(styled, accountContext);
 
-export default enhanced(SummaryPanel);
+export default enhanced(SummaryPanel) as React.ComponentType<{}>;

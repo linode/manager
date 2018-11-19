@@ -79,4 +79,4 @@ const EventListItem: React.StatelessComponent<FinalProps> = (props) => {
   );
 };
 
-export default withStyles(styles, { withTheme: true })(EventListItem);
+export default withStyles(styles)(EventListItem);

@@ -1,6 +1,8 @@
-import TextField, { TextFieldProps as _TextFieldProps } from '@material-ui/core/TextField';
+import TextField, {
+  StandardTextFieldProps as _StandardTextFieldProps,
+} from '@material-ui/core/TextField';
 
 /* tslint:disable-next-line:no-empty-interface */
-export type TextFieldProps = _TextFieldProps & {}
+export type TextFieldProps = _StandardTextFieldProps & {}
 
 export default TextField;

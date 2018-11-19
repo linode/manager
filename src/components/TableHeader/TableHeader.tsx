@@ -37,6 +37,6 @@ const TableHeader: React.StatelessComponent<CombinedProps> = ({ classes, title, 
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(TableHeader);
+export default styled(TableHeader);

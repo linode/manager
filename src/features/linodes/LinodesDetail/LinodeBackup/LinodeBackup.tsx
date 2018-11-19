@@ -648,7 +648,7 @@ const preloaded = PromiseLoader<ContextProps>({
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   timezone: string;

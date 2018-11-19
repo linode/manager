@@ -53,6 +53,6 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default decorate<Props>(ErrorState);
+export default styled(ErrorState);

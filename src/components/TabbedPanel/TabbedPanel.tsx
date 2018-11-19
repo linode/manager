@@ -100,4 +100,4 @@ class TabbedPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(TabbedPanel) as React.ComponentType<Props>;
+export default withStyles(styles)(TabbedPanel) as React.ComponentType<Props>;

@@ -61,6 +61,6 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(DashboardCard);
+export default styled(DashboardCard);

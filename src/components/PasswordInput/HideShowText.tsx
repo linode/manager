@@ -8,7 +8,7 @@ interface State {
   hidden: Boolean;
 }
 
-interface Props extends TextFieldProps {
+type Props = TextFieldProps & {
   required?: boolean;
   tooltipText?: string;
  }

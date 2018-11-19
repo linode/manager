@@ -92,6 +92,6 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(userNotificationButton);
+export default styled(userNotificationButton);

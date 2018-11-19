@@ -628,7 +628,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(LinodeConfigDrawer);
 

@@ -172,11 +172,11 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced = compose(styled);
 
 const isFoundInData = (id: number, data: Linode.Volume[] = []): boolean =>
   data.reduce((result, volume) => result || volume.id === id, false);
 
-export default enhanced(VolumesDashboardCard);
+export default enhanced(VolumesDashboardCard) as React.ComponentType<{}>;

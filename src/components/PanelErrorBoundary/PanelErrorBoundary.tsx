@@ -42,7 +42,7 @@ export default (expansionPanelProps: Props) =>
       }
     }
 
-    const styled = withStyles(styles, { withTheme: true });
+    const styled = withStyles(styles);
 
     return styled<any>(PanelErrorBoundary);
   };

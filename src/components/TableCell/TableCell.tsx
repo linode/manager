@@ -84,4 +84,4 @@ class WrappedTableCell extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(WrappedTableCell);
+export default withStyles(styles)(WrappedTableCell);

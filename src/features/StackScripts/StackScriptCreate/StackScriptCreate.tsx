@@ -349,7 +349,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   setDocs(StackScriptCreate.docs),

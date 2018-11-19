@@ -656,10 +656,10 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
   });
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const accountContext = withAccount();
 
 const enhanced = compose(styled, accountContext);
 
-export default enhanced(UpdateContactInformationPanel);
+export default enhanced(UpdateContactInformationPanel) as React.ComponentType<{}>;

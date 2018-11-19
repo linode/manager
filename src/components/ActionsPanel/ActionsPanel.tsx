@@ -43,7 +43,7 @@ const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any>(
   styled,
