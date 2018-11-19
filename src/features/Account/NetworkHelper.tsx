@@ -60,7 +60,7 @@ const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item>
             <Typography variant="body1">
               This controls the default setting for the Network Helper on newly created
-              Configuration Profiles
+              Configuration Profiles.
           </Typography>
           </Grid>
           <Grid item container direction="row" alignItems="center">
