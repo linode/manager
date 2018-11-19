@@ -1,5 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -26,6 +27,7 @@ import Tags from 'src/components/Tags';
 import { Domains } from 'src/documentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
+import { handleOpen } from 'src/store/reducers/domainDrawer';
 import ActionMenu from './DomainActionMenu';
 import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
@@ -76,7 +78,7 @@ interface State {
   };
 }
 
-type CombinedProps = PaginationProps<Linode.Domain> & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = PaginationProps<Linode.Domain> & WithStyles<ClassNames> & RouteComponentProps<{}> & DispatchProps;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -141,10 +143,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   handleSuccess = (domain: Linode.Domain) => {
     if (domain.id) {
-      this.setState({ createDrawer: { open: false, mode: 'create' }}, () => {
-        this.props.history.push(`/domains/${domain.id}`);
-        return;
-      });
+      return this.props.history.push(`/domains/${domain.id}`);
     }
     this.props.request();
   }
@@ -205,6 +204,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const { error, count, loading } = this.props;
+    const { openDomainDrawer } = this.props.actions;
 
     if (loading) {
       return this.renderLoading();
@@ -237,7 +237,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item>
                 <AddNewLink
-                  onClick={this.openCreateDrawer}
+                  onClick={openDomainDrawer}
                   label="Add a Domain"
                 />
               </Grid>
@@ -265,7 +265,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
         />
-        <this.domainCreateDrawer />
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
@@ -371,9 +370,35 @@ const paginated = Pagey(updatedRequest);
 
 const styled = withStyles(styles);
 
+
+interface DispatchProps {
+  actions: {
+    openDomainDrawer: () => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      openDomainDrawer: () => dispatch(handleOpen()),
+    }
+  };
+};
+
+interface StateProps {
+  domainDrawerOpen: boolean;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  domainDrawerOpen: state.domainDrawer.open
+});
+
+export const connected = connect(mapStateToProps, mapDispatchToProps);
+
 export default compose(
   setDocs(DomainsLanding.docs),
   withRouter,
   styled,
-  paginated
+  paginated,
+  connected
 )(DomainsLanding);

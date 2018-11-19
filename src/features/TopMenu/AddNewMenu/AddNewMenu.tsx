@@ -1,9 +1,9 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux';
+import { compose } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -12,9 +12,9 @@ import Button from 'src/components/core/Button';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
+import { handleClose, handleOpen } from 'src/store/reducers/domainDrawer';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
-
 
 type CSSClasses = 'wrapper'
   | 'menu'
@@ -61,17 +61,15 @@ interface Props {
 
 interface State {
   anchorEl?: HTMLElement;
-  domainDrawerOpen: boolean;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}> & DispatchProps & StateProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined,
-    domainDrawerOpen: false,
   };
 
   items: MenuItem[] = [
@@ -108,7 +106,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'Domain',
       onClick: (e) => {
-        this.openDomainDrawer();
+        this.props.actions.openDomainDrawer();
         this.handleClose();
         e.preventDefault();
       },
@@ -125,24 +123,17 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   }
 
-  openDomainDrawer = () => {
-    this.setState({ domainDrawerOpen: true });
-  }
-
-  closeDomainDrawer = () => {
-    this.setState({ domainDrawerOpen: false });
-  }
-
   onDomainSuccess = (domain:Linode.Domain) => {
     const id = domain.id ? domain.id : '';
-    this.setState({ domainDrawerOpen: false }, () => {
-      this.props.history.push(`/domains/${id}`);
-    });
+    this.props.actions.closeDomainDrawer();
+    this.props.history.push(`/domains/${id}`);
+    return;
   }
 
   render() {
-    const { anchorEl, domainDrawerOpen } = this.state;
-    const { classes } = this.props;
+    const { anchorEl } = this.state;
+    const { classes, domainDrawerOpen } = this.props;
+    const { closeDomainDrawer } = this.props.actions;
     const itemsLen = this.items.length;
 
     return (
@@ -184,7 +175,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         </Menu>
         <DomainCreateDrawer
           open={domainDrawerOpen}
-          onClose={this.closeDomainDrawer}
+          onClose={closeDomainDrawer}
           onSuccess={this.onDomainSuccess}
           mode="create"
         />
@@ -196,12 +187,30 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 
 export const styledComponent = styled(AddNewMenu);
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForCreating },
-  dispatch,
-);
+interface DispatchProps {
+  actions: {
+    closeDomainDrawer: () => void;
+    openDomainDrawer: () => void;
+  },
+}
 
-const connected = connect(undefined, mapDispatchToProps);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    actions: {
+      closeDomainDrawer: () => dispatch(handleClose()),
+      openDomainDrawer: () => dispatch(handleOpen()),
+    }
+  };
+};
+interface StateProps {
+  domainDrawerOpen: boolean;
+}
+
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+  domainDrawerOpen: state.domainDrawer.open
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   connected,

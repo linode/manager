@@ -10,6 +10,7 @@ declare interface ApplicationState {
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
+  domainDrawer: DomainDrawerState;
 }
 
 declare interface AuthState {
@@ -40,6 +41,10 @@ declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;
+}
+
+declare interface DomainDrawerState {
+  open: boolean;
 }
 
 declare interface RequestableData<D> {
