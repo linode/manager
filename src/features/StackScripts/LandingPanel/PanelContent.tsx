@@ -176,7 +176,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
     deleteStackScript(selectedStackScriptID)
       .then(() => {
         this.closeDialogs();
-        this.props.handlePageChange(1);
+        this.props.onDelete();
       })
       .catch(err => {
         this.setState({
@@ -203,7 +203,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
     updateStackScript(selectedStackScriptID, { is_public: true })
       .then(() => {
         this.closeDialogs();
-        this.props.handlePageChange(1);
+        this.props.request();
       })
       .catch(err => {
         this.setState({
