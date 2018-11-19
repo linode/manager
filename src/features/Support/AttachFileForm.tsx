@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+
 import AttachFile from '@material-ui/icons/AttachFile';
 import Close from '@material-ui/icons/Close';
 import CloudUpload from '@material-ui/icons/CloudUpload';
@@ -119,6 +120,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
           <AttachFile />
           Attach a file
         </Button>
+        {/* @todo refactor to separate component */}
         {files.map((file, idx) => (
           file.uploaded
             ? null /* this file has already been uploaded so don't show it */
@@ -141,6 +143,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
                               onClick={this.removeFile}
                               position="end"
                               data-file-idx={idx}
+                              data-qa-inline-delete
                             >
                               <Close />
                             </InputAdornment>
@@ -152,6 +155,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
                       <Button
                         type="remove"
                         data-file-idx={idx}
+                        data-qa-delete-button
                         onClick={this.removeFile}
                       />
                     </Grid>
