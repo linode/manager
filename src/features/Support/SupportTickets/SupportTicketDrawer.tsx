@@ -13,7 +13,7 @@ import TextField from 'src/components/TextField';
 import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
-import { createReply, createSupportTicket, uploadAttachment } from 'src/services/support';
+import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -274,43 +274,37 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         return response;
       })
       .then((response) => {
-        /* We need to create an empty reply to attach files to, since
-        * files don't belong to tickets */
-       if (!response) { return; }
-       /* use validation=false because we're client-side blocking blank replies by default */
-       createReply({ ticket_id: response.id, description: '  ' }, false)
-        .then((_) => {
-          /* Make sure the reply will go through before attaching files */
-          /* Send each file */
-          files.map((file, idx) => {
-            if (file.uploaded) { return ; }
-            this.setState(set(lensPath(['files', idx, 'uploading']), true));
-            const formData = new FormData();
-            formData.append('file', file.file);
-            uploadAttachment(response!.id, formData)
-              .then(() => {
-                this.setState(compose(
-                  /* null out an uploaded file after upload */
-                  set(lensPath(['files', idx, 'file']), null),
-                  set(lensPath(['files', idx, 'uploading']), false),
-                  set(lensPath(['files', idx, 'uploaded']), true),
-                ));
-              })
-              /*
-              * Note! We want the first few uploads to succeed even if the last few
-              * fail! Don't try to aggregate errors!
-              */
-              .catch((errors: Linode.ApiFieldError[]) => {
-                this.setState(set(lensPath(['files', idx, 'uploading']), false));
-                const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
-                const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
-                this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
-              })
-          })
+        /* use validation=false because we're client-side blocking blank replies by default */
+        files.map((file, idx) => {
+          if (file.uploaded) { return; }
+          this.setState(set(lensPath(['files', idx, 'uploading']), true));
+          const formData = new FormData();
+          formData.append('file', file.file);
+          uploadAttachment(response!.id, formData)
+            .then(() => {
+              this.setState(compose(
+                /* null out an uploaded file after upload */
+                set(lensPath(['files', idx, 'file']), null),
+                set(lensPath(['files', idx, 'uploading']), false),
+                set(lensPath(['files', idx, 'uploaded']), true),
+              ));
+            })
+            /*
+            * Note! We want the first few uploads to succeed even if the last few
+            * fail! Don't try to aggregate errors!
+            */
+            .catch((errors: Linode.ApiFieldError[]) => {
+              this.setState(set(lensPath(['files', idx, 'uploading']), false));
+              const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
+              const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
+              this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
+            });
+        });
+        return response;
       })
-      .then(() => {
+      .then((response) => {
         this.close();
-        onSuccess(response);
+        onSuccess(response!);
       })
       .catch((errors) => {
         if (!this.mounted) { return; }
@@ -320,7 +314,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           submitting: false
         })
       })
-    })
   }
 
   renderEntityTypes = () => {

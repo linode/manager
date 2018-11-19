@@ -120,11 +120,11 @@ export const closeSupportTicket = (ticketId: number) =>
  * @param validate { boolean } whether to run the validation schema against the request
  *
  */
-export const createReply = (data: ReplyRequest, validate: boolean=true) =>
+export const createReply = (data: ReplyRequest) =>
   Request<Linode.SupportReply>(
     setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
     setMethod('POST'),
-    setData(data, validate ? createReplySchema : undefined),
+    setData(data, createReplySchema),
 ).then(response => response.data)
 
 /**
