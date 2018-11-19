@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props & ToggleProps & WithStyles<ClassNames>;
 
-const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) => {
+export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) => {
   const { attachments, classes, showMoreAttachments, toggle } = props;
 
   if (isEmpty(attachments)) { return null; }
@@ -59,7 +59,7 @@ const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) =>
         <TicketAttachmentRow attachments={slice(0, 5, attachments)} icons={icons} />
         {
           (attachments.length > 5) &&
-          <div onClick={toggle} style={{ display: 'inline-block' }}>
+          <div onClick={toggle} style={{ display: 'inline-block' }} data-qa-attachment-toggle >
             <ShowMoreExpansion
               name={!showMoreAttachments
                 ? "Show More Files"

@@ -43,13 +43,13 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TicketAttachmentRow: React.StatelessComponent<CombinedProps> = (props) => {
+export const TicketAttachmentRow: React.StatelessComponent<CombinedProps> = (props) => {
   const { attachments, classes, icons } = props;
   return (
-    <Paper className={classes.attachmentPaper}>
+    <Paper className={classes.attachmentPaper} >
       {attachments.map((attachment, idx) => {
         return (
-          <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow}>
+          <Grid container wrap="nowrap" key={idx} className={classes.attachmentRow} data-qa-attachment-row>
             <Grid item className={classes.attachmentIcon}>
               {icons[idx]}
             </Grid>
@@ -64,6 +64,8 @@ const TicketAttachmentRow: React.StatelessComponent<CombinedProps> = (props) => 
     </Paper>
   )
 };
+
+TicketAttachmentRow.displayName = "TicketAttachmentRow";
 
 const styled = withStyles(styles);
 
