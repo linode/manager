@@ -1,10 +1,8 @@
-import * as React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
-
+import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
+import Menu from 'src/components/core/Menu';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 
 export interface Action {
@@ -154,4 +152,6 @@ class ActionMenu extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(ActionMenu);
+const styled = withStyles(styles);
+
+export default styled(ActionMenu);

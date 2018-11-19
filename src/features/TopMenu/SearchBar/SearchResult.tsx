@@ -1,10 +1,8 @@
 import * as React from 'react';
-
-import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import SearchSuggestion from './SearchSuggestion';
-
 import { OptionProps } from 'react-select/lib/components/Option';
+import MenuItem from 'src/components/core/MenuItem';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames = 'root' | 'item' | 'selectedMenuItem';
 
@@ -44,7 +42,7 @@ interface Props extends OptionProps<any> {
   data: any;
  }
 
- type CombinedProps = Props & WithStyles<ClassNames>; 
+ type CombinedProps = Props & WithStyles<ClassNames>;
 
 
 const Option: React.StatelessComponent<CombinedProps> = (props) => {
@@ -62,6 +60,6 @@ const Option: React.StatelessComponent<CombinedProps> = (props) => {
     </MenuItem>
   )
 }
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(Option);
+export default styled(Option);

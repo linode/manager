@@ -1,14 +1,9 @@
-import * as React from 'react';
-
-import { equals } from 'ramda';
-
-import * as classNames from 'classnames';
-
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
-
-import TextField, { TextFieldProps } from '@material-ui/core/TextField';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-
+import * as classNames from 'classnames';
+import { equals } from 'ramda';
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
+import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
@@ -33,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-export interface Props extends TextFieldProps {
+export type Props = TextFieldProps & {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
@@ -113,13 +108,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
           }}
           InputProps={{
             disableUnderline: true,
-            className: classNames(
-              'input',
-              {
-              [classes.expand]: expand,
-              },
-              className,
-            ),
+            className: classNames('input', { [classes.expand]: expand, }, className),
             ...finalProps.InputProps,
             }
           }
@@ -149,4 +138,4 @@ class LinodeTextField extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<CombinedProps>(LinodeTextField);
+export default styled(LinodeTextField);

@@ -1,14 +1,6 @@
-import * as React from 'react';
-
 import { compose } from 'ramda';
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
@@ -33,7 +25,7 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
   render() {
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="Managed" />        
+        <DocumentTitleSegment segment="Managed" />
         <Placeholder
           title="Managed Services"
           copy={`Linode Managed is only available in the Classic Manager`}
@@ -47,7 +39,7 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   setDocs(ManagedLanding.docs),

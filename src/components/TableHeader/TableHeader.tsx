@@ -1,6 +1,6 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root' | 'title';
@@ -37,6 +37,6 @@ const TableHeader: React.StatelessComponent<CombinedProps> = ({ classes, title, 
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(TableHeader);
+export default styled(TableHeader);

@@ -1,12 +1,9 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import TableRow from '@material-ui/core/TableRow';
-
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import { formatDate } from 'src/utilities/format-date-iso8601';
-
 import ActionMenu from './ImagesActionMenu';
 
 type ClassNames = 'root' | 'label';
@@ -52,6 +49,6 @@ const ImageRow: React.StatelessComponent<CombinedProps> = (props) => {
     );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default RenderGuard<Props>(styled<Props>(ImageRow));
+export default styled(RenderGuard<Props>(ImageRow));

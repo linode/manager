@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'
   | 'tableCol1'
@@ -79,11 +78,11 @@ class SkeletonScreen extends React.Component<CombinedProps> {
     }
   };
 
-  render() {    
+  render() {
     return (
       this.renderSkeleton()
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(SkeletonScreen);
+export default withStyles(styles)(SkeletonScreen);

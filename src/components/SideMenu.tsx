@@ -1,14 +1,12 @@
 import * as React from 'react';
-
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import Drawer from 'src/components/core/Drawer';
+import Hidden from 'src/components/core/Hidden';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import PrimaryNav from 'src/components/PrimaryNav';
 
-type CSSClasses = 'menuPaper' | 'menuDocked';
+type ClassNames = 'menuPaper' | 'menuDocked';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuPaper: {
     height: '100%',
     width: 215,
@@ -30,7 +28,7 @@ interface Props {
   toggleTheme: () => void;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SideMenu extends React.Component<CombinedProps> {
   render() {
@@ -68,4 +66,6 @@ class SideMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(SideMenu);
+const styled = withStyles(styles);
+
+export default styled(SideMenu);

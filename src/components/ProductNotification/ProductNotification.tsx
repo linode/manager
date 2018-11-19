@@ -1,8 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
@@ -25,7 +23,7 @@ const ProductNotifications: React.StatelessComponent<CombinedProps> = (props) =>
   return React.createElement(Notice, { flag: true, [level]: true }, text);
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const severityLevelMap = {
   minor: 'warning',
@@ -33,4 +31,4 @@ const severityLevelMap = {
   critical: 'error',
 };
 
-export default styled<Props>(ProductNotifications);
+export default styled(ProductNotifications);
