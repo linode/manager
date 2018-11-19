@@ -141,8 +141,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   handleSuccess = (domain: Linode.Domain) => {
     if (domain.id) {
-      this.props.history.push(`/domains/${domain.id}`);
-      return;
+      this.setState({ createDrawer: { open: false, mode: 'create' }}, () => {
+        this.props.history.push(`/domains/${domain.id}`);
+        return;
+      });
     }
     this.props.request();
   }

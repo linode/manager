@@ -135,7 +135,9 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 
   onDomainSuccess = (domain:Linode.Domain) => {
     const id = domain.id ? domain.id : '';
-    this.props.history.push(`/domains/${id}`);
+    this.setState({ domainDrawerOpen: false }, () => {
+      this.props.history.push(`/domains/${id}`);
+    });
   }
 
   render() {
