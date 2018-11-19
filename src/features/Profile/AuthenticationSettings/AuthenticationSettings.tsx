@@ -1,15 +1,12 @@
 import { compose, lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
-
 import SecuritySettings from './SecuritySettings';
 import TwoFactor from './TwoFactor';
 
@@ -88,7 +85,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   loading: boolean;

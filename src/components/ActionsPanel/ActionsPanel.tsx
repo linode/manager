@@ -1,9 +1,7 @@
 import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
@@ -45,7 +43,7 @@ const ActionPanel: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any>(
   styled,

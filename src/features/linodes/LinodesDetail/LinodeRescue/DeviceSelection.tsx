@@ -1,10 +1,8 @@
 import { defaultTo } from 'ramda';
 import * as React from 'react';
-
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import FormControl from 'src/components/core/FormControl';
+import InputLabel from 'src/components/core/InputLabel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
 import { titlecase } from 'src/features/linodes/presentation';
@@ -102,6 +100,6 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(DeviceSelection);
+export default styled(DeviceSelection) as React.ComponentType<Props>;

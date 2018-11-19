@@ -1,11 +1,9 @@
 import * as React from 'react';
-
-import Typography from '@material-ui/core/Typography';
-
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 
 interface EditPayload {
   label: string;

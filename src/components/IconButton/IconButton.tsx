@@ -1,8 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import IconButton, { IconButtonProps } from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import IconButton, { IconButtonProps } from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'
   | 'destructive'
@@ -52,6 +51,6 @@ const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(IconButtonWrapper);
+export default styled(IconButtonWrapper);

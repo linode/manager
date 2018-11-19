@@ -1,5 +1,5 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
@@ -30,6 +30,6 @@ const LoadingText: React.StatelessComponent<CombinedProps> = (props) => {
   return (<span className={props.classes.root} style={style} />);
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(LoadingText);
+export default styled(LoadingText);

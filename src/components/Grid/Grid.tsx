@@ -1,7 +1,5 @@
 import * as React from 'react';
-
-import Grid, { GridProps } from '@material-ui/core/Grid';
-
+import Grid, { GridProps } from 'src/components/core/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
 /* tslint:disable-next-line */

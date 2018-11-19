@@ -2,14 +2,12 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Divider from '@material-ui/core/Divider';
-import Hidden from '@material-ui/core/Hidden';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Logo from 'src/assets/logo/logo-text.svg';
+import Divider from 'src/components/core/Divider';
+import Hidden from 'src/components/core/Hidden';
+import ListItem from 'src/components/core/ListItem';
+import ListItemText from 'src/components/core/ListItemText';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import ThemeToggle from './ThemeToggle';

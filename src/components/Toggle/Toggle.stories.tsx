@@ -1,8 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import Toggle from './Toggle';
 

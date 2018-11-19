@@ -1,14 +1,10 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Switch, { SwitchProps } from '@material-ui/core/Switch';
-
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Switch, { SwitchProps } from 'src/components/core/Switch';
 import HelpIcon from 'src/components/HelpIcon';
-
 import './toggle.css';
 
 type CSSClasses =
@@ -53,4 +49,4 @@ const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => 
   );
 };
 
-export default withStyles(styles, { withTheme: true })(LinodeSwitchControl);
+export default withStyles(styles)(LinodeSwitchControl);

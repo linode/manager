@@ -2,12 +2,10 @@ import * as Promise from 'bluebird';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -17,11 +15,9 @@ import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { createLinode, getLinodeBackups } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
-
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import getLinodeInfo from 'src/utilities/getLinodeInfo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
@@ -422,6 +418,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(FromBackupsContent);

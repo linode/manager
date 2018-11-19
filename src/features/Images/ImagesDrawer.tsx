@@ -1,11 +1,9 @@
 import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -361,7 +359,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any, any>(
   styled,

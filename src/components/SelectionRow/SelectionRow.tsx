@@ -1,11 +1,9 @@
 import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableCell from '@material-ui/core/TableCell';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableCell from 'src/components/core/TableCell';
+import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
@@ -216,12 +214,12 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(RenderGuard<CombinedProps>(SelectionRow));
 
 const createTag: (images: string) => JSX.Element =
-  v => <Tag label={v} key={v} variant="lightBlue" style={{ margin: '2px 2px' }} />;
+  v => <Tag label={v} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;
 
 const createTags: (images: string[]) => JSX.Element[] =
   map(createTag);

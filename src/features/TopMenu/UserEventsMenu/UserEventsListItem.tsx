@@ -1,10 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
+import ListItem from 'src/components/core/ListItem';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root'
   | 'title'
@@ -53,7 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   };
 };
 
-export interface UserEventsListItemProps {
+export interface Props {
   title: string;
   content?: string;
   success?: boolean;
@@ -62,7 +60,7 @@ export interface UserEventsListItemProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CombinedProps = UserEventsListItemProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, title, content, warning, success, error, onClick } = props;
@@ -83,6 +81,6 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<UserEventsListItemProps>(userEventsListItem);
+export default styled(userEventsListItem);

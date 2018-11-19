@@ -1,10 +1,7 @@
 import * as React from 'react';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import { IndicatorProps } from 'react-select/lib/components/indicators';
-
+import CircularProgress from 'src/components/core/CircularProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
@@ -33,6 +30,6 @@ class LoadingIndicator extends React.PureComponent<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(LoadingIndicator);

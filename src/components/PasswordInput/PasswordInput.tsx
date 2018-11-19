@@ -1,16 +1,13 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import * as zxcvbn from 'zxcvbn';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-
+import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
-interface Props extends TextFieldProps {
+type Props = TextFieldProps & {
   value?: string;
   required?: boolean;
   disabledReason?: string;
@@ -100,4 +97,6 @@ const maybeStrength = (value?: string) => {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(PasswordInput);
+const styled = withStyles(styles);
+
+export default styled(PasswordInput);

@@ -1,8 +1,8 @@
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import Dialog from 'src/components/core/Dialog';
+import DialogContent from 'src/components/core/DialogContent';
+import DialogTitle from 'src/components/core/DialogTitle';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
@@ -27,6 +27,6 @@ const TheApplicationIsOnFire: React.StatelessComponent<CombinedProps> = (props) 
 
 const ReloadLink = () => <a onClick={() => { location.reload(); }}>restarting it</a>;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(TheApplicationIsOnFire);
+export default styled(TheApplicationIsOnFire);

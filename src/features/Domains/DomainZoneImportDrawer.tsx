@@ -1,10 +1,8 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import LinodeTextField from 'src/components/TextField';
@@ -125,6 +123,6 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DomainZoneImportDrawer);

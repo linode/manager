@@ -1,9 +1,7 @@
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
@@ -79,6 +77,6 @@ LinodeConfigSelectionDrawer.defaultProps = {
   open: false,
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(LinodeConfigSelectionDrawer);
+export default styled(LinodeConfigSelectionDrawer);

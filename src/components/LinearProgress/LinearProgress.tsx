@@ -1,7 +1,6 @@
 import * as React from 'react';
-
-import LinearProgress, { LinearProgressProps } from '@material-ui/core/LinearProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import LinearProgress, { LinearProgressProps } from 'src/components/core/LinearProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
@@ -26,6 +25,6 @@ const LinearProgressComponent: React.StatelessComponent<CombinedProps> = (props)
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default decorate<CombinedProps>(LinearProgressComponent);
+export default styled(LinearProgressComponent);

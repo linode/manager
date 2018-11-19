@@ -1,8 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'icon';
 
@@ -40,6 +38,6 @@ class ExternalLink extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
-export default styled<CombinedProps>(ExternalLink);
+export default styled(ExternalLink);

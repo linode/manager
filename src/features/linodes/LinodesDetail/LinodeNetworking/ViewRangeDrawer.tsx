@@ -1,10 +1,8 @@
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { formatRegion } from 'src/utilities';
 
@@ -70,6 +68,6 @@ const ViewRangeDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(ViewRangeDrawer);
+export default styled(ViewRangeDrawer);

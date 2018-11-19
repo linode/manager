@@ -1,7 +1,7 @@
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'
@@ -40,7 +40,7 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
       data-qa-card={title}>
       <Grid item xs={12} className={!title || !headerAction ? 'p0' : ''}>
         <Grid container justify="space-between" alignItems="flex-start">
-          {title && 
+          {title &&
             <Grid item className={'py0'}>
               <Typography variant="title">
                 {title}
@@ -61,6 +61,6 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(DashboardCard);
+export default styled(DashboardCard);

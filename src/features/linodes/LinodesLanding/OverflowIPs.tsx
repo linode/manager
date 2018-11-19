@@ -1,9 +1,7 @@
 import * as React from 'react';
-
-import Chip from '@material-ui/core/Chip';
-import Popover from '@material-ui/core/Popover';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import Chip from 'src/components/core/Chip';
+import Popover from 'src/components/core/Popover';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import IPAddress from './IPAddress';
 
 type CSSClasses =  'chip' | 'label' | 'popover';
@@ -76,4 +74,4 @@ class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses> > {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(OverflowIPs);
+export default withStyles(styles)(OverflowIPs);

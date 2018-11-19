@@ -1,11 +1,8 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
 import VncDisplay from './VncDisplay';
 
@@ -315,6 +312,6 @@ class Glish extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(withRouter(Glish));

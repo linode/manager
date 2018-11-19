@@ -42,7 +42,7 @@ describe('StackScriptUpdate', () => {
 
     it('should render back array icon button', () => {
       const backIcon = component.find('WithStyles(IconButton)').first();
-      expect(backIcon.find('pure(KeyboardArrowLeft)')).toHaveLength(1);
+      expect(backIcon.find('pure(KeyboardArrowLeftIcon)')).toHaveLength(1);
     });
 
     it('back arrow icon should link back to stackscripts landing', () => {

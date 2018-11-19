@@ -1,12 +1,10 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/core/Button';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SelectionCard from 'src/components/SelectionCard';
 import { withTypes } from 'src/context/types';
@@ -190,7 +188,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes(({ data }) => ({
   currentTypesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {

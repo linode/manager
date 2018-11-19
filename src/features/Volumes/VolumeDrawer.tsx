@@ -1,20 +1,18 @@
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import { append, filter, lensPath, over, path, set, view, when } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { bindActionCreators, compose } from 'redux';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
-import { debounce } from 'throttle-debounce';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormControl from 'src/components/core/FormControl';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputAdornment from 'src/components/core/InputAdornment';
+import InputLabel from 'src/components/core/InputLabel';
+import MenuItem from 'src/components/core/MenuItem';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -34,6 +32,7 @@ import { formatRegion } from 'src/utilities';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root'
   | 'actionPanel'
@@ -737,7 +736,7 @@ const regionsContext = withRegions(({ data }) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any, any, any>(
   connected,

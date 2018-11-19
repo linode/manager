@@ -1,16 +1,13 @@
 import { compose, lensPath, set, view } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
-
 import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
 import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
 import RecentPaymentsPanel from './BillingPanels/RecentPaymentsPanel';
@@ -132,7 +129,7 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose(
   styled,

@@ -1,18 +1,16 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormLabel from '@material-ui/core/FormLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import CircleProgress from 'src/components/CircleProgress';
+import Button from 'src/components/core/Button';
+import Divider from 'src/components/core/Divider';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormGroup from 'src/components/core/FormGroup';
+import FormLabel from 'src/components/core/FormLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -630,7 +628,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(LinodeConfigDrawer);
 

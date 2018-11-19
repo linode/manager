@@ -1,15 +1,12 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { closeSupportTicket } from 'src/services/support';
 import scrollToTop from 'src/utilities/scrollToTop';
-
 
 interface Props {
   ticketId: number;

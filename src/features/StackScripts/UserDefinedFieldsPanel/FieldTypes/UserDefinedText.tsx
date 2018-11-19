@@ -1,8 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-
 import AccessPanel from 'src/components/AccessPanel';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
@@ -80,6 +78,6 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(RenderGuard<CombinedProps>(UserDefinedText));

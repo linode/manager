@@ -1,15 +1,12 @@
+import Search from '@material-ui/icons/Search';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Search from '@material-ui/icons/Search';
-
+import InputAdornment from 'src/components/core/InputAdornment';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-
 import './EnhancedSelect.css';
 
 type ClassNames = 'root'
@@ -201,18 +198,18 @@ class EnhancedSelect extends React.Component<CombinedProps, {}> {
     if ( isHighlighted ) { classes += " enhancedSelect-menu-item-highlighted"; }
     if ( isSelected )    { classes += " enhancedSelect-menu-item-selected"; }
 
-    return this.props.renderItems 
+    return this.props.renderItems
       ? this.props.renderItems(item, index, isHighlighted, itemProps, classes)
       :
       <div className={classes}
-        key={index} 
+        key={index}
         {...itemProps}
         data-qa-select-menu-item={item.label}
       >
         {item.label}
       </div>
   }
-  
+
   render() {
     const { value, handleSelect, inputValue, onInputValueChange } = this.props;
     return (
@@ -229,7 +226,7 @@ class EnhancedSelect extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any>(
   styled,

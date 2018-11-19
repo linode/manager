@@ -2,15 +2,13 @@ import { compose, take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
-
-import Hidden from '@material-ui/core/Hidden';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import Typography from '@material-ui/core/Typography';
-
+import Hidden from 'src/components/core/Hidden';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Table from 'src/components/core/Table';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -19,7 +17,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { events$ } from 'src/events';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { getNodeBalancers } from 'src/services/nodebalancers';
-
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -177,11 +174,11 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
 
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const enhanced = compose(styled);
 
 const isFoundInData = (id: number, data: Linode.NodeBalancer[] = []): boolean =>
   data.reduce((result, nodebalancer) => result || nodebalancer.id === id, false);
 
-export default enhanced(NodeBalancersDashboardCard);
+export default enhanced(NodeBalancersDashboardCard) as React.ComponentType<{}>;

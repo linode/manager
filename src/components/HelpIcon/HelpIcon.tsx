@@ -1,19 +1,12 @@
-import * as React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Tooltip from '@material-ui/core/Tooltip';
 import HelpOutline from '@material-ui/icons/HelpOutline';
+import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 
 interface Props {
   text: string;
   className?: string;
-}
-
-interface State {
-  open: boolean;
-  anchorEl?: HTMLElement;
-  anchorReference: string;
 }
 
 type ClassNames = 'root';
@@ -22,38 +15,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
-const styled = withStyles(styles, { withTheme: true });
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class HelpIcon extends React.Component<CombinedProps, State> {
-  state = {
-    open: false,
-    anchorEl: undefined,
-    anchorReference: 'anchorEl',
-  };
+const HelpIcon: React.StatelessComponent<CombinedProps> = (props) => {
+    const { text, className } = props;
 
-  constructor(props: CombinedProps) {
-    super(props);
-  }
-
-  button = null;
-
-  handleClose = () => {
-    this.setState({
-      open: false,
-    });
-  }
-
-  handleOpen = (e: React.MouseEvent<HTMLElement>) => {
-    this.setState({
-      open: true,
-      anchorEl: e.currentTarget,
-    });
-  }
-
-  render() {
-    const { text, className } = this.props;
     return (
       <React.Fragment>
           <Tooltip
@@ -71,7 +37,8 @@ class HelpIcon extends React.Component<CombinedProps, State> {
           </Tooltip>
       </React.Fragment>
     );
-  }
 }
+
+const styled = withStyles(styles, { withTheme: true });
 
 export default styled(HelpIcon);

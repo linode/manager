@@ -1,9 +1,7 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
@@ -39,6 +37,6 @@ class UserAgentNotification extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(UserAgentNotification);

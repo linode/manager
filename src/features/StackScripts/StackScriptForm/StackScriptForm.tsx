@@ -1,27 +1,21 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import FormControl from '@material-ui/core/FormControl';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Divider from 'src/components/core/Divider';
+import FormControl from 'src/components/core/FormControl';
+import InputAdornment from 'src/components/core/InputAdornment';
+import InputLabel from 'src/components/core/InputLabel';
+import MenuItem from 'src/components/core/MenuItem';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
-
-import { Divider } from '../../../../node_modules/@material-ui/core';
-
 import filterImagesByDeprecationStatus from 'src/utilities/filterImagesByDeprecationStatus';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
 
 type ClassNames = 'root'
   | 'backButton'
@@ -238,7 +232,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                     <Tag
                       key={selectedImage}
                       label={stripImageName(selectedImage)}
-                      variant='lightBlue'
+                      colorVariant='lightBlue'
                       onDelete={() => images.handleRemove(index)}
                       className={classes.targetTag}
                     />
@@ -314,7 +308,7 @@ const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<CombinedProps>(StackScriptForm);
+export default styled(StackScriptForm);
 

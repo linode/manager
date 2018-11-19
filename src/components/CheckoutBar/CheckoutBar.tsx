@@ -1,13 +1,10 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
-
-import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import Button from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
-
 
 type ClassNames = 'root'
   | 'checkoutSection'
@@ -143,4 +140,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(CheckoutBar);
+const styled = withStyles(styles);
+
+export default styled(CheckoutBar);

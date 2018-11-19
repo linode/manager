@@ -1,18 +1,16 @@
+import Close from '@material-ui/icons/Close';
+import Search from '@material-ui/icons/Search';
 import * as Bluebird from 'bluebird';
 import * as moment from 'moment';
 import { compose, isEmpty, or } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
-
-import IconButton from '@material-ui/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Close from '@material-ui/icons/Close';
-import Search from '@material-ui/icons/Search';
-
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
@@ -22,7 +20,6 @@ import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
-
 import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames =
@@ -468,7 +465,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const typesContext = withTypes(({
   data: typesData,
@@ -480,4 +477,4 @@ export default compose(
   styled,
   typesContext,
   withRouter,
-)(SearchBar);
+)(SearchBar) as React.ComponentType<{}>;

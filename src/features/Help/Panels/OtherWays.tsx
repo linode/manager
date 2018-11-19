@@ -1,20 +1,12 @@
 import * as React from 'react';
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
-import Grid from 'src/components/Grid';
-import Tile from 'src/components/Tile';
-
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
 import Support from 'src/assets/icons/support.svg';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
+import Tile from 'src/components/Tile';
 
 type ClassNames = 'root'
 | 'wrapper'
@@ -104,7 +96,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
               icon={<Chat />}
               link={this.handleAdaInit}
               errorText={this.state.error}
-            />  
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Tile
@@ -120,6 +112,6 @@ export class OtherWays extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(OtherWays);

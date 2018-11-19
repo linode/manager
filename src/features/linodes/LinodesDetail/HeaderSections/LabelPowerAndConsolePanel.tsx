@@ -1,16 +1,9 @@
 import { last } from 'ramda';
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-
 import LinodePowerControl from '../LinodePowerControl';
 
 type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'cta' | 'launchButton';
@@ -121,6 +114,6 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(LabelPowerAndConsolePanel);
+export default styled(LabelPowerAndConsolePanel);

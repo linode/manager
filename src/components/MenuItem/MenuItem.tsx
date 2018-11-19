@@ -1,9 +1,8 @@
-import * as React from 'react';
-
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem, { MenuItemProps } from '@material-ui/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
+import * as React from 'react';
+import IconButton from 'src/components/core/IconButton';
+import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root'
   | 'toolTip'
@@ -97,6 +96,6 @@ const WrapperMenuItem: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(WrapperMenuItem);

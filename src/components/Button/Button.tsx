@@ -1,13 +1,10 @@
 import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
-
-import Button, { ButtonProps } from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
-import HelpIcon from 'src/components/HelpIcon';
-
 import Reload from 'src/assets/icons/reload.svg';
+import Button, { ButtonProps } from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
   | 'loading'
@@ -131,7 +128,6 @@ const getColor = cond([
 
 const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    theme,
     classes,
     loading,
     destructive,
@@ -161,7 +157,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
           className,
         )}
       >
-        {loading && <Reload />} 
+        {loading && <Reload />}
         <span className={loading ? classes.hidden : classes.reg}>{props.children}</span>
         {type === 'remove' && 'Remove'}
       </Button>
@@ -170,6 +166,6 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(wrappedButton);
+export default styled(wrappedButton);

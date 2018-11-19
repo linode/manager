@@ -3,15 +3,13 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Hidden from '@material-ui/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Hidden from 'src/components/core/Hidden';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -403,7 +401,7 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
   return (length >= 3) ? 'list' : 'grid';
 };
 
-export const styled = withStyles(styles, { withTheme: true });
+export const styled = withStyles(styles);
 
 interface LinodeWithNotifications extends Linode.Linode {
   notifications?: Linode.Notification[];

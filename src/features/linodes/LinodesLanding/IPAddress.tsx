@@ -1,10 +1,8 @@
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CopyTooltip from 'src/components/CopyTooltip';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 
 type CSSClasses =  'root'
@@ -135,4 +133,4 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(IPAddress);
+export default withStyles(styles)(IPAddress);

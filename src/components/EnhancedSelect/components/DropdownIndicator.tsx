@@ -1,9 +1,7 @@
-import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-
+import * as React from 'react';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root'
 | 'enhancedSelectDropdown';
@@ -38,7 +36,7 @@ class DropdownIndicator extends React.PureComponent<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DropdownIndicator);
 

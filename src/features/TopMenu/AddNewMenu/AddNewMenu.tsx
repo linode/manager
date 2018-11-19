@@ -1,22 +1,20 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
-
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-
+import Button from 'src/components/core/Button';
+import Menu from 'src/components/core/Menu';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import { openForCreating } from 'src/store/reducers/volumeDrawer';
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
+
 
 type CSSClasses = 'wrapper'
   | 'menu'
@@ -68,7 +66,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {

@@ -1,14 +1,6 @@
 import * as React from 'react';
-
-import {
-  StyleRulesCallback,
-  
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-
 import OtherWays from './Panels/OtherWays';
 import PopularPosts from './Panels/PopularPosts';
 import SearchPanel from './Panels/SearchPanel';
@@ -40,6 +32,6 @@ export class HelpLanding extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(HelpLanding);

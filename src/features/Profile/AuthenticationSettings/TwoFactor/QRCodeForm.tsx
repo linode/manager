@@ -1,15 +1,8 @@
 import * as QRCode from 'qrcode.react';
 import { compose } from 'ramda';
 import * as React from 'react';
-
-import {
-    StyleRulesCallback,
-
-    WithStyles,
-    withStyles,
-  } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
@@ -68,7 +61,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any>(
   styled,

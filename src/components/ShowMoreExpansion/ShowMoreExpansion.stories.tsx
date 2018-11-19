@@ -1,8 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import Typography from '@material-ui/core/Typography';
-
+import Typography from 'src/components/core/Typography';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import ShowMoreExpansion from './ShowMoreExpansion';
 

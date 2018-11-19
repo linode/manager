@@ -1,9 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
-
 import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
 
@@ -43,6 +40,6 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, S
   }
 }
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
 export default styled(LinodeAdvancedConfigurationsPanel);

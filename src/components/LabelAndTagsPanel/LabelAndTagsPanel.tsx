@@ -1,13 +1,10 @@
 import * as React from 'react';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import TagsInput, { TagInputProps } from 'src/components/TagsInput';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
-
 
 type ClassNames = 'root'
   | 'inner'
@@ -29,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface Props {
   error?: string;

@@ -1,16 +1,9 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-
-import {
-    StyleRulesCallback,
-    
-    WithStyles,
-    withStyles,
-  } from '@material-ui/core/styles';  
-
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from 'src/components/core/FormControl';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputLabel from 'src/components/core/InputLabel';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -30,7 +23,7 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-  
+
 const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
     return(
         <FormControl fullWidth>
@@ -63,7 +56,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = (props) => {
     );
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default compose<any, any, any>(
     styled,

@@ -1,9 +1,7 @@
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CopyTooltip from 'src/components/CopyTooltip';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root'
@@ -20,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface Props extends TextFieldProps {
+type Props = TextFieldProps & {
   className: string;
 }
 
@@ -57,6 +55,6 @@ class CopyableTextField extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(CopyableTextField);
