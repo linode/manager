@@ -103,6 +103,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
             pages: response.pages,
             data: map ? map(response.data) : response.data,
             loading: false,
+            error: undefined,
           });
         })
         .catch((response) => {

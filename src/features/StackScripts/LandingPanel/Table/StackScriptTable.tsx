@@ -82,7 +82,7 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
             />
           </TableBody>
         </Table>
-        {!loading &&
+        {!loading && !error &&
           <PaginationFooter
             count={count}
             page={page}

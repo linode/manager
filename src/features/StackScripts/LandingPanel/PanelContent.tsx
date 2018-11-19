@@ -4,7 +4,7 @@ import {
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
-import { compose, pathOr } from 'ramda';
+import { compose, pathOr, split } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 
@@ -28,16 +28,10 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   searchWrapper: {
-    position: 'sticky',
-    width: '100%',
-    top: 0,
-    zIndex: 11,
-    paddingBottom: theme.spacing.unit * 3,
-    backgroundColor: theme.bg.white,
+    marginBottom: theme.spacing.unit * 3,
   },
   searchBar: {
     marginTop: 0,
-    marginBottom: theme.spacing.unit,
     backgroundColor: theme.color.white,
   },
 });
@@ -109,11 +103,9 @@ class PanelContent extends React.Component<CombinedProps, State> {
         || searchTermToLower.includes('description:'))
 
     if (isAdvancedSearch) {
-      const indexOfColon = searchTermToLower.indexOf(':');
-      // everything before the colon is what we want to filter by
-      const filterKey = searchTermToLower.substr(0, indexOfColon);
-      // everything after the colon is the term we want to search for
-      const advancedSearchTerm = searchTermToLower.substr(indexOfColon + 1);
+      /** everything before the colon is the key and after the colon is the search term */
+      const [filterKey, advancedSearchTerm] = split(':', searchTermToLower);
+      console.log(filterKey, advancedSearchTerm);
       handleSearch(generateSpecificFilter(filterKey as AcceptedFilters, advancedSearchTerm))
     } else {
       /**
@@ -258,15 +250,18 @@ class PanelContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <DebouncedSearch
-          placeholderText='Search by Label, Username, or Description'
-          onSearch={this.handleSearch}
-          className={classes.searchBar}
-          isSearching={searching}
-        /** uncomment when we upgrade to MUI v3 */
-        // toolTipText={`Hint: try searching for a specific item by prepending your
-        // search term with "username:", "label:", or "description:"`}
-        />
+        <div className={classes.searchWrapper}>
+          <DebouncedSearch
+            placeholderText='Search by Label, Username, or Description'
+            onSearch={this.handleSearch}
+            className={classes.searchBar}
+            isSearching={searching}
+            toolTipText={type === 'community'
+              ? `Hint: try searching for a specific item by prepending your
+            search term with "username:", "label:", or "description:"`
+              : ''}
+          />
+        </div>
         {username &&
           <StackScriptTable
             currentUser={username}
