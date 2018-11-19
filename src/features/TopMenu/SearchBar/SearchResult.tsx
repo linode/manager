@@ -17,6 +17,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
       backgroundColor: `${theme.bg.offWhite} !important`,
+      '& .circle': {
+        fill: theme.palette.primary.main,
+        transition: 'fill .2s ease-in-out .2s',
+      },
+      '& .outerCircle': {
+        stroke: theme.palette.primary.dark,
+        strokeDasharray: 1000,
+        strokeDashoffset: 1000,
+        animation: 'dash 2s linear forwards',
+      },
+      '& .insidePath *': {
+        transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+        stroke: 'white',
+      },
     },
     '&:last-item': {
       border: 0,

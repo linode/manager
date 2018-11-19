@@ -4,7 +4,7 @@ import * as React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import Arrow from 'src/assets/icons/diagonalArrow.svg';
 
 import { Item } from 'src/components/EnhancedSelect';
 import RenderGuard from 'src/components/RenderGuard';
@@ -67,7 +67,7 @@ const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
       <ListItem className={classes.root} component="div">
         <div className={classes.row}>
           <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
-          {!isFinal && <OpenInNew className={classes.icon} />}
+          {!isFinal && <Arrow className={classes.icon} />}
         </div>
         {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
       </ListItem>

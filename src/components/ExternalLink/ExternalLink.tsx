@@ -10,11 +10,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     display: 'inline-flex',
     alignItems: 'baseline',
+    '&:hover': {
+      '& $icon': {
+        opacity: 1,
+      },
+    },
   },
   icon: {
     color: theme.palette.primary.main,
     position: 'relative',
     left: theme.spacing.unit,
+    opacity: 0,
   },
 });
 

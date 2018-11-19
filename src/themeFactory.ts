@@ -41,6 +41,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes rotate': any;
     bg: any;
     color: any;
+    animateCircleIcon?: any;
     notificationList: any;
     status: any;
   }
@@ -50,12 +51,16 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes rotate'?: any;
     bg?: any;
     color?: any;
+    animateCircleIcon?: any;
     notificationList?: any;
     status?: any;
   }
 }
 
+const iconCircleAnimation = {
+  // animation: '',
 
+}
 
 const breakpoints = createBreakpoints({});
 
@@ -134,6 +139,9 @@ const themeDefaults: ThemeOptions = {
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
     borderRow: 'white',
+  },
+  animateCircleIcon: {
+    ...iconCircleAnimation,
   },
   notificationList: {
     padding: '16px 32px 16px 23px',

@@ -29,9 +29,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     transition: 'border-color 225ms ease-in-out',
     '&:hover': {
-      borderColor: theme.palette.primary.light,
       '& $icon': {
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.primary.main,
+        transition: 'background-color, color .2s ease-in-out .2s',
+        color: 'white',
       },
     },
     '& .tile-link::after': {
