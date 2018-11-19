@@ -9,9 +9,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
-import { SettingTypes } from './GlobalSettings';
-
-
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -33,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
-  handleToggle: (settingType: SettingTypes) => void;
+  onChange: () => void;
   openBackupsDrawer: () => void;
 }
 
@@ -45,13 +42,9 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
     backups_enabled,
     classes,
     hasLinodesWithoutBackups,
-    handleToggle,
+    onChange,
     openBackupsDrawer,
   } = props;
-
-  const handleToggleBackups = () => {
-    handleToggle('backups');
-  }
 
   return (
     <React.Fragment>
@@ -81,7 +74,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
                 // className="toggleLabel"
                 control={
                   <Toggle
-                    onChange={handleToggleBackups}
+                    onChange={onChange}
                     checked={backups_enabled}
                   />
                 }

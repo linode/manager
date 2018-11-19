@@ -12,8 +12,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
-import { SettingTypes } from './GlobalSettings';
-
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
@@ -33,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  toggleSetting: (settingType: SettingTypes) => void;
+  onChange: () => void;
   networkHelperEnabled: boolean;
 }
 
@@ -42,13 +40,9 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
-    toggleSetting,
+    onChange,
     networkHelperEnabled,
   } = props;
-
-  const toggleNetworkHelper = () => {
-    toggleSetting('networkHelper');
-  }
 
   return (
     <React.Fragment>
@@ -69,7 +63,7 @@ const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
                 // className="toggleLabel"
                 control={
                   <Toggle
-                    onChange={toggleNetworkHelper}
+                    onChange={onChange}
                     checked={networkHelperEnabled}
                   />
                 }

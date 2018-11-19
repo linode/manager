@@ -37,18 +37,16 @@ interface DispatchProps {
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
-export type SettingTypes = 'backups' | 'networkHelper';
-
 class GlobalSettings extends React.Component<CombinedProps, {}> {
 
-  handleToggle = (settingType: SettingTypes) => {
-    const { actions: { updateAccount }, backups_enabled, networkHelperEnabled } = this.props;
-    switch (settingType) {
-      case 'backups':
-        return updateAccount({ backups_enabled: !backups_enabled });
-      case 'networkHelper':
-        return updateAccount({ network_helper: !networkHelperEnabled });
-    }
+  toggleAutomaticBackups = () => {
+    const { actions: { updateAccount }, backups_enabled } = this.props;
+    return updateAccount({ backups_enabled: !backups_enabled });
+  }
+
+  toggleNetworkHelper = () => {
+    const { actions: { updateAccount }, networkHelperEnabled } = this.props;
+    return updateAccount({ network_helper: !networkHelperEnabled });
   }
 
   render() {
@@ -71,12 +69,12 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       <React.Fragment>
         <AutoBackups
           backups_enabled={backups_enabled}
-          handleToggle={this.handleToggle}
+          onChange={this.toggleAutomaticBackups}
           openBackupsDrawer={openBackupsDrawer}
           hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
         />
         <NetworkHelper
-          toggleSetting={this.handleToggle}
+          onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
       </React.Fragment>
