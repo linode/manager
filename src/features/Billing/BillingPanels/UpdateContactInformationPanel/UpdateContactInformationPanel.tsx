@@ -1,10 +1,8 @@
 import { compose, defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
@@ -658,10 +656,10 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
   });
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const accountContext = withAccount();
 
 const enhanced = compose(styled, accountContext);
 
-export default enhanced(UpdateContactInformationPanel);
+export default enhanced(UpdateContactInformationPanel) as React.ComponentType<{}>;

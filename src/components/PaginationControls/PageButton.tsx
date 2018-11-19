@@ -1,8 +1,6 @@
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Button, { ButtonProps } from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
@@ -35,7 +33,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
 });
 
-const styled = withStyles<CSSClasses>(styles, { withTheme: true });
+const styled = withStyles<CSSClasses>(styles);
 
 /* tslint:disable-next-line */
 export interface Props extends ButtonProps { }

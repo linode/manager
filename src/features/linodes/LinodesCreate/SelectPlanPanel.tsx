@@ -1,8 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
@@ -132,6 +130,6 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel));

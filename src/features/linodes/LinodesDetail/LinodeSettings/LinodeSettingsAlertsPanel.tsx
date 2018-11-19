@@ -1,16 +1,13 @@
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { updateLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
 import AlertSection from './AlertSection';
 
 type ClassNames = 'root';
@@ -270,7 +267,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
 const valueUnlessOff = ({ state, value }: { state: boolean, value: number }) => state ? value : 0;
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Notification Thresholds' });
 

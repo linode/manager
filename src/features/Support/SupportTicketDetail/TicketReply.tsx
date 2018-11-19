@@ -1,21 +1,18 @@
-import { compose, lensPath, pathOr,  set } from 'ramda';
-import * as React from 'react';
-
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { StyleRulesCallback, WithStyles, withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import AttachFile from '@material-ui/icons/AttachFile';
 import CloudUpload from '@material-ui/icons/CloudUpload';
-
+import { compose, lensPath, pathOr, set } from 'ramda';
+import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
 import CloseTicketLink from './CloseTicketLink';
 
 type ClassNames =
@@ -56,8 +53,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
     '& svg': {
       color: theme.palette.text.primary,
-      width: 24, 
-      fontSize: 22, 
+      width: 24,
+      fontSize: 22,
     },
   },
   replyField: {
@@ -150,9 +147,9 @@ class TicketReply extends React.Component<CombinedProps, State> {
         /* Make sure the reply will go through before attaching files */
         /* Send each file */
         files.map((file, idx) => {
-          if (file.uploaded) { return ; } 
+          if (file.uploaded) { return ; }
           this.setState(set(lensPath(['files', idx, 'uploading']), true));
-          const formData = new FormData(); 
+          const formData = new FormData();
           formData.append('file', file.file);
           uploadAttachment(this.props.ticketId, formData)
             .then(() => {
@@ -164,7 +161,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
               ));
               this.props.reloadAttachments();
             })
-            /* 
+            /*
             * Note! We want the first few uploads to succeed even if the last few
             * fail! Don't try to aggregate errors!
             */
@@ -329,7 +326,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
           {closable &&
             <CloseTicketLink
               ticketId={ticketId}
-              closeTicketSuccess={closeTicketSuccess}  
+              closeTicketSuccess={closeTicketSuccess}
             />
           }
         </Grid>
@@ -338,6 +335,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(TicketReply);

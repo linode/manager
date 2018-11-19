@@ -1,9 +1,9 @@
 import * as React from 'react';
-
-import { Divider, StyleRulesCallback, Typography, WithStyles, withStyles } from '@material-ui/core';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-
+import Divider from 'src/components/core/Divider';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
@@ -109,7 +109,7 @@ class AlertSection extends React.Component<CombinedProps> {
                 value={this.props.value}
                 disabled={!this.props.state}
                 InputProps={{
-                  endAdornment: 
+                  endAdornment:
                   <InputAdornment position="end">
                     {this.props.endAdornment}
                   </InputAdornment>,
@@ -134,6 +134,6 @@ class AlertSection extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(RenderGuard<CombinedProps>(AlertSection));

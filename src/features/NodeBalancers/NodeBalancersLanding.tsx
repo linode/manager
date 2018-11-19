@@ -2,19 +2,17 @@ import * as Promise from 'bluebird';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import TableBody from '@material-ui/core/TableBody';
-import TableHead from '@material-ui/core/TableHead';
-import Typography from '@material-ui/core/Typography';
-
 import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -32,7 +30,6 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 type ClassNames = 'root'
@@ -368,13 +365,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any, filter: any) => {
   /*
    * this is pretty tricky. we need to make a call to get the configs for each nodebalancer
    * because the up and down time data lives in the configs along with the ports
-   * 
+   *
    * after we get that data, we have to add each config's up time together
    * and each down time together
    */
@@ -382,7 +379,7 @@ const updatedRequest = (ownProps: any, params: any, filter: any) => {
     .then((response) => {
       return new Promise((resolve, reject) => {
         /*
-         * Iterate over each nodebalancer and get it's configs 
+         * Iterate over each nodebalancer and get it's configs
          */
         Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
           .then(({ data: configs }) => ({
@@ -404,7 +401,7 @@ const updatedRequest = (ownProps: any, params: any, filter: any) => {
     .catch((error) => {
       return error;
     });
-} 
+}
 
 const paginated = paginate(updatedRequest);
 

@@ -1,7 +1,7 @@
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import * as React from 'react';
+import Dialog from 'src/components/core/Dialog';
+import DialogContent from 'src/components/core/DialogContent';
+import DialogTitle from 'src/components/core/DialogTitle';
 
 const TheApplicationIsOnFire: React.StatelessComponent<{}> = (props) => {
   return (
@@ -16,4 +16,4 @@ const TheApplicationIsOnFire: React.StatelessComponent<{}> = (props) => {
 
 const ReloadLink = () => <a onClick={() => { location.reload(); }}>restarting it</a>;
 
-export default TheApplicationIsOnFire
+export default TheApplicationIsOnFire;

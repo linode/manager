@@ -1,12 +1,9 @@
-import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-
-import { default as MDivider } from '@material-ui/core/Divider';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-
+import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 import Button from 'src/components/Button';
-
+import { default as MDivider } from 'src/components/core/Divider';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 
 const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />;

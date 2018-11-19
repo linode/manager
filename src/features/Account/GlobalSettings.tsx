@@ -1,15 +1,12 @@
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import CircleProgress from 'src/components/CircleProgress';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
-
 import AutoBackups from './AutoBackups';
 import NetworkHelper from './NetworkHelper';
 
@@ -113,7 +110,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   };
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 

@@ -1,10 +1,8 @@
-import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-
+import * as React from 'react';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
@@ -99,6 +97,6 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(AutoBackups);
