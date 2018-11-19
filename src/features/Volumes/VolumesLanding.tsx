@@ -1,7 +1,7 @@
-import { compose, pathOr } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -25,7 +25,7 @@ import TableRowError from 'src/components/TableRowError';
 import { BlockStorage } from 'src/documentation';
 import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { getLinodes } from 'src/services/linodes';
+import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
@@ -97,7 +97,9 @@ interface State {
   };
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type RouteProps = RouteComponentProps<{ linodeId: string }>;
+
+type CombinedProps = Props & RouteProps & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -250,6 +252,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return this.renderEmpty();
     }
 
+    const isVolumesLanding = this.props.match.params.linodeId === undefined;
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
@@ -275,10 +279,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.labelCol}>Label</TableCell>
-                <TableCell className={classes.attachmentCol}>Attached To</TableCell>
+                {isVolumesLanding && <TableCell className={classes.attachmentCol}>Attached To</TableCell>}
                 <TableCell className={classes.sizeCol}>Size</TableCell>
                 <TableCell className={classes.pathCol}>File System Path</TableCell>
-                <TableCell>Region</TableCell>
+                {isVolumesLanding && <TableCell>Region</TableCell>}
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -361,6 +365,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderData = (volumes: ExtendedVolume[]) => {
+    const isVolumesLanding = this.props.match.params.linodeId === undefined;
+
     return volumes.map((volume) => {
       const label = pathOr('', ['label'], volume);
       const size = pathOr('', ['size'], volume);
@@ -385,15 +391,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
             <TableCell parentColumn="Label" data-qa-volume-cell-label>{volume.label}</TableCell>
-            <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
+            {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
               {volume.linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {volume.linodeLabel}
                 </Link>
-              }</TableCell>
+              }</TableCell>}
             <TableCell parentColumn="Size" data-qa-volume-size>{size} GB</TableCell>
             <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
-            <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>
+            {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
             <TableCell>
               <VolumesActionMenu
                 onShowConfig={this.handleShowConfig}
@@ -486,13 +492,23 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const styled = withStyles(styles);
-
 const documented = setDocs(VolumesLanding.docs);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => {
-  return getVolumes(params, filters)
+const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
+  const linodeId = path<string>(['match','params', 'linodeId'], ownProps);
+
+  const req: (params: any, filter: any) => Promise<Linode.ResourcePage<Linode.Volume>>
+    = linodeId
+      ? getLinodeVolumes.bind(undefined, linodeId)
+      : getVolumes;
+
+  return req(params, filters)
     .then((volumesResponse) => {
+
+      /** If we dont have a linodeId, we  */
+      if (linodeId) {
+        return Promise.resolve(volumesResponse);
+      }
       /*
        * Iterate over all the volumes data and find the ones that
        * have a linodeId property that is not null and create an X-Filter
@@ -544,8 +560,9 @@ const paginated = paginate(updatedRequest);
 
 const withEvents = WithEvents();
 
-export default
-  compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+const styled = withStyles(styles);
+
+export default compose(
     connected,
     documented,
     paginated,
