@@ -13,6 +13,7 @@ import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
+import { reshapeFiles } from '../ticketUtils';
 import CloseTicketLink from './CloseTicketLink';
 
 type ClassNames =
@@ -133,21 +134,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length) {
-      const reshapedFiles = [];
-
-      /* tslint:disable-next-line */
-      for (let i = 0; i < files.length; i++) {
-        reshapedFiles.push({
-          name: files[i].name,
-          /* The file! These can be quite big */
-          file: files[i],
-          /* Used to keep track of initial upload status */
-          uploading: false,
-          /* Used to ensure that the file doesn't get uploaded again */
-          uploaded: false,
-        });
-      }
-
+      const reshapedFiles = reshapeFiles(files);
       this.setState({
         files: [
           ...this.state.files,
