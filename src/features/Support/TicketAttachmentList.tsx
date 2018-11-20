@@ -1,6 +1,6 @@
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
-import { compose, withHandlers, withState } from 'recompose';
+import { compose, withStateHandlers } from 'recompose';
 
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
@@ -34,12 +34,13 @@ interface Props {
 type CombinedProps = Props & ToggleProps & WithStyles<ClassNames>;
 
 export const addIconsToAttachments = (attachments: string[] = []) => {
+  const extensions = ['jpg', 'jpeg', 'png', 'bmp', 'tiff'];
   return attachments.map((attachment, idx) => {
     // try to find a file extension
     const lastDotIndex = attachment.lastIndexOf('.');
     const ext = attachment.slice(lastDotIndex + 1);
     if (ext) {
-      if (['jpg', 'jpeg', 'png', 'bmp', 'tiff'].includes(ext.toLowerCase())) {
+      if (extensions.includes(ext.toLowerCase())) {
         return <InsertPhoto key={idx} />;
       }
     }
@@ -83,10 +84,12 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withState('showMoreAttachments', 'toggle', false),
-  withHandlers({
-    toggle: ({ toggle }) => (e: React.MouseEvent<HTMLButtonElement>) => toggle((current: boolean) => !current)
-  })
+  withStateHandlers(
+    { showMoreAttachments: false },
+    {
+      toggle: ({ showMoreAttachments }) => () => ({ showMoreAttachments: !showMoreAttachments})
+    }
+  )
 )(TicketAttachmentList);
 
 export default enhanced;

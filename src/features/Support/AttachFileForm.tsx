@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import InputAdornment from 'src/components/core/InputAdornment';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 import AttachFile from '@material-ui/icons/AttachFile';
 import Close from '@material-ui/icons/Close';
@@ -18,7 +18,7 @@ type ClassNames = 'root'
 | 'attachmentField'
 | 'uploadProgress';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   attachFileButton: {
     paddingLeft: 14,
@@ -174,6 +174,6 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   }
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(AttachFileForm);
