@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RELEASE_TAG=$1
+RELEASE_VERSION=$1
 RELEASE_DATE=$2
 cd ..
 
@@ -13,16 +13,16 @@ ORIGIN=$1
 git fetch $ORIGIN
 git checkout develop
 git rebase $ORIGIN/develop
-git checkout -b release-$RELEASE_TAG
+git checkout -b release-$RELEASE_VERSION
 
 #Generate changelog
-python generate_changelog.py $RELEASE_TAG $RELEASE_DATE
+python generate_changelog.py $RELEASE_VERSION $RELEASE_DATE
 
 #Create release tag & bump package.json version
-yarn version --new-version $RELEASE_TAG
+yarn version --new-version $RELEASE_VERSION
 
 #Commit updated version and new changelog
-git commit -m "Cloud Manager version $RELEASE_TAG - $RELEASE_DATE"
+git commit -m "Cloud Manager version $RELEASE_VERSION - $RELEASE_DATE"
 
 #Git delete previous release branch
 PREVIOUS_RELEASE=$(git ls-remote --heads $ORIGIN | egrep -o 'release-\d*\.\d*\.\d*')
