@@ -9,6 +9,7 @@ class ListDomains extends Page {
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get domainNameHeader() { return $('[data-qa-domain-name-header]'); }
     get domainTypeHeader() { return $('[data-qa-domain-type-header]'); }
+    get domainDrawer() { return $('[data-qa-drawer]'); }
     get domains() { return $$('[data-qa-domain-cell]'); }
     get domainElem() { return $('[data-qa-domain-cell]'); }
     get label() { return $('[data-qa-domain-label]'); }
@@ -24,7 +25,7 @@ class ListDomains extends Page {
         if (placeholder) {
             const placeholderTitle = 'Add a Domain';
             this.placeholderText.waitForVisible(constants.wait.normal);
-            
+
             expect(this.placeholderText.getText()).toBe(placeholderTitle);
             expect(this.createButton.getText()).toBe(placeholderTitle);
             return this;
@@ -73,9 +74,9 @@ class ListDomains extends Page {
         this.createDomainName.$('input').setValue(name);
         this.createSoaEmail.$('input').setValue(email);
         this.submit.click();
+        this.domainDrawer.waitForVisible(constants.wait.normal, true);
+        browser.waitForVisible(this.breadcrumbStaticText.selector, constants.wait.normal);
 
-        browser.waitForVisible('[data-qa-domain-title]', constants.wait.normal);
-        
         browser.waitUntil(function() {
             return browser.getUrl().includes('/records');
         }, constants.wait.normal);
@@ -94,7 +95,7 @@ class ListDomains extends Page {
         browser.waitUntil(function() {
             return browser.getUrl().includes('/records');
         }, constants.wait.normal);
-        browser.waitForVisible('[data-qa-domain-title]');
+        browser.waitForVisible(this.breadcrumbStaticText.selector);
     }
 
     cloneDrawerElemsDisplay() {
@@ -106,14 +107,14 @@ class ListDomains extends Page {
 
     clone(newDomainName) {
         this.cloneDrawerElemsDisplay();
-        
+
         browser.trySetValue(`${this.cloneDomainName.selector} input`, newDomainName);
         this.submit.click();
 
-        browser.waitForVisible('[data-qa-domain-title]', constants.wait.normal);
+        browser.waitForVisible(this.breadcrumbStaticText.selector, constants.wait.normal);
 
         browser.url(constants.routes.domains)
-        
+
         browser.waitUntil(function() {
             const domains = $$('[data-qa-domain-cell] [data-qa-domain-label]');
             const domainLabels = domains.map(d => d.getText());

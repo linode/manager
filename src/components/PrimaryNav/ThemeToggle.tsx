@@ -1,8 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
@@ -79,5 +77,5 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled<Props>(ThemeToggle);
+export default styled(ThemeToggle);
 

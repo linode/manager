@@ -1,15 +1,11 @@
 import * as React from 'react';
-
-import Paper from '@material-ui/core/Paper';
-import TableBody from '@material-ui/core/TableBody';
-
-import TableHead from '@material-ui/core/TableHead';
-
+import Paper from 'src/components/core/Paper';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';

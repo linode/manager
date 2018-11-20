@@ -1,17 +1,14 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Grid from 'src/components/Grid';
-
 import Mobile from 'src/assets/icons/mobile.svg';
 import Resource from 'src/assets/icons/resource.svg';
 import Streamline from 'src/assets/icons/streamline.svg';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import { storage } from 'src/utilities/storage';
 
 type ClassNames = 'dialog'
@@ -141,7 +138,7 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
   }
 };
 
-const styled = withStyles<ClassNames>(styles, { withTheme: true });
+const styled = withStyles<ClassNames>(styles);
 
 const enhanced = compose<any, any, any>(
   withRouter,

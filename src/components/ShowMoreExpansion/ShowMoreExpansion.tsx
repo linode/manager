@@ -1,11 +1,10 @@
-import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import Collapse from '@material-ui/core/Collapse';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import * as React from 'react';
+import Button from 'src/components/core/Button';
+import Collapse from 'src/components/core/Collapse';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
-type CSSClasses = 'root' 
+type CSSClasses = 'root'
 | 'caret';
 
 const styles: StyleRulesCallback = (theme) => ({
@@ -95,4 +94,6 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<Props>(ShowMoreExpansion);
+const styled = withStyles(styles);
+
+export default styled(ShowMoreExpansion);

@@ -22,14 +22,14 @@ describe('Account - Restricted User Suite', () => {
     it('should navigate to user permissions page on creation', () => {
         expect(Users.userPermissionsTab.isVisible()).toBe(true);
         expect(Users.userPermissionsTab.getAttribute('aria-selected')).toBe('true');
-        expect(browser.getUrl()).toContain(`/account/users/${userConfig.username}/permissions`);
+        expect(browser.getUrl()).toContain(`${constants.routes.account.users}/${userConfig.username}/permissions`);
     });
 
     it('should navigate back to user listing on click back arrow', () => {
         Users.backButton.click();
         Users.baseElementsDisplay();
 
-        expect(browser.getUrl()).toBe(`${browser.options.baseUrl}/users`);
+        expect(browser.getUrl()).toBe(browser.options.baseUrl.concat(constants.routes.account.users));
     });
 
     it('should display user as restricted in users table', () => {

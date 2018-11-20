@@ -1,12 +1,10 @@
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import CheckBox from 'src/components/CheckBox';
+import Button from 'src/components/core/Button';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -108,6 +106,6 @@ OAuthCreationDrawer.defaultProps = {
   errors: [],
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(OAuthCreationDrawer);
+export default styled(OAuthCreationDrawer);

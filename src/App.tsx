@@ -6,9 +6,7 @@ import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
@@ -17,26 +15,22 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
-
+import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import Footer from 'src/features/Footer';
+import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { requestProfile } from 'src/store/reducers/resources/profile';
-
-import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-
-import { events$ } from 'src/events';
 
 shim(); // allows for .finally() usage
 
@@ -446,7 +440,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export const styled = withStyles(styles, { withTheme: true });
+export const styled = withStyles(styles);
 
 export default compose(
   connected,

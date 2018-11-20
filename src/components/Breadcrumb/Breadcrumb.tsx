@@ -1,16 +1,10 @@
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import IconButton from '@material-ui/core/IconButton';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-
+import IconButton from 'src/components/core/IconButton';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
 import LabelText from './LabelText';
 
@@ -20,6 +14,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   backButton: {
     margin: '0',
+    padding: '0',
     width: 'auto',
     height: 'auto',
     '& svg': {
@@ -35,6 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     color: '#3683DC',
     textDecoration: 'underline',
     borderColor: theme.color.grey,
+    whiteSpace: 'nowrap',
     '&:after': {
       content: "''",
       display: 'inline-block',
@@ -52,6 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     color: '#3683DC',
     textDecoration: 'underline',
     borderColor: theme.color.grey,
+    whiteSpace: 'nowrap',
     '&:after': {
       content: "'|'",
       display: 'inline-block',
@@ -108,7 +105,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         ?
         <EditableText
           role="header"
-          variant="headline"
+          typeVariant="h6"
           text={labelTitle}
           errorText={props.onEditHandlers!.errorText}
           onEdit={props.onEditHandlers!.onEdit}
@@ -127,5 +124,5 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
-export default styled<Props>(Breadcrumb);
+const styled = withStyles(styles);
+export default styled(Breadcrumb);

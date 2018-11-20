@@ -1,8 +1,6 @@
-import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
-
+import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
@@ -84,6 +82,6 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default decorate<Props>(LinodeStatusIndicator);
+export default styled(LinodeStatusIndicator);

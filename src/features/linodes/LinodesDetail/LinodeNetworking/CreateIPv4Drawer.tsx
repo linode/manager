@@ -1,11 +1,9 @@
 import { path } from 'ramda';
 import * as React from 'react';
-
-import Button from '@material-ui/core/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/core/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import { allocateIPAddress } from 'src/services/linodes';
@@ -124,6 +122,6 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(CreateIPv4Drawer);
+export default styled(CreateIPv4Drawer);

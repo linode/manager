@@ -33,7 +33,7 @@ export class VolumeDetail extends Page {
     get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
     get volumePrice() { return $('[qa-data-price]'); }
     get volumePriceBillingInterval() { return $('[qa-data-billing-interval]'); }
-    
+
     volAttachedToLinode(linodeLabel) {
         browser.waitUntil(function() {
             const attachedToLinode = $$('[data-qa-volume-cell]')
@@ -109,7 +109,7 @@ export class VolumeDetail extends Page {
             this.region.waitForVisible();
             this.region.click();
             browser.waitForVisible('[data-qa-attach-to-region]');
-            browser.click(`[data-qa-attach-to-region="${volume.region}"]`);
+            browser.jsClick(`[data-qa-attach-to-region="${volume.region}"]`);
 
             browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
             browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);
@@ -173,7 +173,7 @@ export class VolumeDetail extends Page {
         optToClick[0].click();
         optToClick[0].waitForVisible(constants.wait.normal, true);
 
-        browser.click(this.submitButton);
+        browser.click(this.submitButton.selector);
         browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);
     }
 

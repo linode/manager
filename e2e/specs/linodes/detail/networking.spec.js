@@ -37,7 +37,7 @@ describe('Linode Detail - Networking Suite', () => {
             const noticeMsg = 'Additional IPv4 addresses require technical justification. Please open a Support Ticket describing your requirement';
             Networking.allocate.click();
             Networking.notice.waitForVisible(constants.wait.normal);
-            
+
             Networking.waitForNotice(noticeMsg, constants.wait.normal);
         });
 
@@ -45,7 +45,7 @@ describe('Linode Detail - Networking Suite', () => {
             Networking.cancel.click();
             Networking.drawerTitle.waitForVisible(constants.wait.normal, true);
         });
- 
+
         it('should display ipv6 drawer', () => {
             Networking.addIp('ipv6');
             Networking.addIpElemsDisplay('ipv6');
@@ -122,7 +122,7 @@ describe('Linode Detail - Networking Suite', () => {
         it('should error on an invalid domain entry', () => {
             Networking.domainName.$('input').setValue('b');
             Networking.submit.click();
-            Networking.lookupError.waitForVisible();
+            $(`${Networking.domainName.selector} p`).waitForVisible(constants.wait.normal);
         });
 
         it('should reset rdns on empty entry', () => {
@@ -144,7 +144,7 @@ describe('Linode Detail - Networking Suite', () => {
 
         it('should prepopulate rdns with empty text field', () => {
             expect(Networking.domainName.$('input').getValue()).toBe('');
-        });        
+        });
     });
 
     describe('Remove IP Suite', () => {
@@ -152,7 +152,7 @@ describe('Linode Detail - Networking Suite', () => {
     });
 
     it('should display slaac and link local ipv6 ips', () => {
-        const v6ips = 
+        const v6ips =
             Networking.getIpsByType('ipv6')
                 .filter(ip => ip.$(Networking.type.selector).getText() === 'SLAAC' || 'Link Local');
 

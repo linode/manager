@@ -1,14 +1,12 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import Fade from '@material-ui/core/Fade';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input, { InputProps } from '@material-ui/core/Input';
-import { MenuProps } from '@material-ui/core/Menu';
-import Select, { SelectProps } from '@material-ui/core/Select';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-
+import Fade from 'src/components/core/Fade';
+import FormHelperText from 'src/components/core/FormHelperText';
+import Input, { InputProps } from 'src/components/core/Input';
+import { MenuProps } from 'src/components/core/Menu';
+import Select, { SelectProps } from 'src/components/core/Select';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'inputSucess'
@@ -139,6 +137,6 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<CombinedProps>(SSelect);
+export default styled(SSelect) as React.ComponentType<Props>;

@@ -1,8 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from '@material-ui/core/styles';
-
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';

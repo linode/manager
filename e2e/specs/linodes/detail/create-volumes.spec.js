@@ -36,7 +36,7 @@ describe('Linode Detail - Volumes Suite', () => {
         apiDeleteAllVolumes();
     });
 
-    describe("Linode Detail - Volumes - Create Suite", () => {     
+    describe("Linode Detail - Volumes - Create Suite", () => {
         it('should display placeholder text and add a volume button', () => {
             VolumeDetail.placeholderText.waitForVisible(constants.wait.normal);
 
@@ -51,7 +51,7 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.createButton.click();
             VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
             VolumeDetail.label.waitForVisible(constants.wait.normal);
-            
+
             drawerElems = [
                 VolumeDetail.label,
                 VolumeDetail.size,
@@ -78,21 +78,22 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should fail to create without a label', () => {
-            VolumeDetail.submit.click();    
+            VolumeDetail.submit.click();
             VolumeDetail.label.$('p').waitForVisible(constants.wait.normal);
-            
+
             const labelError = VolumeDetail.label.$('p').getText();
 
             expect(labelError.includes('Label cannot be blank')).toBe(true);
         });
 
         it('should fail to create under 10 gb volume', () => {
+            const errorMsg = 'Size must be between 10 and 10240';
             browser.setValue(`${VolumeDetail.label.selector} input`, testLabel);
             browser.setValue(`${VolumeDetail.size.selector} input`, 5);
             VolumeDetail.submit.click();
 
             browser.waitUntil(function() {
-                return browser.getText('[data-qa-size] p').includes('Must be 10-10240');
+                return browser.getText('[data-qa-size] p').includes(errorMsg);
             }, constants.wait.normal);
         });
 
@@ -108,7 +109,7 @@ describe('Linode Detail - Volumes Suite', () => {
     describe('Linode Detail - Volumes - List View', () => {
         it('should display volume in list view', () => {
             const testVolume = { label: 'test-label', size: '20 GiB' }
-            
+
             VolumeDetail.assertVolumeInTable(testVolume);
         });
 
@@ -119,14 +120,14 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should display volume create icon text link', () => {
             const createIcon = $('[data-qa-icon-text-link="Add a Volume"]');
-            
+
             expect(createIcon.isVisible()).toBe(true);
             expect(createIcon.getText()).toBe('Add a Volume');
             expect(createIcon.$('svg').isVisible()).toBe(true);
         });
     });
 
-    describe('Linode Detail - Volume - Summary Suite', () => {   
+    describe('Linode Detail - Volume - Summary Suite', () => {
         it('should display volumes attached to linode in summary', () => {
             LinodeDetail.changeTab('Summary');
 
