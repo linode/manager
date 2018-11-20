@@ -100,7 +100,7 @@ def generateChangeLog(release,date):
             change_log_lines.insert(incrementLine(),'- %s\n'%(commit))
         change_log_lines.insert(incrementLine(),'\n')
 
-    write_change_log=open('CHANGELOG_TEMP.md', 'w')
+    write_change_log=open('CHANGELOG.md', 'w')
     write_change_log.writelines(change_log_lines)
     write_change_log.close()
 
