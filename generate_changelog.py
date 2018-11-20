@@ -5,6 +5,7 @@ import getpass
 
 RELEASE=sys.argv[1]
 DATE=sys.argv[2]
+ORIGIN=sys.argv[3]
 START_INSERT=5
 
 def incrementLine():
@@ -26,8 +27,8 @@ def generateJQLQuery(ticket_list):
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
 
-def generateChangeLog(release,date):
-    git_diff=subprocess.Popen(['git', 'log', '--no-merges', '--oneline', "--pretty=split:'%s'", 'upstream/master...HEAD'],
+def generateChangeLog(release,date, origin):
+    git_diff=subprocess.Popen(['git', 'log', '--no-merges', '--oneline', "--pretty=split:'%s'", origin+'/master...HEAD'],
                stdout=subprocess.PIPE,
                stderr=subprocess.STDOUT)
     stdout,stderr = git_diff.communicate()
@@ -48,19 +49,19 @@ def generateChangeLog(release,date):
             jql_query.append(jira_key)
             commit_array[i]=commit.lstrip(jira_key)
 
-        if( 'test' in commit.lower()):
+        if('test' in commit.lower()):
             commit_array.pop(i)
             break
 
-        if( 'breaking' in commit.lower()):
+        if('break' in commit.lower()):
             breaking.append(commit_array[i])
             break
 
-        if( 'changed' in commit.lower()):
+        if('change' in commit.lower()):
             changed.append(commit_array[i])
             break
 
-        if( 'fixed' in commit.lower()):
+        if('fix' in commit.lower()):
             fixed.append(commit_array[i])
             break
 
@@ -104,4 +105,4 @@ def generateChangeLog(release,date):
     write_change_log.writelines(change_log_lines)
     write_change_log.close()
 
-generateChangeLog(RELEASE,DATE)
+generateChangeLog(RELEASE,DATE,ORIGIN)
