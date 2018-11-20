@@ -1285,10 +1285,10 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/recompose@^0.27.1":
-  version "0.27.1"
-  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.27.1.tgz#eafe5a80b6bdce2108c025bbf19d030136aad894"
-  integrity sha512-5bT3OMz9HHHwvRSMQaDGN8tWbpCxQfsZXlcy5HLexEEqkSJ9PBZfVMA6HANDbshOvn4kNS75SjQSJLJv5LJHxw==
+"@types/recompose@^0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.30.0.tgz#25d1e7bf31b096c2edf6239876dcfa7c167ce03f"
+  integrity sha512-Jx87joXlo3FH8ZMsV+pIgWXWz1oOjQnJ12f6xkKLWM0m06WVJVOwNduXyeLuVb1RYAwX9z/H+Hufu16H3ZG5Qw==
   dependencies:
     "@types/react" "*"
 
