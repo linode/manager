@@ -1,6 +1,5 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import * as Bluebird from 'bluebird';
 import * as moment from 'moment';
 import { compose, isEmpty, or } from 'ramda';
 import * as React from 'react';
@@ -14,12 +13,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
-import { getDomains } from 'src/services/domains';
-import { getImages } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
-import { getNodeBalancers } from 'src/services/nodebalancers';
-import { getVolumes } from 'src/services/volumes';
-import { getAll } from 'src/utilities/getAll';
+import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames =
@@ -153,12 +147,6 @@ type CombinedProps = TypesContextProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
-const getAllLinodes = getAll(getLinodes);
-const getAllNodeBalancers = getAll(getNodeBalancers);
-const getAllVolumes = getAll(getVolumes);
-const getAllDomains = getAll(getDomains);
-const getAllImages = getAll(getImages);
-
 const Control = (props: any) =>
   <_Control {...props} />
 
@@ -216,14 +204,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   updateData = () => {
-    Bluebird.join(
-      getAllLinodes(),
-      getAllNodeBalancers(),
-      getAllVolumes(),
-      getAllDomains(),
-      getAllImages(),
-      this.setEntitiesToState
-    )
+    getAllEntities(this.setEntitiesToState);
   }
 
   setEntitiesToState = (
