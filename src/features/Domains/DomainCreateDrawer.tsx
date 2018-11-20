@@ -210,7 +210,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     soa_email: 'SOA Email',
   };
 
-  reset = () => {
+  resetInternalState = () => {
     if (this.mounted) {
       this.setState({ ...this.defaultState });
     }
@@ -299,7 +299,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   closeDrawer = () => {
-    this.reset();
+    this.resetInternalState();
     this.props.resetDrawer();
   }
 

@@ -1,6 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch, MapStateToProps } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
