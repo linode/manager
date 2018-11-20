@@ -412,7 +412,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 onEdit={this.handleEdit}
                 onResize={this.handleResize}
                 onClone={this.handleClone}
-                attached={Boolean(volume.linodeLabel)}
+                attached={Boolean(volume.linode_id)}
                 onAttach={this.handleAttach}
                 onDetach={this.handleDetach}
                 poweredOff={volume.linodeStatus === 'offline'}
