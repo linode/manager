@@ -1,18 +1,16 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import * as moment from 'moment';
-import { compose, isEmpty, or } from 'ramda';
+import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
-import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
+import { typeLabelLong } from 'src/features/linodes/presentation';
+import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
 import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
 
@@ -131,21 +129,13 @@ interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
 
-export interface SearchResults {
-  linodes: Item[];
-  volumes: Item[];
-  nodebalancers: Item[];
-  domains: Item[];
-  images: Item[];
-}
-
 interface State {
   searchText: string;
   searchActive: boolean;
-  linodes?: Linode.Linode[];
-  volumes?: Linode.Volume[];
-  nodebalancers?: Linode.NodeBalancer[];
-  domains?: Linode.Domain[];
+  linodes: Linode.Linode[];
+  volumes: Linode.Volume[];
+  nodebalancers: Linode.NodeBalancer[];
+  domains: Linode.Domain[];
   resultsLoading: boolean;
   [resource: string]: any;
   options: Item[];
@@ -168,14 +158,14 @@ const selectStyles = {
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
-
-const emptyResults = {
-  linodes: [], nodebalancers: [], volumes: [], domains: [], images: []
-}
-
 class SearchBar extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
+    linodes: [],
+    volumes: [],
+    nodebalancers: [],
+    domains: [],
+    images: [],
     searchText: '',
     searchActive: false,
     resultsLoading: false,
@@ -252,120 +242,13 @@ class SearchBar extends React.Component<CombinedProps, State> {
       return;
     };
 
+    const { linodes, volumes, domains, nodebalancers, images } = this.state;
+
     const queryLower = query.toLowerCase();
-    const searchResults: SearchResults = {...emptyResults};
+    const searchResults: SearchResults = searchAll(
+      linodes, volumes, nodebalancers, domains, images, queryLower, typesData,
+    );
 
-    if (this.state.linodes && typesData) {
-      const linodesByLabel = this.state.linodes.filter(
-        linode => {
-          const matchingTags = this.getMatchingTags(linode.tags, queryLower);
-          const bool = or(
-            linode.label.toLowerCase().includes(queryLower),
-            matchingTags.length > 0
-          )
-          return bool;
-        }
-      );
-      searchResults.linodes = linodesByLabel.map(linode => ({
-        label: linode.label,
-        value: linode.id,
-        data: {
-          tags: this.getMatchingTags(linode.tags, queryLower),
-          description: this.linodeDescription(
-            displayType(linode.type, typesData),
-            linode.specs.memory,
-            linode.specs.disk,
-            linode.specs.vcpus,
-            linode.image!,
-          ),
-          Icon: LinodeIcon,
-          path: `/linodes/${linode.id}`,
-          searchText: query,
-        }
-      }));
-    }
-
-    if (this.state.volumes) {
-      const volumesByLabel = this.state.volumes.filter(
-        volume => volume.label.toLowerCase().includes(queryLower),
-      );
-      searchResults.volumes = volumesByLabel.map(volume => ({
-        label: volume.label,
-        value: volume.id,
-        data: {
-          tags: [],
-          description: volume.size + ' G',
-          Icon: VolumeIcon,
-          path: `/volumes/${volume.id}`,
-          searchText: query,
-        }
-      }));
-    }
-
-    if (this.state.nodebalancers) {
-      const nodebalancersByLabel = this.state.nodebalancers.filter(
-        nodebal => nodebal.label.toLowerCase().includes(queryLower),
-      );
-      searchResults.nodebalancers = nodebalancersByLabel.map(nodebal => ({
-        label: nodebal.label,
-        value: nodebal.id,
-        data: {
-          tags: [],
-          description: nodebal.hostname,
-          Icon: NodebalIcon,
-          path: `/nodebalancers/${nodebal.id}`,
-          searchText: query,
-        }
-      }));
-    }
-
-    if (this.state.domains) {
-      const domainsByLabel = this.state.domains.filter(
-        domain => {
-          const matchingTags = this.getMatchingTags(domain.tags, queryLower);
-          const bool = or(
-            domain.domain.toLowerCase().includes(queryLower),
-            matchingTags.length > 0
-          )
-          return bool;
-        }
-      );
-      searchResults.domains = domainsByLabel.map(domain => ({
-        label: domain.domain,
-        value: domain.id,
-        data: {
-          tags: domain.tags,
-          description: domain.description || domain.status,
-          /* TODO: Update this with the Domains icon! */
-          Icon: NodebalIcon,
-          path: `/domains/${domain.id}`,
-          searchText: query
-        }
-      }));
-    }
-
-    if (this.state.images) {
-      const imagesByLabel = this.state.images.filter(
-        (image: Linode.Image) => (
-          /* TODO: this should be a pre-filter at the API level */
-          image.is_public === false
-          && image.label.toLowerCase().includes(queryLower)
-        ),
-      );
-      searchResults.images = imagesByLabel.map((image: Linode.Image) => ({
-        label: image.label,
-        value: image.id,
-        data: {
-          tags: [],
-          description: image.description || '',
-          /* TODO: Update this with the Images icon! */
-          Icon: VolumeIcon,
-          /* TODO: Choose a real location for this to link to */
-          path: `/images`,
-          searchText: query,
-        }
-      }));
-    }
     /* Keep options (for the Select) and searchResults separate so that we can
     * pass the results to the search landing page in a usable format if necessary. */
     const options = [
