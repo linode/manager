@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.40.0] - 2018.12.03
+
+### Added:
+- Added generate jql query method
+- Edit to package.json
+- Added release script to yarn scripts
+- MD output updates in generate script
+- Added release automation POC
+- Upgrade @material-ui@v3.5.1 (#4102)
+- Prevent import of non-shakeable libraries. (#4100)
+- add tags panel story (#4093)
+
+
 # [0.39.0] - 2018.11.15
 
 ## Breaking:
