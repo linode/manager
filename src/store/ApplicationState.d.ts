@@ -45,6 +45,9 @@ declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
 
 declare interface DomainDrawerState {
   open: boolean;
+  mode: string;
+  cloneId?: number;
+  domain?: string;
 }
 
 declare interface RequestableData<D> {

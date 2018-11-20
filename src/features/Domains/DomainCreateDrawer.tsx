@@ -1,5 +1,8 @@
-import { compose, Lens, lensPath, over, pathOr, set, view } from 'ramda';
+import { compose, Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -14,6 +17,11 @@ import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
+import {
+  CLONING,
+  CREATING,
+  resetDrawer
+} from 'src/store/reducers/domainDrawer';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -25,15 +33,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: theme.spacing.unit * 2
   },
 });
-
-interface Props {
-  open: boolean;
-  onClose: () => void;
-  onSuccess: (domain?:Linode.Domain) => void;
-  mode: 'clone' | 'create';
-  cloneID?: number;
-  domain?: string;
-}
 
 interface State {
   domain: string;
@@ -47,7 +46,10 @@ interface State {
   masterIPsCount: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>
+& DispatchProps
+& RouteComponentProps<{}>
+& StateProps;
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) => compose(masterIPsLens, lensPath([idx])) as Lens;
@@ -83,8 +85,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    if (this.props.mode === 'clone' &&
+  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+    if (this.props.mode === CLONING &&
       prevState.domain !== (this.props.domain || '')) {
       this.setState({ domain: this.props.domain || '' });
     }
@@ -121,14 +123,14 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
           <FormControlLabel value="slave" label="Slave" control={<Radio />} />
         </RadioGroup>
         <TextField
-          errorText={(mode === 'create' || '') && errorFor('domain')}
+          errorText={(mode === CREATING || '') && errorFor('domain')}
           value={domain}
-          disabled={mode === 'clone'}
+          disabled={mode === CLONING}
           label="Domain"
           onChange={this.updateLabel}
           data-qa-domain-name
         />
-        {mode === 'clone' &&
+        {mode === CLONING &&
           <TextField
             errorText={errorFor('domain')}
             value={cloneName}
@@ -137,7 +139,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-clone-name
           />
         }
-        {mode === 'create' && type === 'master' &&
+        {mode === CREATING && type === 'master' &&
           <TextField
             errorText={errorFor('soa_email')}
             value={soaEmail}
@@ -146,7 +148,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             data-qa-soa-email
           />
         }
-        {mode === 'create' && type === 'slave' &&
+        {mode === CREATING && type === 'slave' &&
           <React.Fragment>
             {masterIPsError && <Notice className={classes.masterIPErrorNotice} error text={`Master IP addresses must be valid IPv4 addresses.`} />}
             {
@@ -209,11 +211,16 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   };
 
   reset = () => {
-    if (this.mounted) { this.setState({ ...this.defaultState }); }
+    if (this.mounted) {
+      this.setState({ ...this.defaultState });
+    }
+  }
+
+  redirect = (id: number | '') => {
+    this.props.history.push(`/domains/${id}`);
   }
 
   create = () => {
-    const { onSuccess } = this.props;
     const { domain, type, soaEmail, master_ips } = this.state;
     const tags = this.state.tags.map(tag => tag.value);
 
@@ -240,8 +247,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     createDomain(data)
       .then((domainData: Linode.Domain) => {
         if (!this.mounted) { return; }
-        this.reset();
-        onSuccess(domainData);
+        this.redirect(domainData.id || '');
+        this.closeDrawer();
       })
       .catch((err) => {
         if (!this.mounted) { return; }
@@ -255,21 +262,21 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   clone = () => {
-    const { onClose, onSuccess, cloneID } = this.props;
+    const { cloneId } = this.props;
     const { cloneName } = this.state;
 
-    if (!cloneID) {
-      onClose();
+    if (!cloneId) {
+      this.closeDrawer();
       sendToast('Error cloning domain', 'error');
       return;
     }
 
     this.setState({ submitting: true });
-    cloneDomain(cloneID, cloneName)
+    cloneDomain(cloneId, cloneName)
       .then((data) => {
         if (!this.mounted) { return; }
-        this.reset();
-        onSuccess(data)
+        this.redirect(data.id || '');
+        this.closeDrawer();
       })
       .catch((err) => {
         if (!this.mounted) { return; }
@@ -284,16 +291,16 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   submit = () => {
-    if (this.props.mode === 'create') {
+    if (this.props.mode === CREATING) {
       this.create();
-    } else if (this.props.mode === 'clone') {
+    } else if (this.props.mode === CLONING) {
       this.clone();
     }
   }
 
   closeDrawer = () => {
     this.reset();
-    this.props.onClose();
+    this.props.resetDrawer();
   }
 
   updateLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -309,8 +316,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     this.setState({ tags: selected })
   }
 
-
-
   updateType = (e: React.ChangeEvent<HTMLInputElement>, value: 'master' | 'slave') =>
     this.setState({ type: value })
 
@@ -322,4 +327,33 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(DomainCreateDrawer);
+interface DispatchProps {
+  resetDrawer: () => void;
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { resetDrawer },
+  dispatch,
+);
+
+interface StateProps {
+  domain: string;
+  cloneId: number;
+  mode: typeof CLONING | typeof CREATING;
+  open: boolean;
+}
+
+const mapStateToProps = (state: ApplicationState) => ({
+  domain: path(['domainDrawer', 'domain'], state),
+  cloneId: path(['domainDrawer', 'cloneId'], state),
+  mode: path(['domainDrawer', 'mode'], state),
+  open: path(['domainDrawer', 'open'], state),
+});
+
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export default compose(
+  styled,
+  connected,
+  withRouter
+)(DomainCreateDrawer)

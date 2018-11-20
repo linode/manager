@@ -1,9 +1,10 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
+import { Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -11,9 +12,8 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Button from 'src/components/core/Button';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
-import { handleClose, handleOpen } from 'src/store/reducers/domainDrawer';
-import { openForCreating } from 'src/store/reducers/volumeDrawer';
+import { openForCreating as openDomainDrawerForCreating } from 'src/store/reducers/domainDrawer';
+import { openForCreating as openVolumeDrawerForCreating } from 'src/store/reducers/volumeDrawer';
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
 
 type CSSClasses = 'wrapper'
@@ -56,14 +56,14 @@ const styles: StyleRulesCallback = (theme) => ({
 });
 
 interface Props {
-  openForCreating: typeof openForCreating;
+  openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
 }
 
 interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}> & DispatchProps & StateProps;
+type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}> & DispatchProps;
 
 const styled = withStyles(styles);
 
@@ -86,7 +86,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'Volume',
       onClick: (e) => {
-        this.props.openForCreating();
+        this.props.openVolumeDrawerForCreating();
         this.handleClose();
         e.preventDefault();
       },
@@ -106,7 +106,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'Domain',
       onClick: (e) => {
-        this.props.actions.openDomainDrawer();
+        this.props.openDomainDrawerForCreating();
         this.handleClose();
         e.preventDefault();
       },
@@ -123,17 +123,9 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   }
 
-  onDomainSuccess = (domain:Linode.Domain) => {
-    const id = domain.id ? domain.id : '';
-    this.props.actions.closeDomainDrawer();
-    this.props.history.push(`/domains/${id}`);
-    return;
-  }
-
   render() {
     const { anchorEl } = this.state;
-    const { classes, domainDrawerOpen } = this.props;
-    const { closeDomainDrawer } = this.props.actions;
+    const { classes } = this.props;
     const itemsLen = this.items.length;
 
     return (
@@ -173,12 +165,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
               {...i}
             />)}
         </Menu>
-        <DomainCreateDrawer
-          open={domainDrawerOpen}
-          onClose={closeDomainDrawer}
-          onSuccess={this.onDomainSuccess}
-          mode="create"
-        />
       </div>
 
     );
@@ -188,29 +174,16 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 export const styledComponent = styled(AddNewMenu);
 
 interface DispatchProps {
-  actions: {
-    closeDomainDrawer: () => void;
-    openDomainDrawer: () => void;
-  },
+  openDomainDrawerForCreating: () => void;
+  openVolumeDrawerForCreating: () => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
-  return {
-    actions: {
-      closeDomainDrawer: () => dispatch(handleClose()),
-      openDomainDrawer: () => dispatch(handleOpen()),
-    }
-  };
-};
-interface StateProps {
-  domainDrawerOpen: boolean;
-}
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { openDomainDrawerForCreating, openVolumeDrawerForCreating },
+  dispatch,
+);
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
-  domainDrawerOpen: state.domainDrawer.open
-});
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(undefined, mapDispatchToProps);
 
 export default compose(
   connected,
