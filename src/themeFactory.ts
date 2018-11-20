@@ -40,6 +40,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface Theme {
     name: string;
     '@keyframes rotate': any;
+    '@keyframes dash': any;
     bg: any;
     color: any;
     animateCircleIcon?: any;
@@ -50,17 +51,13 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface ThemeOptions {
     name?: string;
     '@keyframes rotate'?: any;
+    '@keyframes dash'?: any;
     bg?: any;
     color?: any;
     animateCircleIcon?: any;
     notificationList?: any;
     status?: any;
   }
-}
-
-const iconCircleAnimation = {
-  // animation: '',
-
 }
 
 const breakpoints = createBreakpoints({});
@@ -73,6 +70,23 @@ const primaryColors = {
   headline: '#32363C',
   divider: '#f4f4f4',
   offBlack: '#444',
+}
+
+const iconCircleAnimation = {
+  '& .circle': {
+    fill: primaryColors.main,
+    transition: 'fill .2s ease-in-out .2s',
+  },
+  '& .outerCircle': {
+    stroke: primaryColors.dark,
+    strokeDasharray: 1000,
+    strokeDashoffset: 1000,
+    animation: 'dash 2s linear forwards',
+  },
+  '& .insidePath *': {
+    transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white',
+  },
 }
 
 const themeDefaults: ThemeOptions = {
@@ -110,6 +124,11 @@ const themeDefaults: ThemeOptions = {
     },
     to: {
       transform: 'rotate(360deg)',
+    },
+  },
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
     },
   },
   bg: {
