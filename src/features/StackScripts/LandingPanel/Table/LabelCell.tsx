@@ -1,6 +1,5 @@
 import {
   StyleRulesCallback,
-  Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -18,7 +17,7 @@ type ClassNames = 'root'
   | 'linkIcon'
   | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   label: {
     cursor: 'pointer',

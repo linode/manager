@@ -1,6 +1,5 @@
 import {
   StyleRulesCallback,
-  Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -16,7 +15,7 @@ type ClassNames = 'root'
   | 'activeDeploys'
   | 'lastRevision';;
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   activeDeploys: {
     minWidth: 140,
@@ -84,6 +83,6 @@ const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(TableHeader);

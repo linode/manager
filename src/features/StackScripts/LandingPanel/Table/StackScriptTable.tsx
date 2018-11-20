@@ -1,6 +1,5 @@
 import {
   StyleRulesCallback,
-  Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -16,7 +15,7 @@ import StackScriptTableRows from './TableRows';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
@@ -96,6 +95,6 @@ class StackScriptTable extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(StackScriptTable);

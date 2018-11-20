@@ -1,6 +1,5 @@
 import {
   StyleRulesCallback,
-  Theme,
   withStyles,
   WithStyles,
 } from '@material-ui/core/styles';
@@ -25,7 +24,7 @@ type ClassNames = 'root'
   | 'searchWrapper'
   | 'searchBar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   searchWrapper: {
     marginBottom: theme.spacing.unit * 3,
