@@ -72,7 +72,7 @@ interface ExtendedVolume extends Linode.Volume {
 
 interface Props extends PaginationProps<ExtendedVolume> {
   openForEdit: typeof openForEdit;
-  openForResize: typeof openForResize;
+  openForResize: (volumeId: number, volumeSize: number) => void;
   openForClone: typeof openForClone;
   openForCreating: typeof openForCreating;
   recentEvent?: Linode.Event;
@@ -154,39 +154,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     })
   }
 
-  handleEdit = (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-    linodeLabel: string,
-  ) => {
-    this.props.openForEdit(
-      volumeID,
-      label,
-      size,
-      regionID,
-      linodeLabel
-    )
-  }
-
-  handleResize = (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-    linodeLabel: string,
-  ) => {
-    this.props.openForResize(
-      volumeID,
-      label,
-      size,
-      regionID,
-      linodeLabel
-    )
-  }
-
-  handleClone = (
+    handleClone = (
     volumeID: number,
     label: string,
     size: number,
@@ -356,7 +324,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           copy="Add storage to your Linodes using the resilient Volumes service for $0.10/GiB per month."
           icon={VolumesIcon}
           buttonProps={{
-            onClick: this.props.openForCreating,
+            onClick: this.openCreateVolumeDrawer,
             children: 'Create a Volume',
           }}
         />
@@ -409,8 +377,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 volumeID={volume.id}
                 size={size}
                 label={label}
-                onEdit={this.handleEdit}
-                onResize={this.handleResize}
+                onEdit={this.props.openForEdit}
+                onResize={this.props.openForResize}
                 onClone={this.handleClone}
                 attached={Boolean(volume.linode_id)}
                 onAttach={this.handleAttach}
@@ -434,7 +402,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   openCreateVolumeDrawer = (e: any) => {
-    this.props.openForCreating();
+    const { linodeId } = this.props.match.params;
+    const maybeLinodeId = linodeId ? Number(linodeId) : undefined;
+    this.props.openForCreating(maybeLinodeId);
+
     e.preventDefault();
   }
 
@@ -495,7 +466,7 @@ const connected = connect(undefined, mapDispatchToProps);
 const documented = setDocs(VolumesLanding.docs);
 
 const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
-  const linodeId = path<string>(['match','params', 'linodeId'], ownProps);
+  const linodeId = path<string>(['match', 'params', 'linodeId'], ownProps);
 
   const req: (params: any, filter: any) => Promise<Linode.ResourcePage<Linode.Volume>>
     = linodeId
@@ -563,9 +534,9 @@ const withEvents = WithEvents();
 const styled = withStyles(styles);
 
 export default compose(
-    connected,
-    documented,
-    paginated,
-    styled,
-    withEvents
-  )(VolumesLanding);
+  connected,
+  documented,
+  paginated,
+  styled,
+  withEvents
+)(VolumesLanding);

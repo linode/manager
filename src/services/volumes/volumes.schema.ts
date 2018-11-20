@@ -1,11 +1,11 @@
 import { number, object, string } from 'yup';
 
 export const CreateVolumeSchema = object({
-  region: string()
-    .when('linode_id', {
-      is: (id) => id === undefined,
-      then: string().required("Must provide a region or a Linode ID."),
-    }),
+  region: string(),
+    // .when('linode_id', {
+    //   is: (id) => id === undefined || id === '',
+    //   then: string().required("Must provide a region or a Linode ID."),
+    // }),
   linode_id: number(),
   size: number()
     .typeError("Size must be a number.")

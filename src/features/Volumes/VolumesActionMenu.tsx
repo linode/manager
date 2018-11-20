@@ -6,18 +6,12 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   onShowConfig: (path: string, label: string) => void;
   onEdit: (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-    linodeLabel: string,
+    volumeId: number,
+    volumeLabel: string,
   ) => void;
   onResize: (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-    linodeLabel: string,
+    volumeId: number,
+    volumeSize: number,
   ) => void;
   onClone: (
     volumeID: number,
@@ -54,24 +48,18 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
     const {
       volumeID,
       label,
-      size,
-      regionID,
-      linodeLabel,
       onEdit
     } = this.props;
-    onEdit(volumeID, label, size, regionID, linodeLabel)
+    onEdit(volumeID, label)
   }
 
   handleResize = () => {
     const {
       volumeID,
-      label,
       size,
-      regionID,
-      linodeLabel,
       onResize
     } = this.props;
-    onResize(volumeID, label, size, regionID, linodeLabel)
+    onResize(volumeID, size)
   }
 
   handleClone = () => {

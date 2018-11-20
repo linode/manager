@@ -99,6 +99,7 @@ type CombinedProps =
 export const modes = {
   CLOSED: 'closed',
   CREATING: 'creating',
+  CREATING_FOR_LINODE: 'creating_for_linode',
   RESIZING: 'resizing',
   CLONING: 'cloning',
   EDITING: 'editing',
@@ -107,6 +108,7 @@ export const modes = {
 const titleMap = {
   [modes.CLOSED]: '',
   [modes.CREATING]: 'Create a Volume',
+  [modes.CREATING_FOR_LINODE]: 'Create a Volume',
   [modes.RESIZING]: 'Resize a Volume',
   [modes.CLONING]: 'Clone a Volume',
   [modes.EDITING]: 'Rename a Volume',
@@ -124,6 +126,14 @@ const L = {
   size: lensPath(['size']),
   submitting: lensPath(['submitting']),
   success: lensPath(['success']),
+};
+
+const errorMap = {
+  linode_id: 'Linode',
+  config_id: 'Config',
+  region: 'Region',
+  size: 'Size',
+  label: 'Label',
 };
 
 class VolumeDrawer extends React.Component<CombinedProps, State> {
@@ -244,6 +254,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
 
     switch (mode) {
       case modes.CREATING:
+      case modes.CREATING_FOR_LINODE:
 
         this.composeState([
           set(L.submitting, true),
@@ -356,7 +367,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     this.setState({ selectedConfig: e.target.value });
   }
 
-  setSelectedLinode = (selected:Item) => {
+  setSelectedLinode = (selected: Item) => {
     if (!this.mounted) { return; }
     if (selected) {
       this.setState({
@@ -386,41 +397,15 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         (prevState) => prevState.size <= MAX_VOLUME_SIZE && Boolean(prevState.errors),
         over(L.errors, filter((event: Linode.ApiFieldError) => event.field !== 'size')),
       ),
-
-      // (prevState: State) => {
-      //   const { size, errors } = prevState;
-      //   if (size <= 10240 && errors) {
-      //     return {
-      //       ...prevState,
-      //       errors: errors.filter(e => e.field !== 'size'),
-      //     };
-      //   }
-
-      //   return prevState;
-      // }
-
       when<State, State>(
         (prevState) => prevState.size > MAX_VOLUME_SIZE,
         over(L.errors, append({ field: 'size', reason: `Size cannot be over ${MAX_VOLUME_SIZE}.` })),
       ),
-
-      // (prevState: State) => {
-      //   const { size, errors } = prevState;
-      //   if (size > 10240) {
-      //     return {
-      //       ...prevState,
-      //       errors: (errors || []).push({ field: 'size', reason: 'Size cannot be over 10240.' }),
-      //     };
-      //   }
-
-      //   return prevState;
-      // }
-
       set(L.size, +e.target.value || 0),
     ]);
   }
 
-  getLinodeFilter = (inputValue:string) => {
+  getLinodeFilter = (inputValue: string) => {
     const { region } = this.state;
     if (region && region !== 'none') {
       return {
@@ -477,18 +462,18 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
     const { linodeLabel, mode } = this.props;
     if (!linodes) { return []; }
     const options: Item[] = linodes.map((linode: Linode.Linode) => {
-        return {
-          value: linode.id,
-          label: linode.label,
-          data: { region: linode.region }
-        }
-      });
+      return {
+        value: linode.id,
+        label: linode.label,
+        data: { region: linode.region }
+      }
+    });
     if (mode === modes.EDITING || mode === modes.RESIZING) {
       /*
       * We optimize the lookup of the linodeLabel by providing it
       * explicitly when editing or resizing
       */
-      return [{ value: 'none', label: linodeLabel, data: { region: 'none'} }];
+      return [{ value: 'none', label: linodeLabel, data: { region: 'none' } }];
     }
     return options;
   }
@@ -510,13 +495,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
       linodeId,
     } = this.state;
 
-    const hasErrorFor = getAPIErrorFor({
-      linode_id: 'Linode',
-      config_id: 'Config',
-      region: 'Region',
-      size: 'Size',
-      label: 'Label',
-    }, errors);
+    const hasErrorFor = getAPIErrorFor(errorMap, errors);
     const success = view<State, string>(L.success, this.state);
     const submitting = view<State, boolean>(L.submitting, this.state);
     const labelError = hasErrorFor('label');
@@ -549,7 +528,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
-        {[modes.CREATING, modes.RESIZING].includes(mode) &&
+        {[modes.CREATING, modes.CREATING_FOR_LINODE, modes.RESIZING].includes(mode) &&
           <Typography variant="body1">
             A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
             $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
@@ -567,18 +546,17 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           />
         }
 
-        <TextField
+        {[modes.CREATING, modes.CREATING_FOR_LINODE, modes.EDITING].includes(mode) && <TextField
           label="Label"
           required
           value={label}
           onChange={this.setLabel}
           error={Boolean(labelError)}
           errorText={labelError}
-          disabled={mode === modes.RESIZING || mode === modes.CLONING}
           data-qa-volume-label
-        />
+        />}
 
-        <TextField
+        {[modes.CREATING, modes.CREATING_FOR_LINODE, modes.RESIZING].includes(mode) && <TextField
           label="Size"
           type="number"
           required
@@ -586,7 +564,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           onChange={this.setSize}
           error={Boolean(sizeError)}
           errorText={sizeError}
-          disabled={mode === modes.CLONING || mode === modes.EDITING}
           helperText={`A single volume can range from 10 GiB to 10,240 GiB in size.`}
           InputProps={{
             endAdornment:
@@ -595,9 +572,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               </InputAdornment>,
           }}
           data-qa-size
-        />
+        />}
 
-        <FormControl fullWidth>
+        {[modes.CREATING].includes(mode) && <FormControl fullWidth>
           <InputLabel
             htmlFor="region"
             disableAnimation
@@ -608,11 +585,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           </InputLabel>
           <Select
             value={region}
-            disabled={
-              mode === modes.CLONING
-              || mode === modes.EDITING
-              || mode === modes.RESIZING
-            }
             onChange={this.setSelectedRegion}
             inputProps={{ name: 'region', id: 'region' }}
             error={Boolean(regionError)}
@@ -634,9 +606,9 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               {regionError}
             </FormHelperText>
           }
-        </FormControl>
+        </FormControl>}
 
-        {mode !== modes.CLONING &&
+        {[modes.CREATING].includes(mode) &&
           <FormControl fullWidth>
             <EnhancedSelect
               label="Linode"
@@ -644,10 +616,6 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
               value={this.getSelectedLinode(linodeId)}
               isLoading={linodesLoading}
               errorText={linodeError}
-              disabled={
-                mode === modes.EDITING
-                || mode === modes.RESIZING
-              }
               options={linodes}
               onChange={this.setSelectedLinode}
               onInputChange={this.onInputChange}
@@ -661,7 +629,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
           </FormControl>
         }
 
-        {configs.length > 1 &&
+        {configs.length > 1 && [modes.CREATING, modes.CREATING_FOR_LINODE].includes(mode) &&
           <FormControl fullWidth>
             <InputLabel
               htmlFor="config"
@@ -686,11 +654,13 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
             {Boolean(configError) && <FormHelperText error>{configError}</FormHelperText>}
           </FormControl>
         }
-        {[modes.CREATING, modes.RESIZING].includes(mode) &&
+
+        {[modes.CREATING, modes.CREATING_FOR_LINODE, modes.RESIZING].includes(mode) &&
           <div className={classes.pricePanel} >
             <DisplayPrice price={price} interval="mo" />
           </div>
         }
+
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={this.onSubmit}
@@ -738,7 +708,7 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any, any>(
+export default compose(
   connected,
   regionsContext,
   styled,
