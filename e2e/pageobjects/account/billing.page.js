@@ -40,18 +40,19 @@ class Billing extends Page {
 
     contactSummaryDisplay() {
         this.contactSummary.waitForVisible(constants.wait.normal);
-        expect(this.currentCompany.isVisible()).toBe(true);
-        expect(this.currentName.isVisible()).toBe(true);
+        this.currentCompany.waitForVisible(constants.wait.normal);
+        expect(this.currentCompany.getText()).not.toBe(null);
+        this.currentName.waitForVisible(constants.wait.normal);
         expect(this.currentName.getText()).not.toBe(null);
-        expect(this.currentAddress.isVisible()).toBe(true);
+        this.currentAddress.waitForVisible(constants.wait.normal);
         expect(this.currentAddress.getText()).not.toBe(null);
-        expect(this.currentEmail.isVisible()).toBe(true);
+        this.currentEmail.waitForVisible(constants.wait.normal);
         expect(this.currentEmail.getText()).not.toBe(null);
-        expect(this.currentPhone.isVisible()).toBe(true);
+        this.currentPhone.waitForVisible(constants.wait.normal);
         expect(this.currentPhone.getText()).not.toBe(null);
-        expect(this.currentCreditCard.isVisible()).toBe(true);
+        this.currentCreditCard.waitForVisible(constants.wait.normal);
         expect(this.currentCreditCard.getText()).not.toBe(null);
-        expect(this.currentExpDate.isVisible()).toBe(true);
+        this.currentExpDate.waitForVisible(constants.wait.normal);
         expect(this.currentExpDate.getText()).not.toBe(null);
     }
 

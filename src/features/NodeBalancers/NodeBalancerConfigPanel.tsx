@@ -1,18 +1,16 @@
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as React from 'react';
-
-import Divider from '@material-ui/core/Divider';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import MenuItem from '@material-ui/core/MenuItem';
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import Divider from 'src/components/core/Divider';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputAdornment from 'src/components/core/InputAdornment';
+import MenuItem from 'src/components/core/MenuItem';
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -77,7 +75,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface Props {
   linodesWithPrivateIPs?: Linode.Linode[] | null;
@@ -1090,4 +1088,4 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 }
 
-export default styled<Props>(NodeBalancerConfigPanel);
+export default styled(NodeBalancerConfigPanel) as React.ComponentType<Props>;

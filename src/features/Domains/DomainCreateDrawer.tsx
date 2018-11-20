@@ -1,14 +1,12 @@
 import { compose, Lens, lensPath, over, pathOr, set, view } from 'ramda';
 import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -322,6 +320,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   addIPField = () => this.setState(updateMasterIPsCount(v => v + 1))
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(DomainCreateDrawer);

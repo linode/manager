@@ -1,16 +1,11 @@
-import { pathOr } from 'ramda';
-import * as React from 'react';
-
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import OpenInNew from '@material-ui/icons/OpenInNew';
-
+import * as React from 'react';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
@@ -33,30 +28,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
-  errors?: Linode.ApiFieldError[];
-  handleToggle: () => void;
+  onChange: () => void;
   openBackupsDrawer: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-const displayError = (errors: Linode.ApiFieldError[]) => {
-  return pathOr(
-    "There was an error updating your account settings.",
-    ['response', 'data', 'errors', 0, 'reason'],
-    errors
-    )
-}
 
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
   const {
     backups_enabled,
     classes,
-    errors,
     hasLinodesWithoutBackups,
-    handleToggle,
-    openBackupsDrawer
+    onChange,
+    openBackupsDrawer,
   } = props;
 
   return (
@@ -81,18 +66,13 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               </a>.
             </Typography>
           </Grid>
-          {errors &&
-            <Grid item>
-              <Notice error text={displayError(errors)} />
-            </Grid>
-          }
           <Grid item container direction="row" alignItems="center">
             <Grid item>
               <FormControlLabel
                 // className="toggleLabel"
                 control={
                   <Toggle
-                    onChange={handleToggle}
+                    onChange={onChange}
                     checked={backups_enabled}
                   />
                 }
@@ -117,6 +97,6 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
   );
 }
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 export default styled(AutoBackups);

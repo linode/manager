@@ -1,11 +1,9 @@
 import * as moment from 'moment';
 import { compose, filter, flatten, groupBy, head, map, prop, propSatisfies, reverse, sortBy, startsWith, tail, values } from 'ramda';
 import * as React from 'react';
-
-import Paper from '@material-ui/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
+import Paper from 'src/components/core/Paper';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
@@ -197,6 +195,6 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default RenderGuard<Props>(styled(CreateFromImage));
+export default styled(RenderGuard<Props>(CreateFromImage));

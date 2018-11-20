@@ -1,6 +1,7 @@
-import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
-import createMuiTheme, { ThemeOptions } from '@material-ui/core/styles/createMuiTheme';
 import { mergeDeepRight } from 'ramda';
+import createBreakpoints from 'src/components/core/styles/createBreakpoints';
+import createMuiTheme, { ThemeOptions } from 'src/components/core/styles/createMuiTheme';
+
 /**
  * Augmenting Palette and Palette Options
  * @todo Move status out of the palette and add it as a custom ThemeOption.
@@ -954,29 +955,30 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
-    MuiTooltip: {
-      tooltip: {
-        borderRadius: 0,
-        maxWidth: 200,
-        backgroundColor: 'white',
-        boxShadow: '0 0 5px #bbb',
-        color: '#606469',
-        visibility: 'hidden',
-        textAlign: 'left',
-        width: 0,
-        height: 0,
-        [breakpoints.up('sm')]: {
-          padding: '8px 10px',
-          fontSize: '.9rem',
-        },
-        '&$open': {
-          width: 'auto',
-          height: 'auto',
-          opacity: 1,
-          visibility: 'visible',
-        },
-      },
-    },
+    /** @todo Remove when tooltips are properly styled. */
+    // MuiTooltip: {
+    //   tooltip: {
+    //     borderRadius: 0,
+    //     maxWidth: 200,
+    //     backgroundColor: 'white',
+    //     boxShadow: '0 0 5px #bbb',
+    //     color: '#606469',
+    //     visibility: 'hidden',
+    //     textAlign: 'left',
+    //     width: 0,
+    //     height: 0,
+    //     [breakpoints.up('sm')]: {
+    //       padding: '8px 10px',
+    //       fontSize: '.9rem',
+    //     },
+    //     '&$open': {
+    //       width: 'auto',
+    //       height: 'auto',
+    //       opacity: 1,
+    //       visibility: 'visible',
+    //     },
+    //   },
+    // },
   },
 };
 

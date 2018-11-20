@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-
 import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 type CSSClasses = 'root'
   | 'copy'
-  | 'icon' 
+  | 'icon'
   | 'title';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
@@ -103,7 +101,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
 }
 const enhanced = compose(
   withRouter,
-  withStyles(styles, { withTheme: true }),
+  withStyles(styles),
 );
 
 export default enhanced(ListLinodesEmptyState);

@@ -1,16 +1,14 @@
+import Check from '@material-ui/icons/Check';
+import Close from '@material-ui/icons/Close';
+import Edit from '@material-ui/icons/Edit';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-import Button from '@material-ui/core/Button';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import { TextFieldProps } from '@material-ui/core/TextField';
-import Typography, { TypographyProps } from '@material-ui/core/Typography';
-import Check from '@material-ui/icons/Check';
-import Close from '@material-ui/icons/Close';
-import ModeEdit from '@material-ui/icons/ModeEdit';
-
+import Button from 'src/components/core/Button';
+import ClickAwayListener from 'src/components/core/ClickAwayListener';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { TextFieldProps } from 'src/components/core/TextField';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
 import TextField from '../TextField';
 
 type ClassNames = 'root'
@@ -138,6 +136,7 @@ interface Props {
   text: string;
   errorText?: string;
   labelLink?: string;
+  typeVariant: string;
 }
 
 interface State {
@@ -147,7 +146,7 @@ interface State {
 
 type PassThroughProps = Props & TextFieldProps & TypographyProps;
 
-type FinalProps =  PassThroughProps & WithStyles<ClassNames>;
+type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 
 export class EditableText extends React.Component<FinalProps, State> {
   state: State = {
@@ -196,7 +195,7 @@ export class EditableText extends React.Component<FinalProps, State> {
 
 
   render() {
-    const { classes, labelLink, onEdit, errorText, ...rest } = this.props;
+    const { classes, labelLink, onEdit, errorText, typeVariant, ...rest } = this.props;
     const { isEditing, text } = this.state;
 
     const labelText = (
@@ -223,7 +222,7 @@ export class EditableText extends React.Component<FinalProps, State> {
                   onClick={this.toggleEditing}
                   data-qa-edit-button
                 >
-                  <ModeEdit className={`${classes.icon} ${classes.edit}`}/>
+                  <Edit className={`${classes.icon} ${classes.edit}`}/>
                 </Button>
               </React.Fragment>
             </div>
@@ -245,8 +244,8 @@ export class EditableText extends React.Component<FinalProps, State> {
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
                     className: classnames({
-                      [classes.headline]: this.props.variant === 'headline',
-                      [classes.title]: this.props.variant === 'title',
+                      [classes.headline]: this.props.typeVariant === 'headline',
+                      [classes.title]: this.props.typeVariant === 'title',
                       [classes.input]: true,
                     }),
                   }}
@@ -277,4 +276,6 @@ export class EditableText extends React.Component<FinalProps, State> {
   }
 }
 
-export default withStyles(styles, { withTheme: true })<PassThroughProps>(EditableText);
+const styled = withStyles(styles);
+
+export default styled(EditableText);

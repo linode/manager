@@ -1,8 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-
-import CircularProgress, { CircularProgressProps } from '@material-ui/core/CircularProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import CircularProgress, { CircularProgressProps } from 'src/components/core/CircularProgress';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root'
 | 'top'
@@ -138,13 +137,13 @@ const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props)
           data-qa-circle-progress={value}
         />
       </div>
-      : <CircularProgress 
+      : <CircularProgress
           className={classes.mini}
           data-qa-circle-progress
         />
   );
 };
 
-const decorate = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default decorate<Props>(circleProgressComponent);
+export default styled(circleProgressComponent);

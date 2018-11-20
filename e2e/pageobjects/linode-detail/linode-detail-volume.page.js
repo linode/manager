@@ -109,7 +109,7 @@ export class VolumeDetail extends Page {
             this.region.waitForVisible();
             this.region.click();
             browser.waitForVisible('[data-qa-attach-to-region]');
-            browser.click(`[data-qa-attach-to-region="${volume.region}"]`);
+            browser.jsClick(`[data-qa-attach-to-region="${volume.region}"]`);
 
             browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
             browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);

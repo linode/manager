@@ -1,10 +1,8 @@
 import * as React from 'react';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-
+import List from 'src/components/core/List';
+import ListItem from 'src/components/core/ListItem';
+import ListItemText from 'src/components/core/ListItemText';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
@@ -54,9 +52,9 @@ const NodeBalancerCreationError: React.StatelessComponent<CombinedProps> = (prop
     );
 };
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
-export default styled<Props>(NodeBalancerCreationError);
+export default styled(NodeBalancerCreationError);
 
 const maybeListReason = (errors?: Linode.ApiFieldError[]) => {
   if (!errors || errors.length === 0) {
