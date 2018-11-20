@@ -125,7 +125,7 @@ exports.createLinode = (token, password, linodeLabel, tags) => {
             image: 'linode/debian9',
             region: 'us-east',
             root_pass: password,
-            type: 'g6-standard-1'
+            type: 'g6-nanode-1'
         }
 
         if (linodeLabel !== false) {
@@ -391,6 +391,20 @@ exports.updateUserProfile = (token, profileData) => {
 
         return getAxiosInstance(token)
             .put(endpoint,profileData)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error", error);
+                reject(error);
+            });
+    });
+}
+
+exports.updateGlobalSettings = (token, settingsData) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/account/settings';
+
+        return getAxiosInstance(token)
+            .put(endpoint,settingsData)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error("Error", error);
