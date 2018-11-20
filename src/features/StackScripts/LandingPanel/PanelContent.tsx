@@ -76,7 +76,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
     this.props.request();
   }
 
-  handleSearch = (searchTerm: string) => {
+  generateFilterAndTriggerSearch = (searchTerm: string) => {
     const { handleSearch, type } = this.props;
     const searchTermToLower = searchTerm.toLowerCase();
     /**
@@ -240,7 +240,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
         <div className={classes.searchWrapper}>
           <DebouncedSearch
             placeholderText='Search by Label, Username, or Description'
-            onSearch={this.handleSearch}
+            onSearch={this.generateFilterAndTriggerSearch}
             className={classes.searchBar}
             isSearching={searching}
             toolTipText={type === 'community'

@@ -1,23 +1,10 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
 import * as React from 'react';
-
-import TableBody from '@material-ui/core/TableBody';
 
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 
 import TableHeader from './TableHeader';
 import StackScriptTableRows from './TableRows';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
-});
 
 interface Props {
   type: 'linode' | 'own' | 'community';
@@ -37,64 +24,56 @@ interface Props {
   triggerMakePublic: (stackScriptID: number, stackScriptLabel: string) => void;
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>
+type CombinedProps = Props;
 
-class StackScriptTable extends React.Component<CombinedProps, {}> {
+const StackScriptTable = (props: CombinedProps) => {
+  const {
+    page,
+    pageSize,
+    count,
+    handlePageSizeChange,
+    handlePageChange,
+    handleOrderChange,
+    data: stackScripts,
+    loading,
+    error,
+    order,
+    orderBy,
+    currentUser,
+    triggerDelete,
+    triggerMakePublic
+  } = props;
 
-  render() {
-    const {
-      page,
-      pageSize,
-      count,
-      handlePageSizeChange,
-      handlePageChange,
-      handleOrderChange,
-      data: stackScripts,
-      loading,
-      error,
-      order,
-      orderBy,
-      currentUser,
-      triggerDelete,
-      triggerMakePublic
-    } = this.props;
-
-    return (
-      <React.Fragment>
-        <Table aria-label="List of StackScripts" border>
-          <TableHeader
-            sortOrder={order}
-            currentFilter={orderBy}
-            handleClick={handleOrderChange}
-          />
-          <TableBody>
-            <StackScriptTableRows
-              triggerDelete={triggerDelete}
-              triggerMakePublic={triggerMakePublic}
-              currentUser={currentUser}
-              stackScript={{
-                loading,
-                error,
-                stackScripts
-              }}
-            />
-          </TableBody>
-        </Table>
-        {!loading && !error &&
-          <PaginationFooter
-            count={count}
-            page={page}
-            pageSize={pageSize}
-            handlePageChange={handlePageChange}
-            handleSizeChange={handlePageSizeChange}
-          />
-        }
-      </React.Fragment>
-    );
-  }
+  return (
+    <React.Fragment>
+      <Table aria-label="List of StackScripts" border>
+        <TableHeader
+          sortOrder={order}
+          currentFilter={orderBy}
+          handleClick={handleOrderChange}
+        />
+        <StackScriptTableRows
+          triggerDelete={triggerDelete}
+          triggerMakePublic={triggerMakePublic}
+          currentUser={currentUser}
+          stackScript={{
+            loading,
+            error,
+            stackScripts
+          }}
+        />
+      </Table>
+      {!loading && !error &&
+        <PaginationFooter
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={handlePageChange}
+          handleSizeChange={handlePageSizeChange}
+        />
+      }
+    </React.Fragment>
+  );
 }
 
-const styled = withStyles(styles);
-
-export default styled(StackScriptTable);
+export default StackScriptTable;

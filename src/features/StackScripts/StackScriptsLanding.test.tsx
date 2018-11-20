@@ -33,7 +33,7 @@ describe('StackScripts Landing', () => {
   });
 
   it('should render SelectStackScriptPanel', () => {
-    expect(component.find('WithStyles(StackScriptPanel)'))
+    expect(component.find('StackScriptPanel'))
       .toHaveLength(1);
   });
 });
