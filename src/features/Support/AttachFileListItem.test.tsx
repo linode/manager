@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { attachment1 } from 'src/__data__/fileAttachments';
+import { attachment1, attachment2, attachment3 } from 'src/__data__/fileAttachments';
 
 
 import { AttachFileListItem } from './AttachFileListItem';
@@ -43,5 +43,13 @@ describe("AttachFileListItem component", () => {
     const button = component.find('[data-qa-delete-button]').first();
     button.simulate('click');
     expect(props.onClick).toHaveBeenCalled();
+  });
+  it("should render a progress bar when a file is uploading", () => {
+    component.setProps({ file: attachment2 });
+    expect(component.find('WithStyles(LinearProgressComponent)')).toHaveLength(1);
+  });
+  it("should return null if the file has already been uploaded", () => {
+    component.setProps({ file: attachment3 });
+    expect(component.getElement()).toBeNull();
   });
 });

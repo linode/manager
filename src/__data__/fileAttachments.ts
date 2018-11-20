@@ -8,6 +8,13 @@ export const attachment1 =  {
 export const attachment2 =  {
   name: 'file2',
   file: new File(['name'], 'file2'),
-  uploading: false,
+  uploading: true,
   uploaded: false,
+}
+
+export const attachment3 =  {
+  name: 'file2',
+  file: new File(['name'], 'file2'),
+  uploading: false,
+  uploaded: true,
 }

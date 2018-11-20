@@ -64,6 +64,7 @@ type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
 export const AttachFileListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, file, inlineDisplay, onClick } = props;
+  if (file.uploaded) { return null; }
   return (
     <React.Fragment>
       <Grid container className={classes.attachmentsContainer}>

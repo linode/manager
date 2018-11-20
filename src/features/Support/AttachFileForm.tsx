@@ -89,19 +89,14 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
           <AttachFile />
           Attach a file
         </Button>
-        {/* @todo refactor to separate component */}
         {files.map((file, idx) => (
-          file.uploaded
-            ? null /* this file has already been uploaded so don't show it */
-            : (
-              <AttachFileListItem
-                key={idx}
-                inlineDisplay={Boolean(inlineDisplay)}
-                file={file}
-                fileIdx={idx}
-                removeFile={this.removeFile}
-              />
-            )
+          <AttachFileListItem
+            key={idx}
+            inlineDisplay={Boolean(inlineDisplay)}
+            file={file}
+            fileIdx={idx}
+            removeFile={this.removeFile}
+          />
         ))}
       </React.Fragment>
     );
