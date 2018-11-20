@@ -46,18 +46,16 @@ describe('List Linodes - Actions - Reboot Suite', () => {
     });
 
     describe('List View Reboot - Suite', () => {
-        let linodes, totalLinodes;
-        
+        let totalLinodes;
+
         beforeAll(() => {
             ListLinodes.switchView('list');
             ListLinodes.tableHead.waitForVisible(constants.wait.normal);
-
-            linodes = ListLinodes.linode;
-            totalLinodes = linodes.length;
+            totalLinodes = ListLinodes.linode.length;
         });
 
         it('should reboot linode on click', () => {
-            ListLinodes.selectActionMenuItem(linodes[0], 'Reboot');
+            ListLinodes.selectActionMenuItem(ListLinodes.linode[0], 'Reboot');
             ListLinodes.acceptDialog('Confirm Reboot');
             browser.waitForVisible('[data-qa-loading]', constants.wait.normal);
         });
@@ -75,9 +73,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should display running status after booted', () => {
-            browser.waitUntil(function() {
-                return linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status') === 'running';
-            }, rebootTimeout);
+            browser.waitForVisible('[data-qa-status="running"]', rebootTimeout);
         });
 
         it('should display all list view elements after reboot', () => {
