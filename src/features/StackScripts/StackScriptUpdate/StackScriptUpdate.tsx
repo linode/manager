@@ -1,12 +1,11 @@
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import { clone, compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -43,6 +42,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   titleWrapper: {
     display: 'flex',
     marginTop: 5,
+    marginBottom: 20,
+    alignItems: 'center',
+    wordBreak: 'break-all',
   },
 });
 
@@ -308,7 +310,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     if (!username) {
-      return <ErrorState errorText="An error has occured, please reload and try again." />
+      return <ErrorState errorText="An error has occurred, please reload and try again." />
     }
 
     return (
@@ -322,21 +324,12 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           justify="space-between"
         >
           <Grid item className={classes.titleWrapper}>
-            <Link to={`/stackscripts`}>
-              <IconButton
-                className={classes.backButton}
-              >
-                <KeyboardArrowLeft />
-              </IconButton>
-            </Link>
-            <Typography
-              role="header"
-              className={classes.createTitle}
-              variant="headline"
-              data-qa-edit-header
-            >
-              Edit StackScript
-            </Typography>
+            <Breadcrumb
+              linkTo="/stackscripts"
+              linkText="StackScripts"
+              labelTitle="Edit StackScript"
+              data-qa-update-stackscript-breadcrumb
+            />
           </Grid>
         </Grid>
         <ScriptForm

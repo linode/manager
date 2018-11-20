@@ -14,6 +14,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   backButton: {
     margin: '0',
+    padding: '0',
     width: 'auto',
     height: 'auto',
     '& svg': {
