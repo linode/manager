@@ -31,7 +31,6 @@ describe('Tags Panel Suite', () => {
         executeInAllStories(component,childStories, () => {
             browser.waitForVisible(addTag, constants.wait.normal);
             const startTags = $$(tag).length
-            console.log(startTags);
             $(addTag).click();
             browser.waitForVisible(tagsSelect, constants.wait.normal);
             const testTag = "TEST_TAG";
