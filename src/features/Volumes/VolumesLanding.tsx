@@ -356,7 +356,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           copy="Add storage to your Linodes using the resilient Volumes service for $0.10/GiB per month."
           icon={VolumesIcon}
           buttonProps={{
-            onClick: this.props.openForCreating,
+            onClick: this.openCreateVolumeDrawer,
             children: 'Create a Volume',
           }}
         />
@@ -434,7 +434,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   openCreateVolumeDrawer = (e: any) => {
-    this.props.openForCreating();
+    const { linodeId } = this.props.match.params;
+    const maybeLinodeId = linodeId ? Number(linodeId) : undefined;
+    this.props.openForCreating(maybeLinodeId);
+
     e.preventDefault();
   }
 
@@ -495,7 +498,7 @@ const connected = connect(undefined, mapDispatchToProps);
 const documented = setDocs(VolumesLanding.docs);
 
 const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
-  const linodeId = path<string>(['match','params', 'linodeId'], ownProps);
+  const linodeId = path<string>(['match', 'params', 'linodeId'], ownProps);
 
   const req: (params: any, filter: any) => Promise<Linode.ResourcePage<Linode.Volume>>
     = linodeId
@@ -563,9 +566,9 @@ const withEvents = WithEvents();
 const styled = withStyles(styles);
 
 export default compose(
-    connected,
-    documented,
-    paginated,
-    styled,
-    withEvents
-  )(VolumesLanding);
+  connected,
+  documented,
+  paginated,
+  styled,
+  withEvents
+)(VolumesLanding);
