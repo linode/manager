@@ -80,7 +80,7 @@ class ConfigureLinode extends Page {
         expect($$('[data-qa-select-linode-header]').length).toBe(1);
         expect(selectLinodePanelText).toContain(cloneFromHeader);
         expect(this.total.isVisible()).toBe(true);
-        expect(this.total.getText()).toBe('$0.00 /mo');
+        expect(this.total.getText()).toBe('$0.00/mo');
         expect(this.deploy.isVisible()).toBe(true);
     }
 

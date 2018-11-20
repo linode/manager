@@ -9,6 +9,7 @@ class ListDomains extends Page {
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get domainNameHeader() { return $('[data-qa-domain-name-header]'); }
     get domainTypeHeader() { return $('[data-qa-domain-type-header]'); }
+    get domainDrawer() { return $('[data-qa-drawer]'); }
     get domains() { return $$('[data-qa-domain-cell]'); }
     get domainElem() { return $('[data-qa-domain-cell]'); }
     get label() { return $('[data-qa-domain-label]'); }
@@ -73,7 +74,7 @@ class ListDomains extends Page {
         this.createDomainName.$('input').setValue(name);
         this.createSoaEmail.$('input').setValue(email);
         this.submit.click();
-
+        this.domainDrawer.waitForVisible(constants.wait.normal, true);
         browser.waitForVisible(this.breadcrumbStaticText.selector, constants.wait.normal);
 
         browser.waitUntil(function() {

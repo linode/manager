@@ -5,7 +5,7 @@ import Page from '../page';
 export class SupportTickets extends Page {
     get openTicketsTab() { return $('[data-qa-tab="Open Tickets"]'); }
     get closedTicketsTab() { return $('[data-qa-tab="Closed Tickets"]'); }
-    get supportHeader() { return $('[data-qa-label-title]'); }
+    get supportHeader() { return $(this.breadcrumbStaticText.selector); }
     get openTicketButton() { return $('[data-qa-icon-text-link="Open New Ticket"]'); }
 
     get supportCreateDateHeader() { return $('[data-qa-support-date-header]'); }
