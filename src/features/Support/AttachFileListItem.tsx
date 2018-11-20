@@ -62,7 +62,7 @@ interface Props {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-const AttachFileListItem: React.StatelessComponent<CombinedProps> = (props) => {
+export const AttachFileListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, file, inlineDisplay, onClick } = props;
   return (
     <React.Fragment>

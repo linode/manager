@@ -3,19 +3,7 @@ import * as React from 'react';
 
 import { AttachFileForm } from './AttachFileForm';
 
-const attachment1 =  {
-  name: 'file1',
-  file: new File(['name'], 'file1'),
-  uploading: false,
-  uploaded: false,
-}
-
-const attachment2 =  {
-  name: 'file2',
-  file: new File(['name'], 'file2'),
-  uploading: false,
-  uploaded: false,
-}
+import { attachment1, attachment2 } from 'src/__data__/fileAttachments';
 
 const props = {
   files: [attachment1, attachment2],
