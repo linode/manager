@@ -9,8 +9,11 @@ describe("TransferDashboardCard component", () => {
       expect(renderPercentageString(0.01)).toEqual('<1%');
     });
     it("should not display decimals", () => {
-      expect(renderPercentageString(78.9743)).toEqual('79%');
+      expect(renderPercentageString(78.9743)).toEqual('78%');
       expect(renderPercentageString(1.0000001)).toEqual('1%');
+    });
+    it("should not round up to 100% for large values", () => {
+      expect(renderPercentageString(99.99)).toEqual('99%');
     });
   });
 });

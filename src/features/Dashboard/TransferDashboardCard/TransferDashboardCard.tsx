@@ -80,7 +80,7 @@ type CombinedProps = WithStyles<ClassNames>;
 
 
 export const renderPercentageString = (percentage: number) =>
-  percentage < 1 ? "<1%" : `${percentage.toFixed(0)}%`;
+  percentage < 1 ? "<1%" : `${Math.floor(percentage)}%`;
 class TransferDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
