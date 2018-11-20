@@ -1,6 +1,7 @@
 import subprocess
 import re
 import sys
+import getpass
 
 RELEASE=sys.argv[1]
 DATE=sys.argv[2]
@@ -10,6 +11,20 @@ def incrementLine():
     global START_INSERT
     START_INSERT+=1
     return START_INSERT
+
+def generateJQLQuery(ticket_list):
+    last_ticket=len(ticket_list) - 1
+    jql_query='key in('
+    for i,ticket in enumerate(ticket_list):
+        clean_ticket=ticket.strip().replace(':','')
+        if( i == last_ticket ):
+            jql_query+=clean_ticket+')'
+        else:
+            jql_query+=clean_ticket+','
+    print('~~~~~~~~TICKETS IN RELEASE~~~~~~~~')
+    print(jql_query)
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+
 
 def generateChangeLog(release,date):
     git_diff=subprocess.Popen(['git', 'log', '--no-merges', '--oneline', "--pretty=split:'%s'", 'upstream/master...HEAD'],
@@ -50,6 +65,8 @@ def generateChangeLog(release,date):
             break
 
         added.append(commit_array[i])
+
+    generateJQLQuery(jql_query)
 
     read_change_log=open('CHANGELOG.md', 'r')
     change_log_lines=read_change_log.readlines()
