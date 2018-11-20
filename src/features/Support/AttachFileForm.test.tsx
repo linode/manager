@@ -36,20 +36,6 @@ describe("AttachFileForm component", () => {
   it("should render", () => {
     expect(component).toBeDefined();
   });
-  it("should render attachments and delete icons inline if given inlineDisplay", () => {
-    const deleteLink = component.find('WithStyles(LinodeTextField)').first() as any;
-    expect(deleteLink.props().InputProps.endAdornment).toBeTruthy();
-    expect(component.find('[data-qa-delete-button]')).toHaveLength(0);
-  });
-  it("should render a delete button if inlineDisplay is false or undefined", () => {
-    component.setProps({ inlineDisplay: false });
-    const deleteLink = component.find('WithStyles(LinodeTextField)').first() as any;
-    expect(deleteLink.props().InputProps.endAdornment).toBeFalsy();
-    expect(component.find('[data-qa-delete-button]')).toHaveLength(2);
-    component.setProps({ inlineDisplay: undefined });
-    expect(deleteLink.props().InputProps.endAdornment).toBeFalsy();
-    expect(component.find('[data-qa-delete-button]')).toHaveLength(2);
-  });
   // @todo test event handlers
   // @todo test loading/error/empty states
 });
