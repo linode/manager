@@ -13,7 +13,7 @@ describe('Tags Panel Suite', () => {
         navigateToStory(component, childStories[0]);
     });
 
-    it('there should be a tag panel, and icons to add and delete tags', function() {
+    it('there should be a tag panel, and icons to add and delete tags', () => {
         browser.waitForVisible(tag,constants.wait.normal);
         expect($$(tag).length).toBe(3);
         expect($$(deleteTag).length).toBe(3);

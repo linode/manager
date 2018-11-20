@@ -11,9 +11,9 @@ describe('Tags Input Suite', () => {
     const inputValidation = (tagText) => {
       const inputError = $(tagInput).$('..').$('..').$('..').$('p');
       $(tagInput).$('..').$('input').setValue(tagText);
+      browser.waitForVisible(tagOptions,constants.wait.normal);
+      $$(tagOptions)[0].click();
       try {
-        browser.waitForVisible(tagOptions,constants.wait.normal);
-        $$(tagOptions)[0].click();
         inputError.waitForVisible(constants.wait.normal);
         expect(inputError.getText()).toContain('Length must be 3-25 characters');
       } catch (e) {
@@ -82,7 +82,8 @@ describe('Tags Input Suite', () => {
       it('an error message should be displayed when tags can not be retrieved', () => {
           navigateToStory(component, childStories[1]);
           browser.waitForVisible(tagInput,constants.wait.normal);
-          expect($$('p').find(error => error.getAttribute('class').includes('error')).getText()).toContain('There was an error retrieving your tags.');
+          const errorMessaage = $$('p').find(error => error.getAttribute('class').includes('error'))
+          expect(errorMessaage.getText()).toContain('There was an error retrieving your tags.');
       });
     });
 
