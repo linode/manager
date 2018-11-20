@@ -62,7 +62,7 @@ describe('Tags Input Suite', () => {
     });
 
     it('a new tag can be created and selected', () => {
-        const testTag = 'Testing!';
+        const testTag = 'TEST_TAG';
         $(tagInput).$('..').$('input').setValue(testTag);
         browser.waitForVisible(tagOptions,constants.wait.normal);
         $$(tagOptions)[0].click();
