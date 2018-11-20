@@ -27,4 +27,5 @@ git push $ORIGIN  --delete $PREVIOUS_RELEASE
 
 #Push release
 git commit -m "Cloud Manager version $RELEASE - $RELEASE_DATE"
-git push
+git push $ORIGIN
+git push --tags $ORIGIN
