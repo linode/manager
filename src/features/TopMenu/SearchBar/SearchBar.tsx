@@ -131,6 +131,14 @@ interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
 
+export interface SearchResults {
+  linodes: Item[];
+  volumes: Item[];
+  nodebalancers: Item[];
+  domains: Item[];
+  images: Item[];
+}
+
 interface State {
   searchText: string;
   searchActive: boolean;
@@ -141,6 +149,7 @@ interface State {
   resultsLoading: boolean;
   [resource: string]: any;
   options: Item[];
+  searchResults: SearchResults;
 }
 
 type CombinedProps = TypesContextProps
@@ -160,13 +169,18 @@ const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
+const emptyResults = {
+  linodes: [], nodebalancers: [], volumes: [], domains: [], images: []
+}
+
 class SearchBar extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
     searchText: '',
     searchActive: false,
     resultsLoading: false,
-    options: []
+    options: [],
+    searchResults: {...emptyResults}
   };
 
   lastFetch = moment.utc('1970-01-01T00:00:00');
@@ -239,7 +253,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     };
 
     const queryLower = query.toLowerCase();
-    const searchResults = [];
+    const searchResults: SearchResults = {...emptyResults};
 
     if (this.state.linodes && typesData) {
       const linodesByLabel = this.state.linodes.filter(
@@ -252,7 +266,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           return bool;
         }
       );
-      searchResults.push(...(linodesByLabel.map(linode => ({
+      searchResults.linodes = linodesByLabel.map(linode => ({
         label: linode.label,
         value: linode.id,
         data: {
@@ -268,14 +282,14 @@ class SearchBar extends React.Component<CombinedProps, State> {
           path: `/linodes/${linode.id}`,
           searchText: query,
         }
-      }))));
+      }));
     }
 
     if (this.state.volumes) {
       const volumesByLabel = this.state.volumes.filter(
         volume => volume.label.toLowerCase().includes(queryLower),
       );
-      searchResults.push(...(volumesByLabel.map(volume => ({
+      searchResults.volumes = volumesByLabel.map(volume => ({
         label: volume.label,
         value: volume.id,
         data: {
@@ -285,14 +299,14 @@ class SearchBar extends React.Component<CombinedProps, State> {
           path: `/volumes/${volume.id}`,
           searchText: query,
         }
-      }))));
+      }));
     }
 
     if (this.state.nodebalancers) {
       const nodebalancersByLabel = this.state.nodebalancers.filter(
         nodebal => nodebal.label.toLowerCase().includes(queryLower),
       );
-      searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
+      searchResults.nodebalancers = nodebalancersByLabel.map(nodebal => ({
         label: nodebal.label,
         value: nodebal.id,
         data: {
@@ -302,7 +316,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           path: `/nodebalancers/${nodebal.id}`,
           searchText: query,
         }
-      }))));
+      }));
     }
 
     if (this.state.domains) {
@@ -316,7 +330,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           return bool;
         }
       );
-      searchResults.push(...(domainsByLabel.map(domain => ({
+      searchResults.domains = domainsByLabel.map(domain => ({
         label: domain.domain,
         value: domain.id,
         data: {
@@ -327,7 +341,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           path: `/domains/${domain.id}`,
           searchText: query
         }
-      }))));
+      }));
     }
 
     if (this.state.images) {
@@ -338,7 +352,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           && image.label.toLowerCase().includes(queryLower)
         ),
       );
-      searchResults.push(...(imagesByLabel.map((image: Linode.Image) => ({
+      searchResults.images = imagesByLabel.map((image: Linode.Image) => ({
         label: image.label,
         value: image.id,
         data: {
@@ -350,9 +364,18 @@ class SearchBar extends React.Component<CombinedProps, State> {
           path: `/images`,
           searchText: query,
         }
-      }))));
+      }));
     }
-    this.setState({ options: searchResults, resultsLoading: false });
+    /* Keep options (for the Select) and searchResults separate so that we can
+    * pass the results to the search landing page in a usable format if necessary. */
+    const options = [
+      ...searchResults.linodes,
+      ...searchResults.volumes,
+      ...searchResults.nodebalancers,
+      ...searchResults.domains,
+      ...searchResults.images
+    ]
+    this.setState({ searchResults, options, resultsLoading: false });
   }
 
   handleSearchChange = (searchText: string): void => {
