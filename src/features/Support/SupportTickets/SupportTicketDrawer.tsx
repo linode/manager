@@ -277,8 +277,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         * fail! Don't try to aggregate errors!
         */
         this.setState(set(lensPath(['files', idx, 'uploading']), false));
-        const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
-        const newError = pathOr(error, ['response', 'data', 'errors', 0, 'reason'], attachmentErrors);
+        const error = 'There was an error attaching this file. Please try again.';
+        const newError = pathOr<string>(error, ['response', 'data', 'errors', 0, 'reason'], attachmentErrors);
         return {
           ...accumulator,
           errors: [...accumulator.errors, { error: newError, file: attachment.file.get('name')} ]
