@@ -3,6 +3,7 @@ import { modes } from 'src/features/Volumes/VolumeDrawer';
 
 const CLOSE = '@@manager/volumeDrawer/CLOSE';
 const CREATING = '@@manager/volumeDrawer/CREATING';
+const CREATING_FOR_LINODE = '@@manager/volumeDrawer/CREATING_FOR_LINODE';
 const EDITING = '@@manager/volumeDrawer/EDITING';
 const RESIZING = '@@manager/volumeDrawer/RESIZING';
 const CLONING = '@@manager/volumeDrawer/CLONING';
@@ -19,11 +20,24 @@ interface Creating extends Action {
   type: typeof CREATING;
 }
 
-export const openForCreating = (): Creating => {
-  return ({
-    type: CREATING,
-  });
-};
+interface CreatingForLinode extends Action {
+  type: typeof CREATING_FOR_LINODE;
+  linodeId: number;
+}
+
+export const openForCreating: (linodeId?: number) => Creating | CreatingForLinode =
+  (linodeId?: number) => {
+    if (linodeId) {
+      return ({
+        type: CREATING_FOR_LINODE,
+        linodeId,
+      })
+    }
+
+    return ({
+      type: CREATING,
+    });
+  };
 
 interface Editing extends Action {
   type: typeof EDITING;
@@ -112,10 +126,11 @@ export const defaultState = {
 
 type ActionTypes =
   Close
-| Creating
-| Editing
-| Resizing
-| Cloning;
+  | Creating
+  | CreatingForLinode
+  | Editing
+  | Resizing
+  | Cloning;
 
 export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
   switch (action.type) {
@@ -124,11 +139,20 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         ...state,
         mode: modes.CLOSED,
       };
+
     case CREATING:
       return {
         ...defaultState,
         mode: modes.CREATING,
       };
+
+    case CREATING_FOR_LINODE:
+      return {
+        ...defaultState,
+        mode: modes.CREATING_FOR_LINODE,
+        linodeId: action.linodeId,
+      };
+
     case EDITING:
       return {
         ...defaultState,
@@ -139,6 +163,7 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         linodeLabel: action.linodeLabel,
         mode: modes.EDITING,
       };
+
     case RESIZING:
       return {
         ...defaultState,
@@ -149,6 +174,7 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         linodeLabel: action.linodeLabel,
         mode: modes.RESIZING,
       };
+
     case CLONING:
       return {
         ...defaultState,
@@ -158,6 +184,7 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         region: action.region,
         mode: modes.CLONING,
       };
+
     default:
       return state;
   }
