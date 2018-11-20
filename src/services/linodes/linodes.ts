@@ -30,9 +30,9 @@ export interface CreateLinodeRequest {
 
 /**
  * getLinode
- * 
+ *
  * View details for a single Linode.
- * 
+ *
  * @param linodeId { number } The id of the Linode to retrieve.
  */
 export const getLinode = (linodeId: number) =>
@@ -43,9 +43,9 @@ export const getLinode = (linodeId: number) =>
 
 /**
  * getLinodeLishToken
- * 
+ *
  * Generates a token which can be used to authenticate with LISH.
- * 
+ *
  * @param linodeId { number } The id of the Linode.
  */
 export const getLinodeLishToken = (linodeId: number) =>
@@ -56,24 +56,26 @@ export const getLinodeLishToken = (linodeId: number) =>
 
 /**
  * getLinodeVolumes
- * 
+ *
  * Returns a paginated list of Block Storage volumes attached to the
  * specified Linode.
- * 
+ *
  * @param linodeId { number } The id of the Linode.
  */
-export const getLinodeVolumes = (linodeId: number) =>
+export const getLinodeVolumes = (linodeId: number, params: any = {}, filter: any = {}) =>
   Request<Page<Linode.Volume>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/volumes`),
     setMethod('GET'),
+    setXFilter(filter),
+    setParams(params),
   )
     .then(response => response.data);
 
 /**
  * getLinodes
- * 
+ *
  * Returns a paginated list of Linodes on your account.
- * 
+ *
  * @param linodeId { number } The id of the Linode.
  */
 export const getLinodes = (params?: any, filter?: any) =>
@@ -87,12 +89,12 @@ export const getLinodes = (params?: any, filter?: any) =>
 
 /**
  * createLinode
- * 
+ *
  * Create a new Linode. The authenticating user must have the
  * add_linodes grant in order to use this endpoint.
- * 
+ *
  * @param data { object } Options for type, region, etc.
- * 
+ *
  * @returns the newly created Linode object.
  */
 export const createLinode = (data: CreateLinodeRequest) =>
@@ -105,9 +107,9 @@ export const createLinode = (data: CreateLinodeRequest) =>
 
 /**
  * updateLinode
- * 
+ *
  * Generates a token which can be used to authenticate with LISH.
- * 
+ *
  * @param linodeId { number } The id of the Linode to be updated.
  * @param values { object } the fields of the Linode object to be updated.
  * Fields not included in this parameter will be left unchanged.
@@ -122,9 +124,9 @@ export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
 
 /**
  * deleteLinode
- * 
+ *
  * Delete the specified Linode instance.
- * 
+ *
  * @param linodeId { number } The id of the Linode to be deleted.
  */
 export const deleteLinode = (linodeId: number) =>
