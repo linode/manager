@@ -76,17 +76,6 @@ class PanelContent extends React.Component<CombinedProps, State> {
     this.props.request();
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.type !== this.props.type) {
-      /**
-       * handle page change handles the request as well
-       * so no need to run this.props.request()
-       * Also set loading state back to true
-       */
-      this.props.handlePageChange(1, true);
-    }
-  }
-
   handleSearch = (searchTerm: string) => {
     const { handleSearch, type } = this.props;
     const searchTermToLower = searchTerm.toLowerCase();

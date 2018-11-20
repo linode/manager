@@ -115,19 +115,11 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ pageSize, page: 1 }, () => { this.request() });
     };
 
-    public handlePageChange = (page: number, showSpinner?: boolean) => {
+    public handlePageChange = (page: number) => {
       /**
-       * change the page, make the request, and set loading state if specified
+       * change the page, make the request
        */
-      if (showSpinner) { this.setState({ loading: true }) };
-      this.setState({ page }, () => {
-        this.request()
-          .then(() => {
-            if (this.state.loading) {
-              this.setState({ loading: false })
-            }
-          })
-      });
+      this.setState({ page }, () => { this.request() })
     };
 
     public handleOrderChange = (orderBy: string, order: 'asc' | 'desc' = 'asc') => {

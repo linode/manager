@@ -26,6 +26,7 @@ class StackScriptPanel extends React.Component<CombinedProps, {}> {
         return (
           <PanelContent
             type='own'
+            key={0}
           />
         )
       },
@@ -36,6 +37,7 @@ class StackScriptPanel extends React.Component<CombinedProps, {}> {
         return (
           <PanelContent
             type='linode'
+            key={1}
           />
         )
       },
@@ -46,6 +48,7 @@ class StackScriptPanel extends React.Component<CombinedProps, {}> {
         return (
           <PanelContent
             type='community'
+            key={2}
           />
         )
       },
