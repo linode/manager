@@ -105,7 +105,6 @@ class PanelContent extends React.Component<CombinedProps, State> {
     if (isAdvancedSearch) {
       /** everything before the colon is the key and after the colon is the search term */
       const [filterKey, advancedSearchTerm] = split(':', searchTermToLower);
-      console.log(filterKey, advancedSearchTerm);
       handleSearch(generateSpecificFilter(filterKey as AcceptedFilters, advancedSearchTerm))
     } else {
       /**

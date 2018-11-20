@@ -15,8 +15,9 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import Tag from 'src/components/Tag';
 
-import StackScriptActionMenu from '../../SelectStackScriptPanel/StackScriptActionMenu';
-import LabelCell from './LabelCell';
+import StackScriptActionMenu
+  from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
+import LabelCell from '../LabelCell';
 
 type ClassNames = 'root';
 
@@ -39,7 +40,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (props) => {
+export const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     stackScript: {
       loading,
@@ -113,7 +114,7 @@ const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (props) =>
  * We can only delete a stackscript if it's ours
  * and it's not publicly available
  */
-const determineCanDelete = (stackScriptUser: string, currentUser: string, stackScriptIsPublic: boolean) => {
+export const determineCanDelete = (stackScriptUser: string, currentUser: string, stackScriptIsPublic: boolean) => {
   if (stackScriptUser === currentUser && !stackScriptIsPublic) {
     return true;
   }
@@ -124,7 +125,7 @@ const determineCanDelete = (stackScriptUser: string, currentUser: string, stackS
  * We can only edit a stackscript if it's ours
  * it doesn't matter if it's public or not
  */
-const determineCanEdit = (stackScriptUser: string, currentUser: string) => {
+export const determineCanEdit = (stackScriptUser: string, currentUser: string) => {
   if (stackScriptUser === currentUser) {
     return true;
   }
@@ -148,10 +149,10 @@ const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] =
   );
 
 /*
- * @TODO Deprecate once we have a reliable way of mapping
+ * @todo deprecate once we have a reliable way of mapping
  * the slug to the display name
  */
-const stripImageName = (image: string) => {
+export const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
 
