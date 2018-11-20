@@ -6,7 +6,8 @@ import {
 import * as React from 'react';
 
 import Typography from '@material-ui/core/Typography';
-import OpenInNew from '@material-ui/icons/OpenInNew';
+
+import Arrow from 'src/assets/icons/diagonalArrow.svg';
 
 import truncateText from 'src/utilities/truncateText';
 
@@ -18,7 +19,12 @@ type ClassNames = 'root'
   | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    display: 'block',
+    '&:hover $label': {
+      color: theme.palette.primary.main,
+    }
+  },
   label: {
     cursor: 'pointer',
   },
@@ -29,8 +35,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
   },
   linkIcon: {
-    marginLeft: '.5em',
-    width: '10%'
+    marginLeft: theme.spacing.unit,
+    color: theme.palette.primary.main,
+    width: 14,
+    height: 14,
   },
   title: {
     flexGrow: 1
@@ -58,7 +66,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptId}`}>
+      <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptId}`} className={classes.root}>
         <div className={classes.labelWrapper}>
           <Typography className={classes.title} role="header" variant="subheading">
             {stackScriptUsername &&
@@ -73,8 +81,8 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
               className={classes.label}>
               {label}
             </label>
+            <Arrow className={classes.linkIcon} />
           </Typography>
-          <OpenInNew className={classes.linkIcon} />
         </div>
         <Typography variant="caption">{truncateText(description, 100)}</Typography>
       </a>
