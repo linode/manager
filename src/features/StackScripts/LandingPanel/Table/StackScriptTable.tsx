@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import TableBody from 'src/components/core/TableBody';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 
@@ -52,16 +53,18 @@ const StackScriptTable = (props: CombinedProps) => {
           currentFilter={orderBy}
           handleClick={handleOrderChange}
         />
-        <StackScriptTableRows
-          triggerDelete={triggerDelete}
-          triggerMakePublic={triggerMakePublic}
-          currentUser={currentUser}
-          stackScript={{
-            loading,
-            error,
-            stackScripts
-          }}
-        />
+        <TableBody>
+          <StackScriptTableRows
+            triggerDelete={triggerDelete}
+            triggerMakePublic={triggerMakePublic}
+            currentUser={currentUser}
+            stackScript={{
+              loading,
+              error,
+              stackScripts
+            }}
+          />
+        </TableBody>
       </Table>
       {!loading && !error &&
         <PaginationFooter

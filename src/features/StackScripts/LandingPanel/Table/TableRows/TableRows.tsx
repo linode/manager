@@ -6,8 +6,6 @@ import {
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
 
-import TableBody from '@material-ui/core/TableBody';
-
 import ShowMore from 'src/components/ShowMore';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -59,7 +57,7 @@ export const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (pr
   if (stackScripts && stackScripts.length === 0) { return <TableRowEmptyState colSpan={6} /> }
 
   return (
-    <TableBody>
+    <React.Fragment>
       {stackScripts &&
         stackScripts.map(eachStackScript => {
           return (
@@ -107,7 +105,7 @@ export const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (pr
           )
         })
       }
-    </TableBody>
+    </React.Fragment>
   );
 };
 
