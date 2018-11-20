@@ -18,9 +18,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 type CombinedProps = WithStyles<ClassNames>;
 
 class StackScriptPanel extends React.Component<CombinedProps, {}> {
-  handleChangeTab = (tabNumber: number) => {
-    this.setState({ initTab: tabNumber })
-  }
 
   tabs = [
     {
@@ -60,7 +57,6 @@ class StackScriptPanel extends React.Component<CombinedProps, {}> {
       <TabbedPanel
         header=""
         tabs={this.tabs}
-        handleTabChange={this.handleChangeTab}
       />
     );
   }

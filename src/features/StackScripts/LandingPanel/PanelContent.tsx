@@ -343,7 +343,7 @@ const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) =>
 
 const paginated = Pagey(updatedRequest);
 
-const styled = withStyles(styles, { withTheme: true });
+const styled = withStyles(styles);
 
 interface StateProps {
   username: string;
