@@ -2,6 +2,7 @@
 
 RELEASE=$1
 RELEASE_DATE=$2
+cd ..
 
 #Get linode/manager repo name from remote branches
 GET_ORIGIN=$(git remote -v | grep git@github.com:linode/manager.git)
@@ -15,7 +16,6 @@ git git rebase $ORIGIN/develop
 git checkout -b release-$RELEASE
 
 #Generate changelog
-cd ..
 python generate_changelog.py $RELEASE $RELEASE_DATE
 
 #Update Yarn versions
