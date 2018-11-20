@@ -79,10 +79,8 @@ interface State {
 type CombinedProps = WithStyles<ClassNames>;
 
 
-export const renderPercentageString = (percentage: number) => {
-  if (percentage < 1) { return "<1%"; }
-  else { return `${percentage.toFixed(0)}%`; }
-}
+export const renderPercentageString = (percentage: number) =>
+  percentage < 1 ? "<1%" : `${percentage.toFixed(0)}%`;
 class TransferDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
