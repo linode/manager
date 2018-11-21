@@ -87,7 +87,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
     const { classes, backupsMonthly } = this.props;
     return backupsMonthly && (
       <Grid item className={classes.subLabel}>
-        <Typography variant="caption">
+        <Typography variant="body1">
           {`$${backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>
@@ -115,7 +115,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                 label="Backups"
               />
               {this.renderBackupsPrice()}
-              <Typography variant="caption" className={classes.caption}>
+              <Typography variant="body1" className={classes.caption}>
                 {accountBackups
                   ? <React.Fragment>
                       You have enabled automatic backups for your account. This Linode will automatically

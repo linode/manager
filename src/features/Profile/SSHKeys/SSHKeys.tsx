@@ -174,8 +174,8 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
       <TableRow data-qa-content-row={key.label} key={key.id}>
         <TableCell parentColumn="Label">{key.label}</TableCell>
         <TableCell parentColumn="Key" data-qa-public-key>
-          <Typography variant="caption">{key.ssh_key.slice(0, 26)}</Typography>
-          <Typography variant="caption">Fingerprint: {key.fingerprint}</Typography>
+          <Typography variant="body1">{key.ssh_key.slice(0, 26)}</Typography>
+          <Typography variant="body1">Fingerprint: {key.fingerprint}</Typography>
         </TableCell>
         <TableCell parentColumn="Created" data-qa-key-created>{key.created}</TableCell>
         <TableCell>

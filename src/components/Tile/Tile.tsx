@@ -128,7 +128,7 @@ class Tile extends React.Component<CombinedProps> {
           </React.Fragment>
         </Typography>
           {description &&
-            <Typography variant="caption" align="center" data-qa-tile-desc>
+            <Typography variant="body1" align="center" data-qa-tile-desc>
               {description}
             </Typography>
           }

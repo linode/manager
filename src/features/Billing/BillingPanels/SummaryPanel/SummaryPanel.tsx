@@ -113,16 +113,16 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               </Typography>
               </Grid>
               <Grid item sm={6}>
-                <Typography variant="caption" className={classes.item} data-qa-company>
+                <Typography variant="body1" className={classes.item} data-qa-company>
                   <strong>Company Name: </strong>
                   {company ? company : 'None'}
               </Typography>
-                <Typography variant="caption" className={classes.item} data-qa-contact-name>
+                <Typography variant="body1" className={classes.item} data-qa-contact-name>
                   <strong>Name: </strong>
                   {!(first_name || last_name) && 'None'}
                   {`${first_name} ${last_name}`}
               </Typography>
-              <Typography variant="caption" className={classes.item} data-qa-contact-address>
+              <Typography variant="body1" className={classes.item} data-qa-contact-address>
                 <strong>Address: </strong>
                 {!(address_1 || address_2 || city || state || zip) && 'None'}
                 <span>{address_1}</span>
@@ -133,11 +133,11 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               </Typography>
             </Grid>
             <Grid item sm={6}>
-              <Typography variant="caption" className={classes.item} data-qa-contact-email>
+              <Typography variant="body1" className={classes.item} data-qa-contact-email>
                 <strong>Email: </strong>
                 {email}
               </Typography>
-                <Typography variant="caption" className={classes.item} data-qa-contact-phone>
+                <Typography variant="body1" className={classes.item} data-qa-contact-phone>
                   <strong>Phone Number: </strong>
                   {phone ? phone : 'None'}
               </Typography>
@@ -154,14 +154,14 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
                   </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="caption" className={classes.item} data-qa-contact-cc>
+                <Typography variant="body1" className={classes.item} data-qa-contact-cc>
                   <strong>Credit Card: </strong>
                   {(last_four)
                     ? `xxxx-xxxx-xxxx-${last_four}`
                     : 'None'
                   }
                 </Typography>
-                <Typography variant="caption" className={classes.item} data-qa-contact-cc-exp-date>
+                <Typography variant="body1" className={classes.item} data-qa-contact-cc-exp-date>
                   <strong>Expiration Date: </strong>
                   {(expiry)
                     ? `${expiry} `

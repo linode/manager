@@ -114,7 +114,7 @@ const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props
         }
       )}>
         <Typography role="header" variant="subheading" className={classes.innerTitle}>{label}</Typography>
-        <Typography variant="caption">{message}</Typography>
+        <Typography variant="body1">{message}</Typography>
       </div>
     </ListItem>
   );

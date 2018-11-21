@@ -52,7 +52,7 @@ export const LabelText: React.StatelessComponent<CombinedProps> = (props) => {
           </Link>
         :  labelTitle}
       {subtitle &&
-        <Typography variant="caption" className={classes.labelSubtitle} data-qa-label-subtitle>
+        <Typography variant="body1" className={classes.labelSubtitle} data-qa-label-subtitle>
           {subtitle}
         </Typography>
       }

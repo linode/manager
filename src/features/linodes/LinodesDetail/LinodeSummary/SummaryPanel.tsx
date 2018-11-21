@@ -131,33 +131,33 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.section} variant="caption">
+            <Typography className={classes.section} variant="body1">
               {this.renderImage()}
             </Typography>
-            <Typography className={classes.section} variant="caption">
+            <Typography className={classes.section} variant="body1">
               {<span>
                 {typesLongLabel}
               </span>}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.section} variant="caption">
+            <Typography className={classes.section} variant="body1">
               <IPAddress ips={linode.ipv4} copyRight />
             </Typography>
             {
               linode.ipv6 &&
-              <Typography className={classes.section} variant="caption">
+              <Typography className={classes.section} variant="body1">
                 <IPAddress ips={[linode.ipv6]} copyRight />
               </Typography>
             }
           </Grid>
           <Grid item xs={12} sm={6} lg={4} className={classes.region}>
-            <Typography className={`${classes.section}`} variant="caption">
+            <Typography className={`${classes.section}`} variant="body1">
               {formatRegion(linode.region)}
             </Typography>
             <Typography
               className={classes.section}
-              variant="caption"
+              variant="body1"
               data-qa-volumes={volumes.length}
             >
               Volumes: <Link

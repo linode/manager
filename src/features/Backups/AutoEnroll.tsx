@@ -71,7 +71,7 @@ export const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
                 <Typography className={classes.header} >
                   Auto Enroll All New Linodes in Backups
                 </Typography>
-                <Typography variant="caption" >
+                <Typography variant="body1" >
                   {
                     `Enroll all future Linodes in backups. Your account will be billed
                     the additional hourly rate noted on the `

@@ -9,7 +9,7 @@ import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
-import LinodeRow from './LinodeRow';
+import LinodeRow from './LinodeRow/LinodeRow';
 
 interface Props {
   view: 'grid' | 'list';

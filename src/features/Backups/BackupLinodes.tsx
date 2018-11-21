@@ -48,7 +48,7 @@ export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) =>
                 {linode.label}
               </Typography>
               {error &&
-                <Typography variant="caption" className={classes.error}>
+                <Typography variant="body1" className={classes.error}>
                   {error}
                 </Typography>
               }

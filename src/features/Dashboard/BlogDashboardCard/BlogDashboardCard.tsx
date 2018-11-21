@@ -91,7 +91,7 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
         <Typography variant="subheading" className={classes.itemTitle}>
           <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{item.title}</a>
         </Typography>
-        <Typography variant="caption" data-qa-post-desc>
+        <Typography variant="body1" data-qa-post-desc>
           {cleanedDescription}
         </Typography>
       </Paper>

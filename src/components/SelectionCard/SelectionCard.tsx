@@ -84,11 +84,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   heading: {
     fontFamily: 'LatoWebBold',
-    fontSize: '1em',
+    fontSize: '1rem',
     color: theme.color.headline,
   },
   subheading: {
-    fontSize: '0.8em',
+    fontSize: '0.8rem',
     color: theme.palette.text.primary,
   },
   innerGrid: {

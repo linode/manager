@@ -92,7 +92,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
             <Typography variant="subheading" className={classes.itemTitle} >
               Linode Backup Auto-Enrollment
             </Typography>
-            <Typography variant="caption" >
+            <Typography variant="body1" >
               If you enable this global setting, new Linodes will be automatically enrolled
               in the Backups service.
             </Typography>
@@ -113,7 +113,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
             <Typography variant="subheading" className={classes.itemTitle} >
               Enable Backups for Existing Linodes
             </Typography>
-            <Typography variant="caption" data-qa-linodes-message>
+            <Typography variant="body1" data-qa-linodes-message>
               {
                 `You currently have
                 ${linodesWithoutBackups} ${linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'}

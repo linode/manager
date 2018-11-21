@@ -152,7 +152,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
                 </Typography>
               </Grid>
               <Grid item>
-                <Typography variant="caption" data-qa-domain-status>
+                <Typography variant="body1" data-qa-domain-status>
                   {status}, {type}
                 </Typography>
               </Grid>

@@ -51,7 +51,7 @@ const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = (props) => 
       {
         mostRecentBackup ?
           (
-            <Typography variant="caption">
+            <Typography variant="body1">
               <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={"never"} />
             </Typography>
           )
@@ -66,7 +66,7 @@ const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = (props) => 
                   href={`/linodes/${linodeId}/backup`}
                   className={classes.backupLink}
                 >
-                  <Typography variant="caption" className={classes.noBackupText}>Never</Typography>
+                  <Typography variant="body1" className={classes.noBackupText}>Never</Typography>
                   <Backup
                     className={`${classes.icon} backupIcon`}
                   />
