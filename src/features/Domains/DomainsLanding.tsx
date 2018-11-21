@@ -1,6 +1,8 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { connect, Dispatch } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -26,8 +28,8 @@ import Tags from 'src/components/Tags';
 import { Domains } from 'src/documentation';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
+import { openForCloning, openForCreating } from 'src/store/reducers/domainDrawer';
 import ActionMenu from './DomainActionMenu';
-import DomainCreateDrawer from './DomainCreateDrawer';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames = 'root'
@@ -76,7 +78,7 @@ interface State {
   };
 }
 
-type CombinedProps = PaginationProps<Linode.Domain> & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = PaginationProps<Linode.Domain> & WithStyles<ClassNames> & RouteComponentProps<{}> & DispatchProps;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -121,28 +123,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   });
 
-  openCreateDrawer = () => {
-    this.setState({
-      createDrawer: { open: true, mode: 'create' },
-    });
-  }
-
-  openCloneDrawer = (domain: string, id: number) => {
-    this.setState({
-      createDrawer: { open: true, mode: 'clone', domain, cloneID: id },
-    });
-  }
-
-  closeCreateDrawer = () => {
-    this.setState({
-      createDrawer: { open: false, mode: 'create' },
-    });
-  }
-
   handleSuccess = (domain: Linode.Domain) => {
     if (domain.id) {
-      this.props.history.push(`/domains/${domain.id}`);
-      return;
+      return this.props.history.push(`/domains/${domain.id}`);
     }
     this.props.request();
   }
@@ -187,19 +170,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   }
 
-  domainCreateDrawer = () => {
-    return (
-      <DomainCreateDrawer
-        open={this.state.createDrawer.open}
-        onClose={this.closeCreateDrawer}
-        mode={this.state.createDrawer.mode}
-        domain={this.state.createDrawer.domain}
-        cloneID={this.state.createDrawer.cloneID}
-        onSuccess={this.handleSuccess}
-      />
-    );
-  }
-
   render() {
     const { classes } = this.props;
     const { error, count, loading } = this.props;
@@ -235,7 +205,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item>
                 <AddNewLink
-                  onClick={this.openCreateDrawer}
+                  onClick={this.props.openForCreating}
                   label="Add a Domain"
                 />
               </Grid>
@@ -263,7 +233,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
         />
-        <this.domainCreateDrawer />
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
@@ -318,11 +287,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           copy="Adding a new domain is easy. Click below to add a domain."
           icon={DomainIcon}
           buttonProps={{
-            onClick: () => this.openCreateDrawer(),
+            onClick: this.props.openForCreating,
             children: 'Add a Domain',
           }}
         />
-        <this.domainCreateDrawer />
       </React.Fragment>
     );
   }
@@ -353,7 +321,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               id={domain.id}
               history={history}
               onRemove={this.openRemoveDialog}
-              onClone={this.openCloneDrawer}
+              onClone={this.props.openForCloning}
             />
           </TableCell>
         </TableRow>,
@@ -369,9 +337,22 @@ const paginated = Pagey(updatedRequest);
 
 const styled = withStyles(styles);
 
+interface DispatchProps {
+  openForCloning: (domain: string, cloneId: number) => void;
+  openForCreating: () => void;
+}
+
+const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
+  { openForCreating, openForCloning },
+  dispatch,
+);
+
+export const connected = connect(undefined, mapDispatchToProps);
+
 export default compose(
   setDocs(DomainsLanding.docs),
   withRouter,
   styled,
-  paginated
+  paginated,
+  connected
 )(DomainsLanding);
