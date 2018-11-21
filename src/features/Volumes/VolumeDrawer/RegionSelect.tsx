@@ -17,8 +17,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props {
   error?: string;
   name: string;
-  handleChange: any;
-  onBlur: any;
+  onChange: (e: React.ChangeEvent<any>) => void;
+  onBlur: (e: any) => void;
   value: any;
 }
 
@@ -31,7 +31,7 @@ type CombinedProps = Props & RegionsContextProps & WithStyles<ClassNames>;
 const RegionSelect: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     error,
-    handleChange,
+    onChange,
     onBlur,
     regions,
     value,
@@ -47,7 +47,7 @@ const RegionSelect: React.StatelessComponent<CombinedProps> = (props) => {
         value={value}
         name={name}
         placeholder='All Regions'
-        onChange={handleChange}
+        onChange={onChange}
         onBlur={onBlur}
         inputProps={{ name: 'region', id: 'region' }}
         data-qa-select-region

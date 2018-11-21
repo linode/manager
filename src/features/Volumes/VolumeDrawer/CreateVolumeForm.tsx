@@ -93,17 +93,17 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
 
             <LabelField
-              handleChange={handleChange}
-              handleBlur={handleBlur}
+              onChange={handleChange}
+              onBlur={handleBlur}
               error={errors.label}
               value={values.label}
             />
 
-            <SizeField handleChange={handleChange} handleBlur={handleBlur} error={errors.size} value={values.size} />
+            <SizeField onChange={handleChange} onBlur={handleBlur} error={errors.size} value={values.size} />
 
             <RegionSelect
               error={errors.region}
-              handleChange={handleChange}
+              onChange={handleChange}
               name="region"
               onBlur={handleBlur}
               value={values.region}
@@ -111,7 +111,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <LinodeSelect
               error={errors.linodeId}
-              handleChange={(id: number) => setFieldValue('linodeId', id)}
+              onChange={(id: number) => setFieldValue('linodeId', id)}
               name="linodeId"
               onBlur={handleBlur}
               region={values.region}
@@ -119,7 +119,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <ConfigSelect
               error={errors.configId}
-              handleChange={(id: string) => setFieldValue('configId', id)}
+              onChange={(id: string) => setFieldValue('configId', id)}
               linodeId={values.linodeId}
               name="configId"
               onBlur={handleBlur}

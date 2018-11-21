@@ -67,8 +67,8 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           <Form>
 
             <SizeField
-              handleChange={handleChange}
-              handleBlur={handleBlur}
+              onChange={handleChange}
+              onBlur={handleBlur}
               error={errors.size}
               value={values.size}
             />

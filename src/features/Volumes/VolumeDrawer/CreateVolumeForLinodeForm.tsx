@@ -100,17 +100,17 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
 
             <LabelField
-              handleChange={handleChange}
-              handleBlur={handleBlur}
+              onChange={handleChange}
+              onBlur={handleBlur}
               error={errors.label}
               value={values.label}
             />
 
-            <SizeField handleChange={handleChange} handleBlur={handleBlur} error={errors.size} value={values.size} />
+            <SizeField onChange={handleChange} onBlur={handleBlur} error={errors.size} value={values.size} />
 
             <ConfigSelect
               error={errors.configId}
-              handleChange={(id: string) => setFieldValue('configId', id)}
+              onChange={(id: string) => setFieldValue('configId', id)}
               linodeId={linodeId}
               name="configId"
               onBlur={handleBlur}

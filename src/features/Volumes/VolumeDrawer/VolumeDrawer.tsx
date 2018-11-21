@@ -3,7 +3,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
 import { close } from 'src/store/reducers/volumeDrawer';
 import CloneVolumeForm from './CloneVolumeForm';
-import CreateVolumeForLinode from './CreateVolumeForLinode';
+import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
 import RenameVolumeForm from './RenameVolumeForm';
 import ResizeVolumeForm from './ResizeVolumeForm';
@@ -78,7 +78,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           && linodeLabel !== undefined
           && linodeRegion !== undefined
           &&
-          <CreateVolumeForLinode
+          <CreateVolumeForLinodeForm
             linodeId={linodeId}
             linodeLabel={linodeLabel}
             linodeRegion={linodeRegion}

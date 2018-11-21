@@ -15,8 +15,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   error?: string
-  handleChange: any /** @todo */
-  onBlur: any; /** @todo any */
+  onChange: (e?: string) => void;
+  onBlur: (e: any) => void;
   linodeId: number;
   name: string;
   value: string;
@@ -37,8 +37,8 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
   }
 
   setInitialState = () => {
-    const { handleChange } = this.props;
-    handleChange(this.state.configs[0][0]);
+    const { onChange } = this.props;
+    onChange(this.state.configs[0][0]);
   };
 
   updateConfigs(linodeID: number) {
@@ -58,7 +58,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    const { linodeId, handleChange } = this.props;
+    const { linodeId, onChange } = this.props;
     /**
      * If we have a new Linode Id we need to get the configs for said linode.
      */
@@ -72,12 +72,12 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
      */
     if (prevProps.linodeId && !linodeId) {
       this.setState({ configs: [] });
-      handleChange();
+      onChange();
     }
   }
 
   render() {
-    const { error, handleChange, name, onBlur, value } = this.props;
+    const { error, onChange, name, onBlur, value } = this.props;
     const { loading, configs } = this.state;
 
     const hasError = Boolean(error);
@@ -99,7 +99,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
         <Select
           name={name}
           value={value}
-          onChange={(e) => handleChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           onBlur={onBlur}
           inputProps={{ name, id: name }}
           error={hasError}

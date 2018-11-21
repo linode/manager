@@ -9,23 +9,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
-  handleBlur: any;
-  handleChange: any;
+  onBlur: (e: any) => void;
+  onChange: (e: React.ChangeEvent<any>) => void;
   error?: string;
   value: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LabelField: React.StatelessComponent<CombinedProps> = ({ error, handleBlur, handleChange, value, }) => {
+const LabelField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, }) => {
   return (
     <TextField
       data-qa-volume-label
       errorText={error}
       label="Label"
       name="label"
-      onBlur={handleBlur}
-      onChange={handleChange}
+      onBlur={onBlur}
+      onChange={onChange}
       required
       value={value}
     />

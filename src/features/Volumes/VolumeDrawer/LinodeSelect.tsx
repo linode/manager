@@ -15,9 +15,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props {
   /** * @todo Does not having value passed here break the cycle? */
   error?: string;
-  handleChange: (is: number) => void;
+  onChange: (linodeId: number) => void;
   name: string;
-  onBlur: any; /** @todo */
+  onBlur: (e: any) => void;
   region: string;
 }
 
@@ -62,7 +62,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
     if (selected) {
       const { value } = selected;
       this.setState({ selectedLinodeId: value });
-      this.props.handleChange(value);
+      this.props.onChange(value);
     } else {
       this.setState({ selectedLinodeId: 0 })
     }

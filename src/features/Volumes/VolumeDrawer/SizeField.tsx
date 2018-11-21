@@ -12,14 +12,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   error?: string;
-  handleBlur: any;
-  handleChange: any;
+  onBlur: (e: any) => void;
+  onChange: (e: React.ChangeEvent<any>) => void;
   value: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SizeField: React.StatelessComponent<CombinedProps> = ({ error, handleBlur, handleChange, value }) => {
+const SizeField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value }) => {
   return (<TextField
     data-qa-size
     errorText={error}
@@ -28,8 +28,8 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({ error, handleBlur,
     label="Size"
     name="size"
     type="number"
-    onBlur={handleBlur}
-    onChange={handleChange}
+    onBlur={onBlur}
+    onChange={onChange}
     required
     value={value}
   />);

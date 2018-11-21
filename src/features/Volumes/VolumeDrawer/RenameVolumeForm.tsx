@@ -39,9 +39,9 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
         updateVolume(volumeId, { label: values.label })
           .then(response => {
-            onClose();
             resetForm();
             updateVolumes$.next(true);
+            onClose();
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to rename this volume at this time. Please try again later.`;
@@ -55,12 +55,13 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       initialValues={initialValues}
       render={(formikProps) => {
         const {
-          values,
-          handleChange,
           errors,
+          handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
-          resetForm
+          resetForm,
+          values,
         } = formikProps;
         return (
           <Form>
@@ -70,6 +71,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               required
               value={values.label}
               onChange={handleChange}
+              onBlur={handleBlur}
               errorText={errors.label}
               data-qa-volume-label
             />

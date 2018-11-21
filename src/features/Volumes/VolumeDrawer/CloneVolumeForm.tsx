@@ -58,8 +58,8 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           <Form>
             <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GB and be available in ${volumeRegion}`}</Typography>
             <LabelField
-              handleBlur={handleBlur}
-              handleChange={handleChange}
+              onBlur={handleBlur}
+              onChange={handleChange}
               value={values.label}
               error={errors.label as string}
             />
