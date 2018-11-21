@@ -21,7 +21,6 @@ const defaultState: ApplicationState = {
   volumeDrawer: defaultVolumeDrawerState,
   notifications: defaultNotificationState,
   domainDrawer: defaultDomainDrawerState
-
 };
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;

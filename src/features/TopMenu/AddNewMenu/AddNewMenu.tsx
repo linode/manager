@@ -1,8 +1,7 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Dispatch } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';

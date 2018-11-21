@@ -352,7 +352,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
+export default compose<any, any, any, any>(
   styled,
   connected,
   withRouter
