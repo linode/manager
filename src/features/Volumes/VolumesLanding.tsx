@@ -363,7 +363,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   {volume.linodeLabel}
                 </Link>
               }</TableCell>}
-            <TableCell parentColumn="Size" data-qa-volume-size>{size} GB</TableCell>
+            <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
             <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
             {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
             <TableCell>

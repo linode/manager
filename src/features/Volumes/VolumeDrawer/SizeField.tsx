@@ -23,8 +23,8 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onC
   return (<TextField
     data-qa-size
     errorText={error}
-    helperText={`A single volume can range from 10 GB to ${MAX_VOLUME_SIZE} GB in size.`}
-    InputProps={{ endAdornment: <InputAdornment position="end"> GB </InputAdornment> }}
+    helperText={`A single volume can range from 10 GiB to ${MAX_VOLUME_SIZE} GiB in size.`}
+    InputProps={{ endAdornment: <InputAdornment position="end"> GiB </InputAdornment> }}
     label="Size"
     name="size"
     type="number"
