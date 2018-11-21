@@ -46,7 +46,7 @@ const RegionSelect: React.StatelessComponent<CombinedProps> = (props) => {
       <Select
         value={value}
         name={name}
-        placeholder='Select a Region'
+        placeholder='All Regions'
         onChange={handleChange}
         onBlur={onBlur}
         inputProps={{ name: 'region', id: 'region' }}
