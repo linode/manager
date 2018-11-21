@@ -2,6 +2,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/st
 import * as React from 'react';
 import InputAdornment from 'src/components/core/InputAdornment';
 import TextField from 'src/components/TextField';
+import { MAX_VOLUME_SIZE } from 'src/constants';
 
 type ClassNames = 'root';
 
@@ -22,7 +23,7 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({ error, handleBlur,
   return (<TextField
     data-qa-size
     errorText={error}
-    helperText={'A single volume can range from 10 GiB to 10,240 GiB in size.'}
+    helperText={`A single volume can range from 10 GiB to ${MAX_VOLUME_SIZE} GiB in size.`}
     InputProps={{ endAdornment: <InputAdornment position="end"> GB </InputAdornment> }}
     label="Size"
     name="size"
