@@ -64,6 +64,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
       this.setState({ selectedLinodeId: value });
       this.props.onChange(value);
     } else {
+      this.props.onChange(0);
       this.setState({ selectedLinodeId: 0 })
     }
   }

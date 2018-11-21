@@ -80,7 +80,7 @@ interface Props {
 
 interface DispatchProps {
   openForEdit: (volumeId: number, volumeLabel: string) => void;
-  openForResize: (volumeId: number, volumeSize: number) => void;
+  openForResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
   openForClone: (volumeId: number, volumeLabel: string, volumeSize: number, volumeRegion: string) => void;
   openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => void;
 }

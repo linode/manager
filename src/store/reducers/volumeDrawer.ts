@@ -56,10 +56,11 @@ interface Resizing extends Action {
   type: typeof RESIZING;
   volumeId: number;
   volumeSize: number;
+  volumeLabel: string;
 }
 
-export const openForResize = (volumeId: number, volumeSize: number): Resizing =>
-  ({ type: RESIZING, volumeId, volumeSize });
+export const openForResize = (volumeId: number, volumeSize: number, volumeLabel: string): Resizing =>
+  ({ type: RESIZING, volumeId, volumeSize, volumeLabel });
 
 interface Cloning extends Action {
   type: typeof CLONING;
@@ -136,6 +137,7 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         mode: modes.RESIZING,
         volumeId: action.volumeId,
         volumeSize: action.volumeSize,
+        volumeLabel: action.volumeLabel,
       };
 
     case CLONING:

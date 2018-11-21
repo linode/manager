@@ -12,6 +12,7 @@ interface Props {
   onResize: (
     volumeId: number,
     volumeSize: number,
+    volumeLabel: string,
   ) => void;
   onClone: (
     volumeID: number,
@@ -57,9 +58,10 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
     const {
       volumeID,
       size,
-      onResize
+      label,
+      onResize,
     } = this.props;
-    onResize(volumeID, size)
+    onResize(volumeID, size, label)
   }
 
   handleClone = () => {

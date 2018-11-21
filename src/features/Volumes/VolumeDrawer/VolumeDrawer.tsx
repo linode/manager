@@ -18,12 +18,12 @@ export const modes = {
 };
 
 const titleMap = {
-  [modes.CLOSED]: '',
-  [modes.CREATING]: 'Create a Volume',
-  [modes.CREATING_FOR_LINODE]: 'Create a Volume',
-  [modes.RESIZING]: 'Resize a Volume',
-  [modes.CLONING]: 'Clone a Volume',
-  [modes.EDITING]: 'Rename a Volume',
+  [modes.CLOSED]: (volumeLabel: string) => '',
+  [modes.CREATING]: (volumeLabel: string) => 'Create a Volume',
+  [modes.CREATING_FOR_LINODE]: (volumeLabel: string) => 'Create a Volume',
+  [modes.RESIZING]: (volumeLabel: string) => `Resize volume ${volumeLabel}`,
+  [modes.CLONING]: (volumeLabel: string) => `Clone volume ${volumeLabel}`,
+  [modes.EDITING]: (volumeLabel: string) => `Rename volume ${volumeLabel}`,
 };
 
 type CombinedProps = StateProps & DispatchProps
@@ -128,7 +128,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   } = state.volumeDrawer;
 
   return {
-    drawerTitle: titleMap[mode],
+    drawerTitle: titleMap[mode](volumeLabel || ''),
     isOpen: mode !== modes.CLOSED,
     linodeId,
     linodeLabel,
