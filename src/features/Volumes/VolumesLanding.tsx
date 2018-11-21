@@ -40,12 +40,32 @@ type ClassNames = 'root'
   | 'labelCol'
   | 'attachmentCol'
   | 'sizeCol'
-  | 'pathCol';
+  | 'pathCol'
+  | 'volumesWrapper'
+  | 'linodeVolumesWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  // styles for /volumes table
+  volumesWrapper: {
+  },
+  // styles for linodes/id/volumes table
+  linodeVolumesWrapper: {
+    '& $labelCol': {
+      width: '20%',
+      minWidth: 200,
+    },
+    '& $sizeCol': {
+      width: '15%',
+      minWidth: 100,
+    },
+    '& $pathCol': {
+      width: '55%',
+      minWidth: 350,
+    },
   },
   labelCol: {
     width: '15%',
@@ -275,7 +295,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Paper>
-          <Table aria-label="List of Volumes">
+          <Table aria-label="List of Volumes" className={isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper}>
             <TableHead>
               <TableRow>
                 <TableCell className={classes.labelCol}>Label</TableCell>
