@@ -14,6 +14,23 @@ import Radio from './Radio';
 import Select from './Select';
 import TextField from './TextField';
 
+const fields = [
+    {
+    label: 'Default'
+    }, {
+    label: 'Email',
+    type: 'email'
+    }, {
+    label: 'Number',
+    type: 'number'
+    }, {
+    label: 'Telephone',
+    type: 'tel'
+    }, {
+    label: 'Textarea',
+    type: 'textarea'
+    }];
+
 class ExampleSelect extends React.Component {
     state = {
         selected: '',
@@ -171,50 +188,35 @@ class ExampleRadios extends React.Component {
         </React.Fragment>
       );
     }
-  }
+}
 
 storiesOf('Forms', module)
 .addDecorator(ThemeDecorator)
 .add('Form Examples', () => (
     <React.Fragment>
-        <TextField
-            label="Default"
-            placeholder="Default"
-        >
-            Default Input
-        </TextField>
-        <TextField
-            label="Email"
-            placeholder="Email"
-            type="email"
-        >
-            Email Input
-        </TextField>
-        <TextField
-            label="Number"
-            placeholder="Number"
-            type="number"
-        >
-            Number Input
-        </TextField>
-        <TextField
-            label="Tel"
-            placeholder="Telephone"
-            type="tel"
-        >
-            Telephone Input
-        </TextField>
-        <TextField
-            label="Textarea"
-            placeholder="Textarea"
-            multiline={true}
-            rows={3}
-        >
-            Textarea
-        </TextField>
+        {fields.map(eachField => {
+            if (eachField.type === 'textarea')
+            return (
+            <TextField
+                key={eachField.label}
+                label={eachField.label}
+                placeholder={eachField.label}
+                type={eachField.type}
+                multiline={true}
+                rows={3}
+            />
+            )
+            return (
+            <TextField
+                key={eachField.label}
+                label={eachField.label}
+                placeholder={eachField.label}
+                type={eachField.type}
+            />
+            )
+        })}
         <ExampleSelect />
         <ExampleCheckboxes />
         <ExampleRadios/>
     </React.Fragment>
 ));
-
