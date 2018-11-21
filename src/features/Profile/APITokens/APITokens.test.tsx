@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as moment from 'moment';
 import * as React from 'react';
 
-import { paginationProps } from 'src/__data__/paginationProps';
+import { pageyProps } from 'src/__data__/pageyProps';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import { APITokenTable } from './APITokenTable';
@@ -23,7 +23,7 @@ describe('APITokens', () => {
     const component = shallow(
       <LinodeThemeWrapper>
         <APITokenTable
-          {...paginationProps}
+          {...pageyProps}
           count={4}
           classes={{
             headline: '',

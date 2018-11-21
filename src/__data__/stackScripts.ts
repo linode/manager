@@ -25,7 +25,10 @@ export const stackScripts: Linode.StackScript.Response[] = [
     images: [
       "linode/containerlinux",
       "linode/debian8",
-      "linode/fedora27"
+      "linode/fedora27",
+      "linode/centos7",
+      "linode/centos6",
+      "linode/coreos"
     ],
     deployments_active: 0,
     deployments_total: 0,

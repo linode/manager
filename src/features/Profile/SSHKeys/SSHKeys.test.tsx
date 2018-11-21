@@ -1,6 +1,8 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { SSHKeys } from './SSHKeys';
+
+import { pageyProps } from 'src/__data__/pageyProps';
 /**
  * Displays a table
  * Table has 4 columns
@@ -8,34 +10,17 @@ import { SSHKeys } from './SSHKeys';
  */
 
 describe('SSHKeys', () => {
-  const handleOrderChange = jest.fn();
-  const handlePageChange = jest.fn();
-  const handlePageSizeChange = jest.fn();
-  const onDelete = jest.fn();
-  const request = jest.fn();
-
   describe('layout', () => {
     const wrapper = shallow(
       <SSHKeys
         classes={{ root: '' }}
-        count={3}
-        error={undefined}
-        handlePageChange={handlePageChange}
-        handlePageSizeChange={handlePageSizeChange}
-        onDelete={onDelete}
-        loading={false}
-        order={'asc'}
-        orderBy={undefined}
-        page={1}
-        pageSize={25}
-        request={request}
+        {...pageyProps}
         data={[
           { id: 1, label: '', ssh_key: '', created: '', fingerprint: '', },
           { id: 2, label: '', ssh_key: '', created: '', fingerprint: '', },
           { id: 3, label: '', ssh_key: '', created: '', fingerprint: '', },
         ]}
         timezone={'GMT'}
-        handleOrderChange={handleOrderChange}
       />
     );
 
@@ -60,20 +45,10 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         classes={{ root: '' }}
-        count={0}
-        error={undefined}
-        handlePageChange={handlePageChange}
-        handlePageSizeChange={handlePageSizeChange}
-        onDelete={onDelete}
+        {...pageyProps}
         loading={true}
-        order={'asc'}
-        orderBy={undefined}
-        page={1}
-        pageSize={25}
-        request={request}
         data={undefined}
         timezone={'GMT'}
-        handleOrderChange={handleOrderChange}
       />
     );
 
@@ -84,20 +59,10 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         classes={{ root: '' }}
-        count={0}
-        error={Error('Shenanigans')}
-        handlePageChange={handlePageChange}
-        handlePageSizeChange={handlePageSizeChange}
-        onDelete={onDelete}
-        loading={false}
-        order={'asc'}
-        orderBy={undefined}
-        page={1}
-        pageSize={25}
-        request={request}
+        {...pageyProps}
+        error={new Error('error here')}
         data={undefined}
         timezone={'GMT'}
-        handleOrderChange={handleOrderChange}
       />
     );
 
@@ -108,20 +73,9 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         classes={{ root: '' }}
-        count={0}
-        error={undefined}
-        handlePageChange={handlePageChange}
-        handlePageSizeChange={handlePageSizeChange}
-        onDelete={onDelete}
-        loading={false}
-        order={'asc'}
-        orderBy={undefined}
-        page={1}
-        pageSize={25}
-        request={request}
+        {...pageyProps}
         data={undefined}
         timezone={'GMT'}
-        handleOrderChange={handleOrderChange}
       />
     );
 

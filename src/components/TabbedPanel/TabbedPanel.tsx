@@ -49,8 +49,8 @@ interface Props {
   tabs: Tab[];
   [index: string]: any;
   initTab?: number;
-  shrinkTabContent?: string;
-  handleTabChange?: () => void;
+  bodyClass?: string;
+  handleTabChange?: (value?: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -60,7 +60,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
 
   handleChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
     if (this.props.handleTabChange) {
-      this.props.handleTabChange();
+      this.props.handleTabChange(value);
     }
     this.setState({ value });
   }

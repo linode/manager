@@ -11,7 +11,8 @@ import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
 import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
-import SelectStackScriptPanel from './SelectStackScriptPanel';
+
+import StackScriptPanel from './LandingPanel/StackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -48,7 +49,8 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 
   render() {
 
-    const { images, classes, history } = this.props;
+    /** @todo images was used here */
+    const { classes, history } = this.props;
 
     return (
       <React.Fragment>
@@ -75,9 +77,8 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           </Grid>
         </Grid>
         <Grid container>
-          <SelectStackScriptPanel
-            publicImages={images.response}
-            noHeader={true}
+          <StackScriptPanel
+            /** @todo */
           />
         </Grid>
       </React.Fragment>

@@ -1,17 +1,13 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 
+import { pageyProps } from 'src/__data__/pageyProps';
+
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
 import { OAuthClients } from './OAuthClients';
 
 describe('OAuth Clients', () => {
-  const updateOrderBy = jest.fn();
-  const handlePageChange = jest.fn();
-  const handlePageSizeChange = jest.fn();
-  const onDelete = jest.fn();
-  const request = jest.fn();
-
   const mockData: Linode.OAuthClient[] = [
     {
       "public": false,
@@ -44,19 +40,8 @@ describe('OAuth Clients', () => {
     wrapper = shallow(
       <OAuthClients
         classes={{ root: '', title: '' }}
-        count={3}
-        handlePageChange={handlePageChange}
-        error={undefined}
-        handlePageSizeChange={handlePageSizeChange}
-        onDelete={onDelete}
-        loading={false}
-        order={'asc'}
-        orderBy={undefined}
-        page={1}
-        pageSize={25}
-        request={request}
+        {...pageyProps}
         data={mockData}
-        handleOrderChange={updateOrderBy}
         setDocs={setDocs}
         clearDocs={clearDocs}
       />
