@@ -337,17 +337,17 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 );
 
 interface StateProps {
-  domain: string;
-  cloneId: number;
   mode: typeof CLONING | typeof CREATING;
   open: boolean;
+  domain?: string;
+  cloneId?: number;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  domain: path(['domainDrawer', 'domain'], state),
-  cloneId: path(['domainDrawer', 'cloneId'], state),
   mode: path(['domainDrawer', 'mode'], state),
   open: path(['domainDrawer', 'open'], state),
+  domain: path(['domainDrawer', 'domain'], state),
+  cloneId: path(['domainDrawer', 'cloneId'], state),
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);

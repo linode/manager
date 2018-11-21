@@ -287,7 +287,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           copy="Adding a new domain is easy. Click below to add a domain."
           icon={DomainIcon}
           buttonProps={{
-            onClick: () => this.props.openForCreating(),
+            onClick: this.props.openForCreating,
             children: 'Add a Domain',
           }}
         />
