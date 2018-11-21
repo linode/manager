@@ -9,6 +9,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { updateNodeBalancer } from 'src/services/nodebalancers';
 import defaultNumeric from 'src/utilities/defaultNumeric';
@@ -39,6 +40,7 @@ interface Props {
   nodeBalancerId: number;
   nodeBalancerLabel: string;
   nodeBalancerClientConnThrottle: number;
+  nodeBalancerTags?: string[];
 }
 
 interface State {
@@ -46,11 +48,13 @@ interface State {
   errors?: Linode.ApiFieldError[];
   success?: string;
   fields: FieldsState;
+  tags: string[];
 }
 
 interface FieldsState {
   label?: string;
   client_conn_throttle?: number;
+  tags: string[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -58,12 +62,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const errorResources = {
   client_conn_throttle: 'client connection throttle',
   label: 'label',
+  tags: 'tags',
 };
 
 class NodeBalancerSettings extends React.Component<CombinedProps, State> {
   static defaultFieldsStates = (props: CombinedProps) => ({
     client_conn_throttle: props.nodeBalancerClientConnThrottle,
     label: props.nodeBalancerLabel,
+    tags: props.nodeBalancerTags || [],
   })
 
   state: State = {
@@ -71,6 +77,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     fields: NodeBalancerSettings.defaultFieldsStates(this.props),
     isSubmitting: false,
     success: undefined,
+    tags: []
   };
 
   handleLabelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,6 +86,16 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
       fields: {
         ...fields,
         label: e.target.value,
+      },
+    })
+  }
+
+  handleTagsInputChange = (tags: Tag[]) => {
+    const { fields } = this.state;
+    this.setState({
+      fields: {
+        ...fields,
+        tags: tags.map(tag => tag.value),
       },
     })
   }
@@ -94,13 +111,13 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
   }
 
   updateNodeBalancer = () => {
-    const { label, client_conn_throttle } = this.state.fields;
+    const { label, client_conn_throttle, tags } = this.state.fields;
     this.setState({
       errors: undefined,
       isSubmitting: true,
       success: undefined,
     });
-    const data = { label, client_conn_throttle };
+    const data = { label, client_conn_throttle, tags };
     updateNodeBalancer(this.props.nodeBalancerId, data).then(() => {
       this.setState({
         isSubmitting: false,
@@ -139,6 +156,14 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               onChange={this.handleLabelInputChange}
               value={fields.label}
               />
+          </div>
+          <div className={classes.inner}>
+            <TagsInput
+              data-qa-tags-panel
+              tagError={hasErrorFor('tags')}
+              onChange={this.handleTagsInputChange}
+              value={fields.tags.map(tag => ({label: tag, value: tag}))}
+            />
           </div>
           <div className={classes.inner}>
             <TextField

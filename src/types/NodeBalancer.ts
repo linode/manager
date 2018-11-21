@@ -11,6 +11,7 @@ namespace Linode {
     updated: string;
     transfer: BalancerTransfer;
     config?: NodeBalancerConfig[];
+    tags?: string[];
   }
 
   export interface NodesStatus{
