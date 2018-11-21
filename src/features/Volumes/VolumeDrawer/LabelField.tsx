@@ -13,17 +13,18 @@ interface Props {
   onChange: (e: React.ChangeEvent<any>) => void;
   error?: string;
   value: string;
+  name: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LabelField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, }) => {
+const LabelField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, name }) => {
   return (
     <TextField
       data-qa-volume-label
       errorText={error}
       label="Label"
-      name="label"
+      name={name}
       onBlur={onBlur}
       onChange={onChange}
       required

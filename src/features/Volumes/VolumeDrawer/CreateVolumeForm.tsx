@@ -51,7 +51,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           label,
           size: maybeCastToNumber(size),
           region: isNilOrEmpty(region) || region === 'none' ? undefined : region,
-          linode_id: linodeId === 0 ? undefined : linodeId,
+          linode_id: linodeId === -1 ? undefined : linodeId,
           config_id: maybeCastToNumber(configId),
         })
           .then(response => {
@@ -93,36 +93,43 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
 
             <LabelField
-              onChange={handleChange}
-              onBlur={handleBlur}
               error={errors.label}
+              name="label"
+              onBlur={handleBlur}
+              onChange={handleChange}
               value={values.label}
             />
 
-            <SizeField onChange={handleChange} onBlur={handleBlur} error={errors.size} value={values.size} />
+            <SizeField
+              error={errors.size}
+              name="size"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.size}
+            />
 
             <RegionSelect
               error={errors.region}
-              onChange={handleChange}
               name="region"
               onBlur={handleBlur}
+              onChange={handleChange}
               value={values.region}
             />
 
             <LinodeSelect
               error={errors.linodeId}
-              onChange={(id: number) => setFieldValue('linodeId', id)}
               name="linodeId"
               onBlur={handleBlur}
+              onChange={(id: number) => setFieldValue('linodeId', id)}
               region={values.region}
             />
 
             <ConfigSelect
               error={errors.configId}
-              onChange={(id: string) => setFieldValue('configId', id)}
               linodeId={values.linodeId}
               name="configId"
               onBlur={handleBlur}
+              onChange={(id: string) => setFieldValue('configId', id)}
               value={values.configId}
             />
 
@@ -131,7 +138,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              onCancel={() => { resetForm(initialValues); onClose(); }}
+              onCancel={() => { resetForm(); onClose(); }}
             />
           </Form>
         )
@@ -143,8 +150,8 @@ const initialValues = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: 0,
-  configId: '',
+  linodeId: -1,
+  configId: -1,
 };
 
 const styled = withStyles(styles);

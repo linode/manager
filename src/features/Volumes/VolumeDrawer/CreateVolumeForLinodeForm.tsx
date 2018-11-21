@@ -100,20 +100,27 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
 
             <LabelField
-              onChange={handleChange}
-              onBlur={handleBlur}
               error={errors.label}
+              name="label"
+              onBlur={handleBlur}
+              onChange={handleChange}
               value={values.label}
             />
 
-            <SizeField onChange={handleChange} onBlur={handleBlur} error={errors.size} value={values.size} />
+            <SizeField
+              error={errors.size}
+              name="size"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.size}
+            />
 
             <ConfigSelect
               error={errors.configId}
-              onChange={(id: string) => setFieldValue('configId', id)}
               linodeId={linodeId}
               name="configId"
               onBlur={handleBlur}
+              onChange={(id: string) => setFieldValue('configId', id)}
               value={values.configId}
             />
 
@@ -122,7 +129,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              onCancel={() => { resetForm(initialValues); onClose(); }}
+              onCancel={() => { resetForm(); onClose(); }}
             />
           </Form>
         )
@@ -134,8 +141,8 @@ const initialValues = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: '',
-  configId: '',
+  linodeId: -1,
+  configId: -1,
 };
 
 const styled = withStyles(styles);

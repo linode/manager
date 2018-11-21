@@ -1,10 +1,10 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
-import TextField from 'src/components/TextField';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { updateVolume } from 'src/services/volumes';
 import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
+import LabelField from './LabelField';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
@@ -65,21 +65,21 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
         } = formikProps;
         return (
           <Form>
-            <TextField
-              label="Label"
+
+            <LabelField
+              error={errors.label}
               name="label"
-              required
-              value={values.label}
-              onChange={handleChange}
               onBlur={handleBlur}
-              errorText={errors.label}
-              data-qa-volume-label
+              onChange={handleChange}
+              value={values.label}
             />
+
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              onCancel={() => { resetForm(initialValues); onClose(); }}
+              onCancel={() => { resetForm(); onClose(); }}
             />
+
           </Form>
         );
       }}

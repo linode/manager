@@ -15,18 +15,19 @@ interface Props {
   onBlur: (e: any) => void;
   onChange: (e: React.ChangeEvent<any>) => void;
   value: number;
+  name: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SizeField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value }) => {
+const SizeField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, name }) => {
   return (<TextField
     data-qa-size
     errorText={error}
     helperText={`A single volume can range from 10 GiB to ${MAX_VOLUME_SIZE} GiB in size.`}
     InputProps={{ endAdornment: <InputAdornment position="end"> GiB </InputAdornment> }}
     label="Size"
-    name="size"
+    name={name}
     type="number"
     onBlur={onBlur}
     onChange={onChange}

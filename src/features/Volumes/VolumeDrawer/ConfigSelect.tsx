@@ -19,7 +19,7 @@ interface Props {
   onBlur: (e: any) => void;
   linodeId: number;
   name: string;
-  value: string;
+  value: number;
 }
 
 interface State {
@@ -92,7 +92,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
     return (
       <FormControl fullWidth>
         <InputLabel
-          htmlFor="config"
+          htmlFor={name}
           disableAnimation
           shrink={true}
           error={hasError}
