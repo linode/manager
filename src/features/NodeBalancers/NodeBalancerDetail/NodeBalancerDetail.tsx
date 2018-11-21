@@ -10,6 +10,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -115,6 +116,21 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     });
   }
 
+  updateTags = (tags: string[]) => {
+    const { nodeBalancer } = this.state;
+    return updateNodeBalancer(nodeBalancer.id, { tags })
+    .then(() => {
+      this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
+    })
+    .catch((error) => {
+      this.setState(() => ({
+        ApiError: error.response && error.response.data && error.response.data.errors,
+      }), () => {
+        scrollErrorIntoView();
+      });
+    });
+  }
+
   cancelUpdate = () => {
     this.setState({ ApiError: undefined, labelInput: this.state.nodeBalancer.label });
   }
@@ -185,6 +201,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        <TagsPanel
+          tags={nodeBalancer.tags || []}
+          updateTags={this.updateTags}
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
