@@ -48,7 +48,6 @@ interface State {
   errors?: Linode.ApiFieldError[];
   success?: string;
   fields: FieldsState;
-  tags: string[];
 }
 
 interface FieldsState {
@@ -77,7 +76,6 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     fields: NodeBalancerSettings.defaultFieldsStates(this.props),
     isSubmitting: false,
     success: undefined,
-    tags: []
   };
 
   handleLabelInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
