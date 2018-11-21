@@ -51,7 +51,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           label,
           size: maybeCastToNumber(size),
           region: isNilOrEmpty(region) || region === 'none' ? undefined : region,
-          linode_id: maybeCastToNumber(linodeId),
+          linode_id: linodeId === 0 ? undefined : linodeId,
           config_id: maybeCastToNumber(configId),
         })
           .then(response => {
@@ -143,7 +143,7 @@ const initialValues = {
   label: '',
   size: 20,
   region: 'none',
-  linodeId: '',
+  linodeId: 0,
   configId: '',
 };
 

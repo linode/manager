@@ -23,14 +23,18 @@ interface Creating extends Action {
 interface CreatingForLinode extends Action {
   type: typeof CREATING_FOR_LINODE;
   linodeId: number;
+  linodeLabel: string;
+  linodeRegion: string;
 }
 
-export const openForCreating: (linodeId?: number) => Creating | CreatingForLinode =
-  (linodeId?: number) => {
-    if (linodeId) {
+export const openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => Creating | CreatingForLinode =
+  (linodeId, linodeLabel, linodeRegion) => {
+    if (linodeId && linodeLabel && linodeRegion) {
       return ({
         type: CREATING_FOR_LINODE,
         linodeId,
+        linodeLabel,
+        linodeRegion,
       })
     }
 
@@ -114,6 +118,8 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         ...defaultState,
         mode: modes.CREATING_FOR_LINODE,
         linodeId: action.linodeId,
+        linodeLabel: action.linodeLabel,
+        linodeRegion: action.linodeRegion,
       };
 
     case EDITING:

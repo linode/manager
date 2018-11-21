@@ -17,7 +17,7 @@ interface Props {
   error?: string
   handleChange: any /** @todo */
   onBlur: any; /** @todo any */
-  linodeId: string;
+  linodeId: number;
   name: string;
   value: string;
 }

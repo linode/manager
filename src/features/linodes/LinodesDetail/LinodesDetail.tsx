@@ -575,14 +575,13 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       onCancel: this.cancelUpdate,
                       onEdit: this.updateLabel,
                     }}
-                    linode={{
-                      id: linode.id,
-                      label: linode.label,
-                      status: linode.status,
-                      recentEvent: linode.recentEvent,
-                      tags: linode.tags,
-                      update: this.state.context.linode.request,
-                    }}
+                    linodeId={linode.id}
+                    linodeLabel={linode.label}
+                    linodeRegion={linode.region}
+                    linodeStatus={linode.status}
+                    linodeRecentEvent={linode.recentEvent}
+                    linodeTags={linode.tags}
+                    linodeUpdate={this.state.context.linode.request}
                     url={url}
                     history={this.props.history}
                     openConfigDrawer={this.openConfigDrawer}

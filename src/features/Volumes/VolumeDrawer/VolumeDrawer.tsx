@@ -3,6 +3,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
 import { close } from 'src/store/reducers/volumeDrawer';
 import CloneVolumeForm from './CloneVolumeForm';
+import CreateVolumeForLinode from './CreateVolumeForLinode';
 import CreateVolumeForm from './CreateVolumeForm';
 import RenameVolumeForm from './RenameVolumeForm';
 import ResizeVolumeForm from './ResizeVolumeForm';
@@ -38,6 +39,9 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeLabel,
       volumeRegion,
       volumeSize,
+      linodeId,
+      linodeRegion,
+      linodeLabel,
     } = this.props;
 
     return (
@@ -68,19 +72,22 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             volumeSize={volumeSize}
           />
         }
+        {
+          mode === modes.CREATING_FOR_LINODE
+          && linodeId !== undefined
+          && linodeLabel !== undefined
+          && linodeRegion !== undefined
+          &&
+          <CreateVolumeForLinode
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegion}
+            onClose={actions.closeDrawer}
+          />
+        }
       </Drawer>
     );
   }
-}
-
-interface StateProps {
-  drawerTitle: string;
-  isOpen: boolean,
-  mode: string;
-  volumeId?: number;
-  volumeLabel?: string;
-  volumeRegion?: string;
-  volumeSize?: number;
 }
 
 interface DispatchProps {
@@ -95,13 +102,37 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => 
   },
 });
 
+interface StateProps {
+  drawerTitle: string;
+  isOpen: boolean,
+  mode: string;
+  volumeId?: number;
+  volumeLabel?: string;
+  volumeRegion?: string;
+  volumeSize?: number;
+  linodeId?: number;
+  linodeLabel?: string;
+  linodeRegion?: string;
+}
+
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
-  const { mode, volumeId, volumeLabel, volumeSize, volumeRegion } = state.volumeDrawer;
-  const drawerTitle = titleMap[mode];
+  const {
+    linodeId,
+    linodeLabel,
+    linodeRegion,
+    mode,
+    volumeId,
+    volumeLabel,
+    volumeRegion,
+    volumeSize,
+  } = state.volumeDrawer;
 
   return {
-    drawerTitle,
+    drawerTitle: titleMap[mode],
     isOpen: mode !== modes.CLOSED,
+    linodeId,
+    linodeLabel,
+    linodeRegion,
     mode,
     volumeId,
     volumeLabel,

@@ -1285,6 +1285,13 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/recompose@^0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@types/recompose/-/recompose-0.30.0.tgz#25d1e7bf31b096c2edf6239876dcfa7c167ce03f"
+  integrity sha512-Jx87joXlo3FH8ZMsV+pIgWXWz1oOjQnJ12f6xkKLWM0m06WVJVOwNduXyeLuVb1RYAwX9z/H+Hufu16H3ZG5Qw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/redux-thunk@^2.1.0":
   version "2.1.0"
   resolved "http://registry.npmjs.org/@types/redux-thunk/-/redux-thunk-2.1.0.tgz#bc2b6e972961831afb82a9bf4f06726e351f9416"
@@ -11151,7 +11158,7 @@ rechoir@^0.6.2:
   dependencies:
     resolve "^1.1.6"
 
-"recompose@0.28.0 - 0.30.0":
+"recompose@0.28.0 - 0.30.0", recompose@^0.30.0:
   version "0.30.0"
   resolved "https://registry.yarnpkg.com/recompose/-/recompose-0.30.0.tgz#82773641b3927e8c7d24a0d87d65aeeba18aabd0"
   integrity sha512-ZTrzzUDa9AqUIhRk4KmVFihH0rapdCSMFXjhHbNrjAWxBuUD/guYlyysMnuHjlZC/KRiOKRtB4jf96yYSkKE8w==

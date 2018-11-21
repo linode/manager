@@ -1,7 +1,8 @@
-import { compose, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -70,12 +71,18 @@ interface ExtendedVolume extends Linode.Volume {
   linodeStatus: string;
 }
 
-interface Props extends PaginationProps<ExtendedVolume> {
+interface Props {
+  linodeId?: number;
+  linodeLabel?: string;
+  linodeRegion?: string;
+  recentEvent?: Linode.Event;
+}
+
+interface DispatchProps {
   openForEdit: (volumeId: number, volumeLabel: string) => void;
   openForResize: (volumeId: number, volumeSize: number) => void;
   openForClone: (volumeId: number, volumeLabel: string, volumeSize: number, volumeRegion: string) => void;
-  openForCreating: (linodeId?: number) => void;
-  recentEvent?: Linode.Event;
+  openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => void;
 }
 
 interface State {
@@ -99,7 +106,12 @@ interface State {
 
 type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
-type CombinedProps = Props & RouteProps & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & PaginationProps<ExtendedVolume>
+  & DispatchProps
+  & RouteProps
+  & WithStyles<ClassNames>;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -388,9 +400,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   openCreateVolumeDrawer = (e: any) => {
-    const { linodeId } = this.props.match.params;
-    const maybeLinodeId = linodeId ? Number(linodeId) : undefined;
-    this.props.openForCreating(maybeLinodeId);
+    const { linodeId, linodeLabel, linodeRegion } = this.props;
+    if (linodeId && linodeLabel && linodeRegion) {
+      return this.props.openForCreating(linodeId, linodeLabel, linodeRegion);
+    }
+
+    this.props.openForCreating();
 
     e.preventDefault();
   }
@@ -519,7 +534,7 @@ const withEvents = WithEvents();
 
 const styled = withStyles(styles);
 
-export default compose(
+export default compose<CombinedProps, Props>(
   connected,
   documented,
   paginated,
