@@ -38,7 +38,10 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
 
   setInitialState = () => {
     const { onChange } = this.props;
-    onChange(this.state.configs[0][0]);
+    const [firstConfig] = this.state.configs;
+    if (firstConfig && firstConfig[0]) {
+      onChange(firstConfig[0]);
+    }
   };
 
   updateConfigs(linodeID: number) {
