@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       marginBottom: theme.spacing.unit / 2,
     },
     content: {
-      ...theme.typography.caption,
+      ...theme.typography.body1,
     },
     unread: {
       backgroundColor: theme.bg.main,

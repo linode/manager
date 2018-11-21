@@ -90,7 +90,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleChangeDomain}
             data-qa-domain-name
           />
-          <Typography variant="caption">
+          <Typography variant="body1">
             Leave this field blank to reset RDNS
           </Typography>
 

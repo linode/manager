@@ -110,17 +110,17 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
               <Grid item xs={12} md={4} className={classes.item}>
                 <Streamline className={classes.icon} />
                 <Typography variant="subheading" className={classes.itemTitle}>Streamline Deployments</Typography>
-                <Typography variant="caption" className={classes.itemDesc}>Deploy a Linode, NodeBalancers, Block Storage Volume, or Domain easily with step-by-step guidance.</Typography>
+                <Typography variant="body1" className={classes.itemDesc}>Deploy a Linode, NodeBalancers, Block Storage Volume, or Domain easily with step-by-step guidance.</Typography>
               </Grid>
               <Grid item xs={12} md={4} className={classes.item}>
                 <Resource className={classes.icon} />
                 <Typography variant="subheading" className={classes.itemTitle}>Find Resources</Typography>
-                <Typography variant="caption" className={classes.itemDesc}>Our new predictive search gives you quick access to support documentation and community posts.</Typography>
+                <Typography variant="body1" className={classes.itemDesc}>Our new predictive search gives you quick access to support documentation and community posts.</Typography>
               </Grid>
               <Grid item xs={12} md={4} className={classes.item}>
                 <Mobile className={classes.icon} />
                 <Typography variant="subheading" className={classes.itemTitle}>Access Anywhere</Typography>
-                <Typography variant="caption" className={classes.itemDesc}>With support for all major devices and screen sizes, it's easy to stay connected.</Typography>
+                <Typography variant="body1" className={classes.itemDesc}>With support for all major devices and screen sizes, it's easy to stay connected.</Typography>
               </Grid>
             </Grid>
           </Grid>

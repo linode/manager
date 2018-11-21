@@ -143,7 +143,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                     {renderPercentageString(poolUsagePct)}
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant="body1"
                     className={classes.quota}
                     data-qa-transfer-quota
                   >
