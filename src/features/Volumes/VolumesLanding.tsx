@@ -71,10 +71,10 @@ interface ExtendedVolume extends Linode.Volume {
 }
 
 interface Props extends PaginationProps<ExtendedVolume> {
-  openForEdit: typeof openForEdit;
+  openForEdit: (volumeId: number, volumeLabel: string) => void;
   openForResize: (volumeId: number, volumeSize: number) => void;
-  openForClone: typeof openForClone;
-  openForCreating: typeof openForCreating;
+  openForClone: (volumeId: number, volumeLabel: string, volumeSize: number, volumeRegion: string) => void;
+  openForCreating: (linodeId?: number) => void;
   recentEvent?: Linode.Event;
 }
 
