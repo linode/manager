@@ -8,6 +8,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tile from 'src/components/Tile';
+import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
 type ClassNames = 'root'
@@ -101,9 +102,15 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     this.setState({ drawerOpen: false })
   }
 
-  onTicketCreated = (ticket:Linode.SupportTicket) => {
+  onTicketCreated = (ticketId: number, attachmentErrors: AttachmentError[] = []) => {
     const { history } = this.props;
-    history.push(`/support/tickets/${ticket.id}`);
+    history.push({
+      pathname: `/support/tickets/${ticketId}`,
+      state: { attachmentErrors }
+    })
+    this.setState({
+      drawerOpen: false,
+    })
   }
 
   render() {
