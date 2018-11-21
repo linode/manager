@@ -154,20 +154,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     })
   }
 
-    handleClone = (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-  ) => {
-    this.props.openForClone(
-      volumeID,
-      label,
-      size,
-      regionID
-    )
-  }
-
   handleAttach = (
     volumeID: number,
     label: string,
@@ -379,7 +365,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 label={label}
                 onEdit={this.props.openForEdit}
                 onResize={this.props.openForResize}
-                onClone={this.handleClone}
+                onClone={this.props.openForClone}
                 attached={Boolean(volume.linode_id)}
                 onAttach={this.handleAttach}
                 onDetach={this.handleDetach}
