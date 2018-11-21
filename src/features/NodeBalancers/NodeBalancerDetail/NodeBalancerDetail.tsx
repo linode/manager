@@ -223,6 +223,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               <NodeBalancerSettings
                 nodeBalancerId={nodeBalancer.id}
                 nodeBalancerLabel={nodeBalancer.label}
+                nodeBalancerTags={nodeBalancer.tags}
                 nodeBalancerClientConnThrottle={nodeBalancer.client_conn_throttle}
                 />
             }
