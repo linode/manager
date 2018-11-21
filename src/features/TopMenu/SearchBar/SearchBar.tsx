@@ -228,12 +228,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
     }, this.getSearchSuggestions)
   }
 
-  // Helper can be extended to other entities once tags are supported for them.
-  // @todo Inefficient to call this function twice for each search result.
-  getMatchingTags = (tags:string[], query:string): string[] => {
-    return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
-  }
-
   getSearchSuggestions = () => {
     const query = this.state.searchText;
     const { typesData } = this.props;

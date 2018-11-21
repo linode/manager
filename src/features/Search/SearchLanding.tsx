@@ -6,9 +6,12 @@ import { compose } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { withTypes } from 'src/context/types';
+import { getAllEntities } from 'src/utilities/getAll';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
-import { emptyResults, SearchResults } from './utils';
+import ResultGroup from './ResultGroup';
+import { emptyResults, searchAll, SearchResults } from './utils';
 
 type ClassNames = 'root'
 | 'title';
@@ -23,11 +26,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface State {
   query: string;
   results: SearchResults;
+  linodes: Linode.Linode[];
+  volumes: Linode.Volume[];
+  nodebalancers: Linode.NodeBalancer[];
+  domains: Linode.Domain[];
+  images: Linode.Image[];
 }
 
-type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
+interface TypesContextProps {
+  typesData?: Linode.LinodeType[];
+}
+
+type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 class SearchLanding extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   getQuery = () => {
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
     const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
@@ -45,30 +58,72 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   state: State = {
     query: this.getQuery(),
     results: this.getInitialResults(),
+    linodes: [],
+    volumes: [],
+    nodebalancers: [],
+    domains: [],
+    images: [],
   };
 
   componentDidMount() {
+    this.mounted = true;
     const { results } = this.state;
     if (equals(results, emptyResults)) {
-      this.search();
+      this.updateData();
     }
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
+  updateData = () => {
+    getAllEntities(this.setEntitiesToState);
+  }
+
+  setEntitiesToState = (
+    linodes: Linode.Linode[],
+    nodebalancers: Linode.NodeBalancer[],
+    volumes: Linode.Volume[],
+    domains: Linode.Domain[],
+    images: Linode.Image[]
+  ) => {
+    if (!this.mounted) { return; }
+    this.setState({
+      linodes,
+      nodebalancers,
+      volumes,
+      domains,
+      images
+    }, this.search)
+  }
+
   search = () => {
-    // const { query } = this.state;
-    return null;
+    const { linodes, volumes, domains, nodebalancers, images, query } = this.state;
+    const { typesData } = this.props;
+
+    const queryLower = query.toLowerCase();
+    const searchResults: SearchResults = searchAll(
+      linodes, volumes, nodebalancers, domains, images, queryLower, typesData,
+    );
+    this.setState({ results: searchResults });
   }
 
 
   render() {
     const { classes } = this.props;
-    const { query } = this.state;
+    const { query, results } = this.state;
     return (
-      <Grid container >
+      <Grid container direction="column" >
         <Grid item>
           <Typography variant="title" className={classes.title}>
             Search Results for "{query}"
           </Typography>
+        </Grid>
+        <Grid item>
+          {Object.keys(results).map((entityType, idx: number) =>
+            <ResultGroup key={idx} entity={entityType} results={results[entityType]} />
+          )}
         </Grid>
       </Grid>
     );
@@ -77,9 +132,16 @@ class SearchLanding extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
+const typesContext = withTypes(({
+  data: typesData,
+}) => ({
+  typesData,
+}));
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withRouter
+  typesContext,
+  withRouter,
 )(SearchLanding);
 
 export default enhanced;
