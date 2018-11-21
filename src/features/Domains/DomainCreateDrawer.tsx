@@ -344,8 +344,8 @@ interface StateProps {
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  mode: path(['domainDrawer', 'mode'], state),
-  open: path(['domainDrawer', 'open'], state),
+  mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
+  open: pathOr(false, ['domainDrawer', 'open'], state),
   domain: path(['domainDrawer', 'domain'], state),
   cloneId: path(['domainDrawer', 'cloneId'], state),
 });
