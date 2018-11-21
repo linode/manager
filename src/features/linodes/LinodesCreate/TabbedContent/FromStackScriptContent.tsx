@@ -358,7 +358,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             error={hasErrorFor('stackscript_id')}
             selectedId={selectedStackScriptID}
             selectedUsername={selectedStackScriptUsername}
-            shrinkPanel={true}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
             publicImages={this.filterPublicImages(images) || []}
