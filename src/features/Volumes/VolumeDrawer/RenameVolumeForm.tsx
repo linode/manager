@@ -4,7 +4,7 @@ import * as React from 'react';
 import TextField from 'src/components/TextField';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { updateVolume } from 'src/services/volumes';
-import { object, string } from 'yup';
+import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
@@ -23,9 +23,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 /** Single field posts like rename/resize dont have validation schemas in services */
-const validationSchema = object({
-  label: string().required(`A label is required.`),
-});
+const validationSchema = UpdateVolumeSchema;
 
 const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
   const { volumeId, volumeLabel, onClose } = props;
@@ -39,7 +37,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
         setSubmitting(true);
 
-        updateVolume(volumeId, values.label)
+        updateVolume(volumeId, { label: values.label })
           .then(response => {
             onClose();
             resetForm();

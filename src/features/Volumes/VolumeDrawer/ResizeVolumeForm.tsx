@@ -1,10 +1,9 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
-import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import { resizeVolume } from 'src/services/volumes';
-import { number, object } from 'yup';
+import { ResizeVolumeSchema } from 'src/services/volumes/volumes.schema';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
@@ -27,14 +26,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
   const { volumeId, volumeSize, onClose } = props;
   const initialValues = { size: volumeSize };
-
-  /** Single field posts like rename/resize dont have validation schemas in services */
-  const validationSchema = object({
-    size: number()
-      .min(volumeSize, `Size must be between ${volumeSize} and ${MAX_VOLUME_SIZE}.`)
-      .max(MAX_VOLUME_SIZE, `Size must be between ${volumeSize} and ${MAX_VOLUME_SIZE}.`)
-      .required(`A size is required.`),
-  });
+  const validationSchema = ResizeVolumeSchema(volumeSize);
 
   return (
     <Formik
@@ -44,7 +36,7 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
         setSubmitting(true);
 
-        resizeVolume(volumeId, Number(values.size))
+        resizeVolume(volumeId, { size: Number(values.size) })
           .then(response => {
             onClose();
             resetForm();

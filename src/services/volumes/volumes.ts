@@ -1,8 +1,6 @@
 import { API_ROOT } from 'src/constants';
-
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
-
-import { CreateVolumeSchema } from './volumes.schema';
+import { CloneVolumeSchema, CreateVolumeSchema, ResizeVolumeSchema, UpdateVolumeSchema } from './volumes.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Volume = Linode.Volume;
@@ -103,13 +101,13 @@ export const deleteVolume = (volumeId: number) => Request<{}>(
  * The new Volume will have the same size and data as the source Volume
  *
  * @param volumeId { number } The Volume to be detached.
- * @param label { string } A label to identify the new volume.
+ * @param data { { label: string } } A label to identify the new volume.
  *
  */
-export const cloneVolume = (volumeId: number, label: string) => Request<{}>(
+export const cloneVolume = (volumeId: number, data: { label: string }) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
   setMethod('POST'),
-  setData({ label }),
+  setData(data, CloneVolumeSchema),
 )
 .then(response => response.data);
 
@@ -119,13 +117,18 @@ export const cloneVolume = (volumeId: number, label: string) => Request<{}>(
  * Resize an existing Volume on your Account. Volumes can only be resized up.
  *
  * @param volumeId { number } The Volume to be resized.
- * @param size { number } The size of the Volume (in GiB).
+ * @param data { { size: number } } The size of the Volume (in GiB).
  *
  */
-export const resizeVolume = (volumeId: number, size: number) => Request<{}>(
+export const resizeVolume = (volumeId: number, data: { size: number }) => Request<{}>(
   setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
   setMethod('POST'),
-  setData({ size }),
+
+  /**
+   * Unless we require the old size, we wont be able to validate. We know 10 is the
+   * absolute min so it's safe to set here.
+   */
+  setData(data, ResizeVolumeSchema(10)),
 )
 .then(response => response.data);
 
@@ -135,13 +138,13 @@ export const resizeVolume = (volumeId: number, size: number) => Request<{}>(
  * Detaches a Volume on your account from a Linode on your account.
  *
  * @param volumeId { number } The Volume to be updated.
- * @param label { string } The updated label for this Volume.
+ * @param data { { label: string } } The updated label for this Volume.
  *
  */
-export const updateVolume = (volumeId: number, label: string) => Request<Volume>(
+export const updateVolume = (volumeId: number, data: { label: string }) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
-  setData({ label }),
+  setData(data, UpdateVolumeSchema),
 )
 .then(response => response.data);
 

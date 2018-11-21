@@ -4,7 +4,7 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { resetEventsPolling } from 'src/events';
 import { cloneVolume } from 'src/services/volumes';
-import { object, string } from 'yup';
+import { CloneVolumeSchema } from 'src/services/volumes/volumes.schema';
 import LabelField from './LabelField';
 import PricePanel from './PricePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
@@ -26,9 +26,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const validationScheme = object({
-  label: string().required(`A label is required.`),
-});
+const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
@@ -39,7 +37,7 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       validateOnChange={false}
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        cloneVolume(volumeId, values.label)
+        cloneVolume(volumeId, { label: values.label })
           .then(response => {
             onClose();
             resetEventsPolling();
@@ -58,7 +56,7 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       render={({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, resetForm, values }) => {
         return (
           <Form>
-          <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GB and be available in ${volumeRegion}`}</Typography>
+            <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GB and be available in ${volumeRegion}`}</Typography>
             <LabelField
               handleBlur={handleBlur}
               handleChange={handleChange}
