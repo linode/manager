@@ -5,7 +5,7 @@ import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
 
 export interface Props {
-  tags: string[];
+  tags: string[] | undefined;
 }
 
 type ClassNames = 'root'
@@ -60,6 +60,7 @@ export class Tags extends React.Component<CombinedProps, {}> {
 
   render() {
     const { tags } = this.props;
+    if (!tags) return null;
     const [visibleTags, additionalTags] = splitAt(3, tags);
     return (
       <React.Fragment>
