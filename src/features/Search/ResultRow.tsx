@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import ListItem from 'src/components/core/ListItem';
@@ -7,6 +8,8 @@ import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Tag from 'src/components/Tag';
+
+import { iconMap } from './utils';
 
 type ClassNames = 'root'
 | 'description'
@@ -57,12 +60,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, result } = props;
+  const icon = pathOr<string>('default', ['data','icon'], result);
+  const Icon = iconMap[icon];
   return (
     <ListItem disableGutters component="li" className={classes.root}>
       <Paper className={classes.rowContent}>
         <Grid container direction="row" alignItems="center">
           <Grid item className={classes.tableCell} xs={"auto"}>
-            <result.data.Icon className={classes.icon} />
+            <Icon className={classes.icon} />
           </Grid>
           <Grid item xs={11}>
             <Grid

@@ -5,6 +5,7 @@ import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
+import _Option from 'react-select/lib/components/Option';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -158,6 +159,16 @@ const selectStyles = {
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
+
+/* The final option in the list will be the "go to search results page" link.
+* This doesn't share the same shape as the rest of the results, so should use
+* the default styling. */
+const Option = (props: any) => {
+  return props.value === 'default'
+    ? <_Option {...props} />
+    : <SearchSuggestion {...props} />
+}
+
 class SearchBar extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
@@ -251,7 +262,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
       ...searchResults.nodebalancers,
       ...searchResults.domains,
       ...searchResults.images
-    ]
+    ];
+
     this.setState({ searchResults, options, resultsLoading: false });
   }
 
@@ -279,17 +291,38 @@ class SearchBar extends React.Component<CombinedProps, State> {
   onSelect = (item: Item) => {
     if (!item || isEmpty(item)) { return; }
     const { history } = this.props;
+    const { searchText } = item.data;
     this.toggleSearch();
+    if (item.value === 'default') {
+      history.push({
+        pathname: `/search`,
+        search: `?query=${searchText}`,
+        state: { searchResults: this.state.searchResults }
+      });
+      return;
+    }
     history.push(item.data.path);
   }
 
+  /* Need to override the default RS filtering; otherwise entities whose label
+  * doesn't match the search term will be automatically filtered, meaning that
+  * searching by tag won't work. */
   filterResults = (option: Item, inputValue: string) => {
     return true;
   }
 
   render() {
     const { classes } = this.props;
-    const { searchActive, options, resultsLoading } = this.state;
+    const { searchActive, searchText, options, resultsLoading } = this.state;
+    const defaultOption = {
+      label: `View search results page for "${searchText}"`,
+      value: 'default',
+      data: {
+        searchText,
+      }
+    }
+
+    const finalOptions = isEmpty(options) ? [] : [...options, defaultOption];
 
     return (
       <React.Fragment>
@@ -313,7 +346,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           />
           <EnhancedSelect
             id="search-bar"
-            options={options}
+            options={finalOptions}
             onChange={this.onSelect}
             onInputChange={this.handleSearchChange}
             placeholder={
@@ -322,7 +355,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
                 :
                 "Search for Linodes, Volumes, NodeBalancers, Domains, Tags..."
             }
-            components={{ Control, Option: SearchSuggestion }}
+            components={{ Control, Option }}
             styleOverrides={selectStyles}
             openMenuOnFocus={false}
             openMenuOnClick={false}

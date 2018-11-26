@@ -42,6 +42,8 @@ type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<Cl
 class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   getQuery = () => {
+    console.log(this.props.location);
+    console.log(this.props.history.location);
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
     const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
     return query;
@@ -50,7 +52,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   getInitialResults = () => {
     return pathOr(
       emptyResults,
-      ['history', 'location', 'state', 'attachmentErrors'],
+      ['history', 'location', 'state', 'searchResults'],
       this.props
     )
   }

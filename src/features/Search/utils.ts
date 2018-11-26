@@ -18,6 +18,13 @@ export const emptyResults = {
   linodes: [], nodebalancers: [], volumes: [], domains: [], images: []
 }
 
+export const iconMap = {
+  'LinodeIcon': LinodeIcon,
+  'NodebalIcon': NodebalIcon,
+  'VolumeIcon': VolumeIcon,
+  'default': LinodeIcon,
+}
+
 // Helper can be extended to other entities once tags are supported for them.
 // @todo Inefficient to call this function twice for each search result.
 const getMatchingTags = (tags:string[], query:string): string[] => {
@@ -50,7 +57,7 @@ export const searchLinodes = (
         linode.image!,
         images,
       ),
-      Icon: LinodeIcon,
+      icon: 'LinodeIcon',
       path: `/linodes/${linode.id}`,
       searchText: query,
     }
@@ -65,7 +72,7 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) => volume
   data: {
     tags: [],
     description: volume.size + ' G',
-    Icon: VolumeIcon,
+    icon: 'VolumeIcon',
     path: `/volumes/${volume.id}`,
     searchText: query,
   }
@@ -80,7 +87,7 @@ export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query:
     data: {
       tags: [],
       description: nodebal.hostname,
-      Icon: NodebalIcon,
+      icon: 'NodebalIcon',
       path: `/nodebalancers/${nodebal.id}`,
       searchText: query,
     }
@@ -103,7 +110,7 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
       tags: domain.tags,
       description: domain.description || domain.status,
       /* TODO: Update this with the Domains icon! */
-      Icon: NodebalIcon,
+      icon: 'NodebalIcon',
       path: `/domains/${domain.id}`,
       searchText: query
     }
@@ -123,7 +130,7 @@ export const searchImages = (images: Linode.Image[], query: string) =>
       tags: [],
       description: image.description || '',
       /* TODO: Update this with the Images icon! */
-      Icon: VolumeIcon,
+      icon: 'VolumeIcon',
       /* TODO: Choose a real location for this to link to */
       path: `/images`,
       searchText: query,
