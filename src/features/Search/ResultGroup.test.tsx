@@ -13,6 +13,7 @@ const props = {
   classes: { root: ''},
   results: [searchbarResult1, searchbarResult2],
   loading: false,
+  groupSize: 10,
 }
 
 const emptyProps = {
@@ -21,6 +22,7 @@ const emptyProps = {
   classes: { root: ''},
   results: [],
   loading: false,
+  groupSize: 10,
 }
 
 const component = shallow(

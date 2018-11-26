@@ -148,6 +148,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
               results={results[entityType]}
               redirect={this.redirect}
               loading={loading}
+              groupSize={5}
             />
           )}
         </Grid>
