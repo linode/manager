@@ -55,7 +55,6 @@ exports.login = (username, password, credFilePath) => {
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
-    console.log(browser.getUrl());
     genericButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
     $(genericButton).click();
 
@@ -96,7 +95,12 @@ exports.checkoutCreds = (credFilePath, specFile) => {
 }
 
 exports.checkInCreds = (credFilePath, specFile) => {
-    let credCollection = JSON.parse(readFileSync(credFilePath));
+    let credCollection;
+    if (existsSync(credFilePath) ){
+        credCollection = JSON.parse(readFileSync(credFilePath));
+    } else {
+        return;
+    }
 
     return credCollection.find((cred, i) => {
         if (cred.spec === specFile) {

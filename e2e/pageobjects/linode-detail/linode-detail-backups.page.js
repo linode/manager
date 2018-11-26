@@ -28,7 +28,6 @@ class Backups extends Page {
     get duration() { return $('[data-qa-backup-duration]'); }
     get disks() { return $('[data-qa-backup-disks]'); }
     get spaceRequired() { return $('[data-qa-space-required]'); }
-    get snapshotLinearProgress() { return $('[data-qa-linear-progress]'); }
 
     get restoreToLinodeSelect() { return $(`${this.drawerBase.selector} [data-qa-select]`); }
     get restoreToLinodesOptions() { return $$('[data-qa-restore-options]'); }
