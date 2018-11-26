@@ -5,6 +5,7 @@ import { compose } from 'recompose';
 
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { withTypes } from 'src/context/types';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
@@ -32,6 +33,8 @@ interface State {
   nodebalancers: Linode.NodeBalancer[];
   domains: Linode.Domain[];
   images: Linode.Image[];
+  loading: boolean;
+  error: boolean;
 }
 
 interface TypesContextProps {
@@ -59,6 +62,8 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   state: State = {
     query: this.getQuery(),
     results: this.getInitialResults(),
+    error: false,
+    loading: false,
     linodes: [],
     volumes: [],
     nodebalancers: [],
@@ -84,7 +89,11 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   }
 
   updateData = () => {
-    getAllEntities(this.setEntitiesToState);
+    this.setState({ loading: true });
+    getAllEntities(this.setEntitiesToState)
+      .catch((error) => {
+        this.setState({ error: true });
+      });
   }
 
   setEntitiesToState = (
@@ -100,7 +109,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
       nodebalancers,
       volumes,
       domains,
-      images
+      images,
     }, this.search)
   }
 
@@ -112,13 +121,13 @@ class SearchLanding extends React.Component<CombinedProps, State> {
     const searchResults: SearchResults = searchAll(
       linodes, volumes, nodebalancers, domains, images, queryLower, typesData,
     );
-    this.setState({ results: searchResults });
+    this.setState({ results: searchResults, loading: false });
   }
 
 
   render() {
     const { classes } = this.props;
-    const { query, results } = this.state;
+    const { query, error, loading, results } = this.state;
     return (
       <Grid container direction="column" >
         <Grid item>
@@ -126,9 +135,20 @@ class SearchLanding extends React.Component<CombinedProps, State> {
             Search Results for "{query}"
           </Typography>
         </Grid>
+        {error &&
+          <Grid item>
+            <ErrorState errorText={"There was an error retrieving your search resuls."} />
+          </Grid>
+        }
         <Grid item>
           {Object.keys(results).map((entityType, idx: number) =>
-            <ResultGroup key={idx} entity={entityType} results={results[entityType]} redirect={this.redirect} />
+            <ResultGroup
+              key={idx}
+              entity={entityType}
+              results={results[entityType]}
+              redirect={this.redirect}
+              loading={loading}
+            />
           )}
         </Grid>
       </Grid>

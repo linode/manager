@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
+import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 
 import { ResultGroup } from './ResultGroup';
@@ -11,6 +12,7 @@ const props = {
   entity: 'linodes',
   classes: { root: ''},
   results: [searchbarResult1, searchbarResult2],
+  loading: false,
 }
 
 const emptyProps = {
@@ -18,6 +20,7 @@ const emptyProps = {
   entity: 'linodes',
   classes: { root: ''},
   results: [],
+  loading: false,
 }
 
 const component = shallow(
@@ -40,5 +43,11 @@ describe("ResultGroup component", () => {
   });
   it("should render its children", () => {
     expect(component.find('[data-qa-result-row]')).toHaveLength(2);
+  });
+  it("should render a loading spinner", () => {
+    component.setProps({ loading: true });
+    expect(component.containsMatchingElement(
+      <CircleProgress mini />
+    )).toBeTruthy();
   });
 });

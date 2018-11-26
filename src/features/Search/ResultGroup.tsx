@@ -1,6 +1,7 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
+import CircleProgress from 'src/components/CircleProgress';
 import List from 'src/components/core/List';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -21,6 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   entity: string;
+  loading: boolean;
   redirect: (path: string) => void;
   results: Item[];
 }
@@ -28,16 +30,16 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
-  const { entity, classes, redirect, results } = props;
+  const { entity, classes, loading, redirect, results } = props;
 
   if (isEmpty(results)) { return null; }
-
   return (
     <Grid item container direction="column" className={classes.root}>
       <Grid item>
         <Typography variant="subheading" data-qa-entity-header>{capitalize(entity)}</Typography>
       </Grid>
       <List>
+        {loading && <CircleProgress mini />}
         {results.map((result, idx: number) =>
           <ResultRow key={idx} result={result} redirect={redirect} data-qa-result-row />)}
       </List>
