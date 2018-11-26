@@ -67,6 +67,7 @@ exports.login = (username, password, credFilePath) => {
         }
     }
 
+    browser.debug();
     if (browser.isExisting('.Modal')) {
         browser.click('.btn-primary');
     }

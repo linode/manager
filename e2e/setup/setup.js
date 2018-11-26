@@ -136,6 +136,8 @@ exports.createLinode = (token, password, linodeLabel, tags) => {
             linodeConfig['tags'] = tags;
         }
 
+        console.log(linodeConfig);
+
         return getAxiosInstance(token).post(linodesEndpoint, linodeConfig)
             .then(response => {
                 resolve(response.data);
@@ -399,10 +401,10 @@ exports.updateUserProfile = (token, profileData) => {
     });
 }
 
-exports.updateGlobalSettings = (token, settingsData) => {
+exports.putGlobalSetting = (token, settingsData) => {
     return new Promise((resolve, reject) => {
         const endpoint = '/account/settings';
-
+        console.log(settingsData);
         return getAxiosInstance(token)
             .put(endpoint,settingsData)
             .then(response => resolve(response.data))

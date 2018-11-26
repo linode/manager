@@ -8,8 +8,7 @@ const {
     getPublicKeys,
     removePublicKey,
     updateUserProfile,
-    getUserProfile,
-    updateGlobalSettings
+    getUserProfile
 } = require('../setup/setup');
 
 import ConfigureLinode from '../pageobjects/configure-linode';
@@ -144,7 +143,7 @@ export const updateProfile = (profileDate) => {
     return profile;
 }
 
-export const updateGlobalSetting = (settingsData) => {
+export const updateGlobalSettings = (settingsData) => {
     const token = readToken(browser.options.testUser);
     const settings = browser.updateGlobalSettings(token,settingsData);
     return profile;

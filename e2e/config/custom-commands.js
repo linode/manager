@@ -12,7 +12,7 @@ const {
     removeStackScript,
     getUserProfile,
     updateUserProfile,
-    updateGlobalSettings
+    putGlobalSetting
 } = require('../setup/setup');
 
 const {
