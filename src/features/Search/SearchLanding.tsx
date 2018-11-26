@@ -78,6 +78,11 @@ class SearchLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
+  redirect = (path: string) => {
+    const { history } = this.props;
+    history.push(path);
+  }
+
   updateData = () => {
     getAllEntities(this.setEntitiesToState);
   }
@@ -123,7 +128,7 @@ class SearchLanding extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           {Object.keys(results).map((entityType, idx: number) =>
-            <ResultGroup key={idx} entity={entityType} results={results[entityType]} />
+            <ResultGroup key={idx} entity={entityType} results={results[entityType]} redirect={this.redirect} />
           )}
         </Grid>
       </Grid>

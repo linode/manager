@@ -21,13 +21,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   entity: string;
+  redirect: (path: string) => void;
   results: Item[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
-  const { entity, classes, results } = props;
+  const { entity, classes, redirect, results } = props;
 
   if (isEmpty(results)) { return null; }
 
@@ -37,7 +38,7 @@ const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
         <Typography variant="subheading">{capitalize(entity)}</Typography>
       </Grid>
       <List>
-        {results.map((result, idx: number) => <ResultRow key={idx} result={result} />)}
+        {results.map((result, idx: number) => <ResultRow key={idx} result={result} redirect={redirect} />)}
       </List>
     </Grid>
   );
