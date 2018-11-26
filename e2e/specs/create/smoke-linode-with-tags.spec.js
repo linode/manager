@@ -84,7 +84,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         it('should navigate to linode detail', () => {
             // It should navigate to Linode detail page
             browser.waitForVisible(`[data-qa-linode="${linodeName}"]`, constants.wait.normal);
-            ListLinodes.navigateToDetail($(`[data-qa-linode="${linodeName}"]`));
+            ListLinodes.navigateToDetail(linodeName);
             LinodeDetail.landingElemsDisplay();
         });
 

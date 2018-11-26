@@ -53,7 +53,7 @@ export class ListLinodes extends Page {
     }
 
     navigateToDetail(linode) {
-       !!linode ? $(`[data-qa-linode="${linode}"]`).$('a').click() : this.linode[0].$('a').click();
+       linode ? $(`[data-qa-linode="${linode}"]`).$('a').click() : this.linode[0].$('a').click();
     }
 
     gridElemsDisplay() {
