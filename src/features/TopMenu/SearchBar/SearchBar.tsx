@@ -204,6 +204,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   updateData = () => {
+    this.setState({ resultsLoading: true });
     getAllEntities(this.setEntitiesToState);
   }
 
@@ -220,7 +221,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
       nodebalancers,
       volumes,
       domains,
-      images
+      images,
+      resultsLoading: false,
     }, this.getSearchSuggestions)
   }
 
