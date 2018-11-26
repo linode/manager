@@ -1,5 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
@@ -25,6 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
     width: '100%',
+    cursor: 'pointer',
   },
   description: {
   },
@@ -56,16 +59,21 @@ interface Props {
   result: Item;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, result } = props;
+  const { classes, history, result } = props;
   const icon = pathOr<string>('default', ['data','icon'], result);
   const Icon = iconMap[icon];
   return (
-    <ListItem disableGutters component="li" className={classes.root}>
+    <ListItem
+      disableGutters
+      component="li"
+      className={classes.root}
+      onClick={() => history.push(result.data.path)}
+    >
       <Paper className={classes.rowContent}>
-        <Grid container direction="row" alignItems="center">
+        <Grid container direction="row" alignItems="center" wrap="nowrap">
           <Grid item className={classes.tableCell} xs={"auto"}>
             <Icon className={classes.icon} />
           </Grid>
@@ -99,4 +107,9 @@ const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(ResultRow);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withRouter,
+)(ResultRow)
+
+export default enhanced;
