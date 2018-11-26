@@ -10,7 +10,6 @@ import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
-import { typeLabelLong } from 'src/features/linodes/presentation';
 import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
 import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
