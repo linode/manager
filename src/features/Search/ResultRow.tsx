@@ -81,7 +81,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item className={classes.tableCell} xs={"auto"}>
             <Icon className={classes.icon} />
           </Grid>
-          <Grid item xs={11}>
+          <Grid item xs={12}>
             <Grid
               container
               direction="row"

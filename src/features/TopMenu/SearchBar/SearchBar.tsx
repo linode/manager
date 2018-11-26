@@ -163,7 +163,7 @@ const selectStyles = {
 * This doesn't share the same shape as the rest of the results, so should use
 * the default styling. */
 const Option = (props: any) => {
-  return props.value === 'default'
+  return props.value === 'redirect'
     ? <_Option {...props} />
     : <SearchSuggestion {...props} />
 }
@@ -287,7 +287,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     if (!item || isEmpty(item)) { return; }
     const { history } = this.props;
     const { searchText } = item.data;
-    if (item.value === 'default') {
+    if (item.value === 'redirect') {
       history.push({
         pathname: `/search`,
         search: `?query=${searchText}`,
@@ -310,7 +310,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     const { searchActive, searchText, options, resultsLoading } = this.state;
     const defaultOption = {
       label: `View search results page for "${searchText}"`,
-      value: 'default',
+      value: 'redirect',
       data: {
         searchText,
       }
@@ -360,7 +360,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             isMulti={false}
             onMenuClose={this.onClose}
             onMenuOpen={this.onOpen}
-            controlShouldRenderValue={false}
+            value={false}
           />
           <IconButton
             color="inherit"
