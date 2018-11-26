@@ -9,6 +9,8 @@
   <a href="https://coveralls.io/github/linode/manager?branch=master"><img src="https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master" alt="Code coverage" /></a>
   <a href="https://waffle.io/linode/manager"><img src="https://badge.waffle.io/linode/manager.svg?label=ready&title=Agile%20board" alt="Sprint status" /></a>
   <img src="https://img.shields.io/badge/badges-many-brightgreen.svg" alt="much badges" />
+  <a href="https://lgtm.com/projects/g/linode/manager/context:javascript"><img src="https://img.shields.io/lgtm/grade/javascript/g/linode/manager.svg?logo=lgtm&logoWidth=18" alt="Code Quality: Javascript" height="18"></a>
+  <a href="https://lgtm.com/projects/g/linode/manager/alerts"><img src="https://img.shields.io/lgtm/alerts/g/linode/manager.svg?logo=lgtm&logoWidth=18" alt="Total Alerts" height="18"></a>
 </p>
 
 This is the new Linode Manager. It provides a web interface for managing your Linode account. 
