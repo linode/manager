@@ -95,13 +95,7 @@ exports.checkoutCreds = (credFilePath, specFile) => {
 }
 
 exports.checkInCreds = (credFilePath, specFile) => {
-    let credCollection;
-    if (existsSync(credFilePath) ){
-        credCollection = JSON.parse(readFileSync(credFilePath));
-    } else {
-        return;
-    }
-
+    let credCollection = JSON.parse(readFileSync(credFilePath));
     return credCollection.find((cred, i) => {
         if (cred.spec === specFile) {
             credCollection[i].inUse = false;

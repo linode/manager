@@ -145,5 +145,7 @@ export const updateProfile = (profileDate) => {
 
 export const checkEnvironment = () => {
     const environment = process.env.REACT_APP_API_ROOT;
-    return ! (environment.includes('dev') || environment.includes('testing'));
+    if (environment.includes('dev') || environment.includes('testing')) {
+        pending('Feature not available in Testing or Dev environmnet');
+    }
 }
