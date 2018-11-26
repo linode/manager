@@ -169,6 +169,7 @@ const Option = (props: any) => {
 }
 
 class SearchBar extends React.Component<CombinedProps, State> {
+  selectRef = React.createRef<HTMLInputElement>();
   mounted: boolean = false;
   state: State = {
     linodes: [],
@@ -272,11 +273,18 @@ class SearchBar extends React.Component<CombinedProps, State> {
     });
   }
 
+  onClose = () => {
+    this.setState({ searchActive: false })
+  }
+
+  onOpen = () => {
+    this.setState({ searchActive: true });
+  }
+
   onSelect = (item: Item) => {
     if (!item || isEmpty(item)) { return; }
     const { history } = this.props;
     const { searchText } = item.data;
-    this.toggleSearch();
     if (item.value === 'default') {
       history.push({
         pathname: `/search`,
@@ -330,6 +338,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
           />
           <EnhancedSelect
             id="search-bar"
+            blurInputOnSelect
             options={finalOptions}
             onChange={this.onSelect}
             onInputChange={this.handleSearchChange}
@@ -347,6 +356,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
             isLoading={resultsLoading}
             isClearable={false}
             isMulti={false}
+            onMenuClose={this.onClose}
+            onMenuOpen={this.onOpen}
             controlShouldRenderValue={false}
           />
           <IconButton

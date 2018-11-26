@@ -334,12 +334,12 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
-        onMenuClose={onMenuClose}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
         noOptionsMessage={noOptionsMessage}
         menuPlacement="auto"
+        onMenuClose={onMenuClose}
       />
     );
   }
