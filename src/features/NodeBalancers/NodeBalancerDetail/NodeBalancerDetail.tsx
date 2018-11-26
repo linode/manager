@@ -39,6 +39,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
+const defaultError = [{ reason: 'An unknown error occured while updating nodeBalancer.' }];
+
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
 interface PreloadedProps {
@@ -108,7 +110,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     })
     .catch((error) => {
       this.setState(() => ({
-        ApiError: error.response && error.response.data && error.response.data.errors,
+        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
         labelInput: label,
       }), () => {
         scrollErrorIntoView();
@@ -124,7 +126,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     })
     .catch((error) => {
       this.setState(() => ({
-        ApiError: error.response && error.response.data && error.response.data.errors,
+        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
       }), () => {
         scrollErrorIntoView();
       });
