@@ -98,7 +98,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
               </Grid>
               <Grid item>
                 {result.data.tags.map((tag: string, idx: number) =>
-                  <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} />
+                  <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} data-qa-tag-item />
                 )}
               </Grid>
             </Grid>
@@ -111,12 +111,17 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
+const handlers = withHandlers({
+  handleClick: (props: Props) => () =>
+    props.redirect(pathOr('/', ['result', 'data', 'path'], props))
+});
+
+// For testing handler methods
+export const RowWithHandlers = handlers(ResultRow);
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withHandlers({
-    handleClick: (props: Props) => () =>
-      props.redirect(pathOr('/', ['result', 'data', 'path'], props))
-  }),
-)(ResultRow)
+  handlers,
+)(ResultRow);
 
 export default enhanced;
