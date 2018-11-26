@@ -30,10 +30,9 @@ class Backups extends Page {
     get spaceRequired() { return $('[data-qa-space-required]'); }
     get snapshotLinearProgress() { return $('[data-qa-linear-progress]'); }
 
-    get restoreToExistingDrawer() { return '[data-qa-drawer]'; }
-    get restoreToLinodeSelect() { return $(`${this.restoreToExistingDrawer} [data-qa-select]`); }
+    get restoreToLinodeSelect() { return $(`${this.drawerBase.selector} [data-qa-select]`); }
     get restoreToLinodesOptions() { return $$('[data-qa-restore-options]'); }
-    get overwriteLinodeCheckbox() { return $(`${this.restoreToExistingDrawer} [data-qa-checked]`); }
+    get overwriteLinodeCheckbox() { return $(`${this.drawerBase.selector} [data-qa-checked]`); }
     get restoreSubmit() { return $('[data-qa-restore-submit]'); }
     get restoreCancel() { return $('[data-qa-restore-cancel]'); }
 
@@ -88,8 +87,8 @@ class Backups extends Page {
 
     takeSnapshotWaitForComplete(label) {
         this.takeSnapshot(label);
-        this.snapshotLinearProgress.waitForVisible(constants.wait.normal);
-        this.snapshotLinearProgress.waitForVisible(constants.wait.minute*5,true);
+        this.linearProgress.waitForVisible(constants.wait.normal);
+        this.linearProgress.waitForVisible(constants.wait.minute*5,true);
         browser.waitUntil(() => {
             return $$(this.label.selector).find( backup => backup.getText() === label )
         },constants.wait.normal);

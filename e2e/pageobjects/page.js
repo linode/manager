@@ -39,6 +39,8 @@ export default class Page {
     get popoverMsg() { return $('[role="tooltip"]'); }
     get submitButton () { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
+    get linearProgress() { return $('[data-qa-linear-progress]'); }
+    get drawerBase() { return $('[data-qa-drawer]'); }
 
     // Breadcrumb Component
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
@@ -165,7 +167,12 @@ export default class Page {
               return $$('[data-qa-action-menu-item]').length > 0;
           },constants.wait.normal);
         } catch (e) {
-
+            if ( e.Error ){
+                actionMenuRow.$(this.actionMenu.selector).click();
+                browser.waitUntil(() => {
+                    return $$('[data-qa-action-menu-item]').length > 0;
+                },constants.wait.normal);
+            }
         }
     }
 

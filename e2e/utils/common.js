@@ -142,3 +142,8 @@ export const updateProfile = (profileDate) => {
     const profile = browser.updateUserProfile(token,profileDate);
     return profile;
 }
+
+export const checkEnvironment = () => {
+    const environment = process.env.REACT_APP_API_ROOT;
+    return ! (environment.includes('dev') || environment.includes('testing'));
+}

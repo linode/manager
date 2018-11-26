@@ -363,7 +363,7 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onComplete: function(exitCode, config, capabilities) {
+    onComplete: function(exitCode, config, capabilities, execute) {
         // Run delete all, on every test account
 
         /* We wait an arbitrary amount of time here for linodes to be removed
