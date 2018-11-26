@@ -38,7 +38,8 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
         <Typography variant="subheading" data-qa-entity-header>{capitalize(entity)}</Typography>
       </Grid>
       <List>
-        {results.map((result, idx: number) => <ResultRow key={idx} result={result} redirect={redirect} />)}
+        {results.map((result, idx: number) =>
+          <ResultRow key={idx} result={result} redirect={redirect} data-qa-result-row />)}
       </List>
     </Grid>
   );
