@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
+export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
   const { entity, classes, redirect, results } = props;
 
   if (isEmpty(results)) { return null; }
@@ -35,7 +35,7 @@ const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Grid item container direction="column" className={classes.root}>
       <Grid item>
-        <Typography variant="subheading">{capitalize(entity)}</Typography>
+        <Typography variant="subheading" data-qa-entity-header>{capitalize(entity)}</Typography>
       </Grid>
       <List>
         {results.map((result, idx: number) => <ResultRow key={idx} result={result} redirect={redirect} />)}
