@@ -1,12 +1,13 @@
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withTypes } from 'src/context/types';
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getAllEntities } from 'src/utilities/getAll';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
@@ -42,8 +43,6 @@ type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<Cl
 class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   getQuery = () => {
-    console.log(this.props.location);
-    console.log(this.props.history.location);
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
     const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
     return query;
@@ -140,10 +139,18 @@ const typesContext = withTypes(({
   typesData,
 }));
 
+const reloaded = reloadableWithRouter(
+  (routePropsOld, routePropsNew) => {
+    // reload if we're on the search landing
+    // and we enter a new term to search for
+    return routePropsOld.location.search !== routePropsNew.location.search;
+  },
+);
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
   typesContext,
-  withRouter,
+  reloaded,
 )(SearchLanding);
 
 export default enhanced;
