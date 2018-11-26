@@ -44,7 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& h3': {
       color: theme.color.headline,
       textDecoration: 'underline',
-      display: 'inline-block',
+      display: 'inline',
     },
   },
   withSeparator: {
