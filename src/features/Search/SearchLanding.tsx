@@ -7,6 +7,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Placeholder from 'src/components/Placeholder';
 import { withTypes } from 'src/context/types';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getAllEntities } from 'src/utilities/getAll';
@@ -128,6 +129,8 @@ class SearchLanding extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const { query, error, loading, results } = this.state;
+
+    const resultsEmpty = equals(results, emptyResults);
     return (
       <Grid container direction="column" >
         <Grid item>
@@ -139,6 +142,13 @@ class SearchLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <ErrorState errorText={"There was an error retrieving your search resuls."} />
           </Grid>
+        }
+        {
+          !loading && resultsEmpty &&
+          <Placeholder
+            title="No results"
+            copy="Your search didn't return any results."
+          />
         }
         <Grid item>
           {Object.keys(results).map((entityType, idx: number) =>
