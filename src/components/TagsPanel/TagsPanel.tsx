@@ -302,7 +302,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               autoFocus
               className={classes.selectTag}
               blurInputOnSelect={false}
-              data-qa-tags-multiselect
           />
           :
           <Tooltip
