@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
 
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -11,8 +10,7 @@ type ClassNames = 'root'
   | 'postCard'
   | 'postTitle'
   | 'post'
-  | 'withSeparator'
-  | 'icon';
+  | 'withSeparator';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -36,25 +34,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   post: {
     marginBottom: theme.spacing.unit / 2,
     '&:hover': {
-      '& $icon': {
+      '& h3:after': {
         opacity: 1,
-        margin: '0 10px',
       },
     },
     '& h3': {
       color: theme.color.headline,
       textDecoration: 'underline',
-      display: 'inline',
+      display: 'inline-block',
+      '&:after': {
+        content: "url('src/assets/icons/diagonalArrow.svg')",
+        margin: '0 10px',
+        width: 12,
+        height: 12,
+        opacity: 0,
+      },
     },
   },
   withSeparator: {
     borderRight: `1px solid ${theme.palette.divider}`,
-  },
-  icon: {
-    display: 'inline-block',
-    width: 12,
-    height: 12,
-    opacity: 0,
   },
 });
 
@@ -74,7 +72,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Getting Started with Linode
             </Typography>
-            <Arrow className={classes.icon} />
           </a>
         </div>
         <div className={classes.post}>
@@ -86,7 +83,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               How to Secure Your Server
             </Typography>
-            <Arrow className={classes.icon} />
           </a>
         </div>
         <div className={classes.post}>
@@ -98,7 +94,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Troubleshooting
             </Typography>
-            <Arrow className={classes.icon} />
           </a>
         </div>
       </React.Fragment>
@@ -118,7 +113,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
             My Linode is unreachable after maintenance
             </Typography>
-            <Arrow className={classes.icon} />
           </a>
         </div>
         <div className={classes.post}>
@@ -130,7 +124,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Why is my website so slow?
             </Typography>
-            <Arrow className={classes.icon} />
           </a>
         </div>
         <div className={classes.post}>
@@ -142,7 +135,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Stackscript guide?
             </Typography>
-            <Arrow className={classes.icon} />
           </a>
         </div>
       </React.Fragment>
