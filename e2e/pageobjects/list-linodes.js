@@ -27,7 +27,7 @@ export class ListLinodes extends Page {
     get tableHead() { return $('[data-qa-table-head]'); }
 
     // Action Menu Items
-    get powerOffMenu() { return $('[data-qa-action-menu-item="Power Off"]'); } 
+    get powerOffMenu() { return $('[data-qa-action-menu-item="Power Off"]'); }
     get powerOnMenu() { return $('[data-qa-action-menu-item="Power On"]'); }
     get launchConsoleMenu() { return $('[data-qa-action-menu-item="Launch Console"]'); }
     get rebootMenu() { return $('[data-qa-action-menu-item="Reboot"]'); }
@@ -53,11 +53,7 @@ export class ListLinodes extends Page {
     }
 
     navigateToDetail(linode) {
-        if(!linode) {
-            this.linode[0].$('a').click();
-            return;
-        }
-        linode.$('a').click();
+       !!linode ? $(`[data-qa-linode="${linode}"]`).$('a').click() : this.linode[0].$('a').click();
     }
 
     gridElemsDisplay() {
@@ -114,11 +110,11 @@ export class ListLinodes extends Page {
             this.acceptDialog('Confirm Reboot');
             browser.waitForVisible('[data-qa-circular-progress]');
         }
-        
+
         browser.waitUntil(function() {
             return linode.$(this.status.selector).getAttribute('data-qa-status') === 'rebooting';
         }, constants.wait.long);
-        
+
         browser.waitUntil(function() {
             return linode.$(this.status).getAttribute('data-qa-status') === 'running';
         }, constants.wait.long);
@@ -127,7 +123,7 @@ export class ListLinodes extends Page {
     powerOff(linode) {
         this.selectActionMenuItem(linode, 'Power Off');
         this.acceptDialog('Powering Off');
-        
+
         browser.waitUntil(function() {
             return browser.isVisible('[data-qa-status="offline"]');
         }, constants.wait.minute * 3, 'Failed to power down linode');
@@ -170,7 +166,7 @@ export class ListLinodes extends Page {
     }
 
     assertDocsDrawer() {
-        
+
     }
 
 }

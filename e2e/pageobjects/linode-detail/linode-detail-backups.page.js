@@ -27,7 +27,15 @@ class Backups extends Page {
     get dateCreated() { return $('[data-qa-date-created]'); }
     get duration() { return $('[data-qa-backup-duration]'); }
     get disks() { return $('[data-qa-backup-disks]'); }
-    get spaceRequired() { $('[data-qa-space-required]'); }
+    get spaceRequired() { return $('[data-qa-space-required]'); }
+    get snapshotLinearProgress() { return $('[data-qa-linear-progress]'); }
+
+    get restoreToExistingDrawer() { return '[data-qa-drawer]'; }
+    get restoreToLinodeSelect() { return $(`${this.restoreToExistingDrawer} [data-qa-select]`); }
+    get restoreToLinodesOptions() { return $$('[data-qa-restore-options]'); }
+    get overwriteLinodeCheckbox() { return $(`${this.restoreToExistingDrawer} [data-qa-checked]`); }
+    get restoreSubmit() { return $('[data-qa-restore-submit]'); }
+    get restoreCancel() { return $('[data-qa-restore-cancel]'); }
 
     baseElemsDisplay(backupsNotEnabled) {
         if (backupsNotEnabled) {
@@ -57,30 +65,34 @@ class Backups extends Page {
         // expect(this.cancelButton.getAttribute('class')).toContain('destructive');
     }
 
+    restoreToExistingDrawerDisplays() {
+        this.restoreToLinodeSelect.waitForVisible(constants.wait.normal);
+        this.overwriteLinodeCheckbox.waitForVisible(constants.wait.normal);
+        this.restoreSubmit.waitForVisible(constants.wait.normal);
+        this.restoreCancel.waitForVisible(constants.wait.normal);
+    }
+
     enableBackups() {
         const toastMsg = 'Backups are being enabled for this Linode';
-
+        this.enableButton.waitForVisible(constants.wait.normal);
         this.enableButton.click();
-        browser.waitUntil(() => {
-            if (browser.getText('[data-qa-toast-message]') === toastMsg) {
-                browser.click('[data-qa-toast] button');
-                return true;
-            }
-        }, constants.wait.normal);
+        this.toastDisplays(toastMsg);
     }
 
     takeSnapshot(label) {
         const toastMsg = 'A snapshot is being taken';
-
         this.manualSnapshotName.$('input').setValue(label);
         this.snapshotButton.click();
+        this.toastDisplays(toastMsg);
+    }
 
-        browser.waitForVisible('[data-qa-toast]');
-        browser.waitUntil(function() {
-            return browser
-                .getText('[data-qa-toast-message]') === toastMsg;
-        }, constants.wait.normal);
-        return this;
+    takeSnapshotWaitForComplete(label) {
+        this.takeSnapshot(label);
+        this.snapshotLinearProgress.waitForVisible(constants.wait.normal);
+        this.snapshotLinearProgress.waitForVisible(constants.wait.minute*5,true);
+        browser.waitUntil(() => {
+            return $$(this.label.selector).find( backup => backup.getText() === label )
+        },constants.wait.normal);
     }
 
     assertSnapshot(label) {

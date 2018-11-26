@@ -55,10 +55,10 @@ export const createLinodeIfNone = () => {
     }
 }
 
-export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[]) => {
+export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], type=undefined, region=undefined) => {
     const token = readToken(browser.options.testUser);
     const newLinodePass = crypto.randomBytes(20).toString('hex');
-    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags);
+    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region);
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
