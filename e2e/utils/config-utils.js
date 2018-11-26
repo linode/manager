@@ -56,7 +56,7 @@ exports.login = (username, password, credFilePath) => {
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
     console.log(browser.getUrl());
-    genericButton = browser.getUrl().includes('dev') || browser.getUrl().includes('testing') ? '.btn#submit' : '.btn-primary';
+    genericButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
     $(genericButton).click();
 
     try {
