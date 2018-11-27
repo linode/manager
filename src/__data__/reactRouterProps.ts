@@ -1,6 +1,6 @@
 const mockLocation = {
   pathname: '/',
-  search: '',
+  search: '?query=search',
   state: {},
   hash: '',
 }

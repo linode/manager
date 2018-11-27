@@ -44,7 +44,7 @@ interface TypesContextProps {
 
 type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-class SearchLanding extends React.Component<CombinedProps, State> {
+export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   getQuery = () => {
     const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
@@ -139,13 +139,13 @@ class SearchLanding extends React.Component<CombinedProps, State> {
           </Typography>
         </Grid>
         {error &&
-          <Grid item>
+          <Grid item data-qa-error-state>
             <ErrorState errorText={"There was an error retrieving your search results."} />
           </Grid>
         }
         {
           !loading && resultsEmpty &&
-          <Grid item>
+          <Grid item data-qa-empty-state>
             <Placeholder
               title="No results"
               copy="Your search didn't return any results."
