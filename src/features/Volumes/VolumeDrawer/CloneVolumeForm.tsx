@@ -55,7 +55,7 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       render={({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, resetForm, values, touched }) => {
         return (
           <Form>
-            <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}`}</Typography>
+            <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
             <LabelField
               error={touched.label ? errors.label : undefined}
               name="label"
