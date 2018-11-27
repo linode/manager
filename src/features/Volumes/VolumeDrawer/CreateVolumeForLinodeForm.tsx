@@ -3,22 +3,25 @@
  */
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import { createVolume } from 'src/services/volumes';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
+import { openForAttaching } from 'src/store/reducers/volumeDrawer';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
+import ModeSelection from './ModeSelection';
+import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
 import { handleFieldErrors, handleGeneralErrors, maybeCastToNumber } from './utils';
+import { modes } from './VolumeDrawer';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root';
-
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
@@ -32,10 +35,11 @@ interface Props {
 
 type CombinedProps =
   & Props
+  & DispatchProps
   & WithStyles<ClassNames>;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, linodeId, linodeLabel, linodeRegion } = props;
+  const { onClose, linodeId, linodeLabel, linodeRegion, actions, } = props;
 
   return (
     <Formik
@@ -86,9 +90,9 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
         return (
           <Form>
-            {status && status.success && <Notice success>{status.success}</Notice>}
+            {status && <NoticePanel success={status.success} error={status.generalError} />}
 
-            {status && status.generalError && <Notice error>{status.generalError}</Notice>}
+            <ModeSelection mode={modes.CREATING_FOR_LINODE} onChange={() => { actions.switchToAttaching() }} />
 
             <Typography variant="body1">
               {`This volume will be immediately scheduled for attachment to ${linodeLabel} and available to other Linodes in the ${linodeRegion} data-center.`}
@@ -147,5 +151,19 @@ const initialValues = {
 
 const styled = withStyles(styles);
 
-export default styled(CreateVolumeForm);
+interface DispatchProps {
+  actions: {
+    switchToAttaching: () => void;
+  },
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+  actions: {
+    switchToAttaching: () => dispatch(openForAttaching(ownProps.linodeId, ownProps.linodeRegion, ownProps.linodeLabel))
+  },
+});
+
+const connected = connect(undefined, mapDispatchToProps);
+
+export default styled(connected(CreateVolumeForm));
 

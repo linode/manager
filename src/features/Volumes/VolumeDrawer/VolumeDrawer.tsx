@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+
 import Drawer from 'src/components/Drawer';
 import { close } from 'src/store/reducers/volumeDrawer';
+import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
@@ -15,33 +17,28 @@ export const modes = {
   RESIZING: 'resizing',
   CLONING: 'cloning',
   EDITING: 'editing',
-};
-
-const titleMap = {
-  [modes.CLOSED]: (volumeLabel: string) => '',
-  [modes.CREATING]: (volumeLabel: string) => 'Create a Volume',
-  [modes.CREATING_FOR_LINODE]: (volumeLabel: string) => 'Create a Volume',
-  [modes.RESIZING]: (volumeLabel: string) => `Resize volume ${volumeLabel}`,
-  [modes.CLONING]: (volumeLabel: string) => `Clone volume ${volumeLabel}`,
-  [modes.EDITING]: (volumeLabel: string) => `Rename volume ${volumeLabel}`,
+  ATTACHING: 'attaching',
 };
 
 type CombinedProps = StateProps & DispatchProps
 
 class VolumeDrawer extends React.PureComponent<CombinedProps> {
+
+  onModeChange = () => { };
+
   render() {
     const {
       actions,
-      isOpen,
       drawerTitle,
+      isOpen,
+      linodeId,
+      linodeLabel,
+      linodeRegion,
       mode,
       volumeId,
       volumeLabel,
       volumeRegion,
       volumeSize,
-      linodeId,
-      linodeRegion,
-      linodeLabel,
     } = this.props;
 
     return (
@@ -85,6 +82,19 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             onClose={actions.closeDrawer}
           />
         }
+        {
+          mode === modes.ATTACHING
+          && linodeId !== undefined
+          && linodeRegion !== undefined
+          && linodeLabel !== undefined
+          &&
+          <AttachVolumeToLinodeForm
+            linodeId={linodeId}
+            linodeRegion={linodeRegion}
+            linodeLabel={linodeLabel}
+            onClose={actions.closeDrawer}
+          />
+        }
       </Drawer>
     );
   }
@@ -98,7 +108,7 @@ interface DispatchProps {
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
-    closeDrawer: () => dispatch(close())
+    closeDrawer: () => dispatch(close()),
   },
 });
 
@@ -128,7 +138,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   } = state.volumeDrawer;
 
   return {
-    drawerTitle: titleMap[mode](volumeLabel || ''),
+    drawerTitle: titleFromState(state.volumeDrawer),
     isOpen: mode !== modes.CLOSED,
     linodeId,
     linodeLabel,
@@ -138,6 +148,33 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeLabel,
     volumeRegion,
     volumeSize,
+  }
+};
+
+const titleFromState = (state: ApplicationState['volumeDrawer']) => {
+  const { mode, volumeLabel, linodeLabel } = state;
+
+  switch (mode) {
+    case modes.CREATING:
+    return `Create a Volume`;
+
+    case modes.CREATING_FOR_LINODE:
+      return `Create a volume for ${linodeLabel}`
+
+    case modes.RESIZING:
+      return `Resize volume ${volumeLabel}`;
+
+    case modes.CLONING:
+      return `Clone volume ${volumeLabel}`;
+
+    case modes.EDITING:
+      return `Edit volume ${volumeLabel}`;
+
+    case modes.ATTACHING:
+      return `Attach volume to ${linodeLabel}`;
+
+    default:
+      return '';
   }
 };
 

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { resetEventsPolling } from 'src/events';
 import { resizeVolume } from 'src/services/volumes';
 import { ResizeVolumeSchema } from 'src/services/volumes/volumes.schema';
+import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
@@ -53,17 +54,19 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       initialValues={initialValues}
       render={(formikProps) => {
         const {
-          values,
-          handleChange,
-          handleBlur,
           errors,
+          handleBlur,
+          handleChange,
           handleSubmit,
           isSubmitting,
-          resetForm
+          resetForm,
+          status,
+          values,
         } = formikProps;
 
         return (
           <Form>
+            {status && <NoticePanel success={status.success} error={status.generalError} />}
 
             <SizeField
               error={errors.size}

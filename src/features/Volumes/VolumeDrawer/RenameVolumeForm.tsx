@@ -5,6 +5,7 @@ import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { updateVolume } from 'src/services/volumes';
 import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
 import LabelField from './LabelField';
+import NoticePanel from './NoticePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
@@ -60,10 +61,12 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           handleSubmit,
           isSubmitting,
           resetForm,
+          status,
           values,
         } = formikProps;
         return (
           <Form>
+            {status && <NoticePanel success={status.success} error={status.generalError} />}
 
             <LabelField
               error={errors.label}

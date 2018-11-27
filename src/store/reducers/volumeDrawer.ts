@@ -7,6 +7,7 @@ const CREATING_FOR_LINODE = '@@manager/volumeDrawer/CREATING_FOR_LINODE';
 const EDITING = '@@manager/volumeDrawer/EDITING';
 const RESIZING = '@@manager/volumeDrawer/RESIZING';
 const CLONING = '@@manager/volumeDrawer/CLONING';
+const ATTACHING = '@@manager/volumeDrawer/ATTACHING';
 
 interface Close extends Action {
   type: typeof CLOSE;
@@ -84,6 +85,25 @@ export const openForClone = (
     volumeRegion,
   });
 };
+interface Attaching extends Action {
+  type: typeof ATTACHING;
+  linodeId: number;
+  linodeRegion: string;
+  linodeLabel: string;
+}
+
+export const openForAttaching = (
+  linodeId: number,
+  linodeRegion: string,
+  linodeLabel: string,
+): Attaching => {
+  return ({
+    type: ATTACHING,
+    linodeId,
+    linodeRegion,
+    linodeLabel,
+  });
+};
 
 export const defaultState: ApplicationState['volumeDrawer'] = {
   mode: modes.CLOSED,
@@ -93,12 +113,13 @@ export const defaultState: ApplicationState['volumeDrawer'] = {
 };
 
 type ActionTypes =
-  Close
+  | Attaching
+  | Cloning
+  | Close
   | Creating
   | CreatingForLinode
   | Editing
-  | Resizing
-  | Cloning;
+  | Resizing;
 
 export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
   switch (action.type) {
@@ -148,6 +169,15 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         volumeRegion: action.volumeRegion,
         volumeSize: action.volumeSize,
         mode: modes.CLONING,
+      };
+
+      case ATTACHING:
+      return {
+        ...defaultState,
+        linodeId: action.linodeId,
+        linodeRegion: action.linodeRegion,
+        linodeLabel: action.linodeLabel,
+        mode: modes.ATTACHING,
       };
 
     default:

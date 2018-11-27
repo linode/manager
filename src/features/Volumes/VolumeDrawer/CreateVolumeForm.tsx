@@ -1,17 +1,14 @@
-/**
- * @todo Display the volume configuration information on success.
- */
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { createVolume } from 'src/services/volumes';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import LinodeSelect from './LinodeSelect';
+import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import RegionSelect from './RegionSelect';
 import SizeField from './SizeField';
@@ -69,15 +66,15 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       }}
       render={(formikProps) => {
         const {
-          values,
-          handleChange,
-          handleBlur,
-          setFieldValue,
           errors,
-          isSubmitting,
+          handleBlur,
+          handleChange,
           handleSubmit,
+          isSubmitting,
           resetForm,
+          setFieldValue,
           status,
+          values,
           touched,
         } = formikProps;
 
@@ -90,9 +87,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
         return (
           <Form>
 
-            {status && status.success && <Notice success>{status.success}</Notice>}
-
-            {status && status.generalError && <Notice error>{status.generalError}</Notice>}
+            {status && <NoticePanel success={status.success} error={status.generalError} />}
 
             <Typography variant="body1">
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs

@@ -23,9 +23,9 @@ interface Props {
 }
 
 
-type Thingy = [number, string];
+type ConfigTuple = [number, string];
 interface State {
-  configs: Thingy[];
+  configs: ConfigTuple[];
   loading: boolean;
 }
 
@@ -52,6 +52,10 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
     onChange(-9999);
   };
 
+  componentDidMount() {
+    this.updateConfigs(this.props.linodeId);
+  }
+
   updateConfigs(linodeId: number) {
     const { onChange } = this.props;
 
@@ -66,7 +70,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
     getLinodeConfigs(linodeId)
       .then(({ data }) => {
         this.setState({
-          configs: data.map((config) => [config.id, config.label] as Thingy)
+          configs: data.map((config) => [config.id, config.label] as ConfigTuple)
         }, () => { this.setInitialState() });
       })
       .catch(() => {

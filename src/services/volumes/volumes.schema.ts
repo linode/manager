@@ -37,3 +37,8 @@ export const ResizeVolumeSchema = (minSize: number = 10) => object({
 export const UpdateVolumeSchema = object({
   label: string().required()
 })
+
+export const AttachVolumeSchema = object({
+  linode_id: number().required(),
+  config_id: number().required(),
+})
