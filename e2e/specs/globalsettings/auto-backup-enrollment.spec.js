@@ -20,8 +20,8 @@ describe('Backup Auto Enrollment Suite', () => {
     const checkBackupPricingPageLink = () => {
         const start = new Date().getTime();
         browser.waitUntil(() => {
-            //wait 5 seconds for page load
-            return browser.getTabIds().length === 2 && (new Date().getTime() - start) > 5000;
+            //wait 3 seconds for page load
+            return browser.getTabIds().length === 2 && (new Date().getTime() - start) > 3000;
         }, constants.wait.normal);
         const tabs = browser.getTabIds();
         const manager = tabs[0];
@@ -135,7 +135,7 @@ describe('Backup Auto Enrollment Suite', () => {
         Backups.baseElemsDisplay(false);
     });
 
-    it('BEnable backups for existing linodes CTA should no longer display on dashboard there are no linodes to backup', () => {
+    it('Enable backups for existing linodes CTA should no longer display on dashboard there are no linodes to backup', () => {
         browser.url(constants.routes.dashboard);
         Dashboard.baseElemsDisplay();
         expect(Dashboard.backupExistingLinodes.isVisible()).toBe(false);
