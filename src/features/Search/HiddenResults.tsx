@@ -28,7 +28,7 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-const HiddenResults: React.StatelessComponent<CombinedProps> = (props) => {
+export const HiddenResults: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, redirect, results, showMore, toggle } = props;
   return (
     <React.Fragment>
@@ -40,6 +40,7 @@ const HiddenResults: React.StatelessComponent<CombinedProps> = (props) => {
           type="primary"
           onClick={toggle}
           className={classes.button}
+          data-qa-show-more-toggle
         >
           {showMore ? "Show Less" : "Show More"}
         </Button>
@@ -52,7 +53,7 @@ const styled = withStyles(styles);
 const handlers = withStateHandlers(
   { showMore: false },
   {
-    toggle: ({ showMore }) => () => ({ showMore: !showMore})
+    toggle: ({ showMore }) => () => ({ showMore: !showMore })
   }
 )
 
