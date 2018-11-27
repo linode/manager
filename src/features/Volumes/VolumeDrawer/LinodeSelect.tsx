@@ -51,11 +51,11 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 
   getSelectedLinode = (linodeId?: number) => {
-    if (!linodeId) { return 0; }
+    if (!linodeId) { return -1; }
 
     const { linodes } = this.state;
     const idx = linodes.findIndex((linode) => Number(linodeId) === Number(linode.value));
-    return idx > -1 ? linodes[idx] : 0;
+    return idx > -1 ? linodes[idx] : -1;
   }
 
   setSelectedLinode = (selected: Item<number>) => {
@@ -64,8 +64,8 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
       this.setState({ selectedLinodeId: value });
       this.props.onChange(value);
     } else {
-      this.props.onChange(0);
-      this.setState({ selectedLinodeId: 0 })
+      this.props.onChange(-1);
+      this.setState({ selectedLinodeId: -1 })
     }
   }
 
