@@ -110,6 +110,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                     checked={accountBackups || this.props.backups}
                     onChange={changeBackups}
                     disabled={accountBackups}
+                    data-qa-check-backups={accountBackups ? 'auto backup enabled' : 'auto backup disabled'}
                   />
                 }
                 label="Backups"
@@ -143,6 +144,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                   <CheckBox
                     checked={this.props.privateIP}
                     onChange={() => changePrivateIP()}
+                    data-qa-check-private-ip
                   />
                 }
                 label="Private IP (Free!)"

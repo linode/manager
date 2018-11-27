@@ -7,6 +7,7 @@ class EnableAllBackupsDrawer extends Page {
     get linodeLabel() { return $$(`${this.linodeTableBase} [data-qa-linode-label]`); }
     get linodePlan() { return $$(`${this.linodeTableBase} [data-qa-linode-plan]`); }
     get linodeType() { return $$(`${this.linodeTableBase} [data-qa-linode-plan]`); }
+    get enableAutoBackupsToggle() { return $(`${this.drawerBase.selector} ${this.toggleOption.selector}`)}
     get backupPricingPage() { return $('[data-qa-backups-price]'); }
     get countLinodesToBackup() { return $('[data-qa-backup-count]'); }
 

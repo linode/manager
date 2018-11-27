@@ -9,17 +9,24 @@ import Dashboard from '../../pageobjects/dashboard.page';
 import GlobalSettings from '../../pageobjects/account/global-settings.page';
 import ListLinodes from '../../pageobjects/list-linodes';
 import EnableAllBackupsDrawer from '../../pageobjects/enable-all-backups-drawer';
+import ConfigureLinode from '../../pageobjects/configure-linode';
+import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
+import Backups from '../../pageobjects/linode-detail/linode-detail-backups.page';
 
 describe('Backup Auto Enrollment Suite', () => {
     const disableAutoEnrollment = { 'backups_enabled': false };
     const linodeLabel = `TestLinode${timestamp()}`;
 
     const checkBackupPricingPageLink = () => {
-        browser.debug();
+        const start = new Date().getTime();
         browser.waitUntil(() => {
-            return browser.windowHandles().value.length === 2;
+            //wait 5 seconds for page load
+            return browser.getTabIds().length === 2 && (new Date().getTime() - start) > 5000;
         }, constants.wait.normal);
-        browser.switchTab();
+        const tabs = browser.getTabIds();
+        const manager = tabs[0];
+        const backupPricing = tabs[1]
+        browser.switchTab(backupPricing);
         expect(browser.getTitle()).toEqual('Protect Your Data with Backups - Linode');
         browser.close();
     }
@@ -88,6 +95,49 @@ describe('Backup Auto Enrollment Suite', () => {
         browser.waitUntil(() => {
             return GlobalSettings.enrollInNewLinodesAutoBackupsToggle.getAttribute('data-qa-toggle') === 'true';
         }, constants.wait.normal);
-        expect(browser.get)
+        expect(retrieveGlobalSettings().backups_enabled).toBe(true);
+    });
+
+    it('Backups should be enabled when creating a new linode and checkbox', () => {
+        GlobalSettings.globalCreate.click();
+        GlobalSettings.addLinodeMenu.waitForVisible(constants.wait.normal);
+        GlobalSettings.addLinodeMenu.click();
+        ConfigureLinode.baseDisplay();
+        ConfigureLinode.backupsCheckBox.waitForVisible(constants.wait.normal);
+        expect(ConfigureLinode.backupsCheckBox.getAttribute('data-qa-check-backups')).toEqual('auto backup enabled');
+    });
+
+    it('Backup auto enrollment CTA should no longer display on dashboard when autobackup is enabled', () => {
+        browser.url(constants.routes.dashboard);
+        Dashboard.baseElemsDisplay();
+        expect(Dashboard.autoBackupEnrollmentCTA.isVisible()).toBe(false);
+    });
+
+    it('Backup all existing linodes exists on the list linodes page if there is a linode without backups enabled', () => {
+        browser.url(constants.routes.linodes);
+        ListLinodes.linodesDisplay();
+        expect(ListLinodes.enableAllBackups.isVisible()).toBe(true);
+        ListLinodes.enableAllBackups.click();
+        EnableAllBackupsDrawer.enableAllBackupsDrawerDisplays(false);
+    });
+
+    it('Backup auto enroll toggle should not display if autobackup is enabled', () => {
+        expect(EnableAllBackupsDrawer.enableAutoBackupsToggle.isVisible()).toBe(false);
+    });
+
+    it('Confirming enable backups will enable backups for all existing linodes', () => {
+        EnableAllBackupsDrawer.submitButton.click();
+        ListLinodes.toastDisplays('All of your Linodes have been enrolled in automatic backups.');
+        expect(ListLinodes.enableAllBackups.isVisible()).toBe(false);
+        ListLinodes.navigateToDetail();
+        LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
+        LinodeDetail.changeTab('Backups');
+        Backups.baseElemsDisplay(false);
+    });
+
+    it('BEnable backups for existing linodes CTA should no longer display on dashboard there are no linodes to backup', () => {
+        browser.url(constants.routes.dashboard);
+        Dashboard.baseElemsDisplay();
+        expect(Dashboard.backupExistingLinodes.isVisible()).toBe(false);
     });
 });

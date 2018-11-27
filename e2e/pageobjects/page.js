@@ -43,6 +43,7 @@ export default class Page {
     get drawerBase() { return $('[data-qa-drawer]'); }
     get drawerPrice() { return $('[qa-data-price]'); }
     get drawerBillingInterval() { return $('[qa-data-billing-interval]'); }
+    get enableAllBackups() { return $('[data-qa-backup-existing]'); }
 
     // Breadcrumb Component
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }

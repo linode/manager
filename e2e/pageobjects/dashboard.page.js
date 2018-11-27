@@ -36,7 +36,7 @@ export class Dashboard extends Page {
 
     get readMore() { return $('[data-qa-read-more]'); }
     get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
-    get backupExistingLinodes() { return $('[data-qa-backup-existing]'); }
+    get backupExistingLinodes() { return $(this.enableAllBackups.selector); }
     get backupExistingMessage() { return $('[data-qa-linodes-message]'); }
 
     baseElemsDisplay() {
