@@ -4,7 +4,7 @@ import Page from './page';
 
 export class Dashboard extends Page {
     get header() { return $('[data-qa-dashboard-header]'); }
-    
+
     get linodesCard() { return $('[data-qa-card="Linodes"]'); }
     get linodes() { return $('[data-qa-linode]'); }
     get linodePlan() { return $('[data-qa-linode-plan]'); }
@@ -14,7 +14,7 @@ export class Dashboard extends Page {
     get volumes() { return $$('[data-qa-volume]'); }
     get volumeRegion() { return $('[data-qa-volume-region]'); }
     get volumeStatus() { return $('[data-qa-volume-status]'); }
-    
+
     get nodebalancerCard() { return $('[data-qa-card="NodeBalancers"]'); }
     get nodebalancers() { return $$('[data-qa-node]'); }
     get nodeHostname() { return $('[data-qa-node-hostname]'); }
@@ -34,14 +34,18 @@ export class Dashboard extends Page {
     get postDescription() { return $('[data-qa-post-desc]'); }
 
     get readMore() { return $('[data-qa-read-more]'); }
+    get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
+    get backupExistingLinodes() { return $(this.enableAllBackups.selector); }
+    get backupExistingMessage() { return $('[data-qa-linodes-message]'); }
 
     baseElemsDisplay() {
         this.header.waitForVisible(constants.wait.normal);
-        
+
         expect(this.linodesCard.isVisible()).toBe(true);
         expect(this.volumesCard.isVisible()).toBe(true);
         expect(this.nodebalancerCard.isVisible()).toBe(true);
         expect(this.domainsCard.isVisible()).toBe(true);
+        this.blogCard.waitForVisible(constants.wait.normal);
         expect(this.blogCard.isVisible()).toBe(true);
         expect(this.readMore.isVisible()).toBe(true);
     }

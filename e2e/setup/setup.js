@@ -398,3 +398,31 @@ exports.updateUserProfile = (token, profileData) => {
             });
     });
 }
+
+exports.putGlobalSetting = (token, settingsData) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/account/settings';
+
+        return getAxiosInstance(token)
+            .put(endpoint,settingsData)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error", error);
+                reject(error);
+            });
+    });
+}
+
+exports.getGlobalSettings = (token) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/account/settings';
+
+        return getAxiosInstance(token)
+            .get(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error", error);
+                reject(error);
+            });
+    });
+}
