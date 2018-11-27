@@ -524,7 +524,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         configs: {
           data: configs,
           lastUpdated: configsLastUpdated,
-          errors: configsErrors,
         },
       },
     } = this.state;
@@ -551,14 +550,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       throw Error('Configs undefined on LinodeLanding.');
     }
 
-    if (configsErrors) {
-      reportException(
-        Error('Error loading configs data.'),
-        configsErrors,
-      )
-      return <ErrorState errorText="Error while loading configurations." />;
-    }
-
     return (
       <React.Fragment>
         <ConfigsProvider value={this.state.context.configs}>
@@ -581,6 +572,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     linodeStatus={linode.status}
                     linodeRecentEvent={linode.recentEvent}
                     linodeTags={linode.tags}
+                    linodeConfigs={configs}
                     linodeUpdate={this.state.context.linode.request}
                     url={url}
                     history={this.props.history}

@@ -26,6 +26,7 @@ interface Props {
   linodeRecentEvent?: Linode.Event;
   linodeRegion: string;
   linodeStatus: Linode.LinodeStatus;
+  linodeConfigs: Linode.Config[];
   url: string;
   history: any;
 }
@@ -33,7 +34,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { linodeRecentEvent, linodeStatus, url, linodeId, linodeRegion, linodeLabel, } = props;
+  const { linodeRecentEvent, linodeStatus, url, linodeId, linodeRegion, linodeLabel, linodeConfigs } = props;
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -81,6 +82,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
               linodeId={linodeId}
               linodeLabel={linodeLabel}
               linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
               {...routeProps}
             />
           )}

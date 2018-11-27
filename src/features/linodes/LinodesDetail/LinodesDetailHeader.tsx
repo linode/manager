@@ -32,6 +32,7 @@ interface Props {
   linodeRegion: string;
   linodeRecentEvent?: Linode.Event;
   linodeTags: string[];
+  linodeConfigs: Linode.Config[];
   linodeUpdate: (...args: any[]) => Promise<any>;
   showPendingMutation: boolean;
   openMutateDrawer: () => void;
@@ -109,6 +110,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       linodeRegion,
       linodeStatus,
       linodeRecentEvent,
+      linodeConfigs,
     } = this.props;
 
     return (
@@ -148,6 +150,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           linodeId={linodeId}
           linodeRegion={linodeRegion}
           linodeLabel={linodeLabel}
+          linodeConfigs={linodeConfigs}
         />
       </React.Fragment>
     );

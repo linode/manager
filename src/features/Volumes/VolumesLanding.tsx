@@ -75,6 +75,7 @@ interface Props {
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
+  linodeConfigs?: Linode.Config[];
   recentEvent?: Linode.Event;
 }
 
@@ -313,7 +314,31 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
+  gotToSettings = () => {
+    const { history, linodeId } = this.props;
+    history.push(`/linodes/${linodeId}/settings`);
+  };
+
   renderEmpty = () => {
+    const { linodeConfigs } = this.props;
+
+    if (linodeConfigs && linodeConfigs.length === 0) {
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Volumes" />
+          <Placeholder
+            title="No configs available."
+            copy="This Linode has no configurations. Click below to create a configuration."
+            icon={VolumesIcon}
+            buttonProps={{
+              onClick: this.gotToSettings,
+              children: 'View Linode Configurations',
+            }}
+          />
+        </React.Fragment>
+      );
+    }
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
