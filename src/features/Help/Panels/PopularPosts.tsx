@@ -42,7 +42,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     fontFamily: 'LatoWebBold',
     lineHeight: '1.2em',
     textDecoration: 'underline',
-    display: 'flex',
+    display: 'inline-block',
   },
   withSeparator: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -61,18 +61,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/docs/getting-started/"
           text="Getting Started with Linode"
           className={classes.postLink}
-          data-qa-doc-link
         />
-          
-          {/* <a
-            target="_blank"
-            href="https://www.linode.com/docs/getting-started/"
-            data-qa-doc-link
-          >
-            <Typography variant="subheading">
-              Getting Started with Linode
-            </Typography>
-          </a> */}
         </div>
         <div className={classes.post}>
         <ExternalLink
@@ -80,15 +69,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           text="How to Secure Your Server"
           className={classes.postLink}
         />
-          {/* <a
-            target="_blank"
-            href="https://www.linode.com/docs/security/securing-your-server/"
-            data-qa-doc-link
-          >
-            <Typography variant="subheading">
-              How to Secure Your Server
-            </Typography>
-          </a> */}
         </div>
         <div className={classes.post}>
         <ExternalLink
@@ -96,15 +76,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           text="Troubleshooting"
           className={classes.postLink}
         />
-          {/* <a
-            target="_blank"
-            href="https://www.linode.com/docs/troubleshooting/troubleshooting/"
-            data-qa-doc-link
-          >
-            <Typography variant="subheading">
-              Troubleshooting
-            </Typography>
-          </a> */}
         </div>
       </React.Fragment>
     )
@@ -120,15 +91,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           text="My Linode is unreachable after maintenance"
           className={classes.postLink}
         />
-          {/* <a
-            target="_blank"
-            href="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
-            data-qa-community-post
-          >
-            <Typography variant="subheading">
-            My Linode is unreachable after maintenance
-            </Typography>
-          </a> */}
         </div>
         <div className={classes.post}>
         <ExternalLink
@@ -136,15 +98,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           text="Why is my website so slow?"
           className={classes.postLink}
         />
-          {/* <a
-            target="_blank"
-            href="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
-            data-qa-community-post
-          >
-            <Typography variant="subheading">
-              Why is my website so slow?
-            </Typography>
-          </a> */}
         </div>
         <div className={classes.post}>
         <ExternalLink
@@ -152,15 +105,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           text="Stackscript guide?"
           className={classes.postLink}
         />
-          {/* <a
-            target="_blank"
-            href="https://www.linode.com/community/questions/479/stackscript-guide"
-            data-qa-community-post
-          >
-            <Typography variant="subheading">
-              Stackscript guide?
-            </Typography>
-          </a> */}
         </div>
       </React.Fragment>
     )
