@@ -39,7 +39,6 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Formik
-      validateOnChange={false}
       initialValues={initialValues}
       validationSchema={CreateVolumeSchema}
       onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {

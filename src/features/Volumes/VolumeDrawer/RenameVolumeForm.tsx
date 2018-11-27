@@ -31,7 +31,6 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Formik
-      validateOnChange={false}
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {
 

@@ -30,7 +30,6 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Formik
-      validateOnChange={false}
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {
 
@@ -72,6 +71,7 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.size}
+              resize={volumeSize}
             />
 
             <PricePanel value={values.size} currentSize={volumeSize} />

@@ -34,7 +34,6 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
   const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
   return (
     <Formik
-      validateOnChange={false}
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume(volumeId, { label: values.label })
