@@ -29,7 +29,7 @@ const BackupTableRow:React.StatelessComponent<Props> = (props) => {
       <TableCell parentColumn="Date Created">
         {formatBackupDate(backup.created)}
       </TableCell>
-      <TableCell parentColumn="Label" data-qa-backup-name>
+      <TableCell parentColumn="Label" data-qa-backup-name={backup.label || typeMap[backup.type]}>
         {backup.label || typeMap[backup.type]}
       </TableCell>
       <TableCell parentColumn="Duration">
