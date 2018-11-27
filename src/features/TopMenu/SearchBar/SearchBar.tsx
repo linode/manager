@@ -292,13 +292,19 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.volumes) {
       const volumesByLabel = this.state.volumes.filter(
-        volume => volume.label.toLowerCase().includes(queryLower),
-      );
+        volume => {
+          const matchingTags = this.getMatchingTags(volume.tags, queryLower);
+          const bool = or(
+            volume.label.toLowerCase().includes(queryLower),
+            matchingTags.length > 0
+          )
+          return bool;
+        }      );
       searchResults.push(...(volumesByLabel.map(volume => ({
         label: volume.label,
         value: volume.id,
         data: {
-          tags: [],
+          tags: volume.tags,
           description: volume.size + ' G',
           Icon: VolumeIcon,
           path: `/volumes/${volume.id}`,
