@@ -49,14 +49,16 @@ const HiddenResults: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
+const handlers = withStateHandlers(
+  { showMore: false },
+  {
+    toggle: ({ showMore }) => () => ({ showMore: !showMore})
+  }
+)
+
 const enhanced = compose<CombinedProps,Props>(
   styled,
-  withStateHandlers(
-    { showMore: false },
-    {
-      toggle: ({ showMore }) => () => ({ showMore: !showMore})
-    }
-  )
+  handlers,
 )(HiddenResults);
 
 export default enhanced;

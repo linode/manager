@@ -140,15 +140,17 @@ class SearchLanding extends React.Component<CombinedProps, State> {
         </Grid>
         {error &&
           <Grid item>
-            <ErrorState errorText={"There was an error retrieving your search resuls."} />
+            <ErrorState errorText={"There was an error retrieving your search results."} />
           </Grid>
         }
         {
           !loading && resultsEmpty &&
-          <Placeholder
-            title="No results"
-            copy="Your search didn't return any results."
-          />
+          <Grid item>
+            <Placeholder
+              title="No results"
+              copy="Your search didn't return any results."
+            />
+          </Grid>
         }
         <Grid item>
           {Object.keys(results).map((entityType, idx: number) =>
