@@ -115,7 +115,7 @@ exports.removeAllLinodes = token => {
     });
 }
 
-exports.createLinode = (token, password, linodeLabel, tags) => {
+exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
 
@@ -123,9 +123,9 @@ exports.createLinode = (token, password, linodeLabel, tags) => {
             backups_enabled: false,
             booted: true,
             image: 'linode/debian9',
-            region: 'us-east',
+            region: !region ? 'us-east' : region,
             root_pass: password,
-            type: 'g6-standard-1'
+            type: !type ? 'g6-nanode-1' : type
         }
 
         if (linodeLabel !== false) {

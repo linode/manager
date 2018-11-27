@@ -55,10 +55,10 @@ export const createLinodeIfNone = () => {
     }
 }
 
-export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[]) => {
+export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], type=undefined, region=undefined) => {
     const token = readToken(browser.options.testUser);
     const newLinodePass = crypto.randomBytes(20).toString('hex');
-    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags);
+    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region);
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
@@ -141,4 +141,11 @@ export const updateProfile = (profileDate) => {
     const token = readToken(browser.options.testUser);
     const profile = browser.updateUserProfile(token,profileDate);
     return profile;
+}
+
+export const checkEnvironment = () => {
+    const environment = process.env.REACT_APP_API_ROOT;
+    if (environment.includes('dev') || environment.includes('testing')) {
+        pending('Feature not available in Testing or Dev environmnet');
+    }
 }
