@@ -3,6 +3,7 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'
@@ -10,7 +11,8 @@ type ClassNames = 'root'
   | 'postCard'
   | 'postTitle'
   | 'post'
-  | 'withSeparator';
+  | 'withSeparator'
+  | 'postLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -33,23 +35,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   post: {
     marginBottom: theme.spacing.unit / 2,
-    '&:hover': {
-      '& h3:after': {
-        opacity: 1,
-      },
-    },
-    '& h3': {
-      color: theme.color.headline,
-      textDecoration: 'underline',
-      display: 'inline-block',
-      '&:after': {
-        content: "url('src/assets/icons/diagonalArrow.svg')",
-        margin: '0 10px',
-        width: 12,
-        height: 12,
-        opacity: 0,
-      },
-    },
+  },
+  postLink: {
+    color: theme.color.headline,
+    fontSize: '1rem',
+    fontFamily: 'LatoWebBold',
+    lineHeight: '1.2em',
+    textDecoration: 'underline',
+    display: 'flex',
   },
   withSeparator: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -64,7 +57,14 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a
+        <ExternalLink
+          link="https://www.linode.com/docs/getting-started/"
+          text="Getting Started with Linode"
+          className={classes.postLink}
+          data-qa-doc-link
+        />
+          
+          {/* <a
             target="_blank"
             href="https://www.linode.com/docs/getting-started/"
             data-qa-doc-link
@@ -72,10 +72,15 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Getting Started with Linode
             </Typography>
-          </a>
+          </a> */}
         </div>
         <div className={classes.post}>
-          <a
+        <ExternalLink
+          link="https://www.linode.com/docs/security/securing-your-server/"
+          text="How to Secure Your Server"
+          className={classes.postLink}
+        />
+          {/* <a
             target="_blank"
             href="https://www.linode.com/docs/security/securing-your-server/"
             data-qa-doc-link
@@ -83,10 +88,15 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               How to Secure Your Server
             </Typography>
-          </a>
+          </a> */}
         </div>
         <div className={classes.post}>
-          <a
+        <ExternalLink
+          link="https://www.linode.com/docs/troubleshooting/troubleshooting/"
+          text="Troubleshooting"
+          className={classes.postLink}
+        />
+          {/* <a
             target="_blank"
             href="https://www.linode.com/docs/troubleshooting/troubleshooting/"
             data-qa-doc-link
@@ -94,7 +104,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Troubleshooting
             </Typography>
-          </a>
+          </a> */}
         </div>
       </React.Fragment>
     )
@@ -105,7 +115,12 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a
+        <ExternalLink
+          link="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
+          text="My Linode is unreachable after maintenance"
+          className={classes.postLink}
+        />
+          {/* <a
             target="_blank"
             href="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
             data-qa-community-post
@@ -113,10 +128,15 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
             My Linode is unreachable after maintenance
             </Typography>
-          </a>
+          </a> */}
         </div>
         <div className={classes.post}>
-          <a
+        <ExternalLink
+          link="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
+          text="Why is my website so slow?"
+          className={classes.postLink}
+        />
+          {/* <a
             target="_blank"
             href="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
             data-qa-community-post
@@ -124,10 +144,15 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Why is my website so slow?
             </Typography>
-          </a>
+          </a> */}
         </div>
         <div className={classes.post}>
-          <a
+        <ExternalLink
+          link="https://www.linode.com/community/questions/479/stackscript-guide"
+          text="Stackscript guide?"
+          className={classes.postLink}
+        />
+          {/* <a
             target="_blank"
             href="https://www.linode.com/community/questions/479/stackscript-guide"
             data-qa-community-post
@@ -135,7 +160,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             <Typography variant="subheading">
               Stackscript guide?
             </Typography>
-          </a>
+          </a> */}
         </div>
       </React.Fragment>
     )

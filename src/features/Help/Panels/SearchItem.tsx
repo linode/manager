@@ -26,11 +26,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   icon: {
     display: 'inline-block',
-    fontSize: '0.8em',
+    width: 12,
+    height: 12,
     position: 'relative',
     top: 5,
     marginLeft: theme.spacing.unit / 2,
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
   },
   source: {
     marginTop: theme.spacing.unit / 2,
