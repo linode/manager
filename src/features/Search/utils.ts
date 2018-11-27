@@ -1,5 +1,6 @@
 import { or } from 'ramda';
 
+import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -22,6 +23,7 @@ export const iconMap = {
   'LinodeIcon': LinodeIcon,
   'NodebalIcon': NodebalIcon,
   'VolumeIcon': VolumeIcon,
+  'DomainIcon': DomainIcon,
   'default': LinodeIcon,
 }
 
@@ -109,8 +111,7 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
     data: {
       tags: domain.tags,
       description: domain.description || domain.status,
-      /* TODO: Update this with the Domains icon! */
-      icon: 'NodebalIcon',
+      icon: 'DomainIcon',
       path: `/domains/${domain.id}`,
       searchText: query
     }
