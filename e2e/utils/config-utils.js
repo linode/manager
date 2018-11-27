@@ -43,6 +43,8 @@ exports.readToken = (username) => {
 * @returns {null} returns nothing
 */
 exports.login = (username, password, credFilePath) => {
+    let genericButton;
+
     browser.url(constants.routes.linodes);
     try {
         browser.waitForVisible('#username', constants.wait.long);
@@ -53,7 +55,8 @@ exports.login = (username, password, credFilePath) => {
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
-    browser.click('.btn-primary');
+    genericButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
+    $(genericButton).click();
 
     try {
         browser.waitUntil(function() {
@@ -63,12 +66,12 @@ exports.login = (username, password, credFilePath) => {
         console.log('failed to login!');
         if (browser.getText('.alert').includes('This field is required.')) {
             browser.trySetValue('#password', password);
-            browser.click('.btn-primary');
+            $(genericButton).click();
         }
     }
 
     if (browser.isExisting('.Modal')) {
-        browser.click('.btn-primary');
+        $(genericButton).click();
     }
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
     browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
@@ -93,7 +96,6 @@ exports.checkoutCreds = (credFilePath, specFile) => {
 
 exports.checkInCreds = (credFilePath, specFile) => {
     let credCollection = JSON.parse(readFileSync(credFilePath));
-
     return credCollection.find((cred, i) => {
         if (cred.spec === specFile) {
             credCollection[i].inUse = false;

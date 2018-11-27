@@ -39,6 +39,8 @@ export default class Page {
     get popoverMsg() { return $('[role="tooltip"]'); }
     get submitButton () { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
+    get linearProgress() { return $('[data-qa-linear-progress]'); }
+    get drawerBase() { return $('[data-qa-drawer]'); }
 
     // Breadcrumb Component
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
@@ -157,21 +159,31 @@ export default class Page {
         }, constants.wait.normal);
     }
 
+    openActionMenu(actionMenuRow) {
+        actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
+        try {
+          actionMenuRow.$(this.actionMenu.selector).click();
+          browser.waitUntil(() => {
+              return $$('[data-qa-action-menu-item]').length > 0;
+          },constants.wait.normal);
+        } catch (e) {
+            if ( e.Error ){
+                actionMenuRow.$(this.actionMenu.selector).click();
+                browser.waitUntil(() => {
+                    return $$('[data-qa-action-menu-item]').length > 0;
+                },constants.wait.normal);
+            }
+        }
+    }
 
     selectActionMenuItem(tableCell, item) {
-        try {
-            tableCell.$(this.actionMenu.selector).click();
-            browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
-        } catch (err) {
-            // Try clicking again if the action menu item fails to display..
-            // This is a hack
-            if(err.Error.includes('still not visible after')) {
-                tableCell.$(this.actionMenu.selector).click();
-                browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
-            }
-            return err;
-        }
+        this.openActionMenu(tableCell);
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
+    }
+
+    actionMenuOptionExists(actionMenuRow,option) {
+        this.openActionMenu(actionMenuRow);
+        expect($(`[data-qa-action-menu-item="${option}"]`).isVisible()).toBe(true);
     }
 
     closeDrawer() {
