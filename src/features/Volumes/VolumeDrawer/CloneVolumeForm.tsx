@@ -6,6 +6,7 @@ import { resetEventsPolling } from 'src/events';
 import { cloneVolume } from 'src/services/volumes';
 import { CloneVolumeSchema } from 'src/services/volumes/volumes.schema';
 import LabelField from './LabelField';
+import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
@@ -52,10 +53,21 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
       }}
       initialValues={initialValues}
-      render={({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, resetForm, values, touched }) => {
+      render={({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        resetForm,
+        status,
+        touched,
+        values,
+      }) => {
         return (
           <Form>
             <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
+            {status && <NoticePanel success={status.success} error={status.generalError} />}
             <LabelField
               error={touched.label ? errors.label : undefined}
               name="label"
