@@ -20,14 +20,13 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
-
-interface ReducedLinode {
-  status: Linode.LinodeStatus;
-  recentEvent?: Linode.Event;
-}
-
 interface Props {
-  linode: ReducedLinode;
+  linodeId: number;
+  linodeLabel: string;
+  linodeRecentEvent?: Linode.Event;
+  linodeRegion: string;
+  linodeStatus: Linode.LinodeStatus;
+  linodeConfigs: Linode.Config[];
   url: string;
   history: any;
 }
@@ -35,7 +34,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { linode, url } = props;
+  const { linodeRecentEvent, linodeStatus, url, linodeId, linodeRegion, linodeLabel, linodeConfigs } = props;
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -57,8 +56,8 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
 
   return (
     <React.Fragment>
-      {linodeInTransition(linode.status, linode.recentEvent) &&
-        <LinodeBusyStatus status={linode.status} recentEvent={linode.recentEvent} />
+      {linodeInTransition(linodeStatus, linodeRecentEvent) &&
+        <LinodeBusyStatus status={linodeStatus} recentEvent={linodeRecentEvent} />
       }
       <AppBar position="static" color="default">
         <Tabs
@@ -75,7 +74,19 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
       </AppBar>
       <Switch>
         <Route exact path={`/linodes/:linodeId/summary`} component={LinodeSummary} />
-        <Route exact path={`/linodes/:linodeId/volumes`} component={VolumesLanding} />
+        <Route
+          exact
+          path={`/linodes/:linodeId/volumes`}
+          render={(routeProps) => (
+            <VolumesLanding
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
+              {...routeProps}
+            />
+          )}
+        />
         <Route exact path={`/linodes/:linodeId/networking`} component={LinodeNetworking} />
         <Route exact path={`/linodes/:linodeId/resize`} component={LinodeResize} />
         <Route exact path={`/linodes/:linodeId/rescue`} component={LinodeRescue} />

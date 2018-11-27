@@ -21,6 +21,13 @@ declare type DocumentationState = Linode.Doc[];
 
 declare interface VolumeDrawerState {
   mode: string;
+  volumeId?: number;
+  volumeLabel?: string;
+  volumeRegion?: string;
+  volumeSize?: number;
+  linodeId?: number;
+  linodeLabel?: string;
+  linodeRegion?: string;
 }
 
 declare interface SidebarState {

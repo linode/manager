@@ -25,20 +25,18 @@ interface LabelInput {
   onCancel: () => void;
 }
 
-interface ReducedLinode {
-  id: number;
-  label: string;
-  status: Linode.LinodeStatus;
-  recentEvent?: Linode.Event;
-  tags: string[];
-  update: (...args: any[]) => Promise<any>;
-}
-
 interface Props {
+  linodeId: number;
+  linodeLabel: string;
+  linodeStatus: Linode.LinodeStatus;
+  linodeRegion: string;
+  linodeRecentEvent?: Linode.Event;
+  linodeTags: string[];
+  linodeConfigs: Linode.Config[];
+  linodeUpdate: (...args: any[]) => Promise<any>;
   showPendingMutation: boolean;
   openMutateDrawer: () => void;
   labelInput: LabelInput;
-  linode: ReducedLinode;
   url: string;
   history: any;
   openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
@@ -62,9 +60,9 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   migrate = (type: string) => {
-    const { linode } = this.props;
+    const { linodeId } = this.props;
     const { getNotifications } = this.props.actions;
-    scheduleOrQueueMigration(linode.id)
+    scheduleOrQueueMigration(linodeId)
       .then((_) => {
         // A 200 response indicates that the operation was successful.
         const successMessage = type === 'migration_scheduled'
@@ -80,8 +78,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   launchLish = () => {
-    const { linode } = this.props;
-    lishLaunch(linode.id);
+    const { linodeId } = this.props;
+    lishLaunch(linodeId);
   }
 
   editLabel = (value: string) => {
@@ -89,13 +87,13 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   handleUpdateTags = (tagsList: string[]) => {
-    const { linode } = this.props;
+    const { linodeId, linodeUpdate } = this.props;
     return updateLinode(
-      linode.id,
+      linodeId,
       { tags: tagsList }
     )
       .then(() => {
-        linode.update();
+        linodeUpdate();
       })
   }
 
@@ -103,10 +101,16 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     const {
       showPendingMutation,
       labelInput,
-      linode,
       notifications,
       url,
       openConfigDrawer,
+      linodeTags,
+      linodeId,
+      linodeLabel,
+      linodeRegion,
+      linodeStatus,
+      linodeRecentEvent,
+      linodeConfigs,
     } = this.props;
 
     return (
@@ -116,15 +120,15 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           showPendingMutation={showPendingMutation}
           handleUpgrade={this.props.openMutateDrawer}
           handleMigration={this.migrate}
-          status={linode.status}
+          status={linodeStatus}
         />
         <LabelPowerAndConsolePanel
           launchLish={this.launchLish}
           linode={{
-            id: linode.id,
-            label: linode.label,
-            recentEvent: linode.recentEvent,
-            status: linode.status
+            id: linodeId,
+            label: linodeLabel,
+            recentEvent: linodeRecentEvent,
+            status: linodeStatus
           }}
           openConfigDrawer={openConfigDrawer}
           labelInput={{
@@ -135,16 +139,18 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           }}
         />
         <TagsPanel
-          tags={linode.tags}
+          tags={linodeTags}
           updateTags={this.handleUpdateTags}
         />
         <TabsAndStatusBarPanel
           url={url}
           history={this.props.history}
-          linode={{
-            status: linode.status,
-            recentEvent: linode.recentEvent
-          }}
+          linodeRecentEvent={linodeRecentEvent}
+          linodeStatus={linodeStatus}
+          linodeId={linodeId}
+          linodeRegion={linodeRegion}
+          linodeLabel={linodeLabel}
+          linodeConfigs={linodeConfigs}
         />
       </React.Fragment>
     );
@@ -175,7 +181,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
   notificationsLoading: state.notifications.loading,
   notificationsError: state.notifications.error,
   // Only use notifications for this Linode.
-  notifications: filterNotifications(ownProps.linode.id, state.notifications.data),
+  notifications: filterNotifications(ownProps.linodeId, state.notifications.data),
 });
 
 interface StateProps {
