@@ -5,8 +5,12 @@ RELEASE_DATE=$2
 
 #Get linode/manager repo name from remote branches
 GET_ORIGIN=$(git remote -v | grep git@github.com:linode/manager.git)
+if [[ -z $GET_ORIGIN ]]; then
+  GET_ORIGIN=$(git remote -v | grep https://github.com/linode/manager)
+fi
 set -- $GET_ORIGIN
 ORIGIN=$1
+git fetch $ORIGIN
 
 #Create release branch
 git fetch $ORIGIN

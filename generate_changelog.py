@@ -1,12 +1,17 @@
 import subprocess
 import re
 import sys
-import getpass
 
 RELEASE=sys.argv[1]
 DATE=sys.argv[2]
 ORIGIN=sys.argv[3]
+
 START_INSERT=5
+
+TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e']
+BREAKING_KEYWORDS = ['break', 'depricate']
+CHANGED_KEYWORDS = ['update', 'change']
+FIXED_KEYWORDS = ['fix', 'repair', 'bug']
 
 def incrementLine():
     global START_INSERT
@@ -26,8 +31,16 @@ def generateJQLQuery(ticket_list):
     print(jql_query)
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
+def checkKeyWords(list_keywords, commit):
+    for word in list_keywords:
+        if(word in commit):
+            print('Key word ' + word +', comment ' + commit)
+            return True
+    return False
 
-def generateChangeLog(release,date, origin):
+
+
+def generateChangeLog(release, date, origin):
     git_diff=subprocess.Popen(['git', 'log', '--no-merges', '--oneline', "--pretty=split:'%s'", origin+'/master...HEAD'],
                stdout=subprocess.PIPE,
                stderr=subprocess.STDOUT)
@@ -49,23 +62,24 @@ def generateChangeLog(release,date, origin):
             jql_query.append(jira_key)
             commit_array[i]=commit.lstrip(jira_key)
 
-        if('test' in commit.lower()):
+        if(checkKeyWords(TEST_KEYWORDS, commit.lower())):
             commit_array.pop(i)
-            break
+            continue
 
-        if('break' in commit.lower()):
+        if(checkKeyWords(BREAKING_KEYWORDS, commit.lower())):
             breaking.append(commit_array[i])
-            break
+            continue
 
-        if('change' in commit.lower()):
+        if(checkKeyWords(CHANGED_KEYWORDS, commit.lower())):
             changed.append(commit_array[i])
-            break
+            continue
 
-        if('fix' in commit.lower()):
+        if(checkKeyWords(FIXED_KEYWORDS, commit.lower())):
             fixed.append(commit_array[i])
-            break
+            continue
 
         added.append(commit_array[i])
+
 
     generateJQLQuery(jql_query)
 
@@ -103,6 +117,5 @@ def generateChangeLog(release,date, origin):
 
     write_change_log=open('CHANGELOG.md', 'w')
     write_change_log.writelines(change_log_lines)
-    write_change_log.close()
 
-generateChangeLog(RELEASE,DATE,ORIGIN)
+generateChangeLog(RELEASE, DATE, ORIGIN)
