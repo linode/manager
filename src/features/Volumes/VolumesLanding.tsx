@@ -23,6 +23,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
+import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
 import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -43,7 +44,8 @@ type ClassNames = 'root'
   | 'sizeCol'
   | 'pathCol'
   | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
+  | 'linodeVolumesWrapper'
+  | 'tagWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -83,7 +85,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   pathCol: {
     width: '25%',
     minWidth: 250,
-  }
+  },
+  tagWrapper: {
+    marginTop: theme.spacing.unit / 2,
+    '& [class*="MuiChip"]': {
+      cursor: 'pointer',
+    },
+  },
 });
 
 interface ExtendedVolume extends Linode.Volume {
@@ -376,6 +384,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderData = (volumes: ExtendedVolume[]) => {
+    const { classes } = this.props;
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
 
     return volumes.map((volume) => {
@@ -406,6 +415,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               {volume.linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {volume.linodeLabel}
+                  <div className={classes.tagWrapper}>
+                    <Tags tags={volume.tags} />
+                  </div>
                 </Link>
               }</TableCell>}
             <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>

@@ -4,6 +4,7 @@ namespace Linode {
     label: string;
     status: VolumeStatus;
     size: number;
+    tags: string[];
     region: string;
     linode_id: null | number;
     created: string;
