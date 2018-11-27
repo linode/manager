@@ -143,6 +143,18 @@ export const updateProfile = (profileDate) => {
     return profile;
 }
 
+export const updateGlobalSettings = (settingsData) => {
+    const token = readToken(browser.options.testUser);
+    const settings = browser.updateGlobalSettings(token,settingsData);
+    return settings;
+}
+
+export const retrieveGlobalSettings = () => {
+    const token = readToken(browser.options.testUser);
+    const settings = browser.getGlobalSettings(token);
+    return settings;
+} 
+
 export const checkEnvironment = () => {
     const environment = process.env.REACT_APP_API_ROOT;
     if (environment.includes('dev') || environment.includes('testing')) {

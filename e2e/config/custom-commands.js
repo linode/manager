@@ -11,7 +11,9 @@ const {
     getMyStackScripts,
     removeStackScript,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    putGlobalSetting,
+    getGlobalSettings
 } = require('../setup/setup');
 
 const {
@@ -196,6 +198,16 @@ exports.browserCommands = () => {
 
     browser.addCommand('updateUserProfile', function async(token,profileData) {
         return updateUserProfile(token,profileData)
+            .then(res => res);
+    });
+
+    browser.addCommand('updateGlobalSettings', function async(token, settingsData) {
+        return putGlobalSetting(token,settingsData)
+            .then(res => res);
+    });
+
+    browser.addCommand('getGlobalSettings', function async(token) {
+        return getGlobalSettings(token)
             .then(res => res);
     });
 }

@@ -61,7 +61,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               This controls whether Linode Backups are enabled, by default, for all Linodes when
               they are initially created. For each Linode with Backups enabled, your account will
               be billed the additional hourly rate noted on the
-              <a href="https://linode.com/backups" target="_blank">{` Backups pricing page`}
+              <a data-qa-backups-price href="https://linode.com/backups" target="_blank">{` Backups pricing page`}
                 <OpenInNew className={classes.icon} />
               </a>.
             </Typography>
@@ -74,6 +74,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
                   <Toggle
                     onChange={onChange}
                     checked={backups_enabled}
+                    data-qa-toggle-auto-backup
                   />
                 }
                 label={backups_enabled
@@ -87,7 +88,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}
-                <a className={classes.link} onClick={openBackupsDrawer}>enable now</a>.
+                <a data-qa-backup-existing className={classes.link} onClick={openBackupsDrawer}>enable now</a>.
               </Typography>
             </Grid>
           }
