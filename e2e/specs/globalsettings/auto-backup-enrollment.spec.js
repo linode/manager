@@ -65,7 +65,7 @@ describe('Backup Auto Enrollment Suite', () => {
         EnableAllBackupsDrawer.enableAllBackupsDrawerDisplays(true);
     });
 
-    it('Enable all backups drawer displays the count of linodes to be backed up in message and linodes to be backedup', () => {
+    it('Enable all backups drawer displays the count of linodes to be backed up in message and linodes to be backed up', () => {
         expect(EnableAllBackupsDrawer.countLinodesToBackup.getText()).toEqual('1');
         expect(EnableAllBackupsDrawer.linodeLabel[0].getText()).toEqual(linodeLabel);
         EnableAllBackupsDrawer.drawerClose.click();
@@ -77,7 +77,7 @@ describe('Backup Auto Enrollment Suite', () => {
         GlobalSettings.baseElementsDisplay();
     });
 
-    it('The gloabal settings page contains an external link to the backups pricing page', () => {
+    it('The global settings page contains an external link to the backups pricing page', () => {
         GlobalSettings.backupPricingPage.click();
         checkBackupPricingPageLink();
         GlobalSettings.baseElementsDisplay();
@@ -99,9 +99,7 @@ describe('Backup Auto Enrollment Suite', () => {
     });
 
     it('Backups should be enabled when creating a new linode and checkbox', () => {
-        GlobalSettings.globalCreate.click();
-        GlobalSettings.addLinodeMenu.waitForVisible(constants.wait.normal);
-        GlobalSettings.addLinodeMenu.click();
+        GlobalSettings.selectGlobalCreateItem('Linode');
         ConfigureLinode.baseDisplay();
         ConfigureLinode.backupsCheckBox.waitForVisible(constants.wait.normal);
         expect(ConfigureLinode.backupsCheckBox.getAttribute('data-qa-check-backups')).toEqual('auto backup enabled');
