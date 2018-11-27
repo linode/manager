@@ -73,15 +73,16 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       }}
       render={(formikProps) => {
         const {
-          values,
-          handleChange,
-          handleBlur,
-          setFieldValue,
           errors,
-          isSubmitting,
+          handleBlur,
+          handleChange,
           handleSubmit,
+          isSubmitting,
           resetForm,
+          setFieldValue,
           status,
+          touched,
+          values,
         } = formikProps;
 
         return (
@@ -100,7 +101,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
 
             <LabelField
-              error={errors.label}
+              error={touched.label ? errors.label : undefined}
               name="label"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -108,7 +109,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <SizeField
-              error={errors.size}
+              error={touched.size ? errors.size : undefined}
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -116,11 +117,11 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <ConfigSelect
-              error={errors.configId}
+              error={touched.configId ? errors.configId : undefined}
               linodeId={linodeId}
               name="configId"
               onBlur={handleBlur}
-              onChange={(id: string) => setFieldValue('configId', id)}
+              onChange={(id: number) => setFieldValue('configId', id)}
               value={values.configId}
             />
 

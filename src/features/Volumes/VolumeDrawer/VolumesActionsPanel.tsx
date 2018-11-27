@@ -11,18 +11,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   isSubmitting: boolean;
-  onSubmit: any;
-  onCancel: any;
+  onSubmit: () => void;
+  onCancel: () => void;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
-  onSubmit, isSubmitting, onCancel
+  onSubmit, isSubmitting, onCancel, disabled
 }) => {
   return (
     <ActionsPanel style={{ marginTop: 16 }}>
-      <Button onClick={onSubmit} type="primary" loading={isSubmitting} data-qa-submit>
+      <Button onClick={onSubmit} type="primary" loading={isSubmitting} disabled={disabled} data-qa-submit>
         Submit
     </Button>
       <Button onClick={onCancel} type="cancel" data-qa-cancel >Cancel</Button>

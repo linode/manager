@@ -79,10 +79,18 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           handleSubmit,
           resetForm,
           status,
+          touched,
         } = formikProps;
+
+        const linodeError = values.configId === -9999
+          ? 'This Linode has no valid configurations.'
+          : touched.linodeId
+            ? errors.linodeId
+            : undefined
 
         return (
           <Form>
+
             {status && status.success && <Notice success>{status.success}</Notice>}
 
             {status && status.generalError && <Notice error>{status.generalError}</Notice>}
@@ -93,7 +101,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             </Typography>
 
             <LabelField
-              error={errors.label}
+              error={touched.label ? errors.label : undefined}
               name="label"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -101,7 +109,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <SizeField
-              error={errors.size}
+              error={touched.size ? errors.size : undefined}
               name="size"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -109,7 +117,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <RegionSelect
-              error={errors.region}
+              error={touched.region ? errors.region : undefined}
               name="region"
               onBlur={handleBlur}
               onChange={handleChange}
@@ -117,7 +125,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <LinodeSelect
-              error={errors.linodeId}
+              error={linodeError}
               name="linodeId"
               onBlur={handleBlur}
               onChange={(id: number) => setFieldValue('linodeId', id)}
@@ -125,11 +133,11 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <ConfigSelect
-              error={errors.configId}
+              error={touched.configId ? errors.configId : undefined}
               linodeId={values.linodeId}
               name="configId"
               onBlur={handleBlur}
-              onChange={(id: string) => setFieldValue('configId', id)}
+              onChange={(id: number) => setFieldValue('configId', id)}
               value={values.configId}
             />
 
@@ -137,6 +145,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
+              disabled={values.configId === -9999}
               onSubmit={handleSubmit}
               onCancel={() => { resetForm(); onClose(); }}
             />
