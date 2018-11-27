@@ -333,9 +333,20 @@ const themeDefaults: ThemeOptions = {
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',
-        height: 24,
+        height: 20,
+        display: 'inline-flex',
+        alignItems: 'center',
         borderRadius: 4,
+        marginTop: 2,
+        marginBottom: 2,
+        marginRight: 4,
+        paddingLeft: 2,
+        paddingRight: 2,
         color: '#555',
+        fontSize: '.8rem',
+        '&:last-child': {
+          marginRight: 0
+        },
         '&:hover': {
           '& $deleteIcon': {
             color: primaryColors.text,
@@ -345,8 +356,8 @@ const themeDefaults: ThemeOptions = {
       label: {
         paddingLeft: 4,
         paddingRight: 4,
-        fontSize: '.9rem',
         position: 'relative',
+        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
