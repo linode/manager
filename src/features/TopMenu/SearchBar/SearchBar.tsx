@@ -309,13 +309,20 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.nodebalancers) {
       const nodebalancersByLabel = this.state.nodebalancers.filter(
-        nodebal => nodebal.label.toLowerCase().includes(queryLower),
+        nodebal => {
+          const matchingTags = this.getMatchingTags(nodebal.tags || [], queryLower); // with temporary fallback while NodeBalancers don't have tags
+          const bool = or(
+            nodebal.label.toLowerCase().includes(queryLower),
+            matchingTags.length > 0
+          )
+          return bool;
+        }
       );
       searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
         label: nodebal.label,
         value: nodebal.id,
         data: {
-          tags: [],
+          tags: nodebal.tags || [], // temporary fallback while NodeBalancers don't have tags
           description: nodebal.hostname,
           Icon: NodebalIcon,
           path: `/nodebalancers/${nodebal.id}`,
