@@ -44,9 +44,10 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { region } = this.props;
+    const { region, onChange } = this.props;
     if (region !== prevProps.region) {
       this.searchLinodes();
+      onChange(-1);
     }
   }
 
