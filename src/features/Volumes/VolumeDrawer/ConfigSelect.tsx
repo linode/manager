@@ -52,10 +52,6 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
     onChange(-9999);
   };
 
-  componentDidMount() {
-    this.updateConfigs(this.props.linodeId);
-  }
-
   updateConfigs(linodeId: number) {
     const { onChange } = this.props;
 
@@ -80,6 +76,10 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
          * state if this fails.
          */
       });
+  }
+
+  componentDidMount() {
+    this.updateConfigs(this.props.linodeId);
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
