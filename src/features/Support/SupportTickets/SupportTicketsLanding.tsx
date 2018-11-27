@@ -13,6 +13,8 @@ import Notice from 'src/components/Notice';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
+import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
+
 type ClassNames = 'root' | 'title' | 'titleWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -70,9 +72,12 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
     this.setState({ drawerOpen: true, notice: undefined, });
   }
 
-  handleAddTicketSuccess = (ticket:Linode.SupportTicket) => {
+  handleAddTicketSuccess = (ticketId: number, attachmentErrors: AttachmentError[] = []) => {
     const { history } = this.props;
-    history.push(`/support/tickets/${ticket.id}`);
+    history.push({
+      pathname: `/support/tickets/${ticketId}`,
+      state: { attachmentErrors }
+    })
     if (!this.mounted) { return; }
     this.setState({
       drawerOpen: false,

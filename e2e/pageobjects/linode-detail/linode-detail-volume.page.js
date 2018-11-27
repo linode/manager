@@ -31,8 +31,8 @@ export class VolumeDetail extends Page {
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
     get copyToolTips() { return $$('[data-qa-copy-tooltip]'); }
     get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
-    get volumePrice() { return $('[qa-data-price]'); }
-    get volumePriceBillingInterval() { return $('[qa-data-billing-interval]'); }
+    get volumePrice() { return $(this.drawerPrice.selector); }
+    get volumePriceBillingInterval() { return $(this.drawerBillingInterval.selector); }
 
     volAttachedToLinode(linodeLabel) {
         browser.waitUntil(function() {
@@ -109,7 +109,7 @@ export class VolumeDetail extends Page {
             this.region.waitForVisible();
             this.region.click();
             browser.waitForVisible('[data-qa-attach-to-region]');
-            browser.click(`[data-qa-attach-to-region="${volume.region}"]`);
+            browser.jsClick(`[data-qa-attach-to-region="${volume.region}"]`);
 
             browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
             browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);

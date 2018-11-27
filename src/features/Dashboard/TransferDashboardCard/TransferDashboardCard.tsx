@@ -78,6 +78,9 @@ interface State {
 
 type CombinedProps = WithStyles<ClassNames>;
 
+
+export const renderPercentageString = (percentage: number) =>
+  percentage < 1 ? "<1%" : `${Math.floor(percentage)}%`;
 class TransferDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
@@ -111,7 +114,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const poolUsagePct = ((used / quota) * 100) < 1 ? 1 : (used / quota) * 100;
+    const poolUsagePct = ((used / quota) * 100);
 
     return (
       <DashboardCard className={classes.card}>
@@ -129,7 +132,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 variant="static"
                 noTopMargin
                 green
-                value={poolUsagePct}
+                value={Math.ceil(poolUsagePct)}
                 className={classes.poolUsageProgress}
               >
                 <span className={classes.circleChildren}>
@@ -137,10 +140,10 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                     className={classes.used}
                     data-qa-transfer-used
                   >
-                    {used}
+                    {renderPercentageString(poolUsagePct)}
                   </Typography>
                   <Typography
-                    variant="caption"
+                    variant="body1"
                     className={classes.quota}
                     data-qa-transfer-quota
                   >

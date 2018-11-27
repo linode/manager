@@ -17,6 +17,7 @@ import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
+import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
@@ -376,6 +377,7 @@ export class App extends React.Component<CombinedProps, State> {
                     onClose={this.closeWelcomeBanner}
                     data-qa-beta-notice />
                   <ToastNotifications />
+                  <DomainCreateDrawer />
                   <VolumeDrawer />
                   <BackupDrawer />
                 </div>

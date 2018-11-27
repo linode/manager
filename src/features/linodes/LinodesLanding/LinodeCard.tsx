@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     },
   },
   cardSection: {
-    ...theme.typography.caption,
+    ...theme.typography.body1,
     marginBottom: theme.spacing.unit,
     paddingTop: theme.spacing.unit,
     paddingLeft: 3,

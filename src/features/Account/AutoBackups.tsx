@@ -1,12 +1,10 @@
 import OpenInNew from '@material-ui/icons/OpenInNew';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
@@ -30,30 +28,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
-  errors?: Linode.ApiFieldError[];
-  handleToggle: () => void;
+  onChange: () => void;
   openBackupsDrawer: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-const displayError = (errors: Linode.ApiFieldError[]) => {
-  return pathOr(
-    "There was an error updating your account settings.",
-    ['response', 'data', 'errors', 0, 'reason'],
-    errors
-    )
-}
 
 const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
 
   const {
     backups_enabled,
     classes,
-    errors,
     hasLinodesWithoutBackups,
-    handleToggle,
-    openBackupsDrawer
+    onChange,
+    openBackupsDrawer,
   } = props;
 
   return (
@@ -73,24 +61,20 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
               This controls whether Linode Backups are enabled, by default, for all Linodes when
               they are initially created. For each Linode with Backups enabled, your account will
               be billed the additional hourly rate noted on the
-              <a href="https://linode.com/backups" target="_blank">{` Backups pricing page`}
+              <a data-qa-backups-price href="https://linode.com/backups" target="_blank">{` Backups pricing page`}
                 <OpenInNew className={classes.icon} />
               </a>.
             </Typography>
           </Grid>
-          {errors &&
-            <Grid item>
-              <Notice error text={displayError(errors)} />
-            </Grid>
-          }
           <Grid item container direction="row" alignItems="center">
             <Grid item>
               <FormControlLabel
                 // className="toggleLabel"
                 control={
                   <Toggle
-                    onChange={handleToggle}
+                    onChange={onChange}
                     checked={backups_enabled}
+                    data-qa-toggle-auto-backup
                   />
                 }
                 label={backups_enabled
@@ -104,7 +88,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}
-                <a className={classes.link} onClick={openBackupsDrawer}>enable now</a>.
+                <a data-qa-backup-existing className={classes.link} onClick={openBackupsDrawer}>enable now</a>.
               </Typography>
             </Grid>
           }

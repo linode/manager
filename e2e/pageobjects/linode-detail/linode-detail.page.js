@@ -17,6 +17,7 @@ class LinodeDetail extends Page {
     get setPowerReboot() { return $('[data-qa-set-power="reboot"]'); }
     get setPowerOff() { return $('[data-qa-set-power="powerOff"]'); }
     get setPowerOn() { return $('[data-qa-set-power="powerOn"]'); }
+    get tagsMultiSelect() { return $('[data-qa-tags-multiselect]'); }
     get linodeLabel() { return $(this.breadcrumbEditableText.selector); }
     get editLabel() { return $(this.breadcrumbEditableText.selector); }
 

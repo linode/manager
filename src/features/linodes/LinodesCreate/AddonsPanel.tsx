@@ -87,7 +87,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
     const { classes, backupsMonthly } = this.props;
     return backupsMonthly && (
       <Grid item className={classes.subLabel}>
-        <Typography variant="caption">
+        <Typography variant="body1">
           {`$${backupsMonthly.toFixed(2)}`} per month
         </Typography>
       </Grid>
@@ -110,12 +110,13 @@ class AddonsPanel extends React.Component<CombinedProps> {
                     checked={accountBackups || this.props.backups}
                     onChange={changeBackups}
                     disabled={accountBackups}
+                    data-qa-check-backups={accountBackups ? 'auto backup enabled' : 'auto backup disabled'}
                   />
                 }
                 label="Backups"
               />
               {this.renderBackupsPrice()}
-              <Typography variant="caption" className={classes.caption}>
+              <Typography variant="body1" className={classes.caption}>
                 {accountBackups
                   ? <React.Fragment>
                       You have enabled automatic backups for your account. This Linode will automatically
@@ -143,6 +144,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                   <CheckBox
                     checked={this.props.privateIP}
                     onChange={() => changePrivateIP()}
+                    data-qa-check-private-ip
                   />
                 }
                 label="Private IP (Free!)"

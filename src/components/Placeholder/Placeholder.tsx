@@ -68,9 +68,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
     textAlign: 'center',
     fontFamily: 'LatoWebBold',
-    fontSize: '2.4rem',
+    fontSize: '2.188rem',
+    lineHeight: '3.75rem',
     [theme.breakpoints.up('md')]: {
-      fontSize: '3.21rem',
+      fontSize: '2.5rem',
+      lineHeight: '4rem',
     }
   },
   button: {

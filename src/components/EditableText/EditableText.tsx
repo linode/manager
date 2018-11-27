@@ -42,7 +42,8 @@ const styles: StyleRulesCallback = (theme) => ({
     border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
-    textDecoration: 'inherit'
+    textDecoration: 'inherit',
+    ...theme.typography.headline,
   },
   container: {
     display: 'flex',
@@ -108,6 +109,7 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   input: {
     padding: '5px 10px',
+    ...theme.typography.headline,
   },
   headline: {
     ...theme.typography.headline,

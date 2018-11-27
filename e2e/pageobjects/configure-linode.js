@@ -63,6 +63,8 @@ class ConfigureLinode extends Page {
 
     get addonsHeader() { return $('[data-qa-add-ons]'); }
     get addons() { return $$('[data-qa-add-ons] [data-qa-checked]');  }
+    get backupsCheckBox() { return $('[data-qa-check-backups]'); }
+    get privateIpCheckbox() { return $('[data-qa-check-private-ip]'); }
 
     get orderSummary() { return $('[data-qa-order-summary]'); }
     get total() { return $('[data-qa-total-price]'); }
@@ -80,7 +82,7 @@ class ConfigureLinode extends Page {
         expect($$('[data-qa-select-linode-header]').length).toBe(1);
         expect(selectLinodePanelText).toContain(cloneFromHeader);
         expect(this.total.isVisible()).toBe(true);
-        expect(this.total.getText()).toBe('$0.00 /mo');
+        expect(this.total.getText()).toBe('$0.00/mo');
         expect(this.deploy.isVisible()).toBe(true);
     }
 

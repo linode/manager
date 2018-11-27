@@ -73,18 +73,18 @@ describe('Create Linode from Image - With Tags Suite', () => {
             assertTagsDisplay(addedTags);
         });
         //Tests below are affected by bug M3-1671
-        xit('should display the linode with tags on list view', () => {
+        it('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
             assertTagsDisplay(addedTags);
         });
     });
 
-    xdescribe('Linode Detail - Tags Suite', () => {
+    describe('Linode Detail - Tags Suite', () => {
         it('should navigate to linode detail', () => {
             // It should navigate to Linode detail page
             browser.waitForVisible(`[data-qa-linode="${linodeName}"]`, constants.wait.normal);
-            ListLinodes.navigateToDetail($(`[data-qa-linode="${linodeName}"]`));
+            ListLinodes.navigateToDetail(linodeName);
             LinodeDetail.landingElemsDisplay();
         });
 
@@ -97,9 +97,10 @@ describe('Create Linode from Image - With Tags Suite', () => {
             const expectedDetailTags = [...addedTags, linodeDetailTag];
 
             LinodeDetail.addTag.click();
-            LinodeDetail.multiSelect.waitForVisible(constants.wait.normal);
-            LinodeDetail.multiSelect.$('..').$('input').setValue(linodeDetailTag);
-            LinodeDetail.selectOptions[0].click();
+            const createTagSelect = $$('[data-qa-enhanced-select]')[1].$('..').$('input');
+            createTagSelect.waitForVisible(constants.wait.normal);
+            createTagSelect.setValue(linodeDetailTag);
+            createTagSelect.addValue('\uE007');
 
             browser.waitUntil(function() {
                 return $$('[data-qa-tag]').length === 3;

@@ -51,7 +51,7 @@ const SummarySection: React.StatelessComponent<any> = (props) => {
   return (
     <Grid container alignItems="baseline" className={classes.individualContainer}>
       <Grid item>
-        <Typography variant="caption">
+        <Typography variant="body1">
           <strong>{title}:</strong>
         </Typography>
       </Grid>
@@ -139,7 +139,7 @@ const renderIPv6DNSResolvers = () => () => (
 
 const renderSSHLink = (address?: string) => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
-    <Grid item><Typography variant="caption"><span style={{ marginLeft: 3 }} >ssh root@{address}</span></Typography></Grid>
+    <Grid item><Typography variant="body1"><span style={{ marginLeft: 3 }} >ssh root@{address}</span></Typography></Grid>
     <Grid item><CopyTooltip text={`ssh root@${address}`} standAlone /></Grid>
   </div>
 )
@@ -147,7 +147,7 @@ const renderSSHLink = (address?: string) => () => (
 const renderLishLink = (username: string, region: string, linodeLabel: string) => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
     <Grid item>
-      <Typography variant="caption">ssh -t {username}@lish-{region}.linode.com {linodeLabel}</Typography>
+      <Typography variant="body1">ssh -t {username}@lish-{region}.linode.com {linodeLabel}</Typography>
     </Grid>
     <Grid item><CopyTooltip text={`ssh -t ${username}@lish-${region}.linode.com ${linodeLabel}`} standAlone /></Grid>
   </div>

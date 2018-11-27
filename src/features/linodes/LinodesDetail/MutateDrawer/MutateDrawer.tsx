@@ -143,7 +143,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <ListItem>Wait your turn in the upgrade queue.</ListItem>
           <ListItem>Your Linode will be shut down and its disk images will be migrated.</ListItem>
           <ListItem>Your Linode will be upgraded and booted (if it was previously running).</ListItem>
-          <Typography variant="caption" style={{ marginTop: 16 }}>
+          <Typography variant="body1" style={{ marginTop: 16 }}>
             After the migration completes, you can take advantage of the new resources
             by resizing your disk images.
           </Typography>

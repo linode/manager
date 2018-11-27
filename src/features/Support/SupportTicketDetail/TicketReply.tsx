@@ -1,28 +1,24 @@
-import AttachFile from '@material-ui/icons/AttachFile';
-import CloudUpload from '@material-ui/icons/CloudUpload';
-import { compose, lensPath, pathOr, set } from 'ramda';
+import { compose, lensPath, pathOr,  set } from 'ramda';
 import * as React from 'react';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import InputAdornment from 'src/components/core/InputAdornment';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createReply, uploadAttachment } from 'src/services/support';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
+import AttachFileForm, { FileAttachment } from '../AttachFileForm';
+import { reshapeFiles } from '../ticketUtils';
 import CloseTicketLink from './CloseTicketLink';
 
 type ClassNames =
   'root'
   | 'form'
-  | 'attachFileButton'
-  | 'attachmentsContainer'
-  | 'attachmentField'
-  | 'replyField'
-  | 'uploadProgress'
+  | 'replyField';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -32,38 +28,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     minWidth: '100% !important',
     width: '100vw !important',
   },
-  attachFileButton: {
-    paddingLeft: 14,
-    paddingRight: 20,
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2,
-  },
-  attachmentsContainer: {
-    maxWidth: 800,
-  },
-  attachmentField: {
-    marginTop: 0,
-    width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: 165,
-    },
-    '& > div ': {
-      backgroundColor: theme.bg.main,
-      border: 0,
-    },
-    '& svg': {
-      color: theme.palette.text.primary,
-      width: 24,
-      fontSize: 22,
-    },
-  },
+
   replyField: {
     '& > div': {
       maxWidth: '100% !important',
     },
-  },
-  uploadProgress: {
-    maxWidth: 415,
   },
 });
 
@@ -73,17 +42,6 @@ interface Props {
   onSuccess: (newReply: Linode.SupportReply) => void;
   closeTicketSuccess: () => void;
   reloadAttachments: () => void;
-}
-
-interface FileAttachment {
-  name: string,
-  file: File,
-  /* Used to keep track of initial upload status */
-  uploading: boolean,
-  /* Used to ensure that the file doesn't get uploaded again */
-  uploaded: boolean,
-  /* Each file needs to keep track of its own errors because each request hits the same endpoint */
-  errors?: Linode.ApiFieldError[];
 }
 
 interface State {
@@ -103,7 +61,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
     files: [],
   }
 
-  inputRef = React.createRef<HTMLInputElement>();
 
   componentDidMount() {
     this.mounted = true;
@@ -120,17 +77,6 @@ class TicketReply extends React.Component<CombinedProps, State> {
   submitForm = () => {
     const { onSuccess, ticketId } = this.props;
     const { value, files } = this.state;
-
-    /* A whitespace reply text (e.g. '    ') will pass the API,
-    * but we will filter out blank responses from the list. Prevent the user
-    * from submitting blank replies to avoid confusion.
-    */
-    if (value.trim() === '') {
-      this.setState({
-        errors: [{'field':'description', 'reason':'Description can\'t be blank.'}],
-      });
-      return;
-    }
 
     this.setState({
       submitting: true,
@@ -184,55 +130,21 @@ class TicketReply extends React.Component<CombinedProps, State> {
       })
   }
 
-  clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (this.inputRef.current) {
-      this.inputRef.current.click();
-    }
-  }
-
   handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files.length) {
-      const reshapedFiles = [];
-
-      /* tslint:disable-next-line */
-      for (let i = 0; i < files.length; i++) {
-        reshapedFiles.push({
-          name: files[i].name,
-          /* The file! These can be quite big */
-          file: files[i],
-          /* Used to keep track of initial upload status */
-          uploading: false,
-          /* Used to ensure that the file doesn't get uploaded again */
-          uploaded: false,
-        });
-      }
-
+      const reshapedFiles = reshapeFiles(files);
       this.setState({
         files: [
           ...this.state.files,
           ...reshapedFiles
         ]
-      }, () => {
-        if (this.inputRef.current) {
-          this.inputRef.current.value = '';
-        }
-      })
+      });
     }
   }
 
-  removeFile = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!e.target) { return; }
-    const aidx = e.currentTarget.getAttribute('data-file-idx');
-    if (!aidx) { return; }
-    const idx = +aidx;
-    this.setState({
-      files: this.state.files.filter((_, i) => i !== idx),
-    }, () => {
-      if (this.inputRef.current) {
-        this.inputRef.current.value = '';
-      }
-    });
+  updateFiles = (files: FileAttachment[]) => {
+    this.setState({ files });
   }
 
   render() {
@@ -262,58 +174,11 @@ class TicketReply extends React.Component<CombinedProps, State> {
             onChange={this.handleReplyInput}
             errorText={replyError}
           />
-          <input
-              ref={this.inputRef}
-              type="file"
-              multiple
-              id="attach-file"
-              style={{ display: 'none' }}
-              onChange={this.handleFileSelected}
-            />
-            <Button
-              component="span"
-              className={classes.attachFileButton}
-              type="secondary"
-              onClick={this.clickAttachButton}
-            >
-              <AttachFile />
-              Attach a file
-            </Button>
-          {files.map((file, idx) => (
-            file.uploaded
-              ? null /* this file has already been uploaded so don't show it */
-              : (
-                <React.Fragment key={idx}>
-                  <Grid container className={classes.attachmentsContainer}>
-                    <Grid item>
-                      <TextField
-                        className={classes.attachmentField}
-                        value={file.name}
-                        errorText={file.errors && file.errors.length && file.errors[0].reason}
-                        InputProps={{
-                          startAdornment:
-                          <InputAdornment position="end">
-                            <CloudUpload />
-                          </InputAdornment>
-                        }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        type="remove"
-                        data-file-idx={idx}
-                        onClick={this.removeFile}
-                      />
-                    </Grid>
-                    {file.uploading &&
-                      <Grid item xs={12}>
-                        <LinearProgress className={classes.uploadProgress} variant="indeterminate"/>
-                      </Grid>
-                    }
-                  </Grid>
-                </React.Fragment>
-              )
-          ))}
+          <AttachFileForm
+            files={files}
+            handleFileSelected={this.handleFileSelected}
+            updateFiles={this.updateFiles}
+          />
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
               type="primary"
