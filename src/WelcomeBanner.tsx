@@ -25,6 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       maxWidth: 960,
       maxHeight: '100%',
       overflowY: 'auto',
+      margin: '0 auto',
     },
     '& .dialog-title': {
       border: 0,
@@ -100,6 +101,8 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
         title="Welcome to the New Cloud Manager!"
         className={classes.dialog}
         onClose={this.props.onClose}
+        maxWidth={false}
+
       >
         <Grid container className={classes.content}>
           <Grid item xs={12}>
