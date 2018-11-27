@@ -81,7 +81,7 @@ class Backups extends Page {
         const toastMsg = 'A snapshot is being taken';
         this.manualSnapshotName.$('input').setValue(label);
         this.snapshotButton.click();
-        this.toastDisplays(toastMsg);
+        this.toastDisplays(toastMsg, constants.wait.long);
     }
 
     takeSnapshotWaitForComplete(label) {
