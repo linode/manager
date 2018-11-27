@@ -1,7 +1,6 @@
 const { constants } = require('../constants');
 
 import Page from './page';
-import EnableAllBackupsDrawer from './enable-all-backups-drawer';
 
 export class Dashboard extends Page {
     get header() { return $('[data-qa-dashboard-header]'); }

@@ -135,7 +135,7 @@ describe('Backup Auto Enrollment Suite', () => {
         Backups.baseElemsDisplay(false);
     });
 
-    it('Enable backups for existing linodes CTA should no longer display on dashboard there are no linodes to backup', () => {
+    it('Enable backups for existing linodes CTA should no longer display on dashboard if there are no linodes to backup', () => {
         browser.url(constants.routes.dashboard);
         Dashboard.baseElemsDisplay();
         expect(Dashboard.backupExistingLinodes.isVisible()).toBe(false);
