@@ -90,7 +90,7 @@ describe('Backup Auto Enrollment Suite', () => {
         EnableAllBackupsDrawer.drawerBase.waitForVisible(constants.wait.normal,true);
     });
 
-    it('Enable backup auto enrollment toggel', () => {
+    it('Enable backup auto enrollment toggle', () => {
         GlobalSettings.enrollInNewLinodesAutoBackupsToggle.click();
         browser.waitUntil(() => {
             return GlobalSettings.enrollInNewLinodesAutoBackupsToggle.getAttribute('data-qa-toggle') === 'true';
