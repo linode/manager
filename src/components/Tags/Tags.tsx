@@ -60,7 +60,9 @@ export class Tags extends React.Component<CombinedProps, {}> {
 
   render() {
     const { tags } = this.props;
-    if (!tags) return null;
+    if (!tags) {
+      return null;
+    }
     const [visibleTags, additionalTags] = splitAt(3, tags);
     return (
       <React.Fragment>
