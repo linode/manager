@@ -24,8 +24,6 @@ type CombinedProps = StateProps & DispatchProps
 
 class VolumeDrawer extends React.PureComponent<CombinedProps> {
 
-  onModeChange = () => { };
-
   render() {
     const {
       actions,
