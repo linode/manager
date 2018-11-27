@@ -4,6 +4,5 @@ if [[ -z $GET_ORIGIN ]]; then
 fi  
 set -- $GET_ORIGIN
 ORIGIN=$1
-echo $ORIGIN
 git fetch $ORIGIN
 yarn e2e --spec=$(git diff --name-only $ORIGIN/develop | egrep 'e2e/specs/.*\/*spec.js' | tr '\n' ',' | sed 's/.$//')
