@@ -137,7 +137,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
           value={this.getSelectedLinode(selectedLinodeId)}
           isLoading={loading}
           errorText={error}
-          options={linodes}
+          options={[{ label: 'Select a Linode', value: -1 }, ...linodes]}
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}
           data-qa-select-linode

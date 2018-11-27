@@ -52,7 +52,7 @@ const RegionSelect: React.StatelessComponent<CombinedProps> = (props) => {
         inputProps={{ name: 'region', id: 'region' }}
         data-qa-select-region
       >
-        <MenuItem key="none" value="none">Select a Region</MenuItem>
+        <MenuItem key="none" value="none">All Regions</MenuItem>
         {regions && regions.map(eachRegion =>
           (<MenuItem
             key={eachRegion.id}
