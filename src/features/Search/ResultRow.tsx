@@ -22,20 +22,38 @@ type ClassNames = 'root'
 | 'tag';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
     width: '100%',
     cursor: 'pointer',
+    '&:focus': {
+      outline: '1px dotted #999',
+    },  
+    '&:hover': {
+      // uncomment the below after https://github.com/linode/manager/pull/4124 is merged
+      // ...theme.animateCircleIcon,
+    },
   },
   description: {
   },
   label: {
-    fontSize: 17,
-    color: theme.color.blueDTwhite
+    wordBreak: 'break-all',
   },
   icon: {
-
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
   resultBody: {
     width: '100%',
@@ -43,11 +61,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   rowContent: {
     background: theme.bg.white,
     width: '100%',
-    padding: theme.spacing.unit,
-    borderBottom: '1px solid ' + `${theme.color.border3}`,
+    padding: 10,
+    borderTop: `2px solid ${theme.palette.divider}`,
   },
   tableCell: {
-    borderRight: '1px solid ' + `${theme.color.border3}`,
   },
   tag: {
     margin: theme.spacing.unit / 2,
@@ -78,7 +95,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
     >
       <Paper className={classes.rowContent}>
         <Grid container direction="row" alignItems="center" wrap="nowrap">
-          <Grid item className={classes.tableCell} xs={"auto"}>
+          <Grid item className={classes.tableCell}>
             <Icon className={classes.icon} />
           </Grid>
           <Grid item xs={12}>
@@ -90,9 +107,11 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
             >
               <Grid item>
                 <Grid container direction="column"  justify="space-around">
-                  <Grid item className={`${classes.label} py0`}>{result.label}</Grid>
+                  <Grid item className={`${classes.label} py0`}>
+                    <Typography variant="subheading">{result.label}</Typography>
+                  </Grid>
                   <Grid item className={`${classes.description} py0`}>
-                    <Typography variant="caption">{result.data.description}</Typography>
+                    <Typography variant="body1">{result.data.description}</Typography>
                   </Grid>
                 </Grid>
               </Grid>

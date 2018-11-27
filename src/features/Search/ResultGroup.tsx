@@ -12,12 +12,18 @@ import capitalize from 'src/utilities/capitalize';
 import HiddenResults from './HiddenResults';
 import ResultRow from './ResultRow';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+| 'entityHeadingWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: 0,
-    margin: 0,
+    marginBottom: 20,
+  },
+  entityHeadingWrapper: {
+    height: 'auto',
+    padding: 10,
+    backgroundColor: theme.color.borderRow,
   },
 });
 
@@ -41,9 +47,9 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Grid item container direction="column" className={classes.root}>
-      <Grid item>
-        <Typography variant="subheading" data-qa-entity-header>{capitalize(entity)}</Typography>
-      </Grid>
+      <div className={classes.entityHeadingWrapper}>
+        <Typography variant="title" data-qa-entity-header>{capitalize(entity)}</Typography>
+      </div>
       <List>
         {loading && <CircleProgress mini />}
         {initial.map((result, idx: number) =>

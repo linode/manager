@@ -17,13 +17,11 @@ import ResultGroup from './ResultGroup';
 import { emptyResults, searchAll, SearchResults } from './utils';
 
 type ClassNames = 'root'
-| 'title';
+| 'headline';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
-  title: {
-    fontSize: 25,
-  },
+  headline: {},
 });
 
 interface State {
@@ -134,7 +132,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
     return (
       <Grid container direction="column" >
         <Grid item>
-          <Typography variant="title" className={classes.title}>
+          <Typography variant="headline" className={classes.headline}>
             Search Results for "{query}"
           </Typography>
         </Grid>

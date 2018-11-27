@@ -10,7 +10,7 @@ import { ResultGroup } from './ResultGroup';
 const props = {
   redirect: jest.fn(),
   entity: 'linodes',
-  classes: { root: ''},
+  classes: { root: '', entityHeadingWrapper: ''},
   results: [searchbarResult1, searchbarResult2],
   loading: false,
   groupSize: 10,
@@ -19,7 +19,7 @@ const props = {
 const emptyProps = {
   redirect: jest.fn(),
   entity: 'linodes',
-  classes: { root: ''},
+  classes: { root: '', entityHeadingWrapper: ''},
   results: [],
   loading: false,
   groupSize: 10,
