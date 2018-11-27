@@ -39,10 +39,16 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
   }
 
   setInitialState = () => {
+    /**
+     * Configs is [configId, configLabel][].
+     * We select the first config's ID and call onChange to automatically select the first config
+     */
     const { onChange } = this.props;
     const [firstConfig] = this.state.configs;
-    if (firstConfig && firstConfig[0]) {
-      return onChange(firstConfig[0]);
+
+    if (firstConfig) {
+      const [id] = firstConfig;
+      return onChange(id);
     }
 
     /**
