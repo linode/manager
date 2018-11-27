@@ -156,7 +156,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item>
               <Typography variant="body1" data-qa-volume-status>
-                {status}, {size} GB
+                {status}, {size} GiB
               </Typography>
             </Grid>
           </Grid>

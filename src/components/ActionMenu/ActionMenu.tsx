@@ -44,6 +44,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   button: {
     height: 26,
     width: 26,
+    padding: 0,
     '& svg': {
       fontSize: '28px',
     },

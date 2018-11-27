@@ -240,7 +240,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     });
   }
 
-  setDialogError = (errorResponse:Linode.ApiFieldError) => {
+  setDialogError = (errorResponse: Linode.ApiFieldError) => {
     const { updateDialog } = this.state;
     const fallbackError = [{ reason: 'Unable to detach volume.' }];
     const apiError = pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse);
@@ -263,11 +263,13 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
   detachVolume = () => {
     const { updateDialog: { id } } = this.state;
     if (!id) { return; }
-    this.setState({ updateDialog: {
-      ...this.state.updateDialog,
-      submitting: true,
-      error: undefined,
-    }})
+    this.setState({
+      updateDialog: {
+        ...this.state.updateDialog,
+        submitting: true,
+        error: undefined,
+      }
+    })
 
     detachVolume(id)
       .then(() => {
@@ -319,7 +321,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         actions={mode === 'detach' ? this.renderDetachDialogActions : this.renderDeleteDialogActions}
         title={mode === 'detach' ? 'Detach Volume' : 'Delete Volume'}
       >
-        {error && <Notice error text={error}/>}
+        {error && <Notice error text={error} />}
         <Typography> Are you sure you want to {mode} this volume?</Typography>
       </ConfirmationDialog>
     );
@@ -354,7 +356,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           onClick={this.closeUpdateDialog}
           type="cancel"
           data-qa-cancel
-          >
+        >
           Cancel
         </Button>
         <Button
@@ -593,7 +595,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       });
     }
 
-    updateVolume(id, label)
+    updateVolume(id, { label })
       .then((response) => {
         this.closeUpdatingDrawer();
         this.props.actions.updateVolumes((volumes) => {
@@ -638,7 +640,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       });
     }
 
-    resizeVolume(id, Number(size))
+    resizeVolume(id, { size: Number(size) })
       .then(() => {
         this.closeUpdatingDrawer();
         resetEventsPolling();
@@ -676,7 +678,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
       return;
     }
 
-    cloneVolume(id, cloneLabel)
+    cloneVolume(id, { label: cloneLabel })
       .then(() => {
         /** @todo Now what? Per CF parity the volume is not automagically attached. */
         this.closeUpdatingDrawer();
@@ -912,7 +914,7 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
 
 interface DispatchProps {
   actions: {
-    updateVolumes: (fn: (v: Linode.Volume[])=> Linode.Volume[]) => void;
+    updateVolumes: (fn: (v: Linode.Volume[]) => Linode.Volume[]) => void;
   },
 }
 

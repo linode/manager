@@ -152,7 +152,7 @@ namespace Linode {
     run_level: 'default' | 'single' | 'binbash';
     virt_mode: 'paravirt' | 'fullvirt';
     helpers: any;
-    label: any;
+    label: string;
     devices: Devices;
     created: string;
     updated: string;

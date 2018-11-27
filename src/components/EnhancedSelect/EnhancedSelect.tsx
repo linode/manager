@@ -58,8 +58,8 @@ interface Props {
   className?: string;
 }
 
-export interface Item {
-  value: string | number;
+export interface Item<T = string | number> {
+  value: T;
   label: string;
   data?: any;
 }

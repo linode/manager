@@ -291,6 +291,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Volume ${e.entity!.label} is being attached.`,
     failed: e => `Volume ${e.entity!.label} failed to attach.`,
     finished: e => `Volume ${e.entity!.label} has been attached.`,
+    notification: e => `Volume ${e.entity!.label} has been attached.`,
   },
   volume_clone: {
     notification: e => `Volume ${e.entity!.label} has been cloned.`,

@@ -180,8 +180,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-export interface Item {
-  value: string | number;
+export interface Item<T = string | number> {
+  value: T;
   label: string;
   data?: any;
 }
