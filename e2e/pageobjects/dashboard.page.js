@@ -1,6 +1,7 @@
 const { constants } = require('../constants');
 
 import Page from './page';
+import EnableAllBackupsDrawer from './enable-all-backups-drawer';
 
 export class Dashboard extends Page {
     get header() { return $('[data-qa-dashboard-header]'); }
@@ -36,7 +37,8 @@ export class Dashboard extends Page {
     get readMore() { return $('[data-qa-read-more]'); }
     get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
     get backupExistingLinodes() { return $('[data-qa-backup-existing]'); }
-    
+    get backupExistingMessage() { return $('[data-qa-linodes-message]'); }
+
     baseElemsDisplay() {
         this.header.waitForVisible(constants.wait.normal);
 
@@ -44,6 +46,7 @@ export class Dashboard extends Page {
         expect(this.volumesCard.isVisible()).toBe(true);
         expect(this.nodebalancerCard.isVisible()).toBe(true);
         expect(this.domainsCard.isVisible()).toBe(true);
+        this.blogCard.waitForVisible(constants.wait.normal);
         expect(this.blogCard.isVisible()).toBe(true);
         expect(this.readMore.isVisible()).toBe(true);
     }

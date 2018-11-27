@@ -3,15 +3,15 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class GlobalSettings extends Page {
-  get enrollInNewLinodesAutoBackupsToggle() { return $('[heading="Backup Auto Enrollment"] [data-qa-toggle]'); }
-  get networkHelperToggle() { return $('[heading="Network Helper"] [data-qa-toggle]'); }
-  get panelLinkSelector() { return '[data-qa-grid-item] p a'; }
-  get backupPricingPage() { return $$(this.panelLinkSelector)[0]; }
-  get openEnableBackupsForAllLinodesDrawer() { return $$(this.panelLinkSelector)[1]; }
+  get enrollInNewLinodesAutoBackupsToggle() { return $('[data-qa-toggle-auto-backup]'); }
+  get networkHelperToggle() { return $('[data-qa-toggle-network-helper]'); }
+  get backupPricingPage() { return $('[data-qa-backups-price]'); }
+  get enableBackupsForAllLinodesDrawer() { return $('[data-qa-backups-drawer]'); }
 
   baseElementsDisplay(){
       this.enrollInNewLinodesAutoBackupsToggle.waitForVisible(constants.wait.normal);
       this.networkHelperToggle.waitForVisible(constants.wait.normal);
+      this.backupPricingPage.waitForVisible(constants.wait.normal);
   }
 }
 

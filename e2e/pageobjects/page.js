@@ -39,6 +39,10 @@ export default class Page {
     get popoverMsg() { return $('[role="tooltip"]'); }
     get submitButton () { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
+    get linearProgress() { return $('[data-qa-linear-progress]'); }
+    get drawerBase() { return $('[data-qa-drawer]'); }
+    get drawerPrice() { return $('[qa-data-price]'); }
+    get drawerBillingInterval() { return $('[qa-data-billing-interval]'); }
 
     // Breadcrumb Component
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }

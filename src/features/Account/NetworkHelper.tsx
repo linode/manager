@@ -65,6 +65,7 @@ const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
                   <Toggle
                     onChange={onChange}
                     checked={networkHelperEnabled}
+                    data-qa-toggle-network-helper
                   />
                 }
                 label={networkHelperEnabled

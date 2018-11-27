@@ -146,5 +146,11 @@ export const updateProfile = (profileDate) => {
 export const updateGlobalSettings = (settingsData) => {
     const token = readToken(browser.options.testUser);
     const settings = browser.updateGlobalSettings(token,settingsData);
-    return profile;
+    return settings;
+}
+
+export const retrieveGlobalSettings = () => {
+    const token = readToken(browser.options.testUser);
+    const settings = browser.getGlobalSettings(token);
+    return settings;
 }
