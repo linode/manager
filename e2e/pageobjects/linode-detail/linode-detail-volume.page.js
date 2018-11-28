@@ -12,7 +12,7 @@ export class VolumeDetail extends Page {
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
     get regionField() { return $('[data-qa-region]'); }
-    get attachToLinode() { return $('[data-qa-enhanced-select="Select a Linode"]'); }
+    get attachToLinode() { return $(`${this.drawerBase.selector} [data-qa-enhanced-select]`); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }
     get submit() { return $(this.submitButton.selector); }
@@ -61,15 +61,15 @@ export class VolumeDetail extends Page {
     defaultDrawerElemsDisplay() {
         const volumeDrawerTitle = 'Create a Volume';
 
-        this.drawerTitle.waitForVisible();
+        this.drawerTitle.waitForVisible(constants.wait.normal);
 
         expect(this.drawerTitle.getText()).toBe(volumeDrawerTitle);
         expect(this.size.$('input').getValue()).toContain(20);
         expect(this.label.$('input').getText()).toBe('');
-        expect(this.region.getText()).toBe('Select a Region');
+        expect(this.region.isVisible()).toBe(true);
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        expect(this.attachToLinode.getText()).toContain('Select a Linode');
+        this.attachToLinode.waitForVisible(constants.wait.normal);
     }
 
     getVolumeId(label) {
@@ -108,8 +108,9 @@ export class VolumeDetail extends Page {
         if (volume.hasOwnProperty('region')) {
             this.region.waitForVisible();
             this.region.click();
-            browser.waitForVisible('[data-qa-attach-to-region]');
-            browser.jsClick(`[data-qa-attach-to-region="${volume.region}"]`);
+            const volumeRegion = `[data-qa-attach-to-region="${volume.region}"]`;
+            $(volumeRegion).waitForVisible(constants.wait.normal);
+            browser.jsClick(volumeRegion);
 
             browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
             browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);
@@ -131,9 +132,9 @@ export class VolumeDetail extends Page {
             browser.waitForVisible(`[data-qa-volume-cell-attachment="${volume.attachedLinode}"]`, constants.wait.long * 2);
         }
 
-        if (volume.hasOwnProperty('region')) {
+      /*  if (volume.hasOwnProperty('region')) {
             browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
-        }
+        }*/
     }
 
     editVolume(volume, newLabel) {
@@ -236,8 +237,8 @@ export class VolumeDetail extends Page {
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
 
-        browser.waitForVisible('[data-qa-action-menu-item="Delete"]', constants.wait.normal);
-        browser.jsClick('[data-qa-action-menu-item="Delete"]');
+        browser.waitForVisible('[data-qa-action-menu-item="Detach"]', constants.wait.normal);
+        browser.jsClick('[data-qa-action-menu-item="Detach"]');
 
         browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal);
 
@@ -246,7 +247,7 @@ export class VolumeDetail extends Page {
         const dialogCancel = $(this.cancelButton.selector);
 
         expect(dialogTitle.isVisible()).toBe(true);
-        expect(dialogTitle.getText()).toBe('Delete Volume');
+        expect(dialogTitle.getText()).toBe('Detach Volume');
         expect(dialogConfirm.isVisible()).toBe(true);
         expect(dialogConfirm.getTagName()).toBe('button');
         expect(dialogCancel.isVisible()).toBe(true);
