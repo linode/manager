@@ -28,17 +28,14 @@ def generateJQLQuery(ticket_list):
         else:
             jql_query+=clean_ticket+','
     print('~~~~~~~~TICKETS IN RELEASE~~~~~~~~')
-    print(jql_query)
+    print(jql_query.replace(' ','-'))
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 
 def checkKeyWords(list_keywords, commit):
     for word in list_keywords:
         if(word in commit):
-            print('Key word ' + word +', comment ' + commit)
             return True
     return False
-
-
 
 def generateChangeLog(release, date, origin):
     git_diff=subprocess.Popen(['git', 'log', '--no-merges', '--oneline', "--pretty=split:'%s'", origin+'/master...HEAD'],
