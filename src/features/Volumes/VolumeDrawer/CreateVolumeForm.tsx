@@ -24,6 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   onClose: () => void;
+  onSuccess: (volumeLabel: string, volumePath: string) => void;
 }
 
 type CombinedProps =
@@ -31,7 +32,7 @@ type CombinedProps =
   & WithStyles<ClassNames>;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose } = props;
+  const { onClose, onSuccess } = props;
   return (
     <Formik
       initialValues={initialValues}
@@ -52,10 +53,11 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           config_id: configId === -1 ? undefined : configId,
           tags: tags.map(v => v.value),
         })
-          .then(response => {
+          .then(({filesystem_path, label }) => {
             resetForm(initialValues);
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
+            onSuccess(label, filesystem_path);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;

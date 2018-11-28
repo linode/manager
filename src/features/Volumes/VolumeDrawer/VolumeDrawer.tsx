@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
-import { close } from 'src/store/reducers/volumeDrawer';
+import { close, openForConfig } from 'src/store/reducers/volumeDrawer';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
@@ -46,7 +46,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       <Drawer open={isOpen} title={drawerTitle} onClose={actions.closeDrawer}>
         {
           mode === modes.CREATING &&
-          <CreateVolumeForm onClose={actions.closeDrawer} />
+          <CreateVolumeForm onClose={actions.closeDrawer} onSuccess={actions.openForConfig} />
         }
         {
           mode === modes.EDITING && volumeId !== undefined && volumeLabel !== undefined && volumeTags !== undefined &&
@@ -120,12 +120,14 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
 interface DispatchProps {
   actions: {
     closeDrawer: () => void;
+    openForConfig: (volumeLabel: string, volumePath: string) => void;
   }
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
     closeDrawer: () => dispatch(close()),
+    openForConfig: (volumeLabel: string, volumePath: string) => dispatch(openForConfig(volumeLabel, volumePath)),
   },
 });
 
