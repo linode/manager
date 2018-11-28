@@ -113,7 +113,7 @@ interface Props {
 }
 
 interface DispatchProps {
-  openForEdit: (volumeId: number, volumeLabel: string) => void;
+  openForEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
   openForResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
   openForClone: (volumeId: number, volumeLabel: string, volumeSize: number, volumeRegion: string) => void;
   openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => void;
@@ -455,6 +455,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 linodeLabel={volume.linodeLabel}
                 regionID={regionID}
                 volumeID={volume.id}
+                volumeTags={volume.tags}
                 size={size}
                 label={label}
                 onEdit={this.props.openForEdit}
