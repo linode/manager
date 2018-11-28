@@ -92,7 +92,6 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               tagError={touched.tags ? errors.tags ? 'Unable to tag volume.' : undefined : undefined}
               name="tags"
               label="Tags"
-              onBlur={handleBlur}
               onChange={selected => setFieldValue('tags', selected)}
               value={values.tags}
             />
