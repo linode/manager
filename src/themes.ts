@@ -17,6 +17,23 @@ const primaryColors = {
   offBlack: '#fff',
 }
 
+const iconCircleAnimation = {
+  '& .circle': {
+    fill: primaryColors.main,
+    transition: 'fill .2s ease-in-out .2s',
+  },
+  '& .outerCircle': {
+    stroke: primaryColors.dark,
+    strokeDasharray: 1000,
+    strokeDashoffset: 1000,
+    animation: 'dash 2s linear forwards',
+  },
+  '& .insidePath *': {
+    transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white',
+  },
+} 
+
 export const dark = createTheme({
   name: 'darkTheme',
   breakpoints,
@@ -26,6 +43,11 @@ export const dark = createTheme({
     },
     to: {
       transform: 'rotate(360deg)',
+    },
+  },
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
     },
   },
   bg: {
@@ -56,6 +78,9 @@ export const dark = createTheme({
     absWhite: '#000',
     blueDTwhite: '#fff',
     borderRow: 'rgba(0, 0, 0, 0.15)',
+  },
+  animateCircleIcon: {
+    ...iconCircleAnimation,
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',

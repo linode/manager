@@ -7,33 +7,30 @@ import SearchSuggestion from './SearchSuggestion';
 type ClassNames = 'root' | 'item' | 'selectedMenuItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     position: 'absolute',
     left: '10px'
   },
   item: {
     borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:hover, &:focus': {
-      backgroundColor: `${theme.bg.offWhite} !important`,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
     },
     '&:last-item': {
       border: 0,
     },
   },
   selectedMenuItem: {
+    ...theme.animateCircleIcon,
     backgroundColor: `${theme.bg.offWhite} !important`,
-    '& .circle': {
-      transition: theme.transitions.create(['fill']),
-      fill: theme.palette.primary.main,
-    },
-    '& .outerCircle': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: '#2967B1',
-    },
-    '& .insidePath *': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: 'white',
-    },
   },
 });
 

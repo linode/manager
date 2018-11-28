@@ -71,9 +71,10 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           handleSubmit,
           isSubmitting,
           resetForm,
-          status,
-          values,
           setFieldValue,
+          status,
+          touched,
+          values,
         } = formikProps;
         return (
           <Form>
@@ -88,7 +89,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <TagsInput
-              // tagError={touched.tags ? errors.tags : undefined}
+              tagError={touched.tags ? errors.tags ? 'Unable to tag volume.' : undefined : undefined}
               name="tags"
               label="Tags"
               onBlur={handleBlur}

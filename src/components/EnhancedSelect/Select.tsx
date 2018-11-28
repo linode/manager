@@ -32,6 +32,11 @@ type ClassNames = 'root'
 | 'selectedMenuItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     width: '100%',
     position: 'relative',
@@ -167,19 +172,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     }
   },
   selectedMenuItem: {
+    ...theme.animateCircleIcon,
     backgroundColor: `${theme.bg.main} !important`,
-    '& .circle': {
-      transition: theme.transitions.create(['fill']),
-      fill: theme.palette.primary.main,
-    },
-    '& .outerCircle': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: '#2967B1',
-    },
-    '& .insidePath *': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: 'white',
-    },
   },
 });
 
