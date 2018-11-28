@@ -85,6 +85,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             linodeId={linodeId}
             linodeLabel={linodeLabel}
             linodeRegion={linodeRegion}
+            onSuccess={actions.openForConfig}
             onClose={actions.closeDrawer}
           />
         }
