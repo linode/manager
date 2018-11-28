@@ -1,22 +1,14 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
-import { path } from 'ramda';
 import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
 import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
 
-type ClassNames = 'root' | 'label';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  const rootMuiChipStyles = path(['overrides', 'MuiChip', 'root'], theme);
-  const rootMuiChipStylesLabel = path(['overrides', 'MuiChip', 'label'], theme);
 
   return {
-    root: {
-      ...rootMuiChipStyles,
-    },
-    label: {
-      ...rootMuiChipStylesLabel
-    }
+    root: {},
   }
 };
 
@@ -33,7 +25,7 @@ const MultiValueLabel: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <div data-qa-multi-option={props.children} className={classes.root} >
-      <reactSelectComponents.MultiValueLabel {...rest} className={classes.label} />
+      <reactSelectComponents.MultiValueLabel {...rest} />
     </div>
   );
 };
