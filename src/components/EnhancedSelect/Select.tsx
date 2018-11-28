@@ -3,12 +3,15 @@ import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
 import CreatableSelect, { Props as CreatableSelectProps } from 'react-select/lib/Creatable';
 import { Props as SelectProps } from 'react-select/lib/Select';
+import { StylesConfig } from 'react-select/lib/styles';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
 import LoadingIndicator from './components/LoadingIndicator';
-import MultiValue from './components/MultiValue';
+import MultiValueContainer from './components/MultiValueContainer';
+import MultiValueLabel from './components/MultiValueLabel';
+import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
 import Control from './components/SelectControl';
@@ -212,7 +215,7 @@ export interface EnhancedSelectProps {
   label?: string;
   placeholder?: string;
   errorText?: string;
-  styleOverrides?: any;
+  styleOverrides?: StylesConfig;
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
@@ -226,7 +229,9 @@ const _components = {
   Control,
   NoOptionsMessage,
   Placeholder,
-  MultiValue,
+  MultiValueContainer,
+  MultiValueLabel,
+  MultiValueRemove,
   Option,
   DropdownIndicator,
   LoadingIndicator
