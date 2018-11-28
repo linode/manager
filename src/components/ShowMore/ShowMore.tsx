@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
@@ -7,15 +8,13 @@ type CSSClasses =  'chip' | 'label' | 'popover';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   chip: {
-    top: -2,
     position: 'relative',
     marginLeft: theme.spacing.unit / 2,
-    paddingLeft: theme.spacing.unit / 2,
-    paddingRight: theme.spacing.unit / 2,
+    paddingLeft: 2,
+    paddingRight: 2,
     backgroundColor: theme.bg.lightBlue,
     fontWeight: 500,
     lineHeight: 1,
-    fontSize: '.9rem',
     '&:hover, &.active': {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
@@ -28,13 +27,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   label: {
     paddingLeft: 6,
     paddingRight: 6,
-    fontSize: '.75rem',
   },
   popover: {
     minWidth: 'auto',
     maxWidth: 400,
     overflow: 'visible',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing.unit,
     [theme.breakpoints.down('xs')]: {
       maxWidth: 285,
     },
@@ -50,20 +48,18 @@ interface Props<T> {
 class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   state = {
     anchorEl: undefined,
-    classes: this.props.classes.chip,
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     this.setState({
       anchorEl: event.currentTarget,
-      classes: this.props.classes.chip + ' active',
     });
   }
 
   handleClose = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    this.setState({ anchorEl: undefined, classes: this.props.classes.chip });
+    this.setState({ anchorEl: undefined });
   }
 
   render() {
@@ -73,12 +69,20 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
     return (
       <React.Fragment>
         <Chip
-          className={this.state.classes}
+          className={classNames(
+            {
+              [classes.chip]: true,
+              'active': anchorEl,
+            },
+            'chip',
+          )}
           label={`+${items.length}`}
           classes={{ label: classes.label }}
           onClick={this.handleClick}
           {...chipProps}
           data-qa-show-more-chip
+          component="button"
+          clickable
         />
         <Popover
           classes={{ paper: classes.popover }}
@@ -87,11 +91,11 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           onClose={this.handleClose}
           anchorOrigin={{
             vertical: 28,
-            horizontal: 'right',
+            horizontal: 'left',
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'right',
+            horizontal: 'left',
           }}
         >
           {render(items)}
