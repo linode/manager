@@ -29,6 +29,7 @@ export const iconMap = {
 
 // Helper can be extended to other entities once tags are supported for them.
 // @todo Inefficient to call this function twice for each search result.
+<<<<<<< HEAD
 export const getMatchingTags = (tags:string[], query:string): string[] => {
   return tags.filter((tag:string) =>
     tag.toLocaleLowerCase().includes(query.toLowerCase()));
@@ -41,6 +42,10 @@ export const filterMatched = (query: string, label: string, tags: string[]) => {
     matchingTags.length > 0
   )
   return bool;
+=======
+const getMatchingTags = (tags:string[], query:string): string[] => {
+  return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
+>>>>>>> M3-1828 search landing (#4130)
 }
 
 export const searchLinodes = (
@@ -49,8 +54,19 @@ export const searchLinodes = (
   typesData: Linode.LinodeType[],
   images: Linode.Image[],
   ) =>
+<<<<<<< HEAD
   linodes.filter(linode => filterMatched(query, linode.label, linode.tags))
   .map(linode => ({
+=======
+  linodes.filter(linode => {
+    const matchingTags = getMatchingTags(linode.tags, query);
+    const bool = or(
+      linode.label.toLowerCase().includes(query),
+      matchingTags.length > 0
+    )
+    return bool;
+  }).map(linode => ({
+>>>>>>> M3-1828 search landing (#4130)
     label: linode.label,
     value: linode.id,
     data: {
@@ -70,6 +86,7 @@ export const searchLinodes = (
   })
 )
 
+<<<<<<< HEAD
 export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
   volumes.filter(volume => filterMatched(query, volume.label, volume.tags))
     .map(volume => ({
@@ -82,11 +99,29 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
         path: `/volumes/${volume.id}`,
         searchText: query,
       }
+=======
+export const searchVolumes = (volumes: Linode.Volume[], query: string) => volumes.filter(
+  volume => volume.label.toLowerCase().includes(query),
+).map(volume => ({
+  label: volume.label,
+  value: volume.id,
+  data: {
+    tags: [],
+    description: volume.size + ' GiB',
+    icon: 'VolumeIcon',
+    path: `/volumes/${volume.id}`,
+    searchText: query,
+  }
+>>>>>>> M3-1828 search landing (#4130)
 }));
 
 export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query: string) =>
   nodebalancers.filter(
+<<<<<<< HEAD
     nodebal => filterMatched(query, nodebal.label, []),
+=======
+    nodebal => nodebal.label.toLowerCase().includes(query),
+>>>>>>> M3-1828 search landing (#4130)
   ).map(nodebal => ({
     label: nodebal.label,
     value: nodebal.id,
@@ -101,6 +136,7 @@ export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query:
 
 export const searchDomains = (domains: Linode.Domain[], query: string) =>
   domains.filter(
+<<<<<<< HEAD
     domain => filterMatched(query, domain.domain, domain.tags))
       .map(domain => ({
         label: domain.domain,
@@ -112,6 +148,26 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
           path: `/domains/${domain.id}`,
           searchText: query
         }
+=======
+    domain => {
+      const matchingTags = getMatchingTags(domain.tags, query);
+      const bool = or(
+        domain.domain.toLowerCase().includes(query),
+        matchingTags.length > 0
+      )
+      return bool;
+    }
+  ).map(domain => ({
+    label: domain.domain,
+    value: domain.id,
+    data: {
+      tags: domain.tags,
+      description: domain.description || domain.status,
+      icon: 'DomainIcon',
+      path: `/domains/${domain.id}`,
+      searchText: query
+    }
+>>>>>>> M3-1828 search landing (#4130)
   }));
 
 export const searchImages = (images: Linode.Image[], query: string) =>
@@ -119,7 +175,11 @@ export const searchImages = (images: Linode.Image[], query: string) =>
     (image: Linode.Image) => (
       /* TODO: this should be a pre-filter at the API level */
       image.is_public === false
+<<<<<<< HEAD
       && image.label.toLowerCase().includes(query.toLowerCase())
+=======
+      && image.label.toLowerCase().includes(query)
+>>>>>>> M3-1828 search landing (#4130)
     ),
   ).map((image: Linode.Image) => ({
     label: image.label,
