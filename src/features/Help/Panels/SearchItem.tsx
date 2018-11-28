@@ -1,6 +1,6 @@
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import ListItem from 'src/components/core/ListItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
