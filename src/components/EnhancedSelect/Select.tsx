@@ -107,6 +107,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .react-select__indicator-separator': {
       display: 'none',
     },
+    '& .react-select__multi-value': {
+      borderRadius: 4,
+      backgroundColor: theme.bg.main,
+      alignItems: 'center',
+      '& svg': {
+        color: theme.palette.text.primary,
+        margin: '1px 2px 0 2px',
+      },
+      '&:hover': {
+        backgroundColor: theme.bg.main,
+        '& svg': {
+          color: theme.palette.primary.main,
+        },
+      },
+    },
     '& .react-select__dropdown-indicator': {
     },
     '& [class*="MuiFormHelperText-error"]': {

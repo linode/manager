@@ -4,16 +4,10 @@ import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
 import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
 
-type ClassNames = 'root' | 'icon';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-    borderRadius: '4px',
-  },
-  icon: {
-    backgroundColor: 'blue',
-    color: 'white',
-  },
+  root: {},
 });
 
 interface Props extends MultiValueGenericProps<any> {}
@@ -33,8 +27,8 @@ const MultiValueRemove: React.StatelessComponent<CombinedProps> = (props) => {
   };
 
   return (
-    <reactSelectComponents.MultiValueRemove {...updatedProps} className={classes.root}>
-      <Close className={classes.icon} />
+    <reactSelectComponents.MultiValueRemove {...updatedProps}>
+      <Close  />
     </reactSelectComponents.MultiValueRemove>
   );
 };
