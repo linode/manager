@@ -299,7 +299,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
             matchingTags.length > 0
           )
           return bool;
-        }      );
+        }
+      );
       searchResults.push(...(volumesByLabel.map(volume => ({
         label: volume.label,
         value: volume.id,
