@@ -1,6 +1,7 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import TagsInput, { Tag } from 'src/components/TagsInput';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { updateVolume } from 'src/services/volumes';
 import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
@@ -18,6 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props {
   onClose: () => void;
   volumeLabel: string;
+  volumeTags: Tag[];
   volumeId: number;
 }
 
@@ -25,19 +27,27 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 /** Single field posts like rename/resize dont have validation schemas in services */
 const validationSchema = UpdateVolumeSchema;
+interface FormState {
+  label: string;
+  tags: Tag[];
+}
 
 const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { volumeId, volumeLabel, onClose } = props;
-  const initialValues = { label: volumeLabel };
+  const { volumeId, volumeLabel, volumeTags, onClose } = props;
+  const initialValues: FormState = { label: volumeLabel, tags: volumeTags };
 
   return (
     <Formik
       validationSchema={validationSchema}
       onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {
+        const { label, tags } = values;
 
         setSubmitting(true);
 
-        updateVolume(volumeId, { label: values.label })
+        updateVolume(volumeId, {
+          label,
+          tags: tags.map(v => v.value),
+        })
           .then(response => {
             resetForm();
             updateVolumes$.next(true);
@@ -63,6 +73,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           resetForm,
           status,
           values,
+          setFieldValue,
         } = formikProps;
         return (
           <Form>
@@ -74,6 +85,15 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.label}
+            />
+
+            <TagsInput
+              // tagError={touched.tags ? errors.tags : undefined}
+              name="tags"
+              label="Tags"
+              onBlur={handleBlur}
+              onChange={selected => setFieldValue('tags', selected)}
+              value={values.tags}
             />
 
             <VolumesActionsPanel
