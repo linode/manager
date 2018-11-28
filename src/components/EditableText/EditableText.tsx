@@ -4,7 +4,7 @@ import Edit from '@material-ui/icons/Edit';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';

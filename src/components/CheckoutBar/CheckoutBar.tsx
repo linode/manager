@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
@@ -124,8 +124,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
         <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
           <Button
-            variant="raised"
-            color="primary"
+            type="primary"
             disabled={disabled}
             fullWidth
             onClick={onDeploy}

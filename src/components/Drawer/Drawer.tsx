@@ -1,6 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -84,8 +84,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
         <Grid item>
           <Button
-            variant="raised"
-            color="secondary"
+            type="secondary"
             onClick={props.onClose}
             className={classes.button}
             data-qa-close-drawer

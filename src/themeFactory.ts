@@ -273,7 +273,7 @@ const themeDefaults: ThemeOptions = {
           backgroundColor: 'transparent',
         },
       },
-      raisedPrimary: {
+      containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light,
         },
@@ -292,7 +292,7 @@ const themeDefaults: ThemeOptions = {
           },
         },
       },
-      raisedSecondary: {
+      containedSecondary: {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
@@ -948,6 +948,14 @@ const themeDefaults: ThemeOptions = {
       scrollButtons: {
         flex: '0 0 40px',
       },
+      indicator: {
+        primary: {
+          backgroundColor: primaryColors.main,
+        },
+        secondary: {
+          backgroundColor: primaryColors.main,
+        },
+      },
     },
     MuiTableRow: {
       root: {
@@ -993,30 +1001,23 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
-    /** @todo Remove when tooltips are properly styled. */
-    // MuiTooltip: {
-    //   tooltip: {
-    //     borderRadius: 0,
-    //     maxWidth: 200,
-    //     backgroundColor: 'white',
-    //     boxShadow: '0 0 5px #bbb',
-    //     color: '#606469',
-    //     visibility: 'hidden',
-    //     textAlign: 'left',
-    //     width: 0,
-    //     height: 0,
-    //     [breakpoints.up('sm')]: {
-    //       padding: '8px 10px',
-    //       fontSize: '.9rem',
-    //     },
-    //     '&$open': {
-    //       width: 'auto',
-    //       height: 'auto',
-    //       opacity: 1,
-    //       visibility: 'visible',
-    //     },
-    //   },
-    // },
+    MuiTooltip: {
+      popper: {
+        opacity: 1,
+      },
+      tooltip: {
+        borderRadius: 0,
+        maxWidth: 200,
+        backgroundColor: 'white',
+        boxShadow: '0 0 5px #bbb',
+        color: '#606469',
+        textAlign: 'left',
+        [breakpoints.up('sm')]: {
+          padding: '8px 10px',
+          fontSize: '.9rem',
+        },
+      },
+    },
   },
 };
 

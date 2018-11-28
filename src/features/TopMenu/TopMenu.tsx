@@ -31,8 +31,8 @@ type ClassNames = 'root'
   },
   toolbar: {
     minHeight: 64,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
+    paddingLeft: 0,
+    paddingRight: 0,
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
       paddingLeft: theme.spacing.unit * 3,

@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import ActionsPanel from '../ActionsPanel';
 import ExpansionPanel from './ExpansionPanel';
@@ -122,10 +122,9 @@ storiesOf('ExpansionPanel', module)
 const renderActions = () => {
   return (
     <ActionsPanel>
-      <Button variant="raised" color="primary">Save</Button>
+      <Button type="primary">Save</Button>
       <Button
-        variant="raised"
-        color="secondary"
+        type="secondary"
         className="cancel"
       >
         Cancel

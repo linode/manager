@@ -1,6 +1,6 @@
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import * as React from 'react';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 

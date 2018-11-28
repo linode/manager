@@ -1,7 +1,7 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -175,8 +175,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button
             disabled={!this.state.selectedId || linodeInTransition(this.props.linodeStatus || '') }
-            variant="raised"
-            color="primary"
+            type="primary"
             onClick={this.onSubmit}
             data-qa-submit
           >
