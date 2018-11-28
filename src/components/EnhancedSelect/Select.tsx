@@ -143,14 +143,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   suggestionRoot: {
     cursor: 'pointer',
-    display: 'flex',
     width: 'calc(100% + 2px)',
     alignItems: 'space-between',
     justifyContent: 'space-between',
     borderBottom: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.up('md')]: {
+     display: 'flex',
+    },
     '&:last-child': {
       borderBottom: 0,
-    }
+    },
   },
   highlight: {
     color: theme.palette.primary.main,
@@ -173,6 +175,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
+    wordBreak: 'break-all',
   },
   suggestionDescription: {
     color: theme.color.headline,
@@ -186,7 +189,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   tagContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    flexWrap: 'wrap',
+    paddingRight: 8,
+    justifyContent: 'flex-end',
     alignItems: 'center',
     '& > div': {
       margin: '2px',

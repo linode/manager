@@ -211,7 +211,7 @@ class VolumeDrawer extends React.Component<CombinedProps, State> {
         value={this.props.selectedVolume || 'none'}
         errorText={getAPIErrorFor(jawn, this.props.errors)('volume')}
       >
-        <MenuItem value="none" className="placeholder">Select a Volume</MenuItem>
+        <MenuItem value="none">Select a Volume</MenuItem>
         {
           this.state.attachableVolumes && this.state.attachableVolumes.map((volume) => (
             <MenuItem key={volume.id} value={volume.id}>{volume.label}</MenuItem>
