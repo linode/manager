@@ -133,6 +133,23 @@ type ClassNames =
   },
 });
 
+// Helper can be extended to other entities once tags are supported for them.
+// @todo Inefficient to call this function twice for each search result.
+const getMatchingTags = (tags:string[], query:string): string[] => {
+  const queryLower = query.toLowerCase();
+ return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(queryLower));
+}
+
+
+const filterMatched = (query: string, label: string, tags: string[]) => {
+  const matchingTags = getMatchingTags(tags, query);
+  const bool = or(
+    label.toLowerCase().includes(query.toLowerCase()),
+    matchingTags.length > 0
+  )
+  return bool;
+}
+
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
@@ -243,12 +260,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
     }, this.getSearchSuggestions)
   }
 
-  // Helper can be extended to other entities once tags are supported for them.
-  // @todo Inefficient to call this function twice for each search result.
-  getMatchingTags = (tags:string[], query:string): string[] => {
-    return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
-  }
-
   getSearchSuggestions = () => {
     const query = this.state.searchText;
     const { typesData } = this.props;
@@ -257,25 +268,17 @@ class SearchBar extends React.Component<CombinedProps, State> {
       return;
     };
 
-    const queryLower = query.toLowerCase();
     const searchResults = [];
 
     if (this.state.linodes && typesData) {
       const linodesByLabel = this.state.linodes.filter(
-        linode => {
-          const matchingTags = this.getMatchingTags(linode.tags, queryLower);
-          const bool = or(
-            linode.label.toLowerCase().includes(queryLower),
-            matchingTags.length > 0
-          )
-          return bool;
-        }
+        linode => filterMatched(query, linode.label, linode.tags)
       );
       searchResults.push(...(linodesByLabel.map(linode => ({
         label: linode.label,
         value: linode.id,
         data: {
-          tags: this.getMatchingTags(linode.tags, queryLower),
+          tags: getMatchingTags(linode.tags, query),
           description: this.linodeDescription(
             displayType(linode.type, typesData),
             linode.specs.memory,
@@ -292,14 +295,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.volumes) {
       const volumesByLabel = this.state.volumes.filter(
-        volume => {
-          const matchingTags = this.getMatchingTags(volume.tags, queryLower);
-          const bool = or(
-            volume.label.toLowerCase().includes(queryLower),
-            matchingTags.length > 0
-          )
-          return bool;
-        }
+        volume => filterMatched(query, volume.label, volume.tags)
       );
       searchResults.push(...(volumesByLabel.map(volume => ({
         label: volume.label,
@@ -316,7 +312,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.nodebalancers) {
       const nodebalancersByLabel = this.state.nodebalancers.filter(
-        nodebal => nodebal.label.toLowerCase().includes(queryLower),
+        nodebal => filterMatched(query, nodebal.label, [])
       );
       searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
         label: nodebal.label,
@@ -333,14 +329,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
     if (this.state.domains) {
       const domainsByLabel = this.state.domains.filter(
-        domain => {
-          const matchingTags = this.getMatchingTags(domain.tags, queryLower);
-          const bool = or(
-            domain.domain.toLowerCase().includes(queryLower),
-            matchingTags.length > 0
-          )
-          return bool;
-        }
+        domain => filterMatched(query, domain.domain, domain.tags)
       );
       searchResults.push(...(domainsByLabel.map(domain => ({
         label: domain.domain,
@@ -361,7 +350,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
         (image: Linode.Image) => (
           /* TODO: this should be a pre-filter at the API level */
           image.is_public === false
-          && image.label.toLowerCase().includes(queryLower)
+          && image.label.toLowerCase().includes(query.toLowerCase())
         ),
       );
       searchResults.push(...(imagesByLabel.map((image: Linode.Image) => ({
