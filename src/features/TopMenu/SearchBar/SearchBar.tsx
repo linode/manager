@@ -135,13 +135,13 @@ type ClassNames =
 
 // Helper can be extended to other entities once tags are supported for them.
 // @todo Inefficient to call this function twice for each search result.
-const getMatchingTags = (tags:string[], query:string): string[] => {
+export const getMatchingTags = (tags:string[], query:string): string[] => {
   const queryLower = query.toLowerCase();
  return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(queryLower));
 }
 
 
-const filterMatched = (query: string, label: string, tags: string[]) => {
+export const filterMatched = (query: string, label: string, tags: string[]) => {
   const matchingTags = getMatchingTags(tags, query);
   const bool = or(
     label.toLowerCase().includes(query.toLowerCase()),
