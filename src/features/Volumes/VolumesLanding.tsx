@@ -44,8 +44,10 @@ type ClassNames = 'root'
   | 'sizeCol'
   | 'pathCol'
   | 'volumesWrapper'
-  | 'linodeVolumesWrapper'
-  | 'tagWrapper';
+  | 'linodeVolumesWrapper';
+
+  type TagClassNames = 'tagWrapper';
+
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -86,6 +88,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '25%',
     minWidth: 250,
   },
+});
+
+const tagStyles: StyleRulesCallback<TagClassNames> = (theme) => ({
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
     '& [class*="MuiChip"]': {
@@ -141,6 +146,24 @@ type CombinedProps =
   & DispatchProps
   & RouteProps
   & WithStyles<ClassNames>;
+
+interface TagProps {
+  tags: string[];
+}
+type CombinedTagsProps = TagProps & WithStyles<TagClassNames>;
+
+class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
+  render() {
+    const { classes, tags } = this.props;
+    return (
+      <div className={classes.tagWrapper}>
+        <Tags tags={tags} />
+      </div>
+    )  
+  }
+}
+
+const RenderTags = withStyles(tagStyles)(RenderTagsBase);
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -383,15 +406,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderTags = (tags: string[]) => {
-    const { classes } = this.props;
-    return (
-      <div className={classes.tagWrapper}>
-        <Tags tags={tags} />
-      </div>
-    )
-  }
-
   renderData = (volumes: ExtendedVolume[]) => {
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
 
@@ -412,7 +426,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
             <TableCell data-qa-volume-cell-label>
               {label}
-              {this.renderTags(volume.tags)}
+              <RenderTags tags={volume.tags} />
             </TableCell>
             <TableCell colSpan={5}>
               <LinearProgress value={progressFromEvent(volume.recentEvent)} />
@@ -423,7 +437,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
             <TableCell parentColumn="Label" data-qa-volume-cell-label>
               {volume.label}
-              {this.renderTags(volume.tags)}
+              <RenderTags tags={volume.tags} />
             </TableCell>
             {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
               {volume.linodeLabel &&
