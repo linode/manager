@@ -40,7 +40,6 @@ const MultiValueLabel: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <div data-qa-multi-option={props.children} className={classes.root} >
       <reactSelectComponents.MultiValueLabel {...updatedProps} className={classes.label} />
-      {props.children}
     </div>
   );
 };

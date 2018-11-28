@@ -6,10 +6,7 @@ import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-    borderRadius: '4px',
-    backgroundColor: 'orange',
-  },
+  root: {},
 });
 
 interface Props extends MultiValueGenericProps<any> {
@@ -26,7 +23,7 @@ const MultiValueContainer: React.StatelessComponent<CombinedProps> = (props) => 
 
   const updatedProps = {
     ...rest,
-    innerProps: restInnerProps,
+    innerProps: {restInnerProps, className}
   };
 
   return (
