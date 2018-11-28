@@ -318,9 +318,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               }}
               linkText="Support Tickets"
               labelTitle={`#${ticket.id}: ${ticket.summary}`}
-              labelSubtitle={
-                `${ticket.status === 'closed' ? 'Closed' : 'Last updated'} by ${ticket.updated_by} at ${formattedDate}`
-              }
+              labelOptions={{
+                subtitle: `${ticket.status === 'closed'
+                  ? 'Closed'
+                  : 'Last updated'} by ${ticket.updated_by} at ${formattedDate}`
+              }}
               data-qa-breadcrumb
             />
             <Chip className={classNames({

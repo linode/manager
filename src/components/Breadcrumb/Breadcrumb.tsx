@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
 import LabelText from './LabelText';
 
-type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'subtitleLinkText';
+type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'subtitleLinkText' | 'prefixComponentWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -61,6 +61,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   labelText: {
     padding: '2px 10px'
+  },
+  prefixComponentWrapper: {
+    marginLeft: '14px',
+    '& svg': {
+      position: 'relative',
+      top: 2,
+      marginRight: '0',
+    }
   }
 });
 interface EditableProps {
@@ -68,21 +76,26 @@ interface EditableProps {
   onEdit: (value: string) => void;
   errorText?: string;
 }
+
+interface LabelProps {
+  linkTo?: string;
+  prefixComponent?: JSX.Element | null;
+  subtitle?: string;
+}
 export interface Props {
   // linkTo will be passed in to a <Link /> component, so we borrow the
   // LocationDescriptor interface from the history module
   linkTo: LocationDescriptor;
   linkText: string;
   labelTitle: string;
-  labelLink?: string;
-  labelSubtitle?: string;
+  labelOptions?: LabelProps;
   onEditHandlers?: EditableProps
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linkTo, linkText, labelTitle } = props;
+  const { classes, linkTo, linkText, labelTitle, labelOptions, onEditHandlers } = props;
 
   return (
     <React.Fragment>
@@ -94,29 +107,38 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         <KeyboardArrowLeft />
         <Typography
           variant="subheading"
-          className={props.labelSubtitle ? classes.subtitleLinkText : classes.linkText}
+          className={(labelOptions && labelOptions.subtitle)
+            ? classes.subtitleLinkText
+            : classes.linkText}
           data-qa-link-text
         >
           {linkText}
         </Typography>
       </IconButton>
       </Link>
-      {props.onEditHandlers
+
+      {labelOptions && labelOptions.prefixComponent &&
+        <div className={classes.prefixComponentWrapper} data-qa-prefixWrapper>
+          {labelOptions.prefixComponent}
+        </div>
+      }
+
+      {onEditHandlers
         ?
         <EditableText
           role="header"
           typeVariant="h6"
           text={labelTitle}
-          errorText={props.onEditHandlers!.errorText}
-          onEdit={props.onEditHandlers!.onEdit}
-          onCancel={props.onEditHandlers!.onCancel}
-          labelLink={props.labelLink}
+          errorText={onEditHandlers.errorText}
+          onEdit={onEditHandlers.onEdit}
+          onCancel={onEditHandlers.onCancel}
+          labelLink={labelOptions && labelOptions.linkTo}
           data-qa-editable-text
         />
         : <LabelText
             title={props.labelTitle}
-            subtitle={props.labelSubtitle}
-            titleLink={props.labelLink}
+            subtitle={labelOptions && labelOptions.subtitle}
+            titleLink={labelOptions && labelOptions.linkTo}
             data-qa-labeltext
           />
       }

@@ -10,7 +10,7 @@ describe('Breadcrumb component', () => {
       linkText="Linodes"
       labelTitle="MyTestLinode"
 
-      classes={{root: '', backButton: 'backButton', linkText: '', labelText: '', subtitleLinkText: ''}}
+      classes={{root: '', backButton: 'backButton', linkText: '', labelText: '', subtitleLinkText: '', prefixComponentWrapper: ''}}
     />
   );
 
@@ -25,6 +25,13 @@ describe('Breadcrumb component', () => {
 
   it('renders labelText without editable props', () => {
     expect(wrapper.find('[data-qa-labeltext]')).toHaveLength(1);
+  });
+
+  it('renders a prefixComponent wrapper', () => {
+    wrapper.setProps({
+      labelOptions: { prefixComponent: <React.Fragment /> }
+    })
+    expect(wrapper.find('[data-qa-prefixWrapper]')).toHaveLength(1);
   });
 
   it('renders editable text when given editable props', () => {

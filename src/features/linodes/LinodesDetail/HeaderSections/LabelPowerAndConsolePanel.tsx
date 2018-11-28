@@ -84,7 +84,7 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
           linkTo="/linodes"
           linkText="Linodes"
           labelTitle={labelInput.label}
-          labelLink={getLabelLink()}
+          labelOptions={{ linkTo: getLabelLink() }}
           onEditHandlers={{
             onEdit: labelInput.onEdit,
             onCancel: labelInput.onCancel,
