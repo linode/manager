@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 
 import ThemeDecorator from '../../utilities/storybookDecorators';
 import ActionsPanel from '../ActionsPanel';
@@ -30,15 +30,13 @@ class Example extends React.Component {
           />
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               data-qa-save
             >
               Save
             </Button>
             <Button
-              variant="raised"
-              color="secondary"
+              type="secondary"
               className="cancel"
               data-qa-cancel
             >

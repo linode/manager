@@ -8,7 +8,7 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/reducers/domainDrawer';
@@ -130,8 +130,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     return (
       <div className={classes.wrapper}>
         <Button
-          variant="raised"
-          color="primary"
+          type="primary"
           aria-owns={anchorEl ? 'add-new-menu' : undefined}
           aria-expanded={anchorEl ? true : undefined}
           aria-haspopup="true"

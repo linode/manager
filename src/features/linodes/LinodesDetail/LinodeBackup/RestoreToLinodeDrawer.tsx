@@ -1,8 +1,8 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import Button from 'src/components/core/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -176,8 +176,7 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
         {Boolean(generalError) && <FormHelperText error>{generalError}</FormHelperText>}
         <ActionsPanel>
           <Button
-            variant="raised"
-            color="primary"
+            type="primary"
             onClick={this.restoreToLinode}
             data-qa-restore-submit
           >

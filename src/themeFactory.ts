@@ -244,7 +244,7 @@ const themeDefaults: ThemeOptions = {
           backgroundColor: 'transparent',
         },
       },
-      raisedPrimary: {
+      containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light,
         },
@@ -263,7 +263,7 @@ const themeDefaults: ThemeOptions = {
           },
         },
       },
-      raisedSecondary: {
+      containedSecondary: {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
@@ -907,6 +907,14 @@ const themeDefaults: ThemeOptions = {
       },
       scrollButtons: {
         flex: '0 0 40px',
+      },
+      indicator: {
+        primary: {
+          backgroundColor: primaryColors.main,
+        },
+        secondary: {
+          backgroundColor: primaryColors.main,
+        },
       },
     },
     MuiTableRow: {

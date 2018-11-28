@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -82,8 +82,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </div>
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={props.onClose}
               data-qa-cancel
             >
