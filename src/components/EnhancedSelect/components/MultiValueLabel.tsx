@@ -1,15 +1,19 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import { path } from 'ramda';
 import * as React from 'react';
 import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-    borderRadius: '4px',
-    backgroundColor: 'red',
-  },
-});
+const styles: StyleRulesCallback<ClassNames> = (theme) => {
+  const rootMuiChipStyles = path(['overrides', 'MuiChip', 'root'], theme);
+
+  return {
+    root: {
+      ...rootMuiChipStyles,
+    },
+  }
+};
 
 interface Props extends MultiValueGenericProps<any>{
 }
