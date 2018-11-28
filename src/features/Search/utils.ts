@@ -73,7 +73,7 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) => volume
   value: volume.id,
   data: {
     tags: [],
-    description: volume.size + ' G',
+    description: volume.size + ' GiB',
     icon: 'VolumeIcon',
     path: `/volumes/${volume.id}`,
     searchText: query,
