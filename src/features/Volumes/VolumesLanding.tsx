@@ -23,6 +23,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
+import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
 import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
@@ -44,6 +45,9 @@ type ClassNames = 'root'
   | 'pathCol'
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
+
+  type TagClassNames = 'tagWrapper';
+
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -83,7 +87,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   pathCol: {
     width: '25%',
     minWidth: 250,
-  }
+  },
+});
+
+const tagStyles: StyleRulesCallback<TagClassNames> = (theme) => ({
+  tagWrapper: {
+    marginTop: theme.spacing.unit / 2,
+    '& [class*="MuiChip"]': {
+      cursor: 'pointer',
+    },
+  },
 });
 
 interface ExtendedVolume extends Linode.Volume {
@@ -100,7 +113,7 @@ interface Props {
 }
 
 interface DispatchProps {
-  openForEdit: (volumeId: number, volumeLabel: string) => void;
+  openForEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
   openForResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
   openForClone: (volumeId: number, volumeLabel: string, volumeSize: number, volumeRegion: string) => void;
   openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => void;
@@ -133,6 +146,24 @@ type CombinedProps =
   & DispatchProps
   & RouteProps
   & WithStyles<ClassNames>;
+
+interface TagProps {
+  tags: string[];
+}
+type CombinedTagsProps = TagProps & WithStyles<TagClassNames>;
+
+class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
+  render() {
+    const { classes, tags } = this.props;
+    return (
+      <div className={classes.tagWrapper}>
+        <Tags tags={tags} />
+      </div>
+    )  
+  }
+}
+
+const RenderTags = withStyles(tagStyles)(RenderTagsBase);
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -393,7 +424,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return isVolumeUpdating(volume.recentEvent)
         ? (
           <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
-            <TableCell data-qa-volume-cell-label>{label}</TableCell>
+            <TableCell data-qa-volume-cell-label>
+              {label}
+              <RenderTags tags={volume.tags} />
+            </TableCell>
             <TableCell colSpan={5}>
               <LinearProgress value={progressFromEvent(volume.recentEvent)} />
             </TableCell>
@@ -401,7 +435,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         )
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-            <TableCell parentColumn="Label" data-qa-volume-cell-label>{volume.label}</TableCell>
+            <TableCell parentColumn="Label" data-qa-volume-cell-label>
+              {volume.label}
+              <RenderTags tags={volume.tags} />
+            </TableCell>
             {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
               {volume.linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
@@ -418,6 +455,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                 linodeLabel={volume.linodeLabel}
                 regionID={regionID}
                 volumeID={volume.id}
+                volumeTags={volume.tags}
                 size={size}
                 label={label}
                 onEdit={this.props.openForEdit}
