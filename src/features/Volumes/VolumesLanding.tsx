@@ -383,8 +383,16 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderData = (volumes: ExtendedVolume[]) => {
+  renderTags = (tags: string[]) => {
     const { classes } = this.props;
+    return (
+      <div className={classes.tagWrapper}>
+        <Tags tags={tags} />
+      </div>
+    )
+  }
+
+  renderData = (volumes: ExtendedVolume[]) => {
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
 
     return volumes.map((volume) => {
@@ -402,7 +410,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return isVolumeUpdating(volume.recentEvent)
         ? (
           <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
-            <TableCell data-qa-volume-cell-label>{label}</TableCell>
+            <TableCell data-qa-volume-cell-label>
+              {label}
+              {this.renderTags(volume.tags)}
+            </TableCell>
             <TableCell colSpan={5}>
               <LinearProgress value={progressFromEvent(volume.recentEvent)} />
             </TableCell>
@@ -410,14 +421,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         )
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-            <TableCell parentColumn="Label" data-qa-volume-cell-label>{volume.label}</TableCell>
+            <TableCell parentColumn="Label" data-qa-volume-cell-label>
+              {volume.label}
+              {this.renderTags(volume.tags)}
+            </TableCell>
             {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
               {volume.linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {volume.linodeLabel}
-                  <div className={classes.tagWrapper}>
-                    <Tags tags={volume.tags} />
-                  </div>
                 </Link>
               }</TableCell>}
             <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
