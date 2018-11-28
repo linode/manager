@@ -29,11 +29,10 @@ import { generateInFilter, resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
-import { openForClone, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
-import VolumeConfigDrawer from './VolumeConfigDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
 import WithEvents from './WithEvents';
 
@@ -117,14 +116,10 @@ interface DispatchProps {
   openForResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
   openForClone: (volumeId: number, volumeLabel: string, volumeSize: number, volumeRegion: string) => void;
   openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => void;
+  openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
 interface State {
-  configDrawer: {
-    open: boolean;
-    volumePath?: string;
-    volumeLabel?: string;
-  };
   attachmentDrawer: {
     open: boolean;
     volumeID?: number;
@@ -167,9 +162,6 @@ const RenderTags = withStyles(tagStyles)(RenderTagsBase);
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    configDrawer: {
-      open: false,
-    },
     attachmentDrawer: {
       open: false,
     },
@@ -200,22 +192,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  handleCloseConfigDrawer = () => {
-    this.setState({ configDrawer: { open: false } });
-  }
-
   handleCloseAttachDrawer = () => {
     this.setState({ attachmentDrawer: { open: false } });
-  }
-
-  handleShowConfig = (volumePath: string, volumeLabel: string) => {
-    this.setState({
-      configDrawer: {
-        open: true,
-        volumePath,
-        volumeLabel,
-      }
-    })
   }
 
   handleAttach = (
@@ -315,12 +293,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           pageSize={pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
-        />
-        <VolumeConfigDrawer
-          open={this.state.configDrawer.open}
-          onClose={this.handleCloseConfigDrawer}
-          volumePath={this.state.configDrawer.volumePath}
-          volumeLabel={this.state.configDrawer.volumeLabel}
         />
         <VolumeAttachmentDrawer
           open={this.state.attachmentDrawer.open}
@@ -450,7 +422,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
             <TableCell>
               <VolumesActionMenu
-                onShowConfig={this.handleShowConfig}
+                onShowConfig={this.props.openForConfig}
                 filesystemPath={filesystemPath}
                 linodeLabel={volume.linodeLabel}
                 regionID={regionID}
@@ -541,7 +513,7 @@ const progressFromEvent = (e?: Linode.Event) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForEdit, openForResize, openForClone, openForCreating },
+  { openForEdit, openForResize, openForClone, openForCreating, openForConfig },
   dispatch,
 );
 

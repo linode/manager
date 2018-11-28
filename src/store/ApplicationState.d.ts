@@ -27,9 +27,11 @@ declare interface VolumeDrawerState {
   volumeRegion?: string;
   volumeSize?: number;
   volumeTags?: string[];
+  volumePath?: string;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
+  message?: string;
 }
 
 declare interface SidebarState {
