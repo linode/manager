@@ -526,6 +526,9 @@ const themeDefaults: ThemeOptions = {
         '&$error': {
           color: '#555',
         },
+        '&$disabled': {
+          color: '#555',
+        },
       },
     },
     MuiFormHelperText: {
