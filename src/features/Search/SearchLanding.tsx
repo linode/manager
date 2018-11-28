@@ -139,7 +139,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
       <Grid container direction="column" >
         <Grid item>
           <Typography variant="headline" className={classes.headline}>
-            Search Results{ query && `for "${query}"` }
+            Search Results { query && `for "${query}"` }
           </Typography>
         </Grid>
         {error &&
