@@ -10,6 +10,7 @@ namespace Linode {
     updated: string;
     filesystem_path: string;
     recentEvent?: Linode.Event;
+    tags: string[];
   }
 
   export type VolumeStatus =

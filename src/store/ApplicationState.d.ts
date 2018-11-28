@@ -26,6 +26,7 @@ declare interface VolumeDrawerState {
   volumeLabel?: string;
   volumeRegion?: string;
   volumeSize?: number;
+  volumeTags?: string[];
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;

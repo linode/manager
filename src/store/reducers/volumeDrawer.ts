@@ -48,10 +48,11 @@ interface Editing extends Action {
   type: typeof EDITING;
   volumeId: number;
   volumeLabel: string;
+  volumeTags: string[];
 }
 
-export const openForEdit = (volumeId: number, volumeLabel: string): Editing =>
-  ({ type: EDITING, volumeId, volumeLabel });
+export const openForEdit = (volumeId: number, volumeLabel: string, volumeTags: string[]): Editing =>
+  ({ type: EDITING, volumeId, volumeLabel, volumeTags });
 
 interface Resizing extends Action {
   type: typeof RESIZING;
@@ -150,6 +151,7 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         mode: modes.EDITING,
         volumeId: action.volumeId,
         volumeLabel: action.volumeLabel,
+        volumeTags: action.volumeTags,
       };
 
     case RESIZING:

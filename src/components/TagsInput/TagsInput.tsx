@@ -1,12 +1,8 @@
-import * as React from 'react';
-
 import { concat } from 'ramda';
-
+import * as React from 'react';
 import Select, { Item, NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
-
 import { getTags } from 'src/services/tags';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
 
 export interface Tag {
   value: string;
@@ -19,12 +15,18 @@ export interface State {
 }
 
 export interface Props {
+  label?: string;
+  name?: string;
   tagError?: string;
   value: Item[];
   onChange: (selected: Item[]) => void;
 }
 
 class TagsInput extends React.Component<Props, State> {
+  static defaultProps = {
+    label: "Add Tags" ,
+    name: 'tags'
+  }
   createTag = (inputValue:string) => {
     const { value, onChange } = this.props;
     const newTag = { value: inputValue, label: inputValue };
@@ -66,17 +68,19 @@ class TagsInput extends React.Component<Props, State> {
   }
 
   render() {
+    const { tagError, onChange, value, name, label } = this.props;
     const { accountTags, errors } = this.state;
+
     const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
-    // Label refers to the tag label, not the Linode label
     const labelError = hasErrorFor('label');
     const generalError = hasErrorFor('none');
-    const { tagError, onChange, value } = this.props;
+
     return (
       <Select
+        name={name}
         variant='creatable'
         isMulti={true}
-        label={"Add Tags"}
+        label={label}
         options={accountTags}
         placeholder={"Type to choose or create a tag."}
         errorText={labelError || tagError || generalError}

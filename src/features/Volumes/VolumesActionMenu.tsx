@@ -8,6 +8,7 @@ interface Props {
   onEdit: (
     volumeId: number,
     volumeLabel: string,
+    volumeTags: string[],
   ) => void;
   onResize: (
     volumeId: number,
@@ -34,6 +35,7 @@ interface Props {
   linodeLabel: string;
   regionID: string;
   volumeID: number;
+  volumeTags: string[];
   size: number;
 }
 
@@ -49,9 +51,10 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
     const {
       volumeID,
       label,
+      volumeTags,
       onEdit
     } = this.props;
-    onEdit(volumeID, label)
+    onEdit(volumeID, label, volumeTags)
   }
 
   handleResize = () => {
@@ -118,7 +121,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
           },
         },
         {
-          title: 'Edit Label',
+          title: 'Edit Volume',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleOpenEdit();
             closeMenu();

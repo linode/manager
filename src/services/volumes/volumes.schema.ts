@@ -1,5 +1,5 @@
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { number, object, string } from 'yup';
+import { array, number, object, string } from 'yup';
 
 const createSizeValidation = (minSize: number = 10) =>
   number()
@@ -23,7 +23,8 @@ export const CreateVolumeSchema = object({
     .trim()
     .min(1, "Label must be between 1 and 32 characters.")
     .max(32, "Label must be 32 characters or less."),
-  config_id: number().typeError("Config ID must be a number.")
+  config_id: number().typeError("Config ID must be a number."),
+  tags: array().of(string())
 });
 
 export const CloneVolumeSchema = object({

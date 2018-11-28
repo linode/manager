@@ -7,7 +7,7 @@ import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
-import RenameVolumeForm from './RenameVolumeForm';
+import EditVolumeForm from './EditVolumeForm';
 import ResizeVolumeForm from './ResizeVolumeForm';
 
 export const modes = {
@@ -37,6 +37,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeLabel,
       volumeRegion,
       volumeSize,
+      volumeTags,
     } = this.props;
 
     return (
@@ -46,8 +47,13 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           <CreateVolumeForm onClose={actions.closeDrawer} />
         }
         {
-          mode === modes.EDITING && volumeId !== undefined && volumeLabel !== undefined &&
-          <RenameVolumeForm volumeId={volumeId} volumeLabel={volumeLabel} onClose={actions.closeDrawer} />
+          mode === modes.EDITING && volumeId !== undefined && volumeLabel !== undefined && volumeTags !== undefined &&
+          <EditVolumeForm
+            volumeId={volumeId}
+            volumeLabel={volumeLabel}
+            onClose={actions.closeDrawer}
+            volumeTags={volumeTags.map(v => ({ label: v, value: v }))}
+          />
         }
         {
           mode === modes.RESIZING && volumeId !== undefined && volumeSize !== undefined &&
@@ -118,6 +124,7 @@ interface StateProps {
   volumeLabel?: string;
   volumeRegion?: string;
   volumeSize?: number;
+  volumeTags?: string[];
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
@@ -133,6 +140,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeLabel,
     volumeRegion,
     volumeSize,
+    volumeTags,
   } = state.volumeDrawer;
 
   return {
@@ -146,6 +154,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeLabel,
     volumeRegion,
     volumeSize,
+    volumeTags,
   }
 };
 

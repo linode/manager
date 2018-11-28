@@ -11,6 +11,7 @@ export interface VolumeRequestPayload {
   region?: string,
   linode_id?: number,
   config_id?: number,
+  tags?: string[],
 };
 
 /**
@@ -138,10 +139,10 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
  * Detaches a Volume on your account from a Linode on your account.
  *
  * @param volumeId { number } The Volume to be updated.
- * @param data { { label: string } } The updated label for this Volume.
+ * @param data { { label: string; tags: string[] } } The updated label for this Volume.
  *
  */
-export const updateVolume = (volumeId: number, data: { label: string }) => Request<Volume>(
+export const updateVolume = (volumeId: number, data: { label: string, tags?: string[] }) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
   setData(data, UpdateVolumeSchema),
