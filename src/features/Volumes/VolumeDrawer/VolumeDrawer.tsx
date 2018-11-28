@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
 import Drawer from 'src/components/Drawer';
 import { close } from 'src/store/reducers/volumeDrawer';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
@@ -9,6 +8,7 @@ import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
 import EditVolumeForm from './EditVolumeForm';
 import ResizeVolumeForm from './ResizeVolumeForm';
+import VolumeConfigForm from './VolumeConfigForm';
 
 export const modes = {
   CLOSED: 'closed',
@@ -18,6 +18,7 @@ export const modes = {
   CLONING: 'cloning',
   EDITING: 'editing',
   ATTACHING: 'attaching',
+  VIEWING_CONFIG: 'viewing_config',
 };
 
 type CombinedProps = StateProps & DispatchProps
@@ -38,6 +39,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeRegion,
       volumeSize,
       volumeTags,
+      volumePath,
     } = this.props;
 
     return (
@@ -99,6 +101,17 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             onClose={actions.closeDrawer}
           />
         }
+        {
+          mode === modes.VIEWING_CONFIG
+          && volumeLabel !== undefined
+          && volumePath !== undefined
+          &&
+          <VolumeConfigForm
+            volumeLabel={volumeLabel}
+            volumePath={volumePath}
+            onClose={actions.closeDrawer}
+          />
+        }
       </Drawer>
     );
   }
@@ -125,6 +138,7 @@ interface StateProps {
   volumeRegion?: string;
   volumeSize?: number;
   volumeTags?: string[];
+  volumePath?: string;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
@@ -141,6 +155,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeRegion,
     volumeSize,
     volumeTags,
+    volumePath,
   } = state.volumeDrawer;
 
   return {
@@ -155,6 +170,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeRegion,
     volumeSize,
     volumeTags,
+    volumePath,
   }
 };
 
@@ -179,6 +195,9 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
     case modes.ATTACHING:
       return `Attach volume to ${linodeLabel}`;
+
+    case modes.VIEWING_CONFIG:
+      return `Volume Configuration`;
 
     default:
       return '';

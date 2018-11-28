@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onShowConfig: (path: string, label: string) => void;
+  onShowConfig: (volumeLabel: string, volumePath: string) => void;
   onEdit: (
     volumeId: number,
     volumeLabel: string,
@@ -44,7 +44,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 class VolumesActionMenu extends React.Component<CombinedProps> {
   handleShowConfig = () => {
     const { onShowConfig, label, filesystemPath } = this.props;
-    onShowConfig(filesystemPath, label)
+    onShowConfig(label, filesystemPath);
   }
 
   handleOpenEdit = () => {
