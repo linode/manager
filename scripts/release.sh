@@ -10,7 +10,6 @@ if [[ -z $GET_ORIGIN ]]; then
 fi
 set -- $GET_ORIGIN
 ORIGIN=$1
-git fetch $ORIGIN
 
 #Create release branch
 git fetch $ORIGIN
