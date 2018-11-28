@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   poolUsageProgress: {
-    marginRight: theme.spacing.unit * 4,
+    marginRight: theme.spacing.unit * 3,
     height: 'auto',
   },
   circleChildren: {
@@ -60,7 +60,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     fontFamily: 'LatoWebBold',
     color: theme.color.headline,
   },
-  quota: {},
+  quota: {
+    marginTop: theme.spacing.unit,
+  },
   initialLoader: {
     minHeight: 150,
     display: 'flex',
