@@ -24,7 +24,7 @@ const MultiValueContainer: React.StatelessComponent<CombinedProps> = (props) => 
     ...rest
   } = props;
 
-  const updatedProps: MultiValueGenericProps<any> = {
+  const updatedProps = {
     ...rest,
     innerProps: restInnerProps,
   };
