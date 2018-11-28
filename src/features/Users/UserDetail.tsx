@@ -1,15 +1,13 @@
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import { clone, compose, path as pathRamda, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
+import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
-import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -40,10 +38,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     animation: 'fadeIn 150ms linear forwards',
   },
   emptyImage: {
-    margin: '0 8px 0 -4px',
-    display: 'inline',
-    width: 46,
-    height: 46,
+    width: 42,
+    height: 49,
   },
   titleWrapper: {
     display: 'flex',
@@ -186,7 +182,7 @@ class UserDetail extends React.Component<CombinedProps> {
         })
 
         /**
-         * If the user we updated is the current user, we need to reflec that change at the global level.
+         * If the user we updated is the current user, we need to reflect that change at the global level.
          */
         if (profileUsername === originalUsername) {
           updateCurrentUser(user);
@@ -248,9 +244,15 @@ class UserDetail extends React.Component<CombinedProps> {
     if (error) {
       return (
         <React.Fragment>
-          <IconButton onClick={this.visitUsers} className={classes.backButton}>
-            <KeyboardArrowLeft />
-          </IconButton>
+          <Grid container justify="space-between">
+            <Grid item className={classes.titleWrapper}>
+              <Breadcrumb
+                linkTo="/account/users"
+                linkText="Users"
+                labelTitle={username || ''}
+              />
+            </Grid>
+          </Grid>
           <ErrorState
             errorText="There was an error retrieving the user data. Please reload and try again."
           />
@@ -258,26 +260,26 @@ class UserDetail extends React.Component<CombinedProps> {
       );
     }
 
+    const maybeGravatar = gravatarUrl === undefined
+      ? <div className={classes.emptyImage} />
+      : gravatarUrl === 'not found'
+        ? <UserIcon className={classes.avatar} />
+        : <img
+            alt={`user ${username}'s avatar`}
+            src={gravatarUrl}
+            className={classes.avatar}
+          />;
+
     return (
       <React.Fragment>
         <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
-            <IconButton onClick={this.visitUsers} className={classes.backButton} data-qa-back-button>
-              <KeyboardArrowLeft />
-            </IconButton>
-            {gravatarUrl === undefined
-              ? <div className={classes.emptyImage} />
-              : gravatarUrl === 'not found'
-                ? <UserIcon className={classes.avatar} />
-                : <img
-                  alt={`user ${username}'s avatar`}
-                  src={gravatarUrl}
-                  className={classes.avatar}
-                />
-            }
-            <Typography role="header" variant="headline" data-qa-user-detail-header>
-              {username}
-            </Typography>
+            <Breadcrumb
+              linkTo="/account/users"
+              linkText="Users"
+              labelTitle={username}
+              labelOptions={{ prefixComponent: maybeGravatar }}
+            />
           </Grid>
         </Grid>
         <AppBar position="static" color="default">

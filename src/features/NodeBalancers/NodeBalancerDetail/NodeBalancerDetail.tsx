@@ -176,7 +176,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               linkTo="/nodebalancers"
               linkText="NodeBalancers"
               labelTitle={nodeBalancerLabel}
-              labelLink={this.getLabelLink()}
+              labelOptions={{ linkTo: this.getLabelLink() }}
               onEditHandlers={{
                 onEdit: this.updateLabel,
                 onCancel: this.cancelUpdate,
