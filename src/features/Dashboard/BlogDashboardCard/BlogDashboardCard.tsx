@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import { decode } from 'he';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -25,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface BlogItem {
+export interface BlogItem {
   description: string;
   link: string;
   title: string;
@@ -39,7 +40,7 @@ interface State {
 
 type CombinedProps = WithStyles<ClassNames>;
 
-class BlogDashboardCard extends React.Component<CombinedProps, State> {
+export class BlogDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
     items: [],
     loading: true,
@@ -80,16 +81,13 @@ class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderItem = (item: BlogItem, idx: number) => {
     const { classes } = this.props;
 
-    /*
-     * simple fix. Sometimes the description would come back with [&#8230;]
-     * instead of an ellipses
-     */
-    const cleanedDescription = item.description.replace(' [&#8230;]', '...');
+    const cleanedDescription = decode(item.description);
+    const cleanedTitle = decode(item.title);
 
     return (
       <Paper key={idx} className={classes.root}>
         <Typography variant="subheading" className={classes.itemTitle}>
-          <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{item.title}</a>
+          <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{cleanedTitle}</a>
         </Typography>
         <Typography variant="body1" data-qa-post-desc>
           {cleanedDescription}

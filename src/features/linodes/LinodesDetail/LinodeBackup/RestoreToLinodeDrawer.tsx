@@ -151,10 +151,10 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
             inputProps={{ name: 'linode', id: 'linode' }}
             error={Boolean(linodeError)}
           >
-            <MenuItem value="none" disabled>Select a Linode</MenuItem>
+            <MenuItem value="none" disabled className="placeholder">Select a Linode</MenuItem>
             {
               linodes && linodes.map((l) => {
-                return <MenuItem key={l[0]} value={l[0]}>{l[1]}</MenuItem>;
+                return <MenuItem data-qa-restore-options key={l[0]} value={l[0]}>{l[1]}</MenuItem>;
               })
             }
           </Select>
@@ -179,10 +179,11 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
             variant="raised"
             color="primary"
             onClick={this.restoreToLinode}
+            data-qa-restore-submit
           >
             Restore
           </Button>
-          <Button onClick={this.handleCloseDrawer}>Cancel</Button>
+          <Button data-qa-restore-cancel onClick={this.handleCloseDrawer}>Cancel</Button>
         </ActionsPanel>
       </Drawer>
     );

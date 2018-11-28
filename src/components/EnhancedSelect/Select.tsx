@@ -29,6 +29,11 @@ type ClassNames = 'root'
 | 'selectedMenuItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     width: '100%',
     position: 'relative',
@@ -140,6 +145,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: '40px',
       height: '40px',
     },
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
   suggestionTitle: {
     fontSize: '1rem',
@@ -164,24 +175,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     }
   },
   selectedMenuItem: {
+    ...theme.animateCircleIcon,
     backgroundColor: `${theme.bg.main} !important`,
-    '& .circle': {
-      transition: theme.transitions.create(['fill']),
-      fill: theme.palette.primary.main,
-    },
-    '& .outerCircle': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: '#2967B1',
-    },
-    '& .insidePath *': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: 'white',
-    },
   },
 });
 
-export interface Item {
-  value: string | number;
+export interface Item<T = string | number> {
+  value: T;
   label: string;
   data?: any;
 }

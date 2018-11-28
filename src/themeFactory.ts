@@ -40,8 +40,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface Theme {
     name: string;
     '@keyframes rotate': any;
+    '@keyframes dash': any;
     bg: any;
     color: any;
+    animateCircleIcon?: any;
     notificationList: any;
     status: any;
   }
@@ -49,14 +51,14 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface ThemeOptions {
     name?: string;
     '@keyframes rotate'?: any;
+    '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    animateCircleIcon?: any;
     notificationList?: any;
     status?: any;
   }
 }
-
-
 
 const breakpoints = createBreakpoints({});
 
@@ -68,6 +70,23 @@ const primaryColors = {
   headline: '#32363C',
   divider: '#f4f4f4',
   offBlack: '#444',
+}
+
+const iconCircleAnimation = {
+  '& .circle': {
+    fill: primaryColors.main,
+    transition: 'fill .2s ease-in-out .2s',
+  },
+  '& .outerCircle': {
+    stroke: primaryColors.dark,
+    strokeDasharray: 1000,
+    strokeDashoffset: 1000,
+    animation: 'dash 2s linear forwards',
+  },
+  '& .insidePath *': {
+    transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white',
+  },
 }
 
 const themeDefaults: ThemeOptions = {
@@ -107,6 +126,11 @@ const themeDefaults: ThemeOptions = {
       transform: 'rotate(360deg)',
     },
   },
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   bg: {
     main: '#f4f4f4',
     offWhite: '#fbfbfb',
@@ -137,6 +161,9 @@ const themeDefaults: ThemeOptions = {
     blueDTwhite: '#3683DC',
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
+  },
+  animateCircleIcon: {
+    ...iconCircleAnimation,
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
@@ -335,9 +362,20 @@ const themeDefaults: ThemeOptions = {
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',
-        height: 24,
+        height: 20,
+        display: 'inline-flex',
+        alignItems: 'center',
         borderRadius: 4,
+        marginTop: 2,
+        marginBottom: 2,
+        marginRight: 4,
+        paddingLeft: 2,
+        paddingRight: 2,
         color: '#555',
+        fontSize: '.8rem',
+        '&:last-child': {
+          marginRight: 0
+        },
         '&:hover': {
           '& $deleteIcon': {
             color: primaryColors.text,
@@ -347,8 +385,8 @@ const themeDefaults: ThemeOptions = {
       label: {
         paddingLeft: 4,
         paddingRight: 4,
-        fontSize: '.9rem',
         position: 'relative',
+        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
@@ -700,6 +738,9 @@ const themeDefaults: ThemeOptions = {
         '& em': {
           fontStyle: 'normal !important',
         },
+        '&.placeholder': {
+          display: 'none'
+        }
       },
       selected: {
         backgroundColor: 'white !important',

@@ -132,7 +132,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
             <Typography variant="body1">
               Three backup slots are executed and rotated automatically: a daily backup,
               a 2-7 day old backup, and an 8-14 day old backup. Confirm to add backups
-              to <strong>{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
+              to <strong data-qa-backup-count >{linodeCount}</strong> {linodeCount > 1 ? 'Linodes' : 'Linode'}.
             </Typography>
           </Grid>
           {enableErrors && !isEmpty(enableErrors) &&

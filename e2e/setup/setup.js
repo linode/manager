@@ -115,7 +115,7 @@ exports.removeAllLinodes = token => {
     });
 }
 
-exports.createLinode = (token, password, linodeLabel, tags) => {
+exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
 
@@ -123,9 +123,9 @@ exports.createLinode = (token, password, linodeLabel, tags) => {
             backups_enabled: false,
             booted: true,
             image: 'linode/debian9',
-            region: 'us-east',
+            region: !region ? 'us-east' : region,
             root_pass: password,
-            type: 'g6-standard-1'
+            type: !type ? 'g6-nanode-1' : type
         }
 
         if (linodeLabel !== false) {
@@ -391,6 +391,34 @@ exports.updateUserProfile = (token, profileData) => {
 
         return getAxiosInstance(token)
             .put(endpoint,profileData)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error", error);
+                reject(error);
+            });
+    });
+}
+
+exports.putGlobalSetting = (token, settingsData) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/account/settings';
+
+        return getAxiosInstance(token)
+            .put(endpoint,settingsData)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error("Error", error);
+                reject(error);
+            });
+    });
+}
+
+exports.getGlobalSettings = (token) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/account/settings';
+
+        return getAxiosInstance(token)
+            .get(endpoint)
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error("Error", error);

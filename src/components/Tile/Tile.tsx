@@ -13,6 +13,11 @@ type ClassNames = 'root'
   | 'tileTitle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {},
   card: {
     display: 'flex',
@@ -27,10 +32,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     transition: 'border-color 225ms ease-in-out',
     '&:hover': {
-      borderColor: theme.palette.primary.light,
       '& $icon': {
-        borderColor: theme.palette.primary.light,
+        ...theme.animateCircleIcon,
       },
+      '& svg': {
+        fill: theme.palette.primary.main,
+        transition: 'fill .2s ease-in-out .2s',
+      }
     },
     '& .tile-link::after': {
       content: "''",
@@ -50,14 +58,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   icon: {
     margin: '0 auto 16px',
     display: 'block',
-    padding: 16,
-    borderRadius: '50%',
-    border: `2px solid ${theme.palette.divider}`,
-    transition: 'border-color 225ms ease-in-out',
-    color: theme.palette.primary.main,
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
+    '& .insidePath': {
+      fill: 'none',
+      stroke: '#3683DC',
+      strokeWidth: 1.25,
+      strokeLinejoin: 'round',
+    },
     '& svg': {
-      width: 32,
-      height: 32,
+      width: 70,
+      height: 70,
+      fill: theme.bg.offWhiteDT,
     },
   },
 });

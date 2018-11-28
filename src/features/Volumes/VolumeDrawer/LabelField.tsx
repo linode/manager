@@ -1,0 +1,38 @@
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import TextField from 'src/components/TextField';
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  root: {},
+});
+
+interface Props {
+  onBlur: (e: any) => void;
+  onChange: (e: React.ChangeEvent<any>) => void;
+  error?: string;
+  value: string;
+  name: string;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const LabelField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, name }) => {
+  return (
+    <TextField
+      data-qa-volume-label
+      errorText={error}
+      label="Label"
+      name={name}
+      onBlur={onBlur}
+      onChange={onChange}
+      required
+      value={value}
+    />
+  );
+};
+
+const styled = withStyles(styles);
+
+export default styled(LabelField);

@@ -47,7 +47,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button type="primary" className={classes.button} onClick={openBackupsDrawer}>Enable Now</Button>
+          <Button data-qa-backup-existing type="primary" className={classes.button} onClick={openBackupsDrawer}>Enable Now</Button>
         </Grid>
       </Grid>
 

@@ -23,21 +23,18 @@ type ClassNames = 'root'
 | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  '@keyframes dash': {
-    to: {
-      'stroke-dashoffset': 0,
-    },
-  },
+  transition: theme.transitions.create(['background-color']),
   root: {
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
     width: '100%',
     cursor: 'pointer',
     '&:hover': {
-      // uncomment the below after https://github.com/linode/manager/pull/4124 is merged
-      // ...theme.animateCircleIcon,
       '& $rowContent': {
         background: theme.bg.tableHeader,
+        '&:before': {
+          backgroundColor: theme.palette.primary.main,
+        }
       }
     },  
   },
@@ -51,6 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     top: 1,
     width: 40,
     height: 40,
+    marginLeft: 5,
     '& .circle': {
       fill: theme.bg.offWhiteDT,
     },
@@ -62,15 +60,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '100%',
   },
   rowContent: {
+    position: 'relative',
     background: theme.bg.white,
     width: '100%',
     padding: 10,
     borderTop: `2px solid ${theme.palette.divider}`,
     transition: 'background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    '&:before': {
+      content: "''",
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '0.01%',
+      height: '100%',
+      backgroundColor: 'transparent',
+      transition: theme.transitions.create(['background-color']),
+      paddingLeft: 5,
+    },
   },
   tableCell: {
     display: 'flex',
     alignItems: 'center',
+    padding: '4px 8px !important',
   },
   tag: {
     margin: theme.spacing.unit / 2,
@@ -107,7 +118,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
             <Grid item className={classes.tableCell}>
               <Icon className={classes.icon} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.tableCell}>
               <Grid
                 container
                 direction="row"
@@ -124,7 +135,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
                   {result.data.tags.map((tag: string, idx: number) =>
                     <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} data-qa-tag-item />
                   )}
-                </Grid>
+                 </Grid>
               </Grid>
             </Grid>
           </Grid>

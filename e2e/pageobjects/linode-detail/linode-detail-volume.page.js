@@ -31,8 +31,8 @@ export class VolumeDetail extends Page {
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
     get copyToolTips() { return $$('[data-qa-copy-tooltip]'); }
     get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
-    get volumePrice() { return $('[qa-data-price]'); }
-    get volumePriceBillingInterval() { return $('[qa-data-billing-interval]'); }
+    get volumePrice() { return $(this.drawerPrice.selector); }
+    get volumePriceBillingInterval() { return $(this.drawerBillingInterval.selector); }
 
     volAttachedToLinode(linodeLabel) {
         browser.waitUntil(function() {
