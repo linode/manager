@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-
 import Drawer from 'src/components/Drawer';
-import { close } from 'src/store/reducers/volumeDrawer';
+import { close, openForConfig } from 'src/store/reducers/volumeDrawer';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
 import EditVolumeForm from './EditVolumeForm';
 import ResizeVolumeForm from './ResizeVolumeForm';
+import VolumeConfigForm from './VolumeConfigForm';
 
 export const modes = {
   CLOSED: 'closed',
@@ -18,6 +18,7 @@ export const modes = {
   CLONING: 'cloning',
   EDITING: 'editing',
   ATTACHING: 'attaching',
+  VIEWING_CONFIG: 'viewing_config',
 };
 
 type CombinedProps = StateProps & DispatchProps
@@ -38,13 +39,15 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeRegion,
       volumeSize,
       volumeTags,
+      volumePath,
+      message,
     } = this.props;
 
     return (
       <Drawer open={isOpen} title={drawerTitle} onClose={actions.closeDrawer}>
         {
           mode === modes.CREATING &&
-          <CreateVolumeForm onClose={actions.closeDrawer} />
+          <CreateVolumeForm onClose={actions.closeDrawer} onSuccess={actions.openForConfig} />
         }
         {
           mode === modes.EDITING && volumeId !== undefined && volumeLabel !== undefined && volumeTags !== undefined &&
@@ -83,6 +86,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             linodeId={linodeId}
             linodeLabel={linodeLabel}
             linodeRegion={linodeRegion}
+            onSuccess={actions.openForConfig}
             onClose={actions.closeDrawer}
           />
         }
@@ -99,6 +103,18 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             onClose={actions.closeDrawer}
           />
         }
+        {
+          mode === modes.VIEWING_CONFIG
+          && volumeLabel !== undefined
+          && volumePath !== undefined
+          &&
+          <VolumeConfigForm
+            volumeLabel={volumeLabel}
+            volumePath={volumePath}
+            message={message}
+            onClose={actions.closeDrawer}
+          />
+        }
       </Drawer>
     );
   }
@@ -107,12 +123,14 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
 interface DispatchProps {
   actions: {
     closeDrawer: () => void;
+    openForConfig: (volumeLabel: string, volumePath: string, message?: string) => void;
   }
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
     closeDrawer: () => dispatch(close()),
+    openForConfig: (volumeLabel: string, volumePath: string, message?: string) => dispatch(openForConfig(volumeLabel, volumePath, message)),
   },
 });
 
@@ -125,9 +143,11 @@ interface StateProps {
   volumeRegion?: string;
   volumeSize?: number;
   volumeTags?: string[];
+  volumePath?: string;
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
+  message?: string;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
@@ -141,6 +161,8 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeRegion,
     volumeSize,
     volumeTags,
+    volumePath,
+    message,
   } = state.volumeDrawer;
 
   return {
@@ -155,6 +177,8 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeRegion,
     volumeSize,
     volumeTags,
+    volumePath,
+    message,
   }
 };
 
@@ -179,6 +203,9 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
     case modes.ATTACHING:
       return `Attach volume to ${linodeLabel}`;
+
+    case modes.VIEWING_CONFIG:
+      return `Volume Configuration`;
 
     default:
       return '';

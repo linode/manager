@@ -8,6 +8,7 @@ const EDITING = '@@manager/volumeDrawer/EDITING';
 const RESIZING = '@@manager/volumeDrawer/RESIZING';
 const CLONING = '@@manager/volumeDrawer/CLONING';
 const ATTACHING = '@@manager/volumeDrawer/ATTACHING';
+const VIEWING_CONFIG = '@@manager/volumeDrawer/VIEWING_CONFIG';
 
 interface Close extends Action {
   type: typeof CLOSE;
@@ -106,6 +107,26 @@ export const openForAttaching = (
   });
 };
 
+interface ViewingConfig extends Action {
+  type: typeof VIEWING_CONFIG;
+  volumeLabel: string;
+  volumePath: string;
+  message?: string;
+}
+
+export const openForConfig = (
+  volumeLabel: string,
+  volumePath: string,
+  message?: string,
+): ViewingConfig => {
+  return ({
+    type: VIEWING_CONFIG,
+    volumeLabel,
+    volumePath,
+    message,
+  });
+};
+
 export const defaultState: ApplicationState['volumeDrawer'] = {
   mode: modes.CLOSED,
   volumeLabel: undefined,
@@ -120,7 +141,8 @@ type ActionTypes =
   | Creating
   | CreatingForLinode
   | Editing
-  | Resizing;
+  | Resizing
+  | ViewingConfig;
 
 export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
   switch (action.type) {
@@ -180,6 +202,15 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         linodeRegion: action.linodeRegion,
         linodeLabel: action.linodeLabel,
         mode: modes.ATTACHING,
+      };
+
+      case VIEWING_CONFIG:
+      return {
+        ...defaultState,
+        volumeLabel: action.volumeLabel,
+        volumePath: action.volumePath,
+        message: action.message,
+        mode: modes.VIEWING_CONFIG,
       };
 
     default:
