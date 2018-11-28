@@ -125,14 +125,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   suggestionRoot: {
     cursor: 'pointer',
-    display: 'flex',
     width: 'calc(100% + 2px)',
     alignItems: 'space-between',
     justifyContent: 'space-between',
     borderBottom: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.up('md')]: {
+     display: 'flex',
+    },
     '&:last-child': {
       borderBottom: 0,
-    }
+    },
   },
   highlight: {
     color: theme.palette.primary.main,
