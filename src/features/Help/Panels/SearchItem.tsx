@@ -68,7 +68,7 @@ const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
           <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
           {!isFinal && <Arrow className={classes.icon} />}
         </div>
-        {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
+        {!isFinal && <Typography variant="body1" className={classes.source}>{source}</Typography>}
       </ListItem>
     </React.Fragment>
   );
