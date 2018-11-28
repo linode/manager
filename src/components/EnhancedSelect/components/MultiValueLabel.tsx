@@ -3,15 +3,19 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'label';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   const rootMuiChipStyles = path(['overrides', 'MuiChip', 'root'], theme);
+  const rootMuiChipStylesLabel = path(['overrides', 'MuiChip', 'label'], theme);
 
   return {
     root: {
       ...rootMuiChipStyles,
     },
+    label: {
+      ...rootMuiChipStylesLabel
+    }
   }
 };
 
@@ -33,7 +37,9 @@ const MultiValueLabel: React.StatelessComponent<CombinedProps> = (props) => {
   };
 
   return (
-    <div {...updatedProps} className={classes.root} data-qa-multi-option={props.children} />
+    <div {...updatedProps} className={classes.root} data-qa-multi-option={props.children}>
+      <span className={classes.label}>{props.children}</span>
+    </div>
   );
 };
 
