@@ -1,5 +1,6 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { components as reactSelectComponents } from 'react-select';
 import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
 
 type ClassNames = 'root';
@@ -29,7 +30,9 @@ const MultiValueLabel: React.StatelessComponent<CombinedProps> = (props) => {
   };
 
   return (
-    <div {...updatedProps} className={classes.root} data-qa-multi-option={props.children} />
+    <div data-qa-multi-option={props.children}>
+      <reactSelectComponents.MultiValueLabel {...updatedProps} className={classes.root} />
+    </div>
   );
 };
 
