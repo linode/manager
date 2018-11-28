@@ -149,6 +149,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
+    wordBreak: 'break-all',
   },
   suggestionDescription: {
     color: theme.color.headline,
@@ -162,7 +163,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   tagContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    flexWrap: 'wrap',
+    paddingRight: 8,
+    justifyContent: 'flex-end',
     alignItems: 'center',
     '& > div': {
       margin: '2px',
