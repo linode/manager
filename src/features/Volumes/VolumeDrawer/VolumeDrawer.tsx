@@ -40,6 +40,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeSize,
       volumeTags,
       volumePath,
+      message,
     } = this.props;
 
     return (
@@ -110,6 +111,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           <VolumeConfigForm
             volumeLabel={volumeLabel}
             volumePath={volumePath}
+            message={message}
             onClose={actions.closeDrawer}
           />
         }
@@ -121,14 +123,14 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
 interface DispatchProps {
   actions: {
     closeDrawer: () => void;
-    openForConfig: (volumeLabel: string, volumePath: string) => void;
+    openForConfig: (volumeLabel: string, volumePath: string, message?: string) => void;
   }
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
     closeDrawer: () => dispatch(close()),
-    openForConfig: (volumeLabel: string, volumePath: string) => dispatch(openForConfig(volumeLabel, volumePath)),
+    openForConfig: (volumeLabel: string, volumePath: string, message?: string) => dispatch(openForConfig(volumeLabel, volumePath, message)),
   },
 });
 
@@ -145,6 +147,7 @@ interface StateProps {
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
+  message?: string;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
@@ -159,6 +162,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeSize,
     volumeTags,
     volumePath,
+    message,
   } = state.volumeDrawer;
 
   return {
@@ -174,6 +178,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
     volumeSize,
     volumeTags,
     volumePath,
+    message,
   }
 };
 

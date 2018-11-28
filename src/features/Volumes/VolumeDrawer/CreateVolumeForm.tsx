@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   onClose: () => void;
-  onSuccess: (volumeLabel: string, volumePath: string) => void;
+  onSuccess: (volumeLabel: string, volumePath: string, message?: string) => void;
 }
 
 type CombinedProps =
@@ -57,7 +57,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             resetForm(initialValues);
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
-            onSuccess(label, filesystem_path);
+            onSuccess(label, filesystem_path, `Volume scheduled for creation.`);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;

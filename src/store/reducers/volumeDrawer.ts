@@ -111,16 +111,19 @@ interface ViewingConfig extends Action {
   type: typeof VIEWING_CONFIG;
   volumeLabel: string;
   volumePath: string;
+  message?: string;
 }
 
 export const openForConfig = (
   volumeLabel: string,
   volumePath: string,
+  message?: string,
 ): ViewingConfig => {
   return ({
     type: VIEWING_CONFIG,
     volumeLabel,
     volumePath,
+    message,
   });
 };
 
@@ -206,6 +209,7 @@ export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
         ...defaultState,
         volumeLabel: action.volumeLabel,
         volumePath: action.volumePath,
+        message: action.message,
         mode: modes.VIEWING_CONFIG,
       };
 

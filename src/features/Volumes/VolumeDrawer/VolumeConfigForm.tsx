@@ -4,6 +4,7 @@ import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CopyableTextField from '../CopyableTextField';
+import NoticePanel from './NoticePanel';
 
 type ClassNames = 'root'
   | 'copySection'
@@ -23,15 +24,19 @@ interface Props {
   volumePath: string;
   volumeLabel: string;
   onClose: () => void;
+  message?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, onClose } = props;
+  const { classes, message, onClose } = props;
 
   return (
     <React.Fragment>
+
+      {message && <NoticePanel success={message} />}
+
       <div className={classes.copySection}>
         <Typography variant="body1" data-qa-config-help-msg>
           To get started with a new volume, you'll want to create a filesystem on it:

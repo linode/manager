@@ -31,6 +31,7 @@ declare interface VolumeDrawerState {
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
+  message?: string;
 }
 
 declare interface SidebarState {

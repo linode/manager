@@ -32,7 +32,7 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeRegion: string;
-  onSuccess: (volumeLabel: string, volumePath: string) => void;
+  onSuccess: (volumeLabel: string, volumePath: string, message?: string) => void;
 }
 
 type CombinedProps =
@@ -47,7 +47,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
     <Formik
       initialValues={initialValues}
       validationSchema={CreateVolumeSchema}
-      onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {
+      onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         const { label, size, configId, tags } = values;
 
         setSubmitting(true);
@@ -63,11 +63,8 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           tags: tags.map(v => v.value),
         })
           .then(({ label: newLabel, filesystem_path }) => {
-            resetForm(initialValues);
-            setStatus({ success: `Volume scheduled for creation.` });
             resetEventsPolling();
-            setSubmitting(false);
-            onSuccess(newLabel, filesystem_path);
+            onSuccess(newLabel, filesystem_path, `Volume scheduled for creation.`);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
