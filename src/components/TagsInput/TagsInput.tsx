@@ -20,7 +20,6 @@ export interface Props {
   tagError?: string;
   value: Item[];
   onChange: (selected: Item[]) => void;
-  onBlur?: (e: any) => void;
 }
 
 class TagsInput extends React.Component<Props, State> {
