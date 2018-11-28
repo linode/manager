@@ -1,4 +1,4 @@
-import { filterMatched, getMatchingTags } from './SearchBar';
+import { filterMatched, getMatchingTags } from './utils';
 
 describe("getMatchingTags method", () => {
   it("should find all lowercase and uppercase matches", () => {
