@@ -14,6 +14,7 @@ const classes = {
   rowContent: '',
   tableCell: '',
   tag: '',
+  link: '',
 };
 
 const handleClick = jest.fn();

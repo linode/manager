@@ -13,7 +13,8 @@ import HiddenResults from './HiddenResults';
 import ResultRow from './ResultRow';
 
 type ClassNames = 'root'
-| 'entityHeadingWrapper';
+| 'entityHeadingWrapper'
+| 'entityHeading';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -23,8 +24,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   entityHeadingWrapper: {
     height: 'auto',
     padding: 10,
-    backgroundColor: theme.color.borderRow,
+    backgroundColor: theme.bg.tableHeader,
   },
+  entityHeading: {
+    color: theme.color.tableHeaderText,
+    fontSize: '0.9rem',
+    fontWeight: 500,
+    lineHeight: '0.9rem',
+  }
 });
 
 interface Props {
@@ -48,7 +55,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Grid item container direction="column" className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
-        <Typography variant="title" data-qa-entity-header>{capitalize(entity)}</Typography>
+        <Typography variant="title" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
       <List>
         {loading && <CircleProgress mini />}

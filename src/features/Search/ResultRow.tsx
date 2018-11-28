@@ -19,7 +19,8 @@ type ClassNames = 'root'
 | 'resultBody'
 | 'rowContent'
 | 'tableCell'
-| 'tag';
+| 'tag'
+| 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes dash': {
@@ -32,13 +33,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingBottom: '0 !important',
     width: '100%',
     cursor: 'pointer',
-    '&:focus': {
-      outline: '1px dotted #999',
-    },  
     '&:hover': {
       // uncomment the below after https://github.com/linode/manager/pull/4124 is merged
       // ...theme.animateCircleIcon,
-    },
+      '& $rowContent': {
+        background: theme.bg.tableHeader,
+      }
+    },  
   },
   description: {
   },
@@ -46,6 +47,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     wordBreak: 'break-all',
   },
   icon: {
+    position: 'relative',
+    top: 1,
     width: 40,
     height: 40,
     '& .circle': {
@@ -63,12 +66,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '100%',
     padding: 10,
     borderTop: `2px solid ${theme.palette.divider}`,
+    transition: 'background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
   },
   tableCell: {
+    display: 'flex',
+    alignItems: 'center',
   },
   tag: {
     margin: theme.spacing.unit / 2,
   },
+  link: {
+    display: 'block',
+  }
 });
 
 
@@ -93,37 +102,33 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
       className={classes.root}
       onClick={handleClick}
     >
-      <Paper className={classes.rowContent}>
-        <Grid container direction="row" alignItems="center" wrap="nowrap">
-          <Grid item className={classes.tableCell}>
-            <Icon className={classes.icon} />
-          </Grid>
-          <Grid item xs={12}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              justify="space-between"
-            >
-              <Grid item>
-                <Grid container direction="column"  justify="space-around">
-                  <Grid item className={`${classes.label} py0`}>
+    <Paper className={classes.rowContent}>
+          <Grid container direction="row" alignItems="center" wrap="nowrap">
+            <Grid item className={classes.tableCell}>
+              <Icon className={classes.icon} />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                justify="space-between"
+              >
+                <Grid item className={classes.label}>
+                  <a href="javascript:;" onClick={handleClick} className={classes.link} title={result.label}>
                     <Typography variant="subheading">{result.label}</Typography>
-                  </Grid>
-                  <Grid item className={`${classes.description} py0`}>
                     <Typography variant="body1">{result.data.description}</Typography>
-                  </Grid>
+                  </a>
                 </Grid>
-              </Grid>
-              <Grid item>
-                {result.data.tags.map((tag: string, idx: number) =>
-                  <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} data-qa-tag-item />
-                )}
+                <Grid item>
+                  {result.data.tags.map((tag: string, idx: number) =>
+                    <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} data-qa-tag-item />
+                  )}
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Paper>
+      </Paper> 
     </ListItem>
   );
 };
