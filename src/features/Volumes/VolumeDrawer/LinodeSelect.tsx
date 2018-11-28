@@ -30,6 +30,9 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeSelect extends React.Component<CombinedProps, State> {
+
+  mounted: boolean;
+
   static defaultProps = {
     region: 'none',
   };
@@ -40,7 +43,12 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
+    this.mounted = true;
     this.searchLinodes();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
@@ -62,11 +70,15 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   setSelectedLinode = (selected: Item<number>) => {
     if (selected) {
       const { value } = selected;
-      this.setState({ selectedLinodeId: value });
+      if (this.mounted) {
+        this.setState({ selectedLinodeId: value });
+      }
       this.props.onChange(value);
     } else {
       this.props.onChange(-1);
-      this.setState({ selectedLinodeId: -1 })
+      if (this.mounted) {
+        this.setState({ selectedLinodeId: -1 })
+      }
     }
   }
 
@@ -102,22 +114,32 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 
   searchLinodes = (inputValue: string = '') => {
-    this.setState({ loading: true });
+    if (this.mounted) {
+      this.setState({ loading: true });
+    }
 
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
       .then((response) => {
         const linodes = this.renderLinodeOptions(response.data);
-        this.setState({ linodes, loading: false });
+        if (this.mounted) {
+          this.setState({ linodes, loading: false });
+        }
       })
       .catch(() => {
-        this.setState({ loading: false });
+        if (this.mounted) {
+          this.setState({ loading: false });
+        }
       })
   }
 
   onInputChange = (inputValue: string, actionMeta: { action: string }) => {
     if (actionMeta.action !== 'input-change') { return; }
-    this.setState({ loading: true });
+
+    if (this.mounted) {
+      this.setState({ loading: true });
+    }
+
     this.debouncedSearch(inputValue);
   }
 
