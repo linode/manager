@@ -45,7 +45,13 @@ type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<Cl
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   getQuery = () => {
-    const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
+    let queryFromParams;
+    try {
+      queryFromParams = parseQueryParams(this.props.location.search)['?query'];
+    }
+    catch {
+      queryFromParams = ''
+    }
     const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
     return query;
   }

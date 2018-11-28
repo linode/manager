@@ -50,4 +50,10 @@ describe('Component', () => {
     const _component = shallow(<SearchLanding {...newProps} />)
     expect(_component.state()).toHaveProperty('query', 'two words');
   });
+  it("should handle blank or unusual queries without crashing", () => {
+    const newProps = assocPath(['location','search'], '?query=', props);
+    const _component = shallow(<SearchLanding {...newProps} />);
+    expect(_component).toBeDefined();
+    expect(_component.state()).toHaveProperty('query', '');
+  });
 });
