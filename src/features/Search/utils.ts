@@ -30,7 +30,8 @@ export const iconMap = {
 // Helper can be extended to other entities once tags are supported for them.
 // @todo Inefficient to call this function twice for each search result.
 export const getMatchingTags = (tags:string[], query:string): string[] => {
-  return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
+  return tags.filter((tag:string) =>
+    tag.toLocaleLowerCase().includes(query.toLowerCase()));
 }
 
 export const filterMatched = (query: string, label: string, tags: string[]) => {
