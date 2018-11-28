@@ -2,9 +2,10 @@ import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 
 import Tag from 'src/components/Tag';
+import { iconMap } from 'src/features/Search/utils';
 
 export interface SearchSuggestionT {
-  Icon: React.ComponentClass<any>;
+  icon: string;
   description: string;
   path: string;
   searchText: string;
@@ -54,8 +55,9 @@ class SearchSuggestion extends React.Component<CombinedProps> {
   render() {
     const suggestion = this.props.data.data;
     const { classes } = this.props.selectProps;
-    const { Icon } = suggestion;
+    const { icon } = suggestion;
     const { innerRef, innerProps } = this.props;
+    const Icon = iconMap[icon];
     return (
       <div
         className={`

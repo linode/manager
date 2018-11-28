@@ -139,6 +139,7 @@ const themeDefaults: ThemeOptions = {
     lightBlue: '#D7E3EF',
     white: '#fff',
     pureWhite: '#fff',
+    tableHeader: '#fbfbfb',
   },
   color: {
     headline: primaryColors.headline,
@@ -159,6 +160,7 @@ const themeDefaults: ThemeOptions = {
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
     borderRow: 'white',
+    tableHeaderText: 'rgba(0, 0, 0, 0.54)',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,

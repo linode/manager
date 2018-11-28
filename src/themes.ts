@@ -58,6 +58,7 @@ export const dark = createTheme({
     lightBlue: '#444',
     white: '#32363C',
     pureWhite: '#000',
+    tableHeader: 'rgba(0, 0, 0, 0.15)',
   },
   color: {
     headline: primaryColors.headline,
@@ -78,6 +79,7 @@ export const dark = createTheme({
     absWhite: '#000',
     blueDTwhite: '#fff',
     borderRow: 'rgba(0, 0, 0, 0.15)',
+    tableHeaderText: '#fff',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,

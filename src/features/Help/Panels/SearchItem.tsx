@@ -1,7 +1,6 @@
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
-
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
+import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import ListItem from 'src/components/core/ListItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -77,7 +76,7 @@ const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props>(
   styled,
   RenderGuard
   )(searchItem);
