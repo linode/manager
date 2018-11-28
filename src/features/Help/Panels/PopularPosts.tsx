@@ -42,7 +42,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     fontFamily: 'LatoWebBold',
     lineHeight: '1.2em',
     textDecoration: 'underline',
-    display: 'inline-block',
   },
   withSeparator: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -61,6 +60,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/docs/getting-started/"
           text="Getting Started with Linode"
           className={classes.postLink}
+          absoluteIcon
         />
         </div>
         <div className={classes.post}>
@@ -68,6 +68,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/docs/security/securing-your-server/"
           text="How to Secure Your Server"
           className={classes.postLink}
+          absoluteIcon
         />
         </div>
         <div className={classes.post}>
@@ -75,6 +76,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/docs/troubleshooting/troubleshooting/"
           text="Troubleshooting"
           className={classes.postLink}
+          absoluteIcon
         />
         </div>
       </React.Fragment>
@@ -90,6 +92,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
           text="My Linode is unreachable after maintenance"
           className={classes.postLink}
+          absoluteIcon
         />
         </div>
         <div className={classes.post}>
@@ -97,6 +100,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
           text="Why is my website so slow?"
           className={classes.postLink}
+          absoluteIcon
         />
         </div>
         <div className={classes.post}>
@@ -104,6 +108,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           link="https://www.linode.com/community/questions/479/stackscript-guide"
           text="Stackscript guide?"
           className={classes.postLink}
+          absoluteIcon
         />
         </div>
       </React.Fragment>
