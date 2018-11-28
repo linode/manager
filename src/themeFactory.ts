@@ -738,9 +738,6 @@ const themeDefaults: ThemeOptions = {
         '& em': {
           fontStyle: 'normal !important',
         },
-        '&.placeholder': {
-          display: 'none'
-        }
       },
       selected: {
         backgroundColor: 'white !important',

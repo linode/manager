@@ -45,7 +45,7 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = (props) => {
         select
         data-qa-disk-select
       >
-        <MenuItem value="none" disabled className="placeholder">Select a Disk</MenuItem>
+        <MenuItem value="none" disabled>Select a Disk</MenuItem>
         {
           props.disks && props.disks.map((disk) => {
             return (

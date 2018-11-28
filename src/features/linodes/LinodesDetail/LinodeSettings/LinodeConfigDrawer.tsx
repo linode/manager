@@ -307,7 +307,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
             >
-              <MenuItem value="none" disabled className="placeholder"><em>Select a Kernel</em></MenuItem>
+              <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {
                 kernels.map(eachKernel =>
                   <MenuItem
