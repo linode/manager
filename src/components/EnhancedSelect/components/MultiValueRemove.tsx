@@ -17,18 +17,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const MultiValueRemove: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
-    innerProps: { className, ...restInnerProps },
     ...rest
   } = props;
 
-  const updatedProps = {
-    ...rest,
-    innerProps: restInnerProps,
-  };
-
   return (
-    <reactSelectComponents.MultiValueRemove {...updatedProps}>
-      <Close  />
+    <reactSelectComponents.MultiValueRemove {...rest}>
+      <Close />
     </reactSelectComponents.MultiValueRemove>
   );
 };

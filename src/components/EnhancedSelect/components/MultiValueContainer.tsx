@@ -17,17 +17,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const MultiValueContainer: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
-    innerProps: { className, ...restInnerProps },
     ...rest
   } = props;
 
-  const updatedProps = {
-    ...rest,
-    innerProps: {restInnerProps, className}
-  };
-
   return (
-    <reactSelectComponents.MultiValueContainer {...updatedProps} className={classes.root} />
+    <reactSelectComponents.MultiValueContainer {...rest} className={classes.root} />
   );
 };
 

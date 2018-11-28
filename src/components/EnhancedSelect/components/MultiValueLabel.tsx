@@ -28,18 +28,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const MultiValueLabel: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
-    innerProps: { className, ...restInnerProps },
     ...rest
   } = props;
 
-  const updatedProps = {
-    ...rest,
-    innerProps: restInnerProps,
-  };
-
   return (
     <div data-qa-multi-option={props.children} className={classes.root} >
-      <reactSelectComponents.MultiValueLabel {...updatedProps} className={classes.label} />
+      <reactSelectComponents.MultiValueLabel {...rest} className={classes.label} />
     </div>
   );
 };
