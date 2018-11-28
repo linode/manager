@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root'
@@ -9,7 +11,8 @@ type ClassNames = 'root'
   | 'postCard'
   | 'postTitle'
   | 'post'
-  | 'withSeparator';
+  | 'withSeparator'
+  | 'postLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -32,10 +35,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   post: {
     marginBottom: theme.spacing.unit / 2,
-    '& a:hover h3': {
-      color: theme.color.headline,
-      textDecoration: 'underline',
-    },
+  },
+  postLink: {
+    color: theme.color.headline,
+    fontSize: '1rem',
+    fontFamily: 'LatoWebBold',
+    lineHeight: '1.2em',
+    textDecoration: 'underline',
   },
   withSeparator: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -50,37 +56,28 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a
-            target="_blank"
-            href="https://www.linode.com/docs/getting-started/"
-            data-qa-doc-link
-          >
-            <Typography variant="subheading">
-              Getting Started with Linode
-            </Typography>
-          </a>
+        <ExternalLink
+          link="https://www.linode.com/docs/getting-started/"
+          text="Getting Started with Linode"
+          className={classes.postLink}
+          absoluteIcon
+        />
         </div>
         <div className={classes.post}>
-          <a
-            target="_blank"
-            href="https://www.linode.com/docs/security/securing-your-server/"
-            data-qa-doc-link
-          >
-            <Typography variant="subheading">
-              How to Secure Your Server
-            </Typography>
-          </a>
+        <ExternalLink
+          link="https://www.linode.com/docs/security/securing-your-server/"
+          text="How to Secure Your Server"
+          className={classes.postLink}
+          absoluteIcon
+        />
         </div>
         <div className={classes.post}>
-          <a
-            target="_blank"
-            href="https://www.linode.com/docs/troubleshooting/troubleshooting/"
-            data-qa-doc-link
-          >
-            <Typography variant="subheading">
-              Troubleshooting
-            </Typography>
-          </a>
+        <ExternalLink
+          link="https://www.linode.com/docs/troubleshooting/troubleshooting/"
+          text="Troubleshooting"
+          className={classes.postLink}
+          absoluteIcon
+        />
         </div>
       </React.Fragment>
     )
@@ -91,37 +88,28 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         <div className={classes.post}>
-          <a
-            target="_blank"
-            href="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
-            data-qa-community-post
-          >
-            <Typography variant="subheading">
-            My Linode is unreachable after maintenance
-            </Typography>
-          </a>
+        <ExternalLink
+          link="https://www.linode.com/community/questions/323/my-linode-is-unreachable-after-maintenance"
+          text="My Linode is unreachable after maintenance"
+          className={classes.postLink}
+          absoluteIcon
+        />
         </div>
         <div className={classes.post}>
-          <a
-            target="_blank"
-            href="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
-            data-qa-community-post
-          >
-            <Typography variant="subheading">
-              Why is my website so slow?
-            </Typography>
-          </a>
+        <ExternalLink
+          link="https://www.linode.com/community/questions/232/why-is-my-website-so-slow"
+          text="Why is my website so slow?"
+          className={classes.postLink}
+          absoluteIcon
+        />
         </div>
         <div className={classes.post}>
-          <a
-            target="_blank"
-            href="https://www.linode.com/community/questions/479/stackscript-guide"
-            data-qa-community-post
-          >
-            <Typography variant="subheading">
-              Stackscript guide?
-            </Typography>
-          </a>
+        <ExternalLink
+          link="https://www.linode.com/community/questions/479/stackscript-guide"
+          text="Stackscript guide?"
+          className={classes.postLink}
+          absoluteIcon
+        />
         </div>
       </React.Fragment>
     )

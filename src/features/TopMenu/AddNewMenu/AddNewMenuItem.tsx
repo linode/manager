@@ -32,21 +32,8 @@ const styles: StyleRulesCallback = (theme) => ({
       stroke: theme.bg.main,
     },
     '&:hover': {
+      ...theme.animateCircleIcon,
       backgroundColor: theme.bg.offWhiteDT,
-      '& .circle': {
-        fill: theme.palette.primary.main,
-        transition: 'fill .2s ease-in-out .2s',
-      },
-      '& .outerCircle': {
-        stroke: theme.palette.primary.dark,
-        strokeDasharray: 1000,
-        strokeDashoffset: 1000,
-        animation: 'dash 2s linear forwards',
-      },
-      '& .insidePath *': {
-        transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
-        stroke: 'white',
-      },
     },
   },
   iconWrapper: {
