@@ -1,25 +1,17 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import * as Bluebird from 'bluebird';
 import * as moment from 'moment';
-import { compose, isEmpty, or } from 'ramda';
+import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import _Option from 'react-select/lib/components/Option';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withTypes } from 'src/context/types';
-import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
-import { getDomains } from 'src/services/domains';
-import { getImages } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
-import { getNodeBalancers } from 'src/services/nodebalancers';
-import { getVolumes } from 'src/services/volumes';
-import { getAll } from 'src/utilities/getAll';
+import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
+import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames =
@@ -133,23 +125,6 @@ type ClassNames =
   },
 });
 
-// Helper can be extended to other entities once tags are supported for them.
-// @todo Inefficient to call this function twice for each search result.
-export const getMatchingTags = (tags:string[], query:string): string[] => {
-  const queryLower = query.toLowerCase();
- return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(queryLower));
-}
-
-
-export const filterMatched = (query: string, label: string, tags: string[]) => {
-  const matchingTags = getMatchingTags(tags, query);
-  const bool = or(
-    label.toLowerCase().includes(query.toLowerCase()),
-    matchingTags.length > 0
-  )
-  return bool;
-}
-
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];
 }
@@ -157,24 +132,19 @@ interface TypesContextProps {
 interface State {
   searchText: string;
   searchActive: boolean;
-  linodes?: Linode.Linode[];
-  volumes?: Linode.Volume[];
-  nodebalancers?: Linode.NodeBalancer[];
-  domains?: Linode.Domain[];
+  linodes: Linode.Linode[];
+  volumes: Linode.Volume[];
+  nodebalancers: Linode.NodeBalancer[];
+  domains: Linode.Domain[];
   resultsLoading: boolean;
   [resource: string]: any;
   options: Item[];
+  searchResults: SearchResults;
 }
 
 type CombinedProps = TypesContextProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
-
-const getAllLinodes = getAll(getLinodes);
-const getAllNodeBalancers = getAll(getNodeBalancers);
-const getAllVolumes = getAll(getVolumes);
-const getAllDomains = getAll(getDomains);
-const getAllImages = getAll(getImages);
 
 const Control = (props: any) =>
   <_Control {...props} />
@@ -189,13 +159,29 @@ const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
+/* The final option in the list will be the "go to search results page" link.
+* This doesn't share the same shape as the rest of the results, so should use
+* the default styling. */
+const Option = (props: any) => {
+  return props.value === 'redirect'
+    ? <_Option {...props} />
+    : <SearchSuggestion {...props} />
+}
+
 class SearchBar extends React.Component<CombinedProps, State> {
+  selectRef = React.createRef<HTMLInputElement>();
   mounted: boolean = false;
   state: State = {
+    linodes: [],
+    volumes: [],
+    nodebalancers: [],
+    domains: [],
+    images: [],
     searchText: '',
     searchActive: false,
     resultsLoading: false,
-    options: []
+    options: [],
+    searchResults: {...emptyResults}
   };
 
   lastFetch = moment.utc('1970-01-01T00:00:00');
@@ -217,30 +203,9 @@ class SearchBar extends React.Component<CombinedProps, State> {
     );
   }
 
-  linodeDescription(
-    typeLabel: string,
-    memory: number,
-    disk: number,
-    vcpus: number,
-    imageId: string,
-  ) {
-    const { images } = this.state;
-    const image = (images && images.find((img:Linode.Image) => img.id === imageId))
-      || { label: 'Unknown Image' };
-    const imageDesc = image.label;
-    const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
-    return `${imageDesc}, ${typeDesc}`;
-  }
-
   updateData = () => {
-    Bluebird.join(
-      getAllLinodes(),
-      getAllNodeBalancers(),
-      getAllVolumes(),
-      getAllDomains(),
-      getAllImages(),
-      this.setEntitiesToState
-    )
+    this.setState({ resultsLoading: true });
+    getAllEntities(this.setEntitiesToState);
   }
 
   setEntitiesToState = (
@@ -256,7 +221,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
       nodebalancers,
       volumes,
       domains,
-      images
+      images,
+      resultsLoading: false,
     }, this.getSearchSuggestions)
   }
 
@@ -268,106 +234,24 @@ class SearchBar extends React.Component<CombinedProps, State> {
       return;
     };
 
-    const searchResults = [];
+    const { linodes, volumes, domains, nodebalancers, images } = this.state;
 
-    if (this.state.linodes && typesData) {
-      const linodesByLabel = this.state.linodes.filter(
-        linode => filterMatched(query, linode.label, linode.tags)
-      );
-      searchResults.push(...(linodesByLabel.map(linode => ({
-        label: linode.label,
-        value: linode.id,
-        data: {
-          tags: getMatchingTags(linode.tags, query),
-          description: this.linodeDescription(
-            displayType(linode.type, typesData),
-            linode.specs.memory,
-            linode.specs.disk,
-            linode.specs.vcpus,
-            linode.image!,
-          ),
-          Icon: LinodeIcon,
-          path: `/linodes/${linode.id}`,
-          searchText: query,
-        }
-      }))));
-    }
+    const queryLower = query.toLowerCase();
+    const searchResults: SearchResults = searchAll(
+      linodes, volumes, nodebalancers, domains, images, queryLower, typesData,
+    );
 
-    if (this.state.volumes) {
-      const volumesByLabel = this.state.volumes.filter(
-        volume => filterMatched(query, volume.label, volume.tags)
-      );
-      searchResults.push(...(volumesByLabel.map(volume => ({
-        label: volume.label,
-        value: volume.id,
-        data: {
-          tags: volume.tags,
-          description: volume.size + ' G',
-          Icon: VolumeIcon,
-          path: `/volumes/${volume.id}`,
-          searchText: query,
-        }
-      }))));
-    }
+    /* Keep options (for the Select) and searchResults separate so that we can
+    * pass the results to the search landing page in a usable format if necessary. */
+    const options = [
+      ...searchResults.linodes,
+      ...searchResults.volumes,
+      ...searchResults.nodebalancers,
+      ...searchResults.domains,
+      ...searchResults.images
+    ];
 
-    if (this.state.nodebalancers) {
-      const nodebalancersByLabel = this.state.nodebalancers.filter(
-        nodebal => filterMatched(query, nodebal.label, [])
-      );
-      searchResults.push(...(nodebalancersByLabel.map(nodebal => ({
-        label: nodebal.label,
-        value: nodebal.id,
-        data: {
-          tags: [],
-          description: nodebal.hostname,
-          Icon: NodebalIcon,
-          path: `/nodebalancers/${nodebal.id}`,
-          searchText: query,
-        }
-      }))));
-    }
-
-    if (this.state.domains) {
-      const domainsByLabel = this.state.domains.filter(
-        domain => filterMatched(query, domain.domain, domain.tags)
-      );
-      searchResults.push(...(domainsByLabel.map(domain => ({
-        label: domain.domain,
-        value: domain.id,
-        data: {
-          tags: domain.tags,
-          description: domain.description || domain.status,
-          /* TODO: Update this with the Domains icon! */
-          Icon: NodebalIcon,
-          path: `/domains/${domain.id}`,
-          searchText: query
-        }
-      }))));
-    }
-
-    if (this.state.images) {
-      const imagesByLabel = this.state.images.filter(
-        (image: Linode.Image) => (
-          /* TODO: this should be a pre-filter at the API level */
-          image.is_public === false
-          && image.label.toLowerCase().includes(query.toLowerCase())
-        ),
-      );
-      searchResults.push(...(imagesByLabel.map((image: Linode.Image) => ({
-        label: image.label,
-        value: image.id,
-        data: {
-          tags: [],
-          description: image.description || '',
-          /* TODO: Update this with the Images icon! */
-          Icon: VolumeIcon,
-          /* TODO: Choose a real location for this to link to */
-          path: `/images`,
-          searchText: query,
-        }
-      }))));
-    }
-    this.setState({ options: searchResults, resultsLoading: false });
+    this.setState({ searchResults, options, resultsLoading: false });
   }
 
   handleSearchChange = (searchText: string): void => {
@@ -391,20 +275,48 @@ class SearchBar extends React.Component<CombinedProps, State> {
     });
   }
 
+  onClose = () => {
+    this.setState({ searchActive: false })
+  }
+
+  onOpen = () => {
+    this.setState({ searchActive: true });
+  }
+
   onSelect = (item: Item) => {
     if (!item || isEmpty(item)) { return; }
     const { history } = this.props;
-    this.toggleSearch();
+    const { searchText } = item.data;
+    if (item.value === 'redirect') {
+      history.push({
+        pathname: `/search`,
+        search: `?query=${searchText}`,
+        state: { searchResults: this.state.searchResults }
+      });
+      return;
+    }
     history.push(item.data.path);
   }
 
+  /* Need to override the default RS filtering; otherwise entities whose label
+  * doesn't match the search term will be automatically filtered, meaning that
+  * searching by tag won't work. */
   filterResults = (option: Item, inputValue: string) => {
     return true;
   }
 
   render() {
     const { classes } = this.props;
-    const { searchActive, options, resultsLoading } = this.state;
+    const { searchActive, searchText, options, resultsLoading } = this.state;
+    const defaultOption = {
+      label: `View search results page for "${searchText}"`,
+      value: 'redirect',
+      data: {
+        searchText,
+      }
+    }
+
+    const finalOptions = isEmpty(options) ? [] : [...options, defaultOption];
 
     return (
       <React.Fragment>
@@ -428,7 +340,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
           />
           <EnhancedSelect
             id="search-bar"
-            options={options}
+            blurInputOnSelect
+            options={finalOptions}
             onChange={this.onSelect}
             onInputChange={this.handleSearchChange}
             placeholder={
@@ -437,7 +350,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
                 :
                 "Search for Linodes, Volumes, NodeBalancers, Domains, Tags..."
             }
-            components={{ Control, Option: SearchSuggestion }}
+            components={{ Control, Option }}
             styleOverrides={selectStyles}
             openMenuOnFocus={false}
             openMenuOnClick={false}
@@ -445,7 +358,9 @@ class SearchBar extends React.Component<CombinedProps, State> {
             isLoading={resultsLoading}
             isClearable={false}
             isMulti={false}
-            value={null}
+            onMenuClose={this.onClose}
+            onMenuOpen={this.onOpen}
+            value={false}
           />
           <IconButton
             color="inherit"

@@ -163,6 +163,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: '40px',
       height: '40px',
     },
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
   suggestionTitle: {
     fontSize: '1rem',
@@ -348,12 +354,12 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
-        onMenuClose={onMenuClose}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
         noOptionsMessage={noOptionsMessage}
         menuPlacement="auto"
+        onMenuClose={onMenuClose}
       />
     );
   }
