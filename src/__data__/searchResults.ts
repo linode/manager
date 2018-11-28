@@ -29,3 +29,27 @@ export const docs_result = {
   },
   href: "/docs/websites/cms/update-and-secure-drupal-8-on-ubuntu/"
 }
+
+export const searchbarResult1 = {
+  label: 'result1',
+  value: '111111',
+  data: {
+    icon: 'LinodeIcon',
+    tags: [],
+    description: 'Description',
+    path: `/nodebalancers/nodebalID`,
+    searchText: "result"
+  }
+}
+
+export const searchbarResult2 = {
+  label: 'result2',
+  value: '222222',
+  data: {
+    icon: 'NodebalIcon',
+    tags: ['tag1', 'tag2'],
+    description: 'Description',
+    path: `/nodebalancers/nodebalID`,
+    searchText: "result"
+  }
+}
