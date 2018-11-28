@@ -49,14 +49,14 @@ describe('Tags Input Suite', () => {
     });
 
     it('a single tag can be cleared by clicking the x icon on tag', () => {
-        $$(`${selectedTags} svg`)[0].click();
+        $(`${selectedTags}`).$('..').$('svg').click();
         browser.waitUntil(() => {
             return $$(selectedTags).length === 1;
         },constants.wait.normal);
     });
 
     it('all tags can be cleared by clicking on the x icon to clear select', () => {
-        $$('div>div>svg')[1].click();
+        $('svg[height="20"]').click();
         //wait for selected tags not displayed
         browser.waitForVisible(selectedTags,constants.wait.normal, true);
     });
@@ -68,7 +68,7 @@ describe('Tags Input Suite', () => {
         $$(tagOptions)[0].click();
         browser.waitForVisible(selectedTags,constants.wait.normal);
         expect($(selectedTags).getText()).toEqual(testTag);
-        $$('div>div>svg')[1].click();
+        $('svg[height="20"]').click();
     });
 
     it('a tag must be between 3-25 characters', () => {
