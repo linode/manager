@@ -32,6 +32,8 @@ class MultiValue extends React.PureComponent<CombinedProps> {
           tabIndex={-1}
           label={children}
           onDelete={this.onDelete}
+          component="div"
+          role="term"
         />
     );
   }
