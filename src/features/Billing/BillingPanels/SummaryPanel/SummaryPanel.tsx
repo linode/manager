@@ -23,8 +23,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   item: {
     marginBottom: theme.spacing.unit,
+    ...theme.typography.body1,
   },
   address2: {
+    marginTop: -15,
     paddingLeft: theme.spacing.unit * 7.5,
   }
 });
@@ -111,36 +113,36 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               <Typography role="header" variant="subheading">
                 Contact Information
               </Typography>
-              </Grid>
-              <Grid item sm={6}>
-                <Typography variant="body1" className={classes.item} data-qa-company>
-                  <strong>Company Name: </strong>
-                  {company ? company : 'None'}
-              </Typography>
-                <Typography variant="body1" className={classes.item} data-qa-contact-name>
-                  <strong>Name: </strong>
-                  {!(first_name || last_name) && 'None'}
-                  {`${first_name} ${last_name}`}
-              </Typography>
-              <Typography variant="body1" className={classes.item} data-qa-contact-address>
-                <strong>Address: </strong>
-                {!(address_1 || address_2 || city || state || zip) && 'None'}
-                <span>{address_1}</span>
-                <div className={classes.address2}>{address_2}</div>
-                <div className={classes.address2}>
-                  {`${city} ${city && state && ', '} ${state} ${zip}`}
-                </div>
-              </Typography>
             </Grid>
             <Grid item sm={6}>
-              <Typography variant="body1" className={classes.item} data-qa-contact-email>
+              <div className={classes.item} data-qa-company>
+                <strong>Company Name: </strong>
+                {company ? company : 'None'}
+              </div>
+              <div className={classes.item} data-qa-contact-name>
+                <strong>Name: </strong>
+                {!(first_name || last_name) && 'None'}
+                {`${first_name} ${last_name}`}
+              </div>
+              <div className={classes.item} data-qa-contact-address>
+                <strong>Address: </strong>
+                <div className={classes.address2}>
+                  {!(address_1 || address_2 || city || state || zip) && 'None'}
+                  <span>{address_1}</span>
+                  <div>{address_2}</div>
+                  <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
+                </div>
+              </div>
+            </Grid>
+            <Grid item sm={6}>
+              <div className={classes.item} data-qa-contact-email>
                 <strong>Email: </strong>
                 {email}
-              </Typography>
-                <Typography variant="body1" className={classes.item} data-qa-contact-phone>
-                  <strong>Phone Number: </strong>
-                  {phone ? phone : 'None'}
-              </Typography>
+              </div>
+              <div className={classes.item} data-qa-contact-phone>
+                <strong>Phone Number: </strong>
+                {phone ? phone : 'None'}
+              </div>
             </Grid>
           </Grid>
         </Grid>
@@ -154,14 +156,14 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
                   </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1" className={classes.item} data-qa-contact-cc>
+                <div className={classes.item} data-qa-contact-cc>
                   <strong>Credit Card: </strong>
                   {(last_four)
                     ? `xxxx-xxxx-xxxx-${last_four}`
                     : 'None'
                   }
-                </Typography>
-                <Typography variant="body1" className={classes.item} data-qa-contact-cc-exp-date>
+                </div>
+                <div className={classes.item} data-qa-contact-cc-exp-date>
                   <strong>Expiration Date: </strong>
                   {(expiry)
                     ? `${expiry} `
@@ -170,7 +172,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
                   {expiry && isCreditCardExpired(expiry) &&
                     <span className={classes.expired}>Expired</span>
                   }
-                </Typography>
+                </div>
               </Grid>
             </Grid>
           </Grid>

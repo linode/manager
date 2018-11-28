@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
@@ -355,8 +355,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           {mode === 'view' &&
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={closeDrawer}
               data-qa-close-drawer
             >
@@ -367,8 +366,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             [
               <Button
                 key="create"
-                variant="raised"
-                color="primary"
+                type="primary"
                 onClick={mode as string === 'create'
                   ? () => onCreate(permTuplesToScopeString(this.state.scopes))
                   : () => onEdit()
@@ -378,8 +376,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                 {mode as string === 'create' ? 'Submit' : 'Save'}
               </Button>,
               <Button
-                variant="raised"
-                color="secondary"
+                type="secondary"
                 className="cancel"
                 key="cancel"
                 onClick={closeDrawer} data-qa-cancel

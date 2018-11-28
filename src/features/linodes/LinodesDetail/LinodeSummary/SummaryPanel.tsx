@@ -27,6 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   section: {
     marginBottom: theme.spacing.unit,
+    ...theme.typography.body1,
   },
   region: {
     [theme.breakpoints.between('sm', 'md')]: {
@@ -131,39 +132,38 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.section} variant="body1">
+            <div className={classes.section}>
               {this.renderImage()}
-            </Typography>
-            <Typography className={classes.section} variant="body1">
+            </div>
+            <div className={classes.section}>
               {<span>
                 {typesLongLabel}
               </span>}
-            </Typography>
+            </div>
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
-            <Typography className={classes.section} variant="body1">
+            <div className={classes.section}>
               <IPAddress ips={linode.ipv4} copyRight />
-            </Typography>
+            </div>
             {
               linode.ipv6 &&
-              <Typography className={classes.section} variant="body1">
+              <div className={classes.section}>
                 <IPAddress ips={[linode.ipv6]} copyRight />
-              </Typography>
+              </div>
             }
           </Grid>
           <Grid item xs={12} sm={6} lg={4} className={classes.region}>
-            <Typography className={`${classes.section}`} variant="body1">
+            <div className={`${classes.section}`}>
               {formatRegion(linode.region)}
-            </Typography>
-            <Typography
+            </div>
+            <div
               className={classes.section}
-              variant="body1"
               data-qa-volumes={volumes.length}
             >
               Volumes: <Link
                 className={classes.volumeLink}
                 to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
-            </Typography>
+            </div>
           </Grid>
         </Grid>
       </Paper>

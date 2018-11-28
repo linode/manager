@@ -2,7 +2,7 @@ import { assoc, clamp, compose, map, path, pathOr, prop } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -195,7 +195,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             left
           />
           <ActionsPanel>
-            <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
+            <Button onClick={this.onSubmit} type="primary">Submit</Button>
           </ActionsPanel>
         </Paper>
       </React.Fragment>

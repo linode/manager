@@ -173,7 +173,6 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               </Button>
               <Button
                 onClick={close}
-                variant="raised"
                 type="secondary"
                 className="cancel"
                 data-qa-cancel
