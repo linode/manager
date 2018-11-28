@@ -9,7 +9,7 @@ ORIGIN=sys.argv[3]
 START_INSERT=5
 
 TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e']
-BREAKING_KEYWORDS = ['break', 'depricate']
+BREAKING_KEYWORDS = ['break', 'deprecated']
 CHANGED_KEYWORDS = ['update', 'change']
 FIXED_KEYWORDS = ['fix', 'repair', 'bug']
 
