@@ -314,6 +314,9 @@ export const dark = createTheme({
         '&$error': {
           color: '#C9CACB',
         },
+        '&$disabled': {
+          color: '#C9CACB',
+        },
       },
     },
     MuiFormHelperText: {
