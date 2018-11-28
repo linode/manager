@@ -118,7 +118,6 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       {buttonProps &&
         <Grid item xs={12} lg={10}>
           <Button
-            variant="raised"
             type="primary"
             className={classes.button}
             {...buttonProps}

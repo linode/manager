@@ -122,7 +122,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
           className={classes.button}
           data-qa-action-menu
         >
-          <MoreHoriz color="primary" className="kebob" />
+          <MoreHoriz type="primary" className="kebob" />
         </IconButton >
         <Menu
           id="action-menu"

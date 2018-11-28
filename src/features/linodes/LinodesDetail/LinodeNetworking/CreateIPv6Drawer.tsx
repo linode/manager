@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -36,8 +36,7 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = (props) => {
         </Typography>
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
-            variant="raised"
-            color="primary"
+            type="primary"
             className="cancel"
             onClick={props.onClose}
             data-qa-cancel

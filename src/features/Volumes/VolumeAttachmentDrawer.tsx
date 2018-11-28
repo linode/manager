@@ -1,7 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
@@ -196,8 +196,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel>
           <Button
-            variant="raised"
-            color="primary"
+            type="primary"
             onClick={this.attachToLinode}
           >
             Save

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import Button from 'src/components/core/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -81,16 +81,14 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
       </FormControl>
       <ActionsPanel>
         <Button
-          variant="raised"
-          color="primary"
+          type="primary"
           onClick={onSubmit}
           data-qa-submit
           >Submit
         </Button>
         <Button
           onClick={onClose} data-qa-cancel
-          variant="raised"
-          color="secondary"
+          type="secondary"
           className="cancel"
         >
           Cancel

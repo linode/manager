@@ -189,7 +189,6 @@ class UserProfile extends React.Component<CombinedProps> {
           <Button
             disabled={profileUsername === toDeleteUsername}
             className={classes.topMargin}
-            variant="raised"
             type="secondary"
             destructive
             onClick={this.onDelete}

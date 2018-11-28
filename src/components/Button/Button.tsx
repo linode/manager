@@ -110,9 +110,9 @@ const styles: StyleRulesCallback = (theme) => ({
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const getVariant = cond([
-  [propEq('type', 'primary'), always('raised')],
-  [propEq('type', 'secondary'), always('raised')],
-  [propEq('type', 'remove'), always('raised')],
+  [propEq('type', 'primary'), always('contained')],
+  [propEq('type', 'secondary'), always('contained')],
+  [propEq('type', 'remove'), always('contained')],
   [() => true, always(undefined)],
 ]);
 

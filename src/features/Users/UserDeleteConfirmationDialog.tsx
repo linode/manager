@@ -40,7 +40,6 @@ class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, {}
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          variant="raised"
           type="cancel"
           onClick={this.props.onCancel}
           data-qa-cancel-delete
@@ -48,7 +47,6 @@ class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, {}
           Cancel
         </Button>
         <Button
-          variant="raised"
           type="secondary"
           destructive
           onClick={this.deleteUser}

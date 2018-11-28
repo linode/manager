@@ -6,7 +6,7 @@ import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Snackbar from 'src/components/core/Snackbar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -210,8 +210,7 @@ class Notifier extends React.Component<CombinedProps, State> {
               <Grid item className={classes.actions} xs={3} lg={2}>
                 <Button
                   onClick={this.onClose}
-                  color="secondary"
-                  variant="raised"
+                  type="secondary"
                   className={classes.button}
                 >
                   <Close />

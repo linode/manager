@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button, { ButtonProps } from 'src/components/core/Button';
+import Button, { ButtonProps } from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
@@ -509,8 +509,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const isDomain = type === 'master' || type === 'slave';
 
     const buttonProps: ButtonProps = {
-      variant: 'raised',
-      color: submitting ? 'secondary' : 'primary',
+      type: submitting ? 'secondary' : 'primary',
       disabled: submitting,
       className: classNames({ loading: submitting }),
       onClick: isDomain
@@ -540,8 +539,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
-            variant="raised"
-            color="secondary"
+            type="secondary"
             className="cancel"
             onClick={this.onClose}
             data-qa-record-cancel

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -94,8 +94,7 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = (props) => {
 
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="secondary"
+              type="secondary"
               onClick={props.onClose}
               data-qa-cancel
             >

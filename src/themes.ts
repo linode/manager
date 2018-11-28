@@ -117,7 +117,7 @@ export const dark = createTheme({
           color: primaryColors.text,
         },
       },
-      raisedPrimary: {
+      containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light,
         },
@@ -136,7 +136,7 @@ export const dark = createTheme({
           },
         },
       },
-      raisedSecondary: {
+      containedSecondary: {
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
         '&:hover, &:focus': {
