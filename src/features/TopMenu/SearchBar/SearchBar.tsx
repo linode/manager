@@ -1,7 +1,7 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import * as moment from 'moment';
-import { compose, isEmpty, or } from 'ramda';
+import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
@@ -124,23 +124,6 @@ type ClassNames =
     },
   },
 });
-
-// Helper can be extended to other entities once tags are supported for them.
-// @todo Inefficient to call this function twice for each search result.
-export const getMatchingTags = (tags:string[], query:string): string[] => {
-  const queryLower = query.toLowerCase();
- return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(queryLower));
-}
-
-
-export const filterMatched = (query: string, label: string, tags: string[]) => {
-  const matchingTags = getMatchingTags(tags, query);
-  const bool = or(
-    label.toLowerCase().includes(query.toLowerCase()),
-    matchingTags.length > 0
-  )
-  return bool;
-}
 
 interface TypesContextProps {
   typesData?: Linode.LinodeType[];

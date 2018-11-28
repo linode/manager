@@ -29,8 +29,17 @@ export const iconMap = {
 
 // Helper can be extended to other entities once tags are supported for them.
 // @todo Inefficient to call this function twice for each search result.
-const getMatchingTags = (tags:string[], query:string): string[] => {
+export const getMatchingTags = (tags:string[], query:string): string[] => {
   return tags.filter((tag:string) => tag.toLocaleLowerCase().includes(query));
+}
+
+export const filterMatched = (query: string, label: string, tags: string[]) => {
+  const matchingTags = getMatchingTags(tags, query);
+  const bool = or(
+    label.toLowerCase().includes(query.toLowerCase()),
+    matchingTags.length > 0
+  )
+  return bool;
 }
 
 export const searchLinodes = (
@@ -39,14 +48,8 @@ export const searchLinodes = (
   typesData: Linode.LinodeType[],
   images: Linode.Image[],
   ) =>
-  linodes.filter(linode => {
-    const matchingTags = getMatchingTags(linode.tags, query);
-    const bool = or(
-      linode.label.toLowerCase().includes(query),
-      matchingTags.length > 0
-    )
-    return bool;
-  }).map(linode => ({
+  linodes.filter(linode => filterMatched(query, linode.label, linode.tags))
+  .map(linode => ({
     label: linode.label,
     value: linode.id,
     data: {
@@ -66,23 +69,23 @@ export const searchLinodes = (
   })
 )
 
-export const searchVolumes = (volumes: Linode.Volume[], query: string) => volumes.filter(
-  volume => volume.label.toLowerCase().includes(query),
-).map(volume => ({
-  label: volume.label,
-  value: volume.id,
-  data: {
-    tags: [],
-    description: volume.size + ' GiB',
-    icon: 'VolumeIcon',
-    path: `/volumes/${volume.id}`,
-    searchText: query,
-  }
+export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
+  volumes.filter(volume => filterMatched(query, volume.label, volume.tags))
+    .map(volume => ({
+      label: volume.label,
+      value: volume.id,
+      data: {
+        tags: getMatchingTags(volume.tags, query),
+        description: volume.size + ' GiB',
+        icon: 'VolumeIcon',
+        path: `/volumes/${volume.id}`,
+        searchText: query,
+      }
 }));
 
 export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query: string) =>
   nodebalancers.filter(
-    nodebal => nodebal.label.toLowerCase().includes(query),
+    nodebal => filterMatched(query, nodebal.label, []),
   ).map(nodebal => ({
     label: nodebal.label,
     value: nodebal.id,
@@ -97,24 +100,17 @@ export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query:
 
 export const searchDomains = (domains: Linode.Domain[], query: string) =>
   domains.filter(
-    domain => {
-      const matchingTags = getMatchingTags(domain.tags, query);
-      const bool = or(
-        domain.domain.toLowerCase().includes(query),
-        matchingTags.length > 0
-      )
-      return bool;
-    }
-  ).map(domain => ({
-    label: domain.domain,
-    value: domain.id,
-    data: {
-      tags: domain.tags,
-      description: domain.description || domain.status,
-      icon: 'DomainIcon',
-      path: `/domains/${domain.id}`,
-      searchText: query
-    }
+    domain => filterMatched(query, domain.domain, domain.tags))
+      .map(domain => ({
+        label: domain.domain,
+        value: domain.id,
+        data: {
+          tags: domain.tags,
+          description: domain.description || domain.status,
+          icon: 'DomainIcon',
+          path: `/domains/${domain.id}`,
+          searchText: query
+        }
   }));
 
 export const searchImages = (images: Linode.Image[], query: string) =>
@@ -122,7 +118,7 @@ export const searchImages = (images: Linode.Image[], query: string) =>
     (image: Linode.Image) => (
       /* TODO: this should be a pre-filter at the API level */
       image.is_public === false
-      && image.label.toLowerCase().includes(query)
+      && image.label.toLowerCase().includes(query.toLowerCase())
     ),
   ).map((image: Linode.Image) => ({
     label: image.label,
