@@ -28,6 +28,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   IPgrouping: {
     margin: '-2px 0 0 2px',
+    display: 'flex',
+    flexDirection: 'column'
   },
   marginTop: {
     marginTop: theme.spacing.unit * 2,
