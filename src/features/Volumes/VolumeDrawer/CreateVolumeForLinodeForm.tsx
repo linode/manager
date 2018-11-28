@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import { createVolume } from 'src/services/volumes';
@@ -46,7 +47,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       initialValues={initialValues}
       validationSchema={CreateVolumeSchema}
       onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {
-        const { label, size, configId } = values;
+        const { label, size, configId, tags } = values;
 
         setSubmitting(true);
 
@@ -58,6 +59,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           size: maybeCastToNumber(size),
           linode_id: maybeCastToNumber(linodeId),
           config_id: maybeCastToNumber(configId),
+          tags: tags.map(v => v.value),
         })
           .then(response => {
             resetForm(initialValues);
@@ -128,6 +130,15 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               value={values.configId}
             />
 
+            <TagsInput
+              tagError={touched.tags ? errors.tags ? 'Unable to tag volume.' : undefined : undefined}
+              name="tags"
+              label="Tags"
+              onBlur={handleBlur}
+              onChange={selected => setFieldValue('tags', selected)}
+              value={values.tags}
+            />
+
             <PricePanel value={values.size} currentSize={10} />
 
             <VolumesActionsPanel
@@ -140,13 +151,22 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
       }} />
   );
 };
+interface FormState {
+  label: string;
+  size: number;
+  region: string;
+  linodeId: number;
+  configId: number;
+  tags: Tag[];
+}
 
-const initialValues = {
+const initialValues: FormState = {
   label: '',
   size: 20,
   region: 'none',
   linodeId: -1,
   configId: -1,
+  tags: [],
 };
 
 const styled = withStyles(styles);

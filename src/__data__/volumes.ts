@@ -8,7 +8,8 @@ export const volumes: Linode.Volume[] = [
     filesystem_path: "/dev/disk/by-id/scsi-0Linode_Volume_test",
     label: "test",
     linode_id: null,
-    status: "active"
+    status: "active",
+    tags: [],
   },
   {
     created: "2018-06-06T13:16:54",
@@ -19,7 +20,8 @@ export const volumes: Linode.Volume[] = [
     filesystem_path: "/dev/disk/by-id/scsi-0Linode_Volume_test3",
     label: "test3",
     linode_id: null,
-    status: "active"
+    status: "active",
+    tags: [],
   },
   {
     created: "2018-06-27T12:38:51",
@@ -30,7 +32,8 @@ export const volumes: Linode.Volume[] = [
     filesystem_path: "/dev/disk/by-id/scsi-0Linode_Volume_linode_lasdf",
     label: "linode_lasdf",
     linode_id: 8591796,
-    status: "active"
+    status: "active",
+    tags: [],
   },
   {
     created: "2018-06-27T12:39:30",
@@ -41,6 +44,7 @@ export const volumes: Linode.Volume[] = [
     filesystem_path: "/dev/disk/by-id/scsi-0Linode_Volume_volume_region_no_linode",
     label: "volume_region_no_linode",
     linode_id: null,
-    status: "active"
+    status: "active",
+    tags: [],
   }
 ]

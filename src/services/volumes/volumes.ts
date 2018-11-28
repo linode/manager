@@ -11,6 +11,7 @@ export interface VolumeRequestPayload {
   region?: string,
   linode_id?: number,
   config_id?: number,
+  tags?: string[],
 };
 
 /**
@@ -141,7 +142,7 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
  * @param data { { label: string } } The updated label for this Volume.
  *
  */
-export const updateVolume = (volumeId: number, data: { label: string }) => Request<Volume>(
+export const updateVolume = (volumeId: number, data: { label: string, tags?: string[] }) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
   setData(data, UpdateVolumeSchema),
