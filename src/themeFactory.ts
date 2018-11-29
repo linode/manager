@@ -40,8 +40,10 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface Theme {
     name: string;
     '@keyframes rotate': any;
+    '@keyframes dash': any;
     bg: any;
     color: any;
+    animateCircleIcon?: any;
     notificationList: any;
     status: any;
   }
@@ -49,14 +51,14 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   interface ThemeOptions {
     name?: string;
     '@keyframes rotate'?: any;
+    '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    animateCircleIcon?: any;
     notificationList?: any;
     status?: any;
   }
 }
-
-
 
 const breakpoints = createBreakpoints({});
 
@@ -68,6 +70,23 @@ const primaryColors = {
   headline: '#32363C',
   divider: '#f4f4f4',
   offBlack: '#444',
+}
+
+const iconCircleAnimation = {
+  '& .circle': {
+    fill: primaryColors.main,
+    transition: 'fill .2s ease-in-out .2s',
+  },
+  '& .outerCircle': {
+    stroke: primaryColors.dark,
+    strokeDasharray: 1000,
+    strokeDashoffset: 1000,
+    animation: 'dash 2s linear forwards',
+  },
+  '& .insidePath *': {
+    transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white',
+  },
 }
 
 const themeDefaults: ThemeOptions = {
@@ -107,6 +126,11 @@ const themeDefaults: ThemeOptions = {
       transform: 'rotate(360deg)',
     },
   },
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   bg: {
     main: '#f4f4f4',
     offWhite: '#fbfbfb',
@@ -115,6 +139,7 @@ const themeDefaults: ThemeOptions = {
     lightBlue: '#D7E3EF',
     white: '#fff',
     pureWhite: '#fff',
+    tableHeader: '#fbfbfb',
   },
   color: {
     headline: primaryColors.headline,
@@ -135,6 +160,10 @@ const themeDefaults: ThemeOptions = {
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
     borderRow: 'white',
+    tableHeaderText: 'rgba(0, 0, 0, 0.54)',
+  },
+  animateCircleIcon: {
+    ...iconCircleAnimation,
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
@@ -164,31 +193,37 @@ const themeDefaults: ThemeOptions = {
     fontSize: 16,
     headline: {
       color: primaryColors.headline,
-      fontSize: '1.5rem',
+      fontSize: '1.25rem',
+      lineHeight: '1.75rem',
       fontFamily: 'LatoWebBold',
+      [breakpoints.up('lg')]: {
+        fontSize: '1.5rem',
+        lineHeight: '1.875rem',
+      },
     },
     title: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
       fontFamily: 'LatoWebBold',
-      lineHeight: '1.35417em',
+      lineHeight: '1.5rem',
     },
     subheading: {
       color: primaryColors.headline,
       fontSize: '1rem',
       fontFamily: 'LatoWebBold',
-      lineHeight: '1.2em',
+      lineHeight: '1rem',
     },
     body1: {
-      fontSize: '1rem',
+      fontSize: '0.875rem',
+      lineHeight: '1rem',
     },
     body2: {
-      fontSize: '.78rem',
-      lineHeight: '1.3em',
+      fontSize: '0.875rem',
+      lineHeight: '1rem',
     },
     caption: {
-      fontSize: '.9rem',
-      lineHeight: '1.3em',
+      fontSize: '0.625rem',
+      lineHeight: '0.625rem',
       color: primaryColors.text,
     },
     display2: {
@@ -238,7 +273,7 @@ const themeDefaults: ThemeOptions = {
           backgroundColor: 'transparent',
         },
       },
-      raisedPrimary: {
+      containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light,
         },
@@ -257,7 +292,7 @@ const themeDefaults: ThemeOptions = {
           },
         },
       },
-      raisedSecondary: {
+      containedSecondary: {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
@@ -327,9 +362,20 @@ const themeDefaults: ThemeOptions = {
     MuiChip: {
       root: {
         backgroundColor: '#f4f4f4',
-        height: 24,
+        height: 20,
+        display: 'inline-flex',
+        alignItems: 'center',
         borderRadius: 4,
+        marginTop: 2,
+        marginBottom: 2,
+        marginRight: 4,
+        paddingLeft: 2,
+        paddingRight: 2,
         color: '#555',
+        fontSize: '.8rem',
+        '&:last-child': {
+          marginRight: 0
+        },
         '&:hover': {
           '& $deleteIcon': {
             color: primaryColors.text,
@@ -339,8 +385,8 @@ const themeDefaults: ThemeOptions = {
       label: {
         paddingLeft: 4,
         paddingRight: 4,
-        fontSize: '.9rem',
         position: 'relative',
+        top: -1,
       },
       deleteIcon: {
         color: '#aaa',
@@ -507,6 +553,9 @@ const themeDefaults: ThemeOptions = {
           color: '#555',
         },
         '&$error': {
+          color: '#555',
+        },
+        '&$disabled': {
           color: '#555',
         },
       },
@@ -902,6 +951,14 @@ const themeDefaults: ThemeOptions = {
       scrollButtons: {
         flex: '0 0 40px',
       },
+      indicator: {
+        primary: {
+          backgroundColor: primaryColors.main,
+        },
+        secondary: {
+          backgroundColor: primaryColors.main,
+        },
+      },
     },
     MuiTableRow: {
       root: {
@@ -947,30 +1004,23 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
-    /** @todo Remove when tooltips are properly styled. */
-    // MuiTooltip: {
-    //   tooltip: {
-    //     borderRadius: 0,
-    //     maxWidth: 200,
-    //     backgroundColor: 'white',
-    //     boxShadow: '0 0 5px #bbb',
-    //     color: '#606469',
-    //     visibility: 'hidden',
-    //     textAlign: 'left',
-    //     width: 0,
-    //     height: 0,
-    //     [breakpoints.up('sm')]: {
-    //       padding: '8px 10px',
-    //       fontSize: '.9rem',
-    //     },
-    //     '&$open': {
-    //       width: 'auto',
-    //       height: 'auto',
-    //       opacity: 1,
-    //       visibility: 'visible',
-    //     },
-    //   },
-    // },
+    MuiTooltip: {
+      popper: {
+        opacity: 1,
+      },
+      tooltip: {
+        borderRadius: 0,
+        maxWidth: 200,
+        backgroundColor: 'white',
+        boxShadow: '0 0 5px #bbb',
+        color: '#606469',
+        textAlign: 'left',
+        [breakpoints.up('sm')]: {
+          padding: '8px 10px',
+          fontSize: '.9rem',
+        },
+      },
+    },
   },
 };
 

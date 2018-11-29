@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: 34,
       height: 34,
     },
-    padding:0
+    padding: 0
   },
   label: {
     marginBottom: theme.spacing.unit,
@@ -83,7 +83,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   status: {
     marginLeft: theme.spacing.unit,
-    padding: theme.spacing.unit,
     color: theme.color.white,
   },
   open: {
@@ -319,9 +318,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               }}
               linkText="Support Tickets"
               labelTitle={`#${ticket.id}: ${ticket.summary}`}
-              labelSubtitle={
-                `${ticket.status === 'closed' ? 'Closed' : 'Last updated'} by ${ticket.updated_by} at ${formattedDate}`
-              }
+              labelOptions={{
+                subtitle: `${ticket.status === 'closed'
+                  ? 'Closed'
+                  : 'Last updated'} by ${ticket.updated_by} at ${formattedDate}`
+              }}
               data-qa-breadcrumb
             />
             <Chip className={classNames({
@@ -329,7 +330,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
               [classes.open]: ticket.status === 'open' || ticket.status === 'new',
               [classes.closed]: ticket.status === 'closed',
             })}
-            label={ticket.status} />
+              label={ticket.status}
+              component="div"
+              role="term"
+            />
           </Grid>
         </Grid>
 

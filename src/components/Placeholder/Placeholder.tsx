@@ -68,9 +68,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
     textAlign: 'center',
     fontFamily: 'LatoWebBold',
-    fontSize: '2.4rem',
+    fontSize: '2.188rem',
+    lineHeight: '3.75rem',
     [theme.breakpoints.up('md')]: {
-      fontSize: '3.21rem',
+      fontSize: '2.5rem',
+      lineHeight: '4rem',
     }
   },
   button: {
@@ -116,7 +118,6 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       {buttonProps &&
         <Grid item xs={12} lg={10}>
           <Button
-            variant="raised"
             type="primary"
             className={classes.button}
             {...buttonProps}

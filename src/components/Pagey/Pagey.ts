@@ -1,3 +1,4 @@
+import { clone } from 'ramda';
 import * as React from 'react';
 
 /**
@@ -32,13 +33,16 @@ interface State<T={}> {
   data?: T[];
   orderBy?: string;
   order: 'asc' | 'desc';
+  filter: any;
+  searching: boolean;
 }
 
 export interface PaginationProps<T> extends State<T> {
-  handlePageChange: (v: number) => void;
+  handlePageChange: (v: number, showSpinner?: boolean) => void;
   handlePageSizeChange: (v: number) => void;
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
+  handleSearch: (newFilter: any) => void;
   onDelete: () => void;
 }
 
@@ -54,6 +58,8 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       error: undefined,
       orderBy: undefined,
       order: asc,
+      filter: {},
+      searching: false,
     }
 
     private onDelete = () => {
@@ -80,7 +86,10 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     };
 
     private request = (map?: Function) => {
-      const filters = {};
+      /**
+       * we might potentially have a search term to filter by
+       */
+      const filters = clone(this.state.filter);
 
       if (this.state.orderBy) {
         filters['+order_by'] = this.state.orderBy;
@@ -94,6 +103,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
             pages: response.pages,
             data: map ? map(response.data) : response.data,
             loading: false,
+            error: undefined,
           });
         })
         .catch((response) => {
@@ -106,12 +116,22 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     };
 
     public handlePageChange = (page: number) => {
-      this.setState({ page }, () => { this.request() });
+      /**
+       * change the page, make the request
+       */
+      this.setState({ page }, () => { this.request() })
     };
 
     public handleOrderChange = (orderBy: string, order: 'asc' | 'desc' = 'asc') => {
-      this.setState({ orderBy, order }, () => this.request());
+      this.setState({ orderBy, order, page: 1 }, () => this.request());
     };
+
+    public handleSearch = (filter: any) => {
+      this.setState({ filter, page: 1, searching: true }, () => {
+        return this.request()
+          .then(() => this.setState({ searching: false }))
+      });
+    }
 
     public render() {
       return React.createElement(Component, {
@@ -121,6 +141,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         handlePageSizeChange: this.handlePageSizeChange,
         request: this.request,
         handleOrderChange: this.handleOrderChange,
+        handleSearch: this.handleSearch,
         onDelete: this.onDelete,
       });
     }

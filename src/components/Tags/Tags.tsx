@@ -15,18 +15,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     root: {},
     tag: {
-      marginTop: theme.spacing.unit / 2,
-      marginRight: theme.spacing.unit,
-      padding: theme.spacing.unit / 2,
       backgroundColor: theme.color.grey2,
       color: theme.palette.text.primary,
       fontFamily: 'LatoWeb',
       '&:focus': {
         backgroundColor: theme.color.grey2,
-      },
-      '& > span': {
-        position: 'relative',
-        top: -2,
       },
     },
   });

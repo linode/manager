@@ -2,7 +2,7 @@ import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -336,8 +336,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet}
-            variant="raised"
-            color="primary"
+            type="primary"
             data-qa-submit
           >
             {mode === modes.EDITING
@@ -346,8 +345,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           </Button>
           <Button
             onClick={this.close}
-            variant="raised"
-            color="secondary"
+            type="secondary"
             className="cancel"
             data-qa-cancel
           >

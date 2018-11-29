@@ -3,12 +3,15 @@ import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
 import CreatableSelect, { Props as CreatableSelectProps } from 'react-select/lib/Creatable';
 import { Props as SelectProps } from 'react-select/lib/Select';
+import { StylesConfig } from 'react-select/lib/styles';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
 import LoadingIndicator from './components/LoadingIndicator';
-import MultiValue from './components/MultiValue';
+import MultiValueContainer from './components/MultiValueContainer';
+import MultiValueLabel from './components/MultiValueLabel';
+import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
 import Option from './components/Option';
 import Control from './components/SelectControl';
@@ -29,6 +32,11 @@ type ClassNames = 'root'
 | 'selectedMenuItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   root: {
     width: '100%',
     position: 'relative',
@@ -99,6 +107,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .react-select__indicator-separator': {
       display: 'none',
     },
+    '& .react-select__multi-value': {
+      borderRadius: 4,
+      backgroundColor: theme.bg.main,
+      alignItems: 'center',
+      '& svg': {
+        color: theme.palette.text.primary,
+        margin: '1px 2px 0 2px',
+      },
+      '&:hover': {
+        backgroundColor: theme.bg.main,
+        '& svg': {
+          color: theme.palette.primary.main,
+        },
+      },
+    },
     '& .react-select__dropdown-indicator': {
     },
     '& [class*="MuiFormHelperText-error"]': {
@@ -120,14 +143,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   suggestionRoot: {
     cursor: 'pointer',
-    display: 'flex',
     width: 'calc(100% + 2px)',
     alignItems: 'space-between',
     justifyContent: 'space-between',
     borderBottom: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.up('md')]: {
+     display: 'flex',
+    },
     '&:last-child': {
       borderBottom: 0,
-    }
+    },
   },
   highlight: {
     color: theme.palette.primary.main,
@@ -140,10 +165,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: '40px',
       height: '40px',
     },
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
+    wordBreak: 'break-all',
   },
   suggestionDescription: {
     color: theme.color.headline,
@@ -157,31 +189,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   tagContainer: {
     display: 'flex',
-    justifyContent: 'center',
+    flexWrap: 'wrap',
+    paddingRight: 8,
+    justifyContent: 'flex-end',
     alignItems: 'center',
     '& > div': {
       margin: '2px',
     }
   },
   selectedMenuItem: {
+    ...theme.animateCircleIcon,
     backgroundColor: `${theme.bg.main} !important`,
-    '& .circle': {
-      transition: theme.transitions.create(['fill']),
-      fill: theme.palette.primary.main,
-    },
-    '& .outerCircle': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: '#2967B1',
-    },
-    '& .insidePath *': {
-      transition: theme.transitions.create(['stroke']),
-      stroke: 'white',
-    },
   },
 });
 
-export interface Item {
-  value: string | number;
+export interface Item<T = string | number> {
+  value: T;
   label: string;
   data?: any;
 }
@@ -218,7 +241,7 @@ export interface EnhancedSelectProps {
   label?: string;
   placeholder?: string;
   errorText?: string;
-  styleOverrides?: any;
+  styleOverrides?: StylesConfig;
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
@@ -232,7 +255,9 @@ const _components = {
   Control,
   NoOptionsMessage,
   Placeholder,
-  MultiValue,
+  MultiValueContainer,
+  MultiValueLabel,
+  MultiValueRemove,
   Option,
   DropdownIndicator,
   LoadingIndicator
@@ -334,12 +359,12 @@ class Select extends React.PureComponent<CombinedProps,{}> {
         options={options}
         components={combinedComponents}
         onChange={onChange}
-        onMenuClose={onMenuClose}
         onInputChange={onInputChange}
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
         noOptionsMessage={noOptionsMessage}
         menuPlacement="auto"
+        onMenuClose={onMenuClose}
       />
     );
   }

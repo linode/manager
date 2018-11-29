@@ -17,6 +17,7 @@ import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { TypesProvider, WithTypesContext } from 'src/context/types';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
+import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
@@ -92,6 +93,10 @@ const Help = DefaultLoader({
 
 const SupportSearchLanding = DefaultLoader({
   loader: () => import('src/features/Help/SupportSearchLanding'),
+});
+
+const SearchLanding = DefaultLoader({
+  loader: () => import('src/features/Search'),
 });
 
 type ClassNames = 'appFrame'
@@ -345,8 +350,9 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route exact path="/support" component={Help} />
                               <Route exact path="/support/search/" component={SupportSearchLanding} />
                               <Route path="/dashboard" component={Dashboard} />
+                              <Route path="/search" component={SearchLanding} />
                               <Redirect exact from="/" to="/dashboard" />
-                              <Route component={NotFound} />
+\                              <Route component={NotFound} />
                             </Switch>
                           </Grid>
                           {hasDoc &&
@@ -376,6 +382,7 @@ export class App extends React.Component<CombinedProps, State> {
                     onClose={this.closeWelcomeBanner}
                     data-qa-beta-notice />
                   <ToastNotifications />
+                  <DomainCreateDrawer />
                   <VolumeDrawer />
                   <BackupDrawer />
                 </div>

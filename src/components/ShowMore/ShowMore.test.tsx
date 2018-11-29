@@ -22,7 +22,7 @@ describe('ShowMore', () => {
   });
 
   it('should render a chip with items.length', () => {
-    const chipText = wrapper.find('Chip div span').text();
+    const chipText = wrapper.find('Chip button span').text();
     expect(chipText).toBe('+2');
   });
 });

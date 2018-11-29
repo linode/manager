@@ -1,7 +1,7 @@
 import { last } from 'ramda';
 import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LinodePowerControl from '../LinodePowerControl';
@@ -84,7 +84,7 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
           linkTo="/linodes"
           linkText="Linodes"
           labelTitle={labelInput.label}
-          labelLink={getLabelLink()}
+          labelOptions={{ linkTo: getLabelLink() }}
           onEditHandlers={{
             onEdit: labelInput.onEdit,
             onCancel: labelInput.onCancel,

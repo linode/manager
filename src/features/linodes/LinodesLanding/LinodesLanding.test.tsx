@@ -8,28 +8,12 @@ import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 
 import { ListLinodes } from './LinodesLanding';
 
+import { pageyProps } from 'src/__data__/pageyProps';
+
 const RoutedListLinodes = withRouter(ListLinodes);
-
-
-const order: 'asc' = 'asc';
-
-const paginationProps = {
-  count: 0,
-  data: [],
-  loading: false,
-  order,
-  page: 1,
-  pageSize: 100,
-  handlePageChange: jest.fn(),
-  handlePageSizeChange: jest.fn(),
-  request: jest.fn(),
-  handleOrderChange: jest.fn(),
-  onDelete: jest.fn(),
-};
 
 const actions = {
   getLinodesWithoutBackups: jest.fn(),
-  openBackupsDrawer: jest.fn(),
   clearSidebar: jest.fn(),
   setSidebar: jest.fn(),
 }
@@ -47,9 +31,6 @@ describe('ListLinodes', () => {
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
             /** Pagination */
-            {...paginationProps}
-            count={linodes.length}
-            data={linodes}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
@@ -59,6 +40,8 @@ describe('ListLinodes', () => {
             actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
+            data={linodes}
+            {...pageyProps}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -72,8 +55,7 @@ describe('ListLinodes', () => {
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
             /** Pagination Props */
-            {...paginationProps}
-            count={0}
+            {...pageyProps}
             data={[]}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
@@ -101,7 +83,7 @@ describe('ListLinodes', () => {
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
             /** Pagination Props */
-            {...paginationProps}
+            {...pageyProps}
             count={linodes.length}
             data={linodes}
             classes={{ root: '', title: '' }}

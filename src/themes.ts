@@ -17,6 +17,23 @@ const primaryColors = {
   offBlack: '#fff',
 }
 
+const iconCircleAnimation = {
+  '& .circle': {
+    fill: primaryColors.main,
+    transition: 'fill .2s ease-in-out .2s',
+  },
+  '& .outerCircle': {
+    stroke: primaryColors.dark,
+    strokeDasharray: 1000,
+    strokeDashoffset: 1000,
+    animation: 'dash 2s linear forwards',
+  },
+  '& .insidePath *': {
+    transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
+    stroke: 'white',
+  },
+} 
+
 export const dark = createTheme({
   name: 'darkTheme',
   breakpoints,
@@ -28,6 +45,11 @@ export const dark = createTheme({
       transform: 'rotate(360deg)',
     },
   },
+  '@keyframes dash': {
+    to: {
+      'stroke-dashoffset': 0,
+    },
+  },
   bg: {
     main: '#2F3236',
     offWhite: '#111111',
@@ -36,6 +58,7 @@ export const dark = createTheme({
     lightBlue: '#444',
     white: '#32363C',
     pureWhite: '#000',
+    tableHeader: 'rgba(0, 0, 0, 0.15)',
   },
   color: {
     headline: primaryColors.headline,
@@ -56,6 +79,10 @@ export const dark = createTheme({
     absWhite: '#000',
     blueDTwhite: '#fff',
     borderRow: 'rgba(0, 0, 0, 0.15)',
+    tableHeaderText: '#fff',
+  },
+  animateCircleIcon: {
+    ...iconCircleAnimation,
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',
@@ -117,7 +144,7 @@ export const dark = createTheme({
           color: primaryColors.text,
         },
       },
-      raisedPrimary: {
+      containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light,
         },
@@ -136,7 +163,7 @@ export const dark = createTheme({
           },
         },
       },
-      raisedSecondary: {
+      containedSecondary: {
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
         '&:hover, &:focus': {
@@ -285,6 +312,9 @@ export const dark = createTheme({
           color: '#C9CACB',
         },
         '&$error': {
+          color: '#C9CACB',
+        },
+        '&$disabled': {
           color: '#C9CACB',
         },
       },
@@ -540,14 +570,13 @@ export const dark = createTheme({
         textDecoration: 'underline',
       },
     },
-    /** @todo Remove when tooltips are properly styled. */
-    // MuiTooltip: {
-    //   tooltip: {
-    //     backgroundColor: '#444',
-    //     boxShadow: '0 0 5px #222',
-    //     color: '#fff',
-    //   },
-    // },
+    MuiTooltip: {
+      tooltip: {
+        backgroundColor: '#444',
+        boxShadow: '0 0 5px #222',
+        color: '#fff',
+      },
+    },
     MuiTypography: {
       root: {
         '& a.black': {

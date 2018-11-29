@@ -44,7 +44,7 @@ describe('Enhanced Select Suite', () => {
             const errorMsg = "You didn't choose the correct fruit.";
             const basicSelectWithError = $('[data-qa-enhanced-select="Choose one fruit"]');
             const error = basicSelectWithError.$$('p').filter(p => p.getText().includes(errorMsg));
-            
+
             expect(error.length).toBe(1);
             expect(error[0].isVisible()).toBe(true);
         });
@@ -55,7 +55,7 @@ describe('Enhanced Select Suite', () => {
 
         it('should display the multi select with placeholder text', () => {
             multiSelect = $('[data-qa-multi-select="Choose some fruit"]');
-            expect(multiSelect.getText()).toBe('Choose some fruit');        
+            expect(multiSelect.getText()).toBe('Choose some fruit');
         });
 
         it('should display options on click', () => {
@@ -81,7 +81,7 @@ describe('Enhanced Select Suite', () => {
         });
 
         it('should remove the chip on click of the remove icon', () => {
-            browser.click(`[data-qa-multi-option="${selectedOption}"] svg`);
+            $(`[data-qa-multi-option="${selectedOption}"]`).$('..').$('svg').click();
             browser.waitForVisible(`[data-qa-multi-option="${selectedOption}"]`, constants.wait.true, true);
         });
     });
@@ -116,7 +116,7 @@ describe('Enhanced Select Suite', () => {
 
         it('should select an already defined list option', () => {
             browser.click(`[data-qa-multi-option="${newOption}"]`);
-            
+
             const optionToSelect = $$('[data-qa-option]');
             const optionName = optionToSelect[0].getText();
             optionToSelect[0].click();
@@ -125,7 +125,7 @@ describe('Enhanced Select Suite', () => {
         });
 
         it('should remove the created option on click of remove icon', () => {
-            browser.click(`[data-qa-multi-option="${newOption}"] svg`);
+            $(`[data-qa-multi-option="${newOption}"]`).$('..').$('svg').click();
             browser.waitForVisible(`[data-qa-multi-option="${newOption}"]`, constants.wait.normal, true);
         });
     });

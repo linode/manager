@@ -1,8 +1,8 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import Button from 'src/components/core/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -154,7 +154,7 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
             <MenuItem value="none" disabled>Select a Linode</MenuItem>
             {
               linodes && linodes.map((l) => {
-                return <MenuItem key={l[0]} value={l[0]}>{l[1]}</MenuItem>;
+                return <MenuItem data-qa-restore-options key={l[0]} value={l[0]}>{l[1]}</MenuItem>;
               })
             }
           </Select>
@@ -176,13 +176,13 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
         {Boolean(generalError) && <FormHelperText error>{generalError}</FormHelperText>}
         <ActionsPanel>
           <Button
-            variant="raised"
-            color="primary"
+            type="primary"
             onClick={this.restoreToLinode}
+            data-qa-restore-submit
           >
             Restore
           </Button>
-          <Button onClick={this.handleCloseDrawer}>Cancel</Button>
+          <Button data-qa-restore-cancel onClick={this.handleCloseDrawer}>Cancel</Button>
         </ActionsPanel>
       </Drawer>
     );

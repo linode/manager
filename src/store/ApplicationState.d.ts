@@ -10,6 +10,7 @@ declare interface ApplicationState {
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
+  domainDrawer: DomainDrawerState;
 }
 
 declare interface AuthState {
@@ -21,6 +22,16 @@ declare type DocumentationState = Linode.Doc[];
 
 declare interface VolumeDrawerState {
   mode: string;
+  volumeId?: number;
+  volumeLabel?: string;
+  volumeRegion?: string;
+  volumeSize?: number;
+  volumeTags?: string[];
+  volumePath?: string;
+  linodeId?: number;
+  linodeLabel?: string;
+  linodeRegion?: string;
+  message?: string;
 }
 
 declare interface SidebarState {
@@ -40,6 +51,13 @@ declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;
+}
+
+declare interface DomainDrawerState {
+  open: boolean;
+  mode: string;
+  cloneId?: number;
+  domain?: string;
 }
 
 declare interface RequestableData<D> {

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Snackbar from 'src/components/core/Snackbar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -114,13 +114,29 @@ class Notifier extends React.Component<CombinedProps, State> {
     this.subscription = toasts$
       .merge(
         events$
-          .filter((e) => !e._initial && e.status === 'failed')
+          .filter((e) => !e._initial)
           .map(event => {
-            if (event.action === 'disk_imagize') {
+            if (event.action === 'volume_detach' && ['finished', 'notification'].includes(event.status)) {
+              return createToast(`Volume successfully detached.`);
+            }
+
+            if (event.action === 'volume_attach' && ['finished', 'notification'].includes(event.status)) {
+              return createToast(`Volume successfully attached.`);
+            }
+
+            if (event.action === 'volume_create' && ['finished', 'notification'].includes(event.status)) {
+              return createToast(`Volume successfully created.`);
+            }
+
+            if (event.action === 'volume_delete' && ['finished', 'notification'].includes(event.status)) {
+              return createToast(`Volume successfully deleted.`);
+            }
+
+            if (event.action === 'disk_imagize' && event.status === 'failed') {
               return createToast('There was an error creating an image.', 'error');
             }
 
-            if (event.action === 'volume_create') {
+            if (event.action === 'volume_create' && event.status === 'failed') {
               return createToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
             }
 
@@ -200,7 +216,7 @@ class Notifier extends React.Component<CombinedProps, State> {
             >
               <Grid item xs={9} lg={10}>
                 <Typography
-                  variant="caption"
+                  variant="body1"
                   className={classes.content}
                   data-qa-toast-message
                 >
@@ -210,8 +226,7 @@ class Notifier extends React.Component<CombinedProps, State> {
               <Grid item className={classes.actions} xs={3} lg={2}>
                 <Button
                   onClick={this.onClose}
-                  color="secondary"
-                  variant="raised"
+                  type="secondary"
                   className={classes.button}
                 >
                   <Close />

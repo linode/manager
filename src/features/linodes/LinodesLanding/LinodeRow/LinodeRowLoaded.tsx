@@ -128,7 +128,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
       />
       <TableCell parentColumn="Plan" className={classes.planCell}>
         {!typesLoading &&
-          <Typography variant="caption">{displayType(linodeType, typesData || [])}</Typography>
+          <Typography variant="body1">{displayType(linodeType, typesData || [])}</Typography>
         }
       </TableCell>
       <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
