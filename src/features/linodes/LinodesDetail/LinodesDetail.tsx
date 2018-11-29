@@ -1,5 +1,6 @@
 import { Location } from 'history';
 import * as moment from 'moment';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -17,7 +18,6 @@ import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { Requestable } from 'src/requestableContext';
 import { getImage } from 'src/services/images';
 import {
@@ -78,7 +78,7 @@ interface MatchProps { linodeId?: number };
 
 type RouteProps = RouteComponentProps<MatchProps>;
 
-type CombinedProps = DispatchProps & RouteProps;
+type CombinedProps = DispatchProps & RouteProps & InjectedNotistackProps;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
@@ -495,7 +495,9 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             loading: false,
           },
         });
-        sendToast('Linode upgrade has been initiated')
+        this.props.enqueueSnackbar('Linode upgrade has been initiated.', {
+          variant: 'info'
+        });
       })
       .catch(() => {
         this.setState({
@@ -647,6 +649,7 @@ const enhanced = compose(
   connected,
   reloadable,
   LinodeDetailErrorBoundary,
+  withSnackbar
 );
 
 export default enhanced(LinodeDetail);

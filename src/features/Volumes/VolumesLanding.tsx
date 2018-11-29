@@ -1,9 +1,11 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
+
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
@@ -26,7 +28,6 @@ import TableRowError from 'src/components/TableRowError';
 import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
 import { generateInFilter, resetEventsPolling } from 'src/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
@@ -140,6 +141,7 @@ type CombinedProps =
   & PaginationProps<ExtendedVolume>
   & DispatchProps
   & RouteProps
+  & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
 interface TagProps {
@@ -472,7 +474,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     detachVolume(volumeID)
       .then((response) => {
         /* @todo: show a progress bar for volume detachment */
-        sendToast('Volume detachment started');
+        this.props.enqueueSnackbar('Volume detachment started', {
+          variant: 'info',
+        });
         this.closeDestructiveDialog();
         resetEventsPolling();
       })
@@ -594,5 +598,6 @@ export default compose<CombinedProps, Props>(
   documented,
   paginated,
   styled,
-  withEvents
+  withEvents,
+  withSnackbar
 )(VolumesLanding);

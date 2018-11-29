@@ -1,5 +1,6 @@
 import 'font-logos/assets/font-logos.css';
 import createBrowserHistory from 'history/createBrowserHistory';
+import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -101,13 +102,19 @@ const renderAuthentication = () =>
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <Switch>
-        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-        <Route exact path="/null" render={renderNull} />
-        <Route render={renderAuthentication}/>
-      </Switch>
-    </Router>
+    <SnackbarProvider
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      maxSnack={3}
+      autoHideDuration={4000}
+    >
+      <Router>
+        <Switch>
+          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+          <Route exact path="/null" render={renderNull} />
+          <Route render={renderAuthentication} />
+        </Switch>
+      </Router>
+    </SnackbarProvider>
   </Provider>,
   document.getElementById('root') as HTMLElement,
 );
