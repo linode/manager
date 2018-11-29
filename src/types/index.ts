@@ -6,6 +6,8 @@
 declare module '*.svg';
 declare module '*.png';
 
+declare type Omit<T, K extends keyof any> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
+
 namespace Linode {
   export type TodoAny = any;
 
