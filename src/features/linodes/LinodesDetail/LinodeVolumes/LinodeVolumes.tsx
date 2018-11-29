@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import 'rxjs/add/ operator/filter';
+import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
