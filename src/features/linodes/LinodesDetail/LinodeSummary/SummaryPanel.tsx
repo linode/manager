@@ -53,7 +53,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     [theme.breakpoints.only('xs')]: {
       padding: '0 8px !important',
     },
-    [theme.breakpoints.only('lg')]: {
+    [theme.breakpoints.up('lg')]: {
       '&:first-of-type': {
         padding: '8px 8px 0 8px !important',
       },
@@ -187,7 +187,7 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
                   className={classes.section}
                   data-qa-volumes={volumes.length}
                 >
-                  Volumes: <Link
+                  Volumes:&#160;<Link
                     className={classes.volumeLink}
                     to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
                 </div>
