@@ -1,10 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
-
 import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 
 interface State {
   selected: number;
@@ -151,5 +148,4 @@ class InteractiveExample extends React.Component<{}, State> {
 }
 
 storiesOf('SelectionRow', module)
-  .addDecorator(ThemeDecorator)
   .add('Interactive example', () => (<InteractiveExample />));

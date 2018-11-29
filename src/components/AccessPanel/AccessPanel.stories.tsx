@@ -1,10 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
-
-import AccessPanel, {UserSSHKeyObject} from './AccessPanel';
-
+import AccessPanel, { UserSSHKeyObject } from './AccessPanel';
 
 class PasswordAccess extends React.Component<{}, { password: string }> { 
   state = {
@@ -70,7 +66,6 @@ class PasswordAndSSHAccess extends React.Component<{}, { password: string, users
 }
 
 storiesOf('Access Panel', module)
-  .addDecorator(ThemeDecorator)
   .add('Password Access', () => (
     <PasswordAccess />
   ))

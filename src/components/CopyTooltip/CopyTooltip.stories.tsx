@@ -1,8 +1,5 @@
-import * as React from 'react';
-
 import { storiesOf } from '@storybook/react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
+import * as React from 'react';
 import CopyTooltip from './CopyTooltip';
 
 class Example extends React.Component {
@@ -23,5 +20,4 @@ class Example extends React.Component {
 }
 
 storiesOf('Copy Tooltip', module)
-  .addDecorator(ThemeDecorator)
   .add('Copy Tooltip', () => (<Example />));

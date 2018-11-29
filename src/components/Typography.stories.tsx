@@ -1,20 +1,16 @@
-import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-
 import { default as MDivider } from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
-
+import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 import Placeholder from 'src/components/Placeholder';
-import ThemeDecorator from '../utilities/storybookDecorators';
 
 const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />;
 
 storiesOf('Typography', module)
-.addDecorator(ThemeDecorator)
 .add('Headings', () => (
     <React.Fragment>
         <Typography variant="headline" gutterBottom>
-            Primary Heading 
+            Primary Heading
         </Typography>
         <Typography variant="body1" gutterBottom>
             Implemented using the 'headline' variant. Utilized for page-level headings and high-level typographical components, such as editable text and breadcrumbs.
@@ -26,12 +22,12 @@ storiesOf('Typography', module)
         <Typography variant="body1" gutterBottom>
             Implemented using the 'title' variant. Utilized for section-level headings, such as drawers, some table headers and panel sections.
         </Typography>
-        <Divider />  
+        <Divider />
         <Typography variant="subheading" gutterBottom>
             Tertiary Heading
         </Typography>
         <Typography variant="body1" gutterBottom>
-            Implemented using the 'subheading' variant. Utilized for sub-section headings. 
+            Implemented using the 'subheading' variant. Utilized for sub-section headings.
         </Typography>
         <Divider />
         <Typography variant="display2" gutterBottom>
@@ -69,20 +65,19 @@ storiesOf('Typography', module)
     </React.Fragment>
 ))
 
-storiesOf('Typography', module) 
-.addDecorator(ThemeDecorator)
+storiesOf('Typography', module)
 .add('Text', () => (
     <React.Fragment>
         <Typography variant="body2" gutterBottom>
-            Body2. Implemented using the 'body2' variant. 
-            Styles are identical for both body variants since there are 
-            2 defined by MUI but Manager only has 1 body style. Utilized for general body text, messaging, descriptions, and helper info. 
+            Body2. Implemented using the 'body2' variant.
+            Styles are identical for both body variants since there are
+            2 defined by MUI but Manager only has 1 body style. Utilized for general body text, messaging, descriptions, and helper info.
         </Typography>
         <Divider />
         <Typography variant="body1" gutterBottom>
-            Body1. Implemented using the 'body1' variant. 
-            Styles are identical for both body variants since there are 
-            2 defined by MUI but Manager only has 1 body style. Utilized for general body text, messaging, descriptions, and helper info. 
+            Body1. Implemented using the 'body1' variant.
+            Styles are identical for both body variants since there are
+            2 defined by MUI but Manager only has 1 body style. Utilized for general body text, messaging, descriptions, and helper info.
         </Typography>
         <Divider />
         <Typography variant="caption" gutterBottom>

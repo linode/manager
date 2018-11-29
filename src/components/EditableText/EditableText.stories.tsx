@@ -1,7 +1,5 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import EditableText from './EditableText';
 
 class InteractiveEditableText extends React.Component {
@@ -41,7 +39,6 @@ class InteractiveEditableText extends React.Component {
 }
 
 storiesOf('Editable Text', module)
-.addDecorator(ThemeDecorator)
 .add('Headline & Title', () => (
   <InteractiveEditableText />
 ));
