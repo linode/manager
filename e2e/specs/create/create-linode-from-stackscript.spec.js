@@ -57,7 +57,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
         let i = 0;
         const stackScripts = ConfigureLinode.stackScriptRows
             .map(s => s.getAttribute('data-qa-table-row'));
-        
+
         while (!ConfigureLinode.userDefinedFieldsHeader.isVisible()) {
             browser.jsClick(`[data-qa-table-row="${stackScripts[i]}"]`);
             i++;
@@ -82,9 +82,9 @@ describe('Create Linode - Create from StackScript Suite', () => {
 
         ConfigureLinode.randomPassword();
         ConfigureLinode.deploy.click();
-        
+
         browser.waitForVisible('[data-qa-linode]');
-        browser.waitForVisible('[data-qa-image]', constants.wait.minute * 3);
+        browser.waitForVisible('[data-qa-image]', constants.wait.minute * 5);
 
         const listingImageName = $$('[data-qa-linode]')[0].$('[data-qa-image]').getText();
         expect(listingImageName).toBe(imageName);

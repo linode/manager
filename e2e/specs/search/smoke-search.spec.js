@@ -49,7 +49,7 @@ describe('Header - Search Suite', () => {
         SearchBar.assertSuggestions();
     });
 
-    it('should select result on arrow down', () => {
+    xit('should select result on arrow down', () => {
         if (!browser.options.desiredCapabilities.browserName.includes('chrome')) {
             pending();
         }
@@ -64,7 +64,7 @@ describe('Header - Search Suite', () => {
         SearchBar.searchInput.setValue('\uE006');
 
         const currentUrl = browser.getUrl();
-        
+
         browser.waitUntil(function() {
             return browser.getUrl() !== currentUrl;
         }, constants.wait.normal);
@@ -73,7 +73,7 @@ describe('Header - Search Suite', () => {
     it('should navigate to result on click', () => {
         browser.url(constants.routes.dashboard);
         const currentUrl = browser.getUrl();
-        
+
         SearchBar.executeSearch(testLinode);
         browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
 
