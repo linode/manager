@@ -1,14 +1,18 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
 
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
 import OverflowIPs from './OverflowIPs';
 
 describe('OverflowIPs', () => {
   it('should render without error and display the number of IPs', () => {
     const result = mount(
-      <OverflowIPs
-        ips={['8.8.8.8']}
-      />,
+      <LinodeThemeWrapper>
+        <OverflowIPs
+          ips={['8.8.8.8']}
+        />
+      </LinodeThemeWrapper>,
     );
     const rendered = result.find('OverflowIPs');
     const numberText = result.find('span').text();
@@ -19,9 +23,11 @@ describe('OverflowIPs', () => {
 
   it('should render each IPAddress when the chip is clicked', () => {
     const result = mount(
-      <OverflowIPs
-        ips={['8.8.8.8', '8.8.4.4', '192.168.100.112']}
-      />,
+      <LinodeThemeWrapper>
+        <OverflowIPs
+          ips={['8.8.8.8', '8.8.4.4', '192.168.100.112']}
+        />
+      </LinodeThemeWrapper>,
     );
     const chip = result.find('Chip');
     chip.simulate('click');
