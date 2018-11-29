@@ -1,6 +1,6 @@
-import OpenInNew from '@material-ui/icons/OpenInNew';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
+import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import ListItem from 'src/components/core/ListItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -25,11 +25,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   icon: {
     display: 'inline-block',
-    fontSize: '0.8em',
+    width: 12,
+    height: 12,
     position: 'relative',
     top: 5,
     marginLeft: theme.spacing.unit / 2,
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
   },
   source: {
     marginTop: theme.spacing.unit / 2,
@@ -65,9 +66,9 @@ const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
       <ListItem className={classes.root} component="div">
         <div className={classes.row}>
           <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
-          {!isFinal && <OpenInNew className={classes.icon} />}
+          {!isFinal && <Arrow className={classes.icon} />}
         </div>
-        {!isFinal && <Typography variant="caption" className={classes.source}>{source}</Typography>}
+        {!isFinal && <Typography className={classes.source}>{source}</Typography>}
       </ListItem>
     </React.Fragment>
   );
@@ -75,7 +76,7 @@ const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props>(
   styled,
   RenderGuard
   )(searchItem);

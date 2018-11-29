@@ -4,20 +4,16 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onShowConfig: (path: string, label: string) => void;
+  onShowConfig: (volumeLabel: string, volumePath: string) => void;
   onEdit: (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-    linodeLabel: string,
+    volumeId: number,
+    volumeLabel: string,
+    volumeTags: string[],
   ) => void;
   onResize: (
-    volumeID: number,
-    label: string,
-    size: number,
-    regionID: string,
-    linodeLabel: string,
+    volumeId: number,
+    volumeSize: number,
+    volumeLabel: string,
   ) => void;
   onClone: (
     volumeID: number,
@@ -39,6 +35,7 @@ interface Props {
   linodeLabel: string;
   regionID: string;
   volumeID: number;
+  volumeTags: string[];
   size: number;
 }
 
@@ -47,31 +44,27 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 class VolumesActionMenu extends React.Component<CombinedProps> {
   handleShowConfig = () => {
     const { onShowConfig, label, filesystemPath } = this.props;
-    onShowConfig(filesystemPath, label)
+    onShowConfig(label, filesystemPath);
   }
 
   handleOpenEdit = () => {
     const {
       volumeID,
       label,
-      size,
-      regionID,
-      linodeLabel,
+      volumeTags,
       onEdit
     } = this.props;
-    onEdit(volumeID, label, size, regionID, linodeLabel)
+    onEdit(volumeID, label, volumeTags)
   }
 
   handleResize = () => {
     const {
       volumeID,
-      label,
       size,
-      regionID,
-      linodeLabel,
-      onResize
+      label,
+      onResize,
     } = this.props;
-    onResize(volumeID, label, size, regionID, linodeLabel)
+    onResize(volumeID, size, label)
   }
 
   handleClone = () => {
@@ -128,7 +121,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
           },
         },
         {
-          title: 'Edit Label',
+          title: 'Edit Volume',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleOpenEdit();
             closeMenu();

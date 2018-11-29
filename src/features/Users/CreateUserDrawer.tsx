@@ -150,7 +150,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button
             type="primary"
-            variant="raised"
             onClick={this.onSubmit}
             loading={submitting}
             data-qa-submit
@@ -159,7 +158,6 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           </Button>
           <Button
             type="cancel"
-            variant="raised"
             onClick={onClose}
             data-qa-cancel
           >

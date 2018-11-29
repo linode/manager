@@ -1,8 +1,8 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Button from 'src/components/core/Button';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -460,10 +460,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <ActionsPanel>
-            <Button onClick={this.onSubmit} variant="raised" color="primary">Submit</Button>
+            <Button onClick={this.onSubmit}  type="primary">Submit</Button>
             <Button
-              variant="raised"
-              color="secondary"
+              type="secondary"
               className="cancel"
               onClick={onClose}
             >

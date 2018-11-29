@@ -11,7 +11,9 @@ const {
     getMyStackScripts,
     removeStackScript,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    putGlobalSetting,
+    getGlobalSettings
 } = require('../setup/setup');
 
 const {
@@ -71,8 +73,8 @@ exports.browserCommands = () => {
         return token;
     });
 
-    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[]) {
-        return createLinode(token, password, linodeLabel, tags)
+    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[], type=undefined, region=undefined) {
+        return createLinode(token, password, linodeLabel, tags, type, region)
             .then(res => res)
             .catch(err => err);
     });
@@ -196,6 +198,16 @@ exports.browserCommands = () => {
 
     browser.addCommand('updateUserProfile', function async(token,profileData) {
         return updateUserProfile(token,profileData)
+            .then(res => res);
+    });
+
+    browser.addCommand('updateGlobalSettings', function async(token, settingsData) {
+        return putGlobalSetting(token,settingsData)
+            .then(res => res);
+    });
+
+    browser.addCommand('getGlobalSettings', function async(token) {
+        return getGlobalSettings(token)
             .then(res => res);
     });
 }

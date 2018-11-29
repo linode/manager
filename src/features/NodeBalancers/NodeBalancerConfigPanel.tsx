@@ -1057,7 +1057,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <ActionsPanel style={{ padding: 0 }}>
                       {forEdit &&
                         <Button
-                          variant="raised"
                           type="primary"
                           onClick={this.onSave}
                           loading={submitting}

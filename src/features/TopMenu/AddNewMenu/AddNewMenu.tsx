@@ -8,13 +8,12 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
-import { openForCreating } from 'src/store/reducers/volumeDrawer';
+import { openForCreating as openDomainDrawerForCreating } from 'src/store/reducers/domainDrawer';
+import { openForCreating as openVolumeDrawerForCreating } from 'src/store/reducers/volumeDrawer';
 import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
-
 
 type CSSClasses = 'wrapper'
   | 'menu'
@@ -56,22 +55,20 @@ const styles: StyleRulesCallback = (theme) => ({
 });
 
 interface Props {
-  openForCreating: typeof openForCreating;
+  openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
 }
 
 interface State {
   anchorEl?: HTMLElement;
-  domainDrawerOpen: boolean;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}> & DispatchProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined,
-    domainDrawerOpen: false,
   };
 
   items: MenuItem[] = [
@@ -88,7 +85,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'Volume',
       onClick: (e) => {
-        this.props.openForCreating();
+        this.props.openVolumeDrawerForCreating();
         this.handleClose();
         e.preventDefault();
       },
@@ -108,7 +105,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     {
       title: 'Domain',
       onClick: (e) => {
-        this.openDomainDrawer();
+        this.props.openDomainDrawerForCreating();
         this.handleClose();
         e.preventDefault();
       },
@@ -125,29 +122,15 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   }
 
-  openDomainDrawer = () => {
-    this.setState({ domainDrawerOpen: true });
-  }
-
-  closeDomainDrawer = () => {
-    this.setState({ domainDrawerOpen: false });
-  }
-
-  onDomainSuccess = (domain:Linode.Domain) => {
-    const id = domain.id ? domain.id : '';
-    this.props.history.push(`/domains/${id}`);
-  }
-
   render() {
-    const { anchorEl, domainDrawerOpen } = this.state;
+    const { anchorEl } = this.state;
     const { classes } = this.props;
     const itemsLen = this.items.length;
 
     return (
       <div className={classes.wrapper}>
         <Button
-          variant="raised"
-          color="primary"
+          type="primary"
           aria-owns={anchorEl ? 'add-new-menu' : undefined}
           aria-expanded={anchorEl ? true : undefined}
           aria-haspopup="true"
@@ -180,12 +163,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
               {...i}
             />)}
         </Menu>
-        <DomainCreateDrawer
-          open={domainDrawerOpen}
-          onClose={this.closeDomainDrawer}
-          onSuccess={this.onDomainSuccess}
-          mode="create"
-        />
       </div>
 
     );
@@ -194,8 +171,13 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
 
 export const styledComponent = styled(AddNewMenu);
 
+interface DispatchProps {
+  openDomainDrawerForCreating: () => void;
+  openVolumeDrawerForCreating: () => void;
+}
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForCreating },
+  { openDomainDrawerForCreating, openVolumeDrawerForCreating },
   dispatch,
 );
 

@@ -189,7 +189,6 @@ class UserProfile extends React.Component<CombinedProps> {
           <Button
             disabled={profileUsername === toDeleteUsername}
             className={classes.topMargin}
-            variant="raised"
             type="secondary"
             destructive
             onClick={this.onDelete}
@@ -203,7 +202,7 @@ class UserProfile extends React.Component<CombinedProps> {
               text="You can't delete the currently active user"
             />
           }
-          <Typography className={classes.topMargin} variant="caption">
+          <Typography className={classes.topMargin} variant="body1">
             The user will be deleted permanently.
           </Typography>
         </div>

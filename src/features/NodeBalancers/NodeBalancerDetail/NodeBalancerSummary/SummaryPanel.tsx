@@ -28,6 +28,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   IPgrouping: {
     margin: '-2px 0 0 2px',
+    display: 'flex',
+    flexDirection: 'column'
   },
   marginTop: {
     marginTop: theme.spacing.unit * 2,
@@ -60,7 +62,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <div className={classes.IPWrapper}>
-            <Typography variant="caption">
+            <Typography variant="body1">
               <strong>IP:</strong>
             </Typography>
             <div className={classes.IPgrouping} data-qa-ip>
@@ -68,29 +70,29 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
               {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
             </div>
           </div>
-          <Typography variant="caption" data-qa-ports className={classes.marginTop}>
+          <Typography variant="body1" data-qa-ports className={classes.marginTop}>
             <strong>
               Ports: </strong> {nodeBalancer.ports.length === 0 && 'None'}
               {nodeBalancer.ports.join(', ')}
           </Typography>
           <Grid container className={classes.nodeTransfer}>
             <Grid item xs={12} sm={6}>
-              <Typography variant="caption" data-qa-node-status>
+              <Typography variant="body1" data-qa-node-status>
                 <strong>Node Status:</strong> {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="caption" data-qa-transferred>
+              <Typography variant="body1" data-qa-transferred>
                 <strong>Transferred:</strong> {convertMegabytesTo(nodeBalancer.transfer.total)}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption" data-qa-hostname>
+          <Typography variant="body1" data-qa-hostname>
             <strong>Host Name:</strong> {nodeBalancer.hostname}
           </Typography>
-          <Typography variant="caption" data-qa-region className={classes.marginTop}>
+          <Typography variant="body1" data-qa-region className={classes.marginTop}>
             <strong>Region:</strong> {formatRegion(nodeBalancer.region)}
           </Typography>
         </Grid>

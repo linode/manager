@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
@@ -52,16 +52,14 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<CombinedProps> = (pr
       </Grid>
       <ActionsPanel>
         <Button
-          variant="raised"
-          color="primary"
+          type="primary"
           onClick={onSubmit}
         >
           Submit
         </Button>
         <Button
           onClick={onClose}
-          variant="raised"
-          color="secondary"
+          type="secondary"
           className="cancel"
         >
           Cancel

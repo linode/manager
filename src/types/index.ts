@@ -105,7 +105,8 @@ namespace Linode {
     'stackscript_revise' |
     'volume_create' |
     'volume_delete' |
-    'volume_detach';
+    'volume_detach' |
+    'volume_attach';
 
   export type EventStatus =
     'scheduled' |

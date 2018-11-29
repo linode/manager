@@ -2,7 +2,7 @@ import { always, compose, cond, groupBy, pathOr, propOr } from 'ramda';
 import * as React from 'react';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
@@ -216,8 +216,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
           <ActionsPanel>
             <Button
-              variant="raised"
-              color="secondary"
+              type="secondary"
               className="destructive"
               onClick={this.onSubmit}
               data-qa-rebuild

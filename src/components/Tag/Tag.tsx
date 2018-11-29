@@ -112,6 +112,8 @@ class Tag extends React.Component<PropsWithStyles, {}> {
       deleteIcon={this.props.deleteIcon || <Close />}
       classes={{ label: classes.label, deletable: classes[colorVariant!]}}
       data-qa-tag={this.props.label}
+      component="div"
+      role="term"
     />;
   }
 };

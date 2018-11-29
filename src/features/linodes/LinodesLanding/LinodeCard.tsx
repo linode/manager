@@ -2,8 +2,8 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Flag from 'src/assets/icons/flag.svg';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Button from 'src/components/core/Button';
 import Card from 'src/components/core/Card';
 import CardActions from 'src/components/core/CardActions';
 import CardContent from 'src/components/core/CardContent';
@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     },
   },
   cardSection: {
-    ...theme.typography.caption,
+    ...theme.typography.body1,
     marginBottom: theme.spacing.unit,
     paddingTop: theme.spacing.unit,
     paddingLeft: 3,

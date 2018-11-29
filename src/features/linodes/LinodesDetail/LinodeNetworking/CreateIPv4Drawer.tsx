@@ -1,7 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/core/Button';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -99,16 +99,14 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
           }
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
-              variant="raised"
-              color="primary"
+              type="primary"
               onClick={this.create}
               data-qa-submit
             >
               Allocate
             </Button>
             <Button
-              variant="raised"
-              color="secondary"
+              type="secondary"
               className="cancel"
               onClick={onClose}
               data-qa-cancel
