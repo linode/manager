@@ -32,16 +32,16 @@ describe('Header - Search - Volumes Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
-        
+
         apiCreateLinode();
 
         linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
 
         ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);
-          
+
         navigateToVolumes(linodeName);
         const volumeCount = VolumeDetail.volumeCellElem.isVisible() ? VolumeDetail.volumeCell.length : 0;
-        
+
         VolumeDetail.createVolume(testVolume, 'placeholder');
 
         // Wait until the volume is created before searching for it
@@ -67,7 +67,7 @@ describe('Header - Search - Volumes Suite', () => {
     it('should remove the volume', () => {
         navigateToVolumes(linodeName);
         const volume = $(`[data-qa-volume-cell="${testVolume.id}"`);
-        VolumeDetail.removeVolume(volume);
+        VolumeDetail.detachVolume(volume);
     });
 
     it('should not display suggestion after removal', () => {

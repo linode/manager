@@ -7,11 +7,11 @@ import Resize from '../../../pageobjects/linode-detail/linode-detail-resize.page
 
 describe('Linode Detail - Resize Suite', () => {
     const linodeName = `Test-${new Date().getTime()}`;
-    
+
     beforeAll(() => {
         browser.url(constants.routes.linodes);
         browser.waitForVisible('[data-qa-add-new-menu-button]');
-        apiCreateLinode(linodeName);
+        apiCreateLinode(linodeName, undefined, undefined, 'g6-standard-1');
         ListLinodes.navigateToDetail();
         LinodeDetail
             .landingElemsDisplay()
@@ -29,7 +29,7 @@ describe('Linode Detail - Resize Suite', () => {
 
     it('should fail to resize on the same plan selection', () => {
         // const toastMsg = 'Linode is already running this service plan.';
-        
+
         Resize.planCards[0].click();
         browser.waitForVisible('[role="tooltip"]', constants.wait.normal);
         expect(Resize.submit.isEnabled()).toBe(false);
@@ -39,13 +39,15 @@ describe('Linode Detail - Resize Suite', () => {
         const toastMsg = 'Linode resize started.';
 
         Resize.planCards[1].click();
-        expect(Resize.submit.isEnabled()).toBe(true);
+        browser.waitUntil(() => {
+            return Resize.submit.isEnabled();
+        }, constants.wait.normal);
 
         Resize.submit.click();
         Resize.toastDisplays(toastMsg);
     });
 
     xit('M3-474 - should take the linode offline for resizing', () => {
-        
+
     });
 });

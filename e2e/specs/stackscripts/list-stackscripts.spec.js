@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+const { isEmpty } = require('lodash');
 
 import ListStackScripts from '../../pageobjects/list-stackscripts.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
@@ -23,18 +24,19 @@ describe('StackScripts - List Suite', () => {
     });
 
     it('should pre-select stackscript on selecting a stackscript to deploy on a new linode ', () => {
-        const stackScriptToDeploy = ListStackScripts.stackScriptRows[0].$(ListStackScripts.stackScriptTitle.selector).getText();
-        
-        ListStackScripts.selectActionMenuItem(ListStackScripts.stackScriptRows[0], 'Deploy New Linode');
-
+        const actionMenu = $$(`${ListStackScripts.stackScriptRow.selector} ${ListStackScripts.actionMenu.selector}`)[0];
+        const stackScriptToDeploy = $$(`${ListStackScripts.stackScriptTitle.selector}`)[0].getText();
+        actionMenu.click();
+        browser.waitForVisible(ListStackScripts.actionMenuItem.selector, constants.wait.normal);
+        const trimActionMenu = ListStackScripts.actionMenuItem.selector.replace(']', '');
+        browser.jsClick(`${trimActionMenu}="Deploy New Linode"`);
         ConfigureLinode.stackScriptTableDisplay();
         const selectedStackScript = ConfigureLinode.stackScriptRows.filter(row => row.$('[data-qa-radio="true"]'));
         expect(stackScriptToDeploy).toBe(selectedStackScript[0].$(ConfigureLinode.stackScriptTitle.selector).getText());
     });
 
     it('should contain the deploy with stackscript query params in the create url', () => {
-        const url = browser.getUrl();
-        expect(url).toMatch(/\?type=fromStackScript&stackScriptID=\d*&stackScriptUsername=.*/ig)
+        expect(browser.getUrl()).toMatch(/\?type=fromStackScript&stackScriptID=\d*&stackScriptUsername=.*/ig);
     });
 
     it('should display compatible images', () => {

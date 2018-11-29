@@ -34,8 +34,8 @@ describe('Volume Configuration Panel', () => {
         browser.jsClick(`${trimActionMenu}="Show Configuration"`);
         VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
     });
-
-    it('should show the volume configuration', () => {
+    //Need new test for M3-1870
+    xit('should show the volume configuration', () => {
         VolumeDetail.assertConfig();
     });
 });
