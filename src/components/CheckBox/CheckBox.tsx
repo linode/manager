@@ -56,10 +56,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   disabled: {
     color: '#ccc !important',
-    fill: '#f4f4f4 !important',
+    fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
     '& .defaultFill': {
-      fill: '#f4f4f4',
+      opacity: .5,
+      fill: `${theme.bg.main}`,
     },
   },
 });
