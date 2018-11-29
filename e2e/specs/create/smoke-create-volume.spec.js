@@ -54,7 +54,7 @@ describe('Create - Volume Suite', () => {
 
     it('should display form error on create without a label', () => {
         VolumeDetail.createVolume(testVolume, 'header');
-        VolumeDetail.label.$('p').waitForText(constants.wait.normal);
+        expect(VolumeDetail.label.$('p').isVisible()).toBe(true);
         VolumeDetail.closeVolumeDrawer();
     });
 
@@ -70,7 +70,7 @@ describe('Create - Volume Suite', () => {
         testVolume['region'] = 'us-east';
 
         VolumeDetail.createVolume(testVolume, 'header');
-        VolumeDetail.toastDisplays('Volume successfully created.');
+        VolumeDetail.toastDisplays('Volume successfully created.', constants.wait.minute);
         VolumeDetail.drawerClose.click();
         browser.url(constants.routes.volumes);
         browser.waitUntil(function() {

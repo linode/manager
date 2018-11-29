@@ -82,7 +82,7 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<any> & WithStyles<ClassNames>;
 
 class WelcomeBanner extends React.Component<CombinedProps, {}> {
-  actions = () => <Button onClick={this.props.onClose} type="primary">Let's go!</Button>;
+  actions = () => <Button onClick={this.props.onClose} type="primary" data-qa-welcome-button>Let's go!</Button>;
 
   redirectToClassic = () => {
     if( storage.loginCloudManager.get() ){

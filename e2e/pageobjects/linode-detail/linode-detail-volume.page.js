@@ -45,7 +45,9 @@ export class VolumeDetail extends Page {
 
     removeAllVolumes() {
         const pageObject = this;
-
+        browser.waitUntil(() => {
+            return this.volumeCell.length > 0;
+        }, constants.wait.normal);
         this.volumeCell.forEach(function(v) {
             pageObject.removeVolume(v);
         });
@@ -158,27 +160,23 @@ export class VolumeDetail extends Page {
         browser.waitForVisible('[data-qa-drawer-title]');
         browser.waitForVisible('[data-qa-mode-radio-group]', constants.wait.normal);
 
-        const attachRadio = $('[data-qa-mode-radio-group]').$$('[data-qa-radio]')
-            .filter(radio => radio.$('..').getText().includes('Attach Existing'));
+        const attachRadio = $('[data-qa-mode-radio-group] [data-qa-radio="Attach Existing Volume"]');
 
-        attachRadio[0].click();
+        attachRadio.click();
 
-        browser.waitForVisible('[data-qa-volume-select]', constants.wait.normal);
-        browser.jsClick('[data-qa-volume-select] div div div');
+        this.multiSelect.waitForVisible(constants.wait.normal);
+        browser.jsClick(this.multiSelect.selector);
 
-        browser.waitForVisible('[data-value]', constants.wait.normal);
+        this.selectOption.waitForVisible(constants.wait.normal);
 
-        const options = this.volumeOptions.map(v => v.getText());
-        const optToClick = this.volumeOptions.filter(opt => opt.getText() === volume.label);
-
-        optToClick[0].click();
-        optToClick[0].waitForVisible(constants.wait.normal, true);
+        this.selectOptions[0].click();
+        this.selectOption.waitForVisible(constants.wait.normal, true);
 
         browser.click(this.submitButton.selector);
         browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);
     }
 
-    detachVolume(volume) {
+    detachVolume(volume, detach=true) {
         this.selectActionMenuItem(volume, 'Detach');
 
         const dialogTitle = $('[data-qa-dialog-title]');
@@ -194,6 +192,10 @@ export class VolumeDetail extends Page {
         expect(dialogConfirm.getTagName()).toBe('button');
         expect(dialogCancel.isVisible()).toBe(true);
         expect(dialogCancel.getTagName()).toBe('button');
+        if( detach ){
+            dialogConfirm.click();
+            dialogConfirm.waitForVisible(constants.wait.normal, true);
+        }
     }
 
     detachConfirm(volumeId) {
@@ -215,12 +217,12 @@ export class VolumeDetail extends Page {
         // Placeholder volume action
     }
 
-    removeVolume(volumeElement) {
+    removeVolume(volumeElemen) {
         this.drawerTitle.waitForExist(constants.wait.normal, true);
         if (volumeElement.$('[data-qa-volume-cell-attachment]').isExisting() && volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
             volumeElement.$('[data-qa-action-menu]').click();
-            browser.waitForVisible('[data-qa-action-menu-item="Detach"]', constants.wait.normal);
-            browser.jsClick('[data-qa-action-menu-item="Detach"]');
+            browser.waitForVisible('[data-qa-action-menu-item="Delete"]', constants.wait.normal);
+            browser.jsClick('[data-qa-action-menu-item="Delete"]');
             browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal);
             browser.click('[data-qa-confirm]');
             browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal, true);
@@ -247,7 +249,7 @@ export class VolumeDetail extends Page {
         const dialogCancel = $(this.cancelButton.selector);
 
         expect(dialogTitle.isVisible()).toBe(true);
-        expect(dialogTitle.getText()).toBe('Detach Volume');
+        expect(dialogTitle.getText()).toBe('Delete Volume');
         expect(dialogConfirm.isVisible()).toBe(true);
         expect(dialogConfirm.getTagName()).toBe('button');
         expect(dialogCancel.isVisible()).toBe(true);

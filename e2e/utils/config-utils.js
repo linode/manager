@@ -43,7 +43,7 @@ exports.readToken = (username) => {
 * @returns {null} returns nothing
 */
 exports.login = (username, password, credFilePath) => {
-    let genericButton;
+    let loginButton,letsGoButton;
 
     browser.url(constants.routes.linodes);
     try {
@@ -55,8 +55,9 @@ exports.login = (username, password, credFilePath) => {
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
-    genericButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
-    $(genericButton).click();
+    loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
+    letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
+    $(loginButton).click();
 
     try {
         browser.waitUntil(function() {
@@ -66,12 +67,12 @@ exports.login = (username, password, credFilePath) => {
         console.log('failed to login!');
         if (browser.getText('.alert').includes('This field is required.')) {
             browser.trySetValue('#password', password);
-            $(genericButton).click();
+            $(loginButton).click();
         }
     }
 
     if (browser.isExisting('.Modal')) {
-        $(genericButton).click();
+        $(letsGoButton).click();
     }
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
     browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
