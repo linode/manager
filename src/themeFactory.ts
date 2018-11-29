@@ -576,6 +576,20 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
+    MuiRadio: {
+      root: {
+        color: primaryColors.main,
+      },
+      checked: {
+        color: primaryColors.main,
+      },
+      colorSecondary: {
+        color: primaryColors.main,
+        '&$checked': {
+          color: primaryColors.main,
+        }
+      },
+    },
     MuiInput: {
       root: {
         maxWidth: 415,

@@ -22,9 +22,12 @@ import { handleFieldErrors, handleGeneralErrors, maybeCastToNumber } from './uti
 import { modes } from './VolumeDrawer';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'textWrapper';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  textWrapper: {
+    marginBottom: 10,
+  }
 });
 
 interface Props {
@@ -95,11 +98,11 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <ModeSelection mode={modes.CREATING_FOR_LINODE} onChange={() => { actions.switchToAttaching() }} />
 
-            <Typography variant="body1">
+            <Typography variant="body1" className={props.classes.textWrapper}>
               {`This volume will be immediately scheduled for attachment to ${linodeLabel} and available to other Linodes in the ${linodeRegion} data-center.`}
             </Typography>
 
-            <Typography variant="body1">
+            <Typography variant="body1" className={props.classes.textWrapper}>
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
               $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
             </Typography>
