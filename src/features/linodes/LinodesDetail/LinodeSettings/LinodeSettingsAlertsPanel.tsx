@@ -101,11 +101,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(set(lensPath(['cpuusage', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
+          this.setState(
               set(lensPath(['cpuusage', 'value']), Number(e.target.value)),
-            )
-            : () => null,
+            ),
         error: hasErrorFor('alerts.cpu'),
         endAdornment: '%',
       },
