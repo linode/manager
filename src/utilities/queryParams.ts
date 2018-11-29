@@ -1,4 +1,5 @@
-import { isEmpty } from 'ramda';
+import { parse } from 'qs';
+import { pathOr } from 'ramda';
 
 /**
  * Splits a string into at most two parts using a separator character.
@@ -22,14 +23,12 @@ export const splitIntoTwo = (str: string, sep: string): string[] => {
  * @returns An object of the parsed key/value pairs
  */
 export const parseQueryParams = (str: string) => {
-   return str
-    .split('&')
-    .reduce(
-      (acc, keyVal) => {
-        if (isEmpty(keyVal)) { return { ...acc }; }
-        const [key, value] = splitIntoTwo(keyVal, '=');
-        return { ...acc, [key]: value };
-      },
-      {},
-    );
+  // qs library doesn't handle initial ? or # delimiters automatically
+  const queryString = str.replace(/^[\?|\#]/, '');
+  return parse(queryString);
+}
+
+export const getQueryParam = (str: string, paramName: string, defaultValue: string = '') => {
+  const params = parseQueryParams(str);
+  return pathOr(defaultValue, [paramName], params);
 }
