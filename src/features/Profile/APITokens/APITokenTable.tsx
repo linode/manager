@@ -492,7 +492,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             {`Your personal access token has been created.
               Store this secret. It won't be shown again.`}
           </Typography>
-          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.token && this.state.token.value!} />
+          <Notice typeProps={{ variant: 'body1' }} warning text={this.state.token && this.state.token.value!} />
         </ConfirmationDialog>
       </React.Fragment>
     );

@@ -84,7 +84,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
             <Arrow className={classes.linkIcon} />
           </Typography>
         </div>
-        <Typography variant="caption">{truncateText(description, 100)}</Typography>
+        <Typography variant="body1">{truncateText(description, 100)}</Typography>
       </a>
     </React.Fragment>
   )
