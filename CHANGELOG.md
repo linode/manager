@@ -8,9 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ##Added:
 - Search results page with a dedicated URL
-  - Search results page is grouped by entities (Linodes, NodeBalancers , ect.)
+  - Search results page is grouped by entities (Linodes, NodeBalancers, etc.)
   - Search results page displays the first five results per entity, and a button to display remaining results for the given entity
-  - Search can be used to group entities with a common tag
+  - Search can be used to display all entities with a common tag
 - Tags for Volumes
   - Tags can be added during Volume creation
   - Tags can be added/removed from an existing Volume
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Network helper global setting
   - Users now have the option to enable/disable
   - Network helper is enabled by default
-- Ability to attach  a file to a support ticket
+- Ability to attach a file to a support ticket
 - Breadcrumb navigation to Users and User Detail
 - Mobile typography was implemented throughout the app
 
@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added pricing to Volume clone and resize panel
 
 ##Fixed:
-- External Ip's are display first on Linode grid cards, and Linode Details page
+- External (public) Ip's are displayed first (before private IPs) on Linode grid cards, and Linode Details page
 - Character decoding on the blog feed
 - Tags extending beyond the search bar results now wrap
 
