@@ -1,3 +1,4 @@
+import { withKnobs } from '@storybook/addon-knobs';
 import { addDecorator, configure } from '@storybook/react';
 import '../.storybook/storybook.css';
 import '../public/fonts/fonts.css';
@@ -6,6 +7,7 @@ import ThemeDecorator from '../src/utilities/storybookDecorators';
 
 /** Global decorators */
 addDecorator(ThemeDecorator);
+addDecorator(withKnobs);
 
 // automatically import all files ending in *.stories.js
 const req = require.context('../src/components', true, /.stories.tsx?$/);
