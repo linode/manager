@@ -88,7 +88,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     color: theme.color.headline,
   },
   subheading: {
-    fontSize: '0.8rem',
+    fontSize: '0.875rem',
     color: theme.palette.text.primary,
   },
   innerGrid: {

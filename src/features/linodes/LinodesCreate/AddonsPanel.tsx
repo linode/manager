@@ -50,6 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& > span:last-child': {
       color: theme.color.headline,
       fontFamily: 'LatoWebBold',
+      fontSize: '1rem',
       lineHeight: '1.2em',
       [theme.breakpoints.up('md')]: {
         marginLeft: 16,
