@@ -106,6 +106,7 @@ ReactDOM.render(
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       maxSnack={3}
       autoHideDuration={4000}
+      data-qa-toast
     >
       <Router>
         <Switch>
