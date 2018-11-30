@@ -8,6 +8,7 @@ import Grid from 'src/components/Grid';
 import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
+import DashboardNotificationsHeader from './DashboardNotificationsHeader';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
@@ -25,6 +26,7 @@ interface StateProps {
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
+  notifications: Linode.Notification[];
 }
 
 interface DispatchProps {
@@ -45,10 +47,12 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
       backupError,
       linodesWithoutBackups,
       managed,
+      notifications
     } = this.props;
     return (
       <Grid container spacing={24}>
         <DocumentTitleSegment segment="Dashboard" />
+        <DashboardNotificationsHeader notifications={notifications} />
         <Grid item xs={12}>
           <Typography variant="headline" data-qa-dashboard-header>Dashboard</Typography>
         </Grid>
@@ -79,6 +83,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   linodesWithoutBackups: pathOr([],['backups', 'data'], state),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
+  notifications: pathOr([], ['notifications', 'data'], state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {

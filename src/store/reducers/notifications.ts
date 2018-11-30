@@ -37,6 +37,25 @@ export const DEFAULT_STATE: State = {
   error: undefined,
 };
 
+// FAKE NOTIFICATION
+const hardCodedNotifications = [
+  {
+    "entity": {
+      "url": "/linode/instances/fake_linode",
+      "label": "test-linode",
+      "type": "linode",
+      "id": 1
+    },
+    "type": "maintenance",
+    "until": null,
+    "label": "",
+    "severity": "major",
+    "body": "",
+    "when": null,
+    "message": "Maintenance is required for one or more of your Linodes. Your maintenance time is 2018-11-30 14:00:00. Please see status.linode.com for additional information. THIS TEXT IS HARDCODED AND WILL CHANGE."
+  }
+];
+
 // REDUCER
 export default (state: State = DEFAULT_STATE, action: Action) => {
   switch (action.type) {
@@ -47,7 +66,12 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
       return { ...state, loading: false, lastUpdated: Date.now(), error: action.error };
 
     case SUCCESS:
-      return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
+
+      /*  Uncomment the following line for production */
+      // return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
+
+      /* Remove the following line for production */
+      return { ...state, loading: false, lastUpdated: Date.now(), data: [...hardCodedNotifications, ...action.data ]};
 
     case UPDATE:
       return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };

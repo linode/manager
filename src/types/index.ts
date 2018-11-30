@@ -49,7 +49,8 @@ namespace Linode {
     'payment_due' |
     'ticket_important' |
     'ticket_abuse' |
-    'notice';
+    'notice' |
+    'maintenance';
 
   export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -61,6 +62,7 @@ namespace Linode {
     severity: NotificationSeverity;
     when: null | string;
     until: null | string;
+    body?: string;
   }
 
   export interface Entity {
