@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class UserDetail extends Page {
-    get userDetailHeader() { return $('[data-qa-user-detail-header]'); }
+    get userDetailHeader() { return $('[data-qa-link-text]'); }
     get subHeader() { return $('[data-qa-profile-header]'); }
     get deleteSubHeader() { return $('[data-qa-delete-user-header]'); }
     get deleteButton() { return $('[data-qa-confirm-delete]'); }
