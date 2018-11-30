@@ -42,7 +42,7 @@ export const HiddenResults: React.StatelessComponent<CombinedProps> = (props) =>
           className={classes.button}
           data-qa-show-more-toggle
         >
-          {showMore ? "Show Less" : "Show More"}
+          {showMore ? "Show Less" : "Show All"}
         </Button>
     </React.Fragment>
   );
