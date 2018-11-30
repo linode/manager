@@ -68,6 +68,11 @@ interface Props {
   copyRight?: boolean;
 }
 
+const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+
+export const sortIPAddress = (ip1: string, ip2: string) =>
+  ((privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1));
+
 class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   state = {
     copied: false,
@@ -114,10 +119,10 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   render() {
     const { classes, ips, copyRight } = this.props;
-    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+
     const formattedIPS = ips
       .map(ip => ip.replace('/64', ''))
-      .sort((ip1, ip2) => ((privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1)));
+      .sort(sortIPAddress);
 
     return (
       <div className={`dif ${classes.root}`}>
