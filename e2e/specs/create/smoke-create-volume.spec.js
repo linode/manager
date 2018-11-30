@@ -78,6 +78,6 @@ describe('Create - Volume Suite', () => {
         }, constants.wait.long);
 
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
-        VolumeDetail.removeAllVolumes();
+        VolumeDetail.removeVolume(VolumeDetail.volumeCellElem);
     });
 });

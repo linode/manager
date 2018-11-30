@@ -217,7 +217,7 @@ export class VolumeDetail extends Page {
         // Placeholder volume action
     }
 
-    removeVolume(volumeElemen) {
+    removeVolume(volumeElement) {
         this.drawerTitle.waitForExist(constants.wait.normal, true);
         if (volumeElement.$('[data-qa-volume-cell-attachment]').isExisting() && volumeElement.$('[data-qa-volume-cell-attachment]').getText() !== '') {
             volumeElement.$('[data-qa-action-menu]').click();
@@ -239,8 +239,8 @@ export class VolumeDetail extends Page {
         const numberOfVolumes = this.volumeCell.length;
         volumeElement.$('[data-qa-action-menu]').click();
 
-        browser.waitForVisible('[data-qa-action-menu-item="Detach"]', constants.wait.normal);
-        browser.jsClick('[data-qa-action-menu-item="Detach"]');
+        browser.waitForVisible('[data-qa-action-menu-item="Delete"]', constants.wait.normal);
+        browser.jsClick('[data-qa-action-menu-item="Delete"]');
 
         browser.waitForVisible('[data-qa-dialog-title]', constants.wait.normal);
 
