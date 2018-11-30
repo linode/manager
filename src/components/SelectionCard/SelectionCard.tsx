@@ -42,8 +42,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     '&:focus $innerGrid': {
       outline: `1px dotted ${theme.color.focusBorder}`,
     },
-    '& .w100': {
+    '& .disabledInnerGrid': {
       width: '100%',
+      backgroundColor: theme.bg.offWhiteDT,
+      border: '1px solid ' + `${theme.color.grey1}`,
     },
     '& [class^="fl-"]': {
       transition: 'color 225ms ease-in-out',
@@ -78,7 +80,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   disabled: {
     cursor: 'not-allowed',
-    '& $innerGrid': {
+    '& > div': {
       opacity: .4,
     },
   },
@@ -137,7 +139,7 @@ interface WithTooltipProps {
 }
 
 const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({ title, render }) => (title)
-  ? (<Tooltip title={title} className="w100">{render()}</Tooltip>)
+  ? (<Tooltip title={title} className={"disabledInnerGrid"}>{render()}</Tooltip>)
   : render();
 
 class SelectionCard extends React.PureComponent<CombinedProps, {}> {

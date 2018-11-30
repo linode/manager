@@ -16,10 +16,12 @@ import SizeField from './SizeField';
 import { handleFieldErrors, handleGeneralErrors, isNilOrEmpty, maybeCastToNumber } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
-type ClassNames = 'root';
+type ClassNames = 'copy';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  copy: {
+    marginTop: theme.spacing.unit,
+  },
 });
 
 interface Props {
@@ -32,7 +34,7 @@ type CombinedProps =
   & WithStyles<ClassNames>;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, onSuccess } = props;
+  const { onClose, onSuccess, classes } = props;
   return (
     <Formik
       initialValues={initialValues}
@@ -98,6 +100,13 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
             </Typography>
 
+            <Typography variant="body1" className={classes.copy}>
+              Volumes must be created in a particular region. You can choose to create a volume in
+              a region and attach it later to a Linode in the same region. If you select a Linode
+              from the field below, the Volume will be automatically created in that Linode’s
+              region and attached upon creation.
+            </Typography>
+
             <LabelField
               error={touched.label ? errors.label : undefined}
               name="label"
@@ -120,6 +129,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.region}
+              helperText=""
             />
 
             <LinodeSelect
