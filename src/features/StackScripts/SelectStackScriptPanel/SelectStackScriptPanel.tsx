@@ -169,7 +169,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       <TabbedPanel
         error={error}
         rootClass={classes.root}
-        shrinkTabContent={classes.creating}
+        shrinkTabContent={(!noHeader) ? classes.creating : classes.selecting}
         header={(noHeader) ? "" : "Select StackScript"}
         tabs={this.createTabs}
         initTab={this.getInitTab()}
