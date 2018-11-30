@@ -52,6 +52,7 @@ exports.login = (username, password, credFilePath) => {
         console.log(browser.getSource());
 
     }
+    
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
@@ -71,9 +72,14 @@ exports.login = (username, password, credFilePath) => {
         }
     }
 
+    if(browser.isExisting('.Modal') && browser.getUrl().includes('login')){
+        $('.btn.btn-primary').click();
+    }
+
     if (browser.isExisting('.Modal')) {
         $(letsGoButton).click();
     }
+
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
     browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
 
