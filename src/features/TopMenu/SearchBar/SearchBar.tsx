@@ -316,7 +316,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
       }
     }
 
-    const finalOptions = isEmpty(options) ? [] : [...options, defaultOption];
+    const finalOptions = isEmpty(options) ? [] : [defaultOption, ...options];
 
     return (
       <React.Fragment>
