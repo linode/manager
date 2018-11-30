@@ -29,7 +29,7 @@ describe('Tags list', () => {
       />
       
     );  
-    expect(component.find('WithStyles(TagsInput)')).toHaveLength(0);
+    expect(component.find('TagsInput')).toHaveLength(1);
   });
 
   it('should NOT render tags input if tagsInputProps are NOT specified', () => {
@@ -48,6 +48,6 @@ describe('Tags list', () => {
         }}
       />
     );
-    expect(component.find('WithStyles(TagsInput)')).toHaveLength(0);
+    expect(component.find('TagsInput')).toHaveLength(0);
   });
 });
