@@ -4,6 +4,7 @@ import { lensPath, over, set, tail } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import Button from 'src/components/Button';
