@@ -15,6 +15,7 @@ declare interface ApplicationState {
   events: {
     events: Linode.Event[];
     lastUpdated: number;
+    countUnseenEvents: number,
   }
 }
 

@@ -1,21 +1,9 @@
-import * as moment from 'moment';
-import { assoc, compose, sort, take, values } from 'ramda';
 import * as React from 'react';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/interval';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/scan';
-import 'rxjs/add/operator/withLatestFrom';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import ListItem from 'src/components/core/ListItem';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import { events$, init } from 'src/events';
-import { markEventSeen } from 'src/services/account';
+import { async } from 'src/store/reducers/events';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
@@ -46,99 +34,40 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface Props {
-  unseenCount: number
-}
+interface Props { }
 
 interface State {
   anchorEl?: HTMLElement;
-  events: Linode.Event[];
-  unseenCount?: number;
-  notifications: Linode.Notification[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-interface EventsMap {
-  [index: string]: Linode.Event;
-}
+type CombinedProps =
+  & Props
+  & StateProps
+  & DispatchProps
+  & WithStyles<ClassNames>;
 
 class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
-    events: [],
-    notifications: [],
     anchorEl: undefined,
-    unseenCount: 0,
   };
-
-  subscription: Subscription;
-
-  mounted: boolean = false;
 
   static defaultProps = {
     unseenCount: 0,
+    events: [],
   };
 
   componentDidMount() {
-    this.mounted = true;
-    this.subscription = events$
-      /** Filter the fuax event used to kick off the progress bars. */
-      .filter((event: Linode.Event) => event.id !== 1)
-
-      /** Create a map of the Events using Event.ID as the key. */
-      .scan((events: EventsMap, event: Linode.Event) =>
-        assoc(String(event.id), event, events), {})
-
-      /** Wait for the events to settle before calling setState. */
-      .debounce(() => Observable.interval(250))
-
-      /** Notifications are fine, but the events need to be extracts and sorted. */
-      .map(extractAndSortByCreated)
-      .subscribe(
-        (events: Linode.Event[]) => {
-          if (!this.mounted) { return; }
-          this.setState({
-            unseenCount: getNumUnseenEvents(events),
-            events,
-          });
-        },
-        () => null,
-    );
-
-    Observable
-      .fromEvent(this.buttonRef, 'click')
-      .withLatestFrom(
-        events$
-          .filter(e => e.id !== 1)
-          .map(e => e.id),
-    )
-      .subscribe(([e, id]) => {
-        markEventSeen(id)
-          .then(() => init())
-          .catch(console.error);
-      });
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    this.subscription.unsubscribe();
-  }
-
-  private buttonRef: HTMLElement;
-
-  setRef = (element: HTMLElement) => {
-    this.buttonRef = element;
+    this.props.actions.getEvents();
   }
 
   render() {
-    const { anchorEl, events, unseenCount } = this.state;
-    const { classes } = this.props;
+    const { anchorEl } = this.state;
+    const { classes, events, unseenCount } = this.props;
 
     return (
       <React.Fragment>
         <UserEventsButton
           onClick={this.openMenu}
-          getRef={this.setRef}
           count={unseenCount}
           disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
@@ -154,43 +83,51 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           PaperProps={{ className: classes.dropDown }}
         >
           <ListItem key="placeholder" className={classes.hidden} tabIndex={1} />
-          <UserEventsList
-            events={events}
-            closeMenu={this.closeMenu}
-          />
+          <UserEventsList events={events} closeMenu={this.closeMenu} />
         </Menu>
       </React.Fragment>
     );
   }
 
-  openMenu = (e: React.MouseEvent<HTMLElement>) =>
+  openMenu = (e: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: e.currentTarget });
+  };
 
-  closeMenu = (e: React.MouseEvent<HTMLElement>) =>
+  closeMenu = (e: React.MouseEvent<HTMLElement>) => {
+    const { actions } = this.props;
+    actions.markAllSeen();
     this.setState({ anchorEl: undefined })
+  }
 }
 
 const styled = withStyles(styles);
 
-const extractAndSortByCreated = compose(
-  take(25),
-  sort((a: Linode.Event, b: Linode.Event) => moment(b.created).diff(moment(a.created))),
-  values,
-);
+interface DispatchProps {
+  actions: {
+    markAllSeen: () => Promise<any>;
+    getEvents: () => Promise<Linode.Event[]>;
+  },
+}
 
-const getNumUnseenEvents = (events: Linode.Event[]) => {
-  const len = events.length;
-  let unseenCount = 0;
-  let idx = 0;
-  while (idx < len) {
-    if (!events[idx].seen) {
-      unseenCount += 1;
-    }
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+  actions: {
+    markAllSeen: () => dispatch(async.markAllSeen()),
+    getEvents: () => dispatch(async.getEvents()),
+  },
+});
 
-    idx += 1;
-  }
+interface StateProps {
+  events: Linode.Event[];
+  unseenCount: number;
+}
 
-  return unseenCount;
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+  return {
+    events: state.events.events,
+    unseenCount: state.events.countUnseenEvents,
+  };
 };
 
-export default styled(UserEventsMenu);
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export default styled(connected(UserEventsMenu));

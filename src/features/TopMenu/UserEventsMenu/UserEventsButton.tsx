@@ -70,7 +70,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
-  getRef: (e: HTMLElement) => void;
   count?: number;
   disabled?: boolean;
   className?: string;
@@ -82,7 +81,6 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
   classes,
   count,
   onClick,
-  getRef,
   disabled,
   className,
 }) => {
@@ -90,7 +88,6 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
   return (
     <IconButton
       onClick={onClick}
-      buttonRef={getRef}
       className={`${classes.root} ${className}`}
       disabled={disabled}
     >
