@@ -308,7 +308,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => ``,
     failed: e => ``,
     finished: e => ``,
-    notification: e => `Volume has been deleted.`,
+    notification: e => `Volume ${e.entity!.label} has been deleted.`,
   },
   volume_detach: {
     // @todo Once we have better events, display the name of the attached Linode
