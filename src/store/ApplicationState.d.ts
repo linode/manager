@@ -11,6 +11,11 @@ declare interface ApplicationState {
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
+  /** @todo extract */
+  events: {
+    events: Linode.Event[];
+    lastUpdated: number;
+  }
 }
 
 declare interface AuthState {
