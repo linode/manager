@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.41.0] - 2018.12.04
+
+##Added:
+- Tags for NodeBalancers
+  - Tags can be added during NodeBalancer creation
+  - Tags can be added/removed from an existing NodeBalancer
+
+##Changed:
+- Search results page link appears first in the search bar results   
+- Reverted StackScript table pagination
+
 ## [0.40.0] - 2018.12.03
 
 ##Added:
