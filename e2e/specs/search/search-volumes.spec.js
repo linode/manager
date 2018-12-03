@@ -63,15 +63,4 @@ describe('Header - Search - Volumes Suite', () => {
         browser.click('[data-qa-suggestion]');
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
     });
-
-    it('should remove the volume', () => {
-        navigateToVolumes(linodeName);
-        const volume = $(`[data-qa-volume-cell="${testVolume.id}"`);
-        VolumeDetail.detachVolume(volume);
-    });
-
-    it('should not display suggestion after removal', () => {
-        SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal, true);
-    });
 });
