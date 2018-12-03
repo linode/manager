@@ -43,7 +43,7 @@ describe('Linode Detail - Volumes Suite', () => {
             const placeholderTitle = VolumeDetail.placeholderText;
             const createButton = VolumeDetail.createButton;
 
-            expect(placeholderTitle.getText()).toBe('No volumes found');
+            expect(placeholderTitle.getText()).toBe('Create a Volume');
             expect(createButton.isVisible()).toBe(true);
         });
 
@@ -79,11 +79,9 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should fail to create without a label', () => {
             VolumeDetail.submit.click();
-            VolumeDetail.label.$('p').waitForVisible(constants.wait.normal);
-
-            const labelError = VolumeDetail.label.$('p').getText();
-
-            expect(labelError.includes('Label cannot be blank')).toBe(true);
+            const labelError = $(`${VolumeDetail.label.selector} p`);
+            labelError.waitForVisible(constants.wait.normal);
+            expect(labelError.getText()).toContain('Label is required.');
         });
 
         it('should fail to create under 10 gb volume', () => {
@@ -100,8 +98,8 @@ describe('Linode Detail - Volumes Suite', () => {
         it('should create a volume after correcting errors', () => {
             browser.trySetValue(`${VolumeDetail.size.selector} input`,'20');
             VolumeDetail.submit.click();
-
-
+            VolumeDetail.toastDisplays('Volume scheduled for creation', constants.wait.minute);
+            VolumeDetail.drawerClose.click();
             VolumeDetail.volumeCellLabel.waitForVisible(constants.wait.normal);
         });
     });

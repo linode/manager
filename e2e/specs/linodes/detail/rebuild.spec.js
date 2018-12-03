@@ -44,10 +44,7 @@ describe('Linode Detail - Rebuild Suite', () => {
         browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
 
         Rebuild.submit.click();
-
-        browser.waitForVisible('[data-qa-image-error]', constants.wait.normal);
-        const error = Rebuild.imageError;
-
+        expect(Rebuild.imageError.isVisible()).toBe(true);
         expect(error.getText()).toBe('Image cannot be blank.');
     });
 

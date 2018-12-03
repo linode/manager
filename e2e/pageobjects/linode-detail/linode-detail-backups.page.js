@@ -87,7 +87,7 @@ class Backups extends Page {
     takeSnapshotWaitForComplete(label) {
         this.takeSnapshot(label);
         this.linearProgress.waitForVisible(constants.wait.normal);
-        this.linearProgress.waitForVisible(constants.wait.minute*5,true);
+        this.linearProgress.waitForVisible(constants.wait.minute*8,true);
         browser.waitUntil(() => {
             return $$(this.label.selector).find( backup => backup.getText() === label )
         },constants.wait.normal);
