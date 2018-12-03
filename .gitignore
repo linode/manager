@@ -96,3 +96,8 @@ e2e/creds.js
 
 # storybook static files
 .out
+
+
+# gemini
+gemini-reports
+gemini/screens
