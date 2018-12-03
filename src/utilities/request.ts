@@ -1,4 +1,5 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { path } from 'ramda';
 
 import { expire } from 'src/session';
 import store from 'src/store';
@@ -22,7 +23,8 @@ const handleError = (error: AxiosError) => {
 }
 
 Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
-  const token = store.getState().authentication.token;
+  const state = store.getState();
+  const token = path(['authentication', 'token'], state);
 
   return {
     ...config,

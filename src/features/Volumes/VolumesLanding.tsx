@@ -25,12 +25,13 @@ import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
-import { generateInFilter, resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/events';
 import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
+import { generateInFilter } from 'src/utilities/requestFilters';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
@@ -154,7 +155,7 @@ class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
       <div className={classes.tagWrapper}>
         <Tags tags={tags} />
       </div>
-    )  
+    )
   }
 }
 

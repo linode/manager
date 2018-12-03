@@ -1,116 +1,241 @@
-import { compose, sort, take } from 'ramda';
-import { Reducer } from "redux";
+import * as moment from 'moment';
+import { append, compose, equals, findIndex, omit, take, update } from 'ramda';
+import { AnyAction } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { getEvents as _getEvents, markEventSeen } from 'src/services/account/events';
+import { dateFormat } from 'src/time';
+import { generatePollingFilter } from 'src/utilities/requestFilters';
+import updateRight from 'src/utilities/updateRight';
+import actionCreatorFactory, { isType } from 'typescript-fsa';
 
-// State
+type Event = ExtendedEvent;
+
+/** State */
 type State = ApplicationState['events'];
+
+/** We use the epoch on our initial request to get all of the users events. */
+export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
 
 export const defaultState: State = {
   events: [],
-  lastUpdated: Date.now(),
+  mostRecentEventTime: epoch,
   countUnseenEvents: 0,
+  inProgressEvents: {},
 };
 
-// Actions
-type AddEvents = (events: Linode.Event[]) => ({
-  type: typeof ADD_EVENTS,
-  payload: Linode.Event[];
-})
 
-type UpdateEventsAsSeen = () => ({
-  type: typeof UPDATE_EVENTS_AS_SEEN,
-})
 
-const ADD_EVENTS = `@@manager/events/ADD_EVENTS`;
+/** Actions */
+const ADD_EVENTS = `ADD_EVENTS`;
 
-const UPDATE_EVENTS_AS_SEEN = `@@manager/events/UPDATE_EVENTS_AS_SEEN`;
+const UPDATE_EVENTS_AS_SEEN = `UPDATE_EVENTS_AS_SEEN`;
 
-const addEvents: AddEvents = (payload) => ({ type: ADD_EVENTS, payload });
+const actionCreator = actionCreatorFactory(`@@manager/events`);
 
-const updateEventsAsSeen: UpdateEventsAsSeen = () => ({ type: UPDATE_EVENTS_AS_SEEN });
+const addEvents = actionCreator<Event[]>(ADD_EVENTS);
 
-export const actions = {
-  addEvents,
-  updateEventsAsSeen,
+const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
+
+export const actions = { addEvents, updateEventsAsSeen };
+
+/** Reducer */
+export default (state = defaultState, action: AnyAction) => {
+
+  if (isType(action, addEvents)) {
+    const { payload: events } = action;
+    const {
+      events: prevEvents,
+      inProgressEvents: prevInProgressEvents
+    } = state;
+    const updatedEvents = updateEvents(prevEvents, events);
+
+    return {
+      ...state,
+      events: updatedEvents,
+      /** We're iterating over the new events since it will always contain the most recent events. */
+      mostRecentEventTime: events.reduce(mostRecentCreated, epoch),
+      countUnseenEvents: getNumUnseenEvents(updatedEvents),
+      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
+    };
+  }
+
+  if (isType(action, updateEventsAsSeen)) {
+    return {
+      ...state,
+      events: state.events.map((event) => ({ ...event, seen: true })),
+      countUnseenEvents: 0,
+    }
+  }
+
+  return state;
 };
 
-// Reducer
-const reducer: Reducer<State> = (state = defaultState, action) => {
-  const { type } = action;
 
-  switch (type) {
-    case ADD_EVENTS:
-      const events = truncateAndSortEvents(action.payload)
+/** Helpers */
+/**
+ * Safely find an entity in a list of entities returning the index.
+ * Will return -1 if the index is not found.
+ *
+ * entities {Linode.Entity[]}
+ * entity {null | Linode.Entity}
+ */
+export const findInEvents = (events: Pick<Event, 'entity'>[], entity: null | Partial<Linode.Entity> = {}) =>
+  findIndex((e) => equals(e.entity, entity), events);
 
-      return {
-        ...state,
-        events,
-        lastUpdated: Date.now(),
-        countUnseenEvents: getNumUnseenEvents(events),
-      };
+export const setDeletedEvents = (events: Event[]) => {
+  /** Create a list of deletion events. */
+  const deletions = events
+    .reduce((result: Linode.Event[], event) => {
+      const { entity, action, status } = event;
 
-    case UPDATE_EVENTS_AS_SEEN:
-      return {
-        ...state,
-        events: state.events.map(e => ({ ...e, seen: true })),
-        countUnseenEvents: 0,
+      if (!entity) {
+        return result;
       }
 
-    default:
-      return state;
+      if (action !== 'linode_delete' || status !== 'finished') {
+        return result;
+      }
+
+      return append(event, result);
+    }, []);
+
+  /** If there are no deletions to process, just return the events. */
+  if (deletions.length === 0) {
+    return events;
   }
+
+  /** Map events to either deleted or not. */
+  return events.map((e) => {
+    const idx = findInEvents(deletions, e.entity);
+
+    return idx > -1
+      ? ({ ...e, _deleted: deletions[idx].created })
+      : e
+  }
+  );
 };
 
-export default reducer;
+export const updateEvents = compose(
+  /** Finally we return the updated state (right) */
+  ([prevEvents, events]) => events,
 
-// Helpers
-const truncateAndSortEvents = compose(
-  /** We only display 25 */
-  take<Linode.Event>(25),
+  /** Nested compose to get around Ramda's shotty typing. */
+  compose(
+    /** Take only the last 25 events. */
+    updateRight<Event[], Event[]>((prevEvents, events) => take(25, events)),
 
-  /** Sort by descending date. API should ofter ordering. */
-  sort<Linode.Event>((a: Linode.Event, b: Linode.Event) => new Date(b.created).getTime() - new Date(a.created).getTime()),
+    /** Marked events "_deleted". */
+    updateRight<Event[], Event[]>((prevEvents, events) => setDeletedEvents(events)),
+
+    /** Add events to the list. */
+    updateRight<Event[], Event[]>((prevEvents, events) => addToEvents(prevEvents, events)),
+  ),
+
+  /** Convert the arguments to a tuple so we can use updateRight. */
+  (prevEvents: Event[], events: Event[]) => [prevEvents, events],
 );
 
-const getNumUnseenEvents = (events: Linode.Event[]) => {
-  const len = events.length;
-  let unseenCount = 0;
-  let idx = 0;
-  while (idx < len) {
-    if (!events[idx].seen) {
-      unseenCount += 1;
-    }
-
-    idx += 1;
-  }
-
-  return unseenCount;
+/**
+ * Compare the latestTime with the given Linode's created time and return the most recent.
+ *
+ */
+export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'created'>) => {
+  const time = new Date(current.created).getTime();
+  return latestTime > time ? latestTime : time;
 };
 
-// Async
-const getEvents: () => ThunkAction<Promise<Linode.Event[]>, ApplicationState, undefined>
-  = () => (dispatch, getState) => {
+/**
+ * Compile an updated list of events by either updating an event in place or appending an event
+ * to prevEvents.
+ *
+ * I know this could be much more generic, but I cant get the typing right.
+ */
+export const addToEvents = (prevArr: Event[], arr: Event[]) => arr.reduce((updatedArray, el) => {
+  /**
+   * We need to update in place to maintain the correc timeline of events. Update in-place
+   * by finding the index then updating at that index.
+   */
+  const idx = findIndex(({ id }) => id === el.id, updatedArray);
+  return idx > -1
+    ? update(idx, el, updatedArray)
+    : append(el, updatedArray);
+}, prevArr)
 
-    return _getEvents({ page_size: 25 })
+export const isInProgressEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete < 100;
+
+export const isCompletedEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete === 100;
+
+/**
+ * Iterate through new events.
+ * If an event is "in-progress" it's added to the inProgressEvents map.
+ * If an event is "completed" it is removed from the inProgressEvents map.
+ * Otherwise the inProgressEvents is unchanged.
+ *
+ */
+export const updateInProgressEvents = (
+  inProgressEvents: Record<number, boolean>,
+  event: Pick<Event, 'percent_complete' | 'id'>[],
+) => {
+  return event.reduce((result, e) => {
+    const key = String(e.id);
+
+    if (isCompletedEvent(e)) {
+      return omit([key], result);
+    }
+
+    return isInProgressEvent(e) ? { ...result, [key]: true } : result
+  }, inProgressEvents);
+}
+
+export const getNumUnseenEvents = (events: Pick<Event, 'seen'>[]) =>
+  events.reduce((result, event) => event.seen ? result : result + 1, 0);
+
+
+
+/** Async */
+/**
+ * Will send a filtered request for events which have been created after the most recent existing
+ * event or the epoch if there are no stored events.
+ */
+const getEvents: () => ThunkAction<Promise<Event[]>, ApplicationState, undefined>
+  = () => (dispatch, getState) => {
+    const { mostRecentEventTime, inProgressEvents } = getState().events;
+
+    const filters = generatePollingFilter(
+      moment(mostRecentEventTime).format(dateFormat),
+      Object.keys(inProgressEvents),
+    );
+
+    return _getEvents({ page_size: 25 }, filters)
       .then(response => response.data.data)
+      /**
+       * There is where we set _initial on the events. In the default state of events the
+       * mostRecentEventTime is set to epoch. On the completion of the first successful events
+       * update the mostRecentEventTime is updated, meaning it's impossible for subsequent events
+       * to be incorrectly marked as _initial. This addresses our reappearing toast issue.
+       */
+      .then(events => events.map(e => ({ ...e, _initial: mostRecentEventTime === epoch })))
       .then((events) => {
-        dispatch(addEvents(events));
+        if (events.length > 0) {
+          dispatch(addEvents(events));
+        }
         return events;
       })
   };
 
+/**
+ * Send a request to mark all currently stored events as seen, then call updateEventsAsSeen
+ * which iterates the evnts and marks them seen.
+ */
 const markAllSeen: () => ThunkAction<Promise<any>, ApplicationState, undefined>
   = () => (dispatch, getState) => {
     const { events: { events } } = getState();
-    const latestID = events.reduce((result, { id }) => id > result ? id : result, 0);
+    /** */
+    const latestId = events.reduce((result, { id }) => id > result ? id : result, 0);
 
-    return markEventSeen(latestID)
-      .then(result => dispatch(updateEventsAsSeen()))
-      .catch(error => null)
+    return markEventSeen(latestId)
+      .then(() => dispatch(updateEventsAsSeen()))
+      .catch(() => null)
   };
 
-  export const async = {
-    getEvents,
-    markAllSeen,
-  }
+export const async = { getEvents, markAllSeen };

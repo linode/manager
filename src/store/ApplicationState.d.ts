@@ -1,3 +1,7 @@
+declare interface ExtendedEvent extends Linode.Event {
+  _deleted?: string;
+  _initial?: boolean;
+}
 declare interface ApplicationState {
   __resources: {
     profile: RequestableData<Linode.Profile>,
@@ -13,9 +17,10 @@ declare interface ApplicationState {
   domainDrawer: DomainDrawerState;
   /** @todo extract */
   events: {
-    events: Linode.Event[];
-    lastUpdated: number;
+    events: ExtendedEvent[];
+    mostRecentEventTime: number;
     countUnseenEvents: number,
+    inProgressEvents: Record<number, boolean>,
   }
 }
 

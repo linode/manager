@@ -56,10 +56,6 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
     events: [],
   };
 
-  componentDidMount() {
-    this.props.actions.getEvents();
-  }
-
   render() {
     const { anchorEl } = this.state;
     const { classes, events, unseenCount } = this.props;
@@ -105,14 +101,12 @@ const styled = withStyles(styles);
 interface DispatchProps {
   actions: {
     markAllSeen: () => Promise<any>;
-    getEvents: () => Promise<Linode.Event[]>;
   },
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
   actions: {
     markAllSeen: () => dispatch(async.markAllSeen()),
-    getEvents: () => dispatch(async.getEvents()),
   },
 });
 
