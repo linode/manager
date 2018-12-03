@@ -5,7 +5,7 @@ import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
 
 export interface Props {
-  tags: string[] | undefined;
+  tags: string[];
 }
 
 type ClassNames = 'root'

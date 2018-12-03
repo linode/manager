@@ -11,10 +11,10 @@ namespace Linode {
     updated: string;
     transfer: BalancerTransfer;
     config?: NodeBalancerConfig[];
-    tags?: string[];
+    tags: string[];
   }
 
-  export interface NodesStatus{
+  export interface NodesStatus {
     up: number;
     down: number;
   }

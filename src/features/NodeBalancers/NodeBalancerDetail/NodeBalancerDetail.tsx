@@ -12,6 +12,7 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -39,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-const defaultError = [{ reason: 'An unknown error occured while updating nodeBalancer.' }];
+const defaultError = [{ reason: 'An unknown error occured while updating NodeBalancer.' }];
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
@@ -124,12 +125,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     .then(() => {
       this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
     })
-    .catch((error) => {
-      this.setState(() => ({
-        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
-      }), () => {
-        scrollErrorIntoView();
-      });
+    .catch(() => {
+      sendToast("There was an error updating tags for this NodeBalancer.", "error");
     });
   }
 
