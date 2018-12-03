@@ -12,7 +12,8 @@ const props = {
   linodesWithoutBackups: [],
   managed: false,
   backupError: undefined,
-  classes: { root: ''}
+  classes: { root: ''},
+  notifications: []
 }
 
 const component = shallow(
