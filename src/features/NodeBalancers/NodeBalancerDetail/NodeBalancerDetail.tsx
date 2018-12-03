@@ -10,7 +10,9 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -37,6 +39,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
 });
+
+const defaultError = [{ reason: 'An unknown error occured while updating NodeBalancer.' }];
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
@@ -107,11 +111,22 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     })
     .catch((error) => {
       this.setState(() => ({
-        ApiError: error.response && error.response.data && error.response.data.errors,
+        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
         labelInput: label,
       }), () => {
         scrollErrorIntoView();
       });
+    });
+  }
+
+  updateTags = (tags: string[]) => {
+    const { nodeBalancer } = this.state;
+    return updateNodeBalancer(nodeBalancer.id, { tags })
+    .then(() => {
+      this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
+    })
+    .catch(() => {
+      sendToast("There was an error updating tags for this NodeBalancer.", "error");
     });
   }
 
@@ -185,6 +200,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        <TagsPanel
+          tags={nodeBalancer.tags || []}
+          updateTags={this.updateTags}
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}

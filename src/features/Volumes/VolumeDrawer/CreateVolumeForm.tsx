@@ -55,11 +55,11 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           config_id: configId === -1 ? undefined : configId,
           tags: tags.map(v => v.value),
         })
-          .then(({filesystem_path, label }) => {
+          .then(({filesystem_path, label: volumeLabel }) => {
             resetForm(initialValues);
             setStatus({ success: `Volume scheduled for creation.` });
             setSubmitting(false);
-            onSuccess(label, filesystem_path, `Volume scheduled for creation.`);
+            onSuccess(volumeLabel, filesystem_path, `Volume scheduled for creation.`);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
