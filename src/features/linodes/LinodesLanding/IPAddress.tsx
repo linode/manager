@@ -44,10 +44,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     marginLeft: theme.spacing.unit,
   },
   icon: {
+    '&:hover': {
+      backgroundColor: theme.color.grey1,
+      '& svg': {
+        fill: 'white',
+      },
+    },
     '& svg': {
       top: 1,
-      width: 14,
-      height: 14,
+      width: 12,
+      height: 12,
+      fill: theme.color.grey1,
     },
   },
   ip: {
@@ -67,6 +74,11 @@ interface Props {
   ips: string[];
   copyRight?: boolean;
 }
+
+const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+
+export const sortIPAddress = (ip1: string, ip2: string) =>
+  ((privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1));
 
 class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   state = {
@@ -114,10 +126,10 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
   render() {
     const { classes, ips, copyRight } = this.props;
-    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+
     const formattedIPS = ips
       .map(ip => ip.replace('/64', ''))
-      .sort(ip => !!ip.match(privateIPRegex) ? 1 : -1);
+      .sort(sortIPAddress);
 
     return (
       <div className={`dif ${classes.root}`}>

@@ -30,7 +30,7 @@ describe("Hidden results component", () => {
   });
   it("should have a Show More button", () => {
     expect(component.containsMatchingElement(
-      <Button type="primary">Show More</Button>
+      <Button type="primary">Show All</Button>
     ));
   });
   it("should show hidden results when showMore is true", () => {

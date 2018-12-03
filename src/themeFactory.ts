@@ -299,7 +299,7 @@ const themeDefaults: ThemeOptions = {
         padding: '11px 26px 13px',
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent !important',
           color: primaryColors.light,
           borderColor: primaryColors.light,
         },
@@ -574,6 +574,20 @@ const themeDefaults: ThemeOptions = {
           color: primaryColors.light,
           backgroundColor: 'transparent',
         },
+      },
+    },
+    MuiRadio: {
+      root: {
+        color: primaryColors.main,
+      },
+      checked: {
+        color: primaryColors.main,
+      },
+      colorSecondary: {
+        color: primaryColors.main,
+        '&$checked': {
+          color: primaryColors.main,
+        }
       },
     },
     MuiInput: {

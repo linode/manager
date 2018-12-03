@@ -130,7 +130,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
 
   componentDidMount() {
     this.mounted = true;
+    const { history } = this.props;
     this.loadTicketAndReplies();
+    // Clear any state that was passed from React Router so errors don't persist after reload.
+    history.push({ state: {} });
   }
 
   componentDidUpdate(prevProps:CombinedProps, prevState:State) {
@@ -207,6 +210,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
         this.setState({
           replies: updatedReplies,
           ticketCloseSuccess: false,
+          attachmentErrors: [],
         })
       })
   }
