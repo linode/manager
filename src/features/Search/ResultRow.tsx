@@ -6,10 +6,12 @@ import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Tags from 'src/components/Tags';
 import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
+import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 
 
 import { iconMap } from './utils';
@@ -134,8 +136,9 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
               container
               direction="row"
               alignItems="center"
+              justify="space-between"
             >
-              <Grid item className={classes.label}>
+              <Grid item className={classes.label} xs={4}>
                 <a href="javascript:;" onClick={handleClick} className={classes.link} title={result.label}>
                   <div className={classes.labelRow}>
                     <Typography variant="subheading">{result.label}</Typography>
@@ -147,11 +150,16 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
                 </a>
               </Grid>
               {result.data.region &&
-                <Grid item>
-                  {result.data.region}
+                <Grid item xs={2}>
+                  <RegionIndicator region={result.data.region} />
                 </Grid>
               }
-              <Grid item>
+              {result.data.created &&
+                <Grid item xs={2}>
+                  Created at <DateTimeDisplay value={result.data.created} />
+                </Grid>
+              }
+              <Grid item xs={2}>
                 <Tags tags={result.data.tags} />
               </Grid>
             </Grid>

@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
-
+import Tags from 'src/components/Tags';
 import { ResultRow, RowWithHandlers } from './ResultRow';
 
 const classes = {
@@ -15,6 +15,8 @@ const classes = {
   tableCell: '',
   tag: '',
   link: '',
+  status: '',
+  labelRow: '',
 };
 
 const handleClick = jest.fn();
@@ -42,9 +44,10 @@ describe("ResultRow component", () => {
     expect(handleClick).toHaveBeenCalled();
   });
   it("should render tags if any", () => {
-    expect(component.find('[data-qa-tag-item]')).toHaveLength(0);
     component.setProps({ result: searchbarResult2 });
-    expect(component.find('[data-qa-tag-item]')).toHaveLength(searchbarResult2.data.tags.length);
+    expect(component.containsMatchingElement(
+      <Tags tags={searchbarResult2.data.tags} />
+    )).toBeTruthy();
   });
   it("should redirect to the result's path", () => {
     handlers.find(ResultRow).props().handleClick();
