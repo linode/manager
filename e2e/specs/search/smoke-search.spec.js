@@ -61,12 +61,9 @@ describe('Header - Search Suite', () => {
             pending();
         }
         SearchBar.searchInput.setValue('\uE006');
-<<<<<<< HEAD
-=======
 
         const currentUrl = browser.getUrl();
 
->>>>>>> 1a9a83927dc3177e3244f2c413d0b593197d0cb3
         browser.waitUntil(function() {
             return browser.getUrl().includes('search?query=') ;
         }, constants.wait.normal);
@@ -75,12 +72,6 @@ describe('Header - Search Suite', () => {
     it('should navigate to result on click', () => {
         browser.url(constants.routes.dashboard);
         const currentUrl = browser.getUrl();
-<<<<<<< HEAD
-=======
-
-        SearchBar.executeSearch(testLinode);
-        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
->>>>>>> 1a9a83927dc3177e3244f2c413d0b593197d0cb3
 
         SearchBar.executeSearch(testLinode);
         browser.waitForVisible(SearchBar.suggestion, constants.wait.normal);
