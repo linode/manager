@@ -8,7 +8,9 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import Tag from 'src/components/Tag';
+import Tags from 'src/components/Tags';
+import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
+
 
 import { iconMap } from './utils';
 
@@ -16,8 +18,10 @@ type ClassNames = 'root'
 | 'description'
 | 'label'
 | 'icon'
+| 'labelRow'
 | 'resultBody'
 | 'rowContent'
+| 'status'
 | 'tableCell'
 | 'tag'
 | 'link';
@@ -36,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
           backgroundColor: theme.palette.primary.main,
         }
       }
-    },  
+    },
   },
   description: {
   },
@@ -55,6 +59,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .outerCircle': {
       stroke: theme.bg.main,
     },
+  },
+  labelRow: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
   },
   resultBody: {
     width: '100%',
@@ -78,6 +87,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       paddingLeft: 5,
     },
   },
+  status: {
+    marginLeft: theme.spacing.unit / 2,
+  },
   tableCell: {
     display: 'flex',
     alignItems: 'center',
@@ -90,7 +102,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'block',
   }
 });
-
 
 interface HandlerProps {
   handleClick: () => void;
@@ -113,33 +124,40 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
       className={classes.root}
       onClick={handleClick}
     >
-    <Paper className={classes.rowContent}>
-          <Grid container direction="row" alignItems="center" wrap="nowrap">
-            <Grid item className={classes.tableCell}>
-              <Icon className={classes.icon} />
-            </Grid>
-            <Grid item xs={12} className={classes.tableCell}>
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                justify="space-between"
-              >
-                <Grid item className={classes.label}>
-                  <a href="javascript:;" onClick={handleClick} className={classes.link} title={result.label}>
+      <Paper className={classes.rowContent}>
+        <Grid container direction="row" alignItems="center" wrap="nowrap">
+          <Grid item className={classes.tableCell}>
+            <Icon className={classes.icon} />
+          </Grid>
+          <Grid item xs={12} className={classes.tableCell}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+            >
+              <Grid item className={classes.label}>
+                <a href="javascript:;" onClick={handleClick} className={classes.link} title={result.label}>
+                  <div className={classes.labelRow}>
                     <Typography variant="subheading">{result.label}</Typography>
-                    <Typography variant="body1">{result.data.description}</Typography>
-                  </a>
-                </Grid>
+                    <div className={classes.status} >
+                      {result.data.status && <LinodeStatusIndicator status={result.data.status} />}
+                    </div>
+                  </div>
+                  <Typography variant="body1">{result.data.description}</Typography>
+                </a>
+              </Grid>
+              {result.data.region &&
                 <Grid item>
-                  {result.data.tags.map((tag: string, idx: number) =>
-                    <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} data-qa-tag-item />
-                  )}
-                 </Grid>
+                  {result.data.region}
+                </Grid>
+              }
+              <Grid item>
+                <Tags tags={result.data.tags} />
               </Grid>
             </Grid>
           </Grid>
-      </Paper> 
+        </Grid>
+      </Paper>
     </ListItem>
   );
 };
