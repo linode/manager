@@ -54,6 +54,8 @@ interface Section {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const maybeNumber = (v: string) => v === '' ? '' : Number(v);
+
 class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   public state: State = {
     submitting: false,
@@ -100,10 +102,11 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         value: this.state.cpuusage.value,
         onStateChange: (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
           this.setState(set(lensPath(['cpuusage', 'state']), checked)),
-        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => {
           this.setState(
-              set(lensPath(['cpuusage', 'value']), Number(e.target.value)),
-            ),
+            set(lensPath(['cpuusage', 'value']), maybeNumber(e.target.value)),
+          );
+        },
         error: hasErrorFor('alerts.cpu'),
         endAdornment: '%',
       },
@@ -119,11 +122,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           this.setState(
             set(lensPath(['diskio', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 10
-            ? this.setState(
-              set(lensPath(['diskio', 'value']), Number(e.target.value)),
-            )
-            : () => null,
+          this.setState(
+            set(lensPath(['diskio', 'value']), maybeNumber(e.target.value)),
+          ),
         error: hasErrorFor('alerts.io'),
         endAdornment: 'IOPS',
       },
@@ -140,11 +141,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           this.setState(
             set(lensPath(['incoming', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['incoming', 'value']), Number(e.target.value)),
-            )
-            : () => null,
+          this.setState(
+            set(lensPath(['incoming', 'value']), maybeNumber(e.target.value)),
+          ),
         error: hasErrorFor('alerts.network_in'),
         endAdornment: 'Mb/s',
       },
@@ -161,11 +160,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
           this.setState(
             set(lensPath(['outbound', 'state']), checked)),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['outbound', 'value']), Number(e.target.value)),
-            )
-            : () => null,
+          this.setState(
+            set(lensPath(['outbound', 'value']), maybeNumber(e.target.value)),
+          ),
         error: hasErrorFor('alerts.network_out'),
         endAdornment: 'Mb/s',
       },
@@ -183,11 +180,9 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             set(lensPath(['transfer', 'state']), checked),
           ),
         onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          e.target.value.length <= 2
-            ? this.setState(
-              set(lensPath(['transfer', 'value']), Number(e.target.value)),
-            )
-            : () => null,
+          this.setState(
+            set(lensPath(['transfer', 'value']), maybeNumber(e.target.value)),
+          ),
         error: hasErrorFor('alerts.transfer_quota'),
         endAdornment: '%',
       },
@@ -253,7 +248,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         success={this.state.success}
         actions={this.renderExpansionActions}
       >
-      { generalError && <Notice error>{generalError}</Notice>}
+        {generalError && <Notice error>{generalError}</Notice>}
         {
           alertSections.map((p, idx) =>
             <AlertSection updateFor={[p.state, p.value, this.state.errors]} key={idx} {...p} />)
