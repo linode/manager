@@ -228,7 +228,13 @@ const themeDefaults: ThemeOptions = {
       color: primaryColors.text,
     },
     h4: {
+      fontSize: '2.188rem',
+      lineHeight: '2.188rem',
       color: primaryColors.text,
+      [breakpoints.up('lg')]: {
+        fontSize: '2.5rem',
+        lineHeight: '2.5rem',
+      }
     },
   },
   overrides: {
