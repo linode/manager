@@ -32,7 +32,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
     <React.Fragment>
       <Typography
         role="header"
-        variant="subheading"
+        variant="h3"
         data-qa-copy
         className={classes.instructions}
       >
@@ -47,7 +47,7 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
       />
       <Typography
         role="header"
-        variant="subheading"
+        variant="h3"
         data-qa-copy
         className={classes.instructions}
       >

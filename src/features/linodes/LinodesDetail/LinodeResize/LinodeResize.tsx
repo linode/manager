@@ -137,7 +137,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.title}
             data-qa-title
           >
@@ -152,7 +152,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <div className={classes.currentPlanContainer} data-qa-current-container>
             <Typography
               role="header"
-              variant="title"
+              variant="h2"
               className={classes.subTitle}
               data-qa-current-header
             >

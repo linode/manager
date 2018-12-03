@@ -556,7 +556,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   className={classes.root}
                 >
                   <Grid item>
-                    <Typography variant="title" className={classes.titles}>{type.title}</Typography>
+                    <Typography variant="h2" className={classes.titles}>{type.title}</Typography>
                   </Grid>
                   {type.link &&
                     <Grid item>

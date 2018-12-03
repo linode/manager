@@ -191,7 +191,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Domains" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
           <Grid item>
-            <Typography role="header" variant="headline" data-qa-title className={classes.title}>
+            <Typography role="header" variant="h1" data-qa-title className={classes.title}>
               Domains
             </Typography>
           </Grid>

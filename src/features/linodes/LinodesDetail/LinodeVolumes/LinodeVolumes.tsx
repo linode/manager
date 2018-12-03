@@ -778,7 +778,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
           <Grid item>
             <Typography
               role="header"
-              variant="title"
+              variant="h2"
               className={classes.title}
               data-qa-title>
               Attached Volumes

@@ -37,7 +37,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
     <Paper className={classes.root} >
       <Grid container direction="column">
         <Grid item>
-          <Typography variant="title">
+          <Typography variant="h2">
             Back Up Your Data
           </Typography>
         </Grid>

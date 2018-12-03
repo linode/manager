@@ -394,7 +394,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid item xs={12}>
                 <Typography
                   role="header"
-                  variant="title"
+                  variant="h2"
                   data-qa-port-config-header
                 >
                   Port Configuration
@@ -568,7 +568,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               >
                 <Typography
                   role="header"
-                  variant="title"
+                  variant="h2"
                   data-qa-active-checks-header
                 >
                   Active Health Checks
@@ -762,7 +762,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Grid item xs={12}>
                 <Typography
                   role="header"
-                  variant="title"
+                  variant="h2"
                   data-qa-passive-checks-header
                 >
                   Passive Checks
@@ -809,7 +809,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </Grid>
                 <Typography
                   role="header"
-                  variant="title"
+                  variant="h2"
                   data-qa-backend-ip-header
                 >
                   Backend Nodes

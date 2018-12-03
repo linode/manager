@@ -43,7 +43,7 @@ const styles: StyleRulesCallback = (theme) => ({
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
     textDecoration: 'inherit',
-    ...theme.typography.headline,
+    ...theme.typography.h1,
   },
   container: {
     display: 'flex',
@@ -109,13 +109,13 @@ const styles: StyleRulesCallback = (theme) => ({
   },
   input: {
     padding: '5px 10px',
-    ...theme.typography.headline,
+    ...theme.typography.h1,
   },
   headline: {
-    ...theme.typography.headline,
+    ...theme.typography.h1,
   },
   title: {
-    ...theme.typography.title,
+    ...theme.typography.h1,
   },
   editIcon: {
     [theme.breakpoints.up('sm')]: {
@@ -246,8 +246,8 @@ export class EditableText extends React.Component<FinalProps, State> {
                   InputProps={{ className: classes.inputRoot }}
                   inputProps={{
                     className: classnames({
-                      [classes.headline]: this.props.typeVariant === 'headline',
-                      [classes.title]: this.props.typeVariant === 'title',
+                      [classes.headline]: this.props.typeVariant === 'h1',
+                      [classes.title]: this.props.typeVariant === 'h2',
                       [classes.input]: true,
                     }),
                   }}

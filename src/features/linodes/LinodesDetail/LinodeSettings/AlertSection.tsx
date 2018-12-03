@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       position: 'absolute',
       left: 90,
       top: 40,
-      ...theme.typography.subheading,
+      ...theme.typography.h3,
     },
   },
   switch: {
