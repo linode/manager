@@ -25,7 +25,8 @@ describe.skip('NodeBalancers', () => {
             transferred: '',
             ports: '',
             ipsWrapper: '',
-            ip: ''
+            ip: '',
+            tagWrapper: '',
           }}
           setDocs={setDocs}
           clearDocs={clearDocs}

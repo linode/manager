@@ -86,12 +86,12 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
 
 export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query: string) =>
   nodebalancers.filter(
-    nodebal => filterMatched(query, nodebal.label, []),
+    nodebal => filterMatched(query, nodebal.label, nodebal.tags || []),
   ).map(nodebal => ({
     label: nodebal.label,
     value: nodebal.id,
     data: {
-      tags: [],
+      tags: getMatchingTags(nodebal.tags || [], query),
       description: nodebal.hostname,
       icon: 'NodebalIcon',
       path: `/nodebalancers/${nodebal.id}`,
