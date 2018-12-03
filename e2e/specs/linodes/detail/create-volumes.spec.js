@@ -85,20 +85,19 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should fail to create under 10 gb volume', () => {
-            const errorMsg = 'Size must be between 10 and 10240';
+            const errorMsg = 'Size must be between 10 and 10240.';
             browser.setValue(`${VolumeDetail.label.selector} input`, testLabel);
             browser.setValue(`${VolumeDetail.size.selector} input`, 5);
             VolumeDetail.submit.click();
-
-            browser.waitUntil(function() {
-                return browser.getText('[data-qa-size] p').includes(errorMsg);
-            }, constants.wait.normal);
+            const volumeError = $(`${VolumeDetail.size.selector}>p`);
+            volumeError.waitForVisible(constants.wait.normal);
+            expect(volumeError.getText()).toEqual(errorMsg);
         });
 
         it('should create a volume after correcting errors', () => {
             browser.trySetValue(`${VolumeDetail.size.selector} input`,'20');
             VolumeDetail.submit.click();
-            VolumeDetail.toastDisplays('Volume scheduled for creation', constants.wait.minute);
+            VolumeDetail.toastDisplays('Volume successfully created.', constants.wait.minute);
             VolumeDetail.drawerClose.click();
             VolumeDetail.volumeCellLabel.waitForVisible(constants.wait.normal);
         });
@@ -112,15 +111,15 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should display volume action menu options', () => {
-           VolumeDetail.volumeCell[0].$(VolumeDetail.volumeActionMenu.selector).click();
+           $(`${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.volumeActionMenu.selector}`).click();
            VolumeDetail.assertActionMenuItems();
         });
 
         it('should display volume create icon text link', () => {
-            const createIcon = $('[data-qa-icon-text-link="Add a Volume"]');
+            const createIcon = $('[data-qa-icon-text-link="Create a Volume"]');
 
             expect(createIcon.isVisible()).toBe(true);
-            expect(createIcon.getText()).toBe('Add a Volume');
+            expect(createIcon.getText()).toBe('Create a Volume');
             expect(createIcon.$('svg').isVisible()).toBe(true);
         });
     });

@@ -45,7 +45,7 @@ describe('Linode Detail - Rebuild Suite', () => {
 
         Rebuild.submit.click();
         expect(Rebuild.imageError.isVisible()).toBe(true);
-        expect(error.getText()).toBe('Image cannot be blank.');
+        expect(Rebuild.imageError.getText()).toBe('Image cannot be blank.');
     });
 
     it('should display error on create image without setting a password', () => {

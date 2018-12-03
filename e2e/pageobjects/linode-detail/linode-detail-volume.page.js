@@ -278,15 +278,9 @@ export class VolumeDetail extends Page {
     }
 
     assertActionMenuItems() {
-        const menuItems = [
-            '[data-qa-action-menu-item="Rename"]',
-            '[data-qa-action-menu-item="Resize"]',
-            '[data-qa-action-menu-item="Clone"]',
-            '[data-qa-action-menu-item="Detach"]',
-            '[data-qa-action-menu-item="Delete"]'
-        ]
-
-        menuItems.forEach(item => expect($(item).isVisible()).toBe(true));
+        const menuItems = [ "Show Configuration", "Edit Volume", "Resize", "Clone", "Detach" ]
+        const actionMenuItem=this.actionMenuItem.selector.replace(']','');
+        menuItems.forEach(item => expect($(`${actionMenuItem}="${item}"`).isVisible()).toBe(true));
     }
 
     assertConfig() {
