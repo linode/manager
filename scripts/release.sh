@@ -41,5 +41,6 @@ fi
 git push $ORIGIN  --delete $PREVIOUS_RELEASE
 
 #Push release
+git tag v$RELEASE_VERSION
 git push $ORIGIN
 git push --tags $ORIGIN

@@ -147,19 +147,15 @@ Creating a hotfix:
 10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master.
 Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
 
-Creating a release candidate:
-1. `git checkout develop`
-2. `git pull origin develop` # make sure your local develop is up to date
-3. `git checkout -b rc-v0.9.0` # create a release candidate branch
-4. stage and commit your hotfix change
-5. `yarn --no-git-tag version minor|major` # bump a minor or major version, updating both the `package.json` and `yarn-shrinkwrap.json`
-6. Manually update the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) to represent changes for the version
-7. stage and commit the version bump and changelog addition
-8. `git push -u your-remote rc-v0.9.0`
-9. open a pull request against master for the release (to be merged with "Create a Merge Commit" (--no-ff))
-10. open a pull request against develop for the release (to be merged with "Create a Merge Commit" (--no-ff))
-10. after the pull request is approved and merged, follow up to make sure a release is tagged in github against master.
-Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
+## Creating a release candidate
+NOTE: Run this script with a clean working tree!!!
+To create a release candidate simply run yarn release #version yyyy.MM.dd
+1. The script accepts two parameters, the release version, and the release date in yyyy.MM.dd format.
+2. First the script identifies the name of the linode/manager repo in your git remotes list.
+3. Fetch linode/manager checkout local develop and rebase with linode/manager develop.
+4. From local develop that is in sync with linode/manager develop the branch release-#version is cut, where #version is the release version provided as the first parameter to yarn release.
+5. 
+
 
 **Tip**: set up your local git repository to lint before every commit.
 ```sh
