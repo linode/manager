@@ -1,6 +1,8 @@
-import { compose, last, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -10,6 +12,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -38,6 +41,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
+const defaultError = [{ reason: 'An unknown error occured while updating NodeBalancer.' }];
+
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
 interface PreloadedProps {
@@ -51,9 +56,11 @@ interface State {
   labelInput?: string;
 }
 
-type CombinedProps = RouteProps &
-  PreloadedProps &
-  WithStyles<ClassNames>;
+type CombinedProps =
+  & InjectedNotistackProps
+  & RouteProps
+  & PreloadedProps
+  & WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
   nodeBalancer: ({ match: { params: { nodeBalancerId } } }) => {
@@ -107,11 +114,22 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     })
     .catch((error) => {
       this.setState(() => ({
-        ApiError: error.response && error.response.data && error.response.data.errors,
+        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
         labelInput: label,
       }), () => {
         scrollErrorIntoView();
       });
+    });
+  }
+
+  updateTags = (tags: string[]) => {
+    const { nodeBalancer } = this.state;
+    return updateNodeBalancer(nodeBalancer.id, { tags })
+    .then(() => {
+      this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
+    })
+    .catch(() => {
+      this.props.enqueueSnackbar(`There was an error updating tags for this NodeBalancer.`, { variant: 'error' });
     });
   }
 
@@ -185,6 +203,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        <TagsPanel
+          tags={nodeBalancer.tags || []}
+          updateTags={this.updateTags}
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
@@ -249,9 +271,10 @@ const reloaded = reloadableWithRouter<PreloadedProps, { nodeBalancerId?: number 
   },
 );
 
-export default compose<any, any, any, any, any>(
+export default compose(
   setDocs(NodeBalancerDetail.docs),
   reloaded,
   styled,
   preloaded,
+  withSnackbar,
 )(NodeBalancerDetail);

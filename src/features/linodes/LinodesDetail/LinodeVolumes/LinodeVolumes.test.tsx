@@ -22,6 +22,8 @@ describe('Linode Volumes', () => {
 
   const component = shallow(
     <LinodeVolumes
+      onPresentSnackbar={jest.fn()}
+      enqueueSnackbar={jest.fn()}
       classes={{ title: '' }}
       linodeConfigs={linodeConfigsAsPromiseResponse}
       linodeVolumes={volumes}

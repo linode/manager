@@ -1,6 +1,8 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { compose } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
@@ -8,7 +10,6 @@ import 'rxjs/add/operator/filter';
 import TagsPanel from 'src/components/TagsPanel';
 
 import { lishLaunch } from 'src/features/Lish';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
@@ -47,7 +48,7 @@ interface State {
   hasScheduledMigration: boolean;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps;
+type CombinedProps = Props & StateProps & DispatchProps & InjectedNotistackProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
@@ -60,20 +61,24 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   migrate = (type: string) => {
-    const { linodeId } = this.props;
+    const { linodeId, enqueueSnackbar } = this.props;
     const { getNotifications } = this.props.actions;
     scheduleOrQueueMigration(linodeId)
       .then((_) => {
         // A 200 response indicates that the operation was successful.
         const successMessage = type === 'migration_scheduled'
           ? "Your Linode has been entered into the migration queue."
-          : "Your migration has been scheduled."
-        sendToast(successMessage);
+          : "Your migration has been scheduled.";
+        enqueueSnackbar(successMessage, {
+          variant: 'success'
+        });
         getNotifications()
       })
       .catch((_) => {
         // @todo: use new error handling pattern here after merge.
-        sendToast("There was an error starting your migration.", "error");
+        enqueueSnackbar("There was an error starting your migration.", {
+          variant: 'error'
+        });
       })
   }
 
@@ -192,4 +197,7 @@ interface StateProps {
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default connected(LinodesDetailHeader);
+export default compose<CombinedProps, Props>(
+  connected,
+  withSnackbar
+)(LinodesDetailHeader);

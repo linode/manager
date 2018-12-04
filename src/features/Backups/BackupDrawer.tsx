@@ -1,6 +1,8 @@
-import { compose, isEmpty, path, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
@@ -10,8 +12,15 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { withTypes } from 'src/context/types';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
-import { enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import {
+  enableAllBackups,
+  enableAutoEnroll,
+  handleAutoEnrollToggle,
+  handleClose,
+  handleResetError,
+  handleResetSuccess,
+  requestLinodesWithoutBackups
+} from 'src/store/reducers/backupDrawer';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
@@ -64,12 +73,13 @@ interface StateProps {
 type CombinedProps = DispatchProps
   & StateProps
   & TypesContextProps
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 
 export const getTotalPrice = (linodes: ExtendedLinode[]) => {
   return linodes.reduce((prevValue: number, linode: ExtendedLinode) => {
-    return prevValue + pathOr(0, ['typeInfo','addons','backups','price','monthly'], linode);
+    return prevValue + pathOr(0, ['typeInfo', 'addons', 'backups', 'price', 'monthly'], linode);
   }, 0)
 }
 export class BackupDrawer extends React.Component<CombinedProps, {}> {
@@ -89,10 +99,9 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
         ? `All of your Linodes have been enrolled in automatic backups, and
         all new Linodes will automatically be backed up.`
         : `All of your Linodes have been enrolled in automatic backups.`
-      sendToast(
-        text,
-        'success'
-      );
+      this.props.enqueueSnackbar(text, {
+        variant: 'success'
+      });
       dismissSuccess();
       close();
     }
@@ -223,24 +232,24 @@ export const addErrors = (errors: BackupError[], linodes: LinodeWithTypeInfo[]) 
     }
   });
 
-  /* Add type and error info to each Linode, so that it's available when rendering each Linode later */
-  export const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], types: Linode.LinodeType[]) => {
-    const linodesWithTypes = addTypeInfo(types, linodes);
-    return addErrors(errors, linodesWithTypes);
-  }
+/* Add type and error info to each Linode, so that it's available when rendering each Linode later */
+export const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], types: Linode.LinodeType[]) => {
+  const linodesWithTypes = addTypeInfo(types, linodes);
+  return addErrors(errors, linodesWithTypes);
+}
 
 const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
-  const enableErrors = pathOr([], ['backups','enableErrors'], state);
-  const linodes = pathOr([], ['backups','data'], state);
+  const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
+  const linodes = pathOr([], ['backups', 'data'], state);
   return ({
     accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
-    backupLoadError: path(['backups','error'], state),
-    backupsLoading: path(['backups','loading'], state),
+    backupLoadError: path(['backups', 'error'], state),
+    backupsLoading: path(['backups', 'loading'], state),
     enableErrors,
-    enableSuccess: path(['backups','enableSuccess'], state),
-    open: path(['backups','open'], state),
-    loading: pathOr(false, ['backups','loading'], state),
-    enabling: pathOr(false, ['backups','enabling'], state),
+    enableSuccess: path(['backups', 'enableSuccess'], state),
+    open: path(['backups', 'open'], state),
+    loading: pathOr(false, ['backups', 'loading'], state),
+    enabling: pathOr(false, ['backups', 'enabling'], state),
     linodesWithoutBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
@@ -257,10 +266,11 @@ const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => (
   typesLoading,
 }));
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   typesContext,
   connected,
+  withSnackbar
 );
 
 export default enhanced(BackupDrawer);
