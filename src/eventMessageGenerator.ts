@@ -301,7 +301,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Volume ${e.entity!.label} is being created.`,
     failed: e => `Creation of volume ${e.entity!.label} failed.`,
     finished: e => `Volume ${e.entity!.label} has been created.`,
-    notification: e => `Volume has been created.`,
+    notification: e => `Volume ${e.entity!.label} has been created.`,
   },
   volume_delete: {
     scheduled: e => ``,

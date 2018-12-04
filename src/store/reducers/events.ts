@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { append, compose, equals, findIndex, omit, take, update } from 'ramda';
+import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import { AnyAction } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { getEvents as _getEvents, markEventSeen } from 'src/services/account/events';
@@ -92,11 +92,11 @@ export const setDeletedEvents = (events: Event[]) => {
         return result;
       }
 
-      if (action !== 'linode_delete' || status !== 'finished') {
+      if (!action.includes(`_delete`) || !['finished', 'notification'].includes(status)) {
         return result;
       }
 
-      return append(event, result);
+      return [event, ...result];
     }, []);
 
   /** If there are no deletions to process, just return the events. */
@@ -150,16 +150,17 @@ export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'crea
  *
  * I know this could be much more generic, but I cant get the typing right.
  */
-export const addToEvents = (prevArr: Event[], arr: Event[]) => arr.reduce((updatedArray, el) => {
-  /**
-   * We need to update in place to maintain the correc timeline of events. Update in-place
-   * by finding the index then updating at that index.
-   */
-  const idx = findIndex(({ id }) => id === el.id, updatedArray);
-  return idx > -1
-    ? update(idx, el, updatedArray)
-    : append(el, updatedArray);
-}, prevArr)
+export const addToEvents = (prevArr: Event[], arr: Event[]) => arr
+  .reduceRight((updatedArray, el) => {
+    /**
+     * We need to update in place to maintain the correc timeline of events. Update in-place
+     * by finding the index then updating at that index.
+     */
+    const idx = findIndex(({ id }) => id === el.id, updatedArray);
+    return idx > -1
+      ? update(idx, el, updatedArray)
+      : [el, ...updatedArray];
+  }, prevArr)
 
 export const isInProgressEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete < 100;
 

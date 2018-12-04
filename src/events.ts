@@ -30,13 +30,16 @@ export let pollIteration = 1;
  */
 export const INTERVAL: number = 1000;
 
+let inProgress = false;
+
 export const resetEventsPolling = () => {
   eventRequestDeadline = Date.now() + INTERVAL;
   pollIteration = 1;
 }
 
 export const requestEvents = () => {
-  store.dispatch(async.getEvents())
+  inProgress = true;
+  return store.dispatch(async.getEvents())
     .then((events) => {
       const reversed = events.reverse();
 
@@ -48,6 +51,7 @@ export const requestEvents = () => {
         .forEach((linodeEvent: Linode.Event) => {
           events$.next(linodeEvent);
         });
+      inProgress = false;
     });
 }
 
@@ -55,6 +59,14 @@ setInterval(
   () => {
     const now = Date.now();
     if (now > eventRequestDeadline) {
+      /**
+       * If we're waiting on a request, set reset the pollIteration and return to prevent
+       * overlapping requests.
+       */
+      if (inProgress) {
+        pollIteration = 1;
+        return;
+      }
 
       requestEvents();
 
@@ -70,6 +82,7 @@ setInterval(
 
         /* Update the iteration to a maximum of 16. */
         pollIteration = Math.min(pollIteration * 2, 16);
+        console.log(timeout);
       }
     }
   },
