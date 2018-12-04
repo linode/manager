@@ -35,6 +35,7 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
         updateGlobalSettings(disableAutoEnrollment);
         apiCreateLinode(linodeLabel);
         apiCreateLinode(otherDataCenterLinode,false,[],'g6-nanode-1','us-central');
+        browser.testPause();
         ListLinodes.navigateToDetail(linodeLabel);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
     });

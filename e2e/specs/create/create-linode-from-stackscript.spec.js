@@ -1,17 +1,17 @@
 const { constants } = require('../../constants');
 
 import ConfigureLinode from '../../pageobjects/configure-linode';
-import { apiDeleteAllLinodes } from '../../utils/common';
+import ListLinodes from '../../pageobjects/list-linodes';
+import {
+    timestamp,
+    waitForLinodeStatus
+  } from '../../utils/common';
 
 describe('Create Linode - Create from StackScript Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.create.linode);
         ConfigureLinode.baseDisplay();
-    });
-
-    afterAll(() => {
-        apiDeleteAllLinodes();
     });
 
     it('should change tab to create from stackscript', () => {
@@ -81,12 +81,18 @@ describe('Create Linode - Create from StackScript Suite', () => {
         const imageName = ConfigureLinode.images[0].$('[data-qa-select-card-subheading]').getText();
 
         ConfigureLinode.randomPassword();
+
+        const linodeLabel = `${timestamp()}`;
+        ConfigureLinode.label.setValue(linodeLabel);
+
         ConfigureLinode.deploy.click();
 
-        browser.waitForVisible('[data-qa-linode]');
-        browser.waitForVisible('[data-qa-image]', constants.wait.minute * 5);
+        waitForLinodeStatus(linodeLabel, 'running');
+        ListLinodes.gridToggle.click();
+        ListLinodes.gridElemsDisplay();
 
-        const listingImageName = $$('[data-qa-linode]')[0].$('[data-qa-image]').getText();
+        const labelAttribute = ListLinodes.linodeElem.selector.replace(/[\[\]']+/g,'')
+        const listingImageName = ListLinodes.linode.find( linode => linode.getAttribute(labelAttribute) === linodeLabel).$(ListLinodes.image.selector).getText();
         expect(listingImageName).toBe(imageName);
     });
 });

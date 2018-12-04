@@ -196,7 +196,9 @@ export default class Page {
     }
 
     changeTab(tab) {
-        browser.jsClick(`[data-qa-tab="${tab}"]`);
+        const tabElementSelector = `[data-qa-tab="${tab}"]`;
+        $(tabElementSelector).waitForVisible(constants.wait.normal);
+        browser.jsClick(tabElementSelector);
         browser.waitUntil(function() {
             return browser
                 .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');

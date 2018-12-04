@@ -77,6 +77,11 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
     return linode;
 }
 
+export const waitForLinodeStatus = (linodeLabel, status) => {
+  browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, constants.wait.minute * 2);
+  browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-status="${status}"]`, constants.wait.minute * 3);
+}
+
 export const apiDeleteAllLinodes = () => {
     const token = readToken(browser.options.testUser);
     const removeAll = browser.removeAllLinodes(token);
@@ -153,7 +158,7 @@ export const retrieveGlobalSettings = () => {
     const token = readToken(browser.options.testUser);
     const settings = browser.getGlobalSettings(token);
     return settings;
-} 
+}
 
 export const checkEnvironment = () => {
     const environment = process.env.REACT_APP_API_ROOT;

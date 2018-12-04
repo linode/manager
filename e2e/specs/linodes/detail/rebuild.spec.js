@@ -51,19 +51,12 @@ describe('Linode Detail - Rebuild Suite', () => {
     it('should display error on create image without setting a password', () => {
         const errorMsg = 'Password cannot be blank.';
         Rebuild.selectImage();
-
-        // Use manual waitUntil polling due to chromedriver request throttle issue.
-        browser.waitUntil(function() {
-            return !$('[data-qa-image-option]').isVisible();
-        }, constants.wait.normal);
-
-        Rebuild.submit.click();
+        browser.jsClick(Rebuild.submit.selector);
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
     });
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = generatePassword();
-
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });
