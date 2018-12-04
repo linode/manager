@@ -129,7 +129,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
     })
     .catch(() => {
-      this.props.enqueueSnackbar(`There was an error updating tags for this NodeBalancer.`, { variant: 'error' });
+      this.props.enqueueSnackbar("There was an error updating tags for this NodeBalancer.", { variant: 'error' });
     });
   }
 
