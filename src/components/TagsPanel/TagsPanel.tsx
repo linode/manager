@@ -1,11 +1,12 @@
 import AddCircle from '@material-ui/icons/AddCircle';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Select from 'src/components/EnhancedSelect/Select';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getTags } from 'src/services/tags';
 import TagsPanelItem from './TagsPanelItem';
 
@@ -116,7 +117,7 @@ export interface Props {
   updateTags: (tags: string[]) => Promise<void>;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & InjectedNotistackProps;
 
 class TagsPanel extends React.Component<CombinedProps, State> {
 
@@ -202,7 +203,9 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           })
         })
         .catch(e => {
-          sendToast(`Could not delete Tag: ${label}`, 'error');
+          this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
+            variant: 'error'
+          });
           /*
           * Remove this tag from the current list of tags that are queued for deletion
           */
@@ -324,4 +327,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(TagsPanel);
+export default compose<CombinedProps, Props>(
+  styled,
+  withSnackbar
+)(TagsPanel);
