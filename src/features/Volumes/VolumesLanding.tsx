@@ -5,7 +5,6 @@ import { connect, Dispatch } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
-
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
@@ -27,11 +26,12 @@ import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
-import { generateInFilter, resetEventsPolling } from 'src/events';
+import { resetEventsPolling } from 'src/events';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
+import { generateInFilter } from 'src/utilities/requestFilters';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
@@ -156,7 +156,7 @@ class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
       <div className={classes.tagWrapper}>
         <Tags tags={tags} />
       </div>
-    )  
+    )
   }
 }
 
