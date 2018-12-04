@@ -82,7 +82,6 @@ setInterval(
 
         /* Update the iteration to a maximum of 16. */
         pollIteration = Math.min(pollIteration * 2, 16);
-        console.log(timeout);
       }
     }
   },

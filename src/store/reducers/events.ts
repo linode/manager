@@ -106,10 +106,10 @@ export const setDeletedEvents = (events: Event[]) => {
 
   /** Map events to either deleted or not. */
   return events.map((e) => {
-    const idx = findInEvents(deletions, e.entity);
+    const indexOfFoundEvent = findInEvents(deletions, e.entity);
 
-    return idx > -1
-      ? ({ ...e, _deleted: deletions[idx].created })
+    return indexOfFoundEvent > -1
+      ? ({ ...e, _deleted: deletions[indexOfFoundEvent].created })
       : e
   }
   );
@@ -145,7 +145,7 @@ export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'crea
 };
 
 /**
- * Compile an updated list of events by either updating an event in place or appending an event
+ * Compile an updated list of events by either updating an event in place or prepending an event
  * to prevEvents.
  *
  * I know this could be much more generic, but I cant get the typing right.
@@ -153,12 +153,12 @@ export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'crea
 export const addToEvents = (prevArr: Event[], arr: Event[]) => arr
   .reduceRight((updatedArray, el) => {
     /**
-     * We need to update in place to maintain the correc timeline of events. Update in-place
+     * We need to update in place to maintain the correct timeline of events. Update in-place
      * by finding the index then updating at that index.
      */
-    const idx = findIndex(({ id }) => id === el.id, updatedArray);
-    return idx > -1
-      ? update(idx, el, updatedArray)
+    const indexOfFoundEvent = findIndex(({ id }) => id === el.id, updatedArray);
+    return indexOfFoundEvent > -1
+      ? update(indexOfFoundEvent, el, updatedArray)
       : [el, ...updatedArray];
   }, prevArr)
 
