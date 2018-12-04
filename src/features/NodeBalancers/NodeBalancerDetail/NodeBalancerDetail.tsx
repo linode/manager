@@ -1,6 +1,8 @@
-import { compose, last, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -12,7 +14,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -55,9 +56,11 @@ interface State {
   labelInput?: string;
 }
 
-type CombinedProps = RouteProps &
-  PreloadedProps &
-  WithStyles<ClassNames>;
+type CombinedProps =
+  & InjectedNotistackProps
+  & RouteProps
+  & PreloadedProps
+  & WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
   nodeBalancer: ({ match: { params: { nodeBalancerId } } }) => {
@@ -126,7 +129,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
     })
     .catch(() => {
-      sendToast("There was an error updating tags for this NodeBalancer.", "error");
+      this.props.enqueueSnackbar("There was an error updating tags for this NodeBalancer.", { variant: 'error' });
     });
   }
 
@@ -268,9 +271,10 @@ const reloaded = reloadableWithRouter<PreloadedProps, { nodeBalancerId?: number 
   },
 );
 
-export default compose<any, any, any, any, any>(
+export default compose(
   setDocs(NodeBalancerDetail.docs),
   reloaded,
   styled,
   preloaded,
+  withSnackbar,
 )(NodeBalancerDetail);
