@@ -43,7 +43,6 @@ const styles: StyleRulesCallback = (theme) => ({
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
     textDecoration: 'inherit',
-    ...theme.typography.h1,
   },
   container: {
     display: 'flex',
