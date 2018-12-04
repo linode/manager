@@ -136,12 +136,16 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
       </TableCell>
       <TableCell className={classes.regionCell}>
         {result.data.region &&
-            <RegionIndicator region={result.data.region} />
+          <RegionIndicator region={result.data.region} />
         }
       </TableCell>
       <TableCell className={classes.createdCell}>
         {result.data.created &&
-          <DateTimeDisplay value={result.data.created} />
+          <React.Fragment>
+            <Typography >
+              Created <DateTimeDisplay value={result.data.created} />
+            </Typography>
+          </React.Fragment>
         }
       </TableCell>
       <TableCell className={classes.tagCell}>
