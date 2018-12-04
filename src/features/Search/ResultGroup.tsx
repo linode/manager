@@ -4,9 +4,13 @@ import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
 
 import Button from 'src/components/Button'
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -19,7 +23,8 @@ import ResultRow from './ResultRow';
 type ClassNames = 'root'
 | 'entityHeadingWrapper'
 | 'entityHeading'
-| 'button';
+| 'button'
+| 'emptyCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -41,6 +46,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: theme.spacing.unit,
     width: '10%'
   },
+  emptyCell: {
+    padding: 0,
+  }
 });
 
 interface Props {
@@ -70,9 +78,19 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
         <Typography variant="title" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
       <Paper>
-        <Table>
+        <Table aria-label="Search Results">
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.emptyCell}/>
+              <Hidden smDown><TableCell className={classes.emptyCell}/></Hidden>
+              <TableCell>Label</TableCell>
+              <TableCell>Region</TableCell>
+              <TableCell>Created</TableCell>
+              <TableCell>Tags</TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
-            {loading && <TableRowLoading  colSpan={12} />}
+            {loading && <TableRowLoading  colSpan={5} />}
             {initial.map((result, idx: number) =>
               <ResultRow key={idx} result={result} data-qa-result-row />)
             }
