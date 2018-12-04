@@ -36,7 +36,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class InfoPanel extends React.Component<CombinedProps> {
+export class InfoPanel extends React.Component<CombinedProps> {
 
   static defaultProps: Partial<Props> = {
     labelFieldProps: {
