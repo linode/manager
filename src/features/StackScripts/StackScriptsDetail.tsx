@@ -21,7 +21,7 @@ interface State {
   stackScript?: Linode.StackScript.Response
 }
 
-type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'cta' | 'button';
+type ClassNames = 'root' | 'titleWrapper' | 'cta' | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -29,13 +29,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: 5,
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34,
-    },
   },
   cta: {
     marginTop: theme.spacing.unit,
@@ -103,8 +96,8 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             <Button
               type="primary"
               className={classes.button}
-              onClick={() => alert('Implement me!')}
-              >
+              href={`/linodes/create?type=fromStackScript&stackScriptID=${stackScript.id}&stackScriptUsername=${stackScript.username}`}
+            >
               Deploy New Linode
             </Button>
           </Grid>
