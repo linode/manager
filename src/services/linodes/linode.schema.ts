@@ -4,7 +4,7 @@ import { array, boolean, mixed, number, object, string } from 'yup';
 const stackscript_data = array().of(object()).nullable(true);
 
 /* @todo add more comprehensive validation.
-*  First validate password using the regex used by the API. Then make sure the password also has a zxcvbn score >= 3. 
+*  First validate password using the regex used by the API. Then make sure the password also has a zxcvbn score >= 3.
 *  Only run validation tests if image is provided (as otherwise the value passed is an empty string, which will fail
 *  validation.)
 */
@@ -20,7 +20,7 @@ const root_pass = string()
   //       "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.")
   //     .test('is-strong-password', 'Please choose a stronger password.', value => zxcvbn(value).score > 3)
   // });
-  
+
 export const ResizeLinodeDiskSchema = object({
   size: number().required().min(1),
 });
@@ -52,7 +52,10 @@ export const CreateLinodeSchema = object({
 });
 
 const alerts = object({
-  cpu: number(),
+  cpu: number()
+    .typeError("CPU Usage must be a number")
+    .min(0, "Must be between 0 and 2000")
+    .max(2000, "Must be between 0 and 2000"),
   network_in: number(),
   network_out: number(),
   transfer_quota: number(),
@@ -113,7 +116,7 @@ export const CreateSnapshotSchema = object({
   .required("A snapshot label is required.")
   .min(1, "Label must be between 1 and 255 characters.")
   .max(255, "Label must be between 1 and 255 characters.")
-}); 
+});
 
 const device = object({
   disk_id: number().nullable(true),
@@ -181,5 +184,5 @@ export const CreateLinodeDiskSchema = object({
   authorized_users: array().of(string()),
   root_pass,
   stackscript_id: number(),
-  stackscript_data, 
+  stackscript_data,
 });
