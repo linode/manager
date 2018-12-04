@@ -1,3 +1,4 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -25,12 +26,12 @@ import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
-import { generateInFilter, resetEventsPolling } from 'src/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
+import { resetEventsPolling } from 'src/events';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
+import { generateInFilter } from 'src/utilities/requestFilters';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
@@ -140,6 +141,7 @@ type CombinedProps =
   & PaginationProps<ExtendedVolume>
   & DispatchProps
   & RouteProps
+  & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
 interface TagProps {
@@ -154,7 +156,7 @@ class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
       <div className={classes.tagWrapper}>
         <Tags tags={tags} />
       </div>
-    )  
+    )
   }
 }
 
@@ -472,7 +474,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     detachVolume(volumeID)
       .then((response) => {
         /* @todo: show a progress bar for volume detachment */
-        sendToast('Volume detachment started');
+        this.props.enqueueSnackbar('Volume detachment started', {
+          variant: 'info',
+        });
         this.closeDestructiveDialog();
         resetEventsPolling();
       })
@@ -594,5 +598,6 @@ export default compose<CombinedProps, Props>(
   documented,
   paginated,
   styled,
-  withEvents
+  withEvents,
+  withSnackbar
 )(VolumesLanding);

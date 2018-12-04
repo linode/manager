@@ -125,7 +125,7 @@ namespace Linode {
     percent_complete: number | null;
     rate: string | null;
     read: boolean;
-    seen: Boolean;
+    seen: boolean;
     status: EventStatus;
     time_remaining: null | number;
     username: string;

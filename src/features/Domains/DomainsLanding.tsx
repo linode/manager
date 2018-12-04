@@ -1,7 +1,8 @@
-import { compose } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -26,7 +27,6 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import { Domains } from 'src/documentation';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteDomain, getDomains } from 'src/services/domains';
 import { openForCloning, openForCreating } from 'src/store/reducers/domainDrawer';
 import ActionMenu from './DomainActionMenu';
@@ -78,7 +78,11 @@ interface State {
   };
 }
 
-type CombinedProps = PaginationProps<Linode.Domain> & WithStyles<ClassNames> & RouteComponentProps<{}> & DispatchProps;
+type CombinedProps = PaginationProps<Linode.Domain>
+  & WithStyles<ClassNames>
+  & RouteComponentProps<{}>
+  & DispatchProps
+  & InjectedNotistackProps;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -141,6 +145,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   removeDomain = () => {
     const { removeDialog: { domainID } } = this.state;
+    const { enqueueSnackbar } = this.props;
     if (domainID) {
       deleteDomain(domainID)
         .then(() => {
@@ -149,11 +154,16 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         })
         .catch(() => {
           this.closeRemoveDialog();
-          sendToast('Error when removing domain', 'error');
+          /** @todo render this error inside the modal */
+          enqueueSnackbar('Error when removing domain', {
+            variant: 'error'
+          })
         });
     } else {
       this.closeRemoveDialog();
-      sendToast('Error when removing domain', 'error');
+      enqueueSnackbar('Error when removing domain', {
+        variant: 'error'
+      })
     }
   }
 
@@ -349,10 +359,11 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 
 export const connected = connect(undefined, mapDispatchToProps);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   setDocs(DomainsLanding.docs),
   withRouter,
   styled,
   paginated,
-  connected
+  connected,
+  withSnackbar
 )(DomainsLanding);
