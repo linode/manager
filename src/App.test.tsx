@@ -13,6 +13,8 @@ it('renders without crashing', () => {
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
           <App
+            onPresentSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
             location={{
               pathname: '',
               hash: '',

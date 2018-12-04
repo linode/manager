@@ -64,7 +64,7 @@ const props = {
 }
 
 const component = shallow(
-  <BackupDrawer {...props} />
+  <BackupDrawer onPresentSnackbar={jest.fn()} enqueueSnackbar={jest.fn()} {...props} />
 )
 
 describe("BackupDrawer component", () => {

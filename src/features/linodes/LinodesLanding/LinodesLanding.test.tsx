@@ -30,6 +30,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            enqueueSnackbar={jest.fn()}
+            onPresentSnackbar={jest.fn()}
             /** Pagination */
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
@@ -54,6 +56,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            enqueueSnackbar={jest.fn()}
+            onPresentSnackbar={jest.fn()}
             /** Pagination Props */
             {...pageyProps}
             data={[]}
@@ -82,6 +86,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            enqueueSnackbar={jest.fn()}
+            onPresentSnackbar={jest.fn()}
             /** Pagination Props */
             {...pageyProps}
             count={linodes.length}

@@ -1,5 +1,7 @@
-import { compose, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -13,7 +15,6 @@ import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreat
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { resizeLinode } from 'src/services/linodes';
 
 type ClassNames = 'root'
@@ -61,9 +62,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = TypesContextProps &
-  LinodeContextProps &
-  WithStyles<ClassNames>;
+type CombinedProps = TypesContextProps
+  & LinodeContextProps
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -90,20 +92,28 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    const { linodeId } = this.props;
+    const { linodeId, enqueueSnackbar } = this.props;
     const { selectedId } = this.state;
 
     if (!linodeId) { return; }
 
     resizeLinode(linodeId, selectedId)
       .then((response) => {
-        sendToast('Linode resize started.');
+        enqueueSnackbar('Linode resize started.', {
+          variant: 'info'
+        });
         this.setState({ selectedId: '' });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        pathOr(
+          [{reason: 'There was an issue resizing your Linode.'}],
+          ['response', 'data', 'errors'],
+          errorResponse
+        )
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
         this.setState({ selectedId: '' });
       });
   }
@@ -205,8 +215,9 @@ const linodeContext = withLinode((context) => ({
   linodeLabel: pathOr(undefined, ['data', 'label'], context),
 }));
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, {}>(
   linodeContext,
   typesContext,
   styled,
+  withSnackbar
 )(LinodeResize);

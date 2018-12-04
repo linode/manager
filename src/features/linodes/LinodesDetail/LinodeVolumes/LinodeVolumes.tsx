@@ -1,7 +1,9 @@
-import { append, compose, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { append, equals, filter, lensPath, over, pathOr, set, when } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -27,7 +29,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { events$, resetEventsPolling } from 'src/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, resizeVolume, updateVolume } from 'src/services/volumes';
 import { handleUpdate } from 'src/store/reducers/features/linodeDetail/volumes';
@@ -46,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface Props {
+interface PreloadedProps {
   /** PromiseLoader */
   linodeConfigs: PromiseLoaderResponse<Linode.Config[]>;
 }
@@ -77,11 +78,12 @@ interface State {
   volumeDrawer: VolumeDrawer;
 }
 
-type CombinedProps = Props
+type CombinedProps = PreloadedProps
   & StateProps & DispatchProps
   & LinodeContextProps
   & RouteComponentProps<{}>
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 const volumeDrawerData = (path: (string | number)[]) => lensPath(['volumeDrawer', ...path])
 
@@ -274,7 +276,9 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     detachVolume(id)
       .then(() => {
         this.closeUpdateDialog();
-        sendToast('Volume is being detached from this Linode.')
+        this.props.enqueueSnackbar('Volume is being detached from this Linode.', {
+          variant: 'info'
+        })
         this.getVolumes();
       })
       .catch((errorResponse) => {
@@ -892,7 +896,7 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const preloaded = PromiseLoader<Props & LinodeContextProps>({
+const preloaded = PromiseLoader<PreloadedProps & LinodeContextProps>({
   linodeConfigs: (props) => getLinodeConfigs(props.linodeID)
     .then(response => response.data),
 });
@@ -908,7 +912,7 @@ interface StateProps {
   linodeVolumes?: Linode.Volume[];
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
   linodeVolumes: state.features.linodeDetail.volumes.data
 });
 
@@ -918,7 +922,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => ({
   actions: {
     updateVolumes: (fn) => dispatch(handleUpdate(fn)),
   }
@@ -926,11 +930,12 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<any, any, any, any, any, any, any>(
+export default compose(
   connected,
   linodeContext,
   styled,
   withRouter,
   SectionErrorBoundary,
   preloaded,
+  withSnackbar,
 )(LinodeVolumes);

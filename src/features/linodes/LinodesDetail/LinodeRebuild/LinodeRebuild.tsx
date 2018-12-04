@@ -1,5 +1,7 @@
-import { always, compose, cond, groupBy, pathOr, propOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { always, cond, groupBy, pathOr, propOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -17,7 +19,6 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Select from 'src/components/Select';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getImages } from 'src/services/images';
 import { rebuildLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -70,7 +71,11 @@ interface State {
   password?: string;
 }
 
-type CombinedProps = PromiseLoaderProps & Props & ContextProps &  WithStyles<ClassNames>;
+type CombinedProps = PromiseLoaderProps
+  & Props
+  & ContextProps
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -82,7 +87,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    const { linodeId } = this.props;
+    const { linodeId, enqueueSnackbar } = this.props;
     const { selected, password } = this.state;
     const errors: Linode.ApiFieldError[] = [];
 
@@ -115,11 +120,19 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       .then((response) => {
         resetEventsPolling();
         this.setState({ errors: undefined, selected: undefined, password: undefined });
-        sendToast('Linode rebuild started.');
+        enqueueSnackbar('Linode rebuild started.', {
+          variant: 'info'
+        });
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        pathOr(
+          [{ reason: 'There was an issue rebuilding your Linode' }],
+          ['response', 'data', 'errors'],
+          errorResponse
+        )
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
       });
   }
 
@@ -243,12 +256,13 @@ const linodeContext = withLinode((context) => ({
   linodeLabel: context.data!.label,
 }));
 
-export default compose<any, any, any, any, any, any>(
+export default compose<CombinedProps, Props>(
   linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,
   userSSHKeyHoc,
+  withSnackbar
 )(LinodeRebuild);
 
 interface GroupedImages {

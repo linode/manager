@@ -3,7 +3,6 @@ import { pathOr } from 'ramda';
 
 import { events$, resetEventsPolling } from 'src/events';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeConfigs, linodeBoot, linodeReboot, linodeShutdown } from 'src/services/linodes';
 import { dateFormat } from 'src/time';
 
@@ -33,26 +32,37 @@ export const genEvent = (
   } as Linode.Event;
 };
 
-export type LinodePowerAction = (id: string | number, label: string, config_id?: number) => void;
+export type LinodePowerAction = (
+  id: string | number,
+  label: string,
+  config_id?: number,
+  sendToast?: (message: string, toastOptions: any) => void,
+) => void;
 
-const _rebootLinode: LinodePowerAction = (id, label, config_id) => {
+const _rebootLinode: LinodePowerAction = (id, label, config_id, sendToast) => {
   linodeReboot(id, config_id)
-  .then((response) => {
-    events$.next(genEvent('linode_reboot', id, label));
-    resetEventsPolling();
-  })
-  .catch((err) => {
-    const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-    errors.forEach(e => sendToast(e.reason, 'error'));
-  });
+    .then((response) => {
+      events$.next(genEvent('linode_reboot', id, label));
+      resetEventsPolling();
+    })
+    .catch((err) => {
+      const errors: Linode.ApiFieldError[] = pathOr(
+        [{ reason: 'There was an issue rebooting your Linode' }],
+        ['response', 'data', 'errors'],
+        err
+      );
+      errors.forEach(e => sendToast && sendToast(e.reason, {
+        variant: 'error'
+      }));
+    });
 };
 
 const _powerOnLinode: LinodePowerAction = (id, label, configId) => {
   linodeBoot(id, configId)
-  .then((response) => {
-    events$.next(genEvent('linode_boot', id, label));
-    resetEventsPolling();
-  });
+    .then((response) => {
+      events$.next(genEvent('linode_boot', id, label));
+      resetEventsPolling();
+    });
 };
 
 type DrawerFunction =
@@ -64,26 +74,34 @@ const withAction = (
   updateDrawer: DrawerFunction,
   id: number,
   label: string,
-) => {
-  getLinodeConfigs(id)
-    .then((response: Linode.ResourcePage<Linode.Config>) => {
-      const configs = response.data;
-      const len = configs.length;
+  sendToast?: (message: string, toastOptions: any) => void,
+  ) => {
+    getLinodeConfigs(id)
+      .then((response: Linode.ResourcePage<Linode.Config>) => {
+        const configs = response.data;
+        const len = configs.length;
 
-      if (len > 1) {
-        updateDrawer(configs, config_id => action(id, label, config_id));
-      } else {
-        action(id, label);
-      }
-    });
-};
+        if (len > 1) {
+          updateDrawer(configs, config_id => action(id, label, config_id, sendToast));
+        } else {
+          action(id, label, undefined, sendToast);
+        }
+      })
+      .catch(e => {
+        if (!!sendToast) {
+          sendToast('There was an issue taking action on this Linode', {
+            variant: 'error'
+          })
+        }
+      });
+  };
 
 export const powerOffLinode: LinodePowerAction = (id, label) => {
   linodeShutdown(id)
-  .then((response) => {
-    events$.next(genEvent('linode_shutdown', id, label));
-    resetEventsPolling();
-  });
+    .then((response) => {
+      events$.next(genEvent('linode_shutdown', id, label));
+      resetEventsPolling();
+    });
 };
 
 export const rebootLinode = withAction(_rebootLinode);

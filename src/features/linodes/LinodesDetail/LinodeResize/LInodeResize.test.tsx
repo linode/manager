@@ -11,6 +11,8 @@ describe('LinodeResize', () => {
 
   const component = shallow(
     <LinodeResize
+      onPresentSnackbar={jest.fn()}
+      enqueueSnackbar={jest.fn()}
       classes={{
         root: '',
         title: '',
@@ -29,6 +31,8 @@ describe('LinodeResize', () => {
     const componentWithTheme = mount(
       <LinodeThemeWrapper>
         <LinodeResize
+          onPresentSnackbar={jest.fn()}
+          enqueueSnackbar={jest.fn()}
           classes={{
             root: '',
             title: '',
@@ -57,6 +61,8 @@ describe('LinodeResize', () => {
         const componentWithTheme = mount(
           <LinodeThemeWrapper>
             <LinodeResize
+              onPresentSnackbar={jest.fn()}
+              enqueueSnackbar={jest.fn()}
               classes={{
                 root: '',
                 title: '',
@@ -87,6 +93,8 @@ describe('LinodeResize', () => {
         const componentWithTheme = mount(
           <LinodeThemeWrapper>
             <LinodeResize
+              onPresentSnackbar={jest.fn()}
+              enqueueSnackbar={jest.fn()}
               classes={{
                 root: '',
                 title: '',

@@ -1,3 +1,4 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
@@ -21,7 +22,6 @@ import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
@@ -160,7 +160,11 @@ interface State {
   hasError: boolean;
 }
 
-type CombinedProps = Props & DispatchProps & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props 
+  & DispatchProps
+  & StateProps
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 const typesContext = (pathCollection: string[]) => lensPath(['typesContext', ...pathCollection]);
 const regionsContext = (pathCollection: string[]) => lensPath(['regionsContext', ...pathCollection]);
@@ -266,11 +270,15 @@ export class App extends React.Component<CombinedProps, State> {
       .subscribe((event) => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
-          sendToast(`Linode ${migratedLinode!.label} migrated successfully.`);
+          this.props.enqueueSnackbar(`Linode ${migratedLinode!.label} migrated successfully.`, {
+            variant: 'success'
+          })
         }
 
         if (event.action === 'linode_migrate' && event.status === 'failed') {
-          sendToast(`Linode ${migratedLinode!.label} migration failed.`, 'error');
+          this.props.enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
+            variant: 'error'
+          });
         }
       });
 
@@ -453,4 +461,5 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
+  withSnackbar
 )(App);

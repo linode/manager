@@ -1,7 +1,9 @@
-import { compose, Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,7 +17,6 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cloneDomain, createDomain } from 'src/services/domains';
 import {
   CLONING,
@@ -47,9 +48,10 @@ interface State {
 }
 
 type CombinedProps = WithStyles<ClassNames>
-& DispatchProps
-& RouteComponentProps<{}>
-& StateProps;
+  & DispatchProps
+  & RouteComponentProps<{}>
+  & StateProps
+  & InjectedNotistackProps;
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) => compose(masterIPsLens, lensPath([idx])) as Lens;
@@ -267,7 +269,9 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     if (!cloneId) {
       this.closeDrawer();
-      sendToast('Error cloning domain', 'error');
+      this.props.enqueueSnackbar('Error cloning domain', {
+        variant: 'error'
+      })
       return;
     }
 
@@ -352,8 +356,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, {}>(
   styled,
   connected,
-  withRouter
+  withRouter,
+  withSnackbar
 )(DomainCreateDrawer)
