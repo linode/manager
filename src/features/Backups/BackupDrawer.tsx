@@ -68,6 +68,7 @@ interface StateProps {
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;
+  updatedCount: number;
 }
 
 type CombinedProps = DispatchProps
@@ -76,6 +77,18 @@ type CombinedProps = DispatchProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
+const getFailureNotificationText = (success: number, failed: number): string => {
+  if (success > 0) {
+    const pluralizedSuccess = success > 1 ? 'Linodes' : 'Linode';
+    const pluralizedFailure = failed > 1 ? 'Linodes' : 'Linode';
+    return `Enabled backups successfully for ${success} ${pluralizedSuccess}
+    , but ${failed} ${pluralizedFailure} failed.`
+  }
+  // This function will only be called if at least one backup failed.
+  else {
+    return `There was an error enabling backups for your Linodes.`
+  }
+}
 
 export const getTotalPrice = (linodes: ExtendedLinode[]) => {
   return linodes.reduce((prevValue: number, linode: ExtendedLinode) => {
@@ -92,16 +105,17 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
   componentDidUpdate() {
     const { close, dismissSuccess } = this.props.actions;
-    const { autoEnroll, enableSuccess } = this.props;
+    const { autoEnroll, enableSuccess, updatedCount } = this.props;
 
     if (enableSuccess) {
+      const pluralizedLinodes = updatedCount > 1 ? 'Linodes have' : 'Linode has'
       const text = autoEnroll
-        ? `All of your Linodes have been enrolled in automatic backups, and
+        ? `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups, and
         all new Linodes will automatically be backed up.`
-        : `All of your Linodes have been enrolled in automatic backups.`
-      this.props.enqueueSnackbar(text, {
-        variant: 'success'
-      });
+        : `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups.`
+        this.props.enqueueSnackbar(text, {
+          variant: 'success'
+        });
       dismissSuccess();
       close();
     }
@@ -128,6 +142,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       linodesWithoutBackups,
       loading,
       open,
+      updatedCount,
     } = this.props;
     const linodeCount = linodesWithoutBackups.length;
     return (
@@ -147,7 +162,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
           {enableErrors && !isEmpty(enableErrors) &&
             <Grid item>
               <Notice error spacingBottom={0} >
-                There was an error enabling backups for some of your Linodes.
+                {getFailureNotificationText(updatedCount, enableErrors.length)}
               </Notice>
             </Grid>
           }
@@ -246,10 +261,11 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     backupLoadError: path(['backups', 'error'], state),
     backupsLoading: path(['backups', 'loading'], state),
     enableErrors,
-    enableSuccess: path(['backups', 'enableSuccess'], state),
-    open: path(['backups', 'open'], state),
-    loading: pathOr(false, ['backups', 'loading'], state),
-    enabling: pathOr(false, ['backups', 'enabling'], state),
+    enableSuccess: path(['backups','enableSuccess'], state),
+    updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
+    open: path(['backups','open'], state),
+    loading: pathOr(false, ['backups','loading'], state),
+    enabling: pathOr(false, ['backups','enabling'], state),
     linodesWithoutBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
