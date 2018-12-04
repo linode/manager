@@ -88,11 +88,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  redirect = (path: string) => {
-    const { history } = this.props;
-    history.push(path);
-  }
-
   updateData = () => {
     this.setState({ loading: true });
     getAllEntities(this.setEntitiesToState)
@@ -162,7 +157,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
               key={idx}
               entity={entityType}
               results={results[entityType]}
-              redirect={this.redirect}
               loading={loading}
               groupSize={5}
             />

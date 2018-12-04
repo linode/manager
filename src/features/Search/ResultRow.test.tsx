@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
 import Tags from 'src/components/Tags';
-import { ResultRow, RowWithHandlers } from './ResultRow';
+import { ResultRow } from './ResultRow';
 
 const classes = {
   root: '',
@@ -17,9 +17,12 @@ const classes = {
   link: '',
   status: '',
   labelRow: '',
+  labelCell: '',
+  iconCell: '',
+  regionCell: '',
+  createdCell: '',
+  tagCell: ''
 };
-
-const handleClick = jest.fn();
 
 const props = {
   result: searchbarResult1,
@@ -28,29 +31,17 @@ const props = {
 }
 
 const component = shallow(
-  <ResultRow handleClick={handleClick} {...props} />
-)
-
-const handlers = shallow(
-  <RowWithHandlers {...props} />
+  <ResultRow {...props} />
 )
 
 describe("ResultRow component", () => {
   it("should render", () => {
     expect(component).toBeDefined();
   });
-  it("should redirect on click", () => {
-    component.simulate('click');
-    expect(handleClick).toHaveBeenCalled();
-  });
   it("should render tags if any", () => {
     component.setProps({ result: searchbarResult2 });
     expect(component.containsMatchingElement(
       <Tags tags={searchbarResult2.data.tags} />
     )).toBeTruthy();
-  });
-  it("should redirect to the result's path", () => {
-    handlers.find(ResultRow).props().handleClick();
-    expect(props.redirect).toHaveBeenCalledWith(searchbarResult2.data.path);
   });
 });
