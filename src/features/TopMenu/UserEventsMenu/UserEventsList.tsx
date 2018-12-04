@@ -40,15 +40,19 @@ const UserEventsList: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       {
-        (events as Linode.Event[])
+        (events as ExtendedEvent[])
           .reduce((result, event): UserEventsListItemProps[] => {
             const title = eventMessageGenerator(event, reportUnfoundEvent, reportEventError);
-            const content = `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
+            const content = event._deleted
+              ? `Deleted ${moment(`${event.created}Z`).fromNow()} by ${event.username}`
+              : `${moment(`${event.created}Z`).fromNow()} by ${event.username}`;
+
             const success = event.status !== 'failed' && !event.seen;
             const error = event.status === 'failed';
             const onClick = createClickHandlerForNotification(
               event.action,
               event.entity,
+              event._deleted,
               (s: string) => {
                 closeMenu();
                 push(s);
@@ -68,13 +72,17 @@ const UserEventsList: React.StatelessComponent<CombinedProps> = (props) => {
 const createClickHandlerForNotification = (
   action: Linode.EventAction,
   entity: null | Linode.Entity,
+  deleted: undefined | string,
   onClick: (path: string) => void,
 ) => {
   const type = path(['type'], entity);
   const id = path(['id'], entity);
 
-  /** If it's a deletion we have no where to go, so don't. */
-  if (action.includes('_delete')) {
+  /**
+   * If we have a deletion event or an event that is marked as referring to a deleted entityt
+   * we don't want a clickable actin.
+   */
+  if (action.includes('_delete') || deleted) {
     return;
   }
 

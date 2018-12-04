@@ -2,6 +2,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { events$ } from 'src/events';
