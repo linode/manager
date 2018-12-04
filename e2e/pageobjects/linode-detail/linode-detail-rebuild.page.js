@@ -57,8 +57,7 @@ class Rebuild extends Page {
 
     rebuild() {
         const toastMessage = 'Linode rebuild started.';
-
-        this.submit.click();
+        browser.jsClick(this.submit.selector);
         browser.waitForVisible('[data-qa-toast]');
         browser.waitUntil(function() {
             return browser

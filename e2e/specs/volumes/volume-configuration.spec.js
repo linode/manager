@@ -15,7 +15,11 @@ describe('Volume Configuration Panel', () => {
         browser.url(constants.routes.volumes);
         Volumes.baseElemsDisplay(true);
         VolumeDetail.createVolume(testVolume, 'placeholder');
-        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
+        VolumeDetail.toastDisplays('Volume scheduled for creation.', constants.wait.long);
+        VolumeDetail.drawerClose.click();
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.minute);
+        browser.url(constants.routes.volumes);
+        Volumes.baseElemsDisplay(true);
     });
 
     afterAll(() => {
@@ -23,12 +27,15 @@ describe('Volume Configuration Panel', () => {
     });
 
     it('should display the configuration drawer', () => {
-        const volumeElement = VolumeDetail.volumeCell[0];
-        VolumeDetail.selectActionMenuItem(volumeElement, 'Show Configuration');
+        const actionMenu = $$(`${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`)[0];
+        actionMenu.click();
+        browser.waitForVisible(VolumeDetail.actionMenuItem.selector, constants.wait.normal);
+        const trimActionMenu = VolumeDetail.actionMenuItem.selector.replace(']', '');
+        browser.jsClick(`${trimActionMenu}="Show Configuration"`);
         VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
     });
-
-    it('should show the volume configuration', () => {
+    //Need new test for M3-1870
+    xit('should show the volume configuration', () => {
         VolumeDetail.assertConfig();
     });
 });
