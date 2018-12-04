@@ -21,7 +21,19 @@ git checkout -b release-$RELEASE_VERSION
 python generate_changelog.py $RELEASE_VERSION $RELEASE_DATE $ORIGIN
 
 #Create release tag & bump package.json version
-yarn version --new-version $RELEASE_VERSION
+VESRION_UPDATE_SUCCESS=$(VERSION=$(yarn version --new-version $RELEASE_VERSION )
+                          if [[ $VERSION == *"New version: $RELEASE_VERSION"* ]]; then
+                            echo "Package json updated successfully to version $RELEASE_VERSION"
+                            exit 0
+                          else
+                            echo "Package json did not update successfully to version $RELEASE_VERSION"
+                            exit 1
+                          fi
+                        )
+
+if [[ ! $VESRION_UPDATE_SUCCESS ]]; then
+  exit $?
+fi
 
 #Commit updated version and new changelog
 git commit -m "Cloud Manager version $RELEASE_VERSION - $RELEASE_DATE"
