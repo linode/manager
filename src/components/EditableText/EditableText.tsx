@@ -201,7 +201,7 @@ export class EditableText extends React.Component<FinalProps, State> {
     const { isEditing, text } = this.state;
 
     const labelText = (
-      <Typography className={classes.root} { ...rest } data-qa-editable-text>
+      <Typography className={classes.root} { ...rest } variant="h1" data-qa-editable-text>
         {this.state.text}
       </Typography>
     );
