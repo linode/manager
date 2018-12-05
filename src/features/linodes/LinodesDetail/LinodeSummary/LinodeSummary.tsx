@@ -15,9 +15,10 @@ import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/contex
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
-import { getMetrics, withPercentage } from 'src/utilities/stats';
+import { getMetrics, withPercentage, withUnit } from 'src/utilities/stats';
 import CPUMetrics from './CPUMetrics';
 import DiskIOMetrics from './DiskIOMetrics';
+import IPMetrics from './IPMetrics';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
@@ -56,27 +57,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
     },
     bottomLegend: {
       margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
-      display: 'flex',
-      flexWrap: 'wrap',
+      // display: 'flex',
+      // flexWrap: 'wrap',
       color: '#777',
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
+        // flexDirection: 'column',
         '& > div': {
           marginBottom: theme.spacing.unit * 2,
         },
       },
-      '& > div': {
-        display: 'flex',
-        marginRight: theme.spacing.unit * 5,
-        '&:before': {
-          content: '""',
-          display: 'block',
-          width: 20,
-          height: 20,
-          marginRight: theme.spacing.unit,
-        },
-      },
+      // '& > div': {
+      //   display: 'flex',
+      //   marginRight: theme.spacing.unit * 5,
+      //   '&:before': {
+      //     content: '""',
+      //     display: 'block',
+      //     width: 20,
+      //     height: 20,
+      //     marginRight: theme.spacing.unit,
+      //   },
+      // },
     },
     graphTitle: {
       marginRight: theme.spacing.unit * 2,
@@ -276,6 +277,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderIPv4TrafficChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
+
+    const data = {
+      publicIn: pathOr([[]], ['data','netv4','in'], stats),
+      publicOut: pathOr([[]], ['data','netv4','out'], stats),
+      privateIn: pathOr([[]], ['data','netv4','private_in'], stats),
+      privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
+    };
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -288,40 +297,34 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#3683dc',
-                data: pathOr([[]], ['data','netv4','in'], stats),
+                data: data.publicIn,
                 label: 'Public Traffic In',
               },
               {
                 borderColor: '#01b159',
-                data: pathOr([[]], ['data','netv4','out'], stats),
+                data: data.publicOut,
                 label: 'Public Traffic Out',
               },
               {
                 borderColor: '#d01e1e',
-                data: pathOr([[]], ['data','netv4','private_in'], stats),
+                data: data.privateIn,
                 label: 'Private Traffic In',
               },
               {
                 borderColor: '#ffd100',
-                data: pathOr([[]], ['data','netv4','private_out'], stats),
+                data: data.privateOut,
                 label: 'Private Traffic Out',
               },
             ]}
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.blue}>
-            Public IPv4 Inbound
-          </div>
-          <div className={classes.green}>
-            Public IPv4 Outbound
-          </div>
-          <div className={classes.red}>
-            Private IPv4 Inbound
-          </div>
-          <div className={classes.yellow}>
-            Private IPv4 Outbound
-          </div>
+          <IPMetrics
+            privateIn={withUnit(getMetrics(data.privateIn))}
+            privateOut={withUnit(getMetrics(data.privateOut))}
+            publicIn={withUnit(getMetrics(data.publicIn))}
+            publicOut={withUnit(getMetrics(data.publicOut))}
+          />
         </div>
       </React.Fragment>
     )
@@ -330,6 +333,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderIPv6TrafficChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
+
+    const data = {
+      publicIn: pathOr([[]], ['data','netv6','in'], stats),
+      publicOut: pathOr([[]], ['data','netv6','out'], stats),
+      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
+      privateOut: pathOr([[]], ['data','netv6','private_out'], stats)
+    };
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -342,40 +353,34 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#3683dc',
-                data: pathOr([[]], ['data','netv6','in'], stats),
+                data: data.publicIn,
                 label: 'Public Traffic In',
               },
               {
                 borderColor: '#01b159',
-                data: pathOr([[]], ['data','netv6','out'], stats),
+                data: data.publicOut,
                 label: 'Public Traffic Out',
               },
               {
                 borderColor: '#d01e1e',
-                data: pathOr([[]], ['data','netv6','private_in'], stats),
+                data: data.privateIn,
                 label: 'Private Traffic In',
               },
               {
                 borderColor: '#ffd100',
-                data: pathOr([[]], ['data','netv6','private_out'], stats),
+                data: data.privateOut,
                 label: 'Private Traffic Out',
               },
             ]}
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.blue}>
-            Public IPv6 Inbound
-          </div>
-          <div className={classes.green}>
-            Public IPv6 Outbound
-          </div>
-          <div className={classes.red}>
-            Private IPv6 Inbound
-          </div>
-          <div className={classes.yellow}>
-            Private IPv6 Outbound
-          </div>
+          <IPMetrics
+            privateIn={withUnit(getMetrics(data.privateIn))}
+            privateOut={withUnit(getMetrics(data.privateOut))}
+            publicIn={withUnit(getMetrics(data.publicIn))}
+            publicOut={withUnit(getMetrics(data.publicOut))}
+          />
         </div>
       </React.Fragment>
     )
