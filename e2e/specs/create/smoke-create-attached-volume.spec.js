@@ -43,8 +43,6 @@ describe('Create - Volume Suite', () => {
 
         VolumeDetail.createVolume(testVolume, 'header');
 
-        VolumeDetail.dismissToast();
-
         browser.url(constants.routes.volumes);
         Volumes.baseElemsDisplay();
 

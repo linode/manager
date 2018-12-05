@@ -2,13 +2,16 @@ const { constants } = require('../../../constants');
 import {
     apiCreateLinode,
     timestamp,
-    checkEnvironment
+    checkEnvironment,
+    updateGlobalSettings,
+    apiDeleteAllLinodes,
 } from '../../../utils/common';
 import Backups from '../../../pageobjects/linode-detail/linode-detail-backups.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Linode - Details - Backup - Snapshot Suite', () => {
+    const disableAutoEnrollment = { 'backups_enabled': false };
     const linodeLabel = `AutoLinode${timestamp()}`;
     const otherDataCenterLinode = `OtherDataCenter${timestamp()}`;
     const snapshot = `backup-${linodeLabel}`;
@@ -30,11 +33,17 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
 
     beforeAll(() => {
         checkEnvironment();
+        updateGlobalSettings(disableAutoEnrollment);
         apiCreateLinode(linodeLabel);
         apiCreateLinode(otherDataCenterLinode,false,[],'g6-nanode-1','us-central');
+        browser.pause(2000);
         ListLinodes.navigateToDetail(linodeLabel);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
     });
+
+    afterAll(() => {
+       apiDeleteAllLinodes();
+   })
 
     beforeEach(() => {
         checkEnvironment();
@@ -42,9 +51,8 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
 
     it('Create snapshot of linode', () => {
         LinodeDetail.changeTab('Backups');
-        if ( Backups.enableButton.isVisible() ){
-            Backups.enableBackups();
-        }
+        Backups.baseElemsDisplay(true);
+        Backups.enableBackups();
         Backups.baseElemsDisplay();
         Backups.takeSnapshotWaitForComplete(snapshot);
     });

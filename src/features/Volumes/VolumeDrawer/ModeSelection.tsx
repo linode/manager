@@ -27,8 +27,8 @@ const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ mode, on
       onChange={onChange}
       data-qa-mode-radio-group
     >
-      <FormControlLabel value="creating_for_linode" label="Create and Attach Volume" control={<Radio />} />
-      <FormControlLabel value="attaching" label="Attach Existing Volume" control={<Radio />} />
+      <FormControlLabel value="creating_for_linode" label="Create and Attach Volume" control={<Radio />} data-qa-radio="Create and Attach Volume"/>
+      <FormControlLabel value="attaching" label="Attach Existing Volume" control={<Radio />} data-qa-radio="Attach Existing Volume"/>
     </RadioGroup>
   );
 };

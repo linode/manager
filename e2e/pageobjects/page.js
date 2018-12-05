@@ -144,23 +144,9 @@ export default class Page {
 
     toastDisplays(expectedMessage, timeout=constants.wait.normal) {
         this.toast.waitForVisible(timeout);
-        this.toastMsg.waitForVisible(timeout);
-
-        const displayedMsg = browser.getText('[data-qa-toast-message]');
+        const displayedMsg = this.toast.getText();
         expect(displayedMsg).toBe(expectedMessage);
-        browser.click('[data-qa-toast] button');
-        browser.waitForExist('[data-qa-toast]', constants.wait.normal, true);
-    }
-
-    dismissToast() {
-        return browser.waitUntil(function() {
-            if (browser.isVisible('[data-qa-toast]')) {
-                browser.click('[data-qa-toast] button');
-                const dismissed = browser.isVisible('[data-qa-toast]') ? true : false;
-                return dismissed;
-            }
-            return true;
-        }, constants.wait.normal);
+        this.toast.waitForVisible(timeout, true);
     }
 
     openActionMenu(actionMenuRow) {
@@ -185,6 +171,14 @@ export default class Page {
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
     }
 
+    selectActionMenuItemV2(tableCellSelector, item, index=0){
+      const actionMenu = $$(`${tableCellSelector} ${this.actionMenu.selector}`)[index];
+      actionMenu.click();
+      browser.waitForVisible(this.actionMenuItem.selector, constants.wait.normal);
+      const trimActionMenu = this.actionMenuItem.selector.replace(']', '');
+      browser.jsClick(`${trimActionMenu}="${item}"]`);
+    }
+
     actionMenuOptionExists(actionMenuRow,option) {
         this.openActionMenu(actionMenuRow);
         expect($(`[data-qa-action-menu-item="${option}"]`).isVisible()).toBe(true);
@@ -196,7 +190,9 @@ export default class Page {
     }
 
     changeTab(tab) {
-        browser.jsClick(`[data-qa-tab="${tab}"]`);
+        const tabElementSelector = `[data-qa-tab="${tab}"]`;
+        $(tabElementSelector).waitForVisible(constants.wait.normal);
+        browser.jsClick(tabElementSelector);
         browser.waitUntil(function() {
             return browser
                 .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected').includes('true');

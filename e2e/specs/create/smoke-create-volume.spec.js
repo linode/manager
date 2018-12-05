@@ -38,7 +38,7 @@ describe('Create - Volume Suite', () => {
     it('should display minimum and maximum volume size', () => {
         const volumeHelpText = $$(`${VolumeDetail.size.selector} p`)[1];
         expect(volumeHelpText.isVisible()).toBe(true);
-        expect(volumeHelpText.getText()).toEqual('A single volume can range from 10 GiB to 10,240 GiB in size.');
+        expect(volumeHelpText.getText()).toEqual('A single volume can range from 10 GiB to 10240 GiB in size.');
     });
 
     it('should display volume price dynamically based on size', () => {
@@ -54,15 +54,15 @@ describe('Create - Volume Suite', () => {
 
     it('should display form error on create without a label', () => {
         VolumeDetail.createVolume(testVolume, 'header');
-        VolumeDetail.label.$('p').waitForText(constants.wait.normal);
+        expect(VolumeDetail.label.$('p').isVisible()).toBe(true);
         VolumeDetail.closeVolumeDrawer();
     });
 
     it('should display a error notice on create without region', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
         VolumeDetail.createVolume(testVolume, 'header');
-        VolumeDetail.notice.waitForVisible(constants.wait.normal);
-        VolumeDetail.closeVolumeDrawer();
+        expect(VolumeDetail.region.$('..').$('..').$('p').isVisible()).toBe(true);
+        VolumeDetail.drawerClose.click();
     });
 
     it('should create without attaching to a linode', () => {
@@ -70,13 +70,14 @@ describe('Create - Volume Suite', () => {
         testVolume['region'] = 'us-east';
 
         VolumeDetail.createVolume(testVolume, 'header');
+        VolumeDetail.toastDisplays('Volume successfully created.', constants.wait.minute);
+        VolumeDetail.drawerClose.click();
         browser.url(constants.routes.volumes);
-
         browser.waitUntil(function() {
             return VolumeDetail.getVolumeId(testVolume.label).length > 0;
-        }, constants.wait.normal);
+        }, constants.wait.long);
 
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
-        VolumeDetail.removeAllVolumes();
+        VolumeDetail.removeVolume(VolumeDetail.volumeCellElem);
     });
 });

@@ -10,7 +10,6 @@ export class ListLinodes extends Page {
     get confirmDialogCancel() { return $('[data-qa-cancel-cancel]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get activeView() { return $('[data-qa-active-view]'); }
-    get linodeElem() { return $('[data-qa-linode]'); }
     get linode() { return $$('[data-qa-linode]'); }
     get linodeElem() { return $('[data-qa-linode]'); }
     get linodeLabel() { return $('[data-qa-label]'); }
@@ -164,10 +163,5 @@ export class ListLinodes extends Page {
         this.confirmDialogSubmit.click();
         this.confirmDialogTitle.waitForVisible(constants.wait.normal, true);
     }
-
-    assertDocsDrawer() {
-
-    }
-
 }
 export default new ListLinodes();
