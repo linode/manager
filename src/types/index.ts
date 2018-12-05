@@ -105,6 +105,8 @@ namespace Linode {
     'stackscript_delete' |
     'stackscript_publicize' |
     'stackscript_revise' |
+    'user_ssh_key_add' |
+    'user_ssh_key_delete' |
     'volume_create' |
     'volume_delete' |
     'volume_detach' |
@@ -125,7 +127,7 @@ namespace Linode {
     percent_complete: number | null;
     rate: string | null;
     read: boolean;
-    seen: Boolean;
+    seen: boolean;
     status: EventStatus;
     time_remaining: null | number;
     username: string;

@@ -52,7 +52,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
       >
         <Grid container direction="column" className={classes.root}>
           <Grid item>
-            <Typography variant="title">
+            <Typography variant="h2">
               Back Up All New Linodes
             </Typography>
           </Grid>

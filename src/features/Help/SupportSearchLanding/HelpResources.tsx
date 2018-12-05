@@ -126,7 +126,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           >
             <Grid item xs={12}>
               <Typography
-                variant="title"
+                variant="h2"
                 className={classes.heading}
               >
                 Didn't find what you need? Get help.

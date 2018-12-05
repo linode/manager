@@ -1,3 +1,7 @@
+declare interface ExtendedEvent extends Linode.Event {
+  _deleted?: string;
+  _initial?: boolean;
+}
 declare interface ApplicationState {
   __resources: {
     profile: RequestableData<Linode.Profile>,
@@ -11,6 +15,13 @@ declare interface ApplicationState {
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
+  /** @todo extract */
+  events: {
+    events: ExtendedEvent[];
+    mostRecentEventTime: number;
+    countUnseenEvents: number,
+    inProgressEvents: Record<number, boolean>,
+  }
 }
 
 declare interface AuthState {
@@ -48,6 +59,7 @@ declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   enabling: boolean;
   enableErrors: BackupError[];
   enableSuccess: boolean;
+  updatedCount: number;
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;

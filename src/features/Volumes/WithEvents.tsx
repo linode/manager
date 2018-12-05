@@ -61,7 +61,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
           }
 
           /** if our volume finished provisioning, refresh the list of Volumes */
-          if (['volume_create', 'volume_attach'].includes(event.action)) {
+          if (['volume_create', 'volume_attach', 'volume_clone'].includes(event.action)) {
             return this.props.request();
           }
 

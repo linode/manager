@@ -31,7 +31,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   subTitle: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit,
   },
   currentPlanContainer: {
     '& .selectionCard': {
@@ -147,7 +148,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.title}
             data-qa-title
           >
@@ -162,7 +163,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <div className={classes.currentPlanContainer} data-qa-current-container>
             <Typography
               role="header"
-              variant="title"
+              variant="h3"
               className={classes.subTitle}
               data-qa-current-header
             >

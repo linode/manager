@@ -137,7 +137,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             )
           })}
         </ul>
-        <Typography variant="title" style={{ marginTop: 32, marginBottom: 16 }}>How it Works</Typography>
+        <Typography variant="h2" style={{ marginTop: 32, marginBottom: 16 }}>How it Works</Typography>
         <Typography>After entering the upgrade queue, the following will occur:</Typography>
         <ol className="nonMUI-list">
           <ListItem>Wait your turn in the upgrade queue.</ListItem>

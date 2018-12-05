@@ -53,7 +53,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
         <Grid item xs={12}>
           <Typography
             role="header"
-            variant="headline"
+            variant="h1"
             className={classes.title}
             data-qa-title
           >

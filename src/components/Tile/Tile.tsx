@@ -130,7 +130,7 @@ class Tile extends React.Component<CombinedProps> {
         {errorText &&
           <Notice error={true} text={errorText} />
         }
-        <Typography variant="subheading" className={classes.tileTitle} data-qa-tile-title>
+        <Typography variant="h3" className={classes.tileTitle} data-qa-tile-title>
           <React.Fragment>
             {link
               ?
