@@ -44,7 +44,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     wordBreak: 'break-all',
   },
   labelCell: {
-    width: '100%', 
+    width: '100%',
+    // Overriding mobile version of TableCell's styles for the label cell only
+    [theme.breakpoints.between('xs','sm')]: {
+      '& > span:first-child': {
+        display: 'none',
+      },
+      '& > span:last-child': {
+        textAlign: 'left',
+        wordBreak: 'normal',
+        marginLeft: 0,
+      },
+    },
     [theme.breakpoints.up('md')]: {
       width: '35%',
       padding: 4,
@@ -93,10 +104,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    [theme.breakpoints.up('md')]: {
-      justifyContent: 'flex-start',
-    },
   },
   resultBody: {
   },
