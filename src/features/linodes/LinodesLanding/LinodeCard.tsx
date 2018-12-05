@@ -384,7 +384,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
           <Grid item className={classes.cardHeader + ' py0'}>
-            <Typography role="header" className={classes.wrapHeader} variant="subheading" data-qa-label>
+            <Typography role="header" className={classes.wrapHeader} variant="h3" data-qa-label>
               {linodeLabel}
             </Typography>
           </Grid>

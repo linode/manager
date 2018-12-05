@@ -68,7 +68,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
     <React.Fragment>
       <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptId}`} className={classes.root}>
         <div className={classes.labelWrapper}>
-          <Typography className={classes.title} role="header" variant="subheading">
+          <Typography className={classes.title} role="header" variant="h3">
             {stackScriptUsername &&
               <label
                 htmlFor={`${stackScriptId}`}
@@ -84,7 +84,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
             <Arrow className={classes.linkIcon} />
           </Typography>
         </div>
-        <Typography variant="caption">{truncateText(description, 100)}</Typography>
+        <Typography variant="body1">{truncateText(description, 100)}</Typography>
       </a>
     </React.Fragment>
   )

@@ -1,148 +1,61 @@
-import Close from '@material-ui/icons/Close';
-import * as classNames from 'classnames';
-import { lensPath, over, set, tail } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
-import Button from 'src/components/Button';
-import Snackbar from 'src/components/core/Snackbar';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import { events$ } from 'src/events';
-import toasts$, { createToast, Toast } from './toasts';
 
-type ClassNames = 'root'
-  | 'content'
-  | 'actions'
-  | 'button'
-  | 'error'
-  | 'warning'
-  | 'success';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  const { palette: { status } } = theme;
-
-  return {
-    root: {
-      background: 'white',
-      borderLeft: `5px solid ${theme.palette.primary.main}`,
-      [theme.breakpoints.up('sm')]: {
-        maxWidth: 300,
-      },
-      [theme.breakpoints.up('md')]: {
-        width: 500,
-        maxWidth: 500,
-      },
-    },
-    content: {
-      color: '#32363C',
-      lineHeight: 1.4,
-    },
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      minWidth: 'auto',
-      minHeight: 'auto',
-      padding: 0,
-      border: 0,
-      color: theme.palette.text.primary,
-      borderRadius: '50%',
-      '& > span': {
-        padding: 2,
-      },
-      '& svg': {
-        width: 24,
-        height: 24,
-      },
-      '&:hover, &:focus': {
-        color: theme.palette.primary.main,
-      },
-    },
-    error: {
-      borderLeftColor: status.errorDark,
-    },
-    warning: {
-      borderLeftColor: status.warningDark,
-    },
-    success: {
-      borderLeftColor: status.successDark,
-    },
-  };
-};
-
-interface State {
-  toasts: Toast[];
-}
-
-type CombinedProps = WithStyles<ClassNames>;
-
-const openFirstToast = (ts: Toast[]): Toast[] => {
-  if (ts.length === 0) { return ts; }
-  return over(
-    lensPath([0]),
-    set(lensPath(['open']), true),
-    ts,
-  );
-};
-
-const dismissFirstToast = (ts: Toast[]): Toast[] => {
-  if (ts.length === 0) { return ts; }
-  return over(
-    lensPath([0]),
-    set(lensPath(['open']), false),
-    ts,
-  );
-};
-
-const removeFirstToast = (ts: Toast[]): Toast[] => ts.length === 0
-  ? []
-  : tail(ts);
-
-class Notifier extends React.Component<CombinedProps, State> {
-  state: State = {
-    toasts: [],
-  };
-
+class ToastNotifications extends React.PureComponent<InjectedNotistackProps, {}> {
   subscription: Subscription;
 
   componentDidMount() {
-    this.subscription = toasts$
-      .merge(
-        events$
-          .filter((e) => !e._initial)
-          .map(event => {
-            if (event.action === 'volume_detach' && ['finished', 'notification'].includes(event.status)) {
-              return createToast(`Volume successfully detached.`);
-            }
+    this.subscription = events$
+      .filter((e) => !e._initial)
+      .map(event => {
+        const { enqueueSnackbar } = this.props;
 
-            if (event.action === 'volume_attach' && ['finished', 'notification'].includes(event.status)) {
-              return createToast(`Volume successfully attached.`);
-            }
-
-            if (event.action === 'volume_create' && ['finished', 'notification'].includes(event.status)) {
-              return createToast(`Volume successfully created.`);
-            }
-
-            if (event.action === 'volume_delete' && ['finished', 'notification'].includes(event.status)) {
-              return createToast(`Volume successfully deleted.`);
-            }
-
-            if (event.action === 'disk_imagize' && event.status === 'failed') {
-              return createToast('There was an error creating an image.', 'error');
-            }
-
-            if (event.action === 'volume_create' && event.status === 'failed') {
-              return createToast(`There was an error attaching volume ${event.entity && event.entity.label}.`, 'error');
-            }
-
-            return;
+        if (event.action === 'volume_detach' && ['finished', 'notification'].includes(event.status)) {
+          return enqueueSnackbar(`Volume successfully detached.`, {
+            variant: 'success'
           })
-      )
+        }
+
+        if (event.action === 'volume_attach' && ['finished', 'notification'].includes(event.status)) {
+          return enqueueSnackbar(`Volume successfully attached.`, {
+            variant: 'success'
+          })
+        }
+
+        if (event.action === 'volume_create' && ['finished', 'notification'].includes(event.status)) {
+          return enqueueSnackbar(`Volume successfully created.`, {
+            variant: 'success'
+          })
+        }
+
+        if (event.action === 'volume_delete' && ['finished', 'notification'].includes(event.status)) {
+          return enqueueSnackbar(`Volume successfully deleted.`, {
+            variant: 'success'
+          });
+        }
+
+        if (event.action === 'disk_imagize' && event.status === 'failed') {
+          return enqueueSnackbar('There was an error creating an image.', {
+            variant: 'error'
+          })
+        }
+
+        if (event.action === 'volume_create' && event.status === 'failed') {
+          return enqueueSnackbar(
+            `There was an error attaching volume ${event.entity && event.entity.label}.`,
+            { variant: 'error' }
+          )
+        }
+
+        return;
+      })
       /**
        * In the somewhat unlikely scenario that we get a flood of events, we're
        * going to buffer for 1s to prevent data loss from React setState being unable
@@ -154,91 +67,15 @@ class Notifier extends React.Component<CombinedProps, State> {
         if (toasts.length === 0) {
           return;
         }
-
-        this.setState(
-          () => ({ toasts: [...this.state.toasts, ...toasts] }),
-          () => this.setState({ toasts: openFirstToast(this.state.toasts) }),
-        );
       });
   }
-
-  onClose = (e: any, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    this.setState({ toasts: dismissFirstToast(this.state.toasts) });
-  }
-
   componentWillUnmount() {
     this.subscription.unsubscribe();
   }
 
-  onExited = () => this.setState(
-    { toasts: removeFirstToast(this.state.toasts) },
-    () => this.setState(({ toasts: openFirstToast(this.state.toasts) })),
-  );
-
   render() {
-    const { classes } = this.props;
-    const { toasts } = this.state;
-    if (toasts.length === 0) { return null; }
-
-    return (
-      toasts.map((toast) => {
-        return <Snackbar
-          key={toast.id}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-          }}
-          open={Boolean(toast.open)}
-          autoHideDuration={6000}
-          onClose={this.onClose}
-          onExited={this.onExited}
-          aria-live="assertive"
-          ContentProps={{
-            className:
-              classNames({
-                [classes.error]: toast.level === 'error',
-                [classes.warning]: toast.level === 'warning',
-                [classes.success]: toast.level === 'success',
-                [classes.root]: true,
-              }),
-          }}
-          message={
-            <Grid
-              container
-              alignItems="center"
-              justify="space-between"
-              spacing={0}
-              data-qa-toast
-            >
-              <Grid item xs={9} lg={10}>
-                <Typography
-                  variant="body1"
-                  className={classes.content}
-                  data-qa-toast-message
-                >
-                  {toast.message}
-                </Typography>
-              </Grid>
-              <Grid item className={classes.actions} xs={3} lg={2}>
-                <Button
-                  onClick={this.onClose}
-                  type="secondary"
-                  className={classes.button}
-                >
-                  <Close />
-                </Button>
-              </Grid>
-            </Grid>}
-        />;
-      })
-    );
+    return null;
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(Notifier);
+export default withSnackbar(ToastNotifications);

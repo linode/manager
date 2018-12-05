@@ -24,6 +24,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
+import Tags from 'src/components/Tags';
 import { NodeBalancerGettingStarted, NodeBalancerReference } from 'src/documentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
@@ -40,7 +41,8 @@ type ClassNames = 'root'
   | 'transferred'
   | 'ports'
   | 'ipsWrapper'
-  | 'ip';
+  | 'ip'
+  | 'tagWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -70,6 +72,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   ip: {
     width: '30%',
     minWidth: 200,
+  },
+  tagWrapper: {
+    marginTop: theme.spacing.unit / 2,
+    '& [class*="MuiChip"]': {
+      cursor: 'pointer',
+    },
   },
 });
 
@@ -194,7 +202,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         <DocumentTitleSegment segment="NodeBalancers" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
-            <Typography role="header" variant="headline" className={classes.title} data-qa-title >
+            <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               NodeBalancers
             </Typography>
           </Grid>
@@ -331,6 +339,9 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <TableCell parentColumn="Name" data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               {nodeBalancer.label}
+              <div className={classes.tagWrapper}>
+                <Tags tags={nodeBalancer.tags} />
+              </div>
             </Link>
           </TableCell>
           <TableCell parentColumn="Node Status" data-qa-node-status>

@@ -358,7 +358,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
-            <Typography role="header" variant="headline" data-qa-create-linode-header>
+            <Typography role="header" variant="h1" data-qa-create-linode-header>
               Create New Linode
             </Typography>
             <AppBar position="static" color="default">

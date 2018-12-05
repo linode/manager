@@ -61,10 +61,11 @@ const props = {
   enrolling: false,
   autoEnroll: false,
   autoEnrollError: undefined,
+  updatedCount: 0,
 }
 
 const component = shallow(
-  <BackupDrawer {...props} />
+  <BackupDrawer onPresentSnackbar={jest.fn()} enqueueSnackbar={jest.fn()} {...props} />
 )
 
 describe("BackupDrawer component", () => {
@@ -126,6 +127,12 @@ describe("BackupDrawer component", () => {
       expect(component.find('WithStyles(Notice)')).toHaveLength(0);
       component.setProps({ enableErrors: [error]});
       expect(component.find('WithStyles(Notice)')).toHaveLength(1);
+    });
+    it("should include the number of failures and successes in the Notice", () => {
+      component.setProps({ enableErrors: [error], updatedCount: 2 });
+      const _props = component.find('WithStyles(Notice)').props() as any;
+      expect(_props.children).toMatch('1 Linode failed');
+      expect(_props.children).toMatch('2 Linodes')
     });
     it("should call enrollAutoBackups on submit", () => {
       const button = component.find('[data-qa-submit]');

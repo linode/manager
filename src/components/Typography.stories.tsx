@@ -9,32 +9,32 @@ const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }
 storiesOf('Typography', module)
 .add('Headings', () => (
     <React.Fragment>
-        <Typography variant="headline" gutterBottom>
-            Primary Heading
+        <Typography variant="h1" gutterBottom>
+            Primary Heading (h1)
         </Typography>
         <Typography variant="body1" gutterBottom>
-            Implemented using the 'headline' variant. Utilized for page-level headings and high-level typographical components, such as editable text and breadcrumbs.
+            Implemented using the 'h1' variant. Utilized for page-level headings and high-level typographical components, such as editable text and breadcrumbs.
         </Typography>
         <Divider />
-        <Typography variant="title" gutterBottom>
-            Secondary Heading
+        <Typography variant="h2" gutterBottom>
+            Secondary Heading (h2)
         </Typography>
         <Typography variant="body1" gutterBottom>
-            Implemented using the 'title' variant. Utilized for section-level headings, such as drawers, some table headers and panel sections.
+            Implemented using the 'h2' variant. Utilized for section-level headings, such as drawers, some table headers and panel sections.
         </Typography>
         <Divider />
-        <Typography variant="subheading" gutterBottom>
-            Tertiary Heading
+        <Typography variant="h3" gutterBottom>
+            Tertiary Heading (h3)
         </Typography>
         <Typography variant="body1" gutterBottom>
-            Implemented using the 'subheading' variant. Utilized for sub-section headings.
+            Implemented using the 'h3' variant. Utilized for sub-section headings.
         </Typography>
         <Divider />
-        <Typography variant="display2" gutterBottom>
-            Display2
+        <Typography variant="h4" gutterBottom>
+            h4
         </Typography>
         <Typography variant="body1" gutterBottom>
-            This is part of MUI. It is utilized for the empty linode list state.
+            Implemented using the 'h4' variant. It is utilized for the empty linode list state.
         </Typography>
         <Divider />
         <Placeholder
@@ -42,40 +42,20 @@ storiesOf('Typography', module)
         copy="This is a separate component utilized for null state headings."
         />
         <Divider />
-        <Typography component="h2" variant="display4" gutterBottom>
-            Display4
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-            This is part of MUI. Manager does not presently utilize this variant.
-        </Typography>
-        <Divider />
-        <Typography variant="display3" gutterBottom>
-            Display3
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-            This is part of MUI. Manager does not presently utilize this variant.
-        </Typography>
-        <Divider />
-        <Typography variant="display1" gutterBottom>
-            Display1
-        </Typography>
-        <Typography variant="body1" gutterBottom>
-            This is part of MUI. Manager does not presently utilize this variant.
-        </Typography>
     </React.Fragment>
 ))
 
 storiesOf('Typography', module)
 .add('Text', () => (
     <React.Fragment>
-        <Typography variant="body2" gutterBottom>
-            Body2. Implemented using the 'body2' variant.
+        <Typography variant="body1" gutterBottom>
+            Body1. Implemented using the 'body1' variant.
             Styles are identical for both body variants since there are
             2 defined by MUI but Manager only has 1 body style. Utilized for general body text, messaging, descriptions, and helper info.
         </Typography>
         <Divider />
-        <Typography variant="body1" gutterBottom>
-            Body1. Implemented using the 'body1' variant.
+        <Typography variant="body2" gutterBottom>
+            Body2. Implemented using the 'body2' variant.
             Styles are identical for both body variants since there are
             2 defined by MUI but Manager only has 1 body style. Utilized for general body text, messaging, descriptions, and helper info.
         </Typography>

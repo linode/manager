@@ -58,7 +58,7 @@ export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (pr
   return (
     <Grid item xs={12} container justify="flex-start" className="px0">
       <Grid item xs={12}>
-        <Typography variant="subheading">Attachments</Typography>
+        <Typography variant="h3">Attachments</Typography>
       </Grid>
       <Grid item xs={12} className={classes.attachmentPaperWrapper}>
         <TicketAttachmentRow attachments={slice(0, 5, attachments)} icons={icons} />

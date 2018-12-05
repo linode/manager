@@ -15,6 +15,7 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { getLinodes } from 'src/services/linodes';
@@ -54,6 +55,7 @@ type CombinedProps = RegionsContextProps
 interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
+  tags?: string[];
   configs: (NodeBalancerConfigFieldsWithStatus & { errors?: any })[];
 }
 
@@ -307,6 +309,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     );
   }
 
+  tagsChange = (tags: Tag[]) => {
+    this.setState(
+      set(
+        lensPath(['nodeBalancerFields', 'tags']),
+        tags.map(tag => tag.value),
+      ),
+    );
+  }
+
   regionChange = (region: string) => {
     this.setState(
       set(
@@ -384,7 +395,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           <Grid item className={`${classes.main} mlMain`}>
             <Typography
               role="header"
-              variant="headline"
+              variant="h1"
               data-qa-create-nodebalancer-header
             >
               Create a NodeBalancer
@@ -400,6 +411,11 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 onChange: this.labelChange,
                 value: nodeBalancerFields.label || '',
               }}
+              tagsInputProps={{
+                value: nodeBalancerFields.tags ? nodeBalancerFields.tags.map(tag => ({label: tag, value: tag})) : [],
+                onChange: this.tagsChange,
+                tagError: hasErrorFor('tag'),
+              }}
             />
             <SelectRegionPanel
               regions={regionsData || []}
@@ -408,7 +424,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               handleSelection={this.regionChange}
             />
             <Grid item xs={12}>
-              <Typography role="header" variant="title" className={classes.title}>
+              <Typography role="header" variant="h2" className={classes.title}>
                 NodeBalancer Settings
               </Typography>
             </Grid>

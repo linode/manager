@@ -189,9 +189,10 @@ const themeDefaults: ThemeOptions = {
     },
   },
   typography: {
+    useNextVariants: true,
     fontFamily: '"LatoWeb", sans-serif',
     fontSize: 16,
-    headline: {
+    h1: {
       color: primaryColors.headline,
       fontSize: '1.25rem',
       lineHeight: '1.75rem',
@@ -201,13 +202,13 @@ const themeDefaults: ThemeOptions = {
         lineHeight: '1.875rem',
       },
     },
-    title: {
+    h2: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
       fontFamily: 'LatoWebBold',
       lineHeight: '1.5rem',
     },
-    subheading: {
+    h3: {
       color: primaryColors.headline,
       fontSize: '1rem',
       fontFamily: 'LatoWebBold',
@@ -226,8 +227,14 @@ const themeDefaults: ThemeOptions = {
       lineHeight: '0.625rem',
       color: primaryColors.text,
     },
-    display2: {
+    h4: {
+      fontSize: '2.188rem',
+      lineHeight: '2.188rem',
       color: primaryColors.text,
+      [breakpoints.up('lg')]: {
+        fontSize: '2.5rem',
+        lineHeight: '2.5rem',
+      }
     },
   },
   overrides: {
@@ -299,7 +306,7 @@ const themeDefaults: ThemeOptions = {
         padding: '11px 26px 13px',
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent !important',
           color: primaryColors.light,
           borderColor: primaryColors.light,
         },
@@ -574,6 +581,20 @@ const themeDefaults: ThemeOptions = {
           color: primaryColors.light,
           backgroundColor: 'transparent',
         },
+      },
+    },
+    MuiRadio: {
+      root: {
+        color: primaryColors.main,
+      },
+      checked: {
+        color: primaryColors.main,
+      },
+      colorSecondary: {
+        color: primaryColors.main,
+        '&$checked': {
+          color: primaryColors.main,
+        }
       },
     },
     MuiInput: {

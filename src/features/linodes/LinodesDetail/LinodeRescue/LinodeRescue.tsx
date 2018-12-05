@@ -1,3 +1,4 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { assoc, clamp, compose, map, path, pathOr, prop } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -12,7 +13,6 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { resetEventsPolling } from 'src/events';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { getLinodeDisks, rescueLinode } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
@@ -61,7 +61,10 @@ interface State {
   counter: number;
 }
 
-type CombinedProps = PromiseLoaderProps & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = PromiseLoaderProps
+  & ContextProps
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -95,7 +98,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    const { linodeId } = this.props;
+    const { linodeId, enqueueSnackbar } = this.props;
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
@@ -113,12 +116,20 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             sdh: undefined,
           },
         });
-        sendToast('Linode rescue started.');
+        enqueueSnackbar('Linode rescue started.', {
+          variant: 'info'
+        });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        pathOr(
+          [{ reason: 'There was an issue rescuing your Linode.' }],
+          ['response', 'data', 'errors'],
+          errorResponse
+         )
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
       });
   }
 
@@ -169,7 +180,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.title}
             data-qa-title
           >
@@ -234,9 +245,10 @@ const linodeContext = withLinode((context) => ({
   linodeLabel: context.data!.label,
 }));
 
-export default compose<any, any, any, any, any>(
+export default compose(
   linodeContext,
   preloaded,
   SectionErrorBoundary,
   styled,
+  withSnackbar
 )(LinodeRescue);

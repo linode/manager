@@ -176,7 +176,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = (props) => {
         />
         : <Paper className={props.classes.flatImagePanel} data-qa-tp="Select Image">
           {error && <Notice text={error} error />}
-          <Typography role="header" variant="title" data-qa-tp="Select Image">
+          <Typography role="header" variant="h2" data-qa-tp="Select Image">
             Select Image
           </Typography>
           <Grid className={props.classes.flatImagePanelSelections} container>

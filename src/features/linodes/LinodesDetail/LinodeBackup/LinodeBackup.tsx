@@ -1,8 +1,10 @@
 import * as moment from 'moment-timezone';
-import { compose, path, pathOr, sortBy } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -29,7 +31,6 @@ import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -123,7 +124,8 @@ type CombinedProps = PreloadedProps
   & StateProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
-  & ContextProps;
+  & ContextProps
+  & InjectedNotistackProps;
 
 const evenize = (n: number): number => {
   if (n === 0) { return n; }
@@ -186,7 +188,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             this.setState({ enabling: false })
           });
       });
-    const { enableOnLoad } = pathOr(false, ['location','state'], this.props);
+    const { enableOnLoad } = pathOr(false, ['location', 'state'], this.props);
     if (enableOnLoad && !this.props.backupsEnabled) { this.enableBackups(); }
   }
 
@@ -232,60 +234,84 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   enableBackups = () => {
     this.setState({ enabling: true });
-    const { linodeID } = this.props;
+    const { linodeID, enqueueSnackbar } = this.props;
     enableBackups(linodeID)
       .then(() => {
         // There is no event for when backups have been enabled,
         // so we don't reset the enabling state.
-        sendToast('Backups are being enabled for this Linode');
+        enqueueSnackbar('Backups are being enabled for this Linode', {
+          variant: 'info'
+        })
         resetEventsPolling();
       })
       .catch((errorResponse) => {
         pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
         this.setState({ enabling: false });
       });
   }
 
   cancelBackups = () => {
+    const { enqueueSnackbar } = this.props;
     cancelBackups(this.props.linodeID)
       .then(() => {
-        sendToast('Backups are being cancelled for this Linode');
+        enqueueSnackbar('Backups are being cancelled for this Linode', {
+          variant: 'info'
+        });
         // Just in case the user immediately disables backups
         // and enabling is still true:
         this.setState({ enabling: false, })
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        pathOr(
+          [{ reason: 'There was an error disabling backups' }],
+          ['response', 'data', 'errors'],
+          errorResponse
+        )
+          /**  @todo move this error to the actual modal */
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
       });
     if (!this.mounted) { return; }
     this.setState({ cancelBackupsAlertOpen: false });
   }
 
   takeSnapshot = () => {
-    const { linodeID } = this.props;
+    const { linodeID, enqueueSnackbar } = this.props;
     const { snapshotForm } = this.state;
     takeSnapshot(linodeID, snapshotForm.label)
       .then(() => {
-        sendToast('A snapshot is being taken');
+        enqueueSnackbar('A snapshot is being taken', {
+          variant: 'info'
+        });
         this.setState({ snapshotForm: { label: '', errors: undefined } });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        pathOr(
+          [{ reason: 'There was an error taking a snapshot' }],
+          ['response', 'data', 'errors'],
+          errorResponse
+        )
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
       });
   }
 
   saveSettings = () => {
-    const { linodeID } = this.props;
+    const { linodeID, enqueueSnackbar } = this.props;
     const { settingsForm } = this.state;
 
     updateBackupsWindow(linodeID, settingsForm.day, settingsForm.window)
       .then(() => {
-        sendToast('Backup settings saved');
+        enqueueSnackbar('Backup settings saved', {
+          variant: 'success'
+        });
       })
       .catch((err) => {
         this.setState({
@@ -336,13 +362,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     this.setState({ cancelBackupsAlertOpen: true });
   }
 
-  handleDeploy = (backup:Linode.LinodeBackup) => {
+  handleDeploy = (backup: Linode.LinodeBackup) => {
     const { history, linodeID } = this.props;
     history.push('/linodes/create'
       + `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`);
   }
 
-  handleRestore = (backup:Linode.LinodeBackup) => {
+  handleRestore = (backup: Linode.LinodeBackup) => {
     this.openRestoreDrawer(
       backup.id,
       formatBackupDate(backup.created),
@@ -351,7 +377,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   handleRestoreSubmit = () => {
     this.closeRestoreDrawer();
-    sendToast('Backup restore started');
+    this.props.enqueueSnackbar('Backup restore started', {
+      variant: 'info'
+    });
   }
 
   Placeholder = (): JSX.Element | null => {
@@ -397,7 +425,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {backups.map((backup:Linode.LinodeBackup, idx:number) =>
+              {backups.map((backup: Linode.LinodeBackup, idx: number) =>
                 <BackupTableRow
                   key={idx}
                   backup={backup}
@@ -422,7 +450,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Paper className={classes.paper}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.subTitle}
             data-qa-manual-heading
           >
@@ -483,7 +511,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <Paper className={classes.paper}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.subTitle}
             data-qa-settings-heading>
             Settings
@@ -555,7 +583,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Typography
           role="header"
-          variant="title"
+          variant="h2"
           className={classes.title}
           data-qa-title
         >
@@ -564,8 +592,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         {backups.length
           ? <this.Table backups={backups} />
           : <Paper className={classes.paper} data-qa-backup-description>
-              <Typography>Automatic and manual backups will be listed here</Typography>
-            </Paper>
+            <Typography>Automatic and manual backups will be listed here</Typography>
+          </Paper>
         }
         <this.SnapshotForm />
         <this.SettingsForm />
@@ -670,10 +698,11 @@ const linodeContext = withLinode((context) => ({
   linodeType: context.data!.type,
 }));
 
-export default compose(
+export default compose<CombinedProps, {}>(
   linodeContext,
   preloaded,
   styled as any,
   withRouter,
   connected,
+  withSnackbar
 )(LinodeBackup);

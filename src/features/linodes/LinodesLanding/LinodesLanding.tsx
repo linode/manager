@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -73,7 +74,8 @@ type CombinedProps =
   & DispatchProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>
-  & SetDocsProps;
+  & SetDocsProps
+  & InjectedNotistackProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -221,7 +223,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   rebootOrPowerLinode = () => {
     const { bootOption, selectedLinodeId, selectedLinodeLabel } = this.state;
     if (bootOption === 'reboot') {
-      rebootLinode(this.openConfigDrawer, selectedLinodeId!, selectedLinodeLabel);
+      rebootLinode(
+        this.openConfigDrawer,
+        selectedLinodeId!,
+        selectedLinodeLabel,
+        this.props.enqueueSnackbar,
+      );
     } else {
       powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
     }
@@ -299,7 +306,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           <Typography
             role="header"
-            variant="headline"
+            variant="h1"
             className={this.props.classes.title}
             data-qa-title
           >
@@ -469,6 +476,7 @@ export const enhanced = compose(
   styled,
   setDocs(ListLinodes.docs),
   data,
+  withSnackbar
 );
 
 const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {

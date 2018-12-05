@@ -9391,6 +9391,11 @@ normalize-url@^1.4.0:
     query-string "^4.1.0"
     sort-keys "^1.0.0"
 
+notistack@^0.3.9:
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/notistack/-/notistack-0.3.9.tgz#622d89c0038b7cdebba2897b3018f89ada03551d"
+  integrity sha512-Xt55Jn2kq+1o34wS6y8ydj/84UpZrJhpWFfFqY5YqxZPdSiu5RgxhUcoTeq6XLQ8Mwg/TdhH+kRgn21Pxb6IlA==
+
 novnc-node@^0.5.3:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/novnc-node/-/novnc-node-0.5.3.tgz#69f20a4a2ff0c54ca2f942ff59553f523eb61fa7"
@@ -13236,6 +13241,11 @@ typeface-ubuntu-mono@^0.0.54:
   version "0.0.54"
   resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.54.tgz#773582617ff60dc252acbaaeb22880ba7f559fe6"
   integrity sha512-hwfEPLzA3f/q8RowZlW6Mmvqe8yffYk7vlwzia+n7xVjY16C2UvWWPCgGMXUbUIgFZIeqA5OvFwUjDMzi95wRw==
+
+typescript-fsa@^3.0.0-beta-2:
+  version "3.0.0-beta-2"
+  resolved "https://registry.yarnpkg.com/typescript-fsa/-/typescript-fsa-3.0.0-beta-2.tgz#1cc1d0c014c025fd51cba097776033ac4b6b753c"
+  integrity sha512-qXkHih2XAtpxqd3AEVgFtCDwvBlAMl2miVy1TmS+wXgiRlVw7orf2qIh3C8faANhD34n75Ui8x5ydQ40uzuskA==
 
 typescript@^2.7.2:
   version "2.9.2"

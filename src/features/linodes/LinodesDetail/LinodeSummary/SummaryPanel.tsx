@@ -14,7 +14,8 @@ type ClassNames = 'root'
   | 'title'
   | 'section'
   | 'region'
-  | 'volumeLink';
+  | 'volumeLink'
+  | 'regionInner';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -26,16 +27,38 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   section: {
+    display: 'flex',
+    alignItems: 'center',
     marginBottom: theme.spacing.unit,
     ...theme.typography.body1,
+    '& .dif': {
+      position: 'relative',
+      paddingRight: 35,
+      width: 'auto',
+      '& .chip': {
+        position: 'absolute',
+        top: '-4px',
+        right: 0,
+      },
+    },
   },
   region: {
     [theme.breakpoints.between('sm', 'md')]: {
       flexBasis: '100%',
       maxWidth: '100%',
       display: 'flex',
-      '& > span': {
-        width: '50%',
+    },
+  },
+  regionInner: {
+    [theme.breakpoints.only('xs')]: {
+      padding: '0 8px !important',
+    },
+    [theme.breakpoints.up('lg')]: {
+      '&:first-of-type': {
+        padding: '8px 8px 0 8px !important',
+      },
+      '&:last-of-type': {
+        padding: '0 8px !important',
       },
     },
   },
@@ -124,7 +147,7 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Typography
               role="header"
-              variant="title"
+              variant="h2"
               className={classes.title}
               data-qa-title
             >
@@ -153,17 +176,23 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
             }
           </Grid>
           <Grid item xs={12} sm={6} lg={4} className={classes.region}>
-            <div className={`${classes.section}`}>
-              {formatRegion(linode.region)}
-            </div>
-            <div
-              className={classes.section}
-              data-qa-volumes={volumes.length}
-            >
-              Volumes: <Link
-                className={classes.volumeLink}
-                to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
-            </div>
+            <Grid container>
+              <Grid item xs={12} sm={6} lg={12} className={classes.regionInner}>
+                <div className={`${classes.section}`}>
+                  {formatRegion(linode.region)}
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={6} lg={12} className={classes.regionInner}>
+                <div
+                  className={classes.section}
+                  data-qa-volumes={volumes.length}
+                >
+                  Volumes:&#160;<Link
+                    className={classes.volumeLink}
+                    to={`/linodes/${linode.id}/volumes`}>{volumes.length}</Link>
+                </div>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </Paper>

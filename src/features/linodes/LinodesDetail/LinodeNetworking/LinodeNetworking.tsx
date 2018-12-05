@@ -352,7 +352,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Grid item className={classes.ipv4TitleContainer}>
             <Typography
               role="header"
-              variant="title"
+              variant="h2"
               className={classes.ipv4Title}
               data-qa-ipv4-subheading
             >
@@ -420,7 +420,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Grid item>
             <Typography
               role="header"
-              variant="title"
+              variant="h2"
               className={classes.ipv4Title}
               data-qa-ipv6-subheading
             >
@@ -471,7 +471,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.netActionsTitle}
             data-qa-network-actions-title
           >

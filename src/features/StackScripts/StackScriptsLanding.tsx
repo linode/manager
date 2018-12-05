@@ -12,7 +12,8 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
 
-import StackScriptPanel from './LandingPanel/StackScriptPanel';
+// import StackScriptPanel from './LandingPanel/StackScriptPanel';
+import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -32,10 +33,10 @@ type CombinedProps = SetDocsProps
   & PreloadedProps
   & RouteComponentProps<{}>;
 
-  const preloaded = PromiseLoader<{}>({
-    images: () => getLinodeImages()
-      .then(response => response.data || []),
-  });
+const preloaded = PromiseLoader<{}>({
+  images: () => getLinodeImages()
+    .then(response => response.data || []),
+});
 
 export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
   static docs = [
@@ -49,8 +50,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 
   render() {
 
-    /** @todo images was used here */
-    const { classes, history } = this.props;
+    const { classes, history, images } = this.props;
 
     return (
       <React.Fragment>
@@ -60,8 +60,8 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         }
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
           <Grid item>
-            <Typography role="header" variant="headline" className={classes.title} data-qa-title >
-                StackScripts
+            <Typography role="header" variant="h1" className={classes.title} data-qa-title >
+              StackScripts
             </Typography>
           </Grid>
           <Grid item>
@@ -77,8 +77,9 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           </Grid>
         </Grid>
         <Grid container>
-          <StackScriptPanel
-            /** @todo */
+          <SelectStackScriptPanel
+            publicImages={images.response}
+            noHeader={true}
           />
         </Grid>
       </React.Fragment>

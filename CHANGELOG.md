@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.41.0] - 2018.12.04
+
+##Added:
+- Tags for NodeBalancers
+  - Tags can be added during NodeBalancer creation
+  - Tags can be added/removed from an existing NodeBalancer
+
+##Changed:
+- Search results page link appears first in the search bar results   
+- Reverted StackScript table pagination
+
+## [0.40.0] - 2018.12.03
+
+##Added:
+- Search results page with a dedicated URL
+  - Search results page is grouped by entities (Linodes, NodeBalancers, etc.)
+  - Search results page displays the first five results per entity, and a button to display remaining results for the given entity
+  - Search can be used to display all entities with a common tag
+- Tags for Volumes
+  - Tags can be added during Volume creation
+  - Tags can be added/removed from an existing Volume
+- Pagination on the StackScripts page
+- Network helper global setting
+  - Users now have the option to enable/disable
+  - Network helper is enabled by default
+- Ability to attach a file to a support ticket
+- Breadcrumb navigation to Users and User Detail
+- Mobile typography was implemented throughout the app
+
+##Changed:
+- UX improvement when creating/resizing a volume attached to a linode with the addition steps necessary to complete the volume creation process
+- Get Help section links and tiles were updated for consistent displays and interactions
+- Added pricing to Volume clone and resize panel
+
+##Fixed:
+- External (public) Ip's are displayed first (before private IPs) on Linode grid cards, and Linode Details page
+- Character decoding on the blog feed
+- Tags extending beyond the search bar results now wrap
+
 # [0.39.0] - 2018.11.15
 
 ## Breaking:
@@ -27,7 +66,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Backups call to action placeholder
 - Updated by/closed by details to support tickets.
 - Breadcrumb navigation to Linodes, NodeBalancers, Domains, and Support Tickets.
-
+-
 # Changed:
 - We're now preventing users from submitting the create a support ticket form until all necessary
   information has been provided.

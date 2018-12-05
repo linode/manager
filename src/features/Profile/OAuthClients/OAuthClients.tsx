@@ -248,7 +248,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography role="header" className={classes.title} variant="title" data-qa-table={classes.title}>
+            <Typography role="header" className={classes.title} variant="h2" data-qa-table={classes.title}>
               My Apps
             </Typography>
           </Grid>
@@ -286,7 +286,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           <Typography variant="body1">
             {`Here is your client secret! Store it securely, as it won't be shown again.`}
           </Typography>
-          <Notice typeProps={{ variant: 'caption' }} warning text={this.state.secret.value!} />
+          <Notice typeProps={{ variant: 'body1' }} warning text={this.state.secret.value!} />
         </ConfirmationDialog>
 
         <OAuthFormDrawer

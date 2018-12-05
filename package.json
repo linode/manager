@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.39.0",
+  "version": "0.41.0",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -58,6 +58,7 @@
     "memoizee": "^0.4.14",
     "moment": "^2.21.0",
     "moment-timezone": "^0.5.16",
+    "notistack": "^0.3.9",
     "novnc-node": "^0.5.3",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
@@ -97,6 +98,7 @@
     "tslint-react": "^3.6.0",
     "typeface-lato": "^0.0.54",
     "typeface-ubuntu-mono": "^0.0.54",
+    "typescript-fsa": "^3.0.0-beta-2",
     "url-loader": "0.6.2",
     "wdio-selenium-standalone-service": "^0.0.10",
     "webpack": "3.8.1",

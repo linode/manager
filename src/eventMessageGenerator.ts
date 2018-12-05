@@ -301,14 +301,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Volume ${e.entity!.label} is being created.`,
     failed: e => `Creation of volume ${e.entity!.label} failed.`,
     finished: e => `Volume ${e.entity!.label} has been created.`,
-    notification: e => `Volume has been created.`,
+    notification: e => `Volume ${e.entity!.label} has been created.`,
   },
   volume_delete: {
     scheduled: e => ``,
     started: e => ``,
     failed: e => ``,
     finished: e => ``,
-    notification: e => `Volume has been deleted.`,
+    notification: e => `Volume ${e.entity!.label} has been deleted.`,
   },
   volume_detach: {
     // @todo Once we have better events, display the name of the attached Linode
@@ -321,6 +321,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   volume_resize: {
     notification: e => `Volume ${e.entity!.label} has been resized.`,
+  },
+  user_ssh_key_add: {
+    notification: e => `An SSH key has been added to your profile.`,
+  },
+  user_ssh_key_delete: {
+    notification: e => `An SSH key has been removed from your profile.`,
   },
 };
 
