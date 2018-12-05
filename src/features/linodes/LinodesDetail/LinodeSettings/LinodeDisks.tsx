@@ -1,5 +1,7 @@
-import { compose, path, pathEq } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -23,7 +25,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { events$, resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { createLinodeDisk, deleteLinodeDisk, getLinodeDisks, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
@@ -89,14 +90,16 @@ interface State {
   confirmDelete: ConfirmDeleteState,
 }
 
-interface DisksProps extends PaginationProps<Linode.Disk> {
+interface DisksProps {
   active: boolean;
 }
 
 type CombinedProps =
   DisksProps
+  & PaginationProps<Linode.Disk>
   & LinodeContextProps
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 class LinodeDisks extends React.Component<CombinedProps, State> {
   static defaultDrawerState: DrawerState = {
@@ -173,7 +176,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 16 }}>
           <Grid item>
-            <Typography role="header" variant="title" className={classes.headline}>Disks</Typography>
+            <Typography role="header" variant="h2" className={classes.headline}>Disks</Typography>
           </Grid>
           <Grid item>
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
@@ -189,7 +192,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </TableHead>
 
           <TableBody>
-            { this.renderTableContent(loading, linodeStatus, error, data) }
+            {this.renderTableContent(loading, linodeStatus, error, data)}
           </TableBody>
         </Table>
         <PaginationFooter
@@ -431,7 +434,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     resizeLinodeDisk(linodeId, diskId, size)
       .then(({ data }) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
-        sendToast(`Disk queued for resizing.`);
+        this.props.enqueueSnackbar(`Disk queued for resizing.`, {
+          variant: 'info'
+        });
         resetEventsPolling();
         this.props.request();
       })
@@ -503,14 +508,18 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     deleteLinodeDisk(linodeId, diskId)
       .then(() => {
         this.setConfirmDelete({ open: false, errors: undefined });
-        sendToast(`Disk queued for deletion.`);
+        this.props.enqueueSnackbar(`Disk queued for deletion.`, {
+          variant: 'info'
+        });
         this.props.request();
       })
       .catch((error) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
-        if (errors) {
-          this.setConfirmDelete({ errors, submitting: false });
-        }
+        const errors = pathOr<Linode.ApiFieldError[]>(
+          [{ reason: 'There was an error deleting your disk.' }],
+          ['response', 'data', 'errors'],
+          error
+        );
+        this.setConfirmDelete({ errors, submitting: false });
       });
   }
 
@@ -593,10 +602,11 @@ const paginated = Pagey((ownProps, params, filters) => {
   return getLinodeDisks(ownProps.linodeId, params, filters);
 });
 
-const enhanced = compose<any, any, any, any>(
+const enhanced = compose<CombinedProps, DisksProps>(
   styled,
   linodeContext,
   paginated,
+  withSnackbar
 );
 
 export default enhanced(LinodeDisks);

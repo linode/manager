@@ -1,6 +1,8 @@
-import { compose, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -26,7 +28,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { Images } from 'src/documentation';
 import { events$ } from 'src/events';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteImage, getImages } from 'src/services/images';
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
@@ -61,7 +62,8 @@ interface State {
 
 type CombinedProps = PaginationProps<Linode.Image>
   & WithStyles<ClassNames>
-  & RouteComponentProps<{}>;
+  & RouteComponentProps<{}>
+  & InjectedNotistackProps;
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -118,14 +120,19 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
          *
          * So the alternative is to display a toast when the event is done
          */
+        const { enqueueSnackbar } = this.props;
         if (event.action === 'disk_imagize' && event.status === 'finished') {
-          sendToast('Image created successfully.');
+          enqueueSnackbar('Image created successfully.', {
+            variant: 'success'
+          })
           /* generated request by Pagey HOC */
           this.props.request();
         }
 
         if (event.action === 'image_delete' && event.status === 'notification') {
-          sendToast('Image has been deleted successfully.');
+          enqueueSnackbar('Image has been deleted successfully.', {
+            variant: 'success',
+          })
           /* generated request by Pagey HOC */
           this.props.request();
         }
@@ -205,7 +212,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
          * from taking any action on the Image.
          */
         this.props.onDelete();
-        sendToast('Image has been scheduled for deletion.');
+        this.props.enqueueSnackbar('Image has been scheduled for deletion.', {
+          variant: 'info'
+        });
       })
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
@@ -304,7 +313,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Images" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
           <Grid item>
-            <Typography variant="headline" data-qa-title className={classes.title}>
+            <Typography variant="h1" data-qa-title className={classes.title}>
               Images
             </Typography>
           </Grid>
@@ -407,9 +416,10 @@ const paginated = paginate(updatedRequest);
 
 const styled = withStyles(styles);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   setDocs(ImagesLanding.docs),
   withRouter,
   styled,
-  paginated
+  paginated,
+  withSnackbar
 )(ImagesLanding);

@@ -68,7 +68,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
     <React.Fragment>
       <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptId}`} className={classes.root}>
         <div className={classes.labelWrapper}>
-          <Typography className={classes.title} role="header" variant="subheading">
+          <Typography className={classes.title} role="header" variant="h3">
             {stackScriptUsername &&
               <label
                 htmlFor={`${stackScriptId}`}

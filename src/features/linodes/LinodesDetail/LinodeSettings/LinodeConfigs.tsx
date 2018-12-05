@@ -1,5 +1,6 @@
-import { compose } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -19,7 +20,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { deleteLinodeConfig, getLinodeConfigs } from 'src/services/linodes';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
@@ -42,7 +42,8 @@ type CombinedProps =
   Props
   & LinodeContext
   & PaginationProps<Linode.Config>
-  & WithStyles<ClassNames>;
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 interface State {
   configDrawer: ConfigDrawerState;
@@ -94,7 +95,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography role="header" variant="title" className={classes.headline}>
+            <Typography role="header" variant="h2" className={classes.headline}>
               Configuration
             </Typography>
           </Grid>
@@ -192,7 +193,10 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       })
       .catch((error) => {
         this.setConfirmDelete({ submitting: false, open: false, id: undefined });
-        sendToast(`Unable to delete configuration.`);
+        /** @todo move this inside the actual delete modal */
+        this.props.enqueueSnackbar(`Unable to delete configuration.`, {
+          variant: 'error'
+        });
       });
   }
 
@@ -277,11 +281,12 @@ const paginated = Pagey((ownProps: LinodeContext, params, filters) => {
   return getLinodeConfigs(ownProps.linodeId, params, filters)
 });
 
-const enhanced = compose<any, any, any, any, any>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   paginated,
   styled,
   errorBoundary,
+  withSnackbar
 );
 
 export default enhanced(LinodeConfigs);

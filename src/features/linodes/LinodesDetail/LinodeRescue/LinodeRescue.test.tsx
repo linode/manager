@@ -28,6 +28,8 @@ describe('LinodeRescue', () => {
 
     const component = shallow(
       <LinodeRescue
+        onPresentSnackbar={jest.fn()}
+        enqueueSnackbar={jest.fn()}
         classes={{
           root: '',
           title: '',

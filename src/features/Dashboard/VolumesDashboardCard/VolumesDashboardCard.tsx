@@ -150,7 +150,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
         <TableCell className={classes.labelCol}>
           <Grid container direction="column" spacing={8}>
             <Grid item className="py0">
-              <Typography className={classes.wrapHeader} variant="subheading">
+              <Typography className={classes.wrapHeader} variant="h3">
                 {label}
               </Typography>
             </Grid>

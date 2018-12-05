@@ -451,7 +451,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
         <React.Fragment>
           <div className={classes.graphControls}>
-            <Typography role="header" variant="title" className={classes.graphTitle}>
+            <Typography role="header" variant="h2" className={classes.graphTitle}>
               Graphs
             </Typography>
             <FormControl style={{ marginTop: 0 }}>

@@ -1,5 +1,7 @@
-import { compose, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -13,7 +15,6 @@ import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreat
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { resizeLinode } from 'src/services/linodes';
 
 type ClassNames = 'root'
@@ -30,7 +31,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   subTitle: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit,
   },
   currentPlanContainer: {
     '& .selectionCard': {
@@ -61,9 +63,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = TypesContextProps &
-  LinodeContextProps &
-  WithStyles<ClassNames>;
+type CombinedProps = TypesContextProps
+  & LinodeContextProps
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
@@ -90,20 +93,28 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   }
 
   onSubmit = () => {
-    const { linodeId } = this.props;
+    const { linodeId, enqueueSnackbar } = this.props;
     const { selectedId } = this.state;
 
     if (!linodeId) { return; }
 
     resizeLinode(linodeId, selectedId)
       .then((response) => {
-        sendToast('Linode resize started.');
+        enqueueSnackbar('Linode resize started.', {
+          variant: 'info'
+        });
         this.setState({ selectedId: '' });
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
-          .forEach((err: Linode.ApiFieldError) => sendToast(err.reason, 'error'));
+        pathOr(
+          [{reason: 'There was an issue resizing your Linode.'}],
+          ['response', 'data', 'errors'],
+          errorResponse
+        )
+          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+            variant: 'error'
+          }));
         this.setState({ selectedId: '' });
       });
   }
@@ -137,7 +148,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.title}
             data-qa-title
           >
@@ -152,7 +163,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <div className={classes.currentPlanContainer} data-qa-current-container>
             <Typography
               role="header"
-              variant="title"
+              variant="h3"
               className={classes.subTitle}
               data-qa-current-header
             >
@@ -205,8 +216,9 @@ const linodeContext = withLinode((context) => ({
   linodeLabel: pathOr(undefined, ['data', 'label'], context),
 }));
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, {}>(
   linodeContext,
   typesContext,
   styled,
+  withSnackbar
 )(LinodeResize);

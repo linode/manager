@@ -19,9 +19,9 @@ describe('Account - Users Suite', () => {
     });
 
     it('should display root user in the table', () => {
-        const rootUserName = Users.getTableDetails(0,Users.username.selector);
+        const rootUserName = Users.getTableDetails(undefined,Users.username.selector,browser.options.testUser);
         const rootUserRestrictions = Users.getTableDetails(0,Users.userRestriction.selector);
-        expect(rootUserName.getText()).toBe(browser.options.testUser);
+        expect(rootUserName).not.toBeNull();
         expect(rootUserRestrictions.getText()).toMatch(/unrestricted/ig);
     });
 
@@ -51,7 +51,7 @@ describe('Account - Users Suite', () => {
         expect(Permissions.popoverMsg.getText()).toEqual('You cannot restrict the current active user.');
 
         //Navigate back to the users page for subsequent tests
-        Users.backButton.click();
+        Users.userDetailHeader.click();
         Users.baseElementsDisplay();
     });
 

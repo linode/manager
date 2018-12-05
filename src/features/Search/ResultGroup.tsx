@@ -28,19 +28,12 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    padding: 0,
     marginBottom: 20,
   },
   entityHeadingWrapper: {
-    height: 'auto',
-    padding: 10,
-    backgroundColor: theme.bg.tableHeader,
   },
   entityHeading: {
-    color: theme.color.tableHeaderText,
-    fontSize: '0.9rem',
-    fontWeight: 500,
-    lineHeight: '0.9rem',
+    marginBottom: 10,
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -73,9 +66,9 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
     ? splitAt(groupSize, results) : [results, []];
 
   return (
-    <Grid item container direction="column" className={classes.root}>
+    <Grid item direction="column" className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
-        <Typography variant="title" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
+        <Typography variant="h2" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
       <Paper>
         <Table aria-label="Search Results">

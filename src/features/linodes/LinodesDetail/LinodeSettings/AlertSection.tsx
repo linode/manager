@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       position: 'absolute',
       left: 90,
       top: 40,
-      ...theme.typography.subheading,
+      ...theme.typography.h3,
     },
   },
   switch: {
@@ -116,13 +116,6 @@ class AlertSection extends React.Component<CombinedProps> {
                 }}
                 error={Boolean(this.props.error)}
                 errorText={this.props.error}
-                /**
-                 * input type of NUMBER and maxlength do not work well together.
-                 * https://github.com/mui-org/material-ui/issues/5309#issuecomment-355462588
-                 */
-                inputProps={{
-                  maxLength: 2,
-                }}
                 onChange={this.props.onValueChange}
                 className={classes.usage}
               />

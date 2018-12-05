@@ -130,9 +130,9 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             sm={6}
             className={classes.withSeparator}
           >
-            <div className={classes.postCard}>
+            <div className={classes.postCard} data-qa-documentation-link>
               <Typography
-                variant="subheading"
+                variant="h3"
                 className={classes.postTitle}
               >
                 Most Popular Documentation:
@@ -145,9 +145,9 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
             xs={12}
             sm={6}
           >
-            <div className={classes.postCard}>
+            <div className={classes.postCard} data-qa-community-link>
               <Typography
-                variant="subheading"
+                variant="h3"
                 className={classes.postTitle}
               >
                 Most Popular Community Posts:

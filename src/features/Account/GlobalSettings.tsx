@@ -1,10 +1,11 @@
-import { compose, isEmpty, path, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-import { sendToast } from 'src/features/ToastNotifications/toasts';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import AutoBackups from './AutoBackups';
@@ -32,7 +33,7 @@ interface DispatchProps {
   }
 }
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames> & InjectedNotistackProps;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
 
@@ -44,6 +45,21 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleNetworkHelper = () => {
     const { actions: { updateAccount }, networkHelperEnabled } = this.props;
     return updateAccount({ network_helper: !networkHelperEnabled });
+  }
+
+  displayError = (errors: Linode.ApiFieldError[] | undefined) => {
+    if (!errors) {
+      return;
+    }
+    const errorText = pathOr(
+      "There was an error updating your account settings.",
+      ['response', 'data', 'errors', 0, 'reason'],
+      errors
+    );
+
+    return this.props.enqueueSnackbar(errorText, {
+      variant: 'error'
+    })
   }
 
   render() {
@@ -60,7 +76,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     if (loading) { return <CircleProgress /> }
     if (error) { return <ErrorState errorText={"There was an error retrieving your account data."} /> }
 
-    displayError(updateError);
+    this.displayError(updateError);
 
     return (
       <React.Fragment>
@@ -77,19 +93,6 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       </React.Fragment>
     )
   }
-}
-
-const displayError = (errors: Linode.ApiFieldError[] | undefined) => {
-  if (!errors) {
-    return;
-  }
-  const errorText = pathOr(
-    "There was an error updating your account settings.",
-    ['response', 'data', 'errors', 0, 'reason'],
-    errors
-  );
-
-  return sendToast(errorText, 'error');
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
@@ -114,9 +117,10 @@ const styled = withStyles(styles);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
-  connected
+  connected,
+  withSnackbar
 )(GlobalSettings);
 
 export default enhanced;

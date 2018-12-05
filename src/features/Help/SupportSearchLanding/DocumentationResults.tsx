@@ -104,7 +104,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
 
   return (
     <div className={classes.root}>
-      <Typography variant="headline" className={classes.header}>
+      <Typography variant="h1" className={classes.header}>
         { `Most Relevant ${sectionTitle}` }
       </Typography>
       <Paper>

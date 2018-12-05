@@ -1,5 +1,8 @@
-import { Action } from 'redux';
+import { Action, AnyAction } from 'redux';
 import { modes } from 'src/features/Volumes/VolumeDrawer';
+import actionCreatorFactory, { isType } from 'typescript-fsa';
+
+const actionCreator = actionCreatorFactory(`@@manager/volumesDrawer`);
 
 const CLOSE = '@@manager/volumeDrawer/CLOSE';
 const CREATING = '@@manager/volumeDrawer/CREATING';
@@ -29,21 +32,30 @@ interface CreatingForLinode extends Action {
   linodeRegion: string;
 }
 
-export const openForCreating: (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => Creating | CreatingForLinode =
-  (linodeId, linodeLabel, linodeRegion) => {
-    if (linodeId && linodeLabel && linodeRegion) {
-      return ({
-        type: CREATING_FOR_LINODE,
-        linodeId,
-        linodeLabel,
-        linodeRegion,
-      })
-    }
+export const openForCreating = (linodeId?: number, linodeLabel?: string, linodeRegion?: string) => {
+  if (linodeId && linodeLabel && linodeRegion) {
+    return createVolumeForLinode({ linodeId, linodeLabel, linodeRegion });
+  }
 
-    return ({
-      type: CREATING,
-    });
-  };
+  return createVolume();
+};
+
+const createVolume = actionCreator<void>(`CREATE_VOLUME`, { mode: 'creating' });
+
+interface CreateVolumeForLinodePayload {
+  linodeId: number;
+  linodeLabel: string;
+  linodeRegion: string;
+};
+
+const createVolumeForLinode = actionCreator<CreateVolumeForLinodePayload>(`CREATE_VOLUME_FOR_LINODE`, { mode: modes.CREATING_FOR_LINODE });
+
+interface ViewResizeInstructionsPayload {
+  volumeLabel: string;
+  message?: string;
+}
+
+export const viewResizeInstructions = actionCreator<ViewResizeInstructionsPayload>(`VIEW_RESIZE_INSTRUCTIONS`, { mode: modes.VIEW_RESIZE_INSTRUCTIONS});
 
 interface Editing extends Action {
   type: typeof EDITING;
@@ -144,18 +156,43 @@ type ActionTypes =
   | Resizing
   | ViewingConfig;
 
+const getMode = (action: AnyAction) => action.meta && action.meta.mode;
+
 export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
+  if (isType(action, createVolume)) {
+    return {
+      ...state,
+      mode: getMode(action),
+    }
+  }
+
+  if (isType(action, createVolumeForLinode)) {
+    const { payload: { linodeId, linodeLabel, linodeRegion, } } = action;
+
+    return {
+      ...state,
+      mode: getMode(action),
+      linodeId,
+      linodeLabel,
+      linodeRegion,
+    }
+  }
+
+  if (isType(action, viewResizeInstructions)) {
+    const { payload: { volumeLabel, message } } = action;
+    return {
+      ...state,
+      mode: getMode(action),
+      volumeLabel,
+      message,
+    };
+  }
+
   switch (action.type) {
     case CLOSE:
       return {
         ...state,
         mode: modes.CLOSED,
-      };
-
-    case CREATING:
-      return {
-        ...defaultState,
-        mode: modes.CREATING,
       };
 
     case CREATING_FOR_LINODE:

@@ -39,14 +39,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingBottom: '0 !important',
     width: '100%',
     cursor: 'pointer',
-    '&:hover': {
-      '& $rowContent': {
-        background: theme.bg.tableHeader,
-        '&:before': {
-          backgroundColor: theme.palette.primary.main,
-        }
-      }
-    },
   },
   label: {
     wordBreak: 'break-all',
@@ -55,29 +47,34 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '100%', 
     [theme.breakpoints.up('md')]: {
       width: '35%',
+      padding: 4,
     },
   },
   iconTableCell: {
     [theme.breakpoints.up('md')]: {
-      width: '5%',
+      width: '4%',
+      padding: 4,
     },
   },
   regionCell: {
     width: '100%', 
     [theme.breakpoints.up('md')]: {
       width: '15%',
+      padding: 4,
     },
   },
   createdCell: {
     width: '100%', 
     [theme.breakpoints.up('md')]: {
       width: '20%',
+      padding: 4,
     },
   },
   tagCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '30%',
+      padding: 4,
     },
   },
   icon: {
@@ -112,7 +109,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   iconGridCell: {
     display: 'flex',
     alignItems: 'center',
-    padding: '4px 8px !important',
+    padding: 4,
   },
   tag: {
     margin: theme.spacing.unit / 2,
@@ -148,7 +145,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
         <div className={classes.labelRow}>
           <Link to={result.data.path} className={classes.link} title={result.label}>
             <div className={classes.labelRow}>
-              <Typography variant="subheading" className={classes.label}>{result.label}</Typography>
+              <Typography variant="h3" className={classes.label}>{result.label}</Typography>
               <div className={classes.status} >
                 {result.data.status && <LinodeStatusIndicator status={result.data.status} />}
               </div>

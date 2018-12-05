@@ -46,7 +46,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="subheading" >
+        <Typography role="header" variant="h3" >
           {field.label}
           {!isOptional &&
             ' *'

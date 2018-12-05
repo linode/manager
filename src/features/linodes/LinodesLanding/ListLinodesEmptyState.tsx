@@ -78,7 +78,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
       className={classes.root}
     >
         <Grid item xs={12}><LinodeSvg className={classes.icon} /></Grid>
-        <Typography variant="display2" className={classes.title} data-qa-placeholder-title>
+        <Typography variant="h4" className={classes.title} data-qa-placeholder-title>
           You don't have any Linodes!
         </Typography>
         <Grid item xs={12} lg={10} className={classes.copy}>
