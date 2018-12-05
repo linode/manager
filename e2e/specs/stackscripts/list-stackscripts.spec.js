@@ -1,6 +1,4 @@
 const { constants } = require('../../constants');
-const { isEmpty } = require('lodash');
-
 import ListStackScripts from '../../pageobjects/list-stackscripts.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
 

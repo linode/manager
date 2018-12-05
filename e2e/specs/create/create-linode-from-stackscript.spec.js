@@ -5,7 +5,7 @@ import ListLinodes from '../../pageobjects/list-linodes';
 import {
     timestamp,
     waitForLinodeStatus,
-    apiDeleteAllLinodes
+    apiDeleteAllLinodes,
   } from '../../utils/common';
 
 describe('Create Linode - Create from StackScript Suite', () => {

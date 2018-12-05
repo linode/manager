@@ -4,7 +4,7 @@ import {
     updateGlobalSettings,
     timestamp,
     retrieveGlobalSettings,
-    apiDeleteAllLinodes
+    apiDeleteAllLinodes,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import GlobalSettings from '../../pageobjects/account/global-settings.page';
