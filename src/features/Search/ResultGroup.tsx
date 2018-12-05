@@ -66,7 +66,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
     ? splitAt(groupSize, results) : [results, []];
 
   return (
-    <Grid item direction="column" className={classes.root}>
+    <Grid item className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
         <Typography variant="h2" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
@@ -83,7 +83,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading && <TableRowLoading  colSpan={5} />}
+            {loading && <TableRowLoading  colSpan={12} />}
             {initial.map((result, idx: number) =>
               <ResultRow key={idx} result={result} data-qa-result-row />)
             }
