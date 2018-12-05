@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
 import { getImagesByIds } from 'src/services/images';
 
@@ -85,7 +86,7 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
         </Typography>
         <Typography variant="h3" className={classes.author}>
           by&nbsp;
-          <a target="_blank" href={`https://www.linode.com/stackscripts/profile/${username}`}>{username}</a>
+          <ExternalLink text={username} link={`https://www.linode.com/stackscripts/profile/${username}`} />
         </Typography>
         <Typography variant="body2" className={classes.deployments}>
           {deployments_total} deployments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
