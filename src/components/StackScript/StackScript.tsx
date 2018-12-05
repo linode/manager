@@ -57,7 +57,7 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="h1">
+        <Typography role="header" variant="h1" component="h2">
           About the StackScript
         </Typography>
         <Typography variant="h3" className={classes.author}>
