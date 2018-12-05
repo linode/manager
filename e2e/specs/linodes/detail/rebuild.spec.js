@@ -40,10 +40,7 @@ describe('Linode Detail - Rebuild Suite', () => {
     });
 
     it('should display error on create an image without selecting an image', () => {
-        browser.click('body'); // click the body to dismiss the opened select
-        browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
-
-        Rebuild.submit.click();
+        browser.jsClick(Rebuild.submit.selector);
         expect(Rebuild.imageError.isVisible()).toBe(true);
         expect(Rebuild.imageError.getText()).toBe('Image cannot be blank.');
     });
