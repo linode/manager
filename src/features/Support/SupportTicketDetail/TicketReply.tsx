@@ -161,7 +161,7 @@ class TicketReply extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid className={classes.root} item>
-          <Typography variant="headline" className={classes.root} data-qa-title >
+          <Typography variant="h1" className={classes.root} data-qa-title >
             Reply
           </Typography>
           {generalError && <Notice error spacingBottom={8} spacingTop={16} text={generalError} />}

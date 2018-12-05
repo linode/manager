@@ -109,7 +109,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Typography
             role="header"
-            variant="title"
+            variant="h2"
             className={classes.title}
             data-qa-title
           >

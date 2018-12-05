@@ -62,7 +62,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Typography
-          variant="title"
+          variant="h2"
           className={classes.heading}
         >
           Other Ways to Get Help

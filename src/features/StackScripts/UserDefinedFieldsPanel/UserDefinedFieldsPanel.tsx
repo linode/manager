@@ -93,7 +93,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<CombinedProps> = (props) 
           />
         );
       })}
-      <Typography role="header" variant="title" data-qa-user-defined-field-header>
+      <Typography role="header" variant="h2" data-qa-user-defined-field-header>
         <span className={classes.username}>{`${props.selectedUsername} / `}</span>
         <span>{`${props.selectedLabel} Options`}</span>
       </Typography>

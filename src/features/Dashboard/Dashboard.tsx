@@ -50,7 +50,7 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
       <Grid container spacing={24}>
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
-          <Typography variant="headline" data-qa-dashboard-header>Dashboard</Typography>
+          <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
         </Grid>
         <Grid item xs={12} md={7}>
           <LinodesDashboardCard />

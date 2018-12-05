@@ -57,7 +57,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
             <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
           <Grid item className="py0">
-            <Typography role="header" variant="subheading" data-qa-label>
+            <Typography role="header" variant="h3" data-qa-label>
               {linodeLabel}
             </Typography>
           </Grid>

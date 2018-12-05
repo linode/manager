@@ -248,7 +248,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography role="header" className={classes.title} variant="title" data-qa-table={classes.title}>
+            <Typography role="header" className={classes.title} variant="h2" data-qa-table={classes.title}>
               My Apps
             </Typography>
           </Grid>

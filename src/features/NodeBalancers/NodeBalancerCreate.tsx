@@ -395,7 +395,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           <Grid item className={`${classes.main} mlMain`}>
             <Typography
               role="header"
-              variant="headline"
+              variant="h1"
               data-qa-create-nodebalancer-header
             >
               Create a NodeBalancer
@@ -424,7 +424,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               handleSelection={this.regionChange}
             />
             <Grid item xs={12}>
-              <Typography role="header" variant="title" className={classes.title}>
+              <Typography role="header" variant="h2" className={classes.title}>
                 NodeBalancer Settings
               </Typography>
             </Grid>

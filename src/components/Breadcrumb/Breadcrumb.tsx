@@ -106,7 +106,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         >
         <KeyboardArrowLeft />
         <Typography
-          variant="subheading"
+          variant="h3"
           className={(labelOptions && labelOptions.subtitle)
             ? classes.subtitleLinkText
             : classes.linkText}
@@ -127,7 +127,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
         ?
         <EditableText
           role="header"
-          typeVariant="h6"
+          typeVariant="h2"
           text={labelTitle}
           errorText={onEditHandlers.errorText}
           onEdit={onEditHandlers.onEdit}

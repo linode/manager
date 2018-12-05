@@ -24,7 +24,7 @@ const TableHeader: React.StatelessComponent<CombinedProps> = ({ classes, title, 
   return (
     <Grid container justify="space-between" alignItems="flex-end">
       <Grid item>
-        <Typography role="header" variant="title" className={classes.title} data-qa-table={title}>
+        <Typography role="header" variant="h2" className={classes.title} data-qa-table={title}>
           {title}
         </Typography>
       </Grid>

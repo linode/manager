@@ -58,7 +58,7 @@ class SearchPanel extends React.Component<CombinedProps, {}> {
         >
           <LinodeIcon className={classes.bgIcon} />
           <Typography
-            variant="headline"
+            variant="h1"
             className={classes.searchHeading}
             data-qa-search-heading
           >

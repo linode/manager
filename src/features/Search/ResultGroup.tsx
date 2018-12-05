@@ -55,7 +55,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Grid item container direction="column" className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
-        <Typography variant="title" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
+        <Typography variant="h2" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
       <List>
         {loading && <CircleProgress mini />}

@@ -76,7 +76,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
         }
       )}>
         <Backup className={classes.icon} />
-        <Typography className={classes.header} variant="headline">
+        <Typography className={classes.header} variant="h1">
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
@@ -89,7 +89,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
             }
             )}
           >
-            <Typography variant="subheading" className={classes.itemTitle} >
+            <Typography variant="h3" className={classes.itemTitle} >
               Linode Backup Auto-Enrollment
             </Typography>
             <Typography variant="body1" >
@@ -110,7 +110,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
               }
             )}
           >
-            <Typography variant="subheading" className={classes.itemTitle} >
+            <Typography variant="h3" className={classes.itemTitle} >
               Enable Backups for Existing Linodes
             </Typography>
             <Typography variant="body1" data-qa-linodes-message>

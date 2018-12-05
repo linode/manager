@@ -124,7 +124,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
               </IconButton>
             </Grid>
             <Grid item>
-              <Typography variant="headline" >
+              <Typography variant="h1" >
                 {query.length > 1 ? `Search results for "${query}"` : "Search"}
               </Typography>
             </Grid>

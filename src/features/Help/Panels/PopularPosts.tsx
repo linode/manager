@@ -132,7 +132,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           >
             <div className={classes.postCard}>
               <Typography
-                variant="subheading"
+                variant="h3"
                 className={classes.postTitle}
               >
                 Most Popular Documentation:
@@ -147,7 +147,7 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
           >
             <div className={classes.postCard}>
               <Typography
-                variant="subheading"
+                variant="h3"
                 className={classes.postTitle}
               >
                 Most Popular Community Posts:

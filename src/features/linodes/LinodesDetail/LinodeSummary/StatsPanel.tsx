@@ -39,7 +39,7 @@ export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
     <Paper className={classes.root} >
       <Typography
         className={classes.title}
-        variant="title"
+        variant="h2"
         data-qa-stats-title
       >
         {title}

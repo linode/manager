@@ -34,9 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .notification': {
       margin: 0,
       ...theme.notificationList,
-      ...theme.typography.subheading,
+      ...theme.typography.h3,
       '& p': {
-        ...theme.typography.subheading,
+        ...theme.typography.h3,
       },
     },
   },

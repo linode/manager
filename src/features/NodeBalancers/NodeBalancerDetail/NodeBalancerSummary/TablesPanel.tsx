@@ -178,7 +178,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Typography
           role="header"
-          variant="subheading"
+          variant="h3"
           className={classes.header}
         >
           Connections (5 min avg.)
@@ -214,7 +214,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Typography
           role="header"
-          variant="subheading"
+          variant="h3"
           className={classes.header}
         >
           Traffic (5 min avg.)
@@ -260,7 +260,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <React.Fragment>
           <div className={classes.graphControls}>
-            <Typography role="header" variant="title" className={classes.graphTitle}>Graphs</Typography>
+            <Typography role="header" variant="h2" className={classes.graphTitle}>Graphs</Typography>
           </div>
 
           <ExtendedExpansionPanel

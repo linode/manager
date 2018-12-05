@@ -885,7 +885,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Configurations`} />
         <Typography
           role="header"
-          variant="headline"
+          variant="h1"
           data-qa-title
           className={classes.title}
         >

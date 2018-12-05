@@ -48,7 +48,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       <Paper className={classes.root} data-qa-contact-summary>
         <Grid container>
           <Grid item xs={12}>
-            <Typography role="header" variant="title">
+            <Typography role="header" variant="h2">
               Summary
             </Typography>
           </Grid>
@@ -110,7 +110,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         <Grid item md={7}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography role="header" variant="subheading">
+              <Typography role="header" variant="h3">
                 Contact Information
               </Typography>
             </Grid>
@@ -151,7 +151,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={12}>
-                <Typography role="header" variant="subheading">
+                <Typography role="header" variant="h3">
                   Billing Information
                   </Typography>
               </Grid>

@@ -127,7 +127,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
               >
                 <Grid item className={classes.label}>
                   <a href="javascript:;" onClick={handleClick} className={classes.link} title={result.label}>
-                    <Typography variant="subheading">{result.label}</Typography>
+                    <Typography variant="h3">{result.label}</Typography>
                     <Typography variant="body1">{result.data.description}</Typography>
                   </a>
                 </Grid>

@@ -40,7 +40,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
                   <DocumentTitleSegment segment={`${linodeContext.data!.label} - Settings`} />
                   <Typography
                     role="header"
-                    variant="title"
+                    variant="h2"
                     className={classes.title}
                     data-qa-settings-header
                   >
