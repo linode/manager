@@ -105,6 +105,8 @@ namespace Linode {
     'stackscript_delete' |
     'stackscript_publicize' |
     'stackscript_revise' |
+    'user_ssh_key_add' |
+    'user_ssh_key_delete' |
     'volume_create' |
     'volume_delete' |
     'volume_detach' |
