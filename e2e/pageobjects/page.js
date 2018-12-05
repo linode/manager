@@ -11,7 +11,7 @@ export default class Page {
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get drawerClose() { return $('[data-qa-close-drawer]'); }
     get docs() { return $$('[data-qa-doc]'); }
-    get toast() { return $('#client-snackbar'); }
+    get toast() { return $('[data-qa-toast]'); }
     get toastMsg() { return $('[data-qa-toast-message]'); }
     get userMenu() { return $('[data-qa-user-menu]'); }
     get logoutButton() { return $('[data-qa-menu-link="Log Out"]'); }
