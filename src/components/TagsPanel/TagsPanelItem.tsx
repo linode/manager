@@ -43,6 +43,7 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
     return (
       <Tag
         {...restOfProps}
+        clickable
         deleteIcon={this.renderIcon()}
         onDelete={this.handleDelete}
       />
