@@ -57,20 +57,20 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="headline">
+        <Typography role="header" variant="h1">
           About the StackScript
         </Typography>
-        <Typography variant="subheading" className={classes.author}>
+        <Typography variant="h3" className={classes.author}>
           by&nbsp;
           <a target="_blank" href={`https://www.linode.com/stackscripts/profile/${username}`}>{username}</a>
         </Typography>
         <Typography variant="body2" className={classes.deployments}>
-          {deployments_total} depolyments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
+          {deployments_total} deployments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
         </Typography>
         <Typography variant="body2" className={classes.description}>
           {description}
         </Typography>
-        <Typography variant="subheading" className={classes.scriptHeading}>
+        <Typography variant="h3" className={classes.scriptHeading}>
           Script:
         </Typography>
         <ScriptCode script={script} />

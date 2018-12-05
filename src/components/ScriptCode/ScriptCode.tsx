@@ -24,7 +24,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       paddingTop: theme.spacing.unit / 4,
       paddingBottom: theme.spacing.unit / 4,
       fontSize: '14px',
-      textAlign: 'center'
+      textAlign: 'center',
+      color: theme.color.headline,
     },
     codeCell: {
       paddingLeft: theme.spacing.unit,
@@ -32,7 +33,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
     },
     code: {
       fontSize: '1em',
-      margin: 0
+      margin: 0,
+      color: theme.color.headline,
     }
   });
 };
