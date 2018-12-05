@@ -176,7 +176,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 16 }}>
           <Grid item>
-            <Typography role="header" variant="title" className={classes.headline}>Disks</Typography>
+            <Typography role="header" variant="h2" className={classes.headline}>Disks</Typography>
           </Grid>
           <Grid item>
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />

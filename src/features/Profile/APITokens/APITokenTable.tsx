@@ -375,7 +375,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     return tokens.map((token: Linode.Token) =>
       <TableRow key={token.id} data-qa-table-row={token.label}>
         <TableCell parentColumn="Label">
-          <Typography role="header" variant="subheading" data-qa-token-label>
+          <Typography role="header" variant="h3" data-qa-token-label>
             {token.label}
           </Typography>
         </TableCell>
@@ -420,7 +420,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography role="header" variant="title" className={classes.headline} data-qa-table={type}>
+            <Typography role="header" variant="h2" className={classes.headline} data-qa-table={type}>
               {title}
             </Typography>
           </Grid>

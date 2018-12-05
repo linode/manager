@@ -388,7 +388,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <div className={classes.section}>
         <Grid container className={classes.section} data-qa-billing-section>
           <Grid item>
-            <Typography role="header" variant="subheading" data-qa-permissions-header="billing">
+            <Typography role="header" variant="h3" data-qa-permissions-header="billing">
               Billing Access
             </Typography>
           </Grid>
@@ -452,7 +452,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const { grants, success, saving } = this.state;
     return (
       <Paper className={classes.globalSection} data-qa-global-section>
-        <Typography role="header" variant="title" data-qa-permissions-header="Global Permissions">
+        <Typography role="header" variant="h2" data-qa-permissions-header="Global Permissions">
           Global Permissions
         </Typography>
         {success && success.global &&
@@ -525,7 +525,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <div key={entity} className={classes.section}>
         <Typography
           role="header"
-          variant="subheading"
+          variant="h3"
           className={classes.tableSubheading}
           data-qa-permissions-header={entityNameMap[entity]}
           >
@@ -649,7 +649,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography role="header" variant="title" data-qa-permissions-header="Specific Permissions">
+            <Typography role="header" variant="h2" data-qa-permissions-header="Specific Permissions">
               Specific Permissions
             </Typography>
           </Grid>
@@ -736,12 +736,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         }
         <Grid container alignItems="center" style={{ width: 'auto' }}>
           <Grid item>
-            <Typography role="header" variant="title" data-qa-restrict-access={restricted}>
+            <Typography role="header" variant="h2" data-qa-restrict-access={restricted}>
               Restrict Access:
               </Typography>
           </Grid>
           <Grid item>
-            <Typography role="header" variant="title">
+            <Typography role="header" variant="h2">
               {restricted
                 ? 'On'
                 : 'Off'

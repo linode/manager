@@ -98,19 +98,19 @@ export const dark = createTheme({
     },
   },
   typography: {
-    headline: {
+    h1: {
       color: primaryColors.headline,
     },
-    title: {
+    h2: {
       color: primaryColors.headline,
     },
-    subheading: {
+    h3: {
       color: primaryColors.headline,
     },
     caption: {
       color: primaryColors.text,
     },
-    display2: {
+    h4: {
       color: primaryColors.text,
     },
   },

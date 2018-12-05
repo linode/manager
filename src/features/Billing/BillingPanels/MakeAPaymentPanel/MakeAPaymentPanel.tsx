@@ -367,14 +367,14 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container>
               <Grid item>
-                <Typography role="header" component={'span'} variant="title">
+                <Typography role="header" component={'span'} variant="h2">
                     Current Balance:
                 </Typography>
               </Grid>
               <Grid item>
                 <Typography
                   component={'span'}
-                  variant="title"
+                  variant="h2"
                   className={classNames({
                     [classes.negative]: balance > 0,
                     [classes.positive]: balance <= 0,

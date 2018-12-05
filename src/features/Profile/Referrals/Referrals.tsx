@@ -49,7 +49,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
           <Grid item xs={12}>
             <Typography
               role="header"
-              variant="title"
+              variant="h2"
               className={classes.title}
               data-qa-title
             >
@@ -65,7 +65,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
               : (
                 <React.Fragment>
                   <Grid item>
-                    <Typography role="header" variant="subheading" className={classes.results}>
+                    <Typography role="header" variant="h3" className={classes.results}>
                       You have {total} total referrals: {completed} completed (${credit} ) and {pending} pending.
                     </Typography>
                   </Grid>

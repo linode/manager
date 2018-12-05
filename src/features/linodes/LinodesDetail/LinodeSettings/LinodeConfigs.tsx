@@ -95,7 +95,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           alignItems="flex-end"
         >
           <Grid item>
-            <Typography role="header" variant="title" className={classes.headline}>
+            <Typography role="header" variant="h2" className={classes.headline}>
               Configuration
             </Typography>
           </Grid>

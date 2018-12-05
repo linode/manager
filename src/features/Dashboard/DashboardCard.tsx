@@ -42,7 +42,7 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
         <Grid container justify="space-between" alignItems="flex-start">
           {title &&
             <Grid item className={'py0'}>
-              <Typography variant="title">
+              <Typography variant="h2">
                 {title}
               </Typography>
             </Grid>

@@ -86,7 +86,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
 
     return (
       <Paper key={idx} className={classes.root}>
-        <Typography variant="subheading" className={classes.itemTitle}>
+        <Typography variant="h3" className={classes.itemTitle}>
           <a href={item.link} className="blue" target="_blank" data-qa-blog-post>{cleanedTitle}</a>
         </Typography>
         <Typography variant="body1" data-qa-post-desc>
