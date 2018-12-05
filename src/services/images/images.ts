@@ -23,8 +23,12 @@ export const getImage = (imageId: string) =>
  * @param imageIds { string[] } IDs of the Images to look up.
  */
 export const getImagesByIds = (imageIds: string[]) => {
-  const requests = imageIds.map(imageId => getImage(imageId));
-  return Promise.all(requests);
+  const requests = imageIds.map(imageId => getImage(imageId).catch(() => Promise.resolve()));
+  return new Promise(resolve => {
+    Promise.all(requests).then(images => {
+      resolve(images.filter(item => item)); // filter out failed images
+    });
+  })
 }
 
 /**
