@@ -1,23 +1,25 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
-import { close, openForConfig } from 'src/store/reducers/volumeDrawer';
+import { close, openForConfig, viewResizeInstructions } from 'src/store/reducers/volumeDrawer';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
 import EditVolumeForm from './EditVolumeForm';
 import ResizeVolumeForm from './ResizeVolumeForm';
+import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
 
 export const modes = {
-  CLOSED: 'closed',
-  CREATING: 'creating',
-  CREATING_FOR_LINODE: 'creating_for_linode',
-  RESIZING: 'resizing',
-  CLONING: 'cloning',
-  EDITING: 'editing',
   ATTACHING: 'attaching',
+  CLONING: 'cloning',
+  CLOSED: 'closed',
+  CREATING_FOR_LINODE: 'creating_for_linode',
+  CREATING: 'creating',
+  EDITING: 'editing',
+  RESIZING: 'resizing',
+  VIEW_RESIZE_INSTRUCTIONS: 'viewing_resize_instructions',
   VIEWING_CONFIG: 'viewing_config',
 };
 
@@ -59,8 +61,18 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           />
         }
         {
-          mode === modes.RESIZING && volumeId !== undefined && volumeSize !== undefined &&
-          <ResizeVolumeForm volumeId={volumeId} volumeSize={volumeSize} onClose={actions.closeDrawer} />
+          mode === modes.RESIZING
+          && volumeId !== undefined
+          && volumeSize !== undefined
+          && volumeLabel !== undefined
+          &&
+          <ResizeVolumeForm
+            volumeId={volumeId}
+            volumeSize={volumeSize}
+            onClose={actions.closeDrawer}
+            volumeLabel={volumeLabel}
+            onSuccess={actions.openForResizeInstructions}
+          />
         }
         {
           mode === modes.CLONING && volumeId !== undefined
@@ -115,6 +127,16 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
             onClose={actions.closeDrawer}
           />
         }
+        {
+          mode === modes.VIEW_RESIZE_INSTRUCTIONS
+          && volumeLabel !== undefined
+          &&
+          <ResizeVolumesInstruction
+            volumeLabel={volumeLabel}
+            message={message}
+            onClose={actions.closeDrawer}
+          />
+        }
       </Drawer>
     );
   }
@@ -124,6 +146,7 @@ interface DispatchProps {
   actions: {
     closeDrawer: () => void;
     openForConfig: (volumeLabel: string, volumePath: string, message?: string) => void;
+    openForResizeInstructions: (volumeLabel: string, message?: string) => void;
   }
 }
 
@@ -131,6 +154,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => 
   actions: {
     closeDrawer: () => dispatch(close()),
     openForConfig: (volumeLabel: string, volumePath: string, message?: string) => dispatch(openForConfig(volumeLabel, volumePath, message)),
+    openForResizeInstructions: (volumeLabel: string, message?: string) => dispatch(viewResizeInstructions({ volumeLabel, message })),
   },
 });
 
@@ -187,7 +211,7 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
   switch (mode) {
     case modes.CREATING:
-    return `Create a Volume`;
+      return `Create a Volume`;
 
     case modes.CREATING_FOR_LINODE:
       return `Create a volume for ${linodeLabel}`
@@ -206,6 +230,9 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
 
     case modes.VIEWING_CONFIG:
       return `Volume Configuration`;
+
+      case modes.VIEW_RESIZE_INSTRUCTIONS:
+      return `Resizing Instructions`;
 
     default:
       return '';

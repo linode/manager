@@ -20,12 +20,14 @@ interface Props {
   onClose: () => void;
   volumeSize: number;
   volumeId: number;
+  volumeLabel: string;
+  onSuccess: (volumeLabel: string, message?: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { volumeId, volumeSize, onClose } = props;
+  const { volumeId, volumeSize, onClose, volumeLabel, onSuccess } = props;
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
 
@@ -38,9 +40,10 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
         resizeVolume(volumeId, { size: Number(values.size) })
           .then(response => {
-            onClose();
-            resetForm();
+            resetForm(initialValues);
+            setSubmitting(false);
             resetEventsPolling();
+            onSuccess(volumeLabel, `Volume scheduled to be resized.`);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to resize this volume at this time. Please try again later.`;
