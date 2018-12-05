@@ -195,6 +195,7 @@
     "mountebank": "^1.14.1",
     "otplib": "^10.0.1",
     "selenium-standalone": "^6.13.0",
+    "storybook-react-router": "^1.0.2",
     "svgr": "^1.9.0",
     "tslint-config-airbnb": "^5.6.0",
     "tslint-config-prettier": "^1.13.0",
