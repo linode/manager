@@ -78,6 +78,10 @@ const createClickHandlerForNotification = (
   const type = path(['type'], entity);
   const id = path(['id'], entity);
 
+  if(['user_ssh_key_add','user_ssh_key_delete'].includes(action)){
+    return (e: React.MouseEvent<HTMLElement>) => onClick(`/profile/keys`);
+  }
+
   /**
    * If we have a deletion event or an event that is marked as referring to a deleted entityt
    * we don't want a clickable actin.

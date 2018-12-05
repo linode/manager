@@ -322,6 +322,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   volume_resize: {
     notification: e => `Volume ${e.entity!.label} has been resized.`,
   },
+  user_ssh_key_add: {
+    notification: e => `An SSH key has been added to your profile.`,
+  },
+  user_ssh_key_delete: {
+    notification: e => `An SSH key has been removed from your profile.`,
+  },
 };
 
 export default (
