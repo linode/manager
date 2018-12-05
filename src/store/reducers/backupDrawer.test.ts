@@ -1,5 +1,3 @@
-import * as Bluebird from 'bluebird';
-
 import backups, * as B from './backupDrawer';
 
 import { linode1, linode2 } from 'src/__data__/linodes';
@@ -8,7 +6,6 @@ import { mockAPIFieldErrors } from 'src/services/';
 const error: BackupError = { linodeId: 123456, reason: 'Error'};
 const apiError = mockAPIFieldErrors([]);
 const linodes = [linode1, linode2];
-const linodeIds = linodes.map(linode => linode.id);
 
 const mockFn = jest.fn();
 jest.mock('axios', () => ({
@@ -31,6 +28,7 @@ describe("Redux backups", () => {
         expect(newState).toHaveProperty('error', undefined);
         expect(newState).toHaveProperty('enableErrors', []);
         expect(newState).toHaveProperty('autoEnrollError', undefined);
+        expect(newState).toHaveProperty('updatedCount', 0);
     });
     it("should handle CLOSE", () => {
       const newState = backups(
@@ -63,12 +61,13 @@ describe("Redux backups", () => {
       );
       expect(newState).toHaveProperty('enabling', false);
       expect(newState).toHaveProperty('enableSuccess', true);
+      expect(newState).toHaveProperty('updatedCount', 1);
       expect(newState.data).not.toContain(linode1);
     });
     it("should handle ENABLE_ERROR", () => {
       const newState = backups(
         {...B.defaultState, enabling: true },
-        B.handleEnableError([error])
+        B.handleEnableError({errors: [error], success: [1,2,3]})
       );
       expect(newState).toHaveProperty('enabling', false);
       expect(newState.enableErrors).toEqual([error]);
@@ -117,20 +116,6 @@ describe("Redux backups", () => {
         B.handleAutoEnrollError('Error')
       )
       expect(newState).toHaveProperty('autoEnrollError', 'Error')
-    });
-  });
-  describe("magic error reducer", () => {
-    // Triggers a Jasmine error that we still need to work out
-    it.skip("should provide a list of errors and linode ids", async () => {
-      const initialValue = { success: [], errors: []};
-      const accumulator = await Bluebird.reduce(linodeIds, B.gatherResponsesAndErrors, initialValue);
-      expect(accumulator).toEqual({
-        success: [1],
-        errors: [{
-          linodeId: linode2.id,
-          reason: "Backups could not be enabled for this Linode."
-        }]
-      });
     });
   });
 });
