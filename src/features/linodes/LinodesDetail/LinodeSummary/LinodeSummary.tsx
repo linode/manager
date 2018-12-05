@@ -15,7 +15,7 @@ import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/contex
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
-import { getMetrics, withPercentage, withUnit } from 'src/utilities/stats';
+import { getMetrics, withBitrate, withPercentSign } from 'src/utilities/statMetrics';
 import CPUMetrics from './CPUMetrics';
 import DiskIOMetrics from './DiskIOMetrics';
 import IPMetrics from './IPMetrics';
@@ -268,7 +268,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <CPUMetrics metrics={withPercentage(metrics)} />
+          <CPUMetrics metrics={withPercentSign(metrics)} />
         </div>
       </React.Fragment>
     )
@@ -320,10 +320,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <IPMetrics
-            privateIn={withUnit(getMetrics(data.privateIn))}
-            privateOut={withUnit(getMetrics(data.privateOut))}
-            publicIn={withUnit(getMetrics(data.publicIn))}
-            publicOut={withUnit(getMetrics(data.publicOut))}
+            privateIn={withBitrate(getMetrics(data.privateIn))}
+            privateOut={withBitrate(getMetrics(data.privateOut))}
+            publicIn={withBitrate(getMetrics(data.publicIn))}
+            publicOut={withBitrate(getMetrics(data.publicOut))}
           />
         </div>
       </React.Fragment>
@@ -376,10 +376,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <IPMetrics
-            privateIn={withUnit(getMetrics(data.privateIn))}
-            privateOut={withUnit(getMetrics(data.privateOut))}
-            publicIn={withUnit(getMetrics(data.publicIn))}
-            publicOut={withUnit(getMetrics(data.publicOut))}
+            privateIn={withBitrate(getMetrics(data.privateIn))}
+            privateOut={withBitrate(getMetrics(data.privateOut))}
+            publicIn={withBitrate(getMetrics(data.publicIn))}
+            publicOut={withBitrate(getMetrics(data.publicOut))}
           />
         </div>
       </React.Fragment>

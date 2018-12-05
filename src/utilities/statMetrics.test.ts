@@ -1,4 +1,4 @@
-import { addUnit, formatNumber, getMetrics, withPercentage } from './stats';
+import { appendBitrateUnit, formatNumber, getMetrics, withPercentSign } from './statMetrics';
 
 const data = [
   [0, 0.12],
@@ -37,16 +37,25 @@ describe('Stat Metrics', () => {
   });
 });
 
-
 describe('add unit', () => {
-  it('returns b/s if less than 1000', () => {
-    expect(addUnit('612.12')).toBe('612.12 b/s');
-    expect(addUnit('1000')).not.toBe('1000.00 b/s');
+  it('returns bit/s if less than 1000', () => {
+    expect(appendBitrateUnit('612.12')).toBe('612.12 bit/s');
+    expect(appendBitrateUnit('1024')).not.toBe('1000.24 bit/s');
   });
 
-  it('converts to kb/s if 1000 or greater', () => {
-    expect(addUnit('6211.21')).toBe('6.21 kb/s');
-    expect(addUnit('1000')).toBe('1.00 kb/s');
+  it('converts to Kbit/s if 1000 or greater', () => {
+    expect(appendBitrateUnit('6211.21')).toBe('6.21 Kbit/s');
+    expect(appendBitrateUnit('1000')).toBe('1.00 Kbit/s');
+  });
+
+  it('converts to Mbit/s if 1000 * 1000 or greater', () => {
+    expect(appendBitrateUnit('62232111.21')).toBe('62.23 Mbit/s');
+    expect(appendBitrateUnit('1000000')).toBe('1.00 Mbit/s');
+  });
+
+  it('converts to Gbit/s if 1000 * 1000 * 1000 or greater', () => {
+    expect(appendBitrateUnit('62331232111.21')).toBe('62.33 Gbit/s');
+    expect(appendBitrateUnit('1000000000')).toBe('1.00 Gbit/s');
   });
 });
 
@@ -59,15 +68,16 @@ describe('format number', () => {
     expect(formatNumber(10000.07)).toBe('10000.07');
     expect(formatNumber(99.99)).toBe('99.99');
     expect(formatNumber(99.999)).toBe('100.00');
+    expect(formatNumber(99.7)).toBe('99.70');
   });
 
   it('with percentage', () => {
     let initial = {a: '1.00', b: '2.50'};
     let expected = {a: '1.00%', b: '2.50%'};
-    expect(withPercentage(initial)).toEqual(expected);
+    expect(withPercentSign(initial)).toEqual(expected);
 
     initial = {a: '0.00', b: '2'};
     expected = {a: '0.00%', b: '2%'}
-    expect(withPercentage(initial)).toEqual(expected);
+    expect(withPercentSign(initial)).toEqual(expected);
   });
 });
