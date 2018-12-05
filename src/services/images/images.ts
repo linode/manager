@@ -18,6 +18,16 @@ export const getImage = (imageId: string) =>
   .then(response => response.data);
 
 /**
+ * Get information about a multiple Images.
+ *
+ * @param imageIds { string[] } IDs of the Images to look up.
+ */
+export const getImagesByIds = (imageIds: string[]) => {
+  const requests = imageIds.map(imageId => getImage(imageId));
+  return Promise.all(requests);
+}
+
+/**
  * Returns a paginated list of Images.
  *
  */

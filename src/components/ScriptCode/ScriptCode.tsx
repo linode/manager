@@ -57,17 +57,19 @@ export class ScriptCode extends React.Component<PropsWithStyles, {}> {
     return (
       <div className={classes.container}>
         <table className={classes.table}>
-          {script.split('\n').map((line, counter) => (
+          <tbody>
+            {script.split('\n').map((line, counter) => (
+              <tr className={classes.row} key={'scriptCodeLine' + counter}>
+                <td className={classes.numberCell}>{counter + 1}</td>
+                <td className={classes.codeCell}><pre className={classes.code}>{line}</pre></td>
+              </tr>
+            ))}
+            {/* Empty row at the end */}
             <tr className={classes.row}>
-              <td className={classes.numberCell}>{counter + 1}</td>
-              <td className={classes.codeCell}><pre className={classes.code}>{line}</pre></td>
+              <td className={classes.numberCell}>&nbsp;</td>
+              <td className={classes.codeCell} />
             </tr>
-          ))}
-          {/* Empty row at the end */}
-          <tr className={classes.row}>
-            <td className={classes.numberCell}>&nbsp;</td>
-            <td className={classes.codeCell} />
-          </tr>
+          </tbody>
         </table>
       </div>
     )

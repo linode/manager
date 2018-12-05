@@ -4,6 +4,7 @@ export {
   createImage,
   updateImage,
   deleteImage,
+  getImagesByIds,
 } from './images';
 
 export { getLinodeImages } from './imagesUtils';

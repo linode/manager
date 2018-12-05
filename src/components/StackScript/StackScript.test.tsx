@@ -29,6 +29,7 @@ describe('StackScript', () => {
           author: '',
           description: '',
           scriptHeading: '',
+          imagesList: '',
         }}
       />
     );
