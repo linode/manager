@@ -15,6 +15,8 @@ import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/contex
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
+import { getMetrics, withPercentage } from 'src/utilities/stats';
+import CPUMetrics from './CPUMetrics';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
@@ -242,6 +244,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
     const { classes } = this.props;
     const data = pathOr([[]], ['data','cpu'], stats);
+
+    const metrics = getMetrics(data);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -261,9 +266,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.blue}>
-            CPU %
-          </div>
+          <CPUMetrics metrics={withPercentage(metrics)} />
         </div>
       </React.Fragment>
     )
