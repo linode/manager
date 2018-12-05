@@ -8,7 +8,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 
 import { ResultGroup } from './ResultGroup';
 
-const classes = { root: '', entityHeadingWrapper: '', entityHeading: '', button: '', emptyCell: ''};
+const classes = { root: '', entityHeadingWrapper: '', entityHeading: '', button: '', emptyCell: '', headerCell: ''};
 
 const props = {
   entity: 'linodes',

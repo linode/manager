@@ -24,7 +24,8 @@ type ClassNames = 'root'
 | 'entityHeadingWrapper'
 | 'entityHeading'
 | 'button'
-| 'emptyCell';
+| 'emptyCell'
+| 'headerCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -41,7 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   emptyCell: {
     padding: 0,
-  }
+  },
+  headerCell: {
+    padding: '10px 4px',
+  },
 });
 
 interface Props {
@@ -76,10 +80,10 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
             <TableRow>
               <TableCell className={classes.emptyCell}/>
               <Hidden smDown><TableCell className={classes.emptyCell}/></Hidden>
-              <TableCell>Label</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Created</TableCell>
-              <TableCell>Tags</TableCell>
+              <TableCell className={classes.headerCell}>Label</TableCell>
+              <TableCell className={classes.headerCell}>Region</TableCell>
+              <TableCell className={classes.headerCell}>Created</TableCell>
+              <TableCell className={classes.headerCell}>Tags</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
