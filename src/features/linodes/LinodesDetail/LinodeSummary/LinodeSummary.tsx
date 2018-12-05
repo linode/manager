@@ -17,6 +17,7 @@ import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
 import { getMetrics, withPercentage } from 'src/utilities/stats';
 import CPUMetrics from './CPUMetrics';
+import DiskIOMetrics from './DiskIOMetrics';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
@@ -383,6 +384,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderDiskIOChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
+
+    const data = {
+      io: pathOr([[]], ['data','io','io'], stats),
+      swap: pathOr([[]], ['data','io','swap'], stats)
+    };
+
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -395,24 +403,22 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#d01e1e',
-                data: pathOr([[]], ['data','io','io'], stats),
+                data: data.io,
                 label: 'Disk I/O',
               },
               {
                 borderColor: '#ffd100',
-                data: pathOr([[]], ['data','io','swap'], stats),
+                data: data.swap,
                 label: 'Swap I/O',
               },
             ]}
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.red}>
-            I/O Rate
-            </div>
-          <div className={classes.yellow}>
-            Swap Rate
-            </div>
+          <DiskIOMetrics
+            io={getMetrics(data.io)}
+            swap={getMetrics(data.swap)}
+          />
         </div>
       </React.Fragment>
     )
