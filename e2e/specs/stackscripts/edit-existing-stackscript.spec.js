@@ -59,7 +59,7 @@ describe('StackScript - Edit Existing', () => {
     it('should display edit stackscript page', () => {
         browser.click('[data-qa-action-menu-item="Edit"]');
         ConfigureStackScripts.editElementsDisplay();
-            
+
         assertOriginalDisplays();
     });
 

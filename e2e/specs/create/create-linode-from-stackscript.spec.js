@@ -1,7 +1,12 @@
 const { constants } = require('../../constants');
 
 import ConfigureLinode from '../../pageobjects/configure-linode';
-import { apiDeleteAllLinodes } from '../../utils/common';
+import ListLinodes from '../../pageobjects/list-linodes';
+import {
+    timestamp,
+    waitForLinodeStatus,
+    apiDeleteAllLinodes,
+  } from '../../utils/common';
 
 describe('Create Linode - Create from StackScript Suite', () => {
 
@@ -11,8 +16,8 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     afterAll(() => {
-        apiDeleteAllLinodes();
-    });
+       apiDeleteAllLinodes();
+   });
 
     it('should change tab to create from stackscript', () => {
         ConfigureLinode.createFrom('StackScript');
@@ -57,7 +62,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
         let i = 0;
         const stackScripts = ConfigureLinode.stackScriptRows
             .map(s => s.getAttribute('data-qa-table-row'));
-        
+
         while (!ConfigureLinode.userDefinedFieldsHeader.isVisible()) {
             browser.jsClick(`[data-qa-table-row="${stackScripts[i]}"]`);
             i++;
@@ -81,12 +86,18 @@ describe('Create Linode - Create from StackScript Suite', () => {
         const imageName = ConfigureLinode.images[0].$('[data-qa-select-card-subheading]').getText();
 
         ConfigureLinode.randomPassword();
-        ConfigureLinode.deploy.click();
-        
-        browser.waitForVisible('[data-qa-linode]');
-        browser.waitForVisible('[data-qa-image]', constants.wait.minute * 3);
 
-        const listingImageName = $$('[data-qa-linode]')[0].$('[data-qa-image]').getText();
+        const linodeLabel = `${timestamp()}`;
+        ConfigureLinode.label.setValue(linodeLabel);
+
+        ConfigureLinode.deploy.click();
+
+        waitForLinodeStatus(linodeLabel, 'running');
+        ListLinodes.gridToggle.click();
+        ListLinodes.gridElemsDisplay();
+
+        const labelAttribute = ListLinodes.linodeElem.selector.replace(/[\[\]']+/g,'')
+        const listingImageName = ListLinodes.linode.find( linode => linode.getAttribute(labelAttribute) === linodeLabel).$(ListLinodes.image.selector).getText();
         expect(listingImageName).toBe(imageName);
     });
 });

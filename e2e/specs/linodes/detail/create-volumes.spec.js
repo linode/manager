@@ -43,7 +43,7 @@ describe('Linode Detail - Volumes Suite', () => {
             const placeholderTitle = VolumeDetail.placeholderText;
             const createButton = VolumeDetail.createButton;
 
-            expect(placeholderTitle.getText()).toBe('No volumes found');
+            expect(placeholderTitle.getText()).toBe('Create a Volume');
             expect(createButton.isVisible()).toBe(true);
         });
 
@@ -79,29 +79,26 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should fail to create without a label', () => {
             VolumeDetail.submit.click();
-            VolumeDetail.label.$('p').waitForVisible(constants.wait.normal);
-
-            const labelError = VolumeDetail.label.$('p').getText();
-
-            expect(labelError.includes('Label cannot be blank')).toBe(true);
+            const labelError = $(`${VolumeDetail.label.selector} p`);
+            labelError.waitForVisible(constants.wait.normal);
+            expect(labelError.getText()).toContain('Label is required.');
         });
 
         it('should fail to create under 10 gb volume', () => {
-            const errorMsg = 'Size must be between 10 and 10240';
+            const errorMsg = 'Size must be between 10 and 10240.';
             browser.setValue(`${VolumeDetail.label.selector} input`, testLabel);
             browser.setValue(`${VolumeDetail.size.selector} input`, 5);
             VolumeDetail.submit.click();
-
-            browser.waitUntil(function() {
-                return browser.getText('[data-qa-size] p').includes(errorMsg);
-            }, constants.wait.normal);
+            const volumeError = $(`${VolumeDetail.size.selector}>p`);
+            volumeError.waitForVisible(constants.wait.normal);
+            expect(volumeError.getText()).toEqual(errorMsg);
         });
 
         it('should create a volume after correcting errors', () => {
             browser.trySetValue(`${VolumeDetail.size.selector} input`,'20');
             VolumeDetail.submit.click();
-
-
+            VolumeDetail.toastDisplays('Volume successfully created.', constants.wait.minute);
+            VolumeDetail.drawerClose.click();
             VolumeDetail.volumeCellLabel.waitForVisible(constants.wait.normal);
         });
     });
@@ -114,15 +111,15 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should display volume action menu options', () => {
-           VolumeDetail.volumeCell[0].$(VolumeDetail.volumeActionMenu.selector).click();
+           $(`${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.volumeActionMenu.selector}`).click();
            VolumeDetail.assertActionMenuItems();
         });
 
         it('should display volume create icon text link', () => {
-            const createIcon = $('[data-qa-icon-text-link="Add a Volume"]');
+            const createIcon = $('[data-qa-icon-text-link="Create a Volume"]');
 
             expect(createIcon.isVisible()).toBe(true);
-            expect(createIcon.getText()).toBe('Add a Volume');
+            expect(createIcon.getText()).toBe('Create a Volume');
             expect(createIcon.$('svg').isVisible()).toBe(true);
         });
     });

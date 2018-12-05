@@ -23,10 +23,9 @@ class Users extends Page {
     get createDrawerSubmit() { return $(this.submitButton.selector); }
     get createDrawerCancel() { return $(this.cancelButton.selector); }
 
-    get userDetailHeader() { return $('[data-qa-user-detail-header]'); }
+    get userDetailHeader() { return $('[data-qa-link-text]'); }
     get userProfileTab() { return $('[data-qa-tab="User Profile"]'); }
     get userPermissionsTab() { return $('[data-qa-tab="User Permissions"]'); }
-    get backButton() { return $('[data-qa-back-button]'); }
 
 
     baseElementsDisplay() {

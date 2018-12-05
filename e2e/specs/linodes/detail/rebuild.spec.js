@@ -32,41 +32,26 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display image options in the select', () => {
         Rebuild.imagesSelect.click();
-        Rebuild.imageSelectHeader.waitForVisible(constants.wait.normal);
-
-        // Only check two image Options for visibility
-        expect(Rebuild.imageOptions[0].isVisible()).toBe(true);
-        expect(Rebuild.imageOptions[1].isVisible()).toBe(true);
+        Rebuild.imageOption.waitForVisible(constants.wait.normal);
+        $('body').click();
+        Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
     });
 
     it('should display error on create an image without selecting an image', () => {
-        browser.click('body'); // click the body to dismiss the opened select
-        browser.waitForVisible('[data-qa-image-option]', constants.wait.normal, true);
-
         Rebuild.submit.click();
-
-        browser.waitForVisible('[data-qa-image-error]', constants.wait.normal);
-        const error = Rebuild.imageError;
-
-        expect(error.getText()).toBe('Image cannot be blank.');
+        expect(Rebuild.imageError.isVisible()).toBe(true);
+        expect(Rebuild.imageError.getText()).toBe('Image cannot be blank.');
     });
 
     it('should display error on create image without setting a password', () => {
         const errorMsg = 'Password cannot be blank.';
         Rebuild.selectImage();
-
-        // Use manual waitUntil polling due to chromedriver request throttle issue.
-        browser.waitUntil(function() {
-            return !$('[data-qa-image-option]').isVisible();
-        }, constants.wait.normal);
-
-        Rebuild.submit.click();
+        browser.jsClick(Rebuild.submit.selector);
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
     });
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = generatePassword();
-
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });

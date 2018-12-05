@@ -5,10 +5,11 @@ import Page from '../page';
 export class SupportLanding extends Page {
     get searchHeading() { return $('[data-qa-search-heading]'); }
     get searchField() { return $('[data-qa-enhanced-select-input]'); }
-    get docLink() { return $('[data-qa-doc-link]'); }
-    get docLinks() { return $$('[data-qa-doc-link]'); }
-    get communityPost() { return $('[data-qa-community-post]'); }
-    get communityPosts() { return $$('[data-qa-community-post]'); }
+    get externalLink() { return '[data-qa-external-link]';}
+    get docLink() { return $(` [data-qa-documentation-link] ${this.externalLink}`); }
+    get docLinks() { return $$(` [data-qa-documentation-link] ${this.externalLink}`); }
+    get communityPost() { return $(`[data-qa-community-link] ${this.externalLink}`); }
+    get communityPosts() { return $$(`[data-qa-community-link] ${this.externalLink}`); }
     get viewDocsTile() { return $('[data-qa-tile="Guides and Tutorials"]'); }
     get communityTile() { return $('[data-qa-tile="Community Q&A"]'); }
     get adaTile() { return $('[data-qa-tile="Linode Support Bot"]'); }

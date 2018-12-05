@@ -26,7 +26,7 @@ describe('Account - Restricted User Suite', () => {
     });
 
     it('should navigate back to user listing on click back arrow', () => {
-        Users.backButton.click();
+        Users.userDetailHeader.click();
         Users.baseElementsDisplay();
 
         expect(browser.getUrl()).toBe(browser.options.baseUrl.concat(constants.routes.account.users));

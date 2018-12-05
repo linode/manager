@@ -6,7 +6,8 @@ class SearchBar extends Page {
     get searchElem() { return $('#search-bar'); }
     get searchInput() { return $('#search-bar input'); }
     get searchIcon() { return $('[data-qa-search-icon]'); }
-    get suggestions() { return $$('[data-qa-suggestion]'); }
+    get suggestion() { return '[data-qa-suggestion]'; }
+    get suggestions() { return $$(this.suggestion); }
     get suggestionTitle() { return $('[data-qa-suggestion-title]'); }
     get suggestionDesc() { return $('[data-qa-suggestion-title]'); }
 

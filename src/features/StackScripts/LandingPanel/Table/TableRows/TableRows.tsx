@@ -61,8 +61,8 @@ export const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (pr
       {stackScripts &&
         stackScripts.map(eachStackScript => {
           return (
-            <TableRow key={eachStackScript.id}>
-              <TableCell parentColumn="StackScript">
+            <TableRow key={eachStackScript.id} data-qa-table-row>
+              <TableCell parentColumn="StackScript" data-qa-stackscript-title={eachStackScript.label}>
                 <LabelCell
                   stackScriptId={eachStackScript.id}
                   label={eachStackScript.label}
@@ -70,10 +70,10 @@ export const StackScriptTableRows: React.StatelessComponent<CombinedProps> = (pr
                   description={eachStackScript.description}
                 />
               </TableCell>
-              <TableCell parentColumn="Active Deploys">
+              <TableCell parentColumn="Active Deploys" data-qa-stackscript-deploys={eachStackScript.deployments_active}>
                 {eachStackScript.deployments_active}
               </TableCell>
-              <TableCell parentColumn="Last Revision">
+              <TableCell parentColumn="Last Revision" data-qa-stackscript-revision>
                 {eachStackScript.updated}
               </TableCell>
               <TableCell parentColumn="Compatible Images">

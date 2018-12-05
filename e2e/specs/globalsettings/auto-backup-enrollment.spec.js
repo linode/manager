@@ -3,7 +3,8 @@ import {
     apiCreateLinode,
     updateGlobalSettings,
     timestamp,
-    retrieveGlobalSettings
+    retrieveGlobalSettings,
+    apiDeleteAllLinodes,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import GlobalSettings from '../../pageobjects/account/global-settings.page';
@@ -39,6 +40,7 @@ describe('Backup Auto Enrollment Suite', () => {
 
     afterAll(() => {
         updateGlobalSettings(disableAutoEnrollment);
+        apiDeleteAllLinodes();
     });
 
     it('Enable backups for existing linodes and backup auto enrollment CTA should display on dashboard', () => {
