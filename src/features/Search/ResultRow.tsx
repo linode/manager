@@ -1,26 +1,36 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose, withHandlers } from 'recompose';
+import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 
-import ListItem from 'src/components/core/ListItem';
-import Paper from 'src/components/core/Paper';
+import Hidden from 'src/components/core/Hidden';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import Tag from 'src/components/Tag';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import Tags from 'src/components/Tags';
+import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
+import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 
 import { iconMap } from './utils';
 
 type ClassNames = 'root'
-| 'description'
 | 'label'
 | 'icon'
+| 'labelRow'
 | 'resultBody'
-| 'rowContent'
-| 'tableCell'
+| 'status'
+| 'iconGridCell'
 | 'tag'
-| 'link';
+| 'link'
+| 'labelCell'
+| 'iconTableCell'
+| 'regionCell'
+| 'createdCell'
+| 'tagCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   transition: theme.transitions.create(['background-color']),
@@ -29,26 +39,60 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingBottom: '0 !important',
     width: '100%',
     cursor: 'pointer',
-    '&:hover': {
-      '& $rowContent': {
-        background: theme.bg.tableHeader,
-        '&:before': {
-          backgroundColor: theme.palette.primary.main,
-        }
-      }
-    },  
-  },
-  description: {
   },
   label: {
     wordBreak: 'break-all',
+  },
+  labelCell: {
+    width: '100%',
+    // Overriding mobile version of TableCell's styles for the label cell only
+    [theme.breakpoints.between('xs','sm')]: {
+      '& > span:first-child': {
+        display: 'none',
+      },
+      '& > span:last-child': {
+        textAlign: 'left',
+        wordBreak: 'normal',
+        marginLeft: 0,
+      },
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '35%',
+      padding: 4,
+    },
+  },
+  iconTableCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '4%',
+      padding: 4,
+    },
+  },
+  regionCell: {
+    width: '100%', 
+    [theme.breakpoints.up('md')]: {
+      width: '15%',
+      padding: 4,
+    },
+  },
+  createdCell: {
+    width: '100%', 
+    [theme.breakpoints.up('md')]: {
+      width: '20%',
+      padding: 4,
+    },
+  },
+  tagCell: {
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '30%',
+      padding: 4,
+    },
   },
   icon: {
     position: 'relative',
     top: 1,
     width: 40,
     height: 40,
-    marginLeft: 5,
     '& .circle': {
       fill: theme.bg.offWhiteDT,
     },
@@ -56,32 +100,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       stroke: theme.bg.main,
     },
   },
+  labelRow: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+  },
   resultBody: {
-    width: '100%',
   },
-  rowContent: {
+  status: {
+    marginLeft: theme.spacing.unit / 2,
     position: 'relative',
-    background: theme.bg.white,
-    width: '100%',
-    padding: 10,
-    borderTop: `2px solid ${theme.palette.divider}`,
-    transition: 'background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-    '&:before': {
-      content: "''",
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '0.01%',
-      height: '100%',
-      backgroundColor: 'transparent',
-      transition: theme.transitions.create(['background-color']),
-      paddingLeft: 5,
-    },
+    top: 0,
+    lineHeight: '0.8rem',
   },
-  tableCell: {
+  iconGridCell: {
     display: 'flex',
     alignItems: 'center',
-    padding: '4px 8px !important',
+    padding: 4,
   },
   tag: {
     margin: theme.spacing.unit / 2,
@@ -91,72 +126,66 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   }
 });
 
-
-interface HandlerProps {
-  handleClick: () => void;
-}
 interface Props {
   result: Item;
-  redirect: (path: string) => void;
 }
 
-type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, handleClick, result } = props;
+  const { classes, result } = props;
   const icon = pathOr<string>('default', ['data','icon'], result);
   const Icon = iconMap[icon];
   return (
-    <ListItem
-      disableGutters
-      component="li"
+    <TableRow
       className={classes.root}
-      onClick={handleClick}
+      rowLink={result.data.path}
     >
-    <Paper className={classes.rowContent}>
-          <Grid container direction="row" alignItems="center" wrap="nowrap">
-            <Grid item className={classes.tableCell}>
-              <Icon className={classes.icon} />
-            </Grid>
-            <Grid item xs={12} className={classes.tableCell}>
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                justify="space-between"
-              >
-                <Grid item className={classes.label}>
-                  <a href="javascript:;" onClick={handleClick} className={classes.link} title={result.label}>
-                    <Typography variant="h3">{result.label}</Typography>
-                    <Typography variant="body1">{result.data.description}</Typography>
-                  </a>
-                </Grid>
-                <Grid item>
-                  {result.data.tags.map((tag: string, idx: number) =>
-                    <Tag key={idx} label={tag} colorVariant={"blue"} className={classes.tag} data-qa-tag-item />
-                  )}
-                 </Grid>
-              </Grid>
-            </Grid>
+      <Hidden smDown>
+        <TableCell className={classes.iconTableCell}>
+          <Grid item className={classes.iconGridCell}>
+            <Icon className={classes.icon} />
           </Grid>
-      </Paper> 
-    </ListItem>
+          </TableCell>
+      </Hidden>
+      <TableCell className={classes.labelCell} parentColumn="Label">
+        <div className={classes.labelRow}>
+          <Link to={result.data.path} className={classes.link} title={result.label}>
+            <div className={classes.labelRow}>
+              <Typography variant="h3" className={classes.label}>{result.label}</Typography>
+              <div className={classes.status} >
+                {result.data.status && <LinodeStatusIndicator status={result.data.status} />}
+              </div>
+            </div>
+            <Typography variant="body1">{result.data.description}</Typography>
+          </Link>
+        </div>
+      </TableCell>
+      <TableCell className={classes.regionCell} parentColumn="Region">
+        {result.data.region &&
+          <RegionIndicator region={result.data.region} />
+        }
+      </TableCell>
+      <TableCell className={classes.createdCell} parentColumn="Created">
+        {result.data.created &&
+          <React.Fragment>
+            <Typography >
+              Created <DateTimeDisplay value={result.data.created} />
+            </Typography>
+          </React.Fragment>
+        }
+      </TableCell>
+      <TableCell className={classes.tagCell} parentColumn="Tags">
+        <Tags tags={result.data.tags} />
+      </TableCell>
+    </TableRow>
   );
 };
 
 const styled = withStyles(styles);
 
-const handlers = withHandlers({
-  handleClick: (props: Props) => () =>
-    props.redirect(pathOr('/', ['result', 'data', 'path'], props))
-});
-
-// For testing handler methods
-export const RowWithHandlers = handlers(ResultRow);
-
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  handlers,
 )(ResultRow);
 
 export default enhanced;

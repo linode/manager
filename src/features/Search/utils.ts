@@ -66,6 +66,9 @@ export const searchLinodes = (
       icon: 'LinodeIcon',
       path: `/linodes/${linode.id}`,
       searchText: query,
+      created: linode.created,
+      region: linode.region,
+      status: linode.status,
     }
   })
 )
@@ -81,6 +84,8 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
         icon: 'VolumeIcon',
         path: `/volumes/${volume.id}`,
         searchText: query,
+        created: volume.created,
+        region: volume.region,
       }
 }));
 
@@ -96,6 +101,7 @@ export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query:
       icon: 'NodebalIcon',
       path: `/nodebalancers/${nodebal.id}`,
       searchText: query,
+      created: nodebal.created
     }
 }));
 
@@ -110,7 +116,7 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
           description: domain.description || domain.status,
           icon: 'DomainIcon',
           path: `/domains/${domain.id}`,
-          searchText: query
+          searchText: query,
         }
   }));
 
@@ -132,6 +138,7 @@ export const searchImages = (images: Linode.Image[], query: string) =>
       /* TODO: Choose a real location for this to link to */
       path: `/images`,
       searchText: query,
+      created: image.created,
     }
   }));
 

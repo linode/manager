@@ -2,8 +2,8 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
-
-import { ResultRow, RowWithHandlers } from './ResultRow';
+import Tags from 'src/components/Tags';
+import { ResultRow } from './ResultRow';
 
 const classes = {
   root: '',
@@ -12,12 +12,17 @@ const classes = {
   icon: '',
   resultBody: '',
   rowContent: '',
-  tableCell: '',
+  iconTableCell: '',
   tag: '',
   link: '',
+  status: '',
+  labelRow: '',
+  labelCell: '',
+  iconGridCell: '',
+  regionCell: '',
+  createdCell: '',
+  tagCell: ''
 };
-
-const handleClick = jest.fn();
 
 const props = {
   result: searchbarResult1,
@@ -26,28 +31,17 @@ const props = {
 }
 
 const component = shallow(
-  <ResultRow handleClick={handleClick} {...props} />
-)
-
-const handlers = shallow(
-  <RowWithHandlers {...props} />
+  <ResultRow {...props} />
 )
 
 describe("ResultRow component", () => {
   it("should render", () => {
     expect(component).toBeDefined();
   });
-  it("should redirect on click", () => {
-    component.simulate('click');
-    expect(handleClick).toHaveBeenCalled();
-  });
   it("should render tags if any", () => {
-    expect(component.find('[data-qa-tag-item]')).toHaveLength(0);
     component.setProps({ result: searchbarResult2 });
-    expect(component.find('[data-qa-tag-item]')).toHaveLength(searchbarResult2.data.tags.length);
-  });
-  it("should redirect to the result's path", () => {
-    handlers.find(ResultRow).props().handleClick();
-    expect(props.redirect).toHaveBeenCalledWith(searchbarResult2.data.path);
+    expect(component.containsMatchingElement(
+      <Tags tags={searchbarResult2.data.tags} />
+    )).toBeTruthy();
   });
 });
