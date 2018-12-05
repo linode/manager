@@ -11,7 +11,7 @@ export default class Page {
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get drawerClose() { return $('[data-qa-close-drawer]'); }
     get docs() { return $$('[data-qa-doc]'); }
-    get toast() { return $('[data-qa-toast]'); }
+    get toast() { return $('#client-snackbar'); }
     get toastMsg() { return $('[data-qa-toast-message]'); }
     get userMenu() { return $('[data-qa-user-menu]'); }
     get logoutButton() { return $('[data-qa-menu-link="Log Out"]'); }
@@ -144,23 +144,9 @@ export default class Page {
 
     toastDisplays(expectedMessage, timeout=constants.wait.normal) {
         this.toast.waitForVisible(timeout);
-        this.toastMsg.waitForVisible(timeout);
-
-        const displayedMsg = browser.getText('[data-qa-toast-message]');
+        const displayedMsg = this.toast.getText();
         expect(displayedMsg).toBe(expectedMessage);
-        browser.click('[data-qa-toast] button');
-        browser.waitForExist('[data-qa-toast]', constants.wait.normal, true);
-    }
-
-    dismissToast() {
-        return browser.waitUntil(function() {
-            if (browser.isVisible('[data-qa-toast]')) {
-                browser.click('[data-qa-toast] button');
-                const dismissed = browser.isVisible('[data-qa-toast]') ? true : false;
-                return dismissed;
-            }
-            return true;
-        }, constants.wait.normal);
+        this.toast.waitForVisible(timeout, true);
     }
 
     openActionMenu(actionMenuRow) {
@@ -183,6 +169,14 @@ export default class Page {
     selectActionMenuItem(tableCell, item) {
         this.openActionMenu(tableCell);
         browser.jsClick(`[data-qa-action-menu-item="${item}"]`);
+    }
+
+    selectActionMenuItemV2(tableCellSelector, item, index=0){
+      const actionMenu = $$(`${tableCellSelector} ${this.actionMenu.selector}`)[index];
+      actionMenu.click();
+      browser.waitForVisible(this.actionMenuItem.selector, constants.wait.normal);
+      const trimActionMenu = this.actionMenuItem.selector.replace(']', '');
+      browser.jsClick(`${trimActionMenu}="${item}"]`);
     }
 
     actionMenuOptionExists(actionMenuRow,option) {

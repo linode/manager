@@ -3,7 +3,8 @@ import {
     apiCreateLinode,
     timestamp,
     checkEnvironment,
-    updateGlobalSettings
+    updateGlobalSettings,
+    apiDeleteAllLinodes
 } from '../../../utils/common';
 import Backups from '../../../pageobjects/linode-detail/linode-detail-backups.page';
 import ListLinodes from '../../../pageobjects/list-linodes';
@@ -35,10 +36,14 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
         updateGlobalSettings(disableAutoEnrollment);
         apiCreateLinode(linodeLabel);
         apiCreateLinode(otherDataCenterLinode,false,[],'g6-nanode-1','us-central');
-        browser.testPause();
+        browser.pause(2000);
         ListLinodes.navigateToDetail(linodeLabel);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
     });
+
+    afterAll(() => {
+       apiDeleteAllLinodes();
+   })
 
     beforeEach(() => {
         checkEnvironment();

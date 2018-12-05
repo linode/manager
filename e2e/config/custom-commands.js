@@ -210,11 +210,4 @@ exports.browserCommands = () => {
         return getGlobalSettings(token)
             .then(res => res);
     });
-
-    browser.addCommand('testPause', function async(timeout=3000) {
-        const start = new Date().getTime();
-        browser.waitUntil(() => {
-            return (new Date().getTime() - start) >= timeout
-        }, timeout+1000);
-    })
 }

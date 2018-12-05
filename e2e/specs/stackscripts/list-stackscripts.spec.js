@@ -24,12 +24,8 @@ describe('StackScripts - List Suite', () => {
     });
 
     it('should pre-select stackscript on selecting a stackscript to deploy on a new linode ', () => {
-        const actionMenu = $$(`${ListStackScripts.stackScriptRow.selector} ${ListStackScripts.actionMenu.selector}`)[0];
         const stackScriptToDeploy = $$(`${ListStackScripts.stackScriptTitle.selector}`)[0].getText();
-        actionMenu.click();
-        browser.waitForVisible(ListStackScripts.actionMenuItem.selector, constants.wait.normal);
-        const trimActionMenu = ListStackScripts.actionMenuItem.selector.replace(']', '');
-        browser.jsClick(`${trimActionMenu}="Deploy New Linode"`);
+        ListStackScripts.selectActionMenuItemV2(ListStackScripts.stackScriptRow.selector, 'Deploy New Linode');
         ConfigureLinode.stackScriptTableDisplay();
         const selectedStackScript = ConfigureLinode.stackScriptRows.filter(row => row.$('[data-qa-radio="true"]'));
         expect(stackScriptToDeploy).toBe(selectedStackScript[0].$(ConfigureLinode.stackScriptTitle.selector).getText());

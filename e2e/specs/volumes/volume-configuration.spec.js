@@ -27,11 +27,7 @@ describe('Volume Configuration Panel', () => {
     });
 
     it('should display the configuration drawer', () => {
-        const actionMenu = $$(`${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`)[0];
-        actionMenu.click();
-        browser.waitForVisible(VolumeDetail.actionMenuItem.selector, constants.wait.normal);
-        const trimActionMenu = VolumeDetail.actionMenuItem.selector.replace(']', '');
-        browser.jsClick(`${trimActionMenu}="Show Configuration"`);
+        VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Show Configuration');
         VolumeDetail.drawerTitle.waitForVisible(constants.wait.normal);
     });
     //Need new test for M3-1870

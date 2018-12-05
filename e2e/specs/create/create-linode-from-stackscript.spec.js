@@ -4,7 +4,8 @@ import ConfigureLinode from '../../pageobjects/configure-linode';
 import ListLinodes from '../../pageobjects/list-linodes';
 import {
     timestamp,
-    waitForLinodeStatus
+    waitForLinodeStatus,
+    apiDeleteAllLinodes
   } from '../../utils/common';
 
 describe('Create Linode - Create from StackScript Suite', () => {
@@ -13,6 +14,10 @@ describe('Create Linode - Create from StackScript Suite', () => {
         browser.url(constants.routes.create.linode);
         ConfigureLinode.baseDisplay();
     });
+
+    afterAll(() => {
+       apiDeleteAllLinodes();
+   });
 
     it('should change tab to create from stackscript', () => {
         ConfigureLinode.createFrom('StackScript');

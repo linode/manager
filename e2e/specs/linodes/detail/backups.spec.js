@@ -27,7 +27,6 @@ describe('Linode Detail - Backups Suite', () => {
 
     it('should dislay placeholder text', () => {
         Backups.baseElemsDisplay(true);
-        Backups.dismissToast();
     });
 
     it('should enable backups', () => {
@@ -47,7 +46,7 @@ describe('Linode Detail - Backups Suite', () => {
 
         const toastMsg = 'A snapshot label is required.';
         Backups.toastDisplays(toastMsg);
-        browser.waitForExist('[data-qa-toast]', constants.wait.normal, true);
+        browser.waitForExist('#client-snackbar', constants.wait.normal, true);
     });
 
     it('should cancel backups', () => {

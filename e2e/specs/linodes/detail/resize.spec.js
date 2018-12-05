@@ -10,13 +10,11 @@ describe('Linode Detail - Resize Suite', () => {
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
-        browser.waitForVisible('[data-qa-add-new-menu-button]');
         apiCreateLinode(linodeName, undefined, undefined, 'g6-standard-1');
         ListLinodes.navigateToDetail();
         LinodeDetail
             .landingElemsDisplay()
             .changeTab('Resize');
-        Resize.dismissToast();
     });
 
     afterAll(() => {
