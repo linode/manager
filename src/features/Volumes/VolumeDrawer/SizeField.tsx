@@ -24,7 +24,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const SizeField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, name, resize }) => {
   const helperText = resize
     ? `This volume can range from ${resize} GiB to ${MAX_VOLUME_SIZE} GiB in size.`
-    : `A single volume can range from 10 GiB to ${MAX_VOLUME_SIZE} GiB in size.`;
+    : undefined;
 
   return (<TextField
     data-qa-size
