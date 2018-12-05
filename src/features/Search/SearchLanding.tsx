@@ -21,7 +21,9 @@ type ClassNames = 'root'
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
-  headline: {},
+  headline: {
+    marginBottom: 10,
+  },
 });
 
 interface State {
@@ -88,11 +90,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  redirect = (path: string) => {
-    const { history } = this.props;
-    history.push(path);
-  }
-
   updateData = () => {
     this.setState({ loading: true });
     getAllEntities(this.setEntitiesToState)
@@ -136,7 +133,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
     const resultsEmpty = equals(results, emptyResults);
     return (
-      <Grid container direction="column" >
+      <Grid container direction="column">
         <Grid item>
           <Typography variant="h1" className={classes.headline}>
             Search Results { query && `for "${query}"` }
@@ -162,7 +159,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
               key={idx}
               entity={entityType}
               results={results[entityType]}
-              redirect={this.redirect}
               loading={loading}
               groupSize={5}
             />

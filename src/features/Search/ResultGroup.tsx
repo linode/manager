@@ -1,51 +1,68 @@
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
 
-import CircleProgress from 'src/components/CircleProgress';
-import List from 'src/components/core/List';
+import { compose, withStateHandlers } from 'recompose';
+
+import Button from 'src/components/Button'
+import Hidden from 'src/components/core/Hidden';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import Table from 'src/components/Table';
+import TableRowLoading from 'src/components/TableRowLoading';
 import capitalize from 'src/utilities/capitalize';
 
-import HiddenResults from './HiddenResults';
 import ResultRow from './ResultRow';
 
 type ClassNames = 'root'
 | 'entityHeadingWrapper'
-| 'entityHeading';
+| 'entityHeading'
+| 'button'
+| 'emptyCell'
+| 'headerCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    padding: 0,
     marginBottom: 20,
   },
   entityHeadingWrapper: {
-    height: 'auto',
-    padding: 10,
-    backgroundColor: theme.bg.tableHeader,
   },
   entityHeading: {
-    color: theme.color.tableHeaderText,
-    fontSize: '0.9rem',
-    fontWeight: 500,
-    lineHeight: '0.9rem',
-  }
+    marginBottom: 10,
+  },
+  button: {
+    marginTop: theme.spacing.unit,
+    width: '10%'
+  },
+  emptyCell: {
+    padding: 0,
+  },
+  headerCell: {
+    padding: '10px 4px',
+  },
 });
 
 interface Props {
   entity: string;
   loading: boolean;
-  redirect: (path: string) => void;
   results: Item[];
   groupSize: number;
 }
+interface HandlerProps {
+  showMore: boolean;
+  toggle: () => void;
+}
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
 export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
-  const { entity, classes, groupSize, loading, redirect, results } = props;
+  const { entity, classes, groupSize, loading, results, toggle, showMore } = props;
 
   if (isEmpty(results)) { return null; }
 
@@ -53,21 +70,60 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
     ? splitAt(groupSize, results) : [results, []];
 
   return (
-    <Grid item container direction="column" className={classes.root}>
+    <Grid item className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
         <Typography variant="h2" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
-      <List>
-        {loading && <CircleProgress mini />}
-        {initial.map((result, idx: number) =>
-          <ResultRow key={idx} result={result} redirect={redirect} data-qa-result-row />)
-        }
-        { !isEmpty(hidden) && <HiddenResults results={hidden} redirect={redirect} /> }
-      </List>
+      <Paper>
+        <Table aria-label="Search Results">
+          <TableHead>
+            <TableRow>
+              <TableCell className={classes.emptyCell}/>
+              <Hidden smDown><TableCell className={classes.emptyCell}/></Hidden>
+              <TableCell className={classes.headerCell}>Label</TableCell>
+              <TableCell className={classes.headerCell}>Region</TableCell>
+              <TableCell className={classes.headerCell}>Created</TableCell>
+              <TableCell className={classes.headerCell}>Tags</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loading && <TableRowLoading  colSpan={12} />}
+            {initial.map((result, idx: number) =>
+              <ResultRow key={idx} result={result} data-qa-result-row />)
+            }
+            {showMore &&
+            hidden.map((result, idx: number) =>
+              <ResultRow key={idx} result={result} data-qa-result-row />
+            )
+            }
+          </TableBody>
+        </Table>
+      </Paper>
+      {!isEmpty(hidden) &&
+        <Button
+          type="primary"
+          onClick={toggle}
+          className={classes.button}
+          data-qa-show-more-toggle
+        >
+          {showMore ? "Show Less" : "Show All"}
+        </Button>
+      }
     </Grid>
   );
 };
 
 const styled = withStyles(styles);
+const handlers = withStateHandlers(
+  { showMore: false },
+  {
+    toggle: ({ showMore }) => () => ({ showMore: !showMore })
+  }
+)
 
-export default styled(ResultGroup);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  handlers
+)(ResultGroup);
+
+export default enhanced;
