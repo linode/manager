@@ -19,6 +19,7 @@ type ClassNames = 'root'
   | 'success'
   | 'successList'
   | 'flag'
+  | 'breakWords'
   | 'icon';
 
 const styles: StyleRulesCallback = (theme) => {
@@ -39,9 +40,6 @@ const styles: StyleRulesCallback = (theme) => {
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
-      '& p': {
-        wordWrap: 'break-word',
-      },
       '& + .notice': {
         marginTop: `${theme.spacing.unit}px !important`,
       },
@@ -53,12 +51,16 @@ const styles: StyleRulesCallback = (theme) => {
     inner: {
       width: '100%',
     },
+    breakWords: {
+      '& $noticeText': {
+        wordBreak: 'break-all',
+      },
+    },
     noticeText: {
       color: theme.palette.text.primary,
       fontFamily: 'LatoWebBold',
       fontSize: '1rem',
       lineHeight: 1.2,
-      wordBreak: 'break-all',
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
@@ -115,6 +117,7 @@ interface Props extends GridProps {
   notificationList?: boolean;
   spacingTop?: 0 | 8 | 16 | 24;
   spacingBottom?: 0 | 8 | 16 | 24;
+  breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
@@ -127,6 +130,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     important,
     text,
     error,
+    breakWords,
     errorGroup,
     warning,
     success,
@@ -169,6 +173,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         [classes.root]: true,
         [classes.important]: important,
         [errorScrollClassName]: error,
+        [classes.breakWords]: breakWords,
         [classes.error]: error && !notificationList,
         [classes.errorList]: error && notificationList,
         [classes.success]: success && !notificationList,

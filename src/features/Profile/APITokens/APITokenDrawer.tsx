@@ -177,13 +177,14 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       <Table
         aria-label="Personnal Acccess Token Permissions"
         className={classes.permsTable}
+        spacingTop={24}
       >
         <TableHead>
           <TableRow>
-            <TableCell padding="checkbox" data-qa-perm-access>Access</TableCell>
-            <TableCell padding="checkbox" data-qa-perm-none>None</TableCell>
-            <TableCell padding="checkbox" data-qa-perm-read>Read Only</TableCell>
-            <TableCell padding="checkbox" data-qa-perm-rw>Read/Write</TableCell>
+            <TableCell data-qa-perm-access>Access</TableCell>
+            <TableCell data-qa-perm-none>None</TableCell>
+            <TableCell data-qa-perm-read>Read Only</TableCell>
+            <TableCell data-qa-perm-rw>Read/Write</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
