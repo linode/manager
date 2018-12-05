@@ -32,15 +32,13 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display image options in the select', () => {
         Rebuild.imagesSelect.click();
-        Rebuild.imageSelectHeader.waitForVisible(constants.wait.normal);
-
-        // Only check two image Options for visibility
-        expect(Rebuild.imageOptions[0].isVisible()).toBe(true);
-        expect(Rebuild.imageOptions[1].isVisible()).toBe(true);
+        Rebuild.imageOption.waitForVisible(constants.wait.normal);
+        $('body').click();
+        Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
     });
 
     it('should display error on create an image without selecting an image', () => {
-        browser.jsClick(Rebuild.submit.selector);
+        Rebuild.submit.click();
         expect(Rebuild.imageError.isVisible()).toBe(true);
         expect(Rebuild.imageError.getText()).toBe('Image cannot be blank.');
     });
