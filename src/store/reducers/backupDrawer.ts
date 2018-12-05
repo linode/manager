@@ -56,7 +56,7 @@ export const handleEnable: ActionCreator = () => ({ type: ENABLE });
 
 export const handleEnableSuccess: ActionCreator = (data: number[]) => ({ type: ENABLE_SUCCESS, data });
 
-export const handleEnableError: ActionCreator = (data: BackupError[]) => ({ type: ENABLE_ERROR, data });
+export const handleEnableError: ActionCreator = (data: Accumulator) => ({ type: ENABLE_ERROR, data });
 
 export const handleResetSuccess: ActionCreator = () => ({ type: RESET_SUCCESS });
 
@@ -88,6 +88,7 @@ export const defaultState: State = {
   autoEnroll: false,
   autoEnrollError: undefined,
   enrolling: false,
+  updatedCount: 0,
 };
 
 // REDUCER
@@ -95,7 +96,8 @@ export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case OPEN:
       return { ...state, lastUpdated: Date.now(), open: true,
-        error: undefined, enableErrors: [], autoEnrollError: undefined, autoEnroll: false };
+        error: undefined, enableErrors: [], autoEnrollError: undefined,
+        updatedCount: 0, autoEnroll: false };
 
     case CLOSE:
       return { ...state, lastUpdated: Date.now(), open: false, };
@@ -114,16 +116,18 @@ export default (state: State = defaultState, action: Action) => {
 
     case ENABLE_SUCCESS:
       return { ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true,
+        updatedCount: action.data.length,
         data: state.data!.filter((linode: Linode) => !action.data.includes(linode.id)) };
 
     case ENABLE_ERROR:
-      return { ...state, enabling: false, lastUpdated: Date.now(), enableErrors: action.data };
+      return { ...state, enabling: false, lastUpdated: Date.now(),
+        enableErrors: action.data.errors, updatedCount: action.data.success.length };
 
     case RESET_ERRORS:
       return { ...state, lastUpdated: Date.now(), enableErrors: [], error: undefined };
 
     case RESET_SUCCESS:
-      return { ...state, lastUpdated: Date.now(), enableSuccess: false, }
+      return { ...state, lastUpdated: Date.now(), enableSuccess: false, updatedCount: 0 }
 
     case AUTO_ENROLL:
      return {...state, enrolling: true }
@@ -189,12 +193,12 @@ export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () =
   const linodeIDs = pathOr([],['backups', 'data'], getState()).map((linode: Linode.Linode) => linode.id);
   dispatch(handleEnable());
   Bluebird.reduce(linodeIDs, gatherResponsesAndErrors, { success: [], errors: []})
-    .then(({ success, errors }) => {
-      if (errors && !isEmpty(errors)) {
-        dispatch(handleEnableError(errors));
+    .then(response => {
+      if (response.errors && !isEmpty(response.errors)) {
+        dispatch(handleEnableError(response));
       }
       else {
-        dispatch(handleEnableSuccess(success));
+        dispatch(handleEnableSuccess(response.success));
       }
       dispatch(requestLinodesWithoutBackups());
     })
