@@ -76,7 +76,7 @@ type CombinedProps = MetricsDisplayProps & WithStyles<ClassNames>
 
 export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
   return (
-    <Table padding="dense" className={classes.root}>
+    <Table aria-label="Linode stats and metrics" padding="dense" className={classes.root}>
       <TableHead>
         <TableRow>
           <TableCell>
