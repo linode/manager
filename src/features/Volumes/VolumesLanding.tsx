@@ -277,10 +277,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow>
                 <TableCell className={classes.labelCol}>Label</TableCell>
-                {isVolumesLanding && <TableCell className={classes.attachmentCol}>Attached To</TableCell>}
+                {isVolumesLanding && <TableCell>Region</TableCell>}
                 <TableCell className={classes.sizeCol}>Size</TableCell>
                 <TableCell className={classes.pathCol}>File System Path</TableCell>
-                {isVolumesLanding && <TableCell>Region</TableCell>}
+                {isVolumesLanding && <TableCell className={classes.attachmentCol}>Attached To</TableCell>}
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -413,15 +413,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               {volume.label}
               <RenderTags tags={volume.tags} />
             </TableCell>
+            {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
+            <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
+            <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
             {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
               {volume.linodeLabel &&
                 <Link to={`/linodes/${volume.linode_id}`}>
                   {volume.linodeLabel}
                 </Link>
               }</TableCell>}
-            <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
-            <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
-            {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
             <TableCell>
               <VolumesActionMenu
                 onShowConfig={this.props.openForConfig}
