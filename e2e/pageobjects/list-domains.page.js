@@ -6,6 +6,7 @@ class ListDomains extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get createButton() { return $('[data-qa-placeholder-button]'); }
     get createIconLink() { return $('[data-qa-icon-text-link="Add a Domain"]'); }
+    get importZoneButton() { return $('[data-qa-icon-text-link="Import a Zone"]'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get domainNameHeader() { return $('[data-qa-domain-name-header]'); }
     get domainTypeHeader() { return $('[data-qa-domain-type-header]'); }
@@ -60,7 +61,7 @@ class ListDomains extends Page {
         expect(this.cancel.getText()).toBe(cancelMsg);
     }
 
-    create(name, email, placeholder) {
+    create(name, email, placeholder, tag=undefined) {
         let existingDomainsCount;
         if (placeholder) {
             this.createButton.click();
@@ -73,6 +74,9 @@ class ListDomains extends Page {
         this.createDrawerElemsDisplay();
         this.createDomainName.$('input').setValue(name);
         this.createSoaEmail.$('input').setValue(email);
+        if(tag){
+            this.addTagToTagInput(tag);
+        }
         this.submit.click();
         this.domainDrawer.waitForVisible(constants.wait.normal, true);
         browser.waitForVisible(this.breadcrumbStaticText.selector, constants.wait.normal);

@@ -169,6 +169,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       }
       value={defaultTo(defaultValue, this.state.fields[field])}
       onChange={e => this.updateField(field)(defaultNumeric(defaultValue)(e.target.value))}
+      data-qa-target={label}
     />
 
   NameField = ({ label }: { label: string }) => <this.TextField field="name" label={label} />;
@@ -204,11 +205,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       select
       value={defaultTo(0, (this.state.fields as EditableDomainFields).expire_sec)}
       onChange={e => this.setExpireSec(+e.target.value)}
+      data-qa-expire-rate
     >
       <MenuItem value={0}>Default</MenuItem>
-      <MenuItem value={604800}>1 week</MenuItem>
-      <MenuItem value={1209600}>2 weeks</MenuItem>
-      <MenuItem value={2419200}>4 weeks</MenuItem>
+      <MenuItem value={604800} data-qa-expire-options>1 week</MenuItem>
+      <MenuItem value={1209600} data-qa-expire-options>2 weeks</MenuItem>
+      <MenuItem value={2419200} data-qa-expire-options>4 weeks</MenuItem>
     </TextField>
 
   MSSelect = ({
@@ -225,21 +227,21 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       select
       value={defaultTo(0, this.state.fields[field])}
       onChange={e => fn(+e.target.value)}
-      data-qa-ns-select={label}
+      data-qa-domain-select={label}
     >
       <MenuItem value={0}>Default</MenuItem>
-      <MenuItem value={300}>5 minutes</MenuItem>
-      <MenuItem value={3600}>1 hours</MenuItem>
-      <MenuItem value={7200}>2 hours</MenuItem>
-      <MenuItem value={14400}>4 hours</MenuItem>
-      <MenuItem value={28800}>8 hours</MenuItem>
-      <MenuItem value={57600}>16 hours</MenuItem>
-      <MenuItem value={86400}>1 day</MenuItem>
-      <MenuItem value={172800}>2 days</MenuItem>
-      <MenuItem value={345600}>4 days</MenuItem>
-      <MenuItem value={604800}>1 week</MenuItem>
-      <MenuItem value={1209600}>2 weeks</MenuItem>
-      <MenuItem value={2419200}>4 weeks</MenuItem>
+      <MenuItem value={300} data-qa-options>5 minutes</MenuItem>
+      <MenuItem value={3600} data-qa-options>1 hour</MenuItem>
+      <MenuItem value={7200} data-qa-options>2 hours</MenuItem>
+      <MenuItem value={14400} data-qa-options>4 hours</MenuItem>
+      <MenuItem value={28800} data-qa-options>8 hours</MenuItem>
+      <MenuItem value={57600} data-qa-options>16 hours</MenuItem>
+      <MenuItem value={86400} data-qa-options>1 day</MenuItem>
+      <MenuItem value={172800} data-qa-options>2 days</MenuItem>
+      <MenuItem value={345600} data-qa-options>4 days</MenuItem>
+      <MenuItem value={604800} data-qa-options>1 week</MenuItem>
+      <MenuItem value={1209600} data-qa-options>2 weeks</MenuItem>
+      <MenuItem value={2419200} data-qa-options>4 weeks</MenuItem>
     </TextField>
 
   ProtocolField = () =>
@@ -248,12 +250,13 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       label="Protocol"
       value={defaultTo('tcp', (this.state.fields as EditableRecordFields).protocol)}
       onChange={e => this.setProtocol(e.target.value)}
+      data-qa-protocol
     >
-      <MenuItem value="tcp">tcp</MenuItem>
-      <MenuItem value="udp">udp</MenuItem>
-      <MenuItem value="xmpp">xmpp</MenuItem>
-      <MenuItem value="tls">tls</MenuItem>
-      <MenuItem value="smtp">smtp</MenuItem>
+      <MenuItem value="tcp" data-qa-protocol-options>tcp</MenuItem>
+      <MenuItem value="udp" data-qa-protocol-options>udp</MenuItem>
+      <MenuItem value="xmpp" data-qa-protocol-options>xmpp</MenuItem>
+      <MenuItem value="tls" data-qa-protocol-options>tls</MenuItem>
+      <MenuItem value="smtp" data-qa-protocol-options>smtp</MenuItem>
     </TextField>
 
   TagField = () =>
@@ -262,10 +265,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       select
       value={defaultTo('issue', (this.state.fields as EditableRecordFields).tag)}
       onChange={e => this.setTag(e.target.value)}
+      data-qa-caa-tag
     >
-      <MenuItem value="issue">issue</MenuItem>
-      <MenuItem value="issuewild">issuewild</MenuItem>
-      <MenuItem value="iodef">iodef</MenuItem>
+      <MenuItem value="issue" data-qa-caa-tags>issue</MenuItem>
+      <MenuItem value="issuewild" data-qa-caa-tags>issuewild</MenuItem>
+      <MenuItem value="iodef" data-qa-caa-tags>iodef</MenuItem>
     </TextField>
 
   DomainTrainsferField = () =>

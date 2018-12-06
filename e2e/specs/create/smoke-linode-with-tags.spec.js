@@ -35,12 +35,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     });
 
     it('should add a custom tag', () => {
-        ConfigureLinode.tagsMultiSelect.$('..').$('input').setValue(customTagName);
-        ConfigureLinode.selectOptions[0].waitForVisible(constants.wait.normal);
-        ConfigureLinode.selectOptions[0].click();
-
-        ConfigureLinode.multiOption.waitForVisible(constants.wait.normal);
-        expect(ConfigureLinode.multiOption.getText()).toBe(customTagName);;
+        ConfigureLinode.addTagToTagInput(customTagName);
     });
 
     it('should select an available tag', () => {
@@ -95,17 +90,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         it('should add a new tag', () => {
             const linodeDetailTag = `new${timestamp()}`;
             const expectedDetailTags = [...addedTags, linodeDetailTag];
-
-            LinodeDetail.addTag.click();
-            const createTagSelect = $$('[data-qa-enhanced-select]')[1].$('..').$('input');
-            createTagSelect.waitForVisible(constants.wait.normal);
-            createTagSelect.setValue(linodeDetailTag);
-            createTagSelect.addValue('\uE007');
-
-            browser.waitUntil(function() {
-                return $$('[data-qa-tag]').length === 3;
-            }, constants.wait.normal);
-
+            LinodeDetail.addTagToTagPanel(linodeDetailTag);
             assertTagsDisplay(expectedDetailTags);
         });
 

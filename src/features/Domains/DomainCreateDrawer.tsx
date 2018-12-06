@@ -121,8 +121,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
           onChange={this.updateType}
           row
         >
-          <FormControlLabel value="master" label="Master" control={<Radio />} />
-          <FormControlLabel value="slave" label="Slave" control={<Radio />} />
+          <FormControlLabel value="master" label="Master" control={<Radio />} data-qa-domain-radio="Master"/>
+          <FormControlLabel value="slave" label="Slave" control={<Radio />} data-qa-domain-radio="Slave"/>
         </RadioGroup>
         <TextField
           errorText={(mode === CREATING || '') && errorFor('domain')}
