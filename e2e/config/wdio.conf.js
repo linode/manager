@@ -125,7 +125,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : process.env.REACT_APP_APP_ROOT,
+    baseUrl: process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 30000 : 10000,
