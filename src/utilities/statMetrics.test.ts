@@ -1,4 +1,8 @@
-import { appendBitrateUnit, formatNumber, getMetrics, withPercentSign } from './statMetrics';
+import {
+  appendBitrateUnit,
+  formatNumber,
+  getMetrics,
+  withPercentSign } from './statMetrics';
 
 const data = [
   [0, 0.12],
@@ -13,27 +17,28 @@ const data = [
 
 describe('Stat Metrics', () => {
   const metrics = getMetrics(data);
+
   it('returns max', () => {
-    expect(metrics.max).toBe('2.98');
+    expect(metrics.max).toBe(2.98);
     const newData = [...data, [0, 100]];
-    expect(getMetrics(newData).max).toBe('100.00');
-    expect(getMetrics([[0, 0], [0, 0]]).max).toBe('0.00');
+    expect(getMetrics(newData).max).toBe(100.00);
+    expect(getMetrics([[0, 0], [0, 0]]).max).toBe(0);
   });
 
   it('returns average', () => {
-    expect(metrics.average).toBe('1.01');
-    expect(getMetrics([[0, 0]]).average).toBe('0.00');
-    expect(getMetrics([[0, 0], [0, 0]]).average).toBe('0.00');
-    expect(getMetrics([[0, 0], [0, 1]]).average).toBe('1.00');
-    expect(getMetrics([[0, 0], [0, 100], [0, 100]]).average).toBe('100.00');
+    expect(metrics.average).toBe(1.008);
+    expect(getMetrics([[0, 0]]).average).toBe(0);
+    expect(getMetrics([[0, 0], [0, 0]]).average).toBe(0);
+    expect(getMetrics([[0, 0], [0, 1]]).average).toBe(1);
+    expect(getMetrics([[0, 0], [0, 100], [0, 100]]).average).toBe(100);
   });
 
   it('returns last', () => {
-    expect(metrics.last).toBe('1.20');
+    expect(metrics.last).toBe(1.2);
     let newData = [...data, [0, 0]];
-    expect(getMetrics(newData).last).toBe('1.20');
+    expect(getMetrics(newData).last).toBe(1.2);
     newData = [...data, [0, 50]];
-    expect(getMetrics(newData).last).toBe('50.00');
+    expect(getMetrics(newData).last).toBe(50);
   });
 });
 

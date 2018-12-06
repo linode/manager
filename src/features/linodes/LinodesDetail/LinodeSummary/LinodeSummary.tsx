@@ -8,6 +8,7 @@ import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -15,10 +16,8 @@ import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/contex
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
-import { getMetrics, withBitrate, withPercentSign } from 'src/utilities/statMetrics';
-import CPUMetrics from './CPUMetrics';
-import DiskIOMetrics from './DiskIOMetrics';
-import IPMetrics from './IPMetrics';
+import { appendBitrateUnit, appendPercentSign, formatNumber, getMetrics } from 'src/utilities/statMetrics';
+import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
@@ -28,11 +27,7 @@ type ClassNames = 'chart'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
-  | 'graphControls'
-  | 'blue'
-  | 'green'
-  | 'red'
-  | 'yellow';
+  | 'graphControls';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return {
@@ -57,27 +52,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
     },
     bottomLegend: {
       margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
-      // display: 'flex',
-      // flexWrap: 'wrap',
       color: '#777',
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
-        // flexDirection: 'column',
         '& > div': {
           marginBottom: theme.spacing.unit * 2,
         },
       },
-      // '& > div': {
-      //   display: 'flex',
-      //   marginRight: theme.spacing.unit * 5,
-      //   '&:before': {
-      //     content: '""',
-      //     display: 'block',
-      //     width: 20,
-      //     height: 20,
-      //     marginRight: theme.spacing.unit,
-      //   },
-      // },
     },
     graphTitle: {
       marginRight: theme.spacing.unit * 2,
@@ -86,27 +67,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
       alignItems: 'center',
-    },
-    blue: {
-      '&:before': {
-        backgroundColor: theme.palette.primary.main,
-      },
-    },
-    green: {
-      '&:before': {
-        backgroundColor: theme.color.green,
-      },
-    },
-    red: {
-      '&:before': {
-        backgroundColor: theme.color.red,
-      },
-    },
-    yellow: {
-      '&:before': {
-        backgroundColor: theme.color.yellow,
-      },
-    },
+    }
   };
 };
 
@@ -248,6 +209,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const data = pathOr([[]], ['data','cpu'], stats);
 
     const metrics = getMetrics(data);
+    const format = compose(appendPercentSign, formatNumber);
 
     return (
       <React.Fragment>
@@ -268,7 +230,20 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <CPUMetrics metrics={withPercentSign(metrics)} />
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'CPU %',
+                    legendColor: 'blue',
+                    data: metrics,
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
@@ -285,6 +260,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
     };
 
+    const format = compose(appendBitrateUnit, formatNumber);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -319,12 +296,44 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <IPMetrics
-            privateIn={withBitrate(getMetrics(data.privateIn))}
-            privateOut={withBitrate(getMetrics(data.privateOut))}
-            publicIn={withBitrate(getMetrics(data.publicIn))}
-            publicOut={withBitrate(getMetrics(data.publicOut))}
-          />
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Private IPv4 Outbound',
+                    legendColor: 'yellow',
+                    data: getMetrics(data.privateOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Private IPv4 Inbound',
+                    legendColor: 'red',
+                    data: getMetrics(data.privateIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Public IPv4 Outbound',
+                    legendColor: 'green',
+                    data: getMetrics(data.publicOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Public IPv4 Inbound',
+                    legendColor: 'blue',
+                    data: getMetrics(data.publicIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
@@ -341,6 +350,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       privateOut: pathOr([[]], ['data','netv6','private_out'], stats)
     };
 
+    const format = compose(appendBitrateUnit, formatNumber);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -375,12 +386,44 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <IPMetrics
-            privateIn={withBitrate(getMetrics(data.privateIn))}
-            privateOut={withBitrate(getMetrics(data.privateOut))}
-            publicIn={withBitrate(getMetrics(data.publicIn))}
-            publicOut={withBitrate(getMetrics(data.publicOut))}
-          />
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Private IPv4 Outbound',
+                    legendColor: 'yellow',
+                    data: getMetrics(data.privateOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Private IPv4 Inbound',
+                    legendColor: 'red',
+                    data: getMetrics(data.privateIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Public IPv4 Outbound',
+                    legendColor: 'green',
+                    data: getMetrics(data.publicOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Public IPv4 Inbound',
+                    legendColor: 'blue',
+                    data: getMetrics(data.publicIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
@@ -394,7 +437,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       io: pathOr([[]], ['data','io','io'], stats),
       swap: pathOr([[]], ['data','io','swap'], stats)
     };
-
 
     return (
       <React.Fragment>
@@ -420,10 +462,32 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <DiskIOMetrics
-            io={getMetrics(data.io)}
-            swap={getMetrics(data.swap)}
-          />
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'I/O Rate',
+                    legendColor: 'red',
+                    data: getMetrics(data.io),
+                    format: formatNumber
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Swap Rate',
+                    legendColor: 'yellow',
+                    data: getMetrics(data.swap),
+                    format: formatNumber
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
