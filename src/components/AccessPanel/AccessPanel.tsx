@@ -77,7 +77,7 @@ export interface UserSSHKeyObject {
   username: string;
   selected: boolean;
   keys: string[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => void;
+  onSSHKeyChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -132,7 +132,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             {users.map(({
               gravatarUrl,
               keys,
-              onChange,
+              onSSHKeyChange,
               selected,
               username,
             }) => (
@@ -140,7 +140,7 @@ class AccessPanel extends React.Component<CombinedProps> {
                   <TableCell className={classes.cellCheckbox}>
                     <CheckBox
                       checked={selected}
-                      onChange={onChange}
+                      onChange={onSSHKeyChange}
                     />
                   </TableCell>
                   <TableCell className={classes.cellUser}>

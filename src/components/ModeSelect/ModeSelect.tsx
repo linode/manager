@@ -1,0 +1,51 @@
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import * as React from 'react';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Radio from 'src/components/core/Radio';
+import RadioGroup from 'src/components/core/RadioGroup';
+
+type ClassNames = 'root';
+
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  root: {},
+});
+
+export interface Mode<modes> {
+  label: string;
+  mode: modes;
+}
+
+interface Props {
+  selected: string;
+  modes: Mode<any>[];
+  onChange: (mode: string) => void
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ modes, onChange, selected }) => {
+
+  return (
+    <RadioGroup
+      aria-label="mode"
+      name="mode"
+      value={selected}
+      onChange={(_, value) => onChange(value)} // @todo remove Lambda after we have React.memo
+      data-qa-mode-radio-group
+    >
+      {modes.map((mode, idx: number) => (
+        <FormControlLabel
+          key={idx}
+          value={mode.mode}
+          label={mode.label}
+          control={<Radio />}
+          data-qa-radio={mode.label}
+        />
+      ))}
+    </RadioGroup>
+  );
+};
+
+const styled = withStyles(styles);
+
+export default styled(DrawerModeSelection);

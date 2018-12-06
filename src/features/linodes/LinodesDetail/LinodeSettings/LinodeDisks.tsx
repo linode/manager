@@ -3,6 +3,7 @@ import { path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
+import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -25,6 +26,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { events$, resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { createLinodeDisk, deleteLinodeDisk, getLinodeDisks, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
@@ -74,6 +76,9 @@ interface DrawerState {
     label: string;
     filesystem: Filesystem;
     size: number;
+    image?: string;
+    password?: string;
+    userSSHKeys?: UserSSHKeyObject[];
   };
 }
 
@@ -376,7 +381,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       errors,
       submitting,
       maximumSize,
-      fields: { label, size, filesystem },
+      fields: { label, size, filesystem, password }, // Image is handled internally by React Select
     } = this.state.drawer;
 
     return (
@@ -388,12 +393,15 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         label={label}
         filesystem={filesystem}
         size={size}
+        password={password}
         maximumSize={maximumSize}
         onLabelChange={this.onLabelChange}
         onSizeChange={this.onSizeChange}
         onFilesystemChange={this.onFilesystemChange}
         onClose={this.closeDrawer}
         onSubmit={this.onDrawerSubmit}
+        onImageChange={this.onImageChange}
+        onPasswordChange={this.onPasswordChange}
       />
     );
   }
@@ -411,6 +419,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   onFilesystemChange = (filesystem: Filesystem) => {
     const { fields } = this.state.drawer;
     this.setDrawer({ fields: { ...fields, filesystem } });
+  }
+
+  onImageChange = (image: string) => {
+    const { fields } = this.state.drawer;
+    this.setDrawer({ fields: { ...fields, image }})
+  }
+
+  onPasswordChange = (password: string) => {
+    const { fields } = this.state.drawer;
+    this.setDrawer({ fields: { ...fields, password }});
   }
 
   onDrawerSubmit = () => {
@@ -452,7 +470,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   createDisk = () => {
     const { linodeId } = this.props;
-    const { label, size, filesystem } = this.state.drawer.fields;
+    const { label, size, filesystem, image, password, userSSHKeys } = this.state.drawer.fields;
     if (!linodeId) { return; }
 
     this.setDrawer({ submitting: true, errors: undefined });
@@ -461,6 +479,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       label,
       size,
       filesystem: filesystem === '_none_' ? undefined : filesystem,
+      image,
+      root_pass: password,
+      authorized_users: userSSHKeys ? userSSHKeys.filter(u => u.selected).map((u) => u.username) : undefined,
     })
       .then((_) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
@@ -606,6 +627,7 @@ const enhanced = compose<CombinedProps, DisksProps>(
   styled,
   linodeContext,
   paginated,
+  userSSHKeyHoc,
   withSnackbar
 );
 

@@ -28,11 +28,21 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class ImageSelect extends React.Component<CombinedProps, State> {
+  mounted: boolean = false;
   state: State = {
     renderedImages: renderImagesOptions(this.props.images) as GroupType<string>[],
   };
 
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   componentDidUpdate(prevProps: CombinedProps) {
+    if (!this.mounted) { return; }
     if (prevProps.images !== this.props.images) {
       this.setState({
         renderedImages: renderImagesOptions(this.props.images) as GroupType<string>[]

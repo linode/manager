@@ -87,7 +87,7 @@ export default (Component: React.ComponentType<any>) => {
       username,
       gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(email)}?d=mp&s=24`,
       selected: false,
-      onChange: (_: any, result: boolean) => this.toggleSSHUserKeys(username, result),
+      onSSHKeyChange: (_: any, result: boolean) => this.toggleSSHUserKeys(username, result),
     })
   }
 
