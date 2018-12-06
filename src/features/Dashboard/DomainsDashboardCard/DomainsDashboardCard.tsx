@@ -146,7 +146,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
         <TableCell className={classes.labelCol}>
           <Link to={`/domains/${id}/records`} className={'black nu block'}>
             <Grid container direction="column" spacing={8}>
-              <Grid item className="py0">
+              <Grid item style={{ paddingBottom: 0 }}>
                 <Typography className={classes.wrapHeader} variant="h3" data-qa-domain-name>
                   {domain}
                 </Typography>
