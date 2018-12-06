@@ -4,7 +4,10 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
-import { getImagesByIds } from 'src/services/images';
+import { getImages } from 'src/services/images';
+import { getAll } from 'src/utilities/getAll';
+
+const getAllImages = getAll(getImages);
 
 type CSSClasses = 'root' | 'deployments' | 'author' | 'description' | 'scriptHeading' | 'descriptionText';
 
@@ -59,9 +62,10 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
   componentDidMount() {
     const { data: { images } } = this.props;
 
-    getImagesByIds(images).then(imagesList => {
+    getAllImages().then(allImages => {
+      const imagesList = allImages.filter((image: Linode.Image)  => images.indexOf(image.id) !== -1)
       this.setState({ imagesList });
-    })
+    });
   }
 
   render() {
@@ -92,9 +96,9 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
           {deployments_total} deployments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
         </Typography>
         <div className={classes.description}>
-          <Typography variant="body2" className={classes.descriptionText}>
+          {description && <Typography variant="body2" className={classes.descriptionText}>
             { description }
-          </Typography>
+          </Typography>}
           {imagesList.length !== 0 && <Typography variant="body2">
             <strong>Compatible with: </strong>
             { imagesList.map(image => image.label).join(', ' ) }
