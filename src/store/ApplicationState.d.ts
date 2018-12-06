@@ -72,6 +72,11 @@ declare interface DomainDrawerState {
   domain?: string;
 }
 
+declare interface StackScriptDrawerState {
+  open: boolean;
+  stackScriptId?: number;
+}
+
 declare interface RequestableData<D> {
   lastUpdated: number;
   loading: boolean;
