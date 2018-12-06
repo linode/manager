@@ -3,7 +3,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import { appendPercentSign, formatNumber } from 'src/utilities/statMetrics';
-import { MetricsDisplay } from './MetricsDisplay';
+import { metricsBySection, MetricsDisplay } from './MetricsDisplay';
 
 
 describe('CPUMetrics', () => {
@@ -68,4 +68,13 @@ describe('CPUMetrics', () => {
     ]});
     expect(wrapper.find('[data-qa-legend-title]')).toHaveLength(2);
   })
+});
+
+describe('metrics by section', () => {
+  const metrics = { max: 10, average: 5, last: 8, total: 80 };
+  expect(metricsBySection(metrics)).toHaveLength(3);
+  expect(metricsBySection(metrics)).toBeInstanceOf(Array);
+  expect(metricsBySection(metrics)[0]).toEqual(metrics.max);
+  expect(metricsBySection(metrics)[1]).toEqual(metrics.average);
+  expect(metricsBySection(metrics)[2]).toEqual(metrics.last);
 });

@@ -119,6 +119,8 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
   );
 }
 
+// Grabs the sections we want (max, average, last) and puts them in an array
+// so we can map through them and create JSX
 export const metricsBySection = (data: Metrics): number[] =>
   [data.max, data.average, data.last]
 
