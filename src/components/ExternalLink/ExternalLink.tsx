@@ -57,7 +57,7 @@ class ExternalLink extends React.Component<CombinedProps> {
           },
           className,
           )}
-        >
+        data-qa-external-link>
           {text}
           <Arrow className={classes.icon} />
         </a>

@@ -142,7 +142,6 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
           options={volumes}
           onChange={this.setSelectedVolume}
           onInputChange={this.onInputChange}
-          data-qa-select-linode
         />
         {!error && <FormHelperText>Only volumes in this Linode's region are displayed.</FormHelperText>}
       </FormControl>
@@ -153,4 +152,3 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 export default styled(VolumeSelect);
-

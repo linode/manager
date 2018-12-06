@@ -148,7 +148,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                     data-qa-check-private-ip
                   />
                 }
-                label="Private IP (Free!)"
+                label="Private IP"
               />
             </Grid>
           </Grid>

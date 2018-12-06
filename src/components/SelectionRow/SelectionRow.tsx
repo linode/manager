@@ -2,7 +2,6 @@ import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import { connect, Dispatch } from 'react-redux';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -146,13 +145,13 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
       isPublic,
       openStackScriptDrawer,
     } = this.props;
-  
+
     /** onSelect and showDeployLink should not be used simultaneously */
     invariant(
       !(onSelect && showDeployLink),
       'onSelect and showDeployLink are mutually exclusive.',
     );
-  
+
     const renderLabel = () => {
       return (
         <Typography role="header" variant="h3">
@@ -171,7 +170,7 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
         </Typography>
       )
     }
-  
+
     return (
       <React.Fragment>
         <TableRow data-qa-table-row={label} rowLink={() => onSelect && onSelect({}, !checked)}>
@@ -223,9 +222,8 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
         </TableRow>
       </React.Fragment>
     );
-  
   }
-};
+}
 
 const styled = withStyles(styles);
 

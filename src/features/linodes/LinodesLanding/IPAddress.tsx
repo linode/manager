@@ -44,17 +44,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     marginLeft: theme.spacing.unit,
   },
   icon: {
-    '&:hover': {
-      backgroundColor: theme.color.grey1,
-      '& svg': {
-        fill: 'white',
-      },
-    },
     '& svg': {
       top: 1,
       width: 12,
       height: 12,
-      fill: theme.color.grey1,
     },
   },
   ip: {

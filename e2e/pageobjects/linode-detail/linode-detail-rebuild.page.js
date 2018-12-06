@@ -9,7 +9,8 @@ class Rebuild extends Page {
     get password() { return $('[data-qa-hide] input'); }
     get submit() { return $('[data-qa-rebuild]'); }
     get imageSelectHeader() { return $('[data-qa-select-header]'); }
-    get imageOptions() { return $$('[data-qa-image-option]'); }
+    get imageOption() { return $('[data-qa-image-option]'); }
+    get imageOptions() { return $$(this.imageOption.selector); }
     get imageError() { return $('[data-qa-image-error]'); }
 
     assertElemsDisplay() {
@@ -57,13 +58,8 @@ class Rebuild extends Page {
 
     rebuild() {
         const toastMessage = 'Linode rebuild started.';
-
-        this.submit.click();
-        browser.waitForVisible('[data-qa-toast]');
-        browser.waitUntil(function() {
-            return browser
-                .getText('[data-qa-toast-message]') === toastMessage;
-        }, constants.wait.normal);
+        browser.jsClick(this.submit.selector);
+        this.toastDisplays(toastMessage);
     }
 }
 
