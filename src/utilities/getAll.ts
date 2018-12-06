@@ -1,6 +1,8 @@
 import * as Bluebird from 'bluebird';
 import { range } from 'ramda';
 
+import { sendEvent } from 'src/utilities/analytics';
+
 import { getDomains } from 'src/services/domains';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
@@ -35,7 +37,7 @@ export type GetFromEntity = (entityId?: number, params?: any, filters?: any) => 
  * @example getAllLinodes(params, filter)
  *
  */
-export const getAll: (getter: GetFunction) => (params?: any, filter?: any) => Promise<any> =
+export const getAll: <T>(getter: GetFunction) => (params?: any, filter?: any) => Promise<T[]> =
   (getter) =>
     (params?: any, filter?: any) => {
       const pagination = { ...params, page_size: 100 };
@@ -56,35 +58,35 @@ export const getAll: (getter: GetFunction) => (params?: any, filter?: any) => Pr
             /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
             .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
         });
-  }
+    }
 
 export const getAllFromEntity: (getter: GetFromEntity) => (params?: any, filter?: any) => Promise<any> =
-(getter) =>
-  (entityId: number, params?: any, filter?: any) => {
-    const pagination = { ...params, page_size: 100 };
-    return getter(entityId, pagination, filter)
-      .then(({ data: firstPageData, page, pages }) => {
+  (getter) =>
+    (entityId: number, params?: any, filter?: any) => {
+      const pagination = { ...params, page_size: 100 };
+      return getter(entityId, pagination, filter)
+        .then(({ data: firstPageData, page, pages }) => {
 
-        // If we only have one page, return it.
-        if (page === pages) { return firstPageData; }
+          // If we only have one page, return it.
+          if (page === pages) { return firstPageData; }
 
-        // Create an iterable list of the remaining pages.
-        const remainingPages = range(page + 1, pages + 1);
+          // Create an iterable list of the remaining pages.
+          const remainingPages = range(page + 1, pages + 1);
 
-        //
-        return Bluebird
-          .map(remainingPages, nextPage =>
-            getter({ ...pagination, page: nextPage }, filter).then(response => response.data),
-          )
-          /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
-          .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
-      });
-}
-const getAllLinodes = getAll(getLinodes);
-const getAllNodeBalancers = getAll(getNodeBalancers);
-const getAllVolumes = getAll(getVolumes);
-const getAllDomains = getAll(getDomains);
-const getAllImages = getAll(getImages);
+          //
+          return Bluebird
+            .map(remainingPages, nextPage =>
+              getter({ ...pagination, page: nextPage }, filter).then(response => response.data),
+            )
+            /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
+            .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+        });
+    }
+const getAllLinodes = getAll<Linode.Linode>(getLinodes);
+const getAllNodeBalancers = getAll<Linode.NodeBalancer>(getNodeBalancers);
+const getAllVolumes = getAll<Linode.Volume>(getVolumes);
+const getAllDomains = getAll<Linode.Domain>(getDomains);
+const getAllImages = getAll<Linode.Image>(getImages);
 
 export type GetAllHandler = (
   linodes: Linode.Linode[],
@@ -92,7 +94,7 @@ export type GetAllHandler = (
   volumes: Linode.Volume[],
   domains: Linode.Domain[],
   images: Linode.Image[]
-  ) => any;
+) => any;
 
 /**
  * getAllEntities
@@ -110,5 +112,64 @@ export const getAllEntities = (cb: GetAllHandler) =>
     getAllVolumes(),
     getAllDomains(),
     getAllImages(),
-    cb
-  )
+    // for some reason typescript thinks ...results is implicitly typed as 'any'
+    // @ts-ignore
+    (...results) => {
+      const resultLength = [
+        ...results[0],
+        ...results[1],
+        ...results[2],
+        ...results[3],
+        /**
+         * For tracking purposes, we're not interested in the amount
+         * of public images that are being requested
+         */
+        ...results[4].filter((eachImage: Linode.Image) => {
+          if (eachImage.is_public) {
+            return false;
+          }
+          return true;
+        })
+      ].length;
+
+      sendGetAllRequestToAnalytics(resultLength);
+      // for some reason typescript thinks ...results is implicitly typed as 'any'
+      // @ts-ignore
+      cb(...results)
+    }
+  );
+
+/**
+ * sends off an analytics event with how many entities came back from a search request
+ * for the purposes of determining how many entities does an average user have.
+ * 
+ * @param { number } howManyThingsRequested - how many entities came back in our
+ * network request to get all the things
+ */
+const sendGetAllRequestToAnalytics = (howManyThingsRequested: number) => {
+  /**
+   * We are splitting analytics tracking into a few different buckets
+   */
+  let bucketText = '';
+  if (howManyThingsRequested > 500) {
+    bucketText = '500+'
+  } else if (howManyThingsRequested > 100) {
+    bucketText = '100-499'
+  } else if (howManyThingsRequested > 25) {
+    bucketText = '26-100'
+  } else if (howManyThingsRequested > 10) {
+    bucketText = '11-26'
+  } else {
+    bucketText = '0-10'
+  }
+
+  /**
+   * send an event with the number of requested entities
+   * and the URL pathname and query string
+   */
+  sendEvent({
+    category: 'Amount of User Entities',
+    action: `${bucketText}`,
+    label: `${location.pathname}${location.search}`,
+  });
+}

@@ -90,8 +90,8 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const getAllKernels = getAll(getLinodeKernels);
-const getAllVolumes = getAll(getVolumes);
+const getAllKernels = getAll<Linode.Kernel>(getLinodeKernels);
+const getAllVolumes = getAll<Linode.Volume>(getVolumes);
 const getAllLinodeDisks = getAllFromEntity(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
@@ -497,7 +497,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         return result;
       }, []))
-      .then(volumes => this.setState({ availableDevices: { ...this.state.availableDevices, volumes } }))
+      .then((volumes: ExtendedVolume[]) =>
+        this.setState({ availableDevices: { ...this.state.availableDevices, volumes } }))
       .catch(console.error);
 
     /** Get all Linode disks for usage in the block device assignment. */
