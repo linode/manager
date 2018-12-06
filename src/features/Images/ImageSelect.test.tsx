@@ -1,4 +1,4 @@
-import { groupImages } from './LinodeRebuild';
+import { groupImages } from './ImageSelect';
 
 const privateImage1 = {
   deprecated: false,

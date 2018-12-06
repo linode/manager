@@ -236,6 +236,11 @@ export interface Item<T = string | number> {
   data?: any;
 }
 
+export interface GroupType<T> {
+  label: string;
+  options: Item<T>[];
+}
+
 export interface SelectState {
   data: any,
   isDisabled: boolean,
