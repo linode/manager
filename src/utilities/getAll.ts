@@ -19,6 +19,11 @@ export interface APIResponsePage<T> {
 export type GetFunction = (params?: any, filters?: any) => Promise<APIResponsePage<any>>;
 export type GetFromEntity = (entityId?: number, params?: any, filters?: any) => Promise<APIResponsePage<any>>;
 
+interface GetAllData<T> {
+  data: T;
+  results: number;
+}
+
 /**
  * getAll
  *
@@ -37,15 +42,20 @@ export type GetFromEntity = (entityId?: number, params?: any, filters?: any) => 
  * @example getAllLinodes(params, filter)
  *
  */
-export const getAll: <T>(getter: GetFunction) => (params?: any, filter?: any) => Promise<T[]> =
+export const getAll: <T>(getter: GetFunction) => (params?: any, filter?: any) => Promise<GetAllData<T[]>> =
   (getter) =>
     (params?: any, filter?: any) => {
       const pagination = { ...params, page_size: 100 };
       return getter(pagination, filter)
-        .then(({ data: firstPageData, page, pages }) => {
+        .then(({ data: firstPageData, page, pages, results }) => {
 
           // If we only have one page, return it.
-          if (page === pages) { return firstPageData; }
+          if (page === pages) { 
+            return {
+              data: firstPageData,
+              results
+            };
+           }
 
           // Create an iterable list of the remaining pages.
           const remainingPages = range(page + 1, pages + 1);
@@ -56,7 +66,15 @@ export const getAll: <T>(getter: GetFunction) => (params?: any, filter?: any) =>
               getter({ ...pagination, page: nextPage }, filter).then(response => response.data),
             )
             /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
-            .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
+            .then(resultPages => {
+              const combinedData = resultPages.reduce((result, nextPage) => {
+              return [...result, ...nextPage]
+            }, firstPageData); 
+              return {
+                data: combinedData,
+                results
+              }
+          });
         });
     }
 
@@ -112,30 +130,42 @@ export const getAllEntities = (cb: GetAllHandler) =>
     getAllVolumes(),
     getAllDomains(),
     getAllImages(),
-    // for some reason typescript thinks ...results is implicitly typed as 'any'
+    /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {
-      const resultLength = [
-        ...results[0],
-        ...results[1],
-        ...results[2],
-        ...results[3],
-        /**
-         * For tracking purposes, we're not interested in the amount
-         * of public images that are being requested
-         */
-        ...results[4].filter((eachImage: Linode.Image) => {
-          if (eachImage.is_public) {
-            return false;
-          }
-          return true;
-        })
-      ].length;
-
-      sendGetAllRequestToAnalytics(resultLength);
-      // for some reason typescript thinks ...results is implicitly typed as 'any'
+      /**
+       * Get the number of public images for the purpose of substracting them
+       * from the count we send to analytics
+       */
+      /** for some reason typescript compiler thinks ...results is implicitly typed as 'any' */
       // @ts-ignore
-      cb(...results)
+      const numberOfPublicImages = results[4].data.reduce((acc, eachImage) => {
+        if (eachImage.is_public) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+
+      const resultData = [
+        results[0].data,
+        results[1].data,
+        results[2].data,
+        results[3].data,
+        results[4].data,
+      ]
+
+      /** total number of entities returned, as determined by the results API property */
+      const numOfEntities = results[0].results
+      + results[1].results
+      + results[2].results
+      + results[3].results
+      /** count of images without public images */
+      + (results[4].results - numberOfPublicImages)
+
+      sendGetAllRequestToAnalytics(numOfEntities);
+      /** for some reason typescript thinks ...results is implicitly typed as 'any' */
+      // @ts-ignore
+      cb(...resultData)
     }
   );
 
@@ -168,8 +198,9 @@ const sendGetAllRequestToAnalytics = (howManyThingsRequested: number) => {
    * and the URL pathname and query string
    */
   sendEvent({
-    category: 'Amount of User Entities',
-    action: `${bucketText}`,
-    label: `${location.pathname}${location.search}`,
+    category: 'Search',
+    action: 'Data fetch all entities',
+    label: bucketText,
+    value: howManyThingsRequested
   });
 }

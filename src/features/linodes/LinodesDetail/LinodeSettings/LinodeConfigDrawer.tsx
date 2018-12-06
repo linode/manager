@@ -460,7 +460,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <ActionsPanel>
-            <Button onClick={this.onSubmit}  type="primary">Submit</Button>
+            <Button onClick={this.onSubmit} type="primary">Submit</Button>
             <Button
               type="secondary"
               className="cancel"
@@ -480,7 +480,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     const { linodeId, linodeRegion } = this.props;
     /** Get all volumes for usage in the block device assignment. */
     getAllVolumes()
-      .then((volumes) => volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
+      .then(({ data: volumes }) => volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
         /**
          * This is a combination of filter and map. Filter out irrelevant volumes, and update
          * volumes with the special _id property.
@@ -503,7 +503,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     /** Get all Linode disks for usage in the block device assignment. */
     getAllLinodeDisks(linodeId)
-      .then(disks => disks.map((disk:Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` })))
+      .then(disks => disks.map((disk: Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` })))
       .then(disks => this.setState({ availableDevices: { ...this.state.availableDevices, disks } }))
       .catch(console.error);
   }
@@ -613,7 +613,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     this.setState({ loading: { ...this.state.loading, kernels: true } });
 
     return getAllKernels({}, { [linodeHypervisor]: true })
-      .then((kernels) => {
+      .then(({ data: kernels }) => {
         this.setState({
           kernels,
           loading: { ...this.state.loading, kernels: false },
