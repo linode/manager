@@ -391,13 +391,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               <MetricsDisplay
                 rows={[
                   {
-                    legendTitle: 'Private IPv4 Outbound',
+                    legendTitle: 'Private IPv6 Outbound',
                     legendColor: 'yellow',
                     data: getMetrics(data.privateOut),
                     format
                   },
                   {
-                    legendTitle: 'Private IPv4 Inbound',
+                    legendTitle: 'Private IPv6 Inbound',
                     legendColor: 'red',
                     data: getMetrics(data.privateIn),
                     format
@@ -409,13 +409,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               <MetricsDisplay
                 rows={[
                   {
-                    legendTitle: 'Public IPv4 Outbound',
+                    legendTitle: 'Public IPv6 Outbound',
                     legendColor: 'green',
                     data: getMetrics(data.publicOut),
                     format
                   },
                   {
-                    legendTitle: 'Public IPv4 Inbound',
+                    legendTitle: 'Public IPv6 Inbound',
                     legendColor: 'blue',
                     data: getMetrics(data.publicIn),
                     format
@@ -424,6 +424,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               />
             </Grid>
           </Grid>
+          Total IN: {getMetrics(data.privateIn).total + getMetrics(data.publicIn).total}
         </div>
       </React.Fragment>
     )
