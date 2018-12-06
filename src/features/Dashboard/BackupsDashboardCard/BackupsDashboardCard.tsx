@@ -32,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   itemTitle: {
     marginBottom: theme.spacing.unit,
-    color: theme.color.blueDTwhite,
+    color: theme.palette.primary.main,
   },
   section: {
     padding: theme.spacing.unit * 3,
@@ -42,7 +42,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     cursor: 'pointer',
   },
   title: {
-    background: theme.bg.offWhite,
+    background: theme.bg.tableHeader,
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
