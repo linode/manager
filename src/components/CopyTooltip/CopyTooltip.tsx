@@ -37,16 +37,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     padding: 2,
     transition: theme.transitions.create(['background-color']),
     borderRadius: 4,
-    color: theme.palette.text.primary,
+    color: theme.color.grey1,
     '& svg': {
       transition: theme.transitions.create(['color']),
+      color: theme.color.grey1,
       margin: 0,
       position: 'relative',
       width: 16,
       height: 16,
     },
     '&:hover': {
-      backgroundColor: theme.palette.text.primary,
+      backgroundColor: theme.color.grey1,
       '& svg': {
         color: theme.color.white,
       },
