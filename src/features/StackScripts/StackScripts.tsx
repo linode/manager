@@ -3,6 +3,10 @@ import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom
 
 import DefaultLoader from 'src/components/DefaultLoader';
 
+const StackScriptsDetail = DefaultLoader({
+  loader: () => import('./StackScriptsDetail'),
+});
+
 const StackScriptsLanding = DefaultLoader({
   loader: () => import('./StackScriptsLanding'),
 });
@@ -25,6 +29,7 @@ class NodeBalancers extends React.Component<Props> {
       <Switch>
         <Route component={StackScriptsLanding} path={path} exact />
         <Route component={StackScriptCreate} path={`${path}/create`} exact />
+        <Route component={StackScriptsDetail} path={`${path}/:stackScriptId`}/>
         <Route component={StackScriptUpdate} path={`${path}/:stackScriptID/edit`} exact />
       </Switch>
     );

@@ -86,7 +86,7 @@ export interface Props {
   // linkTo will be passed in to a <Link /> component, so we borrow the
   // LocationDescriptor interface from the history module
   linkTo: LocationDescriptor;
-  linkText: string;
+  linkText?: string;
   labelTitle: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps
@@ -105,7 +105,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
           tabIndex={-1}
         >
         <KeyboardArrowLeft />
-        <Typography
+        {linkText && <Typography
           variant="h3"
           className={(labelOptions && labelOptions.subtitle)
             ? classes.subtitleLinkText
@@ -113,7 +113,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
           data-qa-link-text
         >
           {linkText}
-        </Typography>
+        </Typography>}
       </IconButton>
       </Link>
 

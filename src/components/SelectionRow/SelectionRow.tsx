@@ -1,6 +1,7 @@
 import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
@@ -172,9 +173,9 @@ const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
         <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
           {!showDeployLink
             ? renderLabel()
-            : <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptID}`}>
+            : <Link to={`/stackscripts/${stackScriptID}`}>
               {renderLabel()}
-            </a>
+            </Link>
           }
           <Typography variant="body1">{description}</Typography>
         </TableCell>
