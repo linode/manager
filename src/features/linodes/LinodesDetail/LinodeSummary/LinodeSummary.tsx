@@ -424,7 +424,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               />
             </Grid>
           </Grid>
-          Total IN: {getMetrics(data.privateIn).total + getMetrics(data.publicIn).total}
         </div>
       </React.Fragment>
     )
