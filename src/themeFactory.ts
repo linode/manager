@@ -827,9 +827,12 @@ const themeDefaults: ThemeOptions = {
         color: '#606469',
         padding: 16,
         margin: 16,
-        backgroundColor: 'transparent',
+        backgroundColor: 'white',
+        border: `1px solid ${primaryColors.divider}`,
+        borderRadius: 0,
         [breakpoints.up('md')]: {
           margin: 0,
+          borderRadius: 0,
         },
       },
       message: {
