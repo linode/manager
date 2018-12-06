@@ -42,18 +42,26 @@ interface Props {
   htmlFor?: string;
 }
 
+
 type CombinedProps = Props & _TableRowProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 class TableRow extends React.Component<CombinedProps> {
 
   rowClick = (e: any, target: string | onClickFn ) =>  {
-    if (e.target.tagName === 'TD') {
-      e.stopPropagation();
-      if (typeof(target) === 'string') {
-        this.props.history.push(target);
+    const body = document.body as any;
+
+    // if no modal is open
+    if (body.getAttribute('style') !== null && body.getAttribute('style').indexOf('overflow: hidden') !== 0) {
+      // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
+      if (e.target.tagName !== 'BUTTON' && !e.target.closest('button')
+          && e.target.tagName !== 'A' && !e.target.closest('a')) {
+          e.stopPropagation();
+          if (typeof(target) === 'string') {
+            this.props.history.push(target);
+          }
       }
+      if (typeof(target) === 'function') { target(e) };
     }
-    if (typeof(target) === 'function') { target(e) };
   }
 
   render() {
