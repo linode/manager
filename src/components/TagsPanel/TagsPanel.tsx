@@ -249,12 +249,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         })
       })
       .catch(e => {
-        const APIErrors = pathOr(
+        const tagError = pathOr(
           'Error while creating tag',
-          ['response', 'data', 'errors'],
+          ['response', 'data', 'errors', 0, 'reason'],
           e);
         // display the first error in the array or a generic one
-        this.setState({ tagError: APIErrors[0].reason || 'Error while creating tag' })
+        this.setState({ tagError })
       })
   }
 
