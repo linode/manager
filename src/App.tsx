@@ -23,6 +23,7 @@ import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
+import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
@@ -393,6 +394,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <DomainCreateDrawer />
                   <VolumeDrawer />
                   <BackupDrawer />
+                  <StackScriptDrawer />
                 </div>
               </RegionsProvider>
             </TypesProvider>

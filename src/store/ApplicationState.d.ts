@@ -15,6 +15,7 @@ declare interface ApplicationState {
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
+  stackScriptDrawer: StackScriptDrawerState;
   /** @todo extract */
   events: {
     events: ExtendedEvent[];

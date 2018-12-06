@@ -1,7 +1,6 @@
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
-import { connect, Dispatch } from 'react-redux';
+import { connect, Dispatch, MapStateToProps } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
@@ -37,7 +36,7 @@ class StackScriptDrawer extends React.Component<Props, State> {
     error: false
   };
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  componentDidUpdate(prevProps: Props) {
     const { stackScriptId } = this.props;
     const { stackScriptId: prevStackScriptId } = prevProps;
 
@@ -69,7 +68,7 @@ class StackScriptDrawer extends React.Component<Props, State> {
 
     return (
       <Drawer
-        title="Add a new Domain"
+        title={stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript'}
         open={open}
         onClose={this.closeDrawer}
       >
@@ -90,11 +89,10 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
 );
 
 const mapStateToProps = (state: ApplicationState) => ({
-  open: pathOr(false, ['stackScript', 'open'], state),
-  stackScriptId: path(['stackScript', 'stackScriptId'], state),
+  open: pathOr(false, ['stackScriptDrawer', 'open'], state),
+  stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state),
 });
 
-export default compose<Props, {}>(
-  connect(mapStateToProps, mapDispatchToProps),
-  StackScriptDrawer
-)
+const connected = connect(mapStateToProps, mapDispatchToProps);
+
+export default connected(StackScriptDrawer)

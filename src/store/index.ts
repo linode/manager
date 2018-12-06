@@ -10,6 +10,7 @@ import notifications from './reducers/notifications';
 import __resources from './reducers/resources';
 import sidebar from './reducers/sidebar';
 import volumeDrawer from './reducers/volumeDrawer';
+import stackScriptDrawer from './reducers/stackScriptDrawer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
@@ -21,6 +22,7 @@ const reducers = combineReducers<ApplicationState>({
   features,
   sidebar,
   volumeDrawer,
+  stackScriptDrawer,
   notifications,
   domainDrawer,
   events,
