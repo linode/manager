@@ -6,7 +6,7 @@ import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
 import { getImagesByIds } from 'src/services/images';
 
-type CSSClasses = 'root' | 'deployments' | 'author' | 'description' | 'scriptHeading' | 'imagesList';
+type CSSClasses = 'root' | 'deployments' | 'author' | 'description' | 'scriptHeading' | 'descriptionText';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => {
   return ({
@@ -33,8 +33,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
     scriptHeading: {
       marginBottom: theme.spacing.unit,
     },
-    imagesList: {
-      marginTop: theme.spacing.unit * 2,
+    descriptionText: {
+      marginBottom: theme.spacing.unit * 2,
     }
   });
 };
@@ -92,10 +92,10 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
           {deployments_total} deployments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
         </Typography>
         <div className={classes.description}>
-          <Typography variant="body2">
+          <Typography variant="body2" className={classes.descriptionText}>
             { description }
           </Typography>
-          {imagesList.length !== 0 && <Typography variant="body2" className={classes.imagesList}>
+          {imagesList.length !== 0 && <Typography variant="body2">
             <strong>Compatible with: </strong>
             { imagesList.map(image => image.label).join(', ' ) }
           </Typography>}
