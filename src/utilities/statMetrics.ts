@@ -1,5 +1,4 @@
-import { isEmpty, map } from 'ramda';
-
+import { isEmpty } from 'ramda';
 export interface Metrics {
   max: number;
   average: number;
@@ -41,8 +40,8 @@ export const getMetrics = (data: number[][]): Metrics => {
 
   // Safeguard against dividing by 0
   const average = length > 0
-  ? sum/length
-  : 0;
+    ? sum/length
+    : 0;
 
   return { max, average, last, total: sum };
 }
@@ -50,9 +49,6 @@ export const getMetrics = (data: number[][]): Metrics => {
 export const formatNumber = (n: number): string => n.toFixed(2);
 
 export const appendPercentSign = (value: string) => value + '%';
-
-// Function that applies addPercentSign to each value in a collection
-export const withPercentSign = map(appendPercentSign) as any; // Typing...
 
 // Appends a "friendly" unit of measurement – bit/s, Kbit/s, Mbit/s, Gbit/s
 // Will make appropriate division, e.g. appendFriendlyBitrateUnit(1000) --> 1.00 Kbit/s
@@ -79,4 +75,3 @@ export const appendBitrateUnit = (valueInBits: string | number) => {
 
   return formatNumber(num/divisor) + ' ' + unit;
 }
-export const withBitrate = map(appendBitrateUnit) as any; // Map is hard to type...

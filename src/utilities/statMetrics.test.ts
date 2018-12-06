@@ -1,8 +1,4 @@
-import {
-  appendBitrateUnit,
-  formatNumber,
-  getMetrics,
-  withPercentSign } from './statMetrics';
+import { appendBitrateUnit, appendPercentSign, formatNumber, getMetrics } from './statMetrics';
 
 const data = [
   [0, 0.12],
@@ -77,12 +73,10 @@ describe('format number', () => {
   });
 
   it('with percentage', () => {
-    let initial = {a: '1.00', b: '2.50'};
-    let expected = {a: '1.00%', b: '2.50%'};
-    expect(withPercentSign(initial)).toEqual(expected);
-
-    initial = {a: '0.00', b: '2'};
-    expected = {a: '0.00%', b: '2%'}
-    expect(withPercentSign(initial)).toEqual(expected);
+    expect(appendPercentSign('2')).toBe('2%');
+    expect(appendPercentSign('223')).toBe('223%');
+    expect(appendPercentSign('22.32')).toBe('22.32%');
+    expect(appendPercentSign('')).toBe('%');
+    expect(appendPercentSign('  ')).toBe('  %');
   });
 });
