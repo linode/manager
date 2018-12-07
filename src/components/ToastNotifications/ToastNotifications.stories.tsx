@@ -3,7 +3,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Snackbar from 'src/components/SnackBar';
-import ThemeDecorator from '../utilities/storybookDecorators';
+import ThemeDecorator from '../../utilities/storybookDecorators';
 
 interface Props {
   onClick: (variant: string) => void;
@@ -25,7 +25,7 @@ class MyButton extends React.PureComponent<Props>  {
 
 class Example extends React.PureComponent<InjectedNotistackProps, {}> {
   render() {
-    const { enqueueSnackbar } = this.props; 
+    const { enqueueSnackbar } = this.props;
     const variants = ['default', 'success', 'warning', 'error', 'info'];
 
     // enqueueSnackbar comes from the notistack library and triggers the toast to appear
@@ -42,7 +42,7 @@ class Example extends React.PureComponent<InjectedNotistackProps, {}> {
       </React.Fragment>
     )
   }
-} 
+}
 
 const Enhanced = withSnackbar(Example);
 
