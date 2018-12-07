@@ -1,10 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import { SelectionRowProps } from 'src/components/SelectionRow';
-import ThemeDecorator from '../../utilities/storybookDecorators';
-import { SelectionRow } from './SelectionRow'
-
+import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
 
 interface State {
   selected: number;
@@ -142,29 +139,7 @@ class InteractiveExample extends React.Component<{}, State> {
           {
             this
               .createItems()
-              .map((item, idx) => (
-                <SelectionRow
-                  key={idx}
-                  {...item}
-                  classes={{
-                    root: '',
-                    respPadding: '',
-                    images: '',
-                    libTitleContainer: '',
-                    libRadio: '',
-                    libRadioLabel: '',
-                    libTitle: '',
-                    libTitleLink: '',
-                    libDescription: '',
-                    colImages: '',
-                    stackScriptCell: '',
-                    stackScriptUsername: '',
-                    deployButton: '',
-                    textButton: ''
-                  }}
-                  openStackScriptDrawer={() => true}
-                />
-              )
+              .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
           }
         </React.Fragment>
       </StaticRouter>
@@ -173,5 +148,4 @@ class InteractiveExample extends React.Component<{}, State> {
 }
 
 storiesOf('SelectionRow', module)
-  .addDecorator(ThemeDecorator)
   .add('Interactive example', () => (<InteractiveExample />));

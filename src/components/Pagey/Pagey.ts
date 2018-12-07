@@ -23,6 +23,13 @@ export type PaginatedRequest<T = {}> = (
   f?: FilterParams,
 ) => Promise<Linode.ResourcePage<T>>;
 
+
+export type HandleOrderChange = (key: string, order?: Order) => void;
+
+export type Order = 'asc' | 'desc';
+
+export type OrderBy = undefined | string;
+
 interface State<T={}> {
   count: number;
   error?: Error;
@@ -31,8 +38,8 @@ interface State<T={}> {
   pages?: number;
   pageSize: number;
   data?: T[];
-  orderBy?: string;
-  order: 'asc' | 'desc';
+  orderBy?: OrderBy;
+  order: Order;
   filter: any;
   searching: boolean;
 }
@@ -41,7 +48,7 @@ export interface PaginationProps<T> extends State<T> {
   handlePageChange: (v: number, showSpinner?: boolean) => void;
   handlePageSizeChange: (v: number) => void;
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
-  handleOrderChange: (key: string, order?: 'asc' | 'desc') => void;
+  handleOrderChange: HandleOrderChange;
   handleSearch: (newFilter: any) => void;
   onDelete: () => void;
 }
@@ -68,11 +75,11 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
        * Basically, if we're on page 2 and the user deletes the last entity
        * on the page, send the user back to the previous page, AKA the max number
        * of pages.
-       * 
+       *
        * This solves the issue where the user deletes the last entity
        * on a page and then sees an empty state instead of going to the
        * last page available
-       * 
+       *
        * Please note that if the deletion of an entity is instant and not
        * initiated by the completetion of an event, we need to check that
        * the data.length === 1 because we're not calling this.request() to update
@@ -122,7 +129,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ page }, () => { this.request() })
     };
 
-    public handleOrderChange = (orderBy: string, order: 'asc' | 'desc' = 'asc') => {
+    public handleOrderChange = (orderBy: string, order: Order = 'asc') => {
       this.setState({ orderBy, order, page: 1 }, () => this.request());
     };
 

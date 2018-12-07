@@ -1,12 +1,23 @@
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { select } from '@storybook/addon-knobs/react';
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
 import { MuiThemeProvider } from 'src/components/core/styles';
-import { light as theme } from 'src/themes';
+import { dark, light } from 'src/themes';
 
-const ThemeDecorator = (storyFn: Function) => {
+const options = {
+  dark,
+  light,
+};
+
+const ThemeDecorator = (story: Function) => {
+  const key = select('theme', [ 'light', 'dark' ], 'light');
+  const content = story();
+
   return (
-    <MuiThemeProvider theme={theme}>
-      { storyFn() }
+    <MuiThemeProvider theme={options[key]}>
+      <CssBaseline />
+      {content}
     </MuiThemeProvider>
   );
 };

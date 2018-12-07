@@ -2,11 +2,9 @@ import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import Tag from './Tag';
 
 storiesOf('Tags', module)
-  .addDecorator(ThemeDecorator)
   .add('primary', () => (
     <Tag label="tag" />
   ))

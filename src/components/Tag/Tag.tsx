@@ -1,6 +1,8 @@
 import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
@@ -87,18 +89,25 @@ export interface Props extends ChipProps {
   colorVariant?: Variants;
 }
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
 
-class Tag extends React.Component<PropsWithStyles, {}> {
+class Tag extends React.Component<CombinedProps, {}> {
   static defaultProps = {
     colorVariant: 'gray' as Variants,
   };
+
+  handleClick = (e: React.MouseEvent<any>) => {
+    e.preventDefault();
+    const { history, label } = this.props;
+    history.push(`/search/?query=${label}`);
+  }
 
   render() {
     const {
       colorVariant,
       classes,
       className,
+      history, location, staticContext, match, // Don't pass route props to the Chip component
       ...chipProps
     } = this.props;
 
@@ -111,8 +120,9 @@ class Tag extends React.Component<PropsWithStyles, {}> {
       })}
       deleteIcon={this.props.deleteIcon || <Close />}
       classes={{ label: classes.label, deletable: classes[colorVariant!]}}
+      onClick={this.handleClick}
       data-qa-tag={this.props.label}
-      component="div"
+      component="button"
       role="term"
     />;
   }
@@ -120,4 +130,9 @@ class Tag extends React.Component<PropsWithStyles, {}> {
 
 const styled = withStyles(styles);
 
-export default styled(Tag);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withRouter,
+)(Tag)
+
+export default enhanced;

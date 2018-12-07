@@ -6,6 +6,7 @@ import Tag from 'src/components/Tag';
 
 export interface Props {
   tags: string[];
+  clickable?: boolean;
 }
 
 type ClassNames = 'root'
@@ -29,14 +30,15 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class Tags extends React.Component<CombinedProps, {}> {
   renderTags = (tags: string[]) => {
-    const { classes } = this.props;
+    const { classes, clickable } = this.props;
     return tags.map(eachTag => {
       return (
         <Tag
           className={classes.tag}
           label={eachTag}
           key={eachTag}
-          clickable={false}
+          clickable={clickable}
+          component="button"
         />
       )
     })
