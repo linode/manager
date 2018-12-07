@@ -51,7 +51,7 @@ storiesOf('Toast Notification', module)
   .add('Default', () => (
     <Snackbar
       maxSnack={3} // this is the amount of toasts that can appear on the screen at once
-      autoHideDuration={40000} // this is the number of seconds the toast appears for
+      autoHideDuration={4000} // this is the number of seconds the toast appears for
       data-qa-toast
       hideIconVariant={true}
     >
