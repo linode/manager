@@ -393,6 +393,9 @@ const themeDefaults: ThemeOptions = {
             },
           },
         },
+        '&:focus': {
+          outline: '1px dotted #999',
+        }
       },
       label: {
         paddingLeft: 4,
