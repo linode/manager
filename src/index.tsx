@@ -74,18 +74,22 @@ const renderNull = () =>
 
 const renderLish = () =>
   <LinodeThemeWrapper>
-    <Lish />
+    {(toggle) => (<Lish />)}
   </LinodeThemeWrapper>
-
-/**
- * The way toggleTheme is set is all funked up. This gross hack
- * needs to be removed in favor of (maybe) render children.
- */
-const mock = () => null;
 
 const renderApp = (props: RouteProps) =>
   <LinodeThemeWrapper>
-    <App toggleTheme={mock} location={props.location} />
+    {(toggle) => (
+      <SnackBar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        maxSnack={3}
+        autoHideDuration={4000}
+        data-qa-toast
+        hideIconVariant={true}
+      >
+        <App toggleTheme={toggle} location={props.location} />
+      </SnackBar>
+    )}
   </LinodeThemeWrapper>
 
 const renderAuthentication = () =>
@@ -96,27 +100,19 @@ const renderAuthentication = () =>
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
       <Route exact path="/nullauth" render={renderNullAuth} />
       <Route exact path="/logout" component={Logout} />
-      <Route render={renderApp}/>
+      <Route render={renderApp} />
     </Switch>
   </AuthenticationWrapper>
 
 ReactDOM.render(
   <Provider store={store}>
-    <SnackBar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      maxSnack={3}
-      autoHideDuration={4000}
-      data-qa-toast
-      hideIconVariant={true}
-    >
-      <Router>
-        <Switch>
-          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-          <Route exact path="/null" render={renderNull} />
-          <Route render={renderAuthentication} />
-        </Switch>
-      </Router>
-    </SnackBar>
+    <Router>
+      <Switch>
+        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+        <Route exact path="/null" render={renderNull} />
+        <Route render={renderAuthentication} />
+      </Switch>
+    </Router>
   </Provider>,
   document.getElementById('root') as HTMLElement,
 );
