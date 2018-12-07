@@ -3,13 +3,13 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class UserDetail extends Page {
-    get userDetailHeader() { return $('[data-qa-link-text]'); }
+    get userDetailHeader() { return this.breadCrumbLinkText; }
     get subHeader() { return $('[data-qa-profile-header]'); }
     get deleteSubHeader() { return $('[data-qa-delete-user-header]'); }
     get deleteButton() { return $('[data-qa-confirm-delete]'); }
     get usernameField() { return $('[data-qa-username]'); }
     get emailField() { return $('[data-qa-email]'); }
-    get saveButton() { return $(this.submitButton.selector); }
+    get saveButton() { return this.submitButton; }
     get usernameWarning() { return $(`${this.usernameField.selector} p`); }
 
     baseElementsDisplay(owner) {

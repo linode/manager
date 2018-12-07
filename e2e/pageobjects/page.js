@@ -36,6 +36,7 @@ export default class Page {
     get addTag() { return $('[data-qa-add-tag]'); }
     get deleteTag() { return $('[data-qa-delete-tag]'); }
     get helpButton() { return $('[data-qa-help-button]'); }
+    get tagsMultiSelect() { return $('[data-qa-multi-select="Type to choose or create a tag."]'); }
     get popoverMsg() { return $('[role="tooltip"]'); }
     get submitButton () { return $('[data-qa-submit]'); }
     get cancelButton() { return $('[data-qa-cancel]'); }
@@ -50,6 +51,7 @@ export default class Page {
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
     get breadcrumbStaticText() { return $('[data-qa-label-title]'); }
     get breadcrumbBackLink() { return $('[data-qa-link]'); }
+    get breadCrumbLinkText() { return $('[data-qa-link-text]'); }
     get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
@@ -209,5 +211,25 @@ export default class Page {
             t.$(this.deleteTag.selector).click();
             browser.waitForVisible(`[data-qa-tag="${tagName}"]`, constants.wait.normal, true);
         });
+    }
+
+    addTagToTagInput(tagName){
+        this.tagsMultiSelect.$('..').$('input').setValue(tagName);
+        this.selectOptions[0].waitForVisible(constants.wait.normal);
+        this.selectOptions[0].click();
+        this.multiOption.waitForVisible(constants.wait.normal);
+        expect(this.multiOption.getText()).toBe(tagName);
+    }
+
+    addTagToTagPanel(tagName){
+        const expectedCount = this.tags.length + 1
+        this.addTag.click();
+        const createTagSelect = $$('[data-qa-enhanced-select]')[1].$('..').$('input');
+        createTagSelect.waitForVisible(constants.wait.normal);
+        createTagSelect.setValue(tagName);
+        createTagSelect.addValue('\uE007');
+        browser.waitUntil(() => {
+            return this.tags.length === expectedCount;
+        }, constants.wait.normal);
     }
 }

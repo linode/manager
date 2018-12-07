@@ -556,7 +556,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                   className={classes.root}
                 >
                   <Grid item>
-                    <Typography variant="h2" className={classes.titles}>{type.title}</Typography>
+                    <Typography variant="h2" className={classes.titles} data-qa-domain-record={type.title}>{type.title}</Typography>
                   </Grid>
                   {type.link &&
                     <Grid item>
@@ -583,7 +583,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                       {
                         type.data.map((data, idx) => {
                           return (
-                            <TableRow key={idx} data-qa-record-row>
+                            <TableRow key={idx} data-qa-record-row={type.title}>
                               {type.columns.length > 0
                                 && type.columns.map(({ title, render }, columnIndex) => {
                                   return (
