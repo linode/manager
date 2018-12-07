@@ -69,7 +69,6 @@ export const getLinodeVolumes = (linodeId: number, params: any = {}, filter: any
     setXFilter(filter),
     setParams(params),
   )
-    .then(response => response.data);
 
 /**
  * getLinodes
@@ -85,7 +84,6 @@ export const getLinodes = (params?: any, filter?: any) =>
     setXFilter(filter),
     setParams(params),
   )
-    .then(response => response.data);
 
 /**
  * createLinode
@@ -103,7 +101,6 @@ export const createLinode = (data: CreateLinodeRequest) =>
     setMethod('POST'),
     setData(data, CreateLinodeSchema),
   )
-    .then(response => response.data);
 
 /**
  * updateLinode
@@ -120,7 +117,6 @@ export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
     setMethod('PUT'),
     setData(values, UpdateLinodeSchema),
   )
-    .then(response => response.data);
 
 /**
  * deleteLinode

@@ -44,7 +44,6 @@ export const getPayments = (params?: any, filter?: any) =>
     setParams(params),
     setXFilter(filter),
   )
-    .then(response => response.data);
 
 /**
  * makePayment
@@ -64,7 +63,6 @@ export const makePayment = (data: { usd: string, CVV?: string }) =>
     setMethod('POST'),
     setData(data, PaymentSchema),
   )
-    .then(response => response.data)
 
 /**
  * stagePaypalPayment
@@ -85,7 +83,6 @@ export const stagePaypalPayment = (data: Paypal) =>
     setMethod('POST'),
     setData(data, StagePaypalPaymentSchema),
   )
-    .then(response => response.data);
 
 
 /**
@@ -106,7 +103,6 @@ export const executePaypalPayment = (data: ExecutePayload) =>
     setMethod('POST'),
     setData(data, ExecutePaypalPaymentSchema),
   )
-    .then(response => response.data);
 
 /**
  * saveCreditCard
@@ -121,4 +117,3 @@ export const saveCreditCard = (data: SaveCreditCardData) => Request<{}>(
   setMethod('POST'),
   setData(data, CreditCardSchema),
 )
-  .then(response => response.data);

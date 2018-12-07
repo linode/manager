@@ -71,7 +71,6 @@ export const requestProfile = () => (dispatch: Dispatch<State>) => {
 
   dispatch(startRequest());
   getProfile()
-    .then(response => response.data)
     .then(maybeRequestGrants)
     .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));

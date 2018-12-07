@@ -186,7 +186,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
 
         this.setState({ statsLoadError: undefined });
-        this.setState({ stats: response.data, dataIsLoading: false });
+        this.setState({ stats: response, dataIsLoading: false });
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }

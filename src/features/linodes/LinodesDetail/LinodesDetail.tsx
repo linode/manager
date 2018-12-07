@@ -216,14 +216,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           this.setState(set(L.linode.loading, true));
 
           return getLinode(this.props.match.params.linodeId!)
-            .then(({ data }) => {
+            .then(linode => {
               this.composeState(
-                set(L.labelInput.label, data.label),
+                set(L.labelInput.label, linode.label),
                 set(L.linode.loading, false),
-                set(L.linode.data, { ...data, recentEvent }),
+                set(L.linode.data, { ...linode, recentEvent }),
                 set(L.linode.lastUpdated, Date.now()),
               );
-              return data;
+              return linode;
             })
             .catch((r) => {
               this.composeState(

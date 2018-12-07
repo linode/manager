@@ -196,7 +196,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     this.setState({ loading: true });
     getTFAToken()
       .then((response) => {
-        this.setState({ secret: response.data.secret, loading: false })
+        this.setState({ secret: response.secret, loading: false })
       })
       .catch((error) => {
         const fallbackError = [{ reason: 'There was an error retrieving your secret key. Please try again.' }];

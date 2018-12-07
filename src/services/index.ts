@@ -1,4 +1,4 @@
-import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
+import Axios, { AxiosError, AxiosResponse } from 'axios';
 import {
   compose,
   isEmpty,
@@ -108,7 +108,7 @@ export const setXFilter = (xFilter: any) => when(
 const reduceRequestConfig = (...fns: Function[]) => fns.reduceRight((result, fn) => fn(result), {});
 
 /** Generator */
-export default <T>(...fns: Function[]): AxiosPromise<T> => {
+export default <T>(...fns: Function[]): Promise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject({
@@ -118,6 +118,7 @@ export default <T>(...fns: Function[]): AxiosPromise<T> => {
   }
 
   return Axios(config)
+    .then(response => response.data) // We only ever want to deal with Linode API responses, not Axios data
 
   /*
    * If in the future, we want to hook into every single

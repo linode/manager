@@ -432,7 +432,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({ submitting: true, errors: undefined, });
 
     resizeLinodeDisk(linodeId, diskId, size)
-      .then(({ data }) => {
+      .then((_) => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
         this.props.enqueueSnackbar(`Disk queued for resizing.`, {
           variant: 'info'

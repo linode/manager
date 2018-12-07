@@ -8,9 +8,9 @@ type Backup = Linode.LinodeBackup;
 
 /**
  * getLinodeBackups
- * 
+ *
  * Returns information about this Linode's available backups.
- * 
+ *
  * @param linodeId { number } The id of a Linode with backups enabled.
  */
 export const getLinodeBackups = (id: number) =>
@@ -18,13 +18,12 @@ Request<Linode.LinodeBackupsResponse>(
   setURL(`${API_ROOT}/linode/instances/${id}/backups`),
   setMethod('GET'),
 )
-  .then(response => response.data);
 
 /**
  * enableBackups
- * 
+ *
  * Enable backups service for a single Linode.
- * 
+ *
  * @param linodeId { number } The id of the Linode to enable backup services for.
  */
 export const enableBackups = (linodeId: number) =>
@@ -35,9 +34,9 @@ Request<{}>(
 
 /**
  * cancelBackups
- * 
+ *
  * Cancel backups service for the specified Linode.
- * 
+ *
  * @param linodeId { number } The id of a Linode with backups enabled.
  */
 export const cancelBackups = (linodeId: number) =>
@@ -48,10 +47,10 @@ Request<{}>(
 
 /**
  * takeSnapshot
- * 
+ *
  * Creates a snapshot Backup of a Linode. If you already have a snapshot
  * of this Linode, this is a destructive action. The previous snapshot will be deleted.
- * 
+ *
  * @param linodeId { number } The id of the Linode to retrieve.
  * @param label { string } A label to identify the new snapshot.
  */
@@ -64,9 +63,9 @@ Request<Backup>(
 
 /**
  * restoreBackup
- * 
+ *
  * Restores a Linode's Backup to the specified Linode.
- * 
+ *
  * @param linodeId { number } The id of the Linode that the backup belongs to.
  * @param backupId { number } The id of the backup to restore from.
  * @param targetLinodeId { number } The id of the Linode to restore the backup to.
@@ -84,5 +83,3 @@ export const restoreBackup = (
     setMethod('POST'),
     setData({ linode_id: targetLinodeId, overwrite }),
   )
-    .then(response => response.data);
-    
