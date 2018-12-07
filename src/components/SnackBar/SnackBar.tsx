@@ -35,15 +35,11 @@ type CombinedProps = SnackbarProviderProps & WithStyles<CSSClasses>;
 class SnackBar extends React.Component<CombinedProps> {
   
   render() {
-    const { children, classes } = this.props;
+    const { children, classes, ...rest } = this.props;
 
     return (
       <SnackbarProvider
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        maxSnack={3}
-        autoHideDuration={4000}
-        data-qa-toast
-        hideIconVariant={true}
+        {...rest}
         classes={{
           root: classes.root,
           variantSuccess: classes.success,
