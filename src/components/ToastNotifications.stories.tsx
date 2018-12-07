@@ -50,8 +50,9 @@ storiesOf('Toast Notification', module)
   .addDecorator(ThemeDecorator)
   .add('Default', () => (
     <Snackbar
-      maxSnack={3} // this is the amount of toasts that can appear on the screen at once
-      autoHideDuration={4000} // this is the number of seconds the toast appears for
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      maxSnack={3}
+      autoHideDuration={4000}
       data-qa-toast
       hideIconVariant={true}
     >

@@ -107,6 +107,7 @@ ReactDOM.render(
       maxSnack={3}
       autoHideDuration={4000}
       data-qa-toast
+      hideIconVariant={true}
     >
       <Router>
         <Switch>
