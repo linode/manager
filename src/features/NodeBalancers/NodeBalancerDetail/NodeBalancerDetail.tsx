@@ -15,6 +15,7 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -40,8 +41,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
 });
-
-const defaultError = [{ reason: 'An unknown error occured while updating NodeBalancer.' }];
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
@@ -114,7 +113,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     })
     .catch((error) => {
       this.setState(() => ({
-        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
+        ApiError: getAPIErrorOrDefault(error, 'An unknown error occured while updating NodeBalancer.'),
         labelInput: label,
       }), () => {
         scrollErrorIntoView();

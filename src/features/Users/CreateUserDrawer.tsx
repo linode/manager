@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -10,6 +9,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import { createUser } from 'src/services/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
@@ -70,9 +70,8 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         }
       })
       .catch((errResponse) => {
-        const errors = pathOr([
-            { reason: 'An unexpected error occured while creating the user.'}
-          ], ['response', 'data', 'errors'], errResponse);
+        const errors = getAPIErrorOrDefault(errResponse,
+          'An unexpected error occured while creating the user.');
         this.setState({ errors, submitting: false });
       })
   }

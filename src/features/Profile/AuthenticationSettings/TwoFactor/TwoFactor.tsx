@@ -1,5 +1,5 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
-import { compose, path, pathOr } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -14,6 +14,7 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import { disableTwoFactor, getTFAToken } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { getAPIErrorOrDefault, getErrorStringOrDefault  } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
@@ -155,12 +156,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       });
     })
     .catch((error) => {
-      const fallbackError = [{ reason: 'There was an error disabling TFA.' }];
-      const disableError = pathOr(fallbackError, ['response', 'data', 'errors'], error);
       this.setState({
         twoFactorEnabled: true,
         disableDialog: {
-          error: disableError[0].reason,
+          error: getErrorStringOrDefault(error, 'There was an error disabling TFA.'),
           submitting: false,
           open: true,
           success: undefined,
@@ -199,9 +198,8 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
         this.setState({ secret: response.secret, loading: false })
       })
       .catch((error) => {
-        const fallbackError = [{ reason: 'There was an error retrieving your secret key. Please try again.' }];
         this.setState({
-            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+            errors: getAPIErrorOrDefault(error, 'There was an error retrieving your secret key. Please try again.'),
             loading: false,
             twoFactorEnabled: false,
           }, () => {
