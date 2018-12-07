@@ -1,9 +1,9 @@
 import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
-import { connect, Dispatch } from 'react-redux';
 import * as React from 'react';
-import { bindActionCreators } from 'redux';
+import { connect, Dispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
@@ -13,7 +13,7 @@ import ShowMore from 'src/components/ShowMore';
 import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
 import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
-import { openStackScriptDrawer } from 'src/store/reducers/stackScriptDrawer';
+import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/reducers/stackScriptDrawer';
 
 type ClassNames = 'root'
   | 'respPadding'
@@ -119,7 +119,7 @@ export interface Props {
 }
 
 interface DispatchProps {
-  openStackScriptDrawer: (stackScriptId: number) => void;
+  openStackScriptDrawerAction: (stackScriptId: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & DispatchProps;
@@ -143,7 +143,7 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
       canDelete,
       canEdit,
       isPublic,
-      openStackScriptDrawer,
+      openStackScriptDrawerAction: openStackScriptDrawer,
     } = this.props;
 
     /** onSelect and showDeployLink should not be used simultaneously */
@@ -228,7 +228,7 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
 const styled = withStyles(styles);
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openStackScriptDrawer },
+  { openStackScriptDrawerAction },
   dispatch,
 );
 

@@ -88,7 +88,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
-const mapStateToProps = (state: ApplicationState) => ({
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state: ApplicationState) => ({
   open: pathOr(false, ['stackScriptDrawer', 'open'], state),
   stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state),
 });

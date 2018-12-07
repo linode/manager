@@ -9,8 +9,8 @@ import features from './reducers/features';
 import notifications from './reducers/notifications';
 import __resources from './reducers/resources';
 import sidebar from './reducers/sidebar';
-import volumeDrawer from './reducers/volumeDrawer';
 import stackScriptDrawer from './reducers/stackScriptDrawer';
+import volumeDrawer from './reducers/volumeDrawer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
