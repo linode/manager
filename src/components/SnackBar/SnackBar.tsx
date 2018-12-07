@@ -1,3 +1,4 @@
+import { SnackbarClassKey } from '@material-ui/core/Snackbar';
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -40,7 +41,7 @@ class SnackBar extends React.Component<CombinedProps> {
       <SnackbarProvider
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         maxSnack={3}
-        autoHideDuration={400000}
+        autoHideDuration={4000}
         data-qa-toast
         hideIconVariant={true}
         classes={{
@@ -49,7 +50,8 @@ class SnackBar extends React.Component<CombinedProps> {
           variantError: classes.error,
           variantWarning: classes.warning,
           variantInfo: classes.info,
-        }}
+          /** implicitly typing this as Snackbar key value pairs from MUI */
+        } as Partial<Record<SnackbarClassKey, string>>}
       >
         {children}
       </SnackbarProvider>
