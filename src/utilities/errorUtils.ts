@@ -1,18 +1,30 @@
 import { AxiosError } from 'axios';
-import { pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 
-export const getAPIErrorOrDefault = (errorResponse: AxiosError, defaultError: string): Linode.ApiFieldError[] => {
+export const getAPIErrorOrDefault = (
+  errorResponse: AxiosError,
+  defaultError: string = "An unexpected error occurred.",
+  field?: string,
+  ): Linode.ApiFieldError[] => {
+  const _defaultError = field
+    ? [{ 'reason': defaultError, field: 'field' }]
+    : [{ 'reason': defaultError }]
+
   return pathOr<Linode.ApiFieldError[]>(
-    [{'reason': defaultError}],
+    _defaultError,
     ['response','data','errors'],
     errorResponse,
   )
-}
+  }
 
-export const getErrorStringOrDefault = (ApiError: Linode.ApiFieldError[], defaultError: string): string => {
+export const getErrorStringOrDefault = (error: AxiosError | Linode.ApiFieldError[], defaultError: string): string => {
+  // This will be the default case after refactors
+  const reason = path<string>([0, 'reason'], error);
+  if (reason) { return reason; }
+  // If passed an AxiosError, dive to the reason for the first error in the array (if any)
   return pathOr<string>(
     defaultError,
-    [0, 'reason'],
-    ApiError
+    ['response','data','errors', 0, 'reason'],
+    error
   )
 }

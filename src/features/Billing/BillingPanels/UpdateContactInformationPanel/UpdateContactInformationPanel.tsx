@@ -1,4 +1,4 @@
-import { compose, defaultTo, lensPath, pathOr, set } from 'ramda';
+import { compose, defaultTo, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -12,6 +12,7 @@ import { withAccount } from 'src/features/Billing/context';
 import { Requestable } from 'src/requestableContext';
 import { updateAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -638,10 +639,9 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
         })
       })
       .catch((response) => {
-        const fallbackError = [{ reason: 'Unable to save your contact information. Please try again.' }];
         this.setState({
           submitting: false,
-          submissionErrors: pathOr(fallbackError, ['response', 'data', 'errors'], response),
+          submissionErrors: getAPIErrorOrDefault(response, 'Unable to save your contact information. Please try again.'),
         }, () => {
           scrollErrorIntoView();
         })
