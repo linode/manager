@@ -3,13 +3,13 @@ import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
-type CSSClasses =  'root'
+type ClassNames =  'root'
   | 'info'
   | 'success'
   | 'error'
   | 'warning';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   info: {
@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   }
 });
 
-type CombinedProps = SnackbarProviderProps & WithStyles<CSSClasses>;
+type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
 
 class SnackBar extends React.Component<CombinedProps> {
   
@@ -55,4 +55,6 @@ class SnackBar extends React.Component<CombinedProps> {
   }
 }
 
-export default withStyles<CSSClasses>(styles)(SnackBar);
+const styled = withStyles(styles);
+
+export default styled(SnackBar);
