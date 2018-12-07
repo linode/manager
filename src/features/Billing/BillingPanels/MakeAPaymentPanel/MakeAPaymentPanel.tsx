@@ -19,6 +19,7 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
 import { executePaypalPayment, makePayment, stagePaypalPayment } from 'src/services/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
@@ -295,8 +296,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       .catch((error) => {
         this.setState({
           submitting: false,
-          errors: pathOr([{ reason: 'Unable to make a payment at this time.' }],
-            ['response', 'data', 'errors'], error),
+          errors: getAPIErrorOrDefault(error, 'Unable to make a payment at this time.')
         });
         return;
       })
