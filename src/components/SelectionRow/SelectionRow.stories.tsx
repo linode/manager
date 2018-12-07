@@ -1,10 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
-
-import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
-
+import { SelectionRowProps } from 'src/components/SelectionRow';
 import ThemeDecorator from '../../utilities/storybookDecorators';
+import { SelectionRow } from './SelectionRow'
+
 
 interface State {
   selected: number;
@@ -142,7 +142,29 @@ class InteractiveExample extends React.Component<{}, State> {
           {
             this
               .createItems()
-              .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
+              .map((item, idx) => (
+                <SelectionRow
+                  key={idx}
+                  {...item}
+                  classes={{
+                    root: '',
+                    respPadding: '',
+                    images: '',
+                    libTitleContainer: '',
+                    libRadio: '',
+                    libRadioLabel: '',
+                    libTitle: '',
+                    libTitleLink: '',
+                    libDescription: '',
+                    colImages: '',
+                    stackScriptCell: '',
+                    stackScriptUsername: '',
+                    deployButton: '',
+                    textButton: ''
+                  }}
+                  openStackScriptDrawer={() => true}
+                />
+              )
           }
         </React.Fragment>
       </StaticRouter>

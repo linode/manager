@@ -1,7 +1,6 @@
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch, MapStateToProps } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -19,7 +18,7 @@ interface State {
 }
 
 interface DispatchProps {
-  closeStackScriptDrawer: () => void;
+  closeDrawer: () => void;
 }
 
 interface StateProps {
@@ -27,16 +26,17 @@ interface StateProps {
   stackScriptId?: number;
 }
 
-type Props = DispatchProps & StateProps;
+type CombinedProps = DispatchProps
+  & StateProps;
 
-class StackScriptDrawer extends React.Component<Props, State> {
+class StackScriptDrawer extends React.Component<CombinedProps, State> {
 
   state: State = {
     loading: true,
     error: false
   };
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: StateProps) {
     const { stackScriptId } = this.props;
     const { stackScriptId: prevStackScriptId } = prevProps;
 
@@ -53,7 +53,7 @@ class StackScriptDrawer extends React.Component<Props, State> {
   }
 
   closeDrawer = () => {
-    this.props.closeStackScriptDrawer();
+    this.props.closeDrawer();
   }
 
 
@@ -61,17 +61,13 @@ class StackScriptDrawer extends React.Component<Props, State> {
     const { open } = this.props;
     const { stackScript, error, loading } = this.state;
 
-    if (loading) {
-      return <CircleProgress />
-    }
-
-
     return (
       <Drawer
         title={stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript'}
         open={open}
         onClose={this.closeDrawer}
       >
+        {loading && <CircleProgress />}
         {error &&
           <Notice error spacingTop={8}>
             Couldn't load StackScript
@@ -83,16 +79,15 @@ class StackScriptDrawer extends React.Component<Props, State> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { closeStackScriptDrawer },
-  dispatch,
-);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+  return {
+    closeDrawer: () => dispatch(closeStackScriptDrawer()),
+  };
+};
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state: ApplicationState) => ({
   open: pathOr(false, ['stackScriptDrawer', 'open'], state),
   stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state),
 });
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-export default connected(StackScriptDrawer)
+export default connect(mapStateToProps, mapDispatchToProps)(StackScriptDrawer);

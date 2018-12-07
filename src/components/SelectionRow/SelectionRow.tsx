@@ -1,9 +1,9 @@
 import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
+
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
@@ -27,7 +27,8 @@ type ClassNames = 'root'
   | 'colImages'
   | 'stackScriptCell'
   | 'stackScriptUsername'
-  | 'deployButton';
+  | 'deployButton'
+  | 'textButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -98,6 +99,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     whiteSpace: 'nowrap',
     border: 0,
   },
+  textButton: {
+    border: 'none',
+    padding: 0,
+    textAlign: 'left'
+  }
 });
 
 export interface Props {
@@ -116,15 +122,16 @@ export interface Props {
   canDelete: boolean;
   canEdit: boolean;
   isPublic: boolean;
+  updateFor?: any[];
 }
 
 interface DispatchProps {
-  openStackScriptDrawerAction: (stackScriptId: number) => void;
+  openStackScriptDrawer: (stackScriptId: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & DispatchProps;
 
-class SelectionRow extends React.Component<CombinedProps, {}> {
+export class SelectionRow extends React.Component<CombinedProps, {}> {
   render() {
     const {
       classes,
@@ -143,7 +150,7 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
       canDelete,
       canEdit,
       isPublic,
-      openStackScriptDrawerAction: openStackScriptDrawer,
+      openStackScriptDrawer,
     } = this.props;
 
     /** onSelect and showDeployLink should not be used simultaneously */
@@ -156,17 +163,15 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
       return (
         <Typography role="header" variant="h3">
           {stackScriptUsername &&
-            <label
-              htmlFor={`${stackScriptID}`}
+            <span
               className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
               {stackScriptUsername} /&nbsp;
-      </label>
+      </span>
           }
-          <label
-            htmlFor={`${stackScriptID}`}
+          <span
             className={classes.libRadioLabel}>
             {label}
-          </label>
+          </span>
         </Typography>
       )
     }
@@ -181,7 +186,7 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
           }
           <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
             {!showDeployLink
-              ? <button onClick={() => {openStackScriptDrawer(stackScriptID)}}>{renderLabel()}</button>
+              ? <button className={classes.textButton} type="button" onClick={() => {openStackScriptDrawer(stackScriptID)}}>{renderLabel()}</button>
               : <Link to={`/stackscripts/${stackScriptID}`}>
                 {renderLabel()}
               </Link>
@@ -225,19 +230,16 @@ class SelectionRow extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openStackScriptDrawerAction },
-  dispatch,
-);
-
-export const connected = connect(undefined, mapDispatchToProps);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch) => {
+  return {
+    openStackScriptDrawer: (stackScriptId: number) => dispatch(openStackScriptDrawerAction(stackScriptId)),
+  };
+}
 
 export default compose(
+  connect(undefined, mapDispatchToProps),
   RenderGuard,
-  connected,
-  styled,
+  withStyles(styles),
 )(SelectionRow)
 
 const createTag: (images: string) => JSX.Element =
