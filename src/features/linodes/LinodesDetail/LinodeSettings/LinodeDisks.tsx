@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { path, pathEq, pathOr } from 'ramda';
+import { path, pathEq } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
@@ -26,6 +26,7 @@ import { events$, resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { createLinodeDisk, deleteLinodeDisk, getLinodeDisks, resizeLinodeDisk, updateLinodeDisk } from 'src/services/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
@@ -441,12 +442,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         this.props.request();
       })
       .catch((error) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
-        if (errors) {
-          this.setDrawer({ errors, submitting: false }, () => {
-            scrollErrorIntoView('linode-disk-drawer');
-          });
-        }
+        const errors = getAPIErrorOrDefault(error);
+        this.setDrawer({ errors, submitting: false }, () => {
+          scrollErrorIntoView('linode-disk-drawer');
+        });
       });
   };
 
@@ -467,12 +466,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         this.props.request();
       })
       .catch((error) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
-        if (errors) {
-          this.setDrawer({ errors, submitting: false }, () => {
-            scrollErrorIntoView('linode-disk-drawer');
-          });
-        }
+        const errors = getAPIErrorOrDefault(error);
+        this.setDrawer({ errors, submitting: false }, () => {
+          scrollErrorIntoView('linode-disk-drawer');
+        });
       });
   }
 
@@ -489,12 +486,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         this.props.request();
       })
       .catch((error) => {
-        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], error);
-        if (errors) {
-          this.setDrawer({ errors, submitting: false }, () => {
-            scrollErrorIntoView('linode-disk-drawer');
-          });
-        }
+        const errors = getAPIErrorOrDefault(error);
+        this.setDrawer({ errors, submitting: false }, () => {
+          scrollErrorIntoView('linode-disk-drawer');
+        });
       });
   }
 
@@ -514,11 +509,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         this.props.request();
       })
       .catch((error) => {
-        const errors = pathOr<Linode.ApiFieldError[]>(
-          [{ reason: 'There was an error deleting your disk.' }],
-          ['response', 'data', 'errors'],
-          error
-        );
+        const errors = getAPIErrorOrDefault(
+          error,
+          'There was an error deleting your disk.'
+        )
         this.setConfirmDelete({ errors, submitting: false });
       });
   }

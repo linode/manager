@@ -1,7 +1,7 @@
 import { Location } from 'history';
 import * as moment from 'moment';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import { compose, Lens, lensPath, pathEq, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -29,6 +29,7 @@ import {
 } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -439,9 +440,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         );
       })
       .catch((err) => {
-        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-        const errorStrings: string[] = errors.map(e => e.reason);
-        this.setState({ labelInput: { label, errorText: errorStrings[0] } }, () => {
+        const errorString = getErrorStringOrDefault(err);
+        this.setState({ labelInput: { label, errorText: errorString } }, () => {
           scrollErrorIntoView();
         });
       });
@@ -504,10 +504,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
           mutateDrawer: {
             ...mutateDrawer,
             loading: false,
-            error: pathOr('Mutation could not be initiated.',
-              ['response', 'data', 'errors', 0, 'reason'],
-              errors
-            )
+            error: getErrorStringOrDefault(errors, 'Mutation could not be initiated.')
           }
         })
       });

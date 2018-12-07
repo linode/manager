@@ -2,9 +2,9 @@ import { AxiosError } from 'axios';
 import { path, pathOr } from 'ramda';
 
 export const getAPIErrorOrDefault = (
-  errorResponse: AxiosError | Linode.ApiFieldError[],
-  defaultError: string = "An unexpected error occurred.",
-  field?: string,
+    errorResponse: AxiosError | Linode.ApiFieldError[],
+    defaultError: string = "An unexpected error occurred.",
+    field?: string,
   ): Linode.ApiFieldError[] => {
   const _defaultError = field
     ? [{ 'reason': defaultError, field: 'field' }]
@@ -17,7 +17,10 @@ export const getAPIErrorOrDefault = (
   )
   }
 
-export const getErrorStringOrDefault = (error: AxiosError | Linode.ApiFieldError[], defaultError: string): string => {
+export const getErrorStringOrDefault = (
+    error: AxiosError | Linode.ApiFieldError[],
+    defaultError: string = "An unexpected error occurred."
+  ): string => {
   // This will be the default case after refactors
   const reason = path<string>([0, 'reason'], error);
   if (reason) { return reason; }

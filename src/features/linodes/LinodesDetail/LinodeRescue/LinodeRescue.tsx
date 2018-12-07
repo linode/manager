@@ -16,6 +16,7 @@ import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { getLinodeDisks, rescueLinode } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 
 type ClassNames = 'root'
@@ -122,10 +123,9 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr(
-          [{ reason: 'There was an issue rescuing your Linode.' }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue rescuing your Linode.'
          )
           .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
             variant: 'error'

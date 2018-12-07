@@ -1,4 +1,4 @@
-import { append, clone, compose, defaultTo, Lens, lensPath, map, over, pathOr, set, view } from 'ramda';
+import { append, clone, compose, defaultTo, Lens, lensPath, map, over, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
@@ -20,6 +20,7 @@ import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
 import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancer } from 'src/services/nodebalancers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -240,8 +241,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`))
       .catch((errorResponse) => {
-        const defaultError = [{ reason: `An unexpected error has occured.` }];
-        const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
+        const errors = getAPIErrorOrDefault(errorResponse);
         this.setNodeErrors(errors.map((e:Linode.ApiFieldError) => ({
           ...e,
           ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
