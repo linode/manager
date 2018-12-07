@@ -361,7 +361,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
             onMenuClose={this.onClose}
             onMenuOpen={this.onOpen}
             value={false}
-            menuIsOpen={true}
           />
           <IconButton
             color="inherit"
