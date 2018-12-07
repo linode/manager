@@ -219,6 +219,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   selectedMenuItem: {
     ...theme.animateCircleIcon,
     backgroundColor: `${theme.bg.main} !important`,
+    '& .tag': {
+      backgroundColor: theme.bg.lightBlue,
+      color: theme.palette.text.primary,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white'
+      }
+    }
   },
 });
 
