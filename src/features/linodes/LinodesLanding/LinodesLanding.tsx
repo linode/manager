@@ -243,6 +243,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         images={images}
         openConfigDrawer={this.openConfigDrawer}
         toggleConfirmation={this.toggleDialog}
+        order={this.props.order}
+        orderBy={this.props.orderBy}
+        handleOrderChange={this.props.handleOrderChange}
       />
     )
   }

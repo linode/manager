@@ -1,1 +1,1 @@
-export { default, PaginationProps } from './Pagey';
+export { default, PaginationProps, HandleOrderChange, Order, OrderBy } from './Pagey';
