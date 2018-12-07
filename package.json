@@ -137,7 +137,8 @@
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
-    "mb": "npx mb"
+    "mb": "npx mb",
+    "release": "./scripts/release_change.log"
   },
   "husky": {
     "hooks": {
