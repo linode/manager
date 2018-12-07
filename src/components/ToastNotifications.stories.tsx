@@ -1,10 +1,9 @@
 import { storiesOf } from '@storybook/react';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
+import Snackbar from 'src/components/SnackBar';
 import ThemeDecorator from '../utilities/storybookDecorators';
-
 
 interface Props {
   onClick: (variant: string) => void;
@@ -50,12 +49,12 @@ const Enhanced = withSnackbar(Example);
 storiesOf('Toast Notification', module)
   .addDecorator(ThemeDecorator)
   .add('Default', () => (
-    <SnackbarProvider
+    <Snackbar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       maxSnack={3} // this is the amount of toasts that can appear on the screen at once
       autoHideDuration={40000} // this is the number of seconds the toast appears for
       data-qa-toast
     >
       <Enhanced />
-    </SnackbarProvider>
+    </Snackbar>
   ));

@@ -1,6 +1,5 @@
 import 'font-logos/assets/font-logos.css';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -9,6 +8,7 @@ import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
+import SnackBar from 'src/components/SnackBar';
 import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
@@ -102,7 +102,7 @@ const renderAuthentication = () =>
 
 ReactDOM.render(
   <Provider store={store}>
-    <SnackbarProvider
+    <SnackBar
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       maxSnack={3}
       autoHideDuration={4000}
@@ -115,7 +115,7 @@ ReactDOM.render(
           <Route render={renderAuthentication} />
         </Switch>
       </Router>
-    </SnackbarProvider>
+    </SnackBar>
   </Provider>,
   document.getElementById('root') as HTMLElement,
 );
