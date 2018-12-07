@@ -138,7 +138,7 @@
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
-    "release": "./scripts/release.sh"
+    "release": "./scripts/release_changelog.sh"
   },
   "husky": {
     "hooks": {
