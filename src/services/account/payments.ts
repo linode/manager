@@ -58,7 +58,7 @@ export const getPayments = (params?: any, filter?: any) =>
  * credit card.
  * 
  */
-export const makePayment = (data: { usd: string, CVV: string }) =>
+export const makePayment = (data: { usd: string, CVV?: string }) =>
   Request<Linode.Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
