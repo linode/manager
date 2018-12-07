@@ -117,6 +117,7 @@ class Tag extends React.Component<CombinedProps, {}> {
       classes,
       className,
       history, location, staticContext, match, // Don't pass route props to the Chip component
+      asSuggestion,
       ...chipProps
     } = this.props;
 

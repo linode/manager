@@ -45,7 +45,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         clickable
         colorVariant={selected ? 'blue' : 'lightBlue'}
         component="button"
-        asSuggestion
+        asSuggestion={true}
         className="tag"
       />
     );
