@@ -6,6 +6,7 @@ import {
   lensPath,
   not,
   omit,
+  pathOr,
   set,
   when,
 } from 'ramda';
@@ -119,6 +120,14 @@ export default <T>(...fns: Function[]): Promise<T> => {
 
   return Axios(config)
     .then(response => response.data) // We only ever want to deal with Linode API responses, not Axios data
+    .catch(error => {
+      const defaultError = pathOr(
+        [{'reason': 'An unexpected error has occurred.'}],
+        ['response', 'data', 'errors'],
+        error
+      );
+      throw defaultError;
+    }) // Same with error messages. This way all errors are in Linode.ApiError[] format.
 
   /*
    * If in the future, we want to hook into every single
