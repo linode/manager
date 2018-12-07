@@ -148,7 +148,7 @@ Creating a hotfix:
 Copy relative changes from the [CHANGELOG.md](https://github.com/linode/manager/blob/master/CHANGELOG.md) into the release description.
 
 Creating a release candidate:
-1. run yarn release ${release version} ${release date yyyy.MM.dd}, this will create the release branch and update changelog. (Note: make sure to stage any work, the script will clear working tree)
+1. run `yarn release ${release version} ${release date yyyy.MM.dd}`, this will create the release branch and update changelog. (Note: make sure to stage any work, the script will clear working tree)
 2. review changelog, update manually if necessary
 3. `yarn version --new-version ${release version}` # bump a minor or major version, updating both the `package.json` and `yarn-shrinkwrap.json`
 4. stage and commit the version bump and changelog addition commit message 'v${release version}'
