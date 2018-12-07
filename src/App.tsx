@@ -20,7 +20,6 @@ import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import Footer from 'src/features/Footer';
-import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -394,7 +393,6 @@ export class App extends React.Component<CombinedProps, State> {
                   <DomainCreateDrawer />
                   <VolumeDrawer />
                   <BackupDrawer />
-                  <StackScriptDrawer />
                 </div>
               </RegionsProvider>
             </TypesProvider>

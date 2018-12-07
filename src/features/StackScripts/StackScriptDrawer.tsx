@@ -44,7 +44,7 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
       this.setState({ loading: true });
       getStackScript(stackScriptId)
       .then(stackScript => {
-        this.setState({ stackScript, loading: false })
+        this.setState({ stackScript, loading: false, error: false })
       })
       .catch(() => {
         this.setState({ error: true, loading: false })
@@ -61,18 +61,40 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
     const { open } = this.props;
     const { stackScript, error, loading } = this.state;
 
+    if (loading) {
+      return (
+        <Drawer
+          title={'StackScript'}
+          open={open}
+          onClose={this.closeDrawer}
+        >
+          <CircleProgress />
+        </Drawer>
+      );
+    }
+
+    if (error) {
+      return (
+        <Drawer
+          title={'StackScript'}
+          open={open}
+          onClose={this.closeDrawer}
+        >
+          {error &&
+            <Notice error spacingTop={8}>
+              Couldn't load StackScript
+            </Notice>
+          }
+        </Drawer>
+      );
+    }
+
     return (
       <Drawer
         title={stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript'}
         open={open}
         onClose={this.closeDrawer}
       >
-        {loading && <CircleProgress />}
-        {error &&
-          <Notice error spacingTop={8}>
-            Couldn't load StackScript
-          </Notice>
-        }
         {stackScript && <StackScript data={stackScript} />}
       </Drawer>
     );
