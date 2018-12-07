@@ -511,6 +511,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const buttonProps: ButtonProps = {
       type: submitting ? 'secondary' : 'primary',
       disabled: submitting,
+      loading: submitting,
       className: classNames({ loading: submitting }),
       onClick: isDomain
         ? this.onDomainEdit
