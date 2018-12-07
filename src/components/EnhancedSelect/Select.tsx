@@ -67,9 +67,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .react-select__input': {
       width: '100%',
       color: theme.palette.text.primary,
-      '& input': {
-        width: '100% !important',
-      },
     },
     '& .react-select__menu': {
       margin: '-1px 0 0 0',
@@ -109,31 +106,36 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
     '& .react-select__multi-value': {
       borderRadius: 4,
-      backgroundColor: theme.bg.main,
+      backgroundColor: theme.bg.lightBlue,
       alignItems: 'center',
-      padding: '2px 2px 3px',
-      '& svg': {
-        color: 'white',
-      },
+      
     },
     '& .react-select__multi-value__label': {
       color: theme.palette.text.primary,
-      fontSize: '100%',
-      backgroundColor: theme.bg.main,
+      fontSize: '.8rem',
+      height: 20,
+      marginTop: 2,
+      marginBottom: 2,
+      marginRight: 4,
+      paddingLeft: 6,
+      paddingRight: 0,
     },
     '& .react-select__multi-value__remove': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: 'transparent',
       borderRadius: '50%',
-      width: 18,
-      height: 18,
-      padding: 0,
+      padding: 2,
       marginLeft: 4,
       marginRight: 4,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      '& svg': {
+        color: theme.palette.text.primary,
+        width: 12,
+        height: 12,
+      },
       '&:hover': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.primary.main,
         '& svg': {
           color: 'white',
         },
