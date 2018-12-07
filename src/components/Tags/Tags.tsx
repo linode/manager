@@ -16,12 +16,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return ({
     root: {},
     tag: {
-      backgroundColor: theme.color.grey2,
       color: theme.palette.text.primary,
       fontFamily: 'LatoWeb',
-      '&:focus': {
-        backgroundColor: theme.color.grey2,
-      },
     },
   });
 };
@@ -39,6 +35,7 @@ export class Tags extends React.Component<CombinedProps, {}> {
           key={eachTag}
           clickable={clickable}
           component="button"
+          colorVariant="lightBlue"
         />
       )
     })

@@ -70,6 +70,7 @@ const primaryColors = {
   headline: '#32363C',
   divider: '#f4f4f4',
   offBlack: '#444',
+  white: '#fff',
 }
 
 const iconCircleAnimation = {
@@ -385,7 +386,11 @@ const themeDefaults: ThemeOptions = {
         },
         '&:hover': {
           '& $deleteIcon': {
-            color: primaryColors.text,
+            color: primaryColors.white,
+            '&:hover': {
+              color: primaryColors.main,
+              backgroundColor: primaryColors.white,
+            },
           },
         },
       },
@@ -396,11 +401,12 @@ const themeDefaults: ThemeOptions = {
         top: -1,
       },
       deleteIcon: {
-        color: '#aaa',
-        width: 20,
-        height: 20,
-        marginLeft: 2,
-        marginRight: 2,
+        color: primaryColors.text,
+        width: 12,
+        height: 12,
+        marginLeft: 4,
+        marginRight: 4,
+        borderRadius: '50%',
       },
     },
     MuiCircularProgress: {
