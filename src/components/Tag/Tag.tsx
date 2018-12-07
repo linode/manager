@@ -56,6 +56,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
         backgroundColor: theme.palette.primary.main,
         color: 'white'
       },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+        color: theme.color.black,
+      }
     },
     green: {
       backgroundColor: '#61CD7B',
@@ -88,6 +92,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
 export interface Props extends ChipProps {
   label: string;
   colorVariant?: Variants;
+  asSuggestion?: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
@@ -99,6 +104,9 @@ class Tag extends React.Component<CombinedProps, {}> {
 
   handleClick = (e: React.MouseEvent<any>) => {
     e.preventDefault();
+    if (this.props.asSuggestion) {
+      e.stopPropagation();
+    }
     const { history, label } = this.props;
     history.push(`/search/?query=${label}`);
   }
