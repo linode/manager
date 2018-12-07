@@ -15,6 +15,7 @@ const primaryColors = {
   headline: '#f4f4f4',
   divider: '#222222',
   offBlack: '#fff',
+  white: '#222',
 }
 
 const iconCircleAnimation = {

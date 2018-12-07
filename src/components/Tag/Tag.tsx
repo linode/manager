@@ -25,59 +25,60 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
     root: {},
     white: {
       backgroundColor: theme.color.white,
-      '&:focus': {
+      '&:hover': {
         backgroundColor: theme.color.white,
       },
     },
     gray: {
       backgroundColor: '#939598',
       color: 'white',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: '#939598',
       },
     },
     lightGray: {
       backgroundColor: '#C9CACB',
       color: 'white',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: '#C9CACB',
       },
     },
     blue: {
       backgroundColor: theme.palette.primary.main,
       color: 'white',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: theme.palette.primary.main,
       },
     },
     lightBlue: {
       backgroundColor: theme.bg.lightBlue,
-      '&:focus': {
-        backgroundColor: theme.bg.lightBlue,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white'
       },
     },
     green: {
       backgroundColor: '#61CD7B',
       color: 'white',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: '#61CD7B',
       },
     },
     lightGreen: {
       backgroundColor: '#DFF3E7',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: '#DFF3E7',
       },
     },
     yellow: {
       backgroundColor: '#F8D147',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: '#F8D147',
       },
     },
     lightYellow: {
       backgroundColor: '#FCF4DD',
-      '&:focus': {
+      '&:hover': {
         backgroundColor: '#FCF4DD',
       },
     },
@@ -123,7 +124,7 @@ class Tag extends React.Component<CombinedProps, {}> {
       onClick={this.handleClick}
       data-qa-tag={this.props.label}
       component="button"
-      role="term"
+      role="button"
     />;
   }
 };

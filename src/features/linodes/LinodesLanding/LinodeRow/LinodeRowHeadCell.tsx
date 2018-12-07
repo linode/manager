@@ -25,9 +25,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
     marginLeft: theme.spacing.unit * 4,
-    '& .chip': {
-      cursor: 'pointer',
-    },
   },
 });
 
