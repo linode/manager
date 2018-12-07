@@ -29,7 +29,7 @@ class Example extends React.PureComponent<InjectedNotistackProps, {}> {
     const variants = ['default', 'success', 'warning', 'error', 'info'];
 
     // enqueueSnackbar comes from the notistack library and triggers the toast to appear
-    const showToast = (variant: any) => enqueueSnackbar('Hello world', {
+    const showToast = (variant: any) => enqueueSnackbar('Toast message. This will auto destruct after four seconds.', {
       variant,
     })
 
@@ -50,10 +50,10 @@ storiesOf('Toast Notification', module)
   .addDecorator(ThemeDecorator)
   .add('Default', () => (
     <Snackbar
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       maxSnack={3} // this is the amount of toasts that can appear on the screen at once
       autoHideDuration={40000} // this is the number of seconds the toast appears for
       data-qa-toast
+      hideIconVariant={true}
     >
       <Enhanced />
     </Snackbar>
