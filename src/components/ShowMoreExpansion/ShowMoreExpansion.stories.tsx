@@ -1,11 +1,9 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import ShowMoreExpansion from './ShowMoreExpansion';
 
 storiesOf('ShowMoreExpansion', module)
-.addDecorator(ThemeDecorator)
 .add('default', () => (
   <ShowMoreExpansion name="Show Older Images">
     <Typography>

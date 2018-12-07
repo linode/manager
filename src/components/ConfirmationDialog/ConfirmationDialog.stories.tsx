@@ -3,7 +3,6 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import ConfirmationDialog from './ConfirmationDialog';
 
 class Example extends React.Component {
@@ -64,5 +63,4 @@ class Example extends React.Component {
   }
 }
 storiesOf('Confirmation Dialogs', module)
-  .addDecorator(ThemeDecorator)
   .add('Simple Confirmation', () => (<Example />));

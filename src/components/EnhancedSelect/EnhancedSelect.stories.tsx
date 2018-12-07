@@ -1,11 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
-
-import Select, { Item } from './Select';
-
 import timezones from 'src/assets/timezones/timezones';
+import Select, { Item } from './Select';
 
 const tz = timezones.map((timezone:any) => {
   return { value: timezone.name, label: timezone.label };
@@ -45,7 +41,7 @@ interface State {
 }
 
 class Example extends React.Component<{},State> {
-  state:State = { 
+  state:State = {
     open: false,
     valueCreatable: [],
     valueError: null,
@@ -60,7 +56,7 @@ class Example extends React.Component<{},State> {
   }
 
   handleChangeSingle = (valueSingle: Item) => {
-    this.setState({ 
+    this.setState({
       valueSingle,
     })
   }
@@ -114,7 +110,7 @@ class Example extends React.Component<{},State> {
   }
 
   render() {
-    const { 
+    const {
       valueAsync,
       valueCreatable,
       valueMulti,
@@ -179,7 +175,6 @@ class Example extends React.Component<{},State> {
 }
 
 storiesOf('Enhanced Select', module)
-  .addDecorator(ThemeDecorator)
   .add('Example', () => (
     <Example />
   ));

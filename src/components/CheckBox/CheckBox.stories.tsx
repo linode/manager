@@ -1,7 +1,5 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import CheckBox from './CheckBox';
 
 class InteractiveCheckboxes extends React.Component {
@@ -88,8 +86,6 @@ class InteractiveCheckboxes extends React.Component {
 }
 
 storiesOf('CheckBox', module)
-.addDecorator(ThemeDecorator)
 .add('Interactive', () => (
   <InteractiveCheckboxes />
-))
-;
+));
