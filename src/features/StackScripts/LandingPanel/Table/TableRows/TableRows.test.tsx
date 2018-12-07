@@ -31,9 +31,6 @@ beforeAll(() => {
 
 describe('StackScript Table Rows', () => {
   it('should render 2 rows', () => {
-
-    // console.log(component.debug());
-
     expect(component.find('WithStyles(withRouter(TableRow))')).toHaveLength(2)
   });
 
@@ -41,14 +38,14 @@ describe('StackScript Table Rows', () => {
     const firstRow = component
       .find('WithStyles(WrappedTableCell)[parentColumn="Compatible Images"]')
       .first();
-    expect(firstRow.find('WithStyles(Tag)')).toHaveLength(3);
+    expect(firstRow.find('WithStyles(withRouter(Tag))')).toHaveLength(3);
   });
 
   it('the second row should render 3 tags and a "Show More" button', () => {
     const secondRow = component
       .find('WithStyles(WrappedTableCell)[parentColumn="Compatible Images"]')
       .at(1);
-    expect(secondRow.find('WithStyles(Tag)')).toHaveLength(3);
+    expect(secondRow.find('WithStyles(withRouter(Tag))')).toHaveLength(3);
     expect(secondRow.find('WithStyles(ShowMore)')).toHaveLength(1)
   });
 

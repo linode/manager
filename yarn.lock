@@ -12421,6 +12421,13 @@ stealthy-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
 
+storybook-react-router@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/storybook-react-router/-/storybook-react-router-1.0.2.tgz#8c53a809b343d41002c3373e53ef4a642a2b34ce"
+  integrity sha512-+dV0wMO8DW3oUaUykoQJKC11uugwgwZRHsXksmO6bRo36CDoJPGFjfnT8LAkDpT1E9FaDZ668xOhJ+7Ml0qUDQ==
+  dependencies:
+    prop-types "^15.6.1"
+
 stream-browserify@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.1.tgz#66266ee5f9bdb9940a4e4514cafb43bb71e5c9db"

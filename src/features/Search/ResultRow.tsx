@@ -39,6 +39,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingBottom: '0 !important',
     width: '100%',
     cursor: 'pointer',
+    '&:hover': {
+      '& $rowContent': {
+        background: theme.bg.tableHeader,
+        '&:before': {
+          backgroundColor: theme.palette.primary.main,
+        }
+      }
+    },
+  },
+  description: {
   },
   label: {
     wordBreak: 'break-all',
@@ -68,14 +78,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   regionCell: {
-    width: '100%', 
+    width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '15%',
       padding: 4,
     },
   },
   createdCell: {
-    width: '100%', 
+    width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20%',
       padding: 4,
