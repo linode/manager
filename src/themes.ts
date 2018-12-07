@@ -56,7 +56,7 @@ export const dark = createTheme({
     offWhite: '#111111',
     offWhiteDT: '#444', // better handing for dark theme
     navy: '#32363C',
-    lightBlue: '#444',
+    lightBlue: '#222',
     white: '#32363C',
     pureWhite: '#000',
     tableHeader: 'rgba(0, 0, 0, 0.15)',
@@ -220,20 +220,14 @@ export const dark = createTheme({
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
       },
     },
+    MuiChip: {
+      root: {
+        color: primaryColors.text,
+      }
+    },
     MuiCardActions: {
       root: {
         backgroundColor: 'rgba(0, 0, 0, 0.2) !important',
-      },
-    },
-    MuiChip: {
-      root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        color: '#fff',
-        '&:hover': {
-          '& $deleteIcon': {
-            color: '#fff',
-          },
-        },
       },
     },
     MuiDialog: {
