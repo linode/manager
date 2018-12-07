@@ -1,8 +1,5 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from 'src/utilities/storybookDecorators';
-
 import PaginationControls from './PaginationControls';
 
 class Example extends React.Component<{}, { currentPage: number }> {
@@ -30,7 +27,6 @@ class Example extends React.Component<{}, { currentPage: number }> {
 export default Example;
 
 storiesOf('Pagination Controls', module)
-  .addDecorator(ThemeDecorator)
   .add('Interactive example', () => (
     <Example />
   ))

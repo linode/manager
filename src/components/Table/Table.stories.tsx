@@ -4,11 +4,9 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
-import ThemeDecorator from 'src/utilities/storybookDecorators';
 import TableWrapper from './Table';
 
 storiesOf('Table', module)
-  .addDecorator(ThemeDecorator)
   .add('default', () => (
     <TableWrapper>
       <TableHead data-qa-table>

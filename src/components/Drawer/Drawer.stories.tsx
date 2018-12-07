@@ -1,9 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
 import Button from 'src/components/Button';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import ActionsPanel from '../ActionsPanel';
 import TextField from '../TextField';
 import Drawer from './Drawer';
@@ -50,7 +47,6 @@ class Example extends React.Component {
 }
 
 storiesOf('Drawer', module)
-  .addDecorator(ThemeDecorator)
   .add('Example', () => (
     <Example />
   ));

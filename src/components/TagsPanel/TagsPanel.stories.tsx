@@ -6,7 +6,7 @@ import  MockAdapter from 'axios-mock-adapter';
 
 import { API_ROOT } from '../../constants';
 
-import ThemeDecorator from '../../utilities/storybookDecorators';
+
 import TagsPanel from './TagsPanel';
 
 const API_REQUEST = `${API_ROOT}/tags`;
@@ -44,7 +44,7 @@ class TagsPanelDemo extends React.Component<Props, {}> {
       tags
     });
   }
-  
+
   render() {
     const { tags } = this.state;
 
@@ -56,9 +56,8 @@ class TagsPanelDemo extends React.Component<Props, {}> {
       );
     }
   }
-  
+
 storiesOf('Tags Panel', module)
-  .addDecorator(ThemeDecorator)
   .addDecorator(story => {
     const mock = new MockAdapter(axios);
 

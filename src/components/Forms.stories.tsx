@@ -1,13 +1,10 @@
-import { storiesOf } from '@storybook/react';
-import * as React from 'react';
-
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import RadioGroup from '@material-ui/core/RadioGroup';
-
-import ThemeDecorator from '../utilities/storybookDecorators';
+import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 import CheckBox from './CheckBox';
 import MenuItem from './MenuItem';
 import Radio from './Radio';
@@ -168,11 +165,11 @@ class ExampleCheckboxes extends React.Component {
 
 class ExampleRadios extends React.Component {
     state = { value: undefined };
-  
+
     handleChange = (e: React.ChangeEvent<HTMLFormElement>, value: string) => {
       this.setState(() => ({ value }));
     }
-  
+
     render() {
       return (
         <React.Fragment>
@@ -196,7 +193,6 @@ class ExampleRadios extends React.Component {
 }
 
 storiesOf('Forms', module)
-  .addDecorator(ThemeDecorator)
   .add('Form Examples', () => (
     <React.Fragment>
       {fields.map(eachField =>

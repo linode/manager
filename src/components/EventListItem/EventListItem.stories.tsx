@@ -1,7 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import List from 'src/components/core/List';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import EventListItem from './EventListItem';
 
 const testContent = 'We hope you\'re doing well! We\'re sending you this update ' +
@@ -9,7 +8,6 @@ const testContent = 'We hope you\'re doing well! We\'re sending you this update 
   'know more about how you\'re using the service.';
 
 storiesOf('EventListItem', module)
-.addDecorator(ThemeDecorator)
 .add('All EventListItems', () => (
   <React.Fragment>
     <List disablePadding>

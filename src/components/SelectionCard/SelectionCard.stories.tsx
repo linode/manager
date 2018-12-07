@@ -1,15 +1,11 @@
+import Alarm from '@material-ui/icons/Alarm';
+import InsertPhoto from '@material-ui/icons/InsertPhoto';
 import { storiesOf } from '@storybook/react';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import FR from 'flag-icon-css/flags/4x3/fr.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import * as React from 'react';
-
-import Alarm from '@material-ui/icons/Alarm';
-import InsertPhoto from '@material-ui/icons/InsertPhoto';
-
 import Grid from 'src/components/Grid';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import SelectionCard, { Props as CardProps } from './SelectionCard';
 
 class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
@@ -84,7 +80,6 @@ class InteractiveExample extends React.Component<{}, { cards: CardProps[] }> {
 export default InteractiveExample;
 
 storiesOf('SelectionCard', module)
-.addDecorator(ThemeDecorator)
 .add('Interactive example', () => (
   <InteractiveExample />
 ))

@@ -6,7 +6,7 @@ import  MockAdapter from 'axios-mock-adapter';
 
 import { API_ROOT } from '../../constants';
 
-import ThemeDecorator from '../../utilities/storybookDecorators';
+
 import TagsInput from './TagsInput';
 
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -41,12 +41,11 @@ class TagsInputDemo extends React.Component<{}, {}> {
     );
   }
 }
-  
+
 storiesOf('Tags Input', module)
-  .addDecorator(ThemeDecorator)
   .add('Tags Input', () => {
     const mock = new MockAdapter(axios);
-    
+
     mock.onGet(API_REQUEST).reply(200, {
       data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({label: tag}))
     });
@@ -54,7 +53,7 @@ storiesOf('Tags Input', module)
   })
   .add('Tags Input with an error', () => {
     const mock = new MockAdapter(axios);
-    
+
     mock.onGet(API_REQUEST).reply(500, {});
     return <TagsInputDemo />
   })

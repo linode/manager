@@ -4,12 +4,10 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { default as MDivider } from 'src/components/core/Divider';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 
 const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />;
 
 storiesOf('Button', module)
-  .addDecorator(ThemeDecorator)
   .add('Types', () => (
     <React.Fragment>
       <Button type="primary" data-qa-button="primary">Primary</Button>

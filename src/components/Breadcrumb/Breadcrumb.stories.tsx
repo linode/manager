@@ -2,9 +2,8 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import Breadcrumb from './Breadcrumb';
+
 interface Props {
   labelLink?: string;
 }
@@ -44,7 +43,6 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
 }
 
 storiesOf('Breadcrumb', module)
-  .addDecorator(ThemeDecorator)
   .add('Static text', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>

@@ -5,7 +5,6 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
 import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import Select from './Select';
 
 interface State {
@@ -61,7 +60,6 @@ class Example extends React.Component<any, State> {
 }
 
 storiesOf('Select', module)
-  .addDecorator(ThemeDecorator)
   .add('Example', () => (
     <Grid container style={{ padding: 16 }}>
       <Grid item xs={12}>

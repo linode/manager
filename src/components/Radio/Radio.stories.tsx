@@ -2,7 +2,6 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import Radio from './Radio';
 
 class Example extends React.Component<{}, { value?: string }> {
@@ -30,7 +29,6 @@ class Example extends React.Component<{}, { value?: string }> {
 }
 
 storiesOf('Radio', module)
-  .addDecorator(ThemeDecorator)
   .add('Interactive', () => (
     <Example />
   ));

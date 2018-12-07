@@ -1,11 +1,8 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import Notice from './Notice';
 
 storiesOf('Notice', module)
-.addDecorator(ThemeDecorator)
 .add('All Notices', () => (
   <React.Fragment>
     <div style={{padding: 20, backgroundColor: '#f4f4f4'}}>

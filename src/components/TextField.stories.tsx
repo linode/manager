@@ -1,11 +1,8 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../utilities/storybookDecorators';
 import TextField from './TextField';
 
 storiesOf('TextField', module)
-.addDecorator(ThemeDecorator)
 .add('Normal', () => (
   <TextField
     label="Input Label"

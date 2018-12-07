@@ -1,14 +1,9 @@
 import { storiesOf } from '@storybook/react';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
-
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-
 import Radio from 'src/components/Radio';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
-
 import { TimeInterval } from 'src/utilities/formatDate';
 import { DateTimeDisplay } from './DateTimeDisplay';
 
@@ -98,7 +93,6 @@ class Example extends React.Component<{},State> {
 }
 
 storiesOf('DateTimeDisplay', module)
-  .addDecorator(ThemeDecorator)
   .add('Example', () => (
     <Example />
   ));

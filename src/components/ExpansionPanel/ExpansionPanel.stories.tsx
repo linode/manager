@@ -1,7 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import ActionsPanel from '../ActionsPanel';
 import ExpansionPanel from './ExpansionPanel';
 
@@ -52,7 +51,6 @@ class AsyncContentExample extends React.Component {
 }
 
 storiesOf('ExpansionPanel', module)
-  .addDecorator(ThemeDecorator)
   .add('Interactive', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
       <ExpansionPanel heading="Why is Linode the best?">

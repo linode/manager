@@ -1,7 +1,5 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
-import ThemeDecorator from '../../utilities/storybookDecorators';
 import ActionMenu, { Action } from './ActionMenu';
 
 interface Props {
@@ -100,7 +98,6 @@ class StoryActionMenuWithOneAction extends React.Component<CombinedProps> {
 }
 
 storiesOf('Action Menu', module)
-  .addDecorator(ThemeDecorator)
   .add('Action Menu', () => (
     <div style={{ float: 'left' }}>
       <StoryActionMenu />
