@@ -8,6 +8,7 @@ import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withTypes } from 'src/context/types';
@@ -15,6 +16,8 @@ import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/contex
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
+import { appendBitrateUnit, appendPercentSign, formatNumber, getMetrics } from 'src/utilities/statMetrics';
+import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 
@@ -24,11 +27,7 @@ type ClassNames = 'chart'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
-  | 'graphControls'
-  | 'blue'
-  | 'green'
-  | 'red'
-  | 'yellow';
+  | 'graphControls';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return {
@@ -53,25 +52,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
     },
     bottomLegend: {
       margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
-      display: 'flex',
-      flexWrap: 'wrap',
       color: '#777',
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
         '& > div': {
           marginBottom: theme.spacing.unit * 2,
-        },
-      },
-      '& > div': {
-        display: 'flex',
-        marginRight: theme.spacing.unit * 5,
-        '&:before': {
-          content: '""',
-          display: 'block',
-          width: 20,
-          height: 20,
-          marginRight: theme.spacing.unit,
         },
       },
     },
@@ -82,27 +67,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
       alignItems: 'center',
-    },
-    blue: {
-      '&:before': {
-        backgroundColor: theme.palette.primary.main,
-      },
-    },
-    green: {
-      '&:before': {
-        backgroundColor: theme.color.green,
-      },
-    },
-    red: {
-      '&:before': {
-        backgroundColor: theme.color.red,
-      },
-    },
-    yellow: {
-      '&:before': {
-        backgroundColor: theme.color.yellow,
-      },
-    },
+    }
   };
 };
 
@@ -242,6 +207,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
     const { classes } = this.props;
     const data = pathOr([[]], ['data','cpu'], stats);
+
+    const metrics = getMetrics(data);
+    const format = compose(appendPercentSign, formatNumber);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -261,9 +230,20 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.blue}>
-            CPU %
-          </div>
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'CPU %',
+                    legendColor: 'blue',
+                    data: metrics,
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
@@ -272,6 +252,16 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderIPv4TrafficChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
+
+    const data = {
+      publicIn: pathOr([[]], ['data','netv4','in'], stats),
+      publicOut: pathOr([[]], ['data','netv4','out'], stats),
+      privateIn: pathOr([[]], ['data','netv4','private_in'], stats),
+      privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
+    };
+
+    const format = compose(appendBitrateUnit, formatNumber);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -284,40 +274,66 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#3683dc',
-                data: pathOr([[]], ['data','netv4','in'], stats),
+                data: data.publicIn,
                 label: 'Public Traffic In',
               },
               {
                 borderColor: '#01b159',
-                data: pathOr([[]], ['data','netv4','out'], stats),
+                data: data.publicOut,
                 label: 'Public Traffic Out',
               },
               {
                 borderColor: '#d01e1e',
-                data: pathOr([[]], ['data','netv4','private_in'], stats),
+                data: data.privateIn,
                 label: 'Private Traffic In',
               },
               {
                 borderColor: '#ffd100',
-                data: pathOr([[]], ['data','netv4','private_out'], stats),
+                data: data.privateOut,
                 label: 'Private Traffic Out',
               },
             ]}
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.blue}>
-            Public IPv4 Inbound
-          </div>
-          <div className={classes.green}>
-            Public IPv4 Outbound
-          </div>
-          <div className={classes.red}>
-            Private IPv4 Inbound
-          </div>
-          <div className={classes.yellow}>
-            Private IPv4 Outbound
-          </div>
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Private IPv4 Outbound',
+                    legendColor: 'yellow',
+                    data: getMetrics(data.privateOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Private IPv4 Inbound',
+                    legendColor: 'red',
+                    data: getMetrics(data.privateIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Public IPv4 Outbound',
+                    legendColor: 'green',
+                    data: getMetrics(data.publicOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Public IPv4 Inbound',
+                    legendColor: 'blue',
+                    data: getMetrics(data.publicIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
@@ -326,6 +342,16 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderIPv6TrafficChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
+
+    const data = {
+      publicIn: pathOr([[]], ['data','netv6','in'], stats),
+      publicOut: pathOr([[]], ['data','netv6','out'], stats),
+      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
+      privateOut: pathOr([[]], ['data','netv6','private_out'], stats)
+    };
+
+    const format = compose(appendBitrateUnit, formatNumber);
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -338,40 +364,66 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#3683dc',
-                data: pathOr([[]], ['data','netv6','in'], stats),
+                data: data.publicIn,
                 label: 'Public Traffic In',
               },
               {
                 borderColor: '#01b159',
-                data: pathOr([[]], ['data','netv6','out'], stats),
+                data: data.publicOut,
                 label: 'Public Traffic Out',
               },
               {
                 borderColor: '#d01e1e',
-                data: pathOr([[]], ['data','netv6','private_in'], stats),
+                data: data.privateIn,
                 label: 'Private Traffic In',
               },
               {
                 borderColor: '#ffd100',
-                data: pathOr([[]], ['data','netv6','private_out'], stats),
+                data: data.privateOut,
                 label: 'Private Traffic Out',
               },
             ]}
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.blue}>
-            Public IPv6 Inbound
-          </div>
-          <div className={classes.green}>
-            Public IPv6 Outbound
-          </div>
-          <div className={classes.red}>
-            Private IPv6 Inbound
-          </div>
-          <div className={classes.yellow}>
-            Private IPv6 Outbound
-          </div>
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Private IPv6 Outbound',
+                    legendColor: 'yellow',
+                    data: getMetrics(data.privateOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Private IPv6 Inbound',
+                    legendColor: 'red',
+                    data: getMetrics(data.privateIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Public IPv6 Outbound',
+                    legendColor: 'green',
+                    data: getMetrics(data.publicOut),
+                    format
+                  },
+                  {
+                    legendTitle: 'Public IPv6 Inbound',
+                    legendColor: 'blue',
+                    data: getMetrics(data.publicIn),
+                    format
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
@@ -380,6 +432,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderDiskIOChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
+
+    const data = {
+      io: pathOr([[]], ['data','io','io'], stats),
+      swap: pathOr([[]], ['data','io','swap'], stats)
+    };
+
     return (
       <React.Fragment>
         <div className={classes.chart}>
@@ -392,24 +450,44 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#d01e1e',
-                data: pathOr([[]], ['data','io','io'], stats),
+                data: data.io,
                 label: 'Disk I/O',
               },
               {
                 borderColor: '#ffd100',
-                data: pathOr([[]], ['data','io','swap'], stats),
+                data: data.swap,
                 label: 'Swap I/O',
               },
             ]}
           />
         </div>
         <div className={classes.bottomLegend}>
-          <div className={classes.red}>
-            I/O Rate
-            </div>
-          <div className={classes.yellow}>
-            Swap Rate
-            </div>
+          <Grid container>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'I/O Rate',
+                    legendColor: 'red',
+                    data: getMetrics(data.io),
+                    format: formatNumber
+                  }
+                ]}
+              />
+            </Grid>
+            <Grid item xs={12} lg={6}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Swap Rate',
+                    legendColor: 'yellow',
+                    data: getMetrics(data.swap),
+                    format: formatNumber
+                  }
+                ]}
+              />
+            </Grid>
+          </Grid>
         </div>
       </React.Fragment>
     )
