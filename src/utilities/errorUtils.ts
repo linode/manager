@@ -6,7 +6,7 @@ export const getAPIErrorOrDefault = (
     field?: string,
   ): Linode.ApiFieldError[] => {
     const _defaultError = field
-      ? [{ 'reason': defaultError, field: 'field' }]
+      ? [{ 'reason': defaultError, field }]
       : [{ 'reason': defaultError }]
 
     // This should never be empty, just double-checking for safety
