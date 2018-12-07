@@ -67,6 +67,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     padding: 0,
     marginLeft: 4,
     marginRight: 4,
+    '& circle': {
+      stroke: 'white',
+    },
   },
   valueInside: {
     position: 'absolute',

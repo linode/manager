@@ -379,7 +379,7 @@ const themeDefaults: ThemeOptions = {
         marginRight: 4,
         paddingLeft: 2,
         paddingRight: 2,
-        color: '#555',
+        color: primaryColors.text,
         fontSize: '.8rem',
         '&:last-child': {
           marginRight: 0
