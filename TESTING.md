@@ -140,7 +140,7 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 
 # Accessibility Testing
 
-The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `e2e/constants.js`, loads the page and runs the accessibility tests. 
+The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `e2e/constants.js`, loads the page and runs the accessibility tests.
 
 ##### Dependencies
 
@@ -152,4 +152,3 @@ The axe-core accessibility testing script has been integrated into the webdriver
      yarn axe
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
-

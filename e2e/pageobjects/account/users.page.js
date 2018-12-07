@@ -20,10 +20,10 @@ class Users extends Page {
     get createDrawerUsername() { return $('[data-qa-create-username] input'); }
     get createDrawerEmail() { return $('[data-qa-create-email] input'); }
     get createDrawerRestricted() { return $('[data-qa-create-restricted]'); }
-    get createDrawerSubmit() { return $(this.submitButton.selector); }
-    get createDrawerCancel() { return $(this.cancelButton.selector); }
+    get createDrawerSubmit() { return this.submitButton; }
+    get createDrawerCancel() { return this.cancelButton; }
 
-    get userDetailHeader() { return $('[data-qa-link-text]'); }
+    get userDetailHeader() { return this.breadCrumbLinkText; }
     get userProfileTab() { return $('[data-qa-tab="User Profile"]'); }
     get userPermissionsTab() { return $('[data-qa-tab="User Permissions"]'); }
 

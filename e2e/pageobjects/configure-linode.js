@@ -50,8 +50,6 @@ class ConfigureLinode extends Page {
     get plans() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]'); }
     get planNames() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card] [data-qa-select-card-heading]'); }
 
-    get tagsMultiSelect() { return $('[data-qa-multi-select="Type to choose or create a tag."]')}
-
     get labelHeader() { return $('[data-qa-label-header]'); }
     get label() { return $('[data-qa-label-header] input'); }
 
