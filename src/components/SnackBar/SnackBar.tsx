@@ -9,8 +9,7 @@ type ClassNames =  'root'
   | 'warning';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-  },
+  root: {},
   info: {
     backgroundColor: theme.bg.white,
     borderLeftColor: theme.palette.primary.main,
