@@ -68,7 +68,7 @@ describe('layouts/OAuth', () => {
       const res = parseQueryParams('entity=key&color=bronze&weight=20%20grams') as Linode.TodoAny;
       expect(res.entity).toBe('key');
       expect(res.color).toBe('bronze');
-      expect(res.weight).toBe('20%20grams');
+      expect(res.weight).toBe('20 grams');
     });
 
     it('returns an empty object for an empty string', () => {
