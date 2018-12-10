@@ -33,6 +33,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     top: theme.spacing.unit,
     marginRight: theme.spacing.unit,
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 16,
+    }
   },
   addButton: {
     marginTop: theme.spacing.unit / 2,
