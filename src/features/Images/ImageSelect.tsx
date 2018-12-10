@@ -3,15 +3,17 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 
 import { always, cond, groupBy, propOr } from 'ramda';
 
-import FormControl from 'src/components/core/FormControl';
 import InputLabel from 'src/components/core/InputLabel';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
+    paddingTop: '0px',
   },
 });
 
@@ -54,19 +56,26 @@ class ImageSelect extends React.Component<CombinedProps, State> {
     const { classes, imageError, onSelect } = this.props;
     const { renderedImages } = this.state;
     return (
-      <FormControl className={classes.root}>
+      <React.Fragment>
         <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
           Image
         </InputLabel>
-          <Select
-            // tooltipText="Choosing a 64-bit distro is recommended."
-            isMulti={false}
-            errorText={imageError}
-            onChange={onSelect}
-            options={renderedImages as any}
-            placeholder="Select an Image"
-          />
-      </FormControl>
+        <Grid className={classes.root} container direction="row" justify="flex-start" alignItems="center">
+          <Grid item>
+            <Select
+              id={'image-select'}
+              isMulti={false}
+              errorText={imageError}
+              onChange={onSelect}
+              options={renderedImages as any}
+              placeholder="Select an Image"
+            />
+          </Grid>
+          <Grid item spacing={0}>
+            <HelpIcon text="Choosing a 64-bit distro is recommended." />
+          </Grid>
+      </Grid>
+      </React.Fragment>
     );
   }
 }
