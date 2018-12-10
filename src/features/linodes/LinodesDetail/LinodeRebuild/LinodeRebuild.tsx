@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { isNil, pathOr } from 'ramda';
+import { isNil } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';

@@ -70,7 +70,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               placeholder="Select an Image"
             />
           </Grid>
-          <Grid item spacing={0}>
+          <Grid item>
             <HelpIcon text="Choosing a 64-bit distro is recommended." />
           </Grid>
       </Grid>

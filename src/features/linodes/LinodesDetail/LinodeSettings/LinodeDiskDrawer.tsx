@@ -1,4 +1,4 @@
-import { clamp, pathOr } from 'ramda';
+import { clamp } from 'ramda';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -14,6 +14,7 @@ import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getImages } from 'src/services/images';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from './ImageAndPassword';
@@ -100,10 +101,9 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       })
       .catch((errors) => {
         this.setState({
-          imageError: pathOr(
+          imageError: getErrorStringOrDefault(
+            errors,
             "There was an error loading your images.",
-            ['response', 'data', 'errors', 0, 'reason'],
-            errors
           )
         })
       });
@@ -111,7 +111,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     return {
-      hasErrorFor: getAPIErrorsFor({ label: 'label', size: 'size' }, props.errors || []),
+      hasErrorFor: getAPIErrorsFor({ label: 'label', size: 'size', root_pass: 'root_pass' }, props.errors || []),
     };
   }
 
@@ -216,12 +216,12 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       onClose,
       classes,
       password,
-      passwordError,
       userSSHKeys,
     } = this.props;
     const { images, imageError, selectedMode } = this.state;
 
     const generalError = this.getErrors('none');
+    const passwordError = this.getErrors('root_pass');
 
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
