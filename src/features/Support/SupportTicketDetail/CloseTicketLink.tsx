@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,6 +5,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { closeSupportTicket } from 'src/services/support';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollToTop from 'src/utilities/scrollToTop';
 
 interface Props {
@@ -56,15 +56,14 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     if (this.mounted) { this.setState({ isClosingTicket: true }); }
     closeSupportTicket(ticketId)
       .then(() => {
-        if (this.mounted) { 
+        if (this.mounted) {
           this.setState({ isClosingTicket: false, dialogOpen: false });
           scrollToTop();
         }
         closeTicketSuccess();
     })
       .catch((errorResponse) => {
-        const defaultError = [{'reason': 'Your ticket could not be closed.'}];
-        const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
+        const errors = getAPIErrorOrDefault(errorResponse, 'Your ticket could not be closed.');
         if (!this.mounted) { return; }
         this.setState({
           isClosingTicket: false,
@@ -97,7 +96,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     const { ticketCloseError } = this.state;
     return (
       <React.Fragment>
-        <Typography>{`If everything is resolved, you can `} 
+        <Typography>{`If everything is resolved, you can `}
             <a onClick={this.openConfirmationDialog} data-qa-close-ticket-link >close this ticket</a>.
         </Typography>
         <ConfirmationDialog

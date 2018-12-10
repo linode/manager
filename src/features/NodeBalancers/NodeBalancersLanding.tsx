@@ -1,5 +1,5 @@
 import * as Promise from 'bluebird';
-import { compose, path } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -30,6 +30,7 @@ import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
@@ -157,15 +158,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         });
       })
       .catch((err) => {
-        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
-
         return this.setState({
           deleteConfirmDialog: {
             ...this.state.deleteConfirmDialog,
             submitting: false,
-            errors: apiError
-              ? apiError
-              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
+            errors: getAPIErrorOrDefault(err, 'Unable to complete your request at this time.')
           },
         }, () => {
           scrollErrorIntoView();

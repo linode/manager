@@ -9,7 +9,7 @@ type Notification = Linode.Notification;
  * getEvents
  *
  * Retrieve a list of events on your account.
- * 
+ *
  */
 export const getEvents = (params: any = {}, filter: any = {}) =>
 Request<Page<Event>>(
@@ -23,7 +23,7 @@ Request<Page<Event>>(
  * getEvent
  *
  * Retrieve details about a single event.
- * 
+ *
  */
 export const getEvent = (eventId: number) =>
 Request<Event>(
@@ -35,7 +35,7 @@ Request<Event>(
  * markEventSeen
  *
  * Set the "seen" property of an event to true
- * 
+ *
  * @param eventId { number } ID of the event to designate as seen
  */
 export const markEventSeen = (eventId: number) =>
@@ -48,9 +48,9 @@ Request<{}>(
  * markEventRead
  *
  * Set the "read" property of an event to true
- * 
+ *
  * @param eventId { number } ID of the event to designate as read
- * 
+ *
  */
 export const markEventRead = (eventId: number) =>
 Request<{}>(
@@ -62,11 +62,10 @@ Request<{}>(
  * getNotifications
  *
  * Retrieve a list of active notifications on your account.
- * 
+ *
  */
 export const getNotifications = () =>
 Request<Page<Notification>>(
   setURL(`${API_ROOT}/account/notifications`),
   setMethod('GET'),
 )
-  .then(response => response.data);

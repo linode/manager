@@ -16,6 +16,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { withLinode } from '../context';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
@@ -151,10 +152,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.setState({ IPRequestError: undefined });
     return getLinodeIPs(this.props.linodeID)
       .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
-      .catch((errorResponse) => {
-        const defaultError = [{'reason': 'There was an error retrieving your network information.'}];
-        const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
-        this.setState({ IPRequestError: errors[0].reason, initialLoading: false });
+      .catch(errorResponse => {
+        const errorString = getErrorStringOrDefault(errorResponse, 'There was an error retrieving your network information.');
+        this.setState({ IPRequestError: errorString, initialLoading: false });
       });
   }
 

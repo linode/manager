@@ -15,7 +15,6 @@ export const getAccountInfo = () =>
     setURL(`${API_ROOT}/account`),
     setMethod('GET'),
   )
-  .then(response => response.data);
 
 /**
  * updateAccountInfo
@@ -29,7 +28,6 @@ export const updateAccountInfo = (data: Partial<Linode.Account>) =>
     setMethod('PUT'),
     setData(data, updateAccountSchema),
   )
-  .then(response => response.data);
 
 /**
  * getNetworkUtilization
@@ -42,7 +40,6 @@ export const getNetworkUtilization = () =>
     setURL(`${API_ROOT}/account/transfer`),
     setMethod('GET'),
   )
-  .then(response => response.data);
 
 /**
  * getAccountSettings
@@ -55,7 +52,6 @@ export const getAccountSettings = () =>
     setURL(`${API_ROOT}/account/settings`),
     setMethod('GET')
   )
-  .then(response => response.data);
 
 /**
  * updateAccountSettings
@@ -69,4 +65,3 @@ Request<Linode.AccountSettings>(
   setMethod('PUT'),
   setData(data, UpdateAccountSettingsSchema)
 )
-.then(response => response.data);

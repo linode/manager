@@ -21,6 +21,7 @@ import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { getImages } from 'src/services/images';
 import { rebuildLinode } from 'src/services/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
@@ -125,10 +126,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
         });
       })
       .catch((errorResponse) => {
-        pathOr(
-          [{ reason: 'There was an issue rebuilding your Linode' }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue rebuilding your Linode'
         )
           .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
             variant: 'error'

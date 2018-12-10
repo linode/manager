@@ -1,4 +1,3 @@
-import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -8,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import { updateIP } from 'src/services/networking';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -54,12 +54,12 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
     updateIP(address!, (!rdns || rdns === '') ? null : rdns)
-      .then((ipAddress) => {
+      .then((_) => {
         onClose();
       })
       .catch((errResponse) => {
         this.setState({
-          errors: path(['response', 'data', 'errors'], errResponse),
+          errors: getAPIErrorOrDefault(errResponse),
         }, () => {
           scrollErrorIntoView();
         });
