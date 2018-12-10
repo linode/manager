@@ -16,7 +16,7 @@ describe('services', () => {
 
         return Request(setData(data, schema))
           .catch((response) => {
-            expect(response.response.data.errors).toEqual([{
+            expect(response).toEqual([{
               field: 'region',
               reason: `A region is required.`,
             }]);
