@@ -145,7 +145,7 @@ class AccessPanel extends React.Component<CombinedProps> {
                   </TableCell>
                   <TableCell className={classes.cellUser}>
                     <div className={classes.userWrapper}>
-                      <img src={gravatarUrl} className={classes.gravatar} />
+                      <img src={gravatarUrl} className={classes.gravatar} alt={username} />
                       {username}
                     </div>
                   </TableCell>
