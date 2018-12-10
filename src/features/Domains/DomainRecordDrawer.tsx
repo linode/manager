@@ -10,6 +10,7 @@ import Notice from 'src/components/Notice';
 import { default as _TextField, Props as TextFieldProps } from 'src/components/TextField';
 import { createDomainRecord, updateDomain, updateDomainRecord } from 'src/services/domains';
 import defaultNumeric from 'src/utilities/defaultNumeric';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -288,20 +289,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     />
 
   handleSubmissionErrors = (errorResponse: any) => {
-    const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(errorResponse);
-    if (errors) {
+    const errors = getAPIErrorOrDefault(errorResponse, 'An unknown error has occured.', '_unknown');
       this.setState({ errors, submitting: false }, () => {
         scrollErrorIntoView();
       });
-      return;
-    }
-
-    this.setState({
-      submitting: false,
-      errors: [{ reason: 'An unknown error has occured.', field: '_unknown' }],
-    }, () => {
-      scrollErrorIntoView();
-    });
   }
 
   handleRecordSubmissionSuccess = () => {

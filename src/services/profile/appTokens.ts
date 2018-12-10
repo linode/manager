@@ -18,7 +18,6 @@ export const getAppTokens = (params?: any, filters?: any) =>
     setXFilter(filters),
     setURL(`${API_ROOT}/profile/apps`),
   )
-    .then(response => response.data);
 
 /**
  * getAppToken
@@ -32,7 +31,6 @@ export const getAppToken = (tokenId: number) =>
     setMethod('GET'),
     setURL(`${API_ROOT}/profile/apps/${tokenId}`),
   )
-    .then(response => response.data);
 
 /**
  * deleteAppToken

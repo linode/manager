@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -7,6 +6,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createSSHKey } from 'src/services/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
@@ -117,11 +117,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
       })
       .catch((error) => {
         this.setState({
-          errors: pathOr(
-            [{ reason: 'Unable to save SSH key. Please try again.' }],
-            ['response', 'data', 'errors'],
-            error,
-          ),
+          errors: getAPIErrorOrDefault(error, 'Unable to save SSH key. Please try again.'),
           submitting: false,
         });
       })

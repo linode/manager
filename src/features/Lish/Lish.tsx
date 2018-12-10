@@ -59,8 +59,7 @@ class Lish extends React.Component<CombinedProps, State> {
     }
 
     getLinode(linodeId)
-      .then((response) => {
-        const { data: linode } = response;
+      .then(linode => {
         if (!this.mounted) { return; }
         this.setState({
           linode,
@@ -89,7 +88,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return getLinodeLishToken(linodeId)
       .then((response) => {
-        const { data: { lish_token: token } } = response;
+        const { lish_token: token } = response;
         if (!this.mounted) { return; }
         this.setState({
           token,

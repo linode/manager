@@ -1,4 +1,4 @@
-import { compose, path } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -22,6 +22,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { LinodeAPI } from 'src/documentation';
 import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
@@ -160,7 +161,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
         this.setForm(form => ({
           ...form,
-          errors: path(['response', 'data', 'errors'], errResponse),
+          errors: getAPIErrorOrDefault(errResponse),
         }));
       });
   }
@@ -179,7 +180,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       .catch((errResponse) => {
         this.setForm(form => ({
           ...form,
-          errors: path(['response', 'data', 'errors'], errResponse),
+          errors: getAPIErrorOrDefault(errResponse),
         }));
       });
   }

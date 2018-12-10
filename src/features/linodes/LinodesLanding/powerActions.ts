@@ -1,11 +1,10 @@
 import * as moment from 'moment';
-import { pathOr } from 'ramda';
 
 import { events$, resetEventsPolling } from 'src/events';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getLinodeConfigs, linodeBoot, linodeReboot, linodeShutdown } from 'src/services/linodes';
 import { dateFormat } from 'src/time';
-
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export const genEvent = (
   action: string,
@@ -46,10 +45,8 @@ const _rebootLinode: LinodePowerAction = (id, label, config_id, sendToast) => {
       resetEventsPolling();
     })
     .catch((err) => {
-      const errors: Linode.ApiFieldError[] = pathOr(
-        [{ reason: 'There was an issue rebooting your Linode' }],
-        ['response', 'data', 'errors'],
-        err
+      const errors: Linode.ApiFieldError[] = getAPIErrorOrDefault(err,
+        'There was an issue rebooting your Linode'
       );
       errors.forEach(e => sendToast && sendToast(e.reason, {
         variant: 'error'

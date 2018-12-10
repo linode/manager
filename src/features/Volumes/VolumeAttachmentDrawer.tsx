@@ -1,4 +1,3 @@
-import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -13,6 +12,7 @@ import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
 import { attachVolume } from 'src/services/volumes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -127,12 +127,12 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     }
 
     attachVolume(Number(volumeID), { linode_id: Number(selectedLinode) })
-      .then((response) => {
+      .then((_) => {
         resetEventsPolling();
         onClose();
       })
       .catch((error) => {
-        this.setState({ errors: path(['response', 'data', 'errors'], error) }, () => {
+        this.setState({ errors: getAPIErrorOrDefault(error) }, () => {
           scrollErrorIntoView();
         });
       });

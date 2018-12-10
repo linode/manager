@@ -25,7 +25,6 @@ export const getPersonalAccessTokens = (params?: any, filters?: any) =>
     setXFilter(filters),
     setURL(`${API_ROOT}/profile/tokens`),
   )
-    .then(response => response.data);
 
 /**
  * getPersonalAccessToken
@@ -40,7 +39,6 @@ export const getPersonalAccessToken = (id: number) =>
     setMethod('GET'),
     setURL(`${API_ROOT}/profile/tokens/${id}`),
   )
-    .then(response => response.data);
 
 /**
  * createPersonalAccessToken
@@ -65,7 +63,6 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
     setURL(`${API_ROOT}/profile/tokens`),
     setData(data, createPersonalAccessTokenSchema),
   )
-    .then(response => response.data);
 
 /**
  * updatePersonalAccessToken
@@ -84,7 +81,6 @@ export const updatePersonalAccessToken = (tokenId: number, data: Partial<TokenRe
     setMethod('PUT'),
     setData(data, createPersonalAccessTokenSchema),
   )
-    .then(response => response.data);
 
 /**
  * deletePersonalAccessToken

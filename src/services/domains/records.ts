@@ -25,7 +25,6 @@ export const getDomainRecords = (domainId: number, params?: any) =>
     setParams(params),
     setMethod('GET'),
   )
-    .then(response => response.data);
 
 /**
  * View a single Record on this Domain.
@@ -38,7 +37,6 @@ export const getDomainRecord = (domainId: number, recordId: number) =>
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('GET'),
   )
-    .then(response => response.data);
 
 /**
  * Adds a new Domain Record to the zonefile this Domain represents.
@@ -52,7 +50,6 @@ export const createDomainRecord = (domainId: number, data: Partial<DomainRecord>
     setMethod('POST'),
     setData(data, createRecordSchema),
   )
-    .then(response => response.data);
 
 /**
  * Updates a single Record on this Domain.
@@ -70,7 +67,6 @@ export const updateDomainRecord = (
     setMethod('PUT'),
     setData(data, updateRecordSchema),
   )
-    .then(response => response.data);
 
 /**
  * Deletes a Record on this Domain..
@@ -83,4 +79,3 @@ export const deleteDomainRecord = (domainID: number, recordId: number) =>
     setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
     setMethod('DELETE'),
   )
-    .then(response => response.data);
