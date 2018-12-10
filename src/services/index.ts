@@ -112,10 +112,7 @@ const reduceRequestConfig = (...fns: Function[]) => fns.reduceRight((result, fn)
 export default <T>(...fns: Function[]): Promise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
-    return Promise.reject({
-      config: omit(['validationErrors'], config),
-      response: { data: { errors: config.validationErrors } },
-    });
+    return Promise.reject(config.validationErrors);
   }
 
   return Axios(config)
@@ -126,7 +123,7 @@ export default <T>(...fns: Function[]): Promise<T> => {
         ['response', 'data', 'errors'],
         error
     );
-      throw defaultError;
+      return Promise.reject(defaultError);
     }) // Same with error messages. This way all errors are in Linode.ApiError[] format.
 
   /*
