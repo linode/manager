@@ -122,10 +122,10 @@ export default <T>(...fns: Function[]): Promise<T> => {
     .then(response => response.data) // We only ever want to deal with Linode API responses, not Axios data
     .catch(error => {
       const defaultError = pathOr(
-        [{'reason': 'An unexpected error has occurred.'}],
+        [],
         ['response', 'data', 'errors'],
         error
-      );
+    );
       throw defaultError;
     }) // Same with error messages. This way all errors are in Linode.ApiError[] format.
 

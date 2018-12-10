@@ -9,7 +9,6 @@ export const getAPIErrorOrDefault = (
       ? [{ 'reason': defaultError, field }]
       : [{ 'reason': defaultError }]
 
-    // This should never be empty, just double-checking for safety
     return isEmpty(errorResponse) ? _defaultError : errorResponse
   }
 
