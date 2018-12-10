@@ -68,7 +68,7 @@ interface State {
   successMessage?: string;
   errors?: Linode.ApiFieldError[];
   usd: string;
-  CVV: string;
+  CVV?: string;
   paymentID: string;
   payerID: string;
   isExecutingPaypalPayment: boolean;
@@ -426,7 +426,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                 label="CVV"
                 onChange={this.handleCVVChange}
                 value={this.state.CVV}
-                required
                 type="text"
                 placeholder={`000`}
               />
