@@ -29,8 +29,8 @@ class NodeBalancers extends React.Component<Props> {
       <Switch>
         <Route component={StackScriptsLanding} path={path} exact />
         <Route component={StackScriptCreate} path={`${path}/create`} exact />
-        <Route component={StackScriptsDetail} path={`${path}/:stackScriptId`}/>
         <Route component={StackScriptUpdate} path={`${path}/:stackScriptID/edit`} exact />
+        <Route component={StackScriptsDetail} path={`${path}/:stackScriptId`}/>
       </Switch>
     );
   }
