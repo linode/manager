@@ -404,12 +404,26 @@ const themeDefaults: ThemeOptions = {
         top: -1,
       },
       deleteIcon: {
-        color: primaryColors.text,
-        width: 12,
-        height: 12,
+        padding: 2,
         marginLeft: 4,
-        marginRight: 4,
-        borderRadius: '50%',
+        marginRight: 2,
+        color: primaryColors.text,
+        '& svg': {
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+        },
+        [breakpoints.down('xs')]: {
+          marginLeft: 8,
+          marginRight: -8,
+          color: 'white !important',
+          '& svg': {
+            width: 22,
+            height: 22,
+            borderRadius: '50%',
+            backgroundColor: primaryColors.main,
+          },
+        },
       },
     },
     MuiCircularProgress: {

@@ -1,3 +1,4 @@
+import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -5,6 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+
 
 type Variants =
   'white'
@@ -128,11 +130,12 @@ class Tag extends React.Component<CombinedProps, {}> {
         [classes[colorVariant!]]: true,
         [classes.root]: true,
       })}
-      deleteIcon={this.props.deleteIcon || <Close />}
+      deleteIcon={<IconButton data-qa-delete-tag className="deleteButton"><Close /></IconButton>}
       classes={{ label: classes.label, deletable: classes[colorVariant!]}}
       onClick={this.handleClick}
       data-qa-tag={this.props.label}
-      component="button"
+      component="div"
+      clickable
       role="button"
     />;
   }
