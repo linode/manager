@@ -438,6 +438,8 @@ export const dark = createTheme({
     },
     MuiSnackbarContent: {
       root: {
+        backgroundColor: '#32363C',
+        color: primaryColors.text,
         boxShadow: '0 0 5px #222',
       },
     },
