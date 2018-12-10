@@ -140,6 +140,7 @@ interface State {
   [resource: string]: any;
   options: Item[];
   searchResults: SearchResults;
+  menuOpen: boolean;
 }
 
 type CombinedProps = TypesContextProps
@@ -181,6 +182,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
     searchActive: false,
     resultsLoading: false,
     options: [],
+    menuOpen: false,
     searchResults: {...emptyResults}
   };
 
@@ -272,15 +274,22 @@ class SearchBar extends React.Component<CombinedProps, State> {
   toggleSearch = () => {
     this.setState({
       searchActive: !this.state.searchActive,
+      menuOpen: !this.state.menuOpen,
     });
   }
 
   onClose = () => {
-    this.setState({ searchActive: false })
+    this.setState({
+      searchActive: false,
+      menuOpen: false,
+    })
   }
 
   onOpen = () => {
-    this.setState({ searchActive: true });
+    this.setState({
+      searchActive: true,
+      menuOpen: true,
+    });
   }
 
   onSelect = (item: Item) => {
@@ -307,7 +316,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { searchActive, searchText, options, resultsLoading } = this.state;
+    const { searchActive, searchText, options, resultsLoading, menuOpen } = this.state;
     const defaultOption = {
       label: `View search results page for "${searchText}"`,
       value: 'redirect',
@@ -361,6 +370,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             onMenuClose={this.onClose}
             onMenuOpen={this.onOpen}
             value={false}
+            menuIsOpen={menuOpen}
           />
           <IconButton
             color="inherit"
