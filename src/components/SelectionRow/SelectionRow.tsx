@@ -4,6 +4,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
@@ -28,7 +29,7 @@ type ClassNames = 'root'
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'deployButton'
-  | 'textButton';
+  | 'detailsButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -99,10 +100,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     whiteSpace: 'nowrap',
     border: 0,
   },
-  textButton: {
-    border: 'none',
+  detailsButton: {
+    textAlign: 'left',
     padding: 0,
-    textAlign: 'left'
   }
 });
 
@@ -160,20 +160,55 @@ export class SelectionRow extends React.Component<CombinedProps, {}> {
     );
 
     const renderLabel = () => {
-      return (
-        <Typography role="header" variant="h3">
-          {stackScriptUsername &&
-            <span
-              className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
-              {stackScriptUsername} /&nbsp;
-      </span>
-          }
-          <span
-            className={classes.libRadioLabel}>
-            {label}
-          </span>
-        </Typography>
-      )
+
+      const openDrawer = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        openStackScriptDrawer(stackScriptID);
+      }
+      if (showDeployLink) {
+        return (
+          <React.Fragment>
+            <Link to={`/stackscripts/${stackScriptID}`}>
+              <Typography role="header" variant="h3">
+                {stackScriptUsername &&
+                  <span
+                    className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                    {stackScriptUsername} /&nbsp;
+                  </span>
+                }
+                <span
+                  className={classes.libRadioLabel}>
+                  {label}
+                </span>
+              </Typography>
+            </Link>
+            <Typography variant="body1">{description}</Typography>
+          </React.Fragment>
+        )
+      } else {
+        return (
+          <React.Fragment>
+            <Typography role="header" variant="h3">
+              {stackScriptUsername &&
+                <label
+                  htmlFor={`${stackScriptID}`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                  {stackScriptUsername} /&nbsp;
+                </label>
+              }
+              <label
+                htmlFor={`${stackScriptID}`}
+                className={classes.libRadioLabel}>
+                {label}
+              </label>
+            </Typography>
+            <Typography variant="body1">{description}</Typography>
+            <Button className={classes.detailsButton} onClick={openDrawer}>
+              Show Details
+            </Button>
+          </React.Fragment>
+        )
+      }
     }
 
     return (
@@ -185,13 +220,7 @@ export class SelectionRow extends React.Component<CombinedProps, {}> {
             </TableCell>
           }
           <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
-            {!showDeployLink
-              ? <button className={classes.textButton} type="button" onClick={() => {openStackScriptDrawer(stackScriptID)}}>{renderLabel()}</button>
-              : <Link to={`/stackscripts/${stackScriptID}`}>
-                {renderLabel()}
-              </Link>
-            }
-            <Typography variant="body1">{description}</Typography>
+            {renderLabel()}
           </TableCell>
           <TableCell>
             <Typography

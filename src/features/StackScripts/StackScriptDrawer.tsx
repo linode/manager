@@ -52,13 +52,8 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  closeDrawer = () => {
-    this.props.closeDrawer();
-  }
-
-
   render() {
-    const { open } = this.props;
+    const { open, closeDrawer } = this.props;
     const { stackScript, error, loading } = this.state;
 
     if (loading) {
@@ -66,7 +61,7 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
         <Drawer
           title={'StackScript'}
           open={open}
-          onClose={this.closeDrawer}
+          onClose={closeDrawer}
         >
           <CircleProgress />
         </Drawer>
@@ -78,7 +73,7 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
         <Drawer
           title={'StackScript'}
           open={open}
-          onClose={this.closeDrawer}
+          onClose={closeDrawer}
         >
           {error &&
             <Notice error spacingTop={8}>
@@ -93,7 +88,7 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
       <Drawer
         title={stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript'}
         open={open}
-        onClose={this.closeDrawer}
+        onClose={closeDrawer}
       >
         {stackScript && <StackScript data={stackScript} />}
       </Drawer>
