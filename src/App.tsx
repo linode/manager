@@ -253,21 +253,6 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
-    setTimeout(() => {
-      setTimeout(() => {
-        setTimeout(() => {
-          setTimeout(() => {
-            setTimeout(() => {
-              this.props.enqueueSnackbar(`Hi Alban! I fixed it! (default)`, { variant: 'default' });
-            }, 1500);
-            this.props.enqueueSnackbar(`Hi Alban! I fixed it! (warning)`, { variant: 'warning' });
-          }, 1500);
-          this.props.enqueueSnackbar(`Hi Alban! I fixed it! (success)`, { variant: 'success' });
-        }, 1500);
-        this.props.enqueueSnackbar(`Hi Alban! I fixed it! (info)`, { variant: 'info' });
-      }, 1500);
-      this.props.enqueueSnackbar(`Hi Alban! I fixed it! (error)`, { variant: 'error' });
-    }, 1500);
 
     /*
      * We want to listen for migration events side-wide
@@ -375,7 +360,7 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route path="/dashboard" component={Dashboard} />
                               <Route path="/search" component={SearchLanding} />
                               <Redirect exact from="/" to="/dashboard" />
-                              \                              <Route component={NotFound} />
+                              <Route component={NotFound} />
                             </Switch>
                           </Grid>
                           {hasDoc &&
