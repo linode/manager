@@ -1,4 +1,3 @@
-import { SnackbarClassKey } from '@material-ui/core/Snackbar';
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
