@@ -120,7 +120,7 @@ class AccessPanel extends React.Component<CombinedProps> {
     return (
       <React.Fragment>
         <TableHeader title="SSH Keys"/>
-        <Table isResponsive={false}>
+        <Table isResponsive={false} border spacingBottom={16}>
           <TableHead>
             <TableRow>
               <TableCell className={classes.cellCheckbox} />

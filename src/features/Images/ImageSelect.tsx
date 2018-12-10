@@ -3,7 +3,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 
 import { always, cond, groupBy, propOr } from 'ramda';
 
-import InputLabel from 'src/components/core/InputLabel';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
@@ -56,10 +55,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
-        <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
-          Image
-        </InputLabel>
-        <Grid className={classes.root} container direction="row" justify="flex-start" alignItems="center">
+        <Grid className={classes.root} container direction="row" justify="flex-start" alignItems="flex-end">
           <Grid item>
             <Select
               id={'image-select'}
@@ -68,9 +64,10 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               onChange={onSelect}
               options={renderedImages as any}
               placeholder="Select an Image"
+              label="Image"
             />
           </Grid>
-          <Grid item>
+          <Grid item style={{ paddingLeft: 0 }}>
             <HelpIcon text="Choosing a 64-bit distro is recommended." />
           </Grid>
       </Grid>
