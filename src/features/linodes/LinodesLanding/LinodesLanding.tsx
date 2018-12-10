@@ -31,6 +31,10 @@ import requestMostRecentBackupForLinode from './requestMostRecentBackupForLinode
 import ToggleBox from './ToggleBox';
 import withUpdatingLinodes from './withUpdatingLinodes';
 
+/** */
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Toggle from 'src/components/Toggle';
+
 type ClassNames = 'root' | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -59,6 +63,7 @@ interface State {
     data: Linode.Image[];
     error?: Error;
   },
+  groupByTag: boolean;
 }
 
 interface TypesContextProps {
@@ -96,6 +101,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     bootOption: null,
     selectedLinodeId: null,
     selectedLinodeLabel: '',
+    groupByTag: false,
   };
 
   static docs = [
@@ -316,6 +322,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             Linodes
           </Typography>
           <Hidden smDown>
+            <div>
+              <FormControlLabel
+                className="toggleLabel"
+                control={
+                  <Toggle
+                    value={this.state.groupByTag}
+                    onClick={(e: React.MouseEvent<any>) => this.setState({ groupByTag: !this.state.groupByTag })}
+                  />
+                }
+                label="Group by Tag:"
+              />
+            </div>
             <ToggleBox
               handleClick={this.changeViewStyle}
               status={displayGrid}
