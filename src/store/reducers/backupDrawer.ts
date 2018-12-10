@@ -9,7 +9,7 @@ import { getAll } from 'src/utilities/getAll';
 
 // HELPERS
 
-export const getAllLinodes = getAll(getLinodes);
+export const getAllLinodes = getAll<Linode.Linode>(getLinodes);
 
 // TYPES
 type Linode = Linode.Linode;
@@ -95,9 +95,11 @@ export const defaultState: State = {
 export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case OPEN:
-      return { ...state, lastUpdated: Date.now(), open: true,
+      return {
+        ...state, lastUpdated: Date.now(), open: true,
         error: undefined, enableErrors: [], autoEnrollError: undefined,
-        updatedCount: 0, autoEnroll: false };
+        updatedCount: 0, autoEnroll: false
+      };
 
     case CLOSE:
       return { ...state, lastUpdated: Date.now(), open: false, };
@@ -115,13 +117,17 @@ export default (state: State = defaultState, action: Action) => {
       return { ...state, enabling: true, enableErrors: [], enableSuccess: false, lastUpdated: Date.now() };
 
     case ENABLE_SUCCESS:
-      return { ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true,
+      return {
+        ...state, enabling: false, lastUpdated: Date.now(), enableSuccess: true,
         updatedCount: action.data.length,
-        data: state.data!.filter((linode: Linode) => !action.data.includes(linode.id)) };
+        data: state.data!.filter((linode: Linode) => !action.data.includes(linode.id))
+      };
 
     case ENABLE_ERROR:
-      return { ...state, enabling: false, lastUpdated: Date.now(),
-        enableErrors: action.data.errors, updatedCount: action.data.success.length };
+      return {
+        ...state, enabling: false, lastUpdated: Date.now(),
+        enableErrors: action.data.errors, updatedCount: action.data.success.length
+      };
 
     case RESET_ERRORS:
       return { ...state, lastUpdated: Date.now(), enableErrors: [], error: undefined };
@@ -130,16 +136,16 @@ export default (state: State = defaultState, action: Action) => {
       return { ...state, lastUpdated: Date.now(), enableSuccess: false, updatedCount: 0 }
 
     case AUTO_ENROLL:
-     return {...state, enrolling: true }
+      return { ...state, enrolling: true }
 
     case AUTO_ENROLL_TOGGLE:
-     return {...state, autoEnroll: !state.autoEnroll }
+      return { ...state, autoEnroll: !state.autoEnroll }
 
     case AUTO_ENROLL_SUCCESS:
-     return {...state, autoEnrollError: undefined, enrolling: false }
+      return { ...state, autoEnrollError: undefined, enrolling: false }
 
     case AUTO_ENROLL_ERROR:
-     return {...state, autoEnrollError: action.data, enrolling: false }
+      return { ...state, autoEnrollError: action.data, enrolling: false }
 
     default:
       return state;
@@ -151,7 +157,7 @@ export const requestLinodesWithoutBackups = () => (dispatch: Dispatch<State>) =>
   dispatch(startRequest());
   getAllLinodes()
     // API doesn't support filtering by backup status
-    .then((linodes: Linode.Linode[]) =>
+    .then(({ data: linodes }) =>
       linodes.filter((linode: Linode.Linode) => !linode.backups.enabled))
     .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));
@@ -174,14 +180,15 @@ export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: num
   return enableBackups(linodeId).then(() => ({
     ...accumulator,
     success: [...accumulator.success, linodeId]
-    }))
+  }))
     .catch((error) => {
       const reason = pathOr('Backups could not be enabled for this Linode.',
-        ['response','data','errors', 0, 'reason'], error);
+        ['response', 'data', 'errors', 0, 'reason'], error);
       return {
-      ...accumulator,
-      errors: [...accumulator.errors, { linodeId, reason }]
-  }})
+        ...accumulator,
+        errors: [...accumulator.errors, { linodeId, reason }]
+      }
+    })
 }
 
 /* This will dispatch an async action that will send a request to enable backups for
@@ -190,9 +197,9 @@ export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: num
 *  on whether or not any errors occurred.
 */
 export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () => State) => {
-  const linodeIDs = pathOr([],['backups', 'data'], getState()).map((linode: Linode.Linode) => linode.id);
+  const linodeIDs = pathOr([], ['backups', 'data'], getState()).map((linode: Linode.Linode) => linode.id);
   dispatch(handleEnable());
-  Bluebird.reduce(linodeIDs, gatherResponsesAndErrors, { success: [], errors: []})
+  Bluebird.reduce(linodeIDs, gatherResponsesAndErrors, { success: [], errors: [] })
     .then(response => {
       if (response.errors && !isEmpty(response.errors)) {
         dispatch(handleEnableError(response));
@@ -203,7 +210,7 @@ export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () =
       dispatch(requestLinodesWithoutBackups());
     })
     .catch(() => dispatch(
-      handleEnableError([{linodeId: 0, reason: "There was an error enabling backups."}])
+      handleEnableError([{ linodeId: 0, reason: "There was an error enabling backups." }])
     ));
 }
 
@@ -212,7 +219,7 @@ export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () =
 * updating state.__resources.accountSettings.data.backups_enabled.
 */
 export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () => State) => {
-  const backups_enabled = pathOr(false,['backups', 'autoEnroll'], getState());
+  const backups_enabled = pathOr(false, ['backups', 'autoEnroll'], getState());
   dispatch(handleAutoEnroll());
   updateAccountSettings({ backups_enabled })
     .then((response) => {
@@ -223,7 +230,7 @@ export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () =
     })
     .catch((errors) => {
       const defaultError = "Your account settings could not be updated. Please try again.";
-      const finalError =  pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
+      const finalError = pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
       dispatch(handleAutoEnrollError(finalError));
     });
 }

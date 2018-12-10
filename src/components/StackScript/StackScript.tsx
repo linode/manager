@@ -7,7 +7,7 @@ import ScriptCode from 'src/components/ScriptCode';
 import { getImages } from 'src/services/images';
 import { getAll } from 'src/utilities/getAll';
 
-const getAllImages = getAll(getImages);
+const getAllImages = getAll<Linode.Image>(getImages);
 
 type CSSClasses = 'root' | 'deployments' | 'author' | 'description' | 'scriptHeading' | 'descriptionText';
 
@@ -62,8 +62,8 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
   componentDidMount() {
     const { data: { images } } = this.props;
 
-    getAllImages().then(allImages => {
-      const imagesList = allImages.filter((image: Linode.Image)  => images.indexOf(image.id) !== -1)
+    getAllImages().then(({ data: allImages }) => {
+      const imagesList = allImages.filter((image: Linode.Image) => images.indexOf(image.id) !== -1)
       this.setState({ imagesList });
     });
   }
