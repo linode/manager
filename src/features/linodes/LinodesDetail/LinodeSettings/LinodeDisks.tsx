@@ -47,6 +47,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   }
 });
 
+interface SSHKeyProps {
+  userSSHKeys: UserSSHKeyObject[];
+}
+
 interface LinodeContextProps {
   linodeError: Linode.ApiFieldError[],
   linodeLoading: boolean,
@@ -78,7 +82,6 @@ interface DrawerState {
     size: number;
     image?: string;
     password?: string;
-    userSSHKeys?: UserSSHKeyObject[];
   };
 }
 
@@ -101,6 +104,7 @@ interface DisksProps {
 
 type CombinedProps =
   DisksProps
+  & SSHKeyProps
   & PaginationProps<Linode.Disk>
   & LinodeContextProps
   & WithStyles<ClassNames>
@@ -402,6 +406,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         onSubmit={this.onDrawerSubmit}
         onImageChange={this.onImageChange}
         onPasswordChange={this.onPasswordChange}
+        userSSHKeys={this.props.userSSHKeys}
       />
     );
   }
@@ -421,7 +426,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     this.setDrawer({ fields: { ...fields, filesystem } });
   }
 
-  onImageChange = (image: string) => {
+  onImageChange = (image: string | undefined) => {
     const { fields } = this.state.drawer;
     this.setDrawer({ fields: { ...fields, image }})
   }
@@ -469,8 +474,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   createDisk = () => {
-    const { linodeId } = this.props;
-    const { label, size, filesystem, image, password, userSSHKeys } = this.state.drawer.fields;
+    const { linodeId, userSSHKeys } = this.props;
+    const { label, size, filesystem, image, password } = this.state.drawer.fields;
     if (!linodeId) { return; }
 
     this.setDrawer({ submitting: true, errors: undefined });

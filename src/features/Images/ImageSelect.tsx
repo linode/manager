@@ -13,7 +13,6 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
-    paddingTop: '0px',
   },
 });
 
@@ -29,10 +28,10 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class ImageSelect extends React.Component<CombinedProps, State> {
+export class ImageSelect extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
-    renderedImages: renderImagesOptions(this.props.images) as GroupType<string>[],
+    renderedImages: getImagesOptions(this.props.images) as GroupType<string>[],
   };
 
   componentDidMount() {
@@ -47,7 +46,7 @@ class ImageSelect extends React.Component<CombinedProps, State> {
     if (!this.mounted) { return; }
     if (prevProps.images !== this.props.images) {
       this.setState({
-        renderedImages: renderImagesOptions(this.props.images) as GroupType<string>[]
+        renderedImages: getImagesOptions(this.props.images) as GroupType<string>[]
       });
     }
   }
@@ -80,7 +79,7 @@ class ImageSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-const renderImagesOptions = (images: Linode.Image[]) => {
+const getImagesOptions = (images: Linode.Image[]) => {
   const groupedImages = groupImages(images);
   return ['recommended', 'older', 'images', 'deleted'].reduce((accumulator: GroupType<string>[], category: string) => {
     if (groupedImages[category]) {

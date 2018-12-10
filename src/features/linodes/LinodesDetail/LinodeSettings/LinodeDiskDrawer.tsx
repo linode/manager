@@ -51,7 +51,7 @@ interface Props extends EditableFields {
   onLabelChange: (value: string) => void;
   onFilesystemChange: (value: string) => void;
   onSizeChange: (value: number | string) => void;
-  onImageChange: (selected: string) => void;
+  onImageChange: (selected: string | undefined) => void;
   onPasswordChange: (password: string) => void;
 }
 
@@ -148,7 +148,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   }
 
   onImageChange = (selected: Item<string>) => {
-    this.props.onImageChange(selected.value);
+    this.props.onImageChange(selected ? selected.value : undefined);
   }
 
   getErrors = (key: string) => this.state.hasErrorFor && this.state.hasErrorFor(key);

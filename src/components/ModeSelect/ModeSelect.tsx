@@ -23,7 +23,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ modes, onChange, selected }) => {
+export const ModeSelect: React.StatelessComponent<CombinedProps> = ({ modes, onChange, selected }) => {
 
   return (
     <RadioGroup
@@ -48,4 +48,4 @@ const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ modes, o
 
 const styled = withStyles(styles);
 
-export default styled(DrawerModeSelection);
+export default styled(ModeSelect);

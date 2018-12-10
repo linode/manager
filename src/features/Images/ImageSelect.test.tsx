@@ -1,4 +1,18 @@
-import { groupImages } from './ImageSelect';
+import { shallow } from 'enzyme';
+import * as React from 'react';
+
+import { images } from 'src/__data__/images';
+import Select from 'src/components/EnhancedSelect/Select';
+
+import { groupImages, ImageSelect } from './ImageSelect';
+
+const props = {
+  classes: { root: ''},
+  images,
+  onSelect: jest.fn(),
+}
+
+const component = shallow(<ImageSelect {...props} />)
 
 const privateImage1 = {
   deprecated: false,
@@ -112,9 +126,9 @@ const deletedImage2 = {
   created: '',
 };
 
-describe('LinodeRebuild', () => {
-  describe('groupImages', () => {
-    it('should return group images', () => {
+describe('ImageSelect', () => {
+  describe('groupImages method', () => {
+    it("should return a group of the user's private images", () => {
 
       const result = groupImages([privateImage1, privateImage2]);
 
@@ -137,11 +151,11 @@ describe('LinodeRebuild', () => {
     });
 
     it('should return group recommended images', () => {
-      const images = [recommendedImage1, recommendedImage2];
-      const result = groupImages(images);
+      const _images = [recommendedImage1, recommendedImage2];
+      const result = groupImages(_images);
 
       const expected = {
-        recommended: images,
+        recommended: _images,
       };
 
       expect(result).toEqual(expected);
@@ -156,6 +170,15 @@ describe('LinodeRebuild', () => {
       };
 
       expect(result).toEqual(expected);
+    });
+  });
+  describe("ImageSelect component", () => {
+    it("should render", () => {
+      expect(component).toBeDefined();
+    });
+    it("should display an error", () => {
+      component.setProps({ imageError: 'An error'});
+      expect(component.containsMatchingElement(<Select onChange={props.onSelect} errorText={'An error'}  />)).toBeTruthy()
     });
   });
 });
