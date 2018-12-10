@@ -158,7 +158,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
     if (!gravatarUrl) { return null; }
     return (gravatarUrl !== 'not found'
       ? <div className={classes.userWrapper}>
-        <img src={gravatarUrl} className={classes.leftIcon} />
+        <img src={gravatarUrl} className={classes.leftIcon} alt="Gravatar" />
       </div>
       : <div className={classes.userWrapper}>
         <UserIcon className={classes.leftIcon} />
