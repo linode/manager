@@ -67,6 +67,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       '& p': {
         fontSize: '.9rem',
         color: theme.color.grey1,
+        borderLeft: 'none',
       },
     },
     '& .error-for-scroll p': {
@@ -74,10 +75,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       marginLeft: 12,
       marginTop: 0,
       position: 'absolute',
-      boxShadow: '0 0 5px #ddd',
-      backgroundColor: theme.bg.offWhite,
+      top: '50%',
+      transform: 'translateY(-50%)',
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      backgroundColor: theme.bg.offWhiteDT,
+      color: `${theme.palette.text.primary}`,
+      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       lineHeight: 1.2,
-      zIndex: 5.
+      zIndex: 5,
+      [theme.breakpoints.down('xs')]: {
+        top: 0,
+        transform: 'none',
+      },
     },
     '& .react-select__input': {
       fontSize: '.9rem',
