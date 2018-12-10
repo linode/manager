@@ -47,6 +47,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         component="button"
         asSuggestion={true}
         className="tag"
+        closeMenu={this.props.selectProps.onMenuClose}
       />
     );
   }

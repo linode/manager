@@ -95,6 +95,7 @@ export interface Props extends ChipProps {
   label: string;
   colorVariant?: Variants;
   asSuggestion?: boolean;
+  closeMenu?: any;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
@@ -108,6 +109,7 @@ class Tag extends React.Component<CombinedProps, {}> {
     e.preventDefault();
     if (this.props.asSuggestion) {
       e.stopPropagation();
+      this.props.closeMenu();
     }
     const { history, label } = this.props;
     history.push(`/search/?query=${label}`);
@@ -120,6 +122,7 @@ class Tag extends React.Component<CombinedProps, {}> {
       className,
       history, location, staticContext, match, // Don't pass route props to the Chip component
       asSuggestion,
+      closeMenu,
       ...chipProps
     } = this.props;
 
