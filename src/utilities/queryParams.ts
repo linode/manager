@@ -3,21 +3,6 @@ import { pathOr } from 'ramda';
 import * as parseUrl from 'url-parse';
 
 /**
- * Splits a string into at most two parts using a separator character.
- *
- * @param str The string to split
- * @param sep The separator character to use
- * @returns An array of length 2, which are the two separated parts of str
- */
-export const splitIntoTwo = (str: string, sep: string): string[] => {
-  const idx = str.indexOf(sep);
-  if (idx === -1 || idx === (str.length - 1)) {
-    throw new Error(`"${str}" cannot be split into two parts by ${sep}`);
-  }
-  return [str.substr(0, idx), str.substr(idx + 1)];
-}
-
-/**
  * Parses a string of key/value pairs separated by '&', with the key and value separated by '='
  *
  * @param str The string to parse
