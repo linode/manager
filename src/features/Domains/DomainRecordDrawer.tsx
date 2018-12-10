@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -509,10 +508,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const isDomain = type === 'master' || type === 'slave';
 
     const buttonProps: ButtonProps = {
-      type: submitting ? 'secondary' : 'primary',
+      type: 'primary',
       disabled: submitting,
       loading: submitting,
-      className: classNames({ loading: submitting }),
       onClick: isDomain
         ? this.onDomainEdit
         : isCreating
