@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { compose, pathOr } from 'ramda';
+import { compose, map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import FormControl from 'src/components/core/FormControl';
@@ -16,10 +16,11 @@ import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/contex
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
-import { appendBitrateUnit, appendPercentSign, formatNumber, getMetrics } from 'src/utilities/statMetrics';
+import { formatBitsPerSecond, formatBytes, formatNumber, formatPercentage, getMetrics, getTotalTraffic } from 'src/utilities/statMetrics';
 import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
+import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 
 setUpCharts();
 
@@ -212,7 +213,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const data = pathOr([[]], ['data','cpu'], stats);
 
     const metrics = getMetrics(data);
-    const format = compose(appendPercentSign, formatNumber);
+    const format = formatPercentage;
 
     return (
       <React.Fragment>
@@ -263,7 +264,15 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
     };
 
-    const format = compose(appendBitrateUnit, formatNumber);
+    const format = formatBitsPerSecond;
+
+    const publicInMetrics = getMetrics(data.publicIn);
+    const publicOutMetrics = getMetrics(data.publicOut);
+
+    const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
+      publicInMetrics.average,
+      publicOutMetrics.average
+    ));
 
     return (
       <React.Fragment>
@@ -306,13 +315,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Private IPv4 Outbound',
                     legendColor: 'yellow',
-                    data: getMetrics(data.privateOut),
+                    data: getMetrics(data.privateOut, true), // <-- Include 0
                     format
                   },
                   {
                     legendTitle: 'Private IPv4 Inbound',
                     legendColor: 'red',
-                    data: getMetrics(data.privateIn),
+                    data: getMetrics(data.privateIn, true), // <-- Include 0
                     format
                   }
                 ]}
@@ -324,18 +333,27 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Public IPv4 Outbound',
                     legendColor: 'green',
-                    data: getMetrics(data.publicOut),
+                    data: publicOutMetrics,
                     format
                   },
                   {
                     legendTitle: 'Public IPv4 Inbound',
                     legendColor: 'blue',
-                    data: getMetrics(data.publicIn),
+                    data: publicInMetrics,
                     format
                   }
                 ]}
               />
             </Grid>
+            {rangeSelection === '24' &&
+              <Grid item xs={12} lg={6}>
+                <TotalTraffic
+                  inTraffic={totalTraffic.inTraffic}
+                  outTraffic={totalTraffic.outTraffic}
+                  combinedTraffic={totalTraffic.combinedTraffic}
+                />
+              </Grid>
+            }
           </Grid>
         </div>
       </React.Fragment>
@@ -353,7 +371,15 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       privateOut: pathOr([[]], ['data','netv6','private_out'], stats)
     };
 
-    const format = compose(appendBitrateUnit, formatNumber);
+    const format = formatBitsPerSecond;
+
+    const publicInMetrics = getMetrics(data.publicIn, true); // <-- Include 0
+    const publicOutMetrics = getMetrics(data.publicOut, true); // <-- Include 0
+
+    const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
+      publicInMetrics.average,
+      publicOutMetrics.average
+    ));
 
     return (
       <React.Fragment>
@@ -414,18 +440,27 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Public IPv6 Outbound',
                     legendColor: 'green',
-                    data: getMetrics(data.publicOut),
+                    data: publicOutMetrics,
                     format
                   },
                   {
                     legendTitle: 'Public IPv6 Inbound',
                     legendColor: 'blue',
-                    data: getMetrics(data.publicIn),
+                    data: publicInMetrics,
                     format
                   }
                 ]}
               />
             </Grid>
+            {rangeSelection === '24' &&
+              <Grid item xs={12} lg={6}>
+                <TotalTraffic
+                  inTraffic={totalTraffic.inTraffic}
+                  outTraffic={totalTraffic.outTraffic}
+                  combinedTraffic={totalTraffic.combinedTraffic}
+                />
+              </Grid>
+            }
           </Grid>
         </div>
       </React.Fragment>
@@ -440,6 +475,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       io: pathOr([[]], ['data','io','io'], stats),
       swap: pathOr([[]], ['data','io','swap'], stats)
     };
+
+    const format = formatNumber;
 
     return (
       <React.Fragment>
@@ -473,7 +510,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                     legendTitle: 'I/O Rate',
                     legendColor: 'red',
                     data: getMetrics(data.io),
-                    format: formatNumber
+                    format
                   }
                 ]}
               />
@@ -485,7 +522,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                     legendTitle: 'Swap Rate',
                     legendColor: 'yellow',
                     data: getMetrics(data.swap),
-                    format: formatNumber
+                    format
                   }
                 ]}
               />
