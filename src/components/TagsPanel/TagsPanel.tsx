@@ -34,16 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     top: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    padding: theme.spacing.unit / 2,
-    backgroundColor: theme.color.grey2,
-    color: theme.palette.text.primary,
-    '& > span': {
-      position: 'relative',
-      top: -2,
-    },
-    '&:focus': {
-      backgroundColor: theme.color.grey2,
-    },
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 16,
+    }
   },
   addButton: {
     marginTop: theme.spacing.unit / 2,

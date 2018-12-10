@@ -70,6 +70,7 @@ const primaryColors = {
   headline: '#32363C',
   divider: '#f4f4f4',
   offBlack: '#444',
+  white: '#fff',
 }
 
 const iconCircleAnimation = {
@@ -378,16 +379,23 @@ const themeDefaults: ThemeOptions = {
         marginRight: 4,
         paddingLeft: 2,
         paddingRight: 2,
-        color: '#555',
+        color: primaryColors.text,
         fontSize: '.8rem',
         '&:last-child': {
           marginRight: 0
         },
         '&:hover': {
           '& $deleteIcon': {
-            color: primaryColors.text,
+            color: primaryColors.white,
+            '&:hover': {
+              color: primaryColors.main,
+              backgroundColor: primaryColors.white,
+            },
           },
         },
+        '&:focus': {
+          outline: '1px dotted #999',
+        }
       },
       label: {
         paddingLeft: 4,
@@ -396,11 +404,26 @@ const themeDefaults: ThemeOptions = {
         top: -1,
       },
       deleteIcon: {
-        color: '#aaa',
-        width: 20,
-        height: 20,
-        marginLeft: 2,
+        padding: 2,
+        marginLeft: 4,
         marginRight: 2,
+        color: primaryColors.text,
+        '& svg': {
+          width: 12,
+          height: 12,
+          borderRadius: '50%',
+        },
+        [breakpoints.down('xs')]: {
+          marginLeft: 8,
+          marginRight: -8,
+          color: 'white !important',
+          '& svg': {
+            width: 22,
+            height: 22,
+            borderRadius: '50%',
+            backgroundColor: primaryColors.main,
+          },
+        },
       },
     },
     MuiCircularProgress: {
