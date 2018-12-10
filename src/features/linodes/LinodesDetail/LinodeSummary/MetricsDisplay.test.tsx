@@ -12,7 +12,7 @@ describe('CPUMetrics', () => {
 
   const wrapper = shallow(
     <MetricsDisplay
-      classes={{root: '', legend: '', red: '', yellow: '', blue: 'blue', green: ''}}
+      classes={{root: '', legend: '', red: '', yellow: '', blue: 'blue', green: '', text: '', tableHeadInner: ''}}
       rows={[
         {
           legendTitle: 'Legend Title',
