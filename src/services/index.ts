@@ -5,7 +5,6 @@ import {
   isNil,
   lensPath,
   not,
-  omit,
   pathOr,
   set,
   when,
@@ -221,10 +220,7 @@ export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T>
   if (config.validationErrors) {
     return {
       cancel: () => null,
-      request: () => Promise.reject({
-        config: omit(['validationErrors'], config),
-        response: { data: { errors: config.validationErrors } },
-      }),
+      request: () => Promise.reject(config.validationErrors)
     };
   }
 
@@ -232,6 +228,14 @@ export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T>
     cancel: source.cancel,
     request: () => Axios({ ...config, cancelToken: source.token })
       .then(response => response.data)
+      .catch(error => {
+        const defaultError = pathOr(
+          [],
+          ['response', 'data', 'errors'],
+          error
+      );
+        return Promise.reject(defaultError);
+      })
   }
 
 };
