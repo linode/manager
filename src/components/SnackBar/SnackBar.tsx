@@ -46,8 +46,7 @@ class SnackBar extends React.Component<CombinedProps> {
           variantError: classes.error,
           variantWarning: classes.warning,
           variantInfo: classes.info,
-          /** implicitly typing this as Snackbar key value pairs from MUI */
-        } as Partial<Record<SnackbarClassKey, string>>}
+        }}
       >
         {children}
       </SnackbarProvider>
