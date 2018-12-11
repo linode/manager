@@ -240,11 +240,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
         'typesData',
       ],
     )
-      || haveAnyBeenModified<State>(
-        nextState,
-        this.state,
-        ['mutationAvailable']
-      )
       || this.props.theme.name !== nextProps.theme.name
   }
 

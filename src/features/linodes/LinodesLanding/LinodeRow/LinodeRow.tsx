@@ -60,11 +60,6 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         'mutationAvailable',
       ],
     )
-      || haveAnyBeenModified<State>(
-        nextState,
-        this.state,
-        ['mutationAvailable']
-      )
       || this.props.theme.name !== nextProps.theme.name
   }
 
