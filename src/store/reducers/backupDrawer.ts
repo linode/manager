@@ -5,7 +5,6 @@ import { compose, Dispatch } from 'redux';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups, getLinodes } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 
 // HELPERS
@@ -183,7 +182,8 @@ export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: num
     success: [...accumulator.success, linodeId]
   }))
     .catch((error) => {
-      const reason = getErrorStringOrDefault(error, 'Backups could not be enabled for this Linode.');
+      const reason = pathOr('Backups could not be enabled for this Linode.',
+        ['response', 'data', 'errors', 0, 'reason'], error);
       return {
         ...accumulator,
         errors: [...accumulator.errors, { linodeId, reason }]
@@ -229,8 +229,8 @@ export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () =
       dispatch(handleUpdate(response));
     })
     .catch((errors) => {
-      const finalError =  getErrorStringOrDefault(errors,
-        "Your account settings could not be updated. Please try again.");
+      const defaultError = "Your account settings could not be updated. Please try again.";
+      const finalError = pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
       dispatch(handleAutoEnrollError(finalError));
     });
 }
