@@ -206,7 +206,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
     .filter((eachType) => eachType.successor === null)
     .map(LinodeResize.extendType),
 
-  depcrecatedTypesDAta: state.__resources.types.entities
+  deprecatedTypesData: state.__resources.types.entities
     .filter((eachType) => eachType.successor !== null)
     .map(LinodeResize.extendType),
 
