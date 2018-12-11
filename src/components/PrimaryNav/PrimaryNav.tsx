@@ -64,7 +64,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('md')]: {
       paddingTop: 10,
       paddingBottom: 10,
     },
