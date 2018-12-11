@@ -5,13 +5,8 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 import { ListLinodes } from './LinodesLanding';
 
-const RoutedListLinodes = withRouter(ListLinodes);
 
-const actions = {
-  getLinodesWithoutBackups: jest.fn(),
-  clearSidebar: jest.fn(),
-  setSidebar: jest.fn(),
-}
+const RoutedListLinodes = withRouter(ListLinodes);
 
 describe('ListLinodes', () => {
 
@@ -26,7 +21,6 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
-            actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
             handleOrderChange={jest.fn()}
@@ -58,7 +52,6 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
-            actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
             handleOrderChange={jest.fn()}
@@ -93,7 +86,6 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
-            actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
             handleOrderChange={jest.fn()}

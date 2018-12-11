@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { StickyProps } from 'react-sticky';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -32,11 +33,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   docs: Doc[];
-  backupsCTA?: boolean;
   isSticky?: boolean;
 }
 
-type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
+type CombinedProps = Props & BackupCTAProps & StickyProps & WithStyles<ClassNames>;
 
 const styled = withStyles(styles);
 
@@ -79,4 +79,12 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   );
 }
 
-export default styled(DocsSidebar);
+interface BackupCTAProps {
+  backupsCTA: boolean;
+}
+
+const connected = connect((state: ApplicationState, ownProps) => ({
+  backupsCTA: state.__resources.linodes.entities.filter(l => l.backups.enabled).length > 0
+}));
+
+export default connected(styled(DocsSidebar));

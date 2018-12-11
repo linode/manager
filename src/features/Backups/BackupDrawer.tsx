@@ -233,7 +233,7 @@ export const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], 
 
 const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
-  const linodes = pathOr([], ['backups', 'data'], state);
+  const linodes = state.__resources.linodes.entities.filter((l) => !l.backups.enabled);
   return ({
     accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
     backupLoadError: path(['backups', 'error'], state),

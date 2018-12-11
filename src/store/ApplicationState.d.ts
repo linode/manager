@@ -24,7 +24,6 @@ declare interface ApplicationState {
   authentication: AuthState;
   backups: BackupDrawerState;
   documentation: DocumentationState;
-  sidebar: SidebarState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
   notifications: RequestableData<Linode.Notification[]>;

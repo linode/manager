@@ -1,6 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
-import { lensPath, path, pathOr, set } from 'ramda';
+import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -277,7 +277,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen, hasError } = this.state;
     const {
-      backupsCTA,
       classes,
       documentation,
       toggleTheme,
@@ -298,68 +297,59 @@ export class App extends React.Component<CombinedProps, State> {
 
         {profileLoading === false &&
           <React.Fragment>
-              <RegionsProvider value={this.state.regionsContext}>
-                <div {...themeDataAttr()} className={classes.appFrame}>
-                  <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
-                  <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />
-                    <div className={classes.wrapper} id="main-content">
-                      <StickyContainer>
-                        <Grid container spacing={0} className={classes.grid}>
-                          <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                            <Switch>
-                              <Route path="/linodes" component={LinodesRoutes} />
-                              <Route path="/volumes" component={Volumes} />
-                              <Route path="/nodebalancers" component={NodeBalancers} />
-                              <Route path="/domains" component={Domains} />
-                              <Route exact path="/managed" component={Managed} />
-                              <Route exact path="/longview" component={Longview} />
-                              <Route exact path="/images" component={Images} />
-                              <Route path="/stackscripts" component={StackScripts} />
-                              <Route path="/account" component={Account} />
-                              <Route exact path="/support/tickets" component={SupportTickets} />
-                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                              <Route path="/profile" component={Profile} />
-                              <Route exact path="/support" component={Help} />
-                              <Route exact path="/support/search/" component={SupportSearchLanding} />
-                              <Route path="/dashboard" component={Dashboard} />
-                              <Route path="/search" component={SearchLanding} />
-                              <Redirect exact from="/" to="/dashboard" />
-                              <Route component={NotFound} />
-                            </Switch>
-                          </Grid>
-                          {hasDoc &&
-                            <Grid className='mlSidebar'>
-                              <Sticky topOffset={-24} disableCompensation>
-                                {(props: StickyProps) => {
-                                  return (
-                                    <DocsSidebar
-                                      docs={documentation}
-                                      backupsCTA={backupsCTA}
-                                      {...props}
-                                    />
-                                  )
-                                }
-                                }
-                              </Sticky>
-                            </Grid>
-                          }
+            <RegionsProvider value={this.state.regionsContext}>
+              <div {...themeDataAttr()} className={classes.appFrame}>
+                <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
+                <main className={classes.content}>
+                  <TopMenu openSideMenu={this.openMenu} />
+                  <div className={classes.wrapper} id="main-content">
+                    <StickyContainer>
+                      <Grid container spacing={0} className={classes.grid}>
+                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                          <Switch>
+                            <Route path="/linodes" component={LinodesRoutes} />
+                            <Route path="/volumes" component={Volumes} />
+                            <Route path="/nodebalancers" component={NodeBalancers} />
+                            <Route path="/domains" component={Domains} />
+                            <Route exact path="/managed" component={Managed} />
+                            <Route exact path="/longview" component={Longview} />
+                            <Route exact path="/images" component={Images} />
+                            <Route path="/stackscripts" component={StackScripts} />
+                            <Route path="/account" component={Account} />
+                            <Route exact path="/support/tickets" component={SupportTickets} />
+                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                            <Route path="/profile" component={Profile} />
+                            <Route exact path="/support" component={Help} />
+                            <Route exact path="/support/search/" component={SupportSearchLanding} />
+                            <Route path="/dashboard" component={Dashboard} />
+                            <Route path="/search" component={SearchLanding} />
+                            <Redirect exact from="/" to="/dashboard" />
+                            <Route component={NotFound} />
+                          </Switch>
                         </Grid>
-                      </StickyContainer>
-                    </div>
+                        {hasDoc &&
+                          <Grid className='mlSidebar'>
+                            <Sticky topOffset={-24} disableCompensation>
+                              {(props: StickyProps) => (<DocsSidebar docs={documentation} {...props} />)}
+                            </Sticky>
+                          </Grid>
+                        }
+                      </Grid>
+                    </StickyContainer>
+                  </div>
 
-                  </main>
-                  <Footer />
-                  <WelcomeBanner
-                    open={this.state.welcomeBanner}
-                    onClose={this.closeWelcomeBanner}
-                    data-qa-beta-notice />
-                  <ToastNotifications />
-                  <DomainCreateDrawer />
-                  <VolumeDrawer />
-                  <BackupDrawer />
-                </div>
-              </RegionsProvider>
+                </main>
+                <Footer />
+                <WelcomeBanner
+                  open={this.state.welcomeBanner}
+                  onClose={this.closeWelcomeBanner}
+                  data-qa-beta-notice />
+                <ToastNotifications />
+                <DomainCreateDrawer />
+                <VolumeDrawer />
+                <BackupDrawer />
+              </div>
+            </RegionsProvider>
           </React.Fragment>
         }
       </React.Fragment>
@@ -407,7 +397,6 @@ interface StateProps {
   userId?: number;
 
   documentation: Linode.Doc[];
-  backupsCTA: boolean;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
@@ -417,8 +406,6 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation,
-
-  backupsCTA: pathOr(false, ['sidebar', 'backupsCTA'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);

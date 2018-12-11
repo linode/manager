@@ -1,7 +1,7 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -19,7 +19,6 @@ import Toggle from 'src/components/Toggle';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
-import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
 import styled, { StyleProps } from './LinodesLanding.styles';
 import LinodesViewWrapper from './LinodesViewWrapper';
@@ -53,7 +52,6 @@ interface State {
 type CombinedProps =
   & PaginatedLinodes
   & StateProps
-  & DispatchProps
   & RouteComponentProps<{}>
   & StyleProps
   & SetDocsProps
@@ -109,22 +107,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { setSidebar } = this.props.actions;
 
     this.mounted = true;
 
     this.getImages();
-
-    /** Check if the user has any Linodes without backups enabled
-     * (This also pre-populates the Backups drawer with these Linodes)
-     */
-
-    setSidebar();
   }
 
   componentWillUnmount() {
-    this.mounted = false;
-    this.props.actions.clearSidebar();
+    this.mounted = false
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -397,13 +387,6 @@ interface StateProps {
   managed: boolean;
 }
 
-interface DispatchProps {
-  actions: {
-    clearSidebar: () => void;
-    setSidebar: () => void;
-  },
-}
-
 /**
  * 'linodes' are provided by pagination and 'notifications' are provided by redux. We're using MSTP
  * to join the Notifications to the appropriate Linode and provide that to the component.
@@ -414,16 +397,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   }
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
-  return {
-    actions: {
-      clearSidebar: () => dispatch(clearSidebar()),
-      setSidebar: () => dispatch(addBackupsToSidebar())
-    }
-  };
-};
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(mapStateToProps);
 
 export const enhanced = compose(
   withRouter,

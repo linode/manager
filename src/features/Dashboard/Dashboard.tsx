@@ -76,7 +76,7 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
   accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
-  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.last_backup),
+  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
 });
