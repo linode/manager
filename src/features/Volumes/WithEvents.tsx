@@ -105,7 +105,9 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
                */
               if (!!volume.linode_id) {
                 return getLinode(volume.linode_id)
-                  .then(linode => {
+                  .then((response) => {
+                    const linode = response.data;
+
                     /*
                      * Now add our new volume, include the newly attached
                      * Linode data to the master list

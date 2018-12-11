@@ -1,4 +1,4 @@
-import { compose, lensPath, set } from 'ramda';
+import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -7,7 +7,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { updateLinode } from 'src/services/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import AlertSection from './AlertSection';
 
@@ -233,7 +232,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       .catch((error) => {
         this.setState({
           submitting: false,
-          errors: getAPIErrorOrDefault(error, 'Unable to update alerts thresholds.')
+          errors: pathOr([{ reason: 'Unable to update alerts thresholds.' }], ['response', 'data', 'errors'], error)
         });
       });
   }
