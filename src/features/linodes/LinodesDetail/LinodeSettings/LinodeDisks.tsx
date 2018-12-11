@@ -406,6 +406,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         onSubmit={this.onDrawerSubmit}
         onImageChange={this.onImageChange}
         onPasswordChange={this.onPasswordChange}
+        onResetImageMode={this.onResetImageMode}
         userSSHKeys={this.props.userSSHKeys}
       />
     );
@@ -434,6 +435,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   onPasswordChange = (password: string) => {
     const { fields } = this.state.drawer;
     this.setDrawer({ fields: { ...fields, password }});
+  }
+
+  onResetImageMode = () => {
+    const { fields } = this.state.drawer;
+    this.setDrawer({ fields: {...fields, image: undefined, password: undefined }});
   }
 
   onDrawerSubmit = () => {

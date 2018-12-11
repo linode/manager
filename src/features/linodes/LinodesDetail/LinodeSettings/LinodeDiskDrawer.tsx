@@ -53,6 +53,7 @@ interface Props extends EditableFields {
   onSizeChange: (value: number | string) => void;
   onImageChange: (selected: string | undefined) => void;
   onPasswordChange: (password: string) => void;
+  onResetImageMode: () => void;
 }
 
 interface State {
@@ -145,6 +146,7 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
 
   onModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ selectedMode: e.target.value as diskMode });
+    this.props.onResetImageMode(); // Reset image and root_pass
   }
 
   onImageChange = (selected: Item<string>) => {
