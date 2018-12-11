@@ -222,6 +222,7 @@ export class EditableText extends React.Component<FinalProps, State> {
                   className={`${classes.button} ${classes.editIcon}`}
                   onClick={this.toggleEditing}
                   data-qa-edit-button
+                  aria-label={`Edit ${labelText}`}
                 >
                   <Edit className={`${classes.icon} ${classes.edit}`}/>
                 </Button>

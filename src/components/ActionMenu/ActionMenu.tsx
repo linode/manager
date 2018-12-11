@@ -133,7 +133,7 @@ class ActionMenu extends React.Component<CombinedProps, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          <MenuItem key="placeholder" className={classes.hidden} />
+          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {(actions as Action[]).map((a, idx) =>
             <MenuItem
               key={idx}

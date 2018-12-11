@@ -214,7 +214,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
         >
-          <MenuItem key="placeholder" className={classes.hidden} />
+          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           <MenuItem
             onClick={this.toggleRebootDialog}
             className={classes.menuItem}

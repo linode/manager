@@ -192,6 +192,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
             onClick={this.handleMenu}
             className={` ${classes.button} ${anchorEl && 'active'}`}
             data-qa-user-menu
+            aria-label="User Menu"
           >
             {username &&
               <React.Fragment>
@@ -217,7 +218,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
             onClose={this.handleClose}
             className={classes.menu}
           >
-            <MenuItem key="placeholder" className={classes.hidden} />
+            <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
             {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
           </Menu>
         </Hidden>
