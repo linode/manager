@@ -24,16 +24,16 @@ describe('CPUMetrics', () => {
     />
   );
 
-  // it('renders a table', () => {
-  //   expect(wrapper.find('WithStyles(Table)')).toHaveLength(1);
-  // });
+  it('renders a table', () => {
+    expect(wrapper.find('WithStyles(WrappedTable)')).toHaveLength(1);
+  });
 
-  // it('renders Max, Avg, and Last table headers', () => {
-  //   ['Max', 'Avg', 'Last'].forEach(section => {
-  //     expect(wrapper.containsMatchingElement(
-  //       <Typography>{section}</Typography>)).toBeTruthy();
-  //   });
-  // });
+  it('renders Max, Avg, and Last table headers', () => {
+    ['Max', 'Avg', 'Last'].forEach(section => {
+      expect(wrapper.containsMatchingElement(
+        <Typography>{section}</Typography>)).toBeTruthy();
+    });
+  });
 
   it('renders the legend title', () => {
     expect(wrapper.find('[data-qa-legend-title]')).toHaveLength(1);
