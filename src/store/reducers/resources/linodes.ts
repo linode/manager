@@ -126,7 +126,6 @@ type RequestLinodeForStoreThunk = (id: number) => ThunkAction<void, ApplicationS
 const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, getState) => {
   const { results } = getState().__resources.linodes;
 
-  console.log(`Requesting for Linode ${id}`);
   getLinode(id)
     .then(response => response.data)
     .then(linode => {
