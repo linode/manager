@@ -182,3 +182,19 @@ export const checkEnvironment = () => {
         pending('Feature not available in Testing or Dev environmnet');
     }
 }
+
+export const createUnattachedVolumes = (volumeObjArray) => {
+    let volumes = [];
+    const token = readToken(browser.options.testUser);
+
+    volumeObjArray.forEach((volumeObj) => {
+        const volume = browser.createVolumeUnattached(token,volumeObj.label,volumeObj.region,volumeObj.size);
+    });
+
+    browser.url(constants.routes.volumes);
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
+
+    volumeObjArray.forEach((volumeObj) => {
+        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal)
+    });
+}

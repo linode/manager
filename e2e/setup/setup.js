@@ -147,6 +147,27 @@ exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
     });
 }
 
+exports.createVolumeUnattached = (token,label,region,size) => {
+  return new Promise((resolve, reject) => {
+      const volumesEndpoint = '/volumes';
+
+      const volumesConfig = {
+          region: region ? region : 'us-east',
+          size: size ? size : 20,
+          label: label
+      }
+
+      return getAxiosInstance(token).post(volumesEndpoint, volumesConfig)
+          .then(response => {
+              resolve(response.data);
+          })
+          .catch(error => {
+              console.error('Error', error);
+              reject(error);
+          });
+  });
+}
+
 exports.allocatePrivateIp = (token, linodeId) => {
     return new Promise((resolve, reject) => {
         const ipsEndpoint = `/linode/instances/${linodeId}/ips`;

@@ -30,7 +30,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     }
 
     const getLinodeOptions = () => {
-        VolumeDetail.attachToLinode.click();
+        VolumeDetail.selectLinodeOrVolume.click();
         VolumeDetail.selectOption.waitForVisible(constants.wait.normal);
         const linodes = VolumeDetail.selectOptions.map(option => option.getText());
         const justLinodes = linodes.filter(options => options != 'Select a Linode');
@@ -115,16 +115,13 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         testVolume['region'] = 'us-east';
         testVolume['tag'] = `Auto${new Date().getTime()}`;
         VolumeDetail.createVolume(testVolume, 'header');
-        VolumeDetail.waitForNotice('Volume scheduled for creation.')
+        VolumeDetail.waitForNotice('Volume scheduled for creation.');
         VolumeDetail.toastDisplays('Volume successfully created.', constants.wait.minute*2);
     });
 
     it('after creating a volume, configuration drawer displays with volume mounting commands', () => {
-          VolumeDetail.volumeConfigurationDrawerDisplays();
-          expect(VolumeDetail.createFileSystemCommand.getAttribute('value')).toEqual(`mkfs.ext4 "/dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}"`);
-          expect(VolumeDetail.createMountDirCommand.getAttribute('value')).toEqual(`mkdir "/mnt/${testVolume.label}"`);
-          expect(VolumeDetail.mountCommand.getAttribute('value')).toEqual(`mount "/dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}" "/mnt/${testVolume.label}"`);
-          expect(VolumeDetail.mountOnBootCommand.getAttribute('value')).toEqual(`/dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${testVolume.label} ext4 defaults,noatime 0 2`);
+        VolumeDetail.volumeConfigurationDrawerDisplays();
+        VolumeDetail.checkVolumeConfigurationCommands(testVolume.label);
     });
 
     it('should create a volume without attaching to a linode', () => {

@@ -90,7 +90,7 @@ export class ListLinodes extends Page {
     }
 
     getStatus(linode) {
-        return linode.$(this.status.selector).getAttribute('data-qa-status');
+        return $(`[data-qa-linode="${linode}"] ${this.status.selector}`).getAttribute('data-qa-status');
     }
 
     reboot(linode) {
@@ -120,11 +120,11 @@ export class ListLinodes extends Page {
     }
 
     powerOff(linode) {
-        this.selectActionMenuItem(linode, 'Power Off');
+        this.selectActionMenuItemV2(`[data-qa-linode="${linode}"]`,'Power Off');
         this.acceptDialog('Powering Off');
 
         browser.waitUntil(function() {
-            return browser.isVisible('[data-qa-status="offline"]');
+            return browser.isVisible(`[data-qa-linode="${linode}"] [data-qa-status="offline"]`);
         }, constants.wait.minute * 3, 'Failed to power down linode');
     }
 

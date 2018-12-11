@@ -98,11 +98,11 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <ModeSelection mode={modes.CREATING_FOR_LINODE} onChange={() => { actions.switchToAttaching() }} />
 
-            <Typography variant="body1" className={props.classes.textWrapper}>
+            <Typography variant="body1" className={props.classes.textWrapper} data-qa-volume-attach-help>
               {`This volume will be immediately scheduled for attachment to ${linodeLabel} and available to other Linodes in the ${linodeRegion} data-center.`}
             </Typography>
 
-            <Typography variant="body1" className={props.classes.textWrapper}>
+            <Typography variant="body1" className={props.classes.textWrapper} data-qa-volume-size-help>
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
               $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
             </Typography>
@@ -187,4 +187,3 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
 const connected = connect(undefined, mapDispatchToProps);
 
 export default styled(connected(CreateVolumeForm));
-

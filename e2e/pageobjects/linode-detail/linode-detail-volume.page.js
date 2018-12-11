@@ -10,7 +10,7 @@ export class VolumeDetail extends Page {
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
     get regionField() { return $('[data-qa-region]'); }
-    get attachToLinode() { return $(`${this.drawerBase.selector} [data-qa-enhanced-select]`); }
+    get selectLinodeOrVolume() { return $(`${this.drawerBase.selector} [data-qa-enhanced-select]`); }
     get linodeSelect() { return $('[data-qa-linode-select]'); }
     get linodeAttachOption() { return $('[data-qa-linode-menu-item]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
@@ -37,6 +37,7 @@ export class VolumeDetail extends Page {
     get volumeCreateSizeHelpText() { return $('[data-qa-volume-size-help]'); }
     get volumeCreateHelpText() { return $('[data-qa-volume-help]'); }
     get volumeCreateRegionHelp() { return $('[data-qa-volume-region]'); }
+    get volumeselectLinodeOrVolumeHelpText() { return $('[data-qa-volume-attach-help]'); }
     get createFileSystemCommand() { return $('[data-qa-make-filesystem] input'); }
     get createMountDirCommand() { return $('[data-qa-mountpoint] input'); }
     get mountCommand() { return $('[data-qa-mount] input'); }
@@ -44,15 +45,8 @@ export class VolumeDetail extends Page {
     get umountCommand() { return $('[data-qa-umount] input'); }
     get fileSystemCheckCommand() { return $('[data-qa-check-filesystem] input'); }
     get resizeFileSystemCommand() { return $('[data-qa-resize-filesystem] input'); }
-
-    volAttachedToLinode(linodeLabel) {
-        browser.waitUntil(function() {
-            const attachedToLinode = $$('[data-qa-volume-cell]')
-                .filter(e => e.$('[data-qa-volume-cell-attachment]')
-                    .getText().includes(linodeLabel));
-            return attachedToLinode.length > 0;
-        }, constants.wait.normal);
-    }
+    get creatAndAttachRadio() { return $('[data-qa-radio="Create and Attach Volume"]'); }
+    get attachExistingVolume() { return $('[data-qa-radio="Attach Existing Volume"]'); }
 
     removeAllVolumes() {
         const pageObject = this;
@@ -67,6 +61,7 @@ export class VolumeDetail extends Page {
     closeVolumeDrawer() {
         this.drawerClose.click();
         this.drawerTitle.waitForVisible(constants.wait.short, true);
+        browser.pause(500);
     }
 
     defaultDrawerElemsDisplay() {
@@ -80,7 +75,20 @@ export class VolumeDetail extends Page {
         expect(this.region.isVisible()).toBe(true);
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        this.attachToLinode.waitForVisible(constants.wait.normal);
+        this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
+    }
+
+    volumeAttachedToLinodeDrawerDisplays() {
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.creatAndAttachRadio.waitForVisible(constants.wait.normal);
+        this.attachExistingVolume.waitForVisible(constants.wait.normal);
+        this.label.waitForVisible(constants.wait.normal);
+        this.size.waitForVisible(constants.wait.normal);
+        this.tagsMultiSelect.waitForVisible(constants.wait.normal);
+    }
+
+    attachExistingVolumeToLinodeDrawerDisplays() {
+        this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
     }
 
     volumeConfigurationDrawerDisplays(){
@@ -90,6 +98,16 @@ export class VolumeDetail extends Page {
         this.mountOnBootCommand.waitForVisible(constants.wait.normal);
         expect(this.copyToolTips.length).toBe(4);
         expect(this.drawerTitle.getText()).toEqual('Volume Configuration');
+    }
+
+    createVolumeAttachedToLinode(volumeLabel,size,tag){
+        this.volumeAttachedToLinodeDrawerDisplays();
+        this.label.$('input').setValue(volumeLabel);
+        this.size.$('input').setValue(size);
+        if(tag){
+            this.addTagToTagInput(tag);
+        }
+        this.submitButton.click();
     }
 
     getVolumeId(label) {
@@ -131,7 +149,7 @@ export class VolumeDetail extends Page {
         }
 
         if (volume.hasOwnProperty('attachedLinode')) {
-            this.attachToLinode.click();
+            this.selectLinodeOrVolume.click();
             this.selectOption.waitForVisible(constants.wait.normal);
 
             const optionToSelect =
@@ -337,6 +355,13 @@ export class VolumeDetail extends Page {
         }, constants.wait.normal);
         browser.jsClick(volumeRegion);
         this.attachRegion.waitForVisible(constants.wait.short, true);
+    }
+
+    checkVolumeConfigurationCommands(volumeLabel){
+        expect(this.createFileSystemCommand.getAttribute('value')).toEqual(`mkfs.ext4 "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}"`);
+        expect(this.createMountDirCommand.getAttribute('value')).toEqual(`mkdir "/mnt/${volumeLabel}"`);
+        expect(this.mountCommand.getAttribute('value')).toEqual(`mount "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}" "/mnt/${volumeLabel}"`);
+        expect(this.mountOnBootCommand.getAttribute('value')).toEqual(`/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel} ext4 defaults,noatime 0 2`);
     }
 }
 
