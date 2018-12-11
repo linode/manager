@@ -6,8 +6,7 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { getType } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import LinodeRowLoaded from './LinodeRowLoaded';
-import LinodeRowLoading from './LinodeRowLoading';
+import LinodeRowWithState from './LinodeRowWithState';
 
 type ClassNames = 'root';
 
@@ -111,32 +110,25 @@ class LinodeRow extends React.Component<CombinedProps, State> {
 
     const loading = linodeInTransition(this.props.linodeStatus, this.props.linodeRecentEvent);
 
-    return loading
-      ? <LinodeRowLoading
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeRecentEvent={linodeRecentEvent}
-        linodeStatus={linodeStatus}
-        linodeTags={linodeTags}
-      />
-      : <LinodeRowLoaded
-        linodeBackups={linodeBackups}
-        linodeId={linodeId}
-        linodeIpv4={linodeIpv4}
-        linodeIpv6={linodeIpv6}
-        linodeLabel={linodeLabel}
-        linodeRegion={linodeRegion}
-        linodeStatus={linodeStatus}
-        linodeTags={linodeTags}
-        linodeType={linodeType}
-        mostRecentBackup={mostRecentBackup}
-        openConfigDrawer={openConfigDrawer}
-        toggleConfirmation={toggleConfirmation}
-        typesData={typesData}
-        typesLoading={typesLoading}
-        mutationAvailable={mutationAvailable}
-      />
-  }
+    return <LinodeRowWithState
+      loading={loading}
+      linodeRecentEvent={linodeRecentEvent}
+      linodeBackups={linodeBackups}
+      linodeId={linodeId}
+      linodeIpv4={linodeIpv4}
+      linodeIpv6={linodeIpv6}
+      linodeLabel={linodeLabel}
+      linodeRegion={linodeRegion}
+      linodeStatus={linodeStatus}
+      linodeTags={linodeTags}
+      linodeType={linodeType}
+      mostRecentBackup={mostRecentBackup}
+      openConfigDrawer={openConfigDrawer}
+      toggleConfirmation={toggleConfirmation}
+      typesData={typesData}
+      typesLoading={typesLoading}
+      mutationAvailable={mutationAvailable}
+    />
 }
 
 const typesContext = withTypes(({ loading: typesLoading, data: typesData }) => ({
