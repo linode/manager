@@ -26,6 +26,7 @@ declare interface ApplicationState {
   documentation: DocumentationState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
+  tagImportDrawer: TagImportDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
   /** @todo extract */
@@ -56,6 +57,10 @@ declare interface VolumeDrawerState {
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
+}
+
+declare interface TagImportDrawerState {
+  open: boolean;
 }
 
 declare interface SidebarState {
