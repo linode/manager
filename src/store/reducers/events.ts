@@ -47,14 +47,15 @@ export default (state = defaultState, action: AnyAction) => {
     const { payload: events } = action;
     const {
       events: prevEvents,
-      inProgressEvents: prevInProgressEvents
+      inProgressEvents: prevInProgressEvents,
+      mostRecentEventTime,
     } = state;
     const updatedEvents = updateEvents(prevEvents, events);
 
     return {
       ...state,
       events: updatedEvents,
-      mostRecentEventTime: updatedEvents.reduce(mostRecentCreated, epoch),
+      mostRecentEventTime: events.reduce(mostRecentCreated, mostRecentEventTime),
       countUnseenEvents: getNumUnseenEvents(updatedEvents),
       inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };
