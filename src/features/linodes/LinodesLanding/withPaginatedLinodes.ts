@@ -124,6 +124,7 @@ const isWhitelistedAction = (v: string) => [
   'linode_rebuild',
   'linode_resize',
   'linode_migrate',
+  'linode_clone',
 ].includes(v);
 
 const isWhitelistedStatus = (v: string) => [

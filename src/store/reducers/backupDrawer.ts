@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { isEmpty, pathOr } from 'ramda';
-import { Dispatch, Reducer } from 'redux';
+import { Reducer } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
@@ -195,10 +196,16 @@ export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: num
 *  When complete, it will dispatch appropriate actions to handle the result, depending
 *  on whether or not any errors occurred.
 */
-export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () => State) => {
-  const linodeIDs = pathOr([], ['backups', 'data'], getState()).map((linode: Linode.Linode) => linode.id);
+type EnableAllBackupsThunk = () => ThunkAction<void, ApplicationState, undefined>;
+export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState) => {
+  const { entities } = getState().__resources.linodes;
+
+  const linodesWithoutBackups = entities
+    .filter(linode => !linode.backups.enabled)
+    .map(linode => linode.id);
+
   dispatch(handleEnable());
-  Bluebird.reduce(linodeIDs, gatherResponsesAndErrors, { success: [], errors: [] })
+  Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, { success: [], errors: [] })
     .then(response => {
       if (response.errors && !isEmpty(response.errors)) {
         dispatch(handleEnableError(response));
@@ -218,8 +225,11 @@ export const enableAllBackups = () => (dispatch: Dispatch<State>, getState: () =
 *  When complete, it will dispatch appropriate actions to handle the result, including
 * updating state.__resources.accountSettings.data.backups_enabled.
 */
-export const enableAutoEnroll = () => (dispatch: Dispatch<State>, getState: () => State) => {
-  const backups_enabled = pathOr(false, ['backups', 'autoEnroll'], getState());
+type EnableAutoEnrollThunk = () => ThunkAction<void, ApplicationState, undefined>;
+export const enableAutoEnroll: EnableAutoEnrollThunk = () => (dispatch, getState) => {
+  const { backups } = getState();
+  const backups_enabled = Boolean(backups.autoEnroll);
+
   dispatch(handleAutoEnroll());
   updateAccountSettings({ backups_enabled })
     .then((response) => {
