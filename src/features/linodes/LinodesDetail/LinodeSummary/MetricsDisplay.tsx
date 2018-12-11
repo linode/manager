@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { Metrics } from 'src/utilities/statMetrics';
 
 type ClassNames = 'root'
@@ -83,6 +83,9 @@ interface MetricsDisplayRow {
 type CombinedProps = MetricsDisplayProps & WithStyles<ClassNames>
 
 export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
+
+  const rowHeaders = ['Max', 'Avg', 'Last'];
+
   return (
     <Table aria-label="Linode stats and metrics" className={classes.root}>
       <TableHead>
@@ -90,7 +93,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
           <TableCell>
             {''}
           </TableCell>
-          {['Max', 'Avg', 'Last'].map((section, idx) =>
+          {rowHeaders.map((section, idx) =>
             <TableCell key={idx} data-qa-header-cell className={classes.tableHeadInner}>
               <Typography variant="body2" className={classes.text}>
                 {section}
@@ -111,7 +114,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
                   </div>
                 </TableCell>
                 {metricsBySection(data).map((section, idx) => {
-                  return (<TableCell key={idx} parentColumn="Max" data-qa-body-cell>
+                  return (<TableCell key={idx} parentColumn={rowHeaders[idx]} data-qa-body-cell>
                     <Typography variant="body2" className={classes.text}>
                       {format(section)}
                     </Typography>
