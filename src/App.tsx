@@ -160,7 +160,7 @@ interface State {
   hasError: boolean;
 }
 
-type CombinedProps = Props 
+type CombinedProps = Props
   & DispatchProps
   & StateProps
   & WithStyles<ClassNames>
@@ -360,7 +360,7 @@ export class App extends React.Component<CombinedProps, State> {
                               <Route path="/dashboard" component={Dashboard} />
                               <Route path="/search" component={SearchLanding} />
                               <Redirect exact from="/" to="/dashboard" />
-\                              <Route component={NotFound} />
+                              <Route component={NotFound} />
                             </Switch>
                           </Grid>
                           {hasDoc &&

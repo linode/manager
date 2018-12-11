@@ -844,21 +844,20 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
+    MuiSnackbar: {
+      root: { 
+      }
+    },
     MuiSnackbarContent: {
       root: {
         boxShadow: '0 0 5px #ddd',
         color: '#606469',
-        padding: 16,
-        margin: 16,
-        backgroundColor: 'transparent',
+        backgroundColor: 'white',
+        borderLeft: `6px solid transparent`,
+        borderRadius: 0,
         [breakpoints.up('md')]: {
-          margin: 0,
+          borderRadius: 0,
         },
-      },
-      message: {
-        margin: '0 auto',
-        width: '100%',
-        padding: 0,
       },
     },
     MuiSwitch: {
