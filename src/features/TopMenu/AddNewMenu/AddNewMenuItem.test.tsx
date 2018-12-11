@@ -22,23 +22,6 @@ describe('AddNewMenuItem', () => {
      );
   });
 
-  it('should render a divider if not the last item', () => {
-    const result = mount(
-      <LinodeThemeWrapper>
-        <AddNewMenuItem
-          index={1}
-          count={1}
-          title="shenanigans"
-          body="These be the stories of shennanigans."
-          ItemIcon={LinodeIcon}
-          onClick={jest.fn()}
-        />
-      </LinodeThemeWrapper>,
-    );
-
-    expect(result.find('WithStyles(Divider)')).toHaveLength(1);
-  });
-
   it('should not render a divider if not the last item', () => {
     const result = mount(
       <LinodeThemeWrapper>
