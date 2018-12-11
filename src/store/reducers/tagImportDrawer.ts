@@ -24,6 +24,8 @@ export const open = (): Open => ({
 
 export const defaultState: ApplicationState['tagImportDrawer'] = {
   open: true,
+  errors: [],
+  loading: false,
 };
 
 type ActionTypes =

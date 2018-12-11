@@ -61,6 +61,8 @@ declare interface VolumeDrawerState {
 
 declare interface TagImportDrawerState {
   open: boolean;
+  loading: boolean;
+  errors: string[];
 }
 
 declare interface SidebarState {
