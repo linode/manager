@@ -15,7 +15,6 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tags from 'src/components/Tags';
-import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
@@ -215,14 +214,9 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-interface TypesContextProps {
-  typesLoading: boolean;
-  typesData: Linode.LinodeType[];
-}
-
 type CombinedProps =
   & Props
-  & TypesContextProps
+  & WithTypesProps
   & WithTheme
   & WithStyles<CSSClasses>;
 
@@ -244,7 +238,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
         'linodeIpv6',
         'linodeIpv4',
         'typesData',
-        'typesLoading',
       ],
     )
       || haveAnyBeenModified<State>(
@@ -443,12 +436,17 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 }
 
-const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => ({
-  typesData,
-  typesLoading,
+import { connect } from 'react-redux';
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
 }));
+
 
 export default compose(
   withStyles(styles, { withTheme: true }),
-  typesContext,
+  withTypes,
 )(LinodeCard) as React.ComponentType<Props>;

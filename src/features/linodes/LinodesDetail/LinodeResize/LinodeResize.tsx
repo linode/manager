@@ -1,6 +1,7 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -9,7 +10,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SelectionCard from 'src/components/SelectionCard';
-import { withTypes } from 'src/context/types';
 import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
@@ -46,11 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface TypesContextProps {
-  currentTypesData: ExtendedType[];
-  deprecatedTypesData: ExtendedType[];
-}
-
 interface LinodeContextProps {
   linodeId: number;
   linodeType: null | string;
@@ -63,7 +58,8 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = TypesContextProps
+type CombinedProps =
+  & WithTypesProps
   & LinodeContextProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
@@ -108,7 +104,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         pathOr(
-          [{reason: 'There was an issue resizing your Linode.'}],
+          [{ reason: 'There was an issue resizing your Linode.' }],
           ['response', 'data', 'errors'],
           errorResponse
         )
@@ -185,7 +181,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
         <ActionsPanel>
           <Button
-            disabled={!this.state.selectedId || linodeInTransition(this.props.linodeStatus || '') }
+            disabled={!this.state.selectedId || linodeInTransition(this.props.linodeStatus || '')}
             type="primary"
             onClick={this.onSubmit}
             data-qa-submit
@@ -200,13 +196,20 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const typesContext = withTypes(({ data }) => ({
-  currentTypesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {
-    return eachType.successor === null
-  }),
-  deprecatedTypesData: (data || []).map(LinodeResize.extendType).filter((eachType) => {
-    return eachType.successor !== null;
-  })
+interface WithTypesProps {
+  currentTypesData: ExtendedType[];
+  deprecatedTypesData: ExtendedType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  currentTypesData: state.__resources.types.entities
+    .filter((eachType) => eachType.successor === null)
+    .map(LinodeResize.extendType),
+
+  depcrecatedTypesDAta: state.__resources.types.entities
+    .filter((eachType) => eachType.successor !== null)
+    .map(LinodeResize.extendType),
+
 }));
 
 const linodeContext = withLinode((context) => ({
@@ -218,7 +221,7 @@ const linodeContext = withLinode((context) => ({
 
 export default compose<CombinedProps, {}>(
   linodeContext,
-  typesContext,
+  withTypes,
   styled,
   withSnackbar
 )(LinodeResize);

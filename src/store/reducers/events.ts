@@ -32,11 +32,13 @@ const UPDATE_EVENTS_AS_SEEN = `UPDATE_EVENTS_AS_SEEN`;
 
 const actionCreator = actionCreatorFactory(`@@manager/events`);
 
-const addEvents = actionCreator<Event[]>(ADD_EVENTS);
+export const addEvents = actionCreator<Event[]>(ADD_EVENTS);
 
-const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
+export const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
 
 export const actions = { addEvents, updateEventsAsSeen };
+
+
 
 /** Reducer */
 export default (state = defaultState, action: AnyAction) => {
@@ -69,6 +71,7 @@ export default (state = defaultState, action: AnyAction) => {
 
   return state;
 };
+
 
 
 /** Helpers */

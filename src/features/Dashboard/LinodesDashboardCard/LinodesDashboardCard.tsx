@@ -1,5 +1,6 @@
 import { compose, take } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
 import Hidden from 'src/components/core/Hidden';
@@ -14,7 +15,6 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { withTypes } from 'src/context/types';
 import { events$ } from 'src/events';
 import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
@@ -56,11 +56,6 @@ interface ConnectedProps {
   types: Linode.LinodeType[]
 }
 
-interface TypesContext {
-  typesLoading: boolean;
-  typesData?: Linode.LinodeType[];
-}
-
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -68,7 +63,7 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = ConnectedProps & TypesContext & WithStyles<ClassNames>;
+type CombinedProps = ConnectedProps & WithTypesProps & WithStyles<ClassNames>;
 
 class LinodesDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -138,8 +133,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
   renderContent = () => {
     const { loading, data, errors } = this.state;
-    const { typesLoading } = this.props;
-    if (loading || typesLoading) {
+    if (loading) {
       return this.renderLoading();
     }
 
@@ -204,12 +198,16 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const typesContext = withTypes((context) => ({
-  typesLoading: context.loading,
-  typesData: context.data,
+
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
 }));
 
-const enhanced = compose(styled, typesContext);
+const enhanced = compose(styled, withTypes);
 
 const isFoundInData = (id: number, data: Linode.Linode[] = []): boolean =>
   data.reduce((result, linode) => result || linode.id === id, false);

@@ -100,7 +100,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   error: path(['__resources', 'accountSettings', 'error'], state),
   updateError: path(['__resources', 'accountSettings', 'updateError'], state),
-  linodesWithoutBackups: pathOr([], ['backups', 'data'], state),
+  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   networkHelperEnabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'network_helper'], state)
 });
 

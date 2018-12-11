@@ -34,6 +34,8 @@ it('renders without crashing', () => {
               getAccountSettings: jest.fn(),
               getProfile: jest.fn(),
               getNotifications: jest.fn(),
+              requestLinodes: jest.fn(),
+              requestTypes: jest.fn(),
             }}
             documentation={[]}
             toggleTheme={jest.fn()}

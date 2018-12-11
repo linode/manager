@@ -1,15 +1,16 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import authentication from './reducers/authentication';
-import backups from './reducers/backupDrawer';
-import documentation from './reducers/documentation';
-import domainDrawer from './reducers/domainDrawer';
-import events from './reducers/events';
-import features from './reducers/features';
-import notifications from './reducers/notifications';
-import __resources from './reducers/resources';
-import sidebar from './reducers/sidebar';
-import volumeDrawer from './reducers/volumeDrawer';
+import eventsMiddleware from './middleware/events';
+import authentication, { defaultState as authenticationDefaultState } from './reducers/authentication';
+import backups, { defaultState as backupsDefaultState } from './reducers/backupDrawer';
+import documentation, { defaultState as documentationDefaultState } from './reducers/documentation';
+import domainDrawer, { defaultState as domainDrawerDefaultState } from './reducers/domainDrawer';
+import events, { defaultState as eventsDefaultState } from './reducers/events';
+import features, { defaultState as featuresDefaultState } from './reducers/features';
+import notifications, { DEFAULT_STATE as notificationsDefaultState } from './reducers/notifications';
+import __resources, { defaultState as resourcesDefaultState } from './reducers/resources';
+import sidebar, { defaultState as sidebarDefaultState } from './reducers/sidebar';
+import volumeDrawer, { defaultState as volumeDrawerDefaultState } from './reducers/volumeDrawer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
@@ -26,9 +27,22 @@ const reducers = combineReducers<ApplicationState>({
   events,
 });
 
+const defaultState: ApplicationState = {
+  __resources: resourcesDefaultState,
+  authentication: authenticationDefaultState,
+  backups: backupsDefaultState,
+  documentation: documentationDefaultState,
+  features: featuresDefaultState,
+  sidebar: sidebarDefaultState,
+  volumeDrawer: volumeDrawerDefaultState,
+  notifications: notificationsDefaultState,
+  domainDrawer: domainDrawerDefaultState,
+  events: eventsDefaultState,
+};
+
 const enhancers = compose(
-  applyMiddleware(thunk),
+  applyMiddleware(thunk, eventsMiddleware),
   reduxDevTools ? reduxDevTools() : (f: any) => f,
 ) as any;
 
-export default createStore(reducers, undefined, enhancers);
+export default createStore(reducers, defaultState, enhancers);
