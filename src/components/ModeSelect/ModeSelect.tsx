@@ -18,7 +18,7 @@ export interface Mode<modes> {
 interface Props {
   selected: string;
   modes: Mode<any>[];
-  onChange: (mode: string) => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -30,7 +30,7 @@ export const ModeSelect: React.StatelessComponent<CombinedProps> = ({ modes, onC
       aria-label="mode"
       name="mode"
       value={selected}
-      onChange={(_, value) => onChange(value)} // @todo remove Lambda after we have React.memo
+      onChange={onChange} // @todo remove Lambda after we have React.memo
       data-qa-mode-radio-group
     >
       {modes.map((mode, idx: number) => (

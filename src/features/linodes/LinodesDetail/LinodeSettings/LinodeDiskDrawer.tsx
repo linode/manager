@@ -143,8 +143,8 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onFilesystemChange(e.target.value);
 
-  onModeChange = (selected: diskMode) => {
-    this.setState({ selectedMode: selected });
+  onModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ selectedMode: e.target.value as diskMode });
   }
 
   onImageChange = (selected: Item<string>) => {
