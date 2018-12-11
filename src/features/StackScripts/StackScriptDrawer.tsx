@@ -1,9 +1,8 @@
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
-import Notice from 'src/components/Notice';
+import DrawerContent from 'src/components/DrawerContent';
 import StackScript from 'src/components/StackScript';
 
 import { getStackScript } from 'src/services/stackscripts';
@@ -57,37 +56,15 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
     const { stackScript, error, loading } = this.state;
     const title = stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript';
 
-    const DrawerContent = () => {
-      if (loading) {
-        return (
-          <CircleProgress />
-        )
-      }
-
-      if (error) {
-        return (
-          <Notice error spacingTop={8}>
-            Couldn't load StackScript
-          </Notice>
-        );
-      }
-  
-      if (stackScript) {
-        return (
-          <StackScript data={stackScript} />
-        )  
-      } else {
-        return null;
-      }
-    }
-
     return (
       <Drawer
         title={title}
         open={open}
         onClose={closeDrawer}
         >
-          {DrawerContent()}
+          <DrawerContent title={title} error={error} loading={loading}>
+            {stackScript && <StackScript data={stackScript} />}
+          </DrawerContent>
       </Drawer>
     );
   }
