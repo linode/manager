@@ -55,47 +55,40 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
   render() {
     const { open, closeDrawer } = this.props;
     const { stackScript, error, loading } = this.state;
+    const title = stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript';
 
-    interface DrawerContentProps {
-      title: string;
-      children: any;
-    }
-
-    const DrawerContent = (props: DrawerContentProps) => (<Drawer
-      title={props.title}
-      open={open}
-      onClose={closeDrawer}
-      >
-        {props.children}
-      </Drawer>
-    )
-
-    if (loading) {
-      return (
-        <DrawerContent title="StackScript">
+    const DrawerContent = () => {
+      if (loading) {
+        return (
           <CircleProgress />
-        </DrawerContent>
-      )
-    }
+        )
+      }
 
-    if (error) {
-      return (
-        <DrawerContent title="StackScript">
-          {error &&
-            <Notice error spacingTop={8}>
-              Couldn't load StackScript
-            </Notice>
-          }
-        </DrawerContent>
-      );
+      if (error) {
+        return (
+          <Notice error spacingTop={8}>
+            Couldn't load StackScript
+          </Notice>
+        );
+      }
+  
+      if (stackScript) {
+        return (
+          <StackScript data={stackScript} />
+        )  
+      } else {
+        return null;
+      }
     }
 
     return (
-      <DrawerContent
-        title={stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript'}
-      >
-        {stackScript && <StackScript data={stackScript} />}
-        </DrawerContent>
+      <Drawer
+        title={title}
+        open={open}
+        onClose={closeDrawer}
+        >
+          {DrawerContent()}
+      </Drawer>
     );
   }
 }
