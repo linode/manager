@@ -58,6 +58,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     animation: 'fadeIn .3s ease-in-out forwards',
     '& .error-for-scroll > div': {
       width: 'auto',
+      flexDirection: 'row',
+      flexWrap: 'wrap-reverse',
     },
     '& .input': {
       minHeight: 'auto',
@@ -70,23 +72,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         borderLeft: 'none',
       },
     },
-    '& .error-for-scroll p': {
+    '& .error-for-scroll p:last-child': {
       padding: theme.spacing.unit,
-      marginLeft: 12,
       marginTop: 0,
       position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
+      top: '-50px',
+      left: 10,
+      maxWidth: 170,
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
       backgroundColor: theme.bg.offWhiteDT,
       color: `${theme.palette.text.primary}`,
       borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       lineHeight: 1.2,
       zIndex: 5,
-      [theme.breakpoints.down('xs')]: {
-        top: 0,
-        transform: 'none',
-      },
     },
     '& .react-select__input': {
       fontSize: '.9rem',
