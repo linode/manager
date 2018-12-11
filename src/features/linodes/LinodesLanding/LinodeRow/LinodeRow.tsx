@@ -128,7 +128,8 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       typesData={typesData}
       typesLoading={typesLoading}
       mutationAvailable={mutationAvailable}
-    />
+    />;
+    }
 }
 
 const typesContext = withTypes(({ loading: typesLoading, data: typesData }) => ({
