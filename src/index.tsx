@@ -1,6 +1,5 @@
 import 'font-logos/assets/font-logos.css';
 import createBrowserHistory from 'history/createBrowserHistory';
-import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -9,6 +8,7 @@ import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
+import SnackBar from 'src/components/SnackBar';
 import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
@@ -74,18 +74,22 @@ const renderNull = () =>
 
 const renderLish = () =>
   <LinodeThemeWrapper>
-    <Lish />
+    {(toggle) => (<Lish />)}
   </LinodeThemeWrapper>
-
-/**
- * The way toggleTheme is set is all funked up. This gross hack
- * needs to be removed in favor of (maybe) render children.
- */
-const mock = () => null;
 
 const renderApp = (props: RouteProps) =>
   <LinodeThemeWrapper>
-    <App toggleTheme={mock} location={props.location} />
+    {(toggle) => (
+      <SnackBar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        maxSnack={3}
+        autoHideDuration={4000}
+        data-qa-toast
+        hideIconVariant={true}
+      >
+        <App toggleTheme={toggle} location={props.location} />
+      </SnackBar>
+    )}
   </LinodeThemeWrapper>
 
 const renderAuthentication = () =>
@@ -96,26 +100,19 @@ const renderAuthentication = () =>
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
       <Route exact path="/nullauth" render={renderNullAuth} />
       <Route exact path="/logout" component={Logout} />
-      <Route render={renderApp}/>
+      <Route render={renderApp} />
     </Switch>
   </AuthenticationWrapper>
 
 ReactDOM.render(
   <Provider store={store}>
-    <SnackbarProvider
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      maxSnack={3}
-      autoHideDuration={4000}
-      data-qa-toast
-    >
-      <Router>
-        <Switch>
-          {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-          <Route exact path="/null" render={renderNull} />
-          <Route render={renderAuthentication} />
-        </Switch>
-      </Router>
-    </SnackbarProvider>
+    <Router>
+      <Switch>
+        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+        <Route exact path="/null" render={renderNull} />
+        <Route render={renderAuthentication} />
+      </Switch>
+    </Router>
   </Provider>,
   document.getElementById('root') as HTMLElement,
 );
