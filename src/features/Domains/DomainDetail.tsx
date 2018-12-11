@@ -85,7 +85,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [
     {
       title: 'DNS Manager Overview',
-      src: 'https://www.linode.com/docs/networking/dns/dns-manager-overview/',
+      src: 'https://linode.com/docs/platform/manager/dns-manager-new-manager/#add-records',
       body: `The DNS Manager is a comprehensive DNS management interface available within the
       Linode Manager that allows you to add DNS records for all of your domain names. This guide
       covers the use of Linode’s DNS Manager and basic domain zone setup. For an introduction to
