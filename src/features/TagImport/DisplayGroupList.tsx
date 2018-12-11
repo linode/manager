@@ -1,3 +1,4 @@
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper'
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -27,6 +28,9 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, entity, groups } = props;
+
+  if (isEmpty(groups)) { return null; }
+
   return (
     <Paper className={classes.root}>
       <Typography variant="h3">

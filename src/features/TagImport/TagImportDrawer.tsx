@@ -11,7 +11,10 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { close as _close } from 'src/store/reducers/tagImportDrawer'
+import {
+  addTagsToEntities,
+  close as _close,
+} from 'src/store/reducers/tagImportDrawer'
 
 import DisplayGroupList from './DisplayGroupList';
 
@@ -24,12 +27,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface StateProps {
   open: boolean;
   loading: boolean;
+  success: boolean;
   errors: string[];
 }
 
 interface DispatchProps {
   actions: {
     close: () => void;
+    update: () => void;
   }
 }
 
@@ -38,7 +43,7 @@ type CombinedProps = StateProps
   & WithStyles<ClassNames>;
 
 const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
-  const { actions: { close }, errors, loading, open } = props;
+  const { actions: { close, update }, errors, loading, open, success } = props;
   return (
     <Drawer
         title="Import Display Groups to Tags"
@@ -55,7 +60,14 @@ const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           {!isEmpty(errors) &&
             <Grid item>
               <Notice error spacingBottom={0} >
-                Failure!
+                There was an error importing your display groups.
+              </Notice>
+            </Grid>
+          }
+          {success &&
+            <Grid item>
+              <Notice success spacingBottom={0} >
+                Your display groups have been imported successfully.
               </Notice>
             </Grid>
           }
@@ -68,7 +80,7 @@ const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
-                onClick={() => null}
+                onClick={update}
                 loading={loading}
                 type="primary"
                 data-qa-submit
@@ -94,7 +106,8 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   return ({
     open: pathOr(false, ['tagImportDrawer', 'open'], state),
     loading: pathOr(false, ['tagImportDrawer', 'loading'], state),
-    errors: pathOr([], ['tagImportDrawer', 'errors'], state)
+    errors: pathOr([], ['tagImportDrawer', 'errors'], state),
+    success: pathOr(false, ['tagImportDrawer', 'success'], state)
   });
 };
 
@@ -102,6 +115,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   return {
     actions: {
       close: () => dispatch(_close()),
+      update: () => dispatch(addTagsToEntities()),
     }
   };
 };

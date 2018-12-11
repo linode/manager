@@ -59,10 +59,15 @@ declare interface VolumeDrawerState {
   message?: string;
 }
 
+declare interface TagError {
+  entityId: string | number;
+  reason: string;
+}
 declare interface TagImportDrawerState {
   open: boolean;
   loading: boolean;
-  errors: string[];
+  errors: TagError[];
+  success: boolean;
 }
 
 declare interface SidebarState {
