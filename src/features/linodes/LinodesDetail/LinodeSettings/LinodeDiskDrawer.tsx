@@ -1,4 +1,4 @@
-import { clamp } from 'ramda';
+import { clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -14,7 +14,6 @@ import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getImages } from 'src/services/images';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from './ImageAndPassword';
@@ -101,9 +100,10 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       })
       .catch((errors) => {
         this.setState({
-          imageError: getErrorStringOrDefault(
-            errors,
+          imageError: pathOr(
             "There was an error loading your images.",
+            ["response", "data", "errors", 0, "reason"],
+            errors,
           )
         })
       });
