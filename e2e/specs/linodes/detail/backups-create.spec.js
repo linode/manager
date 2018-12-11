@@ -1,6 +1,6 @@
 const { constants } = require('../../../constants');
 import {
-    apiCreateLinode,
+    apiCreateMultipleLinodes,
     timestamp,
     checkEnvironment,
     updateGlobalSettings,
@@ -34,9 +34,17 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
     beforeAll(() => {
         checkEnvironment();
         updateGlobalSettings(disableAutoEnrollment);
-        apiCreateLinode(linodeLabel);
-        apiCreateLinode(otherDataCenterLinode,false,[],'g6-nanode-1','us-central');
-        browser.pause(2000);
+        const linode1 = {
+            linodeLabel: linodeLabel
+        }
+        const linode2 = {
+            linodeLabel: otherDataCenterLinode,
+            privateIp: false,
+            tags: [],
+            type: undefined,
+            region: 'us-central'
+        }
+        apiCreateMultipleLinodes([linode1,linode2]);
         ListLinodes.navigateToDetail(linodeLabel);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
     });

@@ -232,4 +232,14 @@ export default class Page {
             return this.tags.length === expectedCount;
         }, constants.wait.normal);
     }
+
+    checkTagsApplied(expectedTags){
+        browser.waitUntil(() => {
+            return this.tags.length > 0;
+        },constants.wait.normal);
+        const appliedTags = this.tags.map(tag => tag.getText());
+        expectedTags.forEach((tag) => {
+            expect(appliedTags.includes(tag)).toBe(true);
+        });
+    }
 }
