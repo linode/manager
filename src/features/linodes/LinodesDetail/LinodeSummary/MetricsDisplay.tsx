@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Table from 'src/components/core/Table';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableBody from 'src/components/core/TableBody';
-import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
@@ -49,7 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   legend: {
-    width: '38%',
+    [theme.breakpoints.up('sm')]: {
+      width: '38%',
+    },
     '& > div': {
       display: 'flex',
       alignItems: 'center',
@@ -109,7 +111,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
                   </div>
                 </TableCell>
                 {metricsBySection(data).map((section, idx) => {
-                  return (<TableCell key={idx} data-qa-body-cell>
+                  return (<TableCell key={idx} parentColumn="Max" data-qa-body-cell>
                     <Typography variant="body2" className={classes.text}>
                       {format(section)}
                     </Typography>
