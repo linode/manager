@@ -40,13 +40,13 @@ class StackScriptDrawer extends React.Component<CombinedProps, State> {
     const { stackScriptId: prevStackScriptId } = prevProps;
 
     if (stackScriptId && stackScriptId !== prevStackScriptId) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, stackScript: undefined  });
       getStackScript(stackScriptId)
       .then(stackScript => {
         this.setState({ stackScript, loading: false, error: false })
       })
       .catch(() => {
-        this.setState({ error: true, loading: false })
+        this.setState({ error: true, loading: false})
       })
     }
   }
