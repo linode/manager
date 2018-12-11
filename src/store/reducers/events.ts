@@ -54,8 +54,7 @@ export default (state = defaultState, action: AnyAction) => {
     return {
       ...state,
       events: updatedEvents,
-      /** We're iterating over the new events since it will always contain the most recent events. */
-      mostRecentEventTime: events.reduce(mostRecentCreated, epoch),
+      mostRecentEventTime: updatedEvents.reduce(mostRecentCreated, epoch),
       countUnseenEvents: getNumUnseenEvents(updatedEvents),
       inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };
@@ -125,7 +124,7 @@ export const updateEvents = compose(
   /** Nested compose to get around Ramda's shotty typing. */
   compose(
     /** Take only the last 25 events. */
-    updateRight<Event[], Event[]>((prevEvents, events) => take(25, events)),
+    updateRight<Event[], Event[]>((prevEvents, events) => take(100, events)),
 
     /** Marked events "_deleted". */
     updateRight<Event[], Event[]>((prevEvents, events) => setDeletedEvents(events)),
