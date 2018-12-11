@@ -2,13 +2,13 @@
  * The docs in this file are intended for reuse throughout the app by means of the setDocs function.
  * In a component that will use the Docs sidebar, import as many of the objects below as needed, then
  * pass them as an array to the setDocs method. The usual pattern is:
- * 
+ *
  * import { Domains } from 'src/documentation';
- * 
+ *
  * ...
- * 
+ *
  * static docs = [ Domains ]
- * 
+ *
  * compose(
  *  ...
  *  setDocs(Domains.docs)
@@ -90,7 +90,7 @@ export const LISH: Linode.Doc = {
 
 export const LinodeGettingStarted: Linode.Doc = {
   title: 'Getting Started with Linode',
-  src: 'https://linode.com/docs/getting-started/',
+  src: 'https://linode.com/docs/getting-started-new-manager/',
   body: `This guide will help you set up your first Linode.`,
 }
 
