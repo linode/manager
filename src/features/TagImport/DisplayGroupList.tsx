@@ -26,7 +26,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props) => {
+export const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, entity, groups } = props;
 
   if (isEmpty(groups)) { return null; }
@@ -38,7 +38,13 @@ const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props) => {
       </Typography>
       <div className={classes.groupBox}>
         {groups.map((group:string, idx: number) =>
-          <Typography key={idx} className={classes.groupItem}>- {group}</Typography>
+          <Typography
+            key={idx}
+            className={classes.groupItem}
+            data-qa-display-group-item
+          >
+            - {group}
+          </Typography>
         )}
       </div>
     </Paper>

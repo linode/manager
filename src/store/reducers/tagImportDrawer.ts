@@ -29,8 +29,10 @@ interface Success extends Action {
 
 interface Error extends Action {
   type: typeof ERROR;
-  payload: TagError[];
+  payload: ErrorPayload;
 }
+
+type ErrorPayload = TagError[];
 
 export const close = (): Close => ({
   type: CLOSE,
@@ -41,7 +43,7 @@ export const open = (): Open => ({
 });
 
 export const handleSuccess = actionCreator<void>(`SUCCESS`);
-export const handleError = actionCreator<TagError[]>(`ERROR`);
+export const handleError = actionCreator<ErrorPayload>(`ERROR`);
 export const handleUpdate = actionCreator<void>(`UPDATE`);
 
 export const defaultState: State = {
