@@ -61,6 +61,7 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
           [classes.toggle]: true,
           [themeName]: true,
         })}
+        aria-label="Switch Theme"
       />
       <span
         className={classNames({
