@@ -155,14 +155,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     * Luckily, the only thing the API validates is if the amount is over $5 USD
     */
 
-    const amountAsInt = parseInt(e.target.value, 10)
-    const isPaypal = this.state.type === 'PAYPAL';
-    if (isPaypal && isAllowedUSDAmount(amountAsInt)) {
-      this.setState({ paypalSubmitEnabled: true });
-    }
+    const amountAsInt = parseInt(e.target.value, 10);
 
-    if ((isPaypal && !e.target.value) || (isPaypal && !isAllowedUSDAmount(amountAsInt))) {
-      this.setState({ paypalSubmitEnabled: false });
+    if (this.state.type === 'PAYPAL') {
+      this.setState({ paypalSubmitEnabled: shouldEnablePaypalButton(amountAsInt) })
     }
 
     this.setState({ usd: e.target.value || '' });
@@ -418,7 +414,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                 value={this.state.usd}
                 required
                 type="number"
-                placeholder={`1.00`}
+                placeholder={`5.00 minimum`}
               />
               {this.state.type === 'CREDIT_CARD' &&
                 <TextField
@@ -530,9 +526,17 @@ export default
     (enhanced(MakeAPaymentPanel));
 
 
-const isAllowedUSDAmount = (usd: number) => {
-  if (usd >= 5 && usd <= 500) {
-    return true;
+export const isAllowedUSDAmount = (usd: number) => {
+  return !!(usd >= 5 && usd <= 500);
+}
+
+export const shouldEnablePaypalButton = (value: number | undefined) => {
+  /** 
+   * paypal button should be disabled if there is either
+   * no value entered or it's below $5 or over $500 as per APIv4 requirements
+   */
+  if (!value || !isAllowedUSDAmount(value)) {
+    return false;
   }
-  return false;
+  return true;
 }
