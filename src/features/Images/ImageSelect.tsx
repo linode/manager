@@ -117,7 +117,7 @@ groupImages = groupBy(cond([
   [(i: Linode.Image) => true, always('images')],
 ]));
 
-const groupNameMap = {
+export const groupNameMap = {
   _default: 'Other',
   deleted: 'Recently Deleted Disks',
   recommended: '64-bit Distributions - Recommended',
