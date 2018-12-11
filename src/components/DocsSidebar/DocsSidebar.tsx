@@ -84,7 +84,7 @@ interface BackupCTAProps {
 }
 
 const connected = connect((state: ApplicationState, ownProps) => ({
-  backupsCTA: state.__resources.linodes.entities.filter(l => l.backups.enabled).length > 0
+  backupsCTA: state.__resources.linodes.entities.filter(l => !l.backups.enabled).length > 0
 }));
 
 export default connected(styled(DocsSidebar));
