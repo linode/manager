@@ -8,7 +8,6 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/component
 import ErrorState from 'src/components/ErrorState';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import AutoBackups from './AutoBackups';
 import NetworkHelper from './NetworkHelper';
 
@@ -52,7 +51,11 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     if (!errors) {
       return;
     }
-    const errorText = getErrorStringOrDefault(errors, "There was an error updating your account settings.");
+    const errorText = pathOr(
+      "There was an error updating your account settings.",
+      ['response', 'data', 'errors', 0, 'reason'],
+      errors
+    );
 
     return this.props.enqueueSnackbar(errorText, {
       variant: 'error'

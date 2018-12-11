@@ -1,3 +1,4 @@
+import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,7 +7,6 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import { allocateIPAddress } from 'src/services/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import substituteLink from 'src/utilities/substituteLink';
@@ -52,7 +52,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
       })
       .catch((errResponse) => {
         this.setState({
-          errors: getAPIErrorOrDefault(errResponse),
+          errors: path(['response', 'data', 'errors'], errResponse),
         }, () => {
           scrollErrorIntoView();
         });

@@ -1,4 +1,4 @@
-import { both, compose, equals, isNil, lensPath, over, set, uniq, view, when } from 'ramda';
+import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -14,7 +14,6 @@ import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames =
   'containerDivider'
@@ -331,11 +330,19 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
           });
       })
       .catch((response) => {
-        const apiErrors = getAPIErrorOrDefault(response, 'Unable to transfer IP addresses at this time. Please try again later.');
+        const apiErrors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], response);
+
+        if (apiErrors) {
           return this.setState({
             error: uniq(apiErrors),
             submitting: false,
           });
+        }
+
+        this.setState({
+          error: [{ field: 'none', reason: 'Unable to transfer IP addresses at this time. Please try again later.' }],
+          submitting: false
+        });
       })
   };
 

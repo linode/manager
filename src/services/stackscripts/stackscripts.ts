@@ -32,6 +32,7 @@ export const getStackscripts = (params?: any, filter?: any) =>
     setParams(params),
     setXFilter(filter),
   )
+    .then(response => response.data);
 
 /**
  * Returns all of the information about a specified StackScript, including the contents of the script.
@@ -43,6 +44,7 @@ export const getStackScript = (stackscriptId: number) =>
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
     setMethod('GET'),
   )
+    .then(response => response.data);
 
 /**
  * Creates a StackScript in your Account.
@@ -64,6 +66,7 @@ export const createStackScript = (payload: StackScriptPayload) =>
     setMethod('POST'),
     setData(payload, stackScriptSchema)
   )
+    .then(response => response.data);
 
 /**
  * Updates a StackScript.
@@ -86,6 +89,7 @@ export const updateStackScript = (stackscriptId: number, payload: Partial<StackS
     setMethod('PUT'),
     setData(payload, updateStackScriptSchema)
   )
+    .then(response => response.data);
 
 /**
  * Deletes a private StackScript you have permission to read_write. You cannot delete a public StackScript.
@@ -97,3 +101,4 @@ export const deleteStackScript = (stackscriptId: number) =>
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
     setMethod('DELETE'),
   )
+    .then(response => response.data);

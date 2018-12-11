@@ -44,6 +44,7 @@ const withUpdatingLinodes = (WrappedComponent: React.ComponentType<PropsIn>) => 
 
         .concatMap((event) => Observable.fromPromise(
           getLinode(event.entity!.id)
+            .then((response) => response.data)
             .then(requestBackupsWhenFinished(event.status))
             .then(linode => ({ ...linode, recentEvent: event }))
         ))

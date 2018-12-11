@@ -15,6 +15,7 @@ export const getImage = (imageId: string) =>
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('GET'),
   )
+  .then(response => response.data);
 
 /**
  * Returns a paginated list of Images.
@@ -27,6 +28,7 @@ export const getImages = (params: any = {}, filters: any = {}) =>
     setParams(params),
     setXFilter(filters),
   )
+  .then(response => response.data);
 
 /**
  * Create a private gold-master Image from a Linode Disk.
@@ -84,8 +86,9 @@ export const updateImage = (
  *
  * @param imageId { string } the ID of the image to delete
  */
-export const deleteImage = (imageId: string) =>
-  Request<{}>(
+export const deleteImage = (imageId: string) => {
+  return Request<{}>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('DELETE'),
   )
+}

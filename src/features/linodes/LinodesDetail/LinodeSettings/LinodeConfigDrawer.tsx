@@ -24,7 +24,6 @@ import { createLinodeConfig, getLinodeConfig, getLinodeDisks, getLinodeKernels, 
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll, getAllFromEntity } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -521,7 +520,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         })
         .catch((error) => {
           this.setState({
-            errors: getAPIErrorOrDefault(error, 'Unable to update config. Please try again.')
+            errors: pathOr([{ reason: 'Unable to update config. Please try again.' }], ['response', 'data', 'errors'], error)
           })
         })
     }
@@ -534,7 +533,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       })
       .catch(error =>
         this.setState({
-          errors: getAPIErrorOrDefault(error, 'Unable to create config. Please try again.'),
+          errors: pathOr([{ reason: 'Unable to create config. Please try again.' }], ['response', 'data', 'errors'], error),
         }))
   };
 
@@ -623,7 +622,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       .catch(error => {
         this.setState({
           loading: { ...this.state.loading, kernels: false },
-          errors: getAPIErrorOrDefault(error, 'Unable to load kernels.'),
+          errors: pathOr([{ reason: 'Unable to load kernels.' }], ['response', 'data', 'errors'], error),
         })
       });
   };

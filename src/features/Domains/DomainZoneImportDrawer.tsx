@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,7 +7,6 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import LinodeTextField from 'src/components/TextField';
 import { importZone } from 'src/services/domains';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
@@ -112,10 +112,12 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
       .then((data) => {
         this.props.onSuccess(data);
       })
-      .catch(error => {
+      .catch((error:Linode.ApiFieldError) => {
+        const err: Linode.ApiFieldError[] = [{ field: 'none', reason: 'An unexpected error has ocurred.' }];
+
         this.setState({
           submitting: false,
-          errors: getAPIErrorOrDefault(error),
+          errors: pathOr(err, ['response', 'data', 'errors'], error),
         })
       });
   };

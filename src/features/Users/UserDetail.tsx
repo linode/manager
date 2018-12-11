@@ -1,4 +1,4 @@
-import { clone, compose, path as pathRamda } from 'ramda';
+import { clone, compose, path as pathRamda, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -14,7 +14,6 @@ import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
@@ -195,8 +194,9 @@ class UserDetail extends React.Component<CombinedProps> {
         history.push(path.replace(':username', user.username), { success: true });
       })
       .catch((errResponse) => {
-        const errors = getAPIErrorOrDefault(errResponse,
-          'An unexpected error occured while saving');
+        const errors = pathOr([
+          { reason: 'An unexpected error occured while saving' }
+        ], ['response', 'data', 'errors'], errResponse);
         this.setState({
           profileErrors: errors,
           profileSaving: false,

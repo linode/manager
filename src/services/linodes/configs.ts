@@ -27,9 +27,9 @@ export interface LinodeConfigCreationData {
 
 /**
  * getLinodeConfigs
- *
+ * 
  * Lists Configuration profiles associated with the specified Linode.
- *
+ * 
  * @param linodeId { number } The id of the Linode to list configs for.
  */
 export const getLinodeConfigs = (linodeId: number, params?: any, filters?: any) =>
@@ -39,12 +39,13 @@ export const getLinodeConfigs = (linodeId: number, params?: any, filters?: any) 
     setParams(params),
     setXFilter(filters),
   )
+    .then(response => response.data);
 
 /**
  * getLinodeConfig
- *
+ * 
  * Returns information about a single Linode configuration.
- *
+ * 
  * @param linodeId { number } The id of a Linode the specified config is attached to.
  * @param configId { number } The id of the config to be returned
  */
@@ -53,12 +54,13 @@ export const getLinodeConfig = (linodeId: number, configId: number) =>
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
     setMethod('GET'),
   )
+    .then(response => response.data);
 
 /**
  * createLinodeConfig
- *
+ * 
  * Adds a new Configuration profile to a Linode.
- *
+ * 
  * @param linodeId { number } The id of a Linode to receive the new config.
  */
 export const createLinodeConfig = (linodeId: number, data: LinodeConfigCreationData) =>
@@ -67,12 +69,13 @@ export const createLinodeConfig = (linodeId: number, data: LinodeConfigCreationD
     setMethod('POST'),
     setData(data, CreateLinodeConfigSchema),
   )
+    .then(response => response.data)
 
 /**
  * deleteLinodeConfig
- *
+ * 
  * Delete a single configuration profile from a Linode.
- *
+ * 
  * @param linodeId { number } The id of a Linode the specified config is attached to.
  * @param configId { number } The id of the config to be deleted
  */
@@ -81,12 +84,13 @@ export const deleteLinodeConfig = (linodeId: number, configId: number) =>
     setMethod('DELETE'),
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
   )
+    .then(response => response.data);
 
 /**
  * updateLinodeConfig
- *
+ * 
  * Update a configuration profile.
- *
+ * 
  * @param linodeId { number } The id of a Linode the specified config is attached to.
  * @param configId { number } The id of the config to be updated.
  */
@@ -99,3 +103,4 @@ export const updateLinodeConfig = (
   setMethod('PUT'),
   setData(data, UpdateLinodeConfigSchema),
   )
+    .then(response => response.data);

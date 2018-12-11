@@ -10,7 +10,6 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { updateProfile } from 'src/services/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -97,9 +96,10 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
         })
       })
       .catch((error) => {
+        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
         this.setState({
           submitting: false,
-          errors: getAPIErrorOrDefault(error),
+          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
           success: undefined,
         }, () => {
           scrollErrorIntoView();

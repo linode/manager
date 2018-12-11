@@ -1,4 +1,4 @@
-import { compose, dec, lensPath, path, remove, set } from 'ramda';
+import { compose, dec, lensPath, path, pathOr, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -19,7 +19,6 @@ import TextField from 'src/components/TextField';
 import { LISH } from 'src/documentation';
 import { updateProfile } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -222,10 +221,11 @@ class LishSettings extends React.Component<CombinedProps, State> {
         );
       })
       .catch((error) => {
+        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
         this.setState(
           {
             submitting: false,
-            errors: getAPIErrorOrDefault(error),
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
             success: undefined,
           },
           () => {

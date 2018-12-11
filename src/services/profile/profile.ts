@@ -29,6 +29,7 @@ export const updateProfile = (data: any) => Request<Profile>(
   setMethod('PUT'),
   setData(data, updateProfileSchema),
 )
+  .then(response => response.data);
 
 /**
  * listGrants
@@ -43,7 +44,7 @@ export const updateProfile = (data: any) => Request<Profile>(
  */
 export const listGrants = () => Request<Linode.Grants>(
   setURL(`${API_ROOT}/profile/grants`)
-)
+).then(response => response.data)
 
 /**
  * getMyGrants
@@ -58,4 +59,4 @@ export const listGrants = () => Request<Linode.Grants>(
 export const getMyGrants = () => Request<Linode.Grants>(
   setURL(`${API_ROOT}/profile/grants`),
   setMethod('GET'),
-)
+).then(response => response.data);

@@ -1,4 +1,4 @@
-import { compose, range, take, takeLast } from 'ramda';
+import { compose, pathOr, range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -13,7 +13,6 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
 import { saveCreditCard } from 'src/services/account';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
 
@@ -116,7 +115,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
       .catch((error) => {
         this.setState({
           submitting: false,
-          errors: getAPIErrorOrDefault(error, 'Unable to update credit card.')
+          errors: pathOr([{ reason: 'Unable to update credit card.' }], ['response', 'data', 'errors'], error),
         })
       })
   };
@@ -178,7 +177,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     Exp Date:&nbsp;
                     {expiry}
                     {isCreditCardExpired(expiry) &&
-                      <span className={classes.expired}>{` Expired`}</span>
+                      <span className={classes.expired}>Expired</span>
                     }
                   </Typography>
                 </Grid>

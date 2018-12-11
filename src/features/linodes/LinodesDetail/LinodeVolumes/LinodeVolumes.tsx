@@ -33,7 +33,6 @@ import { getLinodeConfigs, getLinodeVolumes } from 'src/services/linodes';
 import { attachVolume, cloneVolume, createVolume, deleteVolume, detachVolume, resizeVolume, updateVolume } from 'src/services/volumes';
 import { handleUpdate } from 'src/store/reducers/features/linodeDetail/volumes';
 import composeState from 'src/utilities/composeState';
-import { getAPIErrorOrDefault, getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
 import ActionMenu from './LinodeVolumesActionMenu';
@@ -218,10 +217,12 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
         actions.updateVolumes((volumes) => ([...volumes, data]));
       })
       .catch((errorResponse) => {
+        const fallbackError = [{ reason: 'Unable to attach volume.' }];
+
         this.setState({
           volumeDrawer: {
             ...this.state.volumeDrawer,
-            errors: getAPIErrorOrDefault(errorResponse, 'Unable to attach volume.'),
+            errors: pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse),
           },
         }, () => {
           scrollErrorIntoView();
@@ -241,9 +242,11 @@ export class LinodeVolumes extends React.Component<CombinedProps, State> {
     });
   }
 
-  setDialogError = (errorResponse: Linode.ApiFieldError[]) => {
+  setDialogError = (errorResponse: Linode.ApiFieldError) => {
     const { updateDialog } = this.state;
-    const error = getErrorStringOrDefault(errorResponse, 'Unable to detach volume.');
+    const fallbackError = [{ reason: 'Unable to detach volume.' }];
+    const apiError = pathOr(fallbackError, ['response', 'data', 'errors'], errorResponse);
+    const error = apiError[0].reason;
     this.setState({
       updateDialog: {
         ...updateDialog,

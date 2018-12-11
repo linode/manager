@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { compose, lensPath, set } from 'ramda';
+import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -17,7 +17,6 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
@@ -141,7 +140,7 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  handleThen = (response: Linode.ResourcePage<any>) => {
+  handleThen = (response:Linode.ResourcePage<any>) => {
     const type = this.state.ticket.entity_type;
     const entityItems = response.data.map((entity) => {
       return type === 'domain_id'
@@ -152,9 +151,10 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState({ data: entityItems, loading: false, });
   }
 
-  handleCatch = (errors: Linode.ApiFieldError[]) => {
+  handleCatch = (errors:Linode.ApiFieldError[]) => {
+    const err: Linode.ApiFieldError[] = [{ field: 'none', reason: 'An unexpected error has ocurred.' }];
     this.setState({
-      errors: getAPIErrorOrDefault(errors),
+      errors: pathOr(err, ['response', 'data', 'errors'], errors),
       loading: false,
     })
   }
@@ -277,7 +277,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         * fail! Don't try to aggregate errors!
         */
         this.setState(set(lensPath(['files', idx, 'uploading']), false));
-        const newError = getAPIErrorOrDefault(attachmentErrors, 'There was an error attaching this file. Please try again.');
+        const error = 'There was an error attaching this file. Please try again.';
+        const newError = pathOr<string>(error, ['response', 'data', 'errors', 0, 'reason'], attachmentErrors);
         return {
           ...accumulator,
           errors: [...accumulator.errors, { error: newError, file: attachment.file.get('name')} ]
@@ -342,8 +343,9 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         /* This block will only handle errors in creating the actual ticket; attachment
         * errors are handled above. */
         if (!this.mounted) { return; }
+        const err: Linode.ApiFieldError[] = [{ reason: 'An unexpected error has ocurred.' }];
         this.setState({
-          errors: getAPIErrorOrDefault(errors),
+          errors: pathOr(err, ['response', 'data', 'errors'], errors),
           submitting: false
         })
       })
