@@ -19,6 +19,7 @@ interface Props {
   images: Linode.Image[];
   imageError?: string;
   onSelect: (selected: Item<string>) => void;
+  selectWidth?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto';
 }
 
 interface State {
@@ -51,12 +52,12 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, imageError, onSelect } = this.props;
+    const { classes, imageError, onSelect, selectWidth } = this.props;
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
         <Grid className={classes.root} container direction="row" justify="flex-start" alignItems="flex-end">
-          <Grid item>
+          <Grid item xs={selectWidth ? selectWidth : 'auto'}>
             <Select
               id={'image-select'}
               isMulti={false}
@@ -67,7 +68,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               label="Image"
             />
           </Grid>
-          <Grid item style={{ paddingLeft: 0 }}>
+          <Grid item xs={1} style={{ paddingLeft: 0 }}>
             <HelpIcon text="Choosing a 64-bit distro is recommended." />
           </Grid>
       </Grid>
@@ -76,7 +77,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-const getImagesOptions = (images: Linode.Image[]) => {
+export const getImagesOptions = (images: Linode.Image[]) => {
   const groupedImages = groupImages(images);
   return ['recommended', 'older', 'images', 'deleted'].reduce((accumulator: GroupType<string>[], category: string) => {
     if (groupedImages[category]) {

@@ -185,6 +185,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             images={images}
             imageError={imageError}
             onSelect={this.handleImageSelect}
+            selectWidth={3}
           />
           <AccessPanel
             noPadding
