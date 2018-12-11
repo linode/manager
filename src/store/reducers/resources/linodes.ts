@@ -121,21 +121,24 @@ const requestLinodes = () => (dispatch: Dispatch<State>) => {
       dispatch(getLinodesFailure(err));
     });
 };
+
 type RequestLinodeForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
-const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispatch) => {
+const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, getState) => {
+  const { results } = getState().__resources.linodes;
+
+  console.log(`Requesting for Linode ${id}`);
   getLinode(id)
     .then(response => response.data)
-    .then(linode => dispatch(addLinode(linode)))
+    .then(linode => {
+      if (results.includes(id)) {
+        return dispatch(updateLinode(linode));
+      }
+      return dispatch(addLinode(linode))
+    })
 
 };
-type UpdateLinodeInStore = (id: number) => ThunkAction<void, ApplicationState, undefined>;
-const updateLinodeInStore: UpdateLinodeInStore = (id) => (dispatch) => {
-  getLinode(id)
-    .then(response => response.data)
-    .then(linode => dispatch(updateLinode(linode)))
-};
 
-export const async = { requestLinodes, requestLinodeForStore, updateLinodeInStore }
+export const async = { requestLinodes, requestLinodeForStore }
 
 
 
@@ -151,4 +154,4 @@ const resultsFromPayload = (linodes: Linode.Linode[]) => {
   return linodes.map(l => l.id);
 }
 
-export const helpers = { };
+export const helpers = {};
