@@ -8,6 +8,7 @@ import {
     createUnattachedVolumes,
     apiDeleteAllLinodes,
     apiDeleteAllVolumes,
+    checkEnvironment,
 } from '../../../utils/common';
 
 const { constants } = require('../../../constants');
@@ -61,7 +62,12 @@ describe('Linode Detail - Volumes Suite', () => {
     }
 
     beforeAll(() => {
-        createUnattachedVolumes([volumeEast,volumeCentral]);
+        const environment = process.env.REACT_APP_API_ROOT;
+        if (environment.includes('dev') || environment.includes('testing')){
+            createUnattachedVolumes([volumeEast]);
+        }else{
+          createUnattachedVolumes([volumeEast,volumeCentral]);
+        }
         apiCreateLinode(testLinode);
         ListLinodes.navigateToDetail(testLinode);
         LinodeDetail.landingElemsDisplay();
@@ -160,6 +166,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('only volumes in the current linode\'s data center should display', () => {
+            checkEnvironment();
             VolumeDetail.selectLinodeOrVolume.$('..').$('..').click();
             VolumeDetail.selectOption.waitForVisible(constants.wait.normal);
             const volumes = VolumeDetail.selectOptions.map(option => option.getText());
