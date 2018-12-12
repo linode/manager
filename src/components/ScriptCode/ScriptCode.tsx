@@ -12,8 +12,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       border: `1px solid ${theme.color.grey2}`
     },
     table: {
+      width: '100%',
       backgroundColor: theme.color.white,
       borderCollapse: 'collapse',
+      tableLayout: 'fixed'
     },
     row: {
     },
@@ -26,6 +28,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       fontSize: '14px',
       textAlign: 'center',
       color: theme.color.headline,
+      userSelect: 'none',
+      width: '35px',
     },
     codeCell: {
       paddingLeft: theme.spacing.unit,
@@ -35,6 +39,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       fontSize: '1em',
       margin: 0,
       color: theme.color.headline,
+      whiteSpace: 'pre-wrap',
+      width: '100%',
     }
   });
 };

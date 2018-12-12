@@ -1,16 +1,21 @@
 import * as invariant from 'invariant';
 import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { compose as recompose } from 'recompose';
+
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
 import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
 import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
+import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/reducers/stackScriptDrawer';
 
 type ClassNames = 'root'
   | 'respPadding'
@@ -24,7 +29,8 @@ type ClassNames = 'root'
   | 'colImages'
   | 'stackScriptCell'
   | 'stackScriptUsername'
-  | 'deployButton';
+  | 'deployButton'
+  | 'detailsButton';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -95,6 +101,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     whiteSpace: 'nowrap',
     border: 0,
   },
+  detailsButton: {
+    textAlign: 'left',
+    padding: 0,
+  }
 });
 
 export interface Props {
@@ -115,109 +125,151 @@ export interface Props {
   isPublic: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface DispatchProps {
+  openStackScriptDrawer: (stackScriptId: number) => void;
+}
 
-const SelectionRow: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    classes,
-    onSelect,
-    checked,
-    label,
-    description,
-    images,
-    deploymentsActive,
-    updated,
-    showDeployLink,
-    stackScriptID,
-    stackScriptUsername,
-    triggerDelete,
-    triggerMakePublic,
-    canDelete,
-    canEdit,
-    isPublic,
-  } = props;
+export type CombinedProps = Props & WithStyles<ClassNames> & DispatchProps & RenderGuardProps;
 
-  /** onSelect and showDeployLink should not be used simultaneously */
-  invariant(
-    !(onSelect && showDeployLink),
-    'onSelect and showDeployLink are mutually exclusive.',
-  );
+export class SelectionRow extends React.Component<CombinedProps, {}> {
+  render() {
+    const {
+      classes,
+      onSelect,
+      checked,
+      label,
+      description,
+      images,
+      deploymentsActive,
+      updated,
+      showDeployLink,
+      stackScriptID,
+      stackScriptUsername,
+      triggerDelete,
+      triggerMakePublic,
+      canDelete,
+      canEdit,
+      isPublic,
+      openStackScriptDrawer,
+    } = this.props;
 
-  const renderLabel = () => {
-    return (
-      <Typography role="header" variant="h3">
-        {stackScriptUsername &&
-          <label
-            htmlFor={`${stackScriptID}`}
-            className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
-            {stackScriptUsername} /&nbsp;
-    </label>
-        }
-        <label
-          htmlFor={`${stackScriptID}`}
-          className={classes.libRadioLabel}>
-          {label}
-        </label>
-      </Typography>
-    )
-  }
+    /** onSelect and showDeployLink should not be used simultaneously */
+    invariant(
+      !(onSelect && showDeployLink),
+      'onSelect and showDeployLink are mutually exclusive.',
+    );
 
-  return (
-    <React.Fragment>
-      <TableRow data-qa-table-row={label} rowLink={() => onSelect && onSelect({}, !checked)}>
-        {onSelect &&
-          <TableCell>
-            <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
-          </TableCell>
-        }
-        <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
-          {!showDeployLink
-            ? renderLabel()
-            : <Link to={`/stackscripts/${stackScriptID}`}>
-              {renderLabel()}
+    const renderLabel = () => {
+
+      const openDrawer = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        openStackScriptDrawer(stackScriptID);
+      }
+      if (showDeployLink) {
+        return (
+          <React.Fragment>
+            <Link to={`/stackscripts/${stackScriptID}`}>
+              <Typography role="header" variant="h3">
+                {stackScriptUsername &&
+                  <span
+                    className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                    {stackScriptUsername} /&nbsp;
+                  </span>
+                }
+                <span
+                  className={classes.libRadioLabel}>
+                  {label}
+                </span>
+              </Typography>
             </Link>
+            <Typography variant="body1">{description}</Typography>
+          </React.Fragment>
+        )
+      } else {
+        return (
+          <React.Fragment>
+            <Typography role="header" variant="h3">
+              {stackScriptUsername &&
+                <label
+                  htmlFor={`${stackScriptID}`}
+                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                  {stackScriptUsername} /&nbsp;
+                </label>
+              }
+              <label
+                htmlFor={`${stackScriptID}`}
+                className={classes.libRadioLabel}>
+                {label}
+              </label>
+            </Typography>
+            <Typography variant="body1">{description}</Typography>
+            <Button className={classes.detailsButton} onClick={openDrawer}>
+              Show Details
+            </Button>
+          </React.Fragment>
+        )
+      }
+    }
+
+    return (
+      <React.Fragment>
+        <TableRow data-qa-table-row={label} rowLink={() => onSelect && onSelect({}, !checked)}>
+          {onSelect &&
+            <TableCell>
+              <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
+            </TableCell>
           }
-          <Typography variant="body1">{description}</Typography>
-        </TableCell>
-        <TableCell>
-          <Typography
-            role="header"
-            variant="h3"
-            data-qa-stackscript-deploys
-          >
-            {deploymentsActive}
-          </Typography>
-        </TableCell>
-        <TableCell>
-          <Typography role="header" variant="h3" data-qa-stackscript-revision>{updated}</Typography>
-        </TableCell>
-        <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
-          {
-            displayTagsAndShowMore(images)
-          }
-        </TableCell>
-        {showDeployLink &&
-          <TableCell>
-          <StackScriptsActionMenu
-            stackScriptID={stackScriptID}
-            stackScriptUsername={stackScriptUsername}
-            stackScriptLabel={label}
-            triggerDelete={triggerDelete!}
-            triggerMakePublic={triggerMakePublic!}
-            canDelete={canDelete}
-            canEdit={canEdit}
-            isPublic={isPublic}
-          />
+          <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
+            {renderLabel()}
           </TableCell>
-        }
-      </TableRow>
-    </React.Fragment>
-  );
-};
+          <TableCell>
+            <Typography
+              role="header"
+              variant="h3"
+              data-qa-stackscript-deploys
+            >
+              {deploymentsActive}
+            </Typography>
+          </TableCell>
+          <TableCell>
+            <Typography role="header" variant="h3" data-qa-stackscript-revision>{updated}</Typography>
+          </TableCell>
+          <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
+            {
+              displayTagsAndShowMore(images)
+            }
+          </TableCell>
+          {showDeployLink &&
+            <TableCell>
+            <StackScriptsActionMenu
+              stackScriptID={stackScriptID}
+              stackScriptUsername={stackScriptUsername}
+              stackScriptLabel={label}
+              triggerDelete={triggerDelete!}
+              triggerMakePublic={triggerMakePublic!}
+              canDelete={canDelete}
+              canEdit={canEdit}
+              isPublic={isPublic}
+            />
+            </TableCell>
+          }
+        </TableRow>
+      </React.Fragment>
+    );
+  }
+}
 
-const styled = withStyles(styles);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch) => {
+  return {
+    openStackScriptDrawer: (stackScriptId: number) => dispatch(openStackScriptDrawerAction(stackScriptId)),
+  };
+}
 
-export default styled(RenderGuard<CombinedProps>(SelectionRow));
+export default recompose<CombinedProps, Props & RenderGuardProps>(
+  connect(undefined, mapDispatchToProps),
+  RenderGuard,
+  withStyles(styles),
+)(SelectionRow);
 
 const createTag: (images: string) => JSX.Element =
   v => <Tag label={v} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;
