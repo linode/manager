@@ -34,7 +34,8 @@ describe('ListLinodes', () => {
             orderBy={'label'}
             page={1}
             pageSize={25}
-
+            groupByTags={false}
+            toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -65,6 +66,8 @@ describe('ListLinodes', () => {
             orderBy={'label'}
             page={1}
             pageSize={25}
+            groupByTags={false}
+            toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -99,6 +102,8 @@ describe('ListLinodes', () => {
             orderBy={'label'}
             page={1}
             pageSize={25}
+            groupByTags={false}
+            toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

@@ -1,8 +1,10 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose, pathOr } from 'ramda';
+import { parse, stringify } from 'qs';
+import { omit, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose, withStateHandlers } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -49,10 +51,18 @@ interface State {
   groupByTag: boolean;
 }
 
+interface Params {
+  view?: string;
+  groupByTag?: string;
+}
+
+type RouteProps = RouteComponentProps<Params>
+
 type CombinedProps =
+  & ToggleGroupByTagsProps
   & PaginatedLinodes
   & StateProps
-  & RouteComponentProps<{}>
+  & RouteProps
   & StyleProps
   & SetDocsProps
   & InjectedNotistackProps;
@@ -141,8 +151,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   changeViewStyle = (style: 'grid' | 'list') => {
-    const { history } = this.props;
-    history.push(`#${style}`);
+    const { history, location } = this.props;
+
+    const updatedParams = updateParams<Params>(location.search, (params) => ({ ...params, view: style }));
+
+    history.push(`?${updatedParams}`);
+
     if (style === 'grid') {
       views.linode.set('grid');
     } else {
@@ -212,7 +226,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      location: { hash },
       linodesCount,
       linodesData: linodes,
       linodesRequestError,
@@ -261,7 +274,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodesCount });
+    const params: Params = parse(this.props.location.search, { ignoreQueryPrefix: true });
+
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({
+      value: params.view,
+      length: linodesCount,
+    });
 
     return (
       <Grid container>
@@ -281,9 +299,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 className="toggleLabel"
                 control={
                   <Toggle
-                    value={this.state.groupByTag}
-                    onClick={(e: React.MouseEvent<any>) => this.setState({ groupByTag: !this.state.groupByTag })}
-                  />
+                    onChange={this.props.toggleGroupByTag}
+                    checked={this.props.groupByTags} />
                 }
                 label="Group by Tag:"
               />
@@ -367,17 +384,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
-const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 'grid' | 'list' => {
+const getDisplayFormat = ({ value, length }: { value?: string, length: number }): 'grid' | 'list' => {
 
-  if (hash) {
-    return hash === '#grid' ? 'grid' : 'list';
+  if (value) {
+    return value === 'grid' ? 'grid' : 'list';
   }
 
   /*
   * If local storage exists, set the view based on that
   */
-  if (views.linode.get() !== null) {
-    return views.linode.get();
+  const localStorageValue = views.linode.get();
+  if (localStorageValue !== null) {
+    return localStorageValue;
   }
 
   return (length >= 3) ? 'list' : 'grid';
@@ -397,10 +415,38 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   }
 };
 
+interface ToggleGroupByTagsProps {
+  groupByTags: boolean;
+  toggleGroupByTag: (e: React.ChangeEvent<any>, checked: boolean) => void;
+}
+
 const connected = connect(mapStateToProps);
 
 export const enhanced = compose(
   withRouter,
+
+  withStateHandlers(
+    (ownProps: RouteProps) => {
+      const { location } = ownProps;
+      const params: Params = parse(location.search, { ignoreQueryPrefix: true })
+
+      return { groupByTags: params.groupByTag }
+    },
+    {
+      toggleGroupByTag: (state, ownProps) => (e, checked) => {
+        const { history, location } = ownProps;
+
+        const updatedParams = updateParams<Params>(location.search, (params) => {
+          return params.groupByTag ? omit(['groupByTag'], params) : { ...params, groupByTag: 'true' }
+        });
+
+        history.push(`?${updatedParams}`);
+
+        return { ...state, groupByTags: `${!checked}` };
+      },
+    },
+  ),
+
   styled,
   setDocs(ListLinodes.docs),
   withPaginatedLinodes,
@@ -409,3 +455,8 @@ export const enhanced = compose(
 );
 
 export default enhanced(ListLinodes);
+
+const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
+  const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
+  return stringify(updater(paramsAsObject));
+};
