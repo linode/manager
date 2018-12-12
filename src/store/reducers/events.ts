@@ -169,6 +169,8 @@ export const isInProgressEvent = ({ percent_complete }: Pick<Event, 'percent_com
 
 export const isCompletedEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete === 100;
 
+export const isEntityEvent = (e: Linode.Event): e is Linode.EntityEvent => Boolean(e.entity);
+
 /**
  * Iterate through new events.
  * If an event is "in-progress" it's added to the inProgressEvents map.
