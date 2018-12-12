@@ -29,6 +29,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     left: -1,
     '& svg': {
       animation: 'rotate 2s linear infinite',
+      fill: theme.color.offBlack,
     },
   },
   green: {
