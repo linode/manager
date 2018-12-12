@@ -93,6 +93,7 @@ namespace Linode {
     'linode_delete' |
     'linode_migrate' |
     'linode_reboot' |
+    'linode_resize' |
     'linode_rebuild' |
     'linode_shutdown' |
     'linode_snapshot' |

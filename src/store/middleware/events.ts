@@ -57,6 +57,7 @@ const responseToEvent = (dispatch: Dispatch<any>, event: Linode.Event) => {
     case 'linode_snapshot':
     case 'linode_addip':
     case 'linode_boot':
+    case 'linode_resize':
       return handleLinodeUpdate(dispatch, status, id);
 
     /** Remove Linode */
