@@ -1,22 +1,18 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { always, cond, groupBy, pathOr, propOr } from 'ramda';
+import { isNil, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
+
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
-import MenuItem from 'src/components/MenuItem';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import Select from 'src/components/Select';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { getImages } from 'src/services/images';
@@ -24,6 +20,8 @@ import { rebuildLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
+
+import { ImageSelect } from 'src/features/Images';
 
 type ClassNames = 'root'
  | 'title'
@@ -60,30 +58,40 @@ interface ContextProps {
   linodeLabel: string;
 }
 
-interface PromiseLoaderProps {
-  images: PromiseLoaderResponse<Linode.Image[]>;
-}
-
 interface State {
-  images: GroupedImages;
+  images: Linode.Image[];
+  imagesError?: string;
   errors?: Linode.ApiFieldError[];
   selected?: string;
   password?: string;
 }
 
-type CombinedProps = PromiseLoaderProps
+type CombinedProps =
   & Props
   & ContextProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
-  constructor(props: CombinedProps) {
-    super(props);
-    this.state = {
-      images: groupImages(props.images.response),
-      selected: pathOr(undefined, ['history', 'location', 'state', 'selectedImageId'], props)
-    };
+  state: State = {
+    images: [],
+  }
+
+  componentDidMount() {
+    getImages().then(response => {
+      this.setState({ images: response.data });
+    })
+      .catch(error => {
+        this.setState({ imagesError: error }); // @todo check typing
+      })
+  }
+
+  handleImageSelect = (selectedItem: Item<string> | null) => {
+    if (isNil(selectedItem)) {
+      this.setState({ selected: undefined });
+      return;
+    }
+    this.setState({ selected: selectedItem!.value });
   }
 
   onSubmit = () => {
@@ -136,31 +144,11 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       });
   }
 
-  onImageChange = (value: string) => this.setState({ selected: value });
-
   onPasswordChange = (value: string) => this.setState({ password: value });
 
-  renderImagesMenuItems = (category: string) => {
-    if (this.state.images[category]) {
-      return [
-        <MenuItem key={category} disabled className="selectHeader" data-qa-select-header>
-          {getDisplayNameForGroup(category)}
-        </MenuItem>,
-        ...this.state.images[category].map(
-          ({ id, label }: Linode.Image) => (
-            <MenuItem key={id} value={id} data-qa-image-option>
-              {label}
-            </MenuItem>
-          )
-        )
-      ]
-    }
-    return [];
-  }
-
   render() {
-    const { images: { error: imagesError }, classes, linodeLabel, userSSHKeys } = this.props;
-    const { errors, selected } = this.state;
+    const { classes, linodeLabel, userSSHKeys } = this.props;
+    const { errors, images, imagesError } = this.state;
 
     if (imagesError) {
       return (
@@ -193,32 +181,11 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             either restore from a backup or start over with a fresh Linux
             distribution. Rebuilding will destroy all data.
           </Typography>
-          <FormControl className={classes.imageControl}>
-            <InputLabel htmlFor="image-select" disableAnimation shrink={true}>
-              Image
-            </InputLabel>
-            <div>
-              <Select
-                tooltipText="Choosing a 64-bit distro is recommended."
-                error={Boolean(imageError)}
-                value={selected || 'select'}
-                onChange={e => this.onImageChange(e.target.value)}
-                inputProps={{ name: 'image-select', id: 'image-select' }}
-                data-qa-rebuild-image
-              >
-                <MenuItem value={'select'} disabled>
-                  Select an Image
-                </MenuItem>
-                {
-                  ['recommended', 'older', 'images', 'deleted'].map((category) => [
-                    ...this.renderImagesMenuItems(category),
-                  ])
-                }
-              </Select>
-              {imageError &&
-              <FormHelperText error data-qa-image-error>{imageError}</FormHelperText>}
-            </div>
-          </FormControl>
+          <ImageSelect
+            images={images}
+            imageError={imageError}
+            onSelect={this.handleImageSelect}
+          />
           <AccessPanel
             noPadding
             password={this.state.password || ''}
@@ -245,12 +212,6 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const preloaded = PromiseLoader({
-  /** @todo filter for available */
-  images: ({ linodeId }) => getImages()
-    .then(response => response.data),
-});
-
 const linodeContext = withLinode((context) => ({
   linodeId: context.data!.id,
   linodeLabel: context.data!.label,
@@ -258,40 +219,10 @@ const linodeContext = withLinode((context) => ({
 
 export default compose<CombinedProps, Props>(
   linodeContext,
-  preloaded,
   SectionErrorBoundary,
   styled,
   userSSHKeyHoc,
   withSnackbar
 )(LinodeRebuild);
 
-interface GroupedImages {
-  deleted?: Linode.Image[];
-  recommended?: Linode.Image[];
-  older?: Linode.Image[];
-  images?: Linode.Image[];
-}
 
-const isRecentlyDeleted = (i: Linode.Image) => i.created_by === null && i.type === 'automatic';
-const isByLinode = (i: Linode.Image) => i.created_by !== null && i.created_by === 'linode';
-const isDeprecated = (i: Linode.Image) => i.deprecated === true;
-const isRecommended = (i: Linode.Image) => isByLinode(i) && !isDeprecated(i);
-const isOlderImage = (i: Linode.Image) => isByLinode(i) && isDeprecated(i);
-
-export let groupImages: (i: Linode.Image[]) => GroupedImages;
-groupImages = groupBy(cond([
-  [isRecentlyDeleted, always('deleted')],
-  [isRecommended, always('recommended')],
-  [isOlderImage, always('older')],
-  [(i: Linode.Image) => true, always('images')],
-]));
-
-const groupNameMap = {
-  _default: 'Other',
-  deleted: 'Recently Deleted Disks',
-  recommended: '64-bit Distributions - Recommended',
-  older: 'Older Distributions',
-  images: 'Images',
-};
-
-const getDisplayNameForGroup = (key: string) => propOr('Other', key, groupNameMap);

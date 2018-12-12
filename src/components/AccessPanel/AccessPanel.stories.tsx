@@ -28,21 +28,21 @@ class PasswordAndSSHAccess extends React.Component<{}, { password: string, users
         username: 'Joe',
         selected: false,
         keys: ['some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key','some-key',],
-        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Joe', result),
+        onSSHKeyChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Joe', result),
       },
       {
         gravatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=24',
         username: 'Bob',
         selected: false,
         keys: ['some-key',],
-        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Bob', result),
+        onSSHKeyChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Bob', result),
       },
       {
         gravatarUrl: 'https://www.gravatar.com/avatar/00000000000000000000000000000000?s=24',
         username: 'Mark',
         selected: false,
         keys: ['some-key','some-key'],
-        onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Mark', result),
+        onSSHKeyChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => this.toggleSSHUserKeys('Mark', result),
       },
     ]
   };

@@ -75,6 +75,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       border: `1px solid ${theme.palette.primary.main}`,
       maxWidth: 415,
     },
+    '& .react-select__group-heading': {
+      textTransform: 'initial',
+      fontSize: '.9rem'
+    },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
       backgroundColor: theme.bg.white,
@@ -234,6 +238,11 @@ export interface Item<T = string | number> {
   value: T;
   label: string;
   data?: any;
+}
+
+export interface GroupType<T> {
+  label: string;
+  options: Item<T>[];
 }
 
 export interface SelectState {

@@ -22,3 +22,5 @@ class ImagesRoutes extends React.Component<Props> {
 }
 
 export default withRouter(ImagesRoutes);
+
+export { default as ImageSelect } from './ImageSelect';
