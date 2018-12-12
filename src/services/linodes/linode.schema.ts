@@ -8,18 +8,17 @@ const stackscript_data = array().of(object()).nullable(true);
 *  Only run validation tests if image is provided (as otherwise the value passed is an empty string, which will fail
 *  validation.)
 */
-const root_pass = string()
-  // .required('Root password is required.')
-  // .when('image', {
-  //   is: (value) => Boolean(value),
-  //   then: string().min(0),
-  //   otherwise: string()
-  //     .min(6, "Password must be between 6 and 128 characters.")
-  //     .max(128, "Password must be between 6 and 128 characters.")
-  //     .matches(/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
-  //       "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.")
-  //     .test('is-strong-password', 'Please choose a stronger password.', value => zxcvbn(value).score > 3)
-  // });
+// const root_pass_disk = string()
+//   .when('image', {
+//     is: (value) => Boolean(value),
+//     then: string().required("You must provide a root password when deploying from an image.")
+//       .min(6, "Password must be between 6 and 128 characters.")
+//       .max(128, "Password must be between 6 and 128 characters.")
+//       .matches(/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
+//         "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.")
+//       .test('is-strong-password', 'Please choose a stronger password.', (value: string) => zxcvbn(value).score > 3),
+//     otherwise: string().notRequired()
+//   });
 
 export const ResizeLinodeDiskSchema = object({
   size: number().required().min(1),
@@ -36,7 +35,7 @@ export const CreateLinodeSchema = object({
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
   image: string().nullable(true),
-  root_pass: root_pass.notRequired(),
+  root_pass: string().notRequired(),
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,
@@ -95,7 +94,7 @@ const SSHKeySchema = object({
 
 export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
-  root_pass,
+  root_pass: string().required('Password cannot be blank.'),
   authorized_keys: array().of(SSHKeySchema),
   authorized_users: array().of(string()),
   stackscript_id: number().notRequired(),
@@ -182,7 +181,17 @@ export const CreateLinodeDiskSchema = object({
   image: string(),
   authorized_keys: array().of(string()),
   authorized_users: array().of(string()),
-  root_pass,
+  root_pass: string()
+    .when('image', {
+      is: (value) => Boolean(value),
+      then: string().required("You must provide a root password when deploying from an image.")
+        .min(6, "Password must be between 6 and 128 characters.")
+        .max(128, "Password must be between 6 and 128 characters.")
+        .matches(/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
+          "Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation."),
+        // .test('is-strong-password', 'Please choose a stronger password.', (value: string) => return zxcvbn(value).score > 3),
+      otherwise: string().notRequired()
+    }),
   stackscript_id: number(),
   stackscript_data,
 });
