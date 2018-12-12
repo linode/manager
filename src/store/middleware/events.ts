@@ -115,8 +115,8 @@ const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
 }
 
 /**
- * When creating a Linode with an image you get a [linode_create, linode_boot] (in order).
- * When deleting a Linode (always) you get a [linode_delete, linode_shutdown] (in order).
+ * When creating a Linode with an image you get a [ linode_create, linode_boot ] (in order).
+ * When deleting a Linode (always) you get a [ linode_shutdown, linode_delete ] (in order).
  * Here we're taking the first event unique to the entity, so we will never experience
  * multiple events being dispatched for a single entity.
  *
