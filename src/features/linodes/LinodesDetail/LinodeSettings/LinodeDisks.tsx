@@ -210,6 +210,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           count={this.props.count}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="linode disks"
         />
         <this.confirmationDialog />
         <this.drawer />

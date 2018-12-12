@@ -130,6 +130,7 @@ class TicketList extends React.Component<CombinedProps, {}> {
             pageSize={pageSize}
             handlePageChange={this.props.handlePageChange}
             handleSizeChange={this.props.handlePageSizeChange}
+            eventCategory="ticket list"
             padded
           />
         </Paper>

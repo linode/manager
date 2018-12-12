@@ -357,6 +357,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           handleSizeChange={handlePageSizeChange}
           page={page}
           pageSize={pageSize}
+          eventCategory="images landing"
         />
         {this.renderImageDrawer()}
         <ConfirmationDialog
