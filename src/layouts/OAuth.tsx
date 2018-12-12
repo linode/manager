@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 
 import * as session from 'src/session';
-import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
+import { getParamFromUrl, parseQueryParams } from 'src/utilities/queryParams';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
 export class OAuthCallbackPage extends Component<Linode.TodoAny> {
@@ -35,13 +35,9 @@ export class OAuthCallbackPage extends Component<Linode.TodoAny> {
       return redirect('/', history);
     }
 
-    let returnTo = '/';
-    if (hashParams.return
-        && hashParams.return.indexOf('?') > -1) {
-      const returnParams =
-        parseQueryParams(splitIntoTwo(hashParams.return, '?')[1]) as Linode.TodoAny;
-      returnTo = returnParams.returnTo;
-    }
+    const returnTo = hashParams.return
+      ? getParamFromUrl(hashParams.return, 'returnTo', '/')
+      : '/';
 
     this.checkNonce(nonce);
 
