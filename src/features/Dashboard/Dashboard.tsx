@@ -6,9 +6,11 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
+import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
@@ -25,6 +27,7 @@ interface StateProps {
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
+  entitiesWithGroupsToImport: GroupedEntitiesForImport;
 }
 
 interface DispatchProps {
@@ -36,42 +39,54 @@ interface DispatchProps {
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
-export class Dashboard extends React.Component<CombinedProps, {}> {
+export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
+  const {
+    accountBackups,
+    actions: { openBackupDrawer },
+    backupError,
+    linodesWithoutBackups,
+    managed,
+    entitiesWithGroupsToImport
+  } = props;
 
-  render() {
-    const {
-      accountBackups,
-      actions: { openBackupDrawer },
-      backupError,
-      linodesWithoutBackups,
-      managed,
-    } = this.props;
-    return (
-      <Grid container spacing={24}>
-        <DocumentTitleSegment segment="Dashboard" />
-        <Grid item xs={12}>
-          <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
-        </Grid>
-        <Grid item xs={12} md={7}>
-          <LinodesDashboardCard />
-          <VolumesDashboardCard />
-          <NodeBalancersDashboardCard />
-          <DomainsDashboardCard />
-        </Grid>
-        <Grid item xs={12} md={5}>
-          <TransferDashboardCard />
-          {(!managed && !backupError) &&
-            <BackupsDashboardCard
-              accountBackups={accountBackups}
-              linodesWithoutBackups={linodesWithoutBackups.length}
-              openBackupDrawer={openBackupDrawer}
-            />
-          }
-          <BlogDashboardCard />
-        </Grid>
+  const hasGroupsToImport =
+    entitiesWithGroupsToImport.linodes.length > 1
+    // @todo: Uncomment when domain support is added
+    // && entitiesWithGroupsToImport.domains.length > 1
+
+  return (
+    <Grid container spacing={24}>
+      <DocumentTitleSegment segment="Dashboard" />
+      <Grid item xs={12}>
+        <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
       </Grid>
-    );
-  }
+      <Grid item xs={12} md={7}>
+        <LinodesDashboardCard />
+        <VolumesDashboardCard />
+        <NodeBalancersDashboardCard />
+        <DomainsDashboardCard />
+      </Grid>
+      <Grid item xs={12} md={5}>
+        <TransferDashboardCard />
+        {(!managed && !backupError) &&
+          <BackupsDashboardCard
+            accountBackups={accountBackups}
+            linodesWithoutBackups={linodesWithoutBackups.length}
+            openBackupDrawer={openBackupDrawer}
+          />
+        }
+        {hasGroupsToImport &&
+          <ImportGroupsCard
+            domainsWithGroupsToImport={{'1234':  ['s']}}
+            linodesWithGroupsToImport={{'1234':  ['s']}}
+            // @todo: use reducer to open drawer
+            openImportDrawer={() => console.log('change this')}
+          />
+        }
+        <BlogDashboardCard />
+      </Grid>
+    </Grid>
+  );
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
@@ -79,6 +94,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   linodesWithoutBackups: pathOr([],['backups', 'data'], state),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
+  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state)
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
@@ -86,6 +102,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
     actions: {
       getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
       openBackupDrawer: () => dispatch(handleOpen())
+      // openImportDrawer; () => dispatch(handleOpenImportDrawer())
     }
   };
 };
