@@ -56,7 +56,6 @@ describe("ResultGroup component", () => {
     )).toBeTruthy();
   });
   it("should render its children", () => {
-    console.log(component.debug());
     expect(component.find('[data-qa-result-row-component]')).toHaveLength(5);
   });
   it("should render a loading spinner", () => {
