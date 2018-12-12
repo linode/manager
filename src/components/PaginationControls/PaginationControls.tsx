@@ -6,11 +6,13 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPage from '@material-ui/icons/LastPage';
 
 import PageButton, { Props as PageButtonProps } from 'src/components/PaginationControls/PageButton';
+import { sendEvent } from 'src/utilities/analytics';
 
 interface Props {
   count: number;
   page: number;
   pageSize: number;
+  eventCategory?: string;
   onClickHandler: (page?: number) => void;
 }
 
@@ -68,26 +70,53 @@ export class PaginationControls extends React.Component<Props, State> {
     });
   }
 
+  handleSendEvent = (eventLabel: string) => {
+    const { eventCategory } = this.props;
+
+    if (!eventCategory) return;
+
+    sendEvent({
+      category: eventCategory,
+      action: 'pagination',
+      label: eventLabel
+    });
+  }
+
   handleFirstPageClick = () => {
-    this.props.onClickHandler(1);
+    const { onClickHandler } = this.props;
+
+    onClickHandler(1);
+    this.handleSendEvent('first');
   };
 
   handleNextPageClick = () => {
-    this.props.onClickHandler(this.props.page + 1)
+    const { onClickHandler, page } = this.props;
+
+    onClickHandler(page + 1);
+    this.handleSendEvent('next');
   }
 
   handlePreviousPageClick = () => {
-    this.props.onClickHandler(this.props.page - 1)
+    const { onClickHandler, page } = this.props;
+
+    onClickHandler(page - 1);
+    this.handleSendEvent('previous');
   }
 
   handleLastPageClick = () => {
-    this.props.onClickHandler(
-      Math.max(0, Math.ceil(this.props.count / this.props.pageSize)),
+    const { onClickHandler, count, pageSize } = this.props;
+
+    onClickHandler(
+      Math.max(0, Math.ceil(count / pageSize)),
     );
+    this.handleSendEvent('last');
   };
 
   handlePageClick = (page: number) => {
-    this.props.onClickHandler(page);
+    const { onClickHandler } = this.props;
+
+    onClickHandler(page);
+    this.handleSendEvent('page number');
   }
 
   render() {

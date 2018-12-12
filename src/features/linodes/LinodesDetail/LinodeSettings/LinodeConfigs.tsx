@@ -220,6 +220,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           pageSize={this.props.pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="linode configs"
         />
       </React.Fragment>
     );

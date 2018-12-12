@@ -289,6 +289,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           pageSize={this.props.pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="users landing"
         />
         <CreateUserDrawer
           open={createDrawerOpen}
