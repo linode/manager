@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { Metrics } from 'src/utilities/statMetrics';
 
@@ -13,18 +13,20 @@ type ClassNames = 'root'
   | 'red'
   | 'yellow'
   | 'blue'
-  | 'green';
+  | 'green'
+  | 'text'
+  | 'tableHeadInner';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     '& *': {
+      height: 'auto',
       border: 'none',
+      backgroundColor: 'transparent',
     },
-    border: 'none',
-    backgroundColor: '#FBFBFB',
-    '& th': {
-      paddingBottom: 4
-    }
+  },
+  tableHeadInner: {
+    paddingBottom: 4,
   },
   red: {
     '&:before': {
@@ -47,18 +49,24 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   legend: {
-    width: '33%',
+    [theme.breakpoints.up('sm')]: {
+      width: '38%',
+    },
     '& > div': {
       display: 'flex',
+      alignItems: 'center',
       '&:before': {
         content: '""',
-        display: 'block',
+        display: 'inline-block',
         width: 20,
         height: 20,
         marginRight: theme.spacing.unit,
       },
-    }
-  }
+    },
+  },
+  text: {
+    color: theme.color.black,
+  },
 });
 
 interface MetricsDisplayProps {
@@ -75,16 +83,19 @@ interface MetricsDisplayRow {
 type CombinedProps = MetricsDisplayProps & WithStyles<ClassNames>
 
 export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
+
+  const rowHeaders = ['Max', 'Avg', 'Last'];
+
   return (
-    <Table aria-label="Linode stats and metrics" padding="dense" className={classes.root}>
+    <Table aria-label="Linode stats and metrics" className={classes.root}>
       <TableHead>
         <TableRow>
           <TableCell>
-            {''} {/* Empty TableCell for layout */}
+            {''}
           </TableCell>
-          {['Max', 'Avg', 'Last'].map((section, idx) =>
-            <TableCell key={idx} data-qa-header-cell>
-              <Typography variant="subheading">
+          {rowHeaders.map((section, idx) =>
+            <TableCell key={idx} data-qa-header-cell className={classes.tableHeadInner}>
+              <Typography variant="body2" className={classes.text}>
                 {section}
               </Typography>
             </TableCell>
@@ -99,12 +110,12 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
               <TableRow key={legendTitle} data-qa-metric-row>
                 <TableCell className={classes.legend}>
                   <div className={classes[legendColor]} data-qa-legend-title>
-                    {legendTitle}
+                    <span>{legendTitle}</span>
                   </div>
                 </TableCell>
                 {metricsBySection(data).map((section, idx) => {
-                  return (<TableCell key={idx} data-qa-body-cell>
-                    <Typography variant="subheading">
+                  return (<TableCell key={idx} parentColumn={rowHeaders[idx]} data-qa-body-cell>
+                    <Typography variant="body2" className={classes.text}>
                       {format(section)}
                     </Typography>
                   </TableCell>)
