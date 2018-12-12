@@ -46,6 +46,8 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
         Rebuild.submit.click();
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
+        browser.refresh();
+        Rebuild.assertElemsDisplay();
     });
 
     it('should rebuild linode on valid image and password', () => {
