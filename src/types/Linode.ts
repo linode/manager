@@ -20,6 +20,7 @@ namespace Linode {
     tags: string[];
     /** Added by UI */
     recentEvent?: Linode.Event;
+    notifications?: Linode.Notification[];
     notification?: string;
     mostRecentBackup?: string;
   }

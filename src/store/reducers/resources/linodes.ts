@@ -6,7 +6,6 @@ import { getLinode, getLinodes } from "src/services/linodes";
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
-
 /**
  * State
  */
