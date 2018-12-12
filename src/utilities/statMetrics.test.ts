@@ -1,4 +1,12 @@
-import { appendBitrateUnit, appendPercentSign, formatNumber, getMetrics } from './statMetrics';
+import {
+  formatBitsPerSecond,
+  formatBytes,
+  formatMagnitude,
+  formatNumber,
+  formatPercentage,
+  getMetrics,
+  getTotalTraffic
+} from './statMetrics';
 
 const data = [
   [0, 0.12],
@@ -22,41 +30,57 @@ describe('Stat Metrics', () => {
   });
 
   it('returns average', () => {
-    expect(metrics.average).toBe(1.008);
+    expect(metrics.average).toBe(0.63);
     expect(getMetrics([[0, 0]]).average).toBe(0);
     expect(getMetrics([[0, 0], [0, 0]]).average).toBe(0);
-    expect(getMetrics([[0, 0], [0, 1]]).average).toBe(1);
-    expect(getMetrics([[0, 0], [0, 100], [0, 100]]).average).toBe(100);
+    expect(getMetrics([[0, 0], [0, 1]]).average).toBe(0.5);
+    expect(getMetrics([[0, 0], [0, 3], [0, 12]]).average).toBe(5);
   });
 
   it('returns last', () => {
-    expect(metrics.last).toBe(1.2);
-    let newData = [...data, [0, 0]];
-    expect(getMetrics(newData).last).toBe(1.2);
-    newData = [...data, [0, 50]];
-    expect(getMetrics(newData).last).toBe(50);
+    expect(metrics.last).toBe(0);
+    expect(getMetrics([...data, [0, 8]]).last).toBe(8);
   });
 });
 
-describe('add unit', () => {
-  it('returns bit/s if less than 1000', () => {
-    expect(appendBitrateUnit('612.12')).toBe('612.12 bit/s');
-    expect(appendBitrateUnit('1024')).not.toBe('1000.24 bit/s');
+describe('total traffic', () => {
+  it('returns total traffic given the average', () => {
+    const totalTraffic = getTotalTraffic(1, 2, 2);
+    expect(totalTraffic.inTraffic).toBe(5400);
+    expect(totalTraffic.outTraffic).toBe(10800);
+    expect(totalTraffic.combinedTraffic).toBe(16200);
+    expect(totalTraffic.combinedTraffic).toEqual(totalTraffic.inTraffic + totalTraffic.outTraffic);
+  });
+});
+
+describe('format magnitude', () => {
+  it('doesn\'t add magnitude when 1 < X < 999', () => {
+    expect(formatMagnitude('612.12', 'b/s')).toBe('612.12 b/s');
+    expect(formatMagnitude(1, 'b/s')).toBe('1.00 b/s');
+    expect(formatMagnitude(99, 'b/s')).toBe('99.00 b/s');
+    expect(formatMagnitude(99.09, 'b/s')).toBe('99.09 b/s');
   });
 
-  it('converts to Kbit/s if 1000 or greater', () => {
-    expect(appendBitrateUnit('6211.21')).toBe('6.21 Kbit/s');
-    expect(appendBitrateUnit('1000')).toBe('1.00 Kbit/s');
+  it('milli', () => {
+    expect(formatMagnitude('0.021', 'b/s')).toBe('21.00 mb/s');
+    expect(formatMagnitude('0.001', 'b/s')).toBe('1.00 mb/s');
+    expect(formatMagnitude('0.999', 'b/s')).toBe('999.00 mb/s');
   });
 
-  it('converts to Mbit/s if 1000 * 1000 or greater', () => {
-    expect(appendBitrateUnit('62232111.21')).toBe('62.23 Mbit/s');
-    expect(appendBitrateUnit('1000000')).toBe('1.00 Mbit/s');
+  it('kilo', () => {
+    expect(formatMagnitude('6211.21', 'b/s')).toBe('6.21 kb/s');
+    expect(formatMagnitude('1000', 'b/s')).toBe('1.00 kb/s');
+    expect(formatMagnitude('555555', 'b/s')).toBe('555.55 kb/s');
   });
 
-  it('converts to Gbit/s if 1000 * 1000 * 1000 or greater', () => {
-    expect(appendBitrateUnit('62331232111.21')).toBe('62.33 Gbit/s');
-    expect(appendBitrateUnit('1000000000')).toBe('1.00 Gbit/s');
+  it('mega', () => {
+    expect(formatMagnitude('62232111.21', 'b/s')).toBe('62.23 Mb/s');
+    expect(formatMagnitude('1000000', 'b/s')).toBe('1.00 Mb/s');
+  });
+
+  it('giga', () => {
+    expect(formatMagnitude('62331232111.21', 'b/s')).toBe('62.33 Gb/s');
+    expect(formatMagnitude('1000000000', 'b/s')).toBe('1.00 Gb/s');
   });
 });
 
@@ -71,12 +95,22 @@ describe('format number', () => {
     expect(formatNumber(99.999)).toBe('100.00');
     expect(formatNumber(99.7)).toBe('99.70');
   });
+});
 
-  it('with percentage', () => {
-    expect(appendPercentSign('2')).toBe('2%');
-    expect(appendPercentSign('223')).toBe('223%');
-    expect(appendPercentSign('22.32')).toBe('22.32%');
-    expect(appendPercentSign('')).toBe('%');
-    expect(appendPercentSign('  ')).toBe('  %');
+describe('formatting', () => {
+  it('formatPercent adds percent sign', () => {
+    expect(formatPercentage(12)).toBe('12.00%');
+    expect(formatPercentage(0)).toBe('0.00%');
+    expect(formatPercentage(123456789)).toBe('123456789.00%');
+  });
+  it('formatBitsPerSecond adds unit', () => {
+    expect(formatBitsPerSecond(12)).toBe('12.00 b/s');
+    expect(formatBitsPerSecond(0)).toBe('0.00 b/s');
+    expect(formatBitsPerSecond(123456789)).toBe('123.46 Mb/s');
+  });
+  it('formatBytes adds unit', () => {
+    expect(formatBytes(12)).toBe('12.00 B');
+    expect(formatBytes(0)).toBe('0.00 B');
+    expect(formatBytes(123456789)).toBe('123.46 MB');
   });
 });
