@@ -1,3 +1,4 @@
+import { compose, equals, uniqWith } from 'ramda';
 import { Dispatch, Middleware } from 'redux';
 import { resetEventsPolling } from 'src/events';
 import { isInProgressEvent } from 'src/store/reducers/events';
@@ -12,13 +13,13 @@ const middleware: Middleware = ({ dispatch }) => (next: Dispatch<any>) => (actio
   if (isType(action, addEvents)) {
     const { payload } = action;
 
-    const newEvents = payload.filter(e => !e._initial);
+    const eventsToDispatch = compose(uniqueEntityEvents, filterInitial)(payload);
 
-    const len = newEvents.length
+    const len = eventsToDispatch.length
     let i = 0;
 
     for (; i < len; i++) {
-      const event = newEvents[i];
+      const event = eventsToDispatch[i];
       responseToEvent(dispatch, event);
     }
   }
@@ -112,3 +113,22 @@ const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
       return;
   }
 }
+
+/**
+ * When creating a Linode with an image you get a [linode_create, linode_boot] (in order).
+ * When deleting a Linode (always) you get a [linode_delete, linode_shutdown] (in order).
+ * Here we're taking the first event unique to the entity, so we will never experience
+ * multiple events being dispatched for a single entity.
+ *
+ * We reverse because events come back in reverse order and want the first (boot and delete).
+ *
+ * The better user exp during deletion would be to see the shutdown, then the delete, but we
+ * cant poll for the deleted Linode's status because it's no longer availalbe from the API.
+ */
+const uniqueEntityEvents = compose(
+  (e: ExtendedEvent[]) => e.reverse(),
+  uniqWith<ExtendedEvent, ExtendedEvent>((left, right) => equals(left.entity, right.entity)),
+  (e: ExtendedEvent[]) => e.reverse(),
+);
+
+const filterInitial = (events: ExtendedEvent[]) => events.filter(e => !e._initial);
