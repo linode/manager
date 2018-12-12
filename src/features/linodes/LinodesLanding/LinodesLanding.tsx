@@ -16,18 +16,16 @@ import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import PaginationFooter from 'src/components/PaginationFooter';
 import Toggle from 'src/components/Toggle';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
 import { views } from 'src/utilities/storage';
+import DisplayGroupedLinodes from './DisplayGroupedLinodes';
+import DisplayLinodes from './DisplayLinodes';
 import styled, { StyleProps } from './LinodesLanding.styles';
-import LinodesViewWrapper from './LinodesViewWrapper';
-import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
-import withPaginatedLinodes, { PaginatedLinodes } from './withPaginatedLinodes';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -60,7 +58,6 @@ type RouteProps = RouteComponentProps<Params>
 
 type CombinedProps =
   & ToggleGroupByTagsProps
-  & PaginatedLinodes
   & StateProps
   & RouteProps
   & StyleProps
@@ -150,7 +147,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     });
   }
 
-  changeViewStyle = (style: 'grid' | 'list') => {
+  changeView = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
     const updatedParams = updateParams<Params>(location.search, (params) => ({ ...params, view: style }));
@@ -209,28 +206,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({ powerAlertOpen: false });
   }
 
-  renderContent = (linodes: Linode.Linode[], images: Linode.Image[], view: 'grid' | 'list') => {
-    return (
-      <LinodesViewWrapper
-        view={view}
-        linodes={linodes}
-        images={images}
-        openConfigDrawer={this.openConfigDrawer}
-        toggleConfirmation={this.toggleDialog}
-        order={this.props.order}
-        orderBy={this.props.orderBy}
-        handleOrderChange={this.props.handleOrderChange}
-      />
-    )
-  }
+
 
   render() {
-    const {
-      linodesCount,
-      linodesData: linodes,
-      linodesRequestError,
-      linodesRequestLoading,
-    } = this.props;
+    const { linodesRequestError, linodesRequestLoading } = this.props;
 
     const {
       configDrawer,
@@ -247,25 +226,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    if (linodes.length === 0) {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Linodes" />
-          <ListLinodesEmptyState />
-        </React.Fragment>
-      );
-    }
-
-    if (linodesRequestError) {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Linodes" />
-          <ErrorState errorText="Error loading data" />
-        </React.Fragment>
-      );
-    }
-
-    if (imagesError) {
+    if (imagesError || linodesRequestError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Linodes" />
@@ -276,10 +237,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const params: Params = parse(this.props.location.search, { ignoreQueryPrefix: true });
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({
-      value: params.view,
-      length: linodesCount,
-    });
+    const usersDisplayChoice = getDisplayFormat(params.view);
+
+    const view = usersDisplayChoice
+      ? usersDisplayChoice
+      : this.props.linodesCount >= 3
+        ? 'list'
+        : 'grid'
 
     return (
       <Grid container>
@@ -305,43 +269,27 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 label="Group by Tag:"
               />
             </div>
-            <ToggleBox
-              handleClick={this.changeViewStyle}
-              status={displayGrid}
-            />
+            <ToggleBox handleClick={this.changeView} status={view} />
           </Hidden>
         </Grid>
         <Grid item xs={12}>
-          <Hidden mdUp>
-            {this.renderContent(linodes, imagesData, 'grid')}
-          </Hidden>
-          <Hidden smDown>
-            {displayGrid === 'grid'
-              ? this.renderContent(linodes, imagesData, 'grid')
-              : this.renderContent(linodes, imagesData, 'list')
-            }
-          </Hidden>
-        </Grid>
-        <Grid item xs={12}>
-          {
-            <PaginationFooter
-              count={this.props.linodesCount}
-              handlePageChange={this.props.handlePageChange}
-              handleSizeChange={this.props.handlePageSizeChange}
-              pageSize={this.props.pageSize}
-              page={this.props.page}
-            />
-          }
-          <LinodeConfigSelectionDrawer
-            onClose={this.closeConfigDrawer}
-            onSubmit={this.submitConfigChoice}
-            onChange={this.selectConfig}
-            open={configDrawer.open}
-            configs={configDrawer.configs}
-            selected={String(configDrawer.selected)}
-            error={configDrawer.error}
+          <RenderContent
+            view={usersDisplayChoice}
+            images={imagesData}
+            group={this.props.groupByTags}
+            openConfigDrawer={this.openConfigDrawer}
+            toggleConfirmation={this.toggleDialog}
           />
         </Grid>
+        <LinodeConfigSelectionDrawer
+          onClose={this.closeConfigDrawer}
+          onSubmit={this.submitConfigChoice}
+          onChange={this.selectConfig}
+          open={configDrawer.open}
+          configs={configDrawer.configs}
+          selected={String(configDrawer.selected)}
+          error={configDrawer.error}
+        />
         <ConfirmationDialog
           title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
           actions={this.renderConfirmationActions}
@@ -384,25 +332,26 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
-const getDisplayFormat = ({ value, length }: { value?: string, length: number }): 'grid' | 'list' => {
-
+const getDisplayFormat = (value?: string): undefined | 'grid' | 'list' => {
+  /** Value comes from the URL */
   if (value) {
     return value === 'grid' ? 'grid' : 'list';
   }
 
-  /*
-  * If local storage exists, set the view based on that
-  */
+  /* If local storage exists, set the view based on that */
   const localStorageValue = views.linode.get();
   if (localStorageValue !== null) {
     return localStorageValue;
   }
 
-  return (length >= 3) ? 'list' : 'grid';
+  return;
 };
 
 interface StateProps {
   managed: boolean;
+  linodesCount: number;
+  linodesRequestLoading: boolean;
+  linodesRequestError?: Linode.ApiFieldError[];
 }
 
 /**
@@ -411,7 +360,10 @@ interface StateProps {
  */
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => {
   return {
-    managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state)
+    managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
+    linodesCount: state.__resources.linodes.results.length,
+    linodesRequestLoading: state.__resources.linodes.loading,
+    linodesRequestError: state.__resources.linodes.error,
   }
 };
 
@@ -442,14 +394,13 @@ export const enhanced = compose(
 
         history.push(`?${updatedParams}`);
 
-        return { ...state, groupByTags: `${!checked}` };
+        return { ...state, groupByTags: checked };
       },
     },
   ),
 
   styled,
   setDocs(ListLinodes.docs),
-  withPaginatedLinodes,
   withSnackbar,
   connected,
 );
@@ -460,3 +411,19 @@ const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
   return stringify(updater(paramsAsObject));
 };
+
+const RenderContent: React.StatelessComponent<{
+  images: any;
+  group: boolean;
+  view: undefined | 'grid' | 'list';
+  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction, selectedLinodeId: number, selectedLinodeLabel: string) => void;
+}> = (props) => {
+  const { group } = props;
+
+  if (group) {
+    return <DisplayGroupedLinodes {...props} />
+  }
+
+  return <DisplayLinodes {...props} />
+}

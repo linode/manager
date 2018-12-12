@@ -15,26 +15,16 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            enqueueSnackbar={jest.fn()}
-            onPresentSnackbar={jest.fn()}
-            /** Pagination */
             classes={{ root: '', title: '' }}
-            setDocs={setDocs}
             clearDocs={clearDocs}
-            linodesWithoutBackups={[]}
-            managed={false}
-            handleOrderChange={jest.fn()}
-            handlePageChange={jest.fn()}
-            handlePageSizeChange={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            groupByTags={false}
             linodesCount={0}
-            linodesData={[]}
             linodesRequestError={undefined}
             linodesRequestLoading={false}
-            order={'asc'}
-            orderBy={'label'}
-            page={1}
-            pageSize={25}
-            groupByTags={false}
+            managed={false}
+            onPresentSnackbar={jest.fn()}
+            setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
@@ -48,25 +38,16 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            enqueueSnackbar={jest.fn()}
-            onPresentSnackbar={jest.fn()}
             classes={{ root: '', title: '' }}
-            setDocs={setDocs}
             clearDocs={clearDocs}
-            linodesWithoutBackups={[]}
-            managed={false}
-            handleOrderChange={jest.fn()}
-            handlePageChange={jest.fn()}
-            handlePageSizeChange={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            groupByTags={false}
             linodesCount={0}
-            linodesData={[]}
             linodesRequestError={undefined}
             linodesRequestLoading={false}
-            order={'asc'}
-            orderBy={'label'}
-            page={1}
-            pageSize={25}
-            groupByTags={false}
+            managed={false}
+            onPresentSnackbar={jest.fn()}
+            setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
@@ -84,25 +65,16 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            enqueueSnackbar={jest.fn()}
-            onPresentSnackbar={jest.fn()}
             classes={{ root: '', title: '' }}
-            setDocs={setDocs}
             clearDocs={clearDocs}
-            linodesWithoutBackups={[]}
-            managed={false}
-            handleOrderChange={jest.fn()}
-            handlePageChange={jest.fn()}
-            handlePageSizeChange={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            groupByTags={false}
             linodesCount={0}
-            linodesData={[]}
             linodesRequestError={undefined}
             linodesRequestLoading={false}
-            order={'asc'}
-            orderBy={'label'}
-            page={1}
-            pageSize={25}
-            groupByTags={false}
+            managed={false}
+            onPresentSnackbar={jest.fn()}
+            setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
