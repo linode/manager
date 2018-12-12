@@ -12,7 +12,7 @@ describe('CPUMetrics', () => {
 
   const wrapper = shallow(
     <MetricsDisplay
-      classes={{root: '', legend: '', red: '', yellow: '', blue: 'blue', green: ''}}
+      classes={{root: '', legend: '', red: '', yellow: '', blue: 'blue', green: '', text: '', tableHeadInner: ''}}
       rows={[
         {
           legendTitle: 'Legend Title',
@@ -25,7 +25,7 @@ describe('CPUMetrics', () => {
   );
 
   it('renders a table', () => {
-    expect(wrapper.find('WithStyles(Table)')).toHaveLength(1);
+    expect(wrapper.find('WithStyles(WrappedTable)')).toHaveLength(1);
   });
 
   it('renders Max, Avg, and Last table headers', () => {

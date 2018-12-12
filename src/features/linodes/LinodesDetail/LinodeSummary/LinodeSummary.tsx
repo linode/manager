@@ -45,14 +45,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
     leftLegend: {
       position: 'absolute',
       left: -8,
-      bottom: 39,
+      bottom: '50%',
       transform: 'rotate(-90deg)',
       color: '#777',
       fontSize: 14,
     },
     bottomLegend: {
       margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
+      padding: 10,
       color: '#777',
+      backgroundColor: theme.bg.offWhiteDT,
+      border: `1px solid ${theme.color.border3}`,
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
         '& > div': {
