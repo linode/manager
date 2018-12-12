@@ -61,14 +61,10 @@ describe('Create Linode From StackScript - Tags Suite', () => {
         const stackscript = 'StackScript Bash Library';
         const password = crypto.randomBytes(20).toString('hex');
         const label = `L${timestamp()}`;
-
         ConfigureLinode.linodeStackScriptTab.click();
         ConfigureLinode.progressBar.waitForVisible(constants.wait.normal, true);
-        ConfigureLinode.stackScriptRow.waitForVisible(constants.wait.normal);
-        // Select a stackscript without UDF fields
-        const scriptElem = $$(ConfigureLinode.stackScriptTitle.selector)
-            .filter(el => el.getText().includes(stackscript));
-        scriptElem[0].click();
+        ConfigureLinode.stackScriptRow(stackscript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRow(stackscript).click();
         ConfigureLinode.images[0].click();
         ConfigureLinode.regions[0].click();
         ConfigureLinode.plans[0].click();

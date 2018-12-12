@@ -188,8 +188,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         browser.pause(750);
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();
-        VolumeDetail.toastDisplays('Volume successfully detached.',constants.wait.long);
-        console.log('here');
+        VolumeDetail.toastDisplays('Volume successfully detached.',constants.wait.minute);
         expect($$(VolumeDetail.volumeAttachment.selector).length).toEqual(0);
     });
 

@@ -56,7 +56,8 @@ describe("ResultGroup component", () => {
     )).toBeTruthy();
   });
   it("should render its children", () => {
-    expect(component.find('[data-qa-result-row]')).toHaveLength(5);
+    console.log(component.debug());
+    expect(component.find('[data-qa-result-row-component]')).toHaveLength(5);
   });
   it("should render a loading spinner", () => {
     component.setProps({ loading: true });
@@ -72,7 +73,7 @@ describe("ResultGroup component", () => {
     });
     it("should show hidden results when showMore is true", () => {
       component.setProps({ showMore: true });
-      expect(component.find('[data-qa-result-row]')).toHaveLength(6);
+      expect(component.find('[data-qa-result-row-component]')).toHaveLength(6);
     });
     it("should have a Show Less button", () => {
       component.setProps({ showMore: true });

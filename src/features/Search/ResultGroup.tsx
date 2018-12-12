@@ -89,11 +89,11 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
           <TableBody>
             {loading && <TableRowLoading  colSpan={12} />}
             {initial.map((result, idx: number) =>
-              <ResultRow key={idx} result={result}/>)
+              <ResultRow key={idx} result={result} data-qa-result-row-component/>)
             }
             {showMore &&
             hidden.map((result, idx: number) =>
-              <ResultRow key={idx} result={result}/>
+              <ResultRow key={idx} result={result} data-qa-result-row-component/>
             )
             }
           </TableBody>

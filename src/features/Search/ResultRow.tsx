@@ -150,6 +150,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
     <TableRow
       className={classes.root}
       rowLink={result.data.path}
+      data-qa-result-row={result.label}
     >
       <Hidden smDown>
         <TableCell className={classes.iconTableCell}>
@@ -158,7 +159,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
           </TableCell>
       </Hidden>
-      <TableCell className={classes.labelCell} parentColumn="Label" data-qa-result-row={result.label}>
+      <TableCell className={classes.labelCell} parentColumn="Label">
         <div className={classes.labelRow}>
           <Link to={result.data.path} className={classes.link} title={result.label}>
             <div className={classes.labelRow}>

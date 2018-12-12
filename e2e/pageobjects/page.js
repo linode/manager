@@ -55,6 +55,7 @@ export default class Page {
     get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
+    get enterKey() { return '\uE007'; }
 
     constructor() {
         this.pageTitle = 'Base page';
@@ -227,7 +228,7 @@ export default class Page {
         const createTagSelect = $$('[data-qa-enhanced-select]')[1].$('..').$('input');
         createTagSelect.waitForVisible(constants.wait.normal);
         createTagSelect.setValue(tagName);
-        createTagSelect.addValue('\uE007');
+        createTagSelect.addValue(this.enterKey);
         browser.waitUntil(() => {
             return this.tags.length === expectedCount;
         }, constants.wait.normal);

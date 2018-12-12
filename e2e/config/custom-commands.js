@@ -213,7 +213,7 @@ exports.browserCommands = () => {
     });
 
     browser.addCommand('createVolumeUnattached', function async(token,label,region,size,tags) {
-        return createVolumeUnattached(token,label,region,size)
+        return createVolumeUnattached(token,label,region,size,tags)
             .then(res => res);
     });
 }
