@@ -14,23 +14,55 @@ const { constants } = require('../../../constants');
 
 describe('Linode Detail - Volumes Suite', () => {
     const testLinode = `AutoLinodeEast${timestamp()}`;
+
     const testVolume = {
         label: `AutoVolume${timestamp()}`,
         size: 100,
         tags: `AutoTag${timestamp()}`
     }
-    const volumesEast = {
+
+    const volumeEast = {
         label: `testEast${timestamp()}`
     }
-    const volumesCentral = {
+
+    const volumeCentral = {
         region: 'us-central',
         label: `testWest${timestamp()}`
     }
 
+    const checkAttachedVolumeInSummary = () => {
+        LinodeDetail.changeTab('Summary');
+        LinodeSummary.volumesAttached.waitForVisible(constants.wait.normal);
+        const volumesCount = LinodeSummary.volumesAttached.getAttribute('data-qa-volumes');
+        expect(volumesCount).toBe('1');
+        LinodeDetail.changeTab('Volumes');
+        browser.pause(500);
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+    }
+
+    const checkVolumeDetail = (testVolume,testLinode) => {
+        browser.url(constants.routes.volumes);
+        let trimSelector = VolumeDetail.volumeAttachment.selector.replace(']','')
+        const linodeAttachedToCell = `${trimSelector}="${testLinode}"]`;
+        $(linodeAttachedToCell).waitForVisible(constants.wait.normal);
+        $(`${linodeAttachedToCell} a`).click();
+        LinodeDetail.landingElemsDisplay();
+        LinodeDetail.changeTab('Volumes');
+        trimSelector = VolumeDetail.volumeCellLabel.selector.replace(']','')
+        const volumeCell = `${trimSelector}="${testVolume}"]`;
+        $(volumeCell).waitForVisible(constants.wait.normal);
+    }
+
+    const detachVolume = () => {
+        VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
+        VolumeDetail.confirmDetachORDelete();
+        VolumeDetail.createButton.waitForVisible(constants.wait.normal);
+        expect(VolumeDetail.placeholderText.getText()).toBe('Create a Volume');
+    }
+
     beforeAll(() => {
-        createUnattachedVolumes([volumesEast,volumesCentral]);
+        createUnattachedVolumes([volumeEast,volumeCentral]);
         apiCreateLinode(testLinode);
-        ListLinodes.shutdownIfRunning(testLinode);
         ListLinodes.navigateToDetail(testLinode);
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Volumes');
@@ -90,7 +122,7 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('should fail to create under 10 gb volume', () => {
             const errorMsg = 'Size must be between 10 and 10240.';
-            VolumeDetail.label.$('..').setValue('test');
+            VolumeDetail.label.$('input').setValue('test');
             browser.setValue(`${VolumeDetail.size.selector} input`, 5);
             VolumeDetail.submit.click();
             const volumeError = $(`${VolumeDetail.size.selector}>p`);
@@ -99,7 +131,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('should fail to create under 10240 gb volume', () => {
-            VolumeDetail.label.$('..').setValue('test');
+            VolumeDetail.label.$('input').setValue('test');
             browser.setValue(`${VolumeDetail.size.selector} input`, 10241);
             VolumeDetail.submit.click();
             const volumeError = $(`${VolumeDetail.size.selector}>p`);
@@ -131,14 +163,14 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.selectLinodeOrVolume.$('..').$('..').click();
             VolumeDetail.selectOption.waitForVisible(constants.wait.normal);
             const volumes = VolumeDetail.selectOptions.map(option => option.getText());
-            expect(volumes.includes(volumesEast.label)).toBe(true);
-            expect(volumes.includes(volumesCentral.label)).toBe(false);
+            expect(volumes.includes(volumeEast.label)).toBe(true);
+            expect(volumes.includes(volumeCentral.label)).toBe(false);
             $('body').click();
             VolumeDetail.selectOption.waitForVisible(constants.wait.normal,true);
         });
     });
 
-    describe('Linode Detail - Create Volume - Detach Volume', () => {
+    describe('Create Attached Volume - Detach Volume', () => {
 
         it('can create a volume attached to the linode with a tag', () => {
             VolumeDetail.createButton.click();
@@ -153,24 +185,51 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.closeVolumeDrawer();
         });
 
+
+
         it('volume created successfully with tag', () => {
             expect(VolumeDetail.volumeCellLabel.getText()).toContain(testVolume.label);
             expect(VolumeDetail.volumeCellSize.getText()).toContain(testVolume.size);
             VolumeDetail.checkTagsApplied([testVolume.tags]);
         });
+
+        it('should display volumes attached to linode in summary', () => {
+            checkAttachedVolumeInSummary();
+        });
+
+        it('should show current linode in volume detail page attached to row', () => {
+            checkVolumeDetail(testVolume.label,testLinode);
+        });
+
+        it('volume can be detached from linode', () => {
+            detachVolume();
+        });
     });
 
-    xdescribe('Linode Detail - Volume - Summary Suite', () => {
+    describe('Attach Existing Volume - Detatch Volume', () => {
+
+        it('can attach an existing volume', () => {
+            VolumeDetail.createButton.click();
+            VolumeDetail.attachExistingVolumeToLinode(volumeEast.label);
+            browser.pause(500);
+        });
+
+        it('volume attached successfully', () => {
+            VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+            expect(VolumeDetail.volumeCellLabel.getText()).toContain(volumeEast.label);
+            expect(VolumeDetail.volumeCellSize.getText()).toContain('20');
+        });
+
         it('should display volumes attached to linode in summary', () => {
-            LinodeDetail.changeTab('Summary');
+            checkAttachedVolumeInSummary();
+        });
 
-            // Refresh due to M3-388
-            browser.refresh();
+        it('should show current linode in volume detail page attached to row', () => {
+            checkVolumeDetail(volumeEast.label,testLinode);
+        });
 
-            LinodeSummary.volumesAttached.waitForVisible(constants.wait.normal);
-
-            const volumesCount = LinodeSummary.volumesAttached.getAttribute('data-qa-volumes');
-            expect(volumesCount).toBe('1');
+        it('volume can be detached from linode', () => {
+            detachVolume();
         });
     });
 });

@@ -147,7 +147,7 @@ exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
     });
 }
 
-exports.createVolumeUnattached = (token,label,region,size) => {
+exports.createVolumeUnattached = (token,label,region,size,tags) => {
   return new Promise((resolve, reject) => {
       const volumesEndpoint = '/volumes';
 
@@ -155,6 +155,10 @@ exports.createVolumeUnattached = (token,label,region,size) => {
           region: region ? region : 'us-east',
           size: size ? size : 20,
           label: label
+      }
+
+      if(tags){
+          volumesConfig['tags'] = tags;
       }
 
       return getAxiosInstance(token).post(volumesEndpoint, volumesConfig)

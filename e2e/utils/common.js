@@ -188,7 +188,7 @@ export const createUnattachedVolumes = (volumeObjArray) => {
     const token = readToken(browser.options.testUser);
 
     volumeObjArray.forEach((volumeObj) => {
-        const volume = browser.createVolumeUnattached(token,volumeObj.label,volumeObj.region,volumeObj.size);
+        const volume = browser.createVolumeUnattached(token,volumeObj.label,volumeObj.region,volumeObj.size,volumeObj.tags);
     });
 
     browser.url(constants.routes.volumes);

@@ -188,8 +188,8 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         browser.pause(750);
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();
-        VolumeDetail.toastDisplays('Volume detachment started');
-        VolumeDetail.toastDisplays('Volume successfully detached.',constants.wait.minute);
+        VolumeDetail.toastDisplays('Volume successfully detached.',constants.wait.long);
+        console.log('here');
         expect($$(VolumeDetail.volumeAttachment.selector).length).toEqual(0);
     });
 
@@ -198,7 +198,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Clone');
         VolumeDetail.cloneVolume(cloneLabel,testVolume.size);
         const clonedVolume = $$(VolumeDetail.volumeCellLabel.selector).find(volume => volume.getText().includes(cloneLabel));
-        expect(clonedVolume).not.toBeNull();
+        expect(clonedVolume).toBeTruthy();
     });
 
     it('can delete a volume', () => {

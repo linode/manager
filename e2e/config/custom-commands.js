@@ -212,7 +212,7 @@ exports.browserCommands = () => {
             .then(res => res);
     });
 
-    browser.addCommand('createVolumeUnattached', function async(token,label,region,size) {
+    browser.addCommand('createVolumeUnattached', function async(token,label,region,size,tags) {
         return createVolumeUnattached(token,label,region,size)
             .then(res => res);
     });

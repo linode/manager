@@ -72,7 +72,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <Grid item className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
-        <Typography variant="h2" data-qa-entity-header className={classes.entityHeading}>{capitalize(entity)}</Typography>
+        <Typography variant="h2" data-qa-entity-header={entity} className={classes.entityHeading}>{capitalize(entity)}</Typography>
       </div>
       <Paper>
         <Table aria-label="Search Results">
@@ -89,11 +89,11 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
           <TableBody>
             {loading && <TableRowLoading  colSpan={12} />}
             {initial.map((result, idx: number) =>
-              <ResultRow key={idx} result={result} data-qa-result-row />)
+              <ResultRow key={idx} result={result}/>)
             }
             {showMore &&
             hidden.map((result, idx: number) =>
-              <ResultRow key={idx} result={result} data-qa-result-row />
+              <ResultRow key={idx} result={result}/>
             )
             }
           </TableBody>

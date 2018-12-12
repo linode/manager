@@ -158,7 +158,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
           </TableCell>
       </Hidden>
-      <TableCell className={classes.labelCell} parentColumn="Label">
+      <TableCell className={classes.labelCell} parentColumn="Label" data-qa-result-row={result.label}>
         <div className={classes.labelRow}>
           <Link to={result.data.path} className={classes.link} title={result.label}>
             <div className={classes.labelRow}>
@@ -171,12 +171,12 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           </Link>
         </div>
       </TableCell>
-      <TableCell className={classes.regionCell} parentColumn="Region">
+      <TableCell className={classes.regionCell} parentColumn="Region" data-qa-result-region>
         {result.data.region &&
           <RegionIndicator region={result.data.region} />
         }
       </TableCell>
-      <TableCell className={classes.createdCell} parentColumn="Created">
+      <TableCell className={classes.createdCell} parentColumn="Created" data-qa-result-created>
         {result.data.created &&
           <React.Fragment>
             <Typography >
@@ -185,7 +185,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           </React.Fragment>
         }
       </TableCell>
-      <TableCell className={classes.tagCell} parentColumn="Tags">
+      <TableCell className={classes.tagCell} parentColumn="Tags" data-qa-result-tags>
         <Tags tags={result.data.tags} />
       </TableCell>
     </TableRow>

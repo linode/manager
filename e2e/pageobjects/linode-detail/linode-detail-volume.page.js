@@ -91,6 +91,19 @@ export class VolumeDetail extends Page {
         this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
     }
 
+    attachExistingVolumeToLinode(volumeLabel){
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.attachExistingVolumeToLinodeDrawerDisplays();
+        this.attachExistingVolume.click();
+        this.attachExistingVolumeToLinodeDrawerDisplays();
+        this.selectLinodeOrVolume.$('..').$('..').click();
+        this.selectOption.waitForVisible(constants.wait.normal);
+        this.selectOptions.find(option => option.getText() === volumeLabel).click();
+        this.selectOption.waitForVisible(constants.wait.normal,true);
+        this.submit.click();
+        this.drawerBase.waitForVisible(constants.wait.normal,true);
+    }
+
     volumeConfigurationDrawerDisplays(){
         this.createFileSystemCommand.waitForVisible(constants.wait.normal);
         this.createMountDirCommand.waitForVisible(constants.wait.normal);
