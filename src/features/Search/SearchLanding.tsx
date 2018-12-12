@@ -11,7 +11,7 @@ import Placeholder from 'src/components/Placeholder';
 import { withTypes } from 'src/context/types';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getAllEntities } from 'src/utilities/getAll';
-import { parseQueryParams } from 'src/utilities/queryParams';
+import { getQueryParam } from 'src/utilities/queryParams';
 
 import ResultGroup from './ResultGroup';
 import { emptyResults, searchAll, SearchResults } from './utils';
@@ -46,17 +46,6 @@ type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<Cl
 
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  getQuery = () => {
-    let queryFromParams;
-    try {
-      queryFromParams = parseQueryParams(this.props.location.search)['?query'];
-    }
-    catch {
-      queryFromParams = ''
-    }
-    const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
-    return query;
-  }
 
   getInitialResults = () => {
     return pathOr(
@@ -67,7 +56,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
   }
 
   state: State = {
-    query: this.getQuery(),
+    query: getQueryParam(this.props.location.search, 'query'),
     results: this.getInitialResults(),
     error: false,
     loading: false,
