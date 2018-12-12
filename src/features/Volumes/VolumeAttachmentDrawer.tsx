@@ -114,8 +114,8 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   }
 
   attachToLinode = () => {
-    const { volumeID, onClose } = this.props;
-    const { selectedLinode } = this.state;
+    const { volumeID } = this.props;
+    const { selectedLinode, selectedConfig } = this.state;
     if (!selectedLinode || selectedLinode === 'none') {
       this.setState({ errors: [
         ...(this.state.errors || []),
@@ -126,10 +126,13 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    attachVolume(Number(volumeID), { linode_id: Number(selectedLinode) })
+    attachVolume(Number(volumeID), {
+      linode_id: Number(selectedLinode),
+      config_id: Number(selectedConfig) || undefined
+    })
       .then((response) => {
         resetEventsPolling();
-        onClose();
+        this.handleClose();
       })
       .catch((error) => {
         this.setState({ errors: path(['response', 'data', 'errors'], error) }, () => {
