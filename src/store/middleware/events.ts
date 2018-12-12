@@ -79,7 +79,6 @@ const handleLinodeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     case 'notification':
     case 'scheduled':
     case 'started':
-
       return dispatch(requestLinodeForStore(id));
 
     default:
@@ -107,7 +106,7 @@ const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
     case 'notification':
     case 'scheduled':
     case 'started':
-      return requestLinodeForStore(id);
+      return dispatch(requestLinodeForStore(id));
 
     default:
       return;
