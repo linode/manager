@@ -171,12 +171,12 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           </Link>
         </div>
       </TableCell>
-      <TableCell className={classes.regionCell} parentColumn="Region" data-qa-result-region>
+      <TableCell className={classes.regionCell} parentColumn="Region">
         {result.data.region &&
           <RegionIndicator region={result.data.region} />
         }
       </TableCell>
-      <TableCell className={classes.createdCell} parentColumn="Created" data-qa-result-created>
+      <TableCell className={classes.createdCell} parentColumn="Created">
         {result.data.created &&
           <React.Fragment>
             <Typography >
@@ -185,7 +185,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           </React.Fragment>
         }
       </TableCell>
-      <TableCell className={classes.tagCell} parentColumn="Tags" data-qa-result-tags>
+      <TableCell className={classes.tagCell} parentColumn="Tags">
         <Tags tags={result.data.tags} />
       </TableCell>
     </TableRow>

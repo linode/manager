@@ -20,7 +20,6 @@ describe('Header - Search - Volumes Suite', () => {
     it('volume displays in search results when searching by name', () => {
         SearchBar.assertSearchDisplays();
         SearchBar.searSearchBar.executeSearch('blahlblahblah');
-        browser.waitForVisible('[data-qa-suggestion]', constants.wait.short, true);
-
+        SearchBar.suggestion.waitForVisible(constants.wait.norma;)
 
 });
