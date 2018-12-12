@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Flag from 'src/assets/icons/flag.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import Card from 'src/components/core/Card';
 import CardActions from 'src/components/core/CardActions';
 import CardContent from 'src/components/core/CardContent';
@@ -14,6 +13,7 @@ import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/compo
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import LinearProgress from 'src/components/LinearProgress';
 import Tags from 'src/components/Tags';
 import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -48,6 +48,8 @@ type CSSClasses =
   | 'linkWrapper'
   | 'StatusIndicatorWrapper'
   | 'link'
+  | 'statusProgress'
+  | 'statusText'
   | 'wrapHeader';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
@@ -187,6 +189,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  statusProgress: {
+    paddingRight: 0,
+    paddingTop: 6
+  },
+  statusText: {
+  }
 });
 
 interface State {
@@ -285,66 +293,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
     toggleConfirmation('reboot', linodeId, linodeLabel);
   }
 
-  loadingState = () => {
-    const { classes, linodeRecentEvent, linodeStatus } = this.props;
-    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
-
-    return (
-      <CardContent className={`${classes.cardContent} ${classes.cardLoadingContainer}`}>
-        <Grid container>
-          <Grid item xs={12}>
-            <CircleProgress value={value} noTopMargin />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography align="center" className={classes.loadingStatusText}>
-              {transitionText(linodeStatus, linodeRecentEvent)}
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardContent>
-    );
-  }
-
-  loadedState = () => {
-    const {
-      classes,
-      imageLabel,
-      linodeIpv4,
-      linodeIpv6,
-      linodeRegion,
-      linodeSpecMemory,
-      linodeSpecDisk,
-      linodeSpecVcpus,
-      linodeTags,
-      linodeType,
-      typesData,
-    } = this.props;
-
-    return (
-      <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
-        <div>
-          <div className={classes.cardSection} data-qa-linode-summary>
-            {typesData && `${displayType(linodeType, typesData || [])}: `}
-            {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
-          </div>
-          <div className={classes.cardSection} data-qa-region>
-            <RegionIndicator region={linodeRegion} />
-          </div>
-          <div className={classes.cardSection} data-qa-ips>
-            <IPAddress ips={linodeIpv4} copyRight />
-            <IPAddress ips={[linodeIpv6]} copyRight />
-          </div>
-          <div className={classes.cardSection} data-qa-image>
-            {imageLabel}
-          </div>
-          <div className={classes.cardSection}>
-            <Tags tags={linodeTags} />
-          </div>
-        </div>
-      </CardContent>
-    );
-  }
-
   renderFlag = () => {
     /*
     * Render either a flag for if the Linode has a notification
@@ -396,8 +344,11 @@ class LinodeCard extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
-      linodeStatus, linodeBackups, toggleConfirmation } = this.props;
-    const loading = linodeInTransition(linodeStatus, linodeRecentEvent)
+      linodeStatus, linodeBackups, toggleConfirmation, typesData, linodeType,
+      linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4,
+      linodeIpv6, imageLabel, linodeTags } = this.props;
+    const loading = linodeInTransition(linodeStatus, linodeRecentEvent);
+    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -419,7 +370,37 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             className={`${classes.customeMQ} ${'title'}`}
           />
           <Divider />
-          {loading ? this.loadingState() : this.loadedState()}
+          <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
+            {loading && <Grid container className={classes.cardSection}>
+              <Grid item>
+                <Typography variant="body2" className={classes.statusText}>
+                  {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} lg={6} xl={6}>
+                <div className={classes.statusProgress}>
+                  <LinearProgress value={value} />
+                </div>
+              </Grid>
+            </Grid>}            
+            <div className={classes.cardSection} data-qa-linode-summary>
+              {typesData && `${displayType(linodeType, typesData || [])}: `}
+              {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
+            </div>
+            <div className={classes.cardSection} data-qa-region>
+              <RegionIndicator region={linodeRegion} />
+            </div>
+            <div className={classes.cardSection} data-qa-ips>
+              <IPAddress ips={linodeIpv4} copyRight />
+              <IPAddress ips={[linodeIpv6]} copyRight />
+            </div>
+            <div className={classes.cardSection} data-qa-image>
+              {imageLabel}
+            </div>
+            <div className={classes.cardSection}>
+              <Tags tags={linodeTags} />
+            </div>
+          </CardContent>
           <CardActions className={classes.cardActions}>
             <Button
               className={`${classes.button} ${classes.consoleButton}`}

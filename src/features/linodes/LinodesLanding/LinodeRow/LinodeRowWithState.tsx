@@ -12,6 +12,7 @@ import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
+import LinodeRowLoading from './LinodeRowLoading';
 
 type ClassNames =
   'actionCell'
@@ -68,6 +69,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
+  loading: boolean;
   linodeBackups: Linode.LinodeBackups;
   linodeId: number;
   linodeIpv4: string[];
@@ -95,6 +97,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
     classes,
     linodeBackups,
     linodeId,
+    loading,
     linodeIpv4,
     linodeIpv6,
     linodeLabel,
@@ -109,56 +112,66 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
     toggleConfirmation,
     typesData,
     typesLoading,
+    linodeRecentEvent,
   } = props;
 
+  const headCell = <LinodeRowHeadCell
+    loading={loading}
+    linodeId={linodeId}
+    linodeRecentEvent={linodeRecentEvent}
+    linodeLabel={linodeLabel}
+    linodeTags={linodeTags}
+    linodeStatus={linodeStatus}
+  />
+
   return (
-    <TableRow
-      key={linodeId}
-      className={`${classes.bodyRow}`}
-      data-qa-loading
-      data-qa-linode={linodeLabel}
-      rowLink={`/linodes/${linodeId}`}
-      arial-label={linodeLabel}
-    >
-      <LinodeRowHeadCell
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeTags={linodeTags}
-        linodeStatus={linodeStatus}
-      />
-      <TableCell parentColumn="Plan" className={classes.planCell}>
-        {!typesLoading &&
-          <Typography variant="body1">{displayType(linodeType, typesData || [])}</Typography>
-        }
-      </TableCell>
-      <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
-      <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
-        <div className={classes.ipCellWrapper}>
-          <IPAddress ips={linodeIpv4} copyRight />
-          <IPAddress ips={[linodeIpv6]} copyRight />
-        </div>
-      </TableCell>
-      <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>
-        <RegionIndicator region={linodeRegion} />
-      </TableCell>
-      <TableCell className={classes.actionCell} data-qa-notifications>
-        <div className={classes.actionInner}>
-          <RenderFlag
-            mutationAvailable={mutationAvailable}
-            linodeNotification={linodeNotification}
-            classes={classes}
-          />
-          <LinodeActionMenu
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            linodeStatus={linodeStatus}
-            linodeBackups={linodeBackups}
-            openConfigDrawer={openConfigDrawer}
-            toggleConfirmation={toggleConfirmation}
-          />
-        </div>
-      </TableCell>
-    </TableRow>
+    <React.Fragment>
+      {loading && <LinodeRowLoading linodeId={linodeId} linodeRecentEvent={linodeRecentEvent}>
+        {headCell}
+      </ LinodeRowLoading>}
+      <TableRow
+        key={linodeId}
+        className={`${classes.bodyRow}`}
+        data-qa-loading
+        data-qa-linode={linodeLabel}
+        rowLink={`/linodes/${linodeId}`}
+        arial-label={linodeLabel}
+      >
+        {!loading && headCell}
+        <TableCell parentColumn="Plan" className={classes.planCell}>
+          {!typesLoading &&
+            <Typography variant="body1">{displayType(linodeType, typesData || [])}</Typography>
+          }
+        </TableCell>
+        <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
+        <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={linodeIpv4} copyRight />
+            <IPAddress ips={[linodeIpv6]} copyRight />
+          </div>
+        </TableCell>
+        <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>
+          <RegionIndicator region={linodeRegion} />
+        </TableCell>
+        <TableCell className={classes.actionCell} data-qa-notifications>
+          <div className={classes.actionInner}>
+            <RenderFlag
+              mutationAvailable={mutationAvailable}
+              linodeNotification={linodeNotification}
+              classes={classes}
+            />
+            <LinodeActionMenu
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeStatus={linodeStatus}
+              linodeBackups={linodeBackups}
+              openConfigDrawer={openConfigDrawer}
+              toggleConfirmation={toggleConfirmation}
+            />
+          </div>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
   );
 };
 
