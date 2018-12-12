@@ -142,7 +142,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           className={classes.root}
           PaperProps={{ className: classes.dropDown }}
         >
-          <MenuItem key="placeholder" className={classes.hidden} tabIndex={1} />
+          <MenuItem key="placeholder" aria-hidden className={classes.hidden} tabIndex={1} />
           <UserNotificationsList notifications={notifications} closeMenu={this.closeMenu} />
         </Menu>
         <GDPRNotification open={this.state.privacyPolicyModalOpen} onClose={this.closePrivacyPolicyModal} />
