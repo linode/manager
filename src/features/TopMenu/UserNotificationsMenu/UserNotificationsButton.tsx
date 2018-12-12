@@ -76,6 +76,7 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
     <IconButton
       onClick={onClick}
       className={`${classes.root} ${className}`}
+      aria-label="User Notifications"
     >
       <div className={
         classNames({

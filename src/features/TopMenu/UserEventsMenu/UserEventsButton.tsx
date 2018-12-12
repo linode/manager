@@ -90,6 +90,7 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
       onClick={onClick}
       className={`${classes.root} ${className}`}
       disabled={disabled}
+      aria-label="User Events"
     >
       <NotificationIcon className={classes.icon} />
       {count && count > 0

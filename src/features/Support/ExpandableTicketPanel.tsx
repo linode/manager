@@ -269,7 +269,7 @@ export class ExpandableTicketPanel extends React.Component<CombinedProps, State>
 
     return (url !== 'not found')
       ? <div className={classes.userWrapper}>
-          <img src={url} className={classes.leftIcon} />
+          <img src={url} className={classes.leftIcon} alt="Gravatar" />
         </div>
       : <div className={classes.userWrapper}>
           <UserIcon className={classes.leftIcon} />
