@@ -44,7 +44,6 @@ export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props)
         images={images}
         imageError={imageError}
         onSelect={onImageChange}
-        selectWidth={11}
       />
       <AccessPanel
         noPadding

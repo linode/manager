@@ -7,7 +7,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import { getImagesOptions, groupImages, groupNameMap, ImageSelect } from './ImageSelect';
 
 const props = {
-  classes: { root: ''},
+  classes: { root: '', icon: '', selectContainer: ''},
   images,
   onSelect: jest.fn(),
 }

@@ -7,19 +7,30 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'selectContainer'
+  | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '100%',
   },
+  icon: {
+    marginTop: 30,
+    marginLeft: -theme.spacing.unit
+  },
+  selectContainer: {
+    width: 415 + theme.spacing.unit * 2,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  }
 });
 
 interface Props {
   images: Linode.Image[];
   imageError?: string;
   onSelect: (selected: Item<string>) => void;
-  selectWidth?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'auto';
 }
 
 interface State {
@@ -52,12 +63,12 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, imageError, onSelect, selectWidth } = this.props;
+    const { classes, imageError, onSelect } = this.props;
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
-        <Grid className={classes.root} container direction="row" justify="flex-start" alignItems="flex-end">
-          <Grid item xs={selectWidth ? selectWidth : 'auto'}>
+        <Grid className={classes.root} container wrap="nowrap" direction="row" justify="flex-start" alignItems="flex-start">
+          <Grid item className={classes.selectContainer}>
             <Select
               id={'image-select'}
               isMulti={false}
@@ -68,8 +79,8 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               label="Image"
             />
           </Grid>
-          <Grid item xs={1} style={{ paddingLeft: 0 }}>
-            <HelpIcon text="Choosing a 64-bit distro is recommended." />
+          <Grid item xs={1}>
+            <HelpIcon className={classes.icon} text="Choosing a 64-bit distro is recommended." />
           </Grid>
       </Grid>
       </React.Fragment>
