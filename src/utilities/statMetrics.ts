@@ -10,13 +10,7 @@ export interface Metrics {
 
 // Returns max, average, and last for RDD data from the API, which has this
 // shape: [ [n1, n2], ... ], where n1 is unix-time in milliseconds and n2 is the
-// value. We ignore values of 0 IF the second param is passed in. This needs
-// to be optional because there are certain metrics in Classic Manager that
-// behave this way.
-//
-// The hacky "customLength" param comes from the need to divide the sum
-// of private_in/out on NetV4 by NetV6 to get the average for netV6
-// private_in/out. I have no idea why.
+// value.
 export const getMetrics = (data: number[][]): Metrics => {
 
   // If there's no data
@@ -26,7 +20,6 @@ export const getMetrics = (data: number[][]): Metrics => {
 
   let max = 0;
   let sum = 0
-  let length = 0; // Number of non-zero elements
 
   // The data is large, so we get everything we need in one iteration
   data.forEach(([_, value]: number[], idx): void => {
@@ -36,15 +29,16 @@ export const getMetrics = (data: number[][]): Metrics => {
     }
 
     sum += value;
-    length++;
   });
+
+  const length = data.length;
 
   // Safeguard against dividing by 0
   const average = length > 0
     ? sum/length
     : 0;
 
-  const last = data[data.length-1][1];
+  const last = data[length-1][1];
 
   return { max, average, last, total: sum, length};
 }
