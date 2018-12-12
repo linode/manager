@@ -13,7 +13,11 @@ export interface Metrics {
 // value. We ignore values of 0 IF the second param is passed in. This needs
 // to be optional because there are certain metrics in Classic Manager that
 // behave this way.
-export const getMetrics = (data: number[][], includeZero?: boolean): Metrics => {
+//
+// The hacky "customLength" param comes from the need to divide the sum
+// of private_in/out on NetV4 by NetV6 to get the average for netV6
+// private_in/out. I have no idea why.
+export const getMetrics = (data: number[][], includeZero?: boolean, customLength?: number): Metrics => {
 
   // If there's no data
   if (isEmpty(data[0])) {
@@ -42,9 +46,11 @@ export const getMetrics = (data: number[][], includeZero?: boolean): Metrics => 
     length++;
   });
 
+  const lengthToDivideBy = customLength || length;
+
   // Safeguard against dividing by 0
-  const average = length > 0
-    ? sum/length
+  const average = lengthToDivideBy > 0
+    ? sum/lengthToDivideBy
     : 0;
 
   return { max, average, last, total: sum, length};

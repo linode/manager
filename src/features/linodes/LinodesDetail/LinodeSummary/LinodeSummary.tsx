@@ -268,17 +268,19 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const v6Data = {
       publicIn: pathOr([[]], ['data','netv6','in'], stats),
       publicOut: pathOr([[]], ['data','netv6','out'], stats),
+      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
     };
 
     const format = formatBitsPerSecond;
-
-    const netv4InMetrics = getMetrics(v4Data.publicIn);
-    const netv4OutMetrics = getMetrics(v4Data.publicOut);
 
     // @todo refactor this component so that these calcs don't need to be done
     // again when we render the v6 chart
     const netv6InMetrics = getMetrics(v6Data.publicIn);
     const netv6OutMetrics = getMetrics(v6Data.publicOut);
+    const netv6PrivateInMetrics = getMetrics(v6Data.privateIn);
+
+    const netv4InMetrics = getMetrics(v4Data.publicIn);
+    const netv4OutMetrics = getMetrics(v4Data.publicOut);
 
     const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
       netv4InMetrics.total,
@@ -329,13 +331,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Private IPv4 Outbound',
                     legendColor: 'yellow',
-                    data: getMetrics(v4Data.privateOut), // <-- Include 0
+                    // We include 0 as possibility for LAST and use the length
+                    // of V6 privateIn to calculate average... no idea why
+                    data: getMetrics(v4Data.privateOut, true, netv6PrivateInMetrics.length),
                     format
                   },
                   {
                     legendTitle: 'Private IPv4 Inbound',
                     legendColor: 'red',
-                    data: getMetrics(v4Data.privateIn), // <-- Include 0
+                    // We include 0 as possibility for LAST and use the length
+                    // of V6 privateIn to calculate average... no idea why
+                    data: getMetrics(v4Data.privateIn, true, netv6PrivateInMetrics.length),
                     format
                   }
                 ]}
