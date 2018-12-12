@@ -28,7 +28,8 @@ type ClassNames = 'chart'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
-  | 'graphControls';
+  | 'graphControls'
+  | 'totalTraffic';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
   return {
@@ -71,6 +72,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
       alignItems: 'center',
+    },
+    totalTraffic: {
+      margin: '12px',
     }
   };
 };
@@ -277,7 +281,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     // again when we render the v6 chart
     const netv6InMetrics = getMetrics(v6Data.publicIn);
     const netv6OutMetrics = getMetrics(v6Data.publicOut);
-    const netv6PrivateInMetrics = getMetrics(v6Data.privateIn);
 
     const netv4InMetrics = getMetrics(v4Data.publicIn);
     const netv4OutMetrics = getMetrics(v4Data.publicOut);
@@ -331,17 +334,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Private IPv4 Outbound',
                     legendColor: 'yellow',
-                    // We include 0 as possibility for LAST and use the length
-                    // of V6 privateIn to calculate average... no idea why
-                    data: getMetrics(v4Data.privateOut, true, netv6PrivateInMetrics.length),
+                    data: getMetrics(v4Data.privateOut),
                     format
                   },
                   {
                     legendTitle: 'Private IPv4 Inbound',
                     legendColor: 'red',
-                    // We include 0 as possibility for LAST and use the length
-                    // of V6 privateIn to calculate average... no idea why
-                    data: getMetrics(v4Data.privateIn, true, netv6PrivateInMetrics.length),
+                    data: getMetrics(v4Data.privateIn),
                     format
                   }
                 ]}
@@ -366,7 +365,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               />
             </Grid>
             {rangeSelection === '24' &&
-              <Grid item xs={12} lg={6}>
+              <Grid item xs={12} lg={6} className={classes.totalTraffic}>
                 <TotalTraffic
                   inTraffic={totalTraffic.inTraffic}
                   outTraffic={totalTraffic.outTraffic}
@@ -393,14 +392,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     const format = formatBitsPerSecond;
 
-    const publicInMetrics = getMetrics(data.publicIn, true); // <-- Include 0
-    const publicOutMetrics = getMetrics(data.publicOut, true); // <-- Include 0
+    const publicInMetrics = getMetrics(data.publicIn);
+    const publicOutMetrics = getMetrics(data.publicOut);
 
     const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
       publicInMetrics.total,
       publicOutMetrics.total,
       publicInMetrics.length
-
     ));
 
     return (

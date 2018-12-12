@@ -17,7 +17,7 @@ export interface Metrics {
 // The hacky "customLength" param comes from the need to divide the sum
 // of private_in/out on NetV4 by NetV6 to get the average for netV6
 // private_in/out. I have no idea why.
-export const getMetrics = (data: number[][], includeZero?: boolean, customLength?: number): Metrics => {
+export const getMetrics = (data: number[][]): Metrics => {
 
   // If there's no data
   if (isEmpty(data[0])) {
@@ -27,31 +27,24 @@ export const getMetrics = (data: number[][], includeZero?: boolean, customLength
   let max = 0;
   let sum = 0
   let length = 0; // Number of non-zero elements
-  let last = 0; // Last non-zero element
 
   // The data is large, so we get everything we need in one iteration
   data.forEach(([_, value]: number[], idx): void => {
-
-    // Ignore '0' values
-    if (!includeZero && value === 0) {
-      return;
-    }
 
     if (value > max) {
       max = value;
     }
 
-    last = value;
     sum += value;
     length++;
   });
 
-  const lengthToDivideBy = customLength || length;
-
   // Safeguard against dividing by 0
-  const average = lengthToDivideBy > 0
-    ? sum/lengthToDivideBy
+  const average = length > 0
+    ? sum/length
     : 0;
+
+  const last = data[data.length-1][1];
 
   return { max, average, last, total: sum, length};
 }

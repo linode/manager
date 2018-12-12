@@ -30,27 +30,16 @@ describe('Stat Metrics', () => {
   });
 
   it('returns average', () => {
-    expect(metrics.average).toBe(1.008);
+    expect(metrics.average).toBe(0.63);
     expect(getMetrics([[0, 0]]).average).toBe(0);
     expect(getMetrics([[0, 0], [0, 0]]).average).toBe(0);
-    expect(getMetrics([[0, 0], [0, 1]]).average).toBe(1);
-    expect(getMetrics([[0, 0], [0, 100], [0, 100]]).average).toBe(100);
+    expect(getMetrics([[0, 0], [0, 1]]).average).toBe(0.5);
+    expect(getMetrics([[0, 0], [0, 3], [0, 12]]).average).toBe(5);
   });
 
   it('returns last', () => {
-    expect(metrics.last).toBe(1.2);
-    let newData = [...data, [0, 0]];
-    expect(getMetrics(newData).last).toBe(1.2);
-    newData = [...data, [0, 50]];
-    expect(getMetrics(newData).last).toBe(50);
-  });
-
-  it('includes 0 in calculations when passed second arg', () => {
-    const metricsWithZero = getMetrics(data, true);
-    expect(metricsWithZero.max).toBe(2.98);
-    expect(metricsWithZero.average).toBe(0.63);
-    expect(metricsWithZero.last).toBe(0);
-
+    expect(metrics.last).toBe(0);
+    expect(getMetrics([...data, [0, 8]]).last).toBe(8);
   });
 });
 
