@@ -20,16 +20,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 84,
   },
   stackscriptTitles: {
-    width: '30%',
+    width: '45%',
     minWidth: 200,
   },
   deploys: {
-    width: '20%',
-    minWidth: 200,
+    width: '10%',
+    minWidth: 100,
   },
   revisions: {
-    width: '20%',
-    minWidth: 200,
+    width: '15%',
+    minWidth: 150,
   },
   tr: {
     height: 48,

@@ -35,7 +35,7 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
   renderIcon = () => {
     return (!this.props.loading)
       ? <Close data-qa-delete-tag />
-      : <CircleProgress mini />
+      : <CircleProgress mini tag />
   }
 
   render() {
@@ -43,9 +43,10 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
     return (
       <Tag
         {...restOfProps}
-        clickable
         deleteIcon={this.renderIcon()}
         onDelete={this.handleDelete}
+        component="button"
+        colorVariant="lightBlue"
       />
     );
   }

@@ -77,6 +77,7 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
         deployments_active,
         description,
         script,
+        label,
         updated,
       },
     } = this.props;
@@ -86,7 +87,7 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
     return (
       <div className={classes.root}>
         <Typography role="header" variant="h1" component="h2">
-          About the StackScript
+          { label }
         </Typography>
         <Typography variant="h3" className={classes.author}>
           by&nbsp;

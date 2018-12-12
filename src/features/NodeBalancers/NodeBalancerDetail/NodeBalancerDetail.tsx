@@ -15,7 +15,6 @@ import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoad
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -41,6 +40,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
 });
+
+const defaultError = [{ reason: 'An unknown error occured while updating NodeBalancer.' }];
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
 
@@ -113,7 +114,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     })
     .catch((error) => {
       this.setState(() => ({
-        ApiError: getAPIErrorOrDefault(error, 'An unknown error occured while updating NodeBalancer.'),
+        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
         labelInput: label,
       }), () => {
         scrollErrorIntoView();
@@ -143,12 +144,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [
     {
       title: 'Getting Started with NodeBalancers',
-      src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/',
+      src: 'https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers-new-manager/',
       body: `Using a NodeBalancer to begin managing a simple web application`,
     },
     {
       title: 'NodeBalancer Reference Guide',
-      src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide/',
+      src: 'https://www.linode.com/docs/platform/nodebalancer/nodebalancer-reference-guide-new-manager/',
       body: `NodeBalancer Reference Guide`,
     },
   ];

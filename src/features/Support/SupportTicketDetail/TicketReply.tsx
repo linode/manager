@@ -1,4 +1,4 @@
-import { compose, lensPath, set } from 'ramda';
+import { compose, lensPath, pathOr,  set } from 'ramda';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -9,7 +9,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createReply, uploadAttachment } from 'src/services/support';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
@@ -114,16 +113,18 @@ class TicketReply extends React.Component<CombinedProps, State> {
             */
             .catch((errors) => {
               this.setState(set(lensPath(['files', idx, 'uploading']), false));
-              const _errors = getAPIErrorOrDefault(errors, 'There was an error attaching this file. Please try again.');
-              this.setState(set(lensPath(['files', idx, 'errors']), _errors));
+              const error = [{ 'reason': 'There was an error attaching this file. Please try again.' }];
+              const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
+              this.setState(set(lensPath(['files', idx, 'errors']), newErrors));
             })
         })
       })
       .catch((errors) => {
         if (!this.mounted) { return; }
-        const _errors = getAPIErrorOrDefault(errors, 'There was an error creating your reply. Please try again.');
+        const error = [{ 'reason': 'There was an error creating your reply. Please try again.' }];
+        const newErrors = pathOr(error, ['response', 'data', 'errors'], errors);
         this.setState({
-          errors: _errors,
+          errors: newErrors,
           submitting: false
         });
       })

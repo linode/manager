@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { compose } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -21,7 +21,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { createPersonalAccessToken, deleteAppToken, deletePersonalAccessToken, getAppTokens, getPersonalAccessTokens, updatePersonalAccessToken } from 'src/services/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
@@ -227,12 +226,16 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   showDialogError(err: any) {
+    const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+
     return this.setState({
       dialog: {
         ...this.state.dialog,
         open: true,
         submitting: false,
-        errors: getAPIErrorOrDefault(err, 'Unable to complete your request at this time.')
+        errors: apiError
+        ? apiError
+        : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
       }
     });
   }
@@ -297,7 +300,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           this.setState({
             form: {
               ...form,
-              errors: getAPIErrorOrDefault(errResponse),
+              errors: path(['response', 'data', 'errors'], errResponse),
             },
           }, () => {
             scrollErrorIntoView();
@@ -334,7 +337,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         this.setState({
           form: {
             ...this.state.form,
-            errors: getAPIErrorOrDefault(errResponse),
+            errors: path(['response', 'data', 'errors'], errResponse),
           },
         }, () => {
           scrollErrorIntoView();

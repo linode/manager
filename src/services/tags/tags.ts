@@ -20,6 +20,7 @@ export const getTags = (params?: any, filter?: any) =>
     setParams(params),
     setXFilter(filter),
   )
+    .then(response => response.data);
 
 export const createTag = (data: TagRequest) =>
   Request<Tag>(
@@ -27,9 +28,11 @@ export const createTag = (data: TagRequest) =>
     setMethod('POST'),
     setData(data),
   )
+    .then(response => response.data)
 
 export const deleteTag = (label: string) =>
   Request<Tag>(
     setURL(`${API_ROOT}/tags/${label}`),
     setMethod('DELETE'),
   )
+    .then(response => response.data)

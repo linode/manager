@@ -1,4 +1,4 @@
-import { compose, equals, filter, flatten, isEmpty, lensPath, over, pathOr, prepend, propEq } from 'ramda';
+import { compose, equals, filter, flatten, isEmpty, lensPath, over, path, pathOr, prepend, propEq } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -16,7 +16,6 @@ import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { deleteDomainRecord } from 'src/services/domains';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
@@ -195,12 +194,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         }));
       })
       .catch((errorResponse) => {
-        const errors = getAPIErrorOrDefault(errorResponse);
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
+        if (errors) {
           this.updateConfirmDialog(c => ({
             ...c,
             submitting: false,
             errors,
           }));
+        }
       });
     this.updateConfirmDialog(c => ({ ...c, submitting: true }));
   }

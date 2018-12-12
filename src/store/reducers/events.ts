@@ -208,7 +208,7 @@ const getEvents: () => ThunkAction<Promise<Event[]>, ApplicationState, undefined
     );
 
     return _getEvents({ page_size: 25 }, filters)
-      .then(response => response.data)
+      .then(response => response.data.data)
       /**
        * There is where we set _initial on the events. In the default state of events the
        * mostRecentEventTime is set to epoch. On the completion of the first successful events

@@ -16,7 +16,6 @@ import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root'
   | 'title'
@@ -108,9 +107,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        getAPIErrorOrDefault(
-          errorResponse,
-          'There was an issue resizing your Linode.'
+        pathOr(
+          [{reason: 'There was an issue resizing your Linode.'}],
+          ['response', 'data', 'errors'],
+          errorResponse
         )
           .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
             variant: 'error'

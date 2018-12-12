@@ -1,5 +1,5 @@
 import * as Promise from 'bluebird';
-import { append, clone, compose, defaultTo, Lens, lensPath, over, pathOr, set, view } from 'ramda';
+import { append, clone, compose, defaultTo, Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -13,7 +13,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancerConfig, createNodeBalancerConfigNode, deleteNodeBalancerConfig, deleteNodeBalancerConfigNode, getNodeBalancerConfigNodes, getNodeBalancerConfigs, updateNodeBalancerConfig, updateNodeBalancerConfigNode } from 'src/services/nodebalancers';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
@@ -245,7 +244,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         // update errors
-        const errors = getAPIErrorOrDefault(errorResponse);
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
         this.setState({
@@ -378,7 +377,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         // update errors
-        const errors = getAPIErrorOrDefault(errorResponse);
+        const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'], errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
         this.setNodeErrors(idx, newErrors[idx]);
@@ -468,11 +467,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         });
       })
       .catch((err) => {
+        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+
         return this.setState({
           deleteConfigConfirmDialog: {
             ...this.state.deleteConfigConfirmDialog,
             submitting: false,
-            errors: getAPIErrorOrDefault(err, 'Unable to complete your request at this time.')
+            errors: apiError
+              ? apiError
+              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
           },
         }, () => {
           scrollErrorIntoView(`${idxToDelete}`);
@@ -532,8 +535,11 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       .catch((err) => {
         /* Return false as a Promise for the sake of aggregating results */
         return false;
-        /* @todo
-          place an error on the node and set toDelete to undefined
+        /* @todo:
+        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+
+            place an error on the node and set toDelete to undefined
+
         */
       });
   }
@@ -569,7 +575,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch((errResponse) => {
         /* Set errors for this node */
-        const errors = getAPIErrorOrDefault(errResponse);
+        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
         this.updateNodeErrors(configIdx, nodeIdx, errors);
         /* Return false as a Promise for the sake of aggregating results */
         return false;
@@ -619,7 +625,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch((errResponse) => {
         /* Set errors for this node */
-        const errors = getAPIErrorOrDefault(errResponse);
+        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
         this.updateNodeErrors(configIdx, nodeIdx, errors);
         /* Return false as a Promise for the sake of aggregating results */
         return false;

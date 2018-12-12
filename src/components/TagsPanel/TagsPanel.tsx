@@ -1,6 +1,6 @@
 import AddCircle from '@material-ui/icons/AddCircle';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { clone } from 'ramda';
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
@@ -8,7 +8,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Tooltip from 'src/components/core/Tooltip';
 import Select from 'src/components/EnhancedSelect/Select';
 import { getTags } from 'src/services/tags';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
 type ClassNames = 'root'
@@ -34,16 +33,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     top: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    padding: theme.spacing.unit / 2,
-    backgroundColor: theme.color.grey2,
-    color: theme.palette.text.primary,
-    '& > span': {
-      position: 'relative',
-      top: -2,
-    },
-    '&:focus': {
-      backgroundColor: theme.color.grey2,
-    },
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 16,
+    }
   },
   addButton: {
     marginTop: theme.spacing.unit / 2,
@@ -59,6 +51,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     animation: 'fadeIn .3s ease-in-out forwards',
     '& .error-for-scroll > div': {
       width: 'auto',
+      flexDirection: 'row',
+      flexWrap: 'wrap-reverse',
     },
     '& .input': {
       minHeight: 'auto',
@@ -68,17 +62,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       '& p': {
         fontSize: '.9rem',
         color: theme.color.grey1,
+        borderLeft: 'none',
       },
     },
-    '& .error-for-scroll p': {
+    '& .error-for-scroll p:last-child': {
       padding: theme.spacing.unit,
-      marginLeft: 12,
       marginTop: 0,
       position: 'absolute',
-      boxShadow: '0 0 5px #ddd',
-      backgroundColor: theme.bg.offWhite,
+      top: '-50px',
+      left: 10,
+      maxWidth: 170,
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      backgroundColor: theme.bg.offWhiteDT,
+      color: `${theme.palette.text.primary}`,
+      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
       lineHeight: 1.2,
-      zIndex: 5.
+      zIndex: 5,
     },
     '& .react-select__input': {
       fontSize: '.9rem',
@@ -250,7 +249,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         })
       })
       .catch(e => {
-        this.setState({ tagError: getErrorStringOrDefault(e, 'Error while creating tag') })
+        const tagError = pathOr(
+          'Error while creating tag',
+          ['response', 'data', 'errors', 0, 'reason'],
+          e);
+        // display the first error in the array or a generic one
+        this.setState({ tagError })
       })
   }
 

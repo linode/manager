@@ -1,4 +1,4 @@
-import { compose, equals } from 'ramda';
+import { compose, equals, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -13,7 +13,6 @@ import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { createImage, updateImage } from 'src/services/images';
 import { getLinodeDisks, getLinodes } from 'src/services/linodes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
@@ -154,7 +153,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             if(!this.mounted){ return; }
 
             this.setState({
-              errors: getAPIErrorOrDefault(errorResponse, 'Unable to edit image')
+              errors: pathOr([
+                { reason: 'Unable to edit image' }],
+                ['response', 'data', 'errors'], errorResponse),
             });
           });
         return;
@@ -163,7 +164,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       case modes.IMAGIZING:
 
         createImage(Number(selectedDisk), label, safeDescription)
-          .then((_) => {
+          .then((response) => {
             if(!this.mounted){ return; }
 
             resetEventsPolling();
@@ -176,7 +177,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             if(!this.mounted){ return; }
 
             this.setState({
-              errors: getAPIErrorOrDefault(errorResponse, 'There was an error creating the image.')
+              errors: pathOr(
+                'There was an error creating the image.',
+                ['response', 'data', 'errors'],
+                errorResponse
+              ),
             });
           })
         return;
