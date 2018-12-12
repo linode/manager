@@ -5,6 +5,7 @@ export interface Metrics {
   average: number;
   last: number;
   total: number;
+  length: number;
 }
 
 // Returns max, average, and last for RDD data from the API, which has this
@@ -16,7 +17,7 @@ export const getMetrics = (data: number[][], includeZero?: boolean): Metrics => 
 
   // If there's no data
   if (isEmpty(data[0])) {
-    return { max: 0, average: 0, last: 0, total: 0 };
+    return { max: 0, average: 0, last: 0, total: 0, length: 0 };
   }
 
   let max = 0;
@@ -46,7 +47,7 @@ export const getMetrics = (data: number[][], includeZero?: boolean): Metrics => 
     ? sum/length
     : 0;
 
-  return { max, average, last, total: sum };
+  return { max, average, last, total: sum, length};
 }
 
 export const formatNumber = (n: number): string => n.toFixed(2);
@@ -84,7 +85,7 @@ export const formatMagnitude = (value: number | string, unit: string) => {
     : `${formatNumber(num)} ${unit}`;
 }
 
-export const formatPercentage = (value: number) => formatNumber(value) + ' %';
+export const formatPercentage = (value: number) => formatNumber(value) + '%';
 export const formatBitsPerSecond = (value: number) => formatMagnitude(value, 'b/s');
 export const formatBytes = (value: number) => formatMagnitude(value, 'B');
 
@@ -99,9 +100,26 @@ export interface TotalTrafficResults {
   outTraffic: number;
   combinedTraffic: number;
 }
-export const getTotalTraffic = (inBits: number, outBits: number): TotalTrafficResults => {
-  const inTraffic = getTraffic(inBits);
-  const outTraffic = getTraffic(outBits);
+export const getTotalTraffic = (
+  inBits: number,
+  outBits: number,
+  length: number,
+  inBitsV6?: number,
+  outBitsV6?: number
+): TotalTrafficResults => {
+  if (inBitsV6) {
+    inBits += inBitsV6;
+  }
+
+  if (outBitsV6) {
+    outBits += outBitsV6;
+  }
+
+  const averageIn = inBits/length;
+  const averageOut = outBits/length;
+
+  const inTraffic = getTraffic(averageIn);
+  const outTraffic = getTraffic(averageOut);
 
   return {
     inTraffic,

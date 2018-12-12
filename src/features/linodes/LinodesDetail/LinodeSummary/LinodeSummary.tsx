@@ -257,21 +257,35 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
 
-    const data = {
+    const v4Data = {
       publicIn: pathOr([[]], ['data','netv4','in'], stats),
       publicOut: pathOr([[]], ['data','netv4','out'], stats),
       privateIn: pathOr([[]], ['data','netv4','private_in'], stats),
       privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
     };
 
+    // Need these to calculate Total Traffic
+    const v6Data = {
+      publicIn: pathOr([[]], ['data','netv6','in'], stats),
+      publicOut: pathOr([[]], ['data','netv6','out'], stats),
+    };
+
     const format = formatBitsPerSecond;
 
-    const publicInMetrics = getMetrics(data.publicIn);
-    const publicOutMetrics = getMetrics(data.publicOut);
+    const netv4InMetrics = getMetrics(v4Data.publicIn);
+    const netv4OutMetrics = getMetrics(v4Data.publicOut);
+
+    // @todo refactor this component so that these calcs don't need to be done
+    // again when we render the v6 chart
+    const netv6InMetrics = getMetrics(v6Data.publicIn);
+    const netv6OutMetrics = getMetrics(v6Data.publicOut);
 
     const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
-      publicInMetrics.average,
-      publicOutMetrics.average
+      netv4InMetrics.total,
+      netv4OutMetrics.total,
+      v4Data.publicIn.length,
+      netv6InMetrics.total,
+      netv6OutMetrics.total,
     ));
 
     return (
@@ -286,22 +300,22 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             data={[
               {
                 borderColor: '#3683dc',
-                data: data.publicIn,
+                data: v4Data.publicIn,
                 label: 'Public Traffic In',
               },
               {
                 borderColor: '#01b159',
-                data: data.publicOut,
+                data: v4Data.publicOut,
                 label: 'Public Traffic Out',
               },
               {
                 borderColor: '#d01e1e',
-                data: data.privateIn,
+                data: v4Data.privateIn,
                 label: 'Private Traffic In',
               },
               {
                 borderColor: '#ffd100',
-                data: data.privateOut,
+                data: v4Data.privateOut,
                 label: 'Private Traffic Out',
               },
             ]}
@@ -315,13 +329,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Private IPv4 Outbound',
                     legendColor: 'yellow',
-                    data: getMetrics(data.privateOut, true), // <-- Include 0
+                    data: getMetrics(v4Data.privateOut), // <-- Include 0
                     format
                   },
                   {
                     legendTitle: 'Private IPv4 Inbound',
                     legendColor: 'red',
-                    data: getMetrics(data.privateIn, true), // <-- Include 0
+                    data: getMetrics(v4Data.privateIn), // <-- Include 0
                     format
                   }
                 ]}
@@ -333,13 +347,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {
                     legendTitle: 'Public IPv4 Outbound',
                     legendColor: 'green',
-                    data: publicOutMetrics,
+                    data: netv4OutMetrics,
                     format
                   },
                   {
                     legendTitle: 'Public IPv4 Inbound',
                     legendColor: 'blue',
-                    data: publicInMetrics,
+                    data: netv4InMetrics,
                     format
                   }
                 ]}
@@ -377,8 +391,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const publicOutMetrics = getMetrics(data.publicOut, true); // <-- Include 0
 
     const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
-      publicInMetrics.average,
-      publicOutMetrics.average
+      publicInMetrics.total,
+      publicOutMetrics.total,
+      publicInMetrics.length
+
     ));
 
     return (

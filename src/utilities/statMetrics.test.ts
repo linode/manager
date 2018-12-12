@@ -56,10 +56,10 @@ describe('Stat Metrics', () => {
 
 describe('total traffic', () => {
   it('returns total traffic given the average', () => {
-    const totalTraffic = getTotalTraffic(1, 2);
-    expect(totalTraffic.inTraffic).toBe(10800);
-    expect(totalTraffic.outTraffic).toBe(21600);
-    expect(totalTraffic.combinedTraffic).toBe(32400);
+    const totalTraffic = getTotalTraffic(1, 2, 2);
+    expect(totalTraffic.inTraffic).toBe(5400);
+    expect(totalTraffic.outTraffic).toBe(10800);
+    expect(totalTraffic.combinedTraffic).toBe(16200);
     expect(totalTraffic.combinedTraffic).toEqual(totalTraffic.inTraffic + totalTraffic.outTraffic);
   });
 });
@@ -110,9 +110,9 @@ describe('format number', () => {
 
 describe('formatting', () => {
   it('formatPercent adds percent sign', () => {
-    expect(formatPercentage(12)).toBe('12.00 %');
-    expect(formatPercentage(0)).toBe('0.00 %');
-    expect(formatPercentage(123456789)).toBe('123456789.00 %');
+    expect(formatPercentage(12)).toBe('12.00%');
+    expect(formatPercentage(0)).toBe('0.00%');
+    expect(formatPercentage(123456789)).toBe('123456789.00%');
   });
   it('formatBitsPerSecond adds unit', () => {
     expect(formatBitsPerSecond(12)).toBe('12.00 b/s');
