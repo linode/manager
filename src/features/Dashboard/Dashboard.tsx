@@ -1,3 +1,4 @@
+
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -5,7 +6,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import { handleOpen } from 'src/store/reducers/backupDrawer';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
@@ -29,7 +30,6 @@ interface StateProps {
 
 interface DispatchProps {
   actions: {
-    getLinodesWithoutBackups: () => void;
     openBackupDrawer: () => void;
   }
 }
@@ -76,7 +76,7 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
   accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
-  linodesWithoutBackups: pathOr([],['backups', 'data'], state),
+  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
 });
@@ -84,7 +84,6 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
   return {
     actions: {
-      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
       openBackupDrawer: () => dispatch(handleOpen())
     }
   };

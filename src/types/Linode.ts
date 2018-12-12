@@ -17,8 +17,10 @@ namespace Linode {
     hypervisor: Hypervisor;
     specs: LinodeSpecs;
     watchdog_enabled: boolean;
-    recentEvent?: Linode.Event;
     tags: string[];
+    /** Added by UI */
+    recentEvent?: Linode.Event;
+    notifications?: Linode.Notification[];
   }
 
   export interface EnhancedLinode extends Linode.Linode {

@@ -1,29 +1,14 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter, withRouter } from 'react-router-dom';
-
-import { linodes as mockLinodes } from 'src/__data__';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
-
 import { ListLinodes } from './LinodesLanding';
 
-import { pageyProps } from 'src/__data__/pageyProps';
 
 const RoutedListLinodes = withRouter(ListLinodes);
 
-const actions = {
-  getLinodesWithoutBackups: jest.fn(),
-  clearSidebar: jest.fn(),
-  setSidebar: jest.fn(),
-}
-
 describe('ListLinodes', () => {
-  let linodes: Linode.Linode[];
-
-  beforeEach(() => {
-    linodes = mockLinodes;
-  });
 
   it('renders without error', () => {
     shallow(
@@ -36,14 +21,20 @@ describe('ListLinodes', () => {
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
-            typesRequest={jest.fn}
-            typesLoading={false}
-            typesLastUpdated={1}
-            actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
-            data={linodes}
-            {...pageyProps}
+            handleOrderChange={jest.fn()}
+            handlePageChange={jest.fn()}
+            handlePageSizeChange={jest.fn()}
+            linodesCount={0}
+            linodesData={[]}
+            linodesRequestError={undefined}
+            linodesRequestLoading={false}
+            order={'asc'}
+            orderBy={'label'}
+            page={1}
+            pageSize={25}
+
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -58,18 +49,22 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             enqueueSnackbar={jest.fn()}
             onPresentSnackbar={jest.fn()}
-            /** Pagination Props */
-            {...pageyProps}
-            data={[]}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
-            typesRequest={jest.fn}
-            typesLoading={false}
-            typesLastUpdated={1}
-            actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
+            handleOrderChange={jest.fn()}
+            handlePageChange={jest.fn()}
+            handlePageSizeChange={jest.fn()}
+            linodesCount={0}
+            linodesData={[]}
+            linodesRequestError={undefined}
+            linodesRequestLoading={false}
+            order={'asc'}
+            orderBy={'label'}
+            page={1}
+            pageSize={25}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -88,19 +83,22 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             enqueueSnackbar={jest.fn()}
             onPresentSnackbar={jest.fn()}
-            /** Pagination Props */
-            {...pageyProps}
-            count={linodes.length}
-            data={linodes}
             classes={{ root: '', title: '' }}
             setDocs={setDocs}
             clearDocs={clearDocs}
-            typesRequest={jest.fn}
-            typesLoading={false}
-            typesLastUpdated={1}
-            actions={actions}
             linodesWithoutBackups={[]}
             managed={false}
+            handleOrderChange={jest.fn()}
+            handlePageChange={jest.fn()}
+            handlePageSizeChange={jest.fn()}
+            linodesCount={0}
+            linodesData={[]}
+            linodesRequestError={undefined}
+            linodesRequestLoading={false}
+            order={'asc'}
+            orderBy={'label'}
+            page={1}
+            pageSize={25}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

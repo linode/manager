@@ -1,10 +1,9 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
-import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import { getType } from 'src/services/linodes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import LinodeRowLoaded from './LinodeRowLoaded';
 import LinodeRowLoading from './LinodeRowLoading';
@@ -37,24 +36,16 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-interface TypesContextProps {
-  typesData?: Linode.LinodeType[];
-  typesLoading: boolean;
-}
-
 type CombinedProps =
   & Props
-  & TypesContextProps
+  & WithTypesProps
   & WithTheme
   & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<CombinedProps, State> {
-  state: State = {
-    mutationAvailable: false,
-  }
 
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
-    return haveAnyBeenModified<Props & TypesContextProps>(
+    return haveAnyBeenModified<Props & WithTypesProps>(
       nextProps,
       this.props,
       [
@@ -65,29 +56,13 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         'linodeLabel',
         'linodeIpv6',
         'linodeIpv4',
-        'typesData',
-        'typesLoading',
+        'displayType',
+        'mutationAvailable',
       ],
     )
-      || haveAnyBeenModified<State>(
-        nextState,
-        this.state,
-        ['mutationAvailable']
-      )
       || this.props.theme.name !== nextProps.theme.name
   }
 
-  componentDidMount() {
-    const { linodeType } = this.props;
-    if (!linodeType) { return }
-    getType(linodeType)
-      .then((data: Linode.LinodeType) => {
-        if (data.successor && data.successor !== null) {
-          this.setState({ mutationAvailable: true })
-        }
-      })
-      .catch((e: Error) => e)
-  }
   render() {
     const {
       linodeBackups,
@@ -103,11 +78,9 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       mostRecentBackup,
       openConfigDrawer,
       toggleConfirmation,
-      typesData,
-      typesLoading,
+      mutationAvailable,
+      displayType,
     } = this.props;
-
-    const { mutationAvailable } = this.state;
 
     const loading = linodeInTransition(this.props.linodeStatus, this.props.linodeRecentEvent);
 
@@ -132,19 +105,50 @@ class LinodeRow extends React.Component<CombinedProps, State> {
         mostRecentBackup={mostRecentBackup}
         openConfigDrawer={openConfigDrawer}
         toggleConfirmation={toggleConfirmation}
-        typesData={typesData}
-        typesLoading={typesLoading}
+        displayType={displayType}
         mutationAvailable={mutationAvailable}
       />
   }
 }
 
-const typesContext = withTypes(({ loading: typesLoading, data: typesData }) => ({
-  typesLoading,
-  typesData,
-}));
+interface WithTypesProps {
+  mutationAvailable: boolean;
+  displayType: string;
+}
+
+const mapStateToProps: MapStateToProps<WithTypesProps, Props, ApplicationState> = (state, ownProps) => {
+  const { linodeType } = ownProps;
+  const { entities, results } = state.__resources.types;
+
+
+  const type = getType(entities, results, linodeType);
+
+  return ({
+    displayType: type === null ? 'No Plan' : type === undefined ? 'Unknown Plan' : type.label,
+    mutationAvailable: hasMutation(type),
+  })
+};
+
+const connected = connect(mapStateToProps);
 
 export default compose(
   withStyles(styles, { withTheme: true }),
-  typesContext,
+  connected,
 )(LinodeRow) as React.ComponentType<Props>;
+
+const getType = <T extends any>(entities: T[], ids: string[], id: null | string) => {
+  if (id === null) {
+    return null;
+  }
+
+  const foundIndex = ids.indexOf(id);
+  return foundIndex > -1 ? entities[foundIndex] : undefined
+}
+
+const hasMutation = (type?: null | Linode.LinodeType) => {
+  if (!type) {
+    return false;
+  }
+
+  return !!type.successor;
+}

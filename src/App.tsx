@@ -1,6 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
-import { lensPath, path, pathOr, set } from 'ramda';
+import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -15,7 +15,6 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
-import { TypesProvider, WithTypesContext } from 'src/context/types';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
@@ -24,11 +23,12 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
 import { getRegions } from 'src/services/misc';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
+import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
+import { async as typesAsync } from 'src/store/reducers/resources/types';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -155,27 +155,19 @@ interface Props {
 interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
-  typesContext: WithTypesContext;
   regionsContext: WithRegionsContext;
   hasError: boolean;
 }
 
-type CombinedProps = Props 
+type CombinedProps = Props
   & DispatchProps
   & StateProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
-const typesContext = (pathCollection: string[]) => lensPath(['typesContext', ...pathCollection]);
 const regionsContext = (pathCollection: string[]) => lensPath(['regionsContext', ...pathCollection]);
 
 const L = {
-  typesContext: {
-    data: typesContext(['data']),
-    errors: typesContext(['errors']),
-    lastUpdated: typesContext(['lastUpdated']),
-    loading: typesContext(['loading']),
-  },
   regionsContext: {
     data: regionsContext(['data']),
     errors: regionsContext(['errors']),
@@ -192,34 +184,6 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    typesContext: {
-      lastUpdated: 0,
-      loading: false,
-      request: () => {
-        this.composeState([set(L.typesContext.loading, true)]);
-        return Promise.all([getLinodeTypes(), getDeprecatedLinodeTypes()
-          .catch(e => Promise.resolve([]))])
-          .then((types: any[]) => {
-            /* if for whatever reason we cannot get the types, just use the curernt types */
-            const cleanedTypes = (types[1].data)
-              ? [...types[0].data, ...types[1].data]
-              : types[0].data;
-            this.composeState([
-              set(L.typesContext.loading, false),
-              set(L.typesContext.lastUpdated, Date.now()),
-              set(L.typesContext.data, cleanedTypes),
-            ])
-          })
-          .catch((error: any) => {
-            this.composeState([
-              set(L.typesContext.loading, false),
-              set(L.typesContext.lastUpdated, Date.now()),
-              set(L.typesContext.errors, error),
-            ]);
-          });
-      },
-      update: () => null, /** @todo */
-    },
     regionsContext: {
       lastUpdated: 0,
       loading: false,
@@ -252,7 +216,10 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { getAccountSettings, getNotifications, getProfile } = this.props.actions;
+    const { getAccountSettings, getNotifications, getProfile, requestLinodes, requestTypes } = this.props.actions;
+
+    requestLinodes();
+    requestTypes();
 
     /*
      * We want to listen for migration events side-wide
@@ -291,7 +258,6 @@ export class App extends React.Component<CombinedProps, State> {
     getAccountSettings();
 
     this.state.regionsContext.request();
-    this.state.typesContext.request();
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -311,7 +277,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen, hasError } = this.state;
     const {
-      backupsCTA,
       classes,
       documentation,
       toggleTheme,
@@ -332,70 +297,59 @@ export class App extends React.Component<CombinedProps, State> {
 
         {profileLoading === false &&
           <React.Fragment>
-            <TypesProvider value={this.state.typesContext}>
-              <RegionsProvider value={this.state.regionsContext}>
-                <div {...themeDataAttr()} className={classes.appFrame}>
-                  <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
-                  <main className={classes.content}>
-                    <TopMenu openSideMenu={this.openMenu} />
-                    <div className={classes.wrapper} id="main-content">
-                      <StickyContainer>
-                        <Grid container spacing={0} className={classes.grid}>
-                          <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                            <Switch>
-                              <Route path="/linodes" component={LinodesRoutes} />
-                              <Route path="/volumes" component={Volumes} />
-                              <Route path="/nodebalancers" component={NodeBalancers} />
-                              <Route path="/domains" component={Domains} />
-                              <Route exact path="/managed" component={Managed} />
-                              <Route exact path="/longview" component={Longview} />
-                              <Route exact path="/images" component={Images} />
-                              <Route path="/stackscripts" component={StackScripts} />
-                              <Route path="/account" component={Account} />
-                              <Route exact path="/support/tickets" component={SupportTickets} />
-                              <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                              <Route path="/profile" component={Profile} />
-                              <Route exact path="/support" component={Help} />
-                              <Route exact path="/support/search/" component={SupportSearchLanding} />
-                              <Route path="/dashboard" component={Dashboard} />
-                              <Route path="/search" component={SearchLanding} />
-                              <Redirect exact from="/" to="/dashboard" />
-\                              <Route component={NotFound} />
-                            </Switch>
-                          </Grid>
-                          {hasDoc &&
-                            <Grid className='mlSidebar'>
-                              <Sticky topOffset={-24} disableCompensation>
-                                {(props: StickyProps) => {
-                                  return (
-                                    <DocsSidebar
-                                      docs={documentation}
-                                      backupsCTA={backupsCTA}
-                                      {...props}
-                                    />
-                                  )
-                                }
-                                }
-                              </Sticky>
-                            </Grid>
-                          }
+            <RegionsProvider value={this.state.regionsContext}>
+              <div {...themeDataAttr()} className={classes.appFrame}>
+                <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
+                <main className={classes.content}>
+                  <TopMenu openSideMenu={this.openMenu} />
+                  <div className={classes.wrapper} id="main-content">
+                    <StickyContainer>
+                      <Grid container spacing={0} className={classes.grid}>
+                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                          <Switch>
+                            <Route path="/linodes" component={LinodesRoutes} />
+                            <Route path="/volumes" component={Volumes} />
+                            <Route path="/nodebalancers" component={NodeBalancers} />
+                            <Route path="/domains" component={Domains} />
+                            <Route exact path="/managed" component={Managed} />
+                            <Route exact path="/longview" component={Longview} />
+                            <Route exact path="/images" component={Images} />
+                            <Route path="/stackscripts" component={StackScripts} />
+                            <Route path="/account" component={Account} />
+                            <Route exact path="/support/tickets" component={SupportTickets} />
+                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                            <Route path="/profile" component={Profile} />
+                            <Route exact path="/support" component={Help} />
+                            <Route exact path="/support/search/" component={SupportSearchLanding} />
+                            <Route path="/dashboard" component={Dashboard} />
+                            <Route path="/search" component={SearchLanding} />
+                            <Redirect exact from="/" to="/dashboard" />
+                            <Route component={NotFound} />
+                          </Switch>
                         </Grid>
-                      </StickyContainer>
-                    </div>
+                        {hasDoc &&
+                          <Grid className='mlSidebar'>
+                            <Sticky topOffset={-24} disableCompensation>
+                              {(props: StickyProps) => (<DocsSidebar docs={documentation} {...props} />)}
+                            </Sticky>
+                          </Grid>
+                        }
+                      </Grid>
+                    </StickyContainer>
+                  </div>
 
-                  </main>
-                  <Footer />
-                  <WelcomeBanner
-                    open={this.state.welcomeBanner}
-                    onClose={this.closeWelcomeBanner}
-                    data-qa-beta-notice />
-                  <ToastNotifications />
-                  <DomainCreateDrawer />
-                  <VolumeDrawer />
-                  <BackupDrawer />
-                </div>
-              </RegionsProvider>
-            </TypesProvider>
+                </main>
+                <Footer />
+                <WelcomeBanner
+                  open={this.state.welcomeBanner}
+                  onClose={this.closeWelcomeBanner}
+                  data-qa-beta-notice />
+                <ToastNotifications />
+                <DomainCreateDrawer />
+                <VolumeDrawer />
+                <BackupDrawer />
+              </div>
+            </RegionsProvider>
           </React.Fragment>
         }
       </React.Fragment>
@@ -419,6 +373,8 @@ interface DispatchProps {
     getProfile: () => void;
     getNotifications: () => void;
     getAccountSettings: () => void;
+    requestLinodes: () => void;
+    requestTypes: () => void;
   },
 }
 
@@ -428,6 +384,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
       getProfile: () => dispatch(requestProfile()),
       getNotifications: () => dispatch(requestNotifications()),
       getAccountSettings: () => dispatch(requestAccountSettings()),
+      requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
+      requestTypes: () => dispatch(typesAsync.requestTypes()),
     }
   };
 };
@@ -439,7 +397,6 @@ interface StateProps {
   userId?: number;
 
   documentation: Linode.Doc[];
-  backupsCTA: boolean;
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
@@ -449,8 +406,6 @@ const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (s
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation,
-
-  backupsCTA: pathOr(false, ['sidebar','backupsCTA'], state)
 });
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
