@@ -23,6 +23,7 @@ import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
 import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
+import { sendEvent } from 'src/utilities/analytics';
 import { views } from 'src/utilities/storage';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
@@ -78,6 +79,8 @@ type CombinedProps =
   & InjectedNotistackProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
+  static eventCategory = 'linodes landing';
+
   mounted: boolean = false;
 
   state: State = {
@@ -188,6 +191,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     } else {
       views.linode.set('list');
     }
+
+    sendEvent({
+      category: ListLinodes.eventCategory,
+      action: 'switch view',
+      label: style
+    })
   }
 
   selectConfig = (id: number) => {
@@ -341,6 +350,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               handleSizeChange={this.props.handlePageSizeChange}
               pageSize={this.props.pageSize}
               page={this.props.page}
+              eventCategory={ListLinodes.eventCategory}
             />
           }
           <LinodeConfigSelectionDrawer

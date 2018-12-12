@@ -295,6 +295,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           pageSize={pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="volumes landing"
         />
         <VolumeAttachmentDrawer
           open={this.state.attachmentDrawer.open}

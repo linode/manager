@@ -73,6 +73,7 @@ const StackScriptTable = (props: CombinedProps) => {
           pageSize={pageSize}
           handlePageChange={handlePageChange}
           handleSizeChange={handlePageSizeChange}
+          eventCategory="stackscripts table"
         />
       }
     </React.Fragment>

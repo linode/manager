@@ -23,6 +23,7 @@ export interface PaginationProps {
   count: number;
   page: number;
   pageSize: number;
+  eventCategory: string;
 }
 
 interface Props extends PaginationProps {
@@ -38,7 +39,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
   handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => this.props.handleSizeChange(+e.target.value);
 
   render() {
-    const { classes, count, page, pageSize, handlePageChange, padded } = this.props;
+    const { classes, count, page, pageSize, handlePageChange, padded, eventCategory } = this.props;
 
     if (count <= 25) { return null; }
 
@@ -57,6 +58,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             page={page}
             count={count}
             pageSize={pageSize}
+            eventCategory={eventCategory}
           />
         </Grid>
         <Grid item>

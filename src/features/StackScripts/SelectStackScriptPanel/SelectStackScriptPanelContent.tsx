@@ -12,6 +12,7 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { deleteStackScript, getStackScript, updateStackScript } from 'src/services/stackscripts';
+import { sendEvent } from 'src/utilities/analytics';
 import StackScriptTableHead from './PanelContent/StackScriptTableHead';
 import StackScriptsSection from './StackScriptsSection';
 
@@ -592,6 +593,12 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     this.setState({
       isSearching: true, // wether to show the loading spinner in search bar
       didSearch: true, // table will show default empty state unless didSearch is true
+    });
+
+    sendEvent({
+      category: 'stackscripts',
+      action: 'search',
+      label: lowerCaseValue
     });
 
     request(

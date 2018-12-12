@@ -241,6 +241,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           pageSize={pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="nodebalancers landing"
         />
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}

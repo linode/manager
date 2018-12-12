@@ -309,6 +309,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           count={this.props.count}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="oauth clients"
         />
       </React.Fragment>
     );

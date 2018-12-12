@@ -65,6 +65,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
             pageSize={pageSize}
             handlePageChange={this.props.handlePageChange}
             handleSizeChange={this.props.handlePageSizeChange}
+            eventCategory="recent payments panel"
           />
         }
       </ExpansionPanel>

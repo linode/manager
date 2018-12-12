@@ -20,6 +20,8 @@ import {
   getStackScriptsByUser
 } from '../SelectStackScriptPanel/stackScriptUtils';
 
+import { sendEvent } from 'src/utilities/analytics';
+
 type ClassNames = 'root'
   | 'searchWrapper'
   | 'searchBar';
@@ -101,6 +103,12 @@ class PanelContent extends React.Component<CombinedProps, State> {
        */
       handleSearch(generateCatchAllFilter(searchTermToLower));
     }
+
+    sendEvent({
+      category: 'stackscripts',
+      action: 'search',
+      label: searchTermToLower
+    });
   }
 
   closeDialogs = () => {
