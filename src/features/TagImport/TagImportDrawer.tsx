@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import {
   addTagsToEntities,
-  close as _close,
+  closeTagDrawer as _close,
 } from 'src/store/reducers/tagImportDrawer'
 
 import DisplayGroupList from './DisplayGroupList';

@@ -6,13 +6,13 @@ describe("tagImportDrawer Redux duck", () => {
       expect(T.defaultState).toHaveProperty('open', false);
     })
     it("should handle OPEN", () => {
-      expect(tagDrawer(T.defaultState, T.open())).toEqual(
+      expect(tagDrawer(T.defaultState, T.openTagDrawer())).toEqual(
         {...T.defaultState, open: true}
       )
     });
     it("should handle CLOSE", () => {
       const newState = tagDrawer(
-        {...T.defaultState, open: true }, T.close());
+        {...T.defaultState, open: true }, T.closeTagDrawer());
       expect(newState).toHaveProperty('open', false)
     });
     it("should handle UPDATE", () => {
