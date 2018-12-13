@@ -7,7 +7,7 @@ namespace Linode {
     created: string;
     region: string;
     image: string | null;
-    group?: string;
+    group: string;
     ipv4: string[];
     ipv6: string;
     label: string;
