@@ -224,6 +224,7 @@ export const dark = createTheme({
     MuiChip: {
       root: {
         color: primaryColors.text,
+        backgroundColor: primaryColors.main,
       }
     },
     MuiCardActions: {
