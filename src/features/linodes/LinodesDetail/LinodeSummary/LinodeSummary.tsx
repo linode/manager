@@ -364,17 +364,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            {rangeSelection === '24' &&
-              <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-                <TotalTraffic
-                  inTraffic={totalTraffic.inTraffic}
-                  outTraffic={totalTraffic.outTraffic}
-                  combinedTraffic={totalTraffic.combinedTraffic}
-                />
-              </Grid>
-            }
           </Grid>
         </div>
+        {rangeSelection === '24' &&
+          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
+            <TotalTraffic
+              inTraffic={totalTraffic.inTraffic}
+              outTraffic={totalTraffic.outTraffic}
+              combinedTraffic={totalTraffic.combinedTraffic}
+            />
+          </Grid>
+        }
       </React.Fragment>
     )
   }
@@ -472,17 +472,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            {rangeSelection === '24' &&
-              <Grid item xs={12} lg={6}>
-                <TotalTraffic
-                  inTraffic={totalTraffic.inTraffic}
-                  outTraffic={totalTraffic.outTraffic}
-                  combinedTraffic={totalTraffic.combinedTraffic}
-                />
-              </Grid>
-            }
           </Grid>
         </div>
+        {rangeSelection === '24' &&
+          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
+            <TotalTraffic
+              inTraffic={totalTraffic.inTraffic}
+              outTraffic={totalTraffic.outTraffic}
+              combinedTraffic={totalTraffic.combinedTraffic}
+            />
+          </Grid>
+        }
       </React.Fragment>
     )
   }
