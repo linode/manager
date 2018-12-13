@@ -180,7 +180,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
         {result.data.created &&
           <React.Fragment>
             <Typography >
-              Created <DateTimeDisplay value={result.data.created} />
+              <DateTimeDisplay value={result.data.created} />
             </Typography>
           </React.Fragment>
         }
