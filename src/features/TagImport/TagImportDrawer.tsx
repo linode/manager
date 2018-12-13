@@ -1,3 +1,4 @@
+import { compose as _compose, defaultTo, map, uniq } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
@@ -15,6 +16,12 @@ import {
   addTagsToEntities,
   closeGroupDrawer as _close,
 } from 'src/store/reducers/tagImportDrawer'
+import getEntitiesWithGroupsToImport,
+  {
+    GroupedEntitiesForImport,
+    GroupImportProps,
+  } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+
 
 import DisplayGroupList from './DisplayGroupList';
 
@@ -29,6 +36,7 @@ interface StateProps {
   loading: boolean;
   success: boolean;
   errors: string[];
+  entitiesWithGroupsToImport: GroupedEntitiesForImport;
 }
 
 interface DispatchProps {
@@ -42,8 +50,27 @@ type CombinedProps = StateProps
   & DispatchProps
   & WithStyles<ClassNames>;
 
+export const getGroupImportList = (entities: GroupImportProps[]) => {
+  const importList: any = _compose(
+    defaultTo([]),         // Always return something
+    uniq,                  // Only return each group once
+    map((entity: GroupImportProps) => entity.group) // Extract group from GIP object
+  )(entities);
+  return importList;
+}
+
 const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
-  const { actions: { close, update }, errors, loading, open, success } = props;
+  const {
+    actions: { close, update },
+    entitiesWithGroupsToImport: { linodes }, // { linodes, domains } after Domains are available
+    errors,
+    loading,
+    open,
+    success
+  } = props;
+
+  const linodeGroups = getGroupImportList(linodes);
+  // const domainGroups = getGroupImportList(domains);
   return (
     <Drawer
         title="Import Display Groups to Tags"
@@ -72,11 +99,12 @@ const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
             </Grid>
           }
           <Grid item data-qa-linode-group-list>
-            <DisplayGroupList entity="Linode" groups={["group1", "group2"]} />
+            <DisplayGroupList entity="Linode" groups={linodeGroups} />
           </Grid>
-          <Grid item data-qa-domain-group-list>
+          {/* @todo add when Domains have been cached in Redux */}
+          {/* <Grid item data-qa-domain-group-list>
             <DisplayGroupList entity="Domain" groups={["group1", "group2"]} />
-          </Grid>
+          </Grid>*/}
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
@@ -107,7 +135,8 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     open: pathOr(false, ['tagImportDrawer', 'open'], state),
     loading: pathOr(false, ['tagImportDrawer', 'loading'], state),
     errors: pathOr([], ['tagImportDrawer', 'errors'], state),
-    success: pathOr(false, ['tagImportDrawer', 'success'], state)
+    success: pathOr(false, ['tagImportDrawer', 'success'], state),
+    entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state),
   });
 };
 

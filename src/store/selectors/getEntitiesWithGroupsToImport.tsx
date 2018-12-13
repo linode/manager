@@ -5,7 +5,7 @@ export interface GroupedEntitiesForImport {
   // @todo: Uncomment when domain support is added
   // domains: GroupImportProps[];
 }
-interface GroupImportProps {
+export interface GroupImportProps {
   id: number;
   group?: string;
   tags: string[];
