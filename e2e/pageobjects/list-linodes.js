@@ -52,9 +52,10 @@ export class ListLinodes extends Page {
     }
 
     navigateToDetail(linode) {
-       linode ? $(`[data-qa-linode="${linode}"]`).$('a').click() : this.linode[0].$('a').click();
+       const linodeLink = linode ? $$(`[data-qa-linode="${linode}"] a>div`)[0] : this.linode[0].$$('a>div')[0];
+       linodeLink.waitForVisible(constants.wait.normal);
+       linodeLink.click();
     }
-
     gridElemsDisplay() {
         const header = this.subheader;
         this.linode.forEach(l => {

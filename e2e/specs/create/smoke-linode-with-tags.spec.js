@@ -67,7 +67,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
             assertTagsDisplay(addedTags);
         });
-        //Tests below are affected by bug M3-1671
+
         it('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
@@ -77,8 +77,6 @@ describe('Create Linode from Image - With Tags Suite', () => {
 
     describe('Linode Detail - Tags Suite', () => {
         it('should navigate to linode detail', () => {
-            // It should navigate to Linode detail page
-            browser.waitForVisible(`[data-qa-linode="${linodeName}"]`, constants.wait.normal);
             ListLinodes.navigateToDetail(linodeName);
             LinodeDetail.landingElemsDisplay();
         });
