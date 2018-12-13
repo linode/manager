@@ -12,6 +12,9 @@ const props = {
   linodesWithoutBackups: [],
   managed: false,
   backupError: undefined,
+  entitiesWithGroupsToImport: { linodes: [] },
+  // @todo: uncomment when support for domains is added
+  // entitiesWithGroupsToImport: { linodes: [], domains: [] },
   classes: { root: ''}
 }
 
