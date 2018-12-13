@@ -24,6 +24,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       border: 'none',
       backgroundColor: 'transparent',
     },
+    '& td:first-child': {
+      backgroundColor: 'transparent !important',
+    },
+    [theme.breakpoints.down('sm')]: {
+      '& td': {
+        justifyContent: 'normal',
+      },
+    },
   },
   tableHeadInner: {
     paddingBottom: 4,
@@ -49,7 +57,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   legend: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: '38%',
     },
     '& > div': {

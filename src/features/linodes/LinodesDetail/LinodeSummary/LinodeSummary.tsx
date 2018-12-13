@@ -239,7 +239,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -328,7 +328,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -346,7 +346,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -367,7 +367,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           </Grid>
         </div>
         {rangeSelection === '24' &&
-          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
+          <Grid item xs={12} sm={6} className={classes.totalTraffic}>
             <TotalTraffic
               inTraffic={totalTraffic.inTraffic}
               outTraffic={totalTraffic.outTraffic}
@@ -436,7 +436,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -454,7 +454,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -475,7 +475,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           </Grid>
         </div>
         {rangeSelection === '24' &&
-          <Grid item xs={12} lg={6} className={classes.totalTraffic}>
+          <Grid item xs={12} sm={6} className={classes.totalTraffic}>
             <TotalTraffic
               inTraffic={totalTraffic.inTraffic}
               outTraffic={totalTraffic.outTraffic}
@@ -523,7 +523,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -535,7 +535,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
