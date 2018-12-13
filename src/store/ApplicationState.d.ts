@@ -73,8 +73,6 @@ declare interface TagImportDrawerState {
 declare interface SidebarState {
   backupsCTA: boolean;
 }
-
-
 declare interface BackupError {
   linodeId: number;
   reason: string;
