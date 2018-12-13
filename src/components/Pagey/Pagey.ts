@@ -103,7 +103,6 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       if (this.state.orderBy) {
         filters['+order_by'] = this.state.orderBy;
         filters['+order'] = this.state.order;
-        this.state.isSorting = false;
       }
       return requestFn(this.props, { page: this.state.page, page_size: this.state.pageSize }, filters)
         .then((response) => {
@@ -114,6 +113,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
             data: map ? map(response.data) : response.data,
             loading: false,
             error: undefined,
+            isSorting: false,
           });
         })
         .catch((response) => {
