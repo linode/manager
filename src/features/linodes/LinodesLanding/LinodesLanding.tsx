@@ -1,44 +1,31 @@
-import * as Bluebird from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
+import Toggle from 'src/components/Toggle';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
-import { requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
-import { addBackupsToSidebar, clearSidebar } from 'src/store/reducers/sidebar';
 import { views } from 'src/utilities/storage';
+import styled, { StyleProps } from './LinodesLanding.styles';
 import LinodesViewWrapper from './LinodesViewWrapper';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import { powerOffLinode, rebootLinode } from './powerActions';
-import requestMostRecentBackupForLinode from './requestMostRecentBackupForLinode';
 import ToggleBox from './ToggleBox';
-import withUpdatingLinodes from './withUpdatingLinodes';
-
-type ClassNames = 'root' | 'title';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
-  title: {
-    marginbottom: theme.spacing.unit * 2,
-  },
-});
+import withPaginatedLinodes, { PaginatedLinodes } from './withPaginatedLinodes';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -59,21 +46,14 @@ interface State {
     data: Linode.Image[];
     error?: Error;
   },
-}
-
-interface TypesContextProps {
-  typesRequest: () => void;
-  typesLoading: boolean;
-  typesLastUpdated: number;
+  groupByTag: boolean;
 }
 
 type CombinedProps =
-  TypesContextProps
-  & PaginationProps<Linode.Linode>
+  & PaginatedLinodes
   & StateProps
-  & DispatchProps
   & RouteComponentProps<{}>
-  & WithStyles<ClassNames>
+  & StyleProps
   & SetDocsProps
   & InjectedNotistackProps;
 
@@ -96,6 +76,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     bootOption: null,
     selectedLinodeId: null,
     selectedLinodeLabel: '',
+    groupByTag: false,
   };
 
   static docs = [
@@ -126,35 +107,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { typesLastUpdated, typesLoading, typesRequest } = this.props;
-    const { getLinodesWithoutBackups, setSidebar } = this.props.actions;
 
     this.mounted = true;
 
-    /** Get the Linodes using the request handler provided by Pagey. */
-    this.props.request();
-
     this.getImages();
-
-    /** Check if the user has any Linodes without backups enabled
-     * (This also pre-populates the Backups drawer with these Linodes)
-     */
-
-    getLinodesWithoutBackups();
-    /* Set the BackupsCTA in the docs sidebar. It will only
-    * render itself for customers who have backups in need of Linodes.
-    */
-    setSidebar();
-
-
-    if (typesLastUpdated === 0 && !typesLoading) {
-      typesRequest();
-    }
   }
 
   componentWillUnmount() {
-    this.mounted = false;
-    this.props.actions.clearSidebar();
+    this.mounted = false
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
@@ -253,10 +213,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       location: { hash },
-      count,
-      data: linodes,
-      error: linodesError,
-      loading: linodesLoading,
+      linodesCount,
+      linodesData: linodes,
+      linodesRequestError,
+      linodesRequestLoading,
     } = this.props;
 
     const {
@@ -270,7 +230,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       },
     } = this.state;
 
-    if (linodesLoading || imagesLoading) {
+    if (linodesRequestLoading || imagesLoading) {
       return <CircleProgress />;
     }
 
@@ -283,7 +243,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (linodesError) {
+    if (linodesRequestError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Linodes" />
@@ -301,7 +261,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: count });
+    const displayGrid: 'grid' | 'list' = getDisplayFormat({ hash, length: linodesCount });
 
     return (
       <Grid container>
@@ -316,6 +276,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             Linodes
           </Typography>
           <Hidden smDown>
+            <div>
+              <FormControlLabel
+                className="toggleLabel"
+                control={
+                  <Toggle
+                    value={this.state.groupByTag}
+                    onClick={(e: React.MouseEvent<any>) => this.setState({ groupByTag: !this.state.groupByTag })}
+                  />
+                }
+                label="Group by Tag:"
+              />
+            </div>
             <ToggleBox
               handleClick={this.changeViewStyle}
               status={displayGrid}
@@ -336,7 +308,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         <Grid item xs={12}>
           {
             <PaginationFooter
-              count={this.props.count}
+              count={this.props.linodesCount}
               handlePageChange={this.props.handlePageChange}
               handleSizeChange={this.props.handlePageSizeChange}
               pageSize={this.props.pageSize}
@@ -411,85 +383,29 @@ const getDisplayFormat = ({ hash, length }: { hash?: string, length: number }): 
   return (length >= 3) ? 'list' : 'grid';
 };
 
-export const styled = withStyles(styles);
-
-interface LinodeWithNotifications extends Linode.Linode {
-  notifications?: Linode.Notification[];
-}
-
 interface StateProps {
-  data: LinodeWithNotifications[];
-  linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
-}
-
-interface DispatchProps {
-  actions: {
-    getLinodesWithoutBackups: () => void;
-    clearSidebar: () => void;
-    setSidebar: () => void;
-  }
 }
 
 /**
  * 'linodes' are provided by pagination and 'notifications' are provided by redux. We're using MSTP
  * to join the Notifications to the appropriate Linode and provide that to the component.
  */
-let mapStateToProps: MapStateToProps<StateProps, PaginationProps<Linode.Linode>, ApplicationState>;
-mapStateToProps = (state, ownProps) => {
-  const notifications = state.notifications.data || [];
-  const linodes = (ownProps.data || []);
-
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => {
   return {
-    data: linodes.map(addNotificationToLinode(notifications)),
-    linodesWithoutBackups: pathOr([], ['backups', 'data'], state),
     managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state)
   }
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
-  return {
-    actions: {
-      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
-      clearSidebar: () => dispatch(clearSidebar()),
-      setSidebar: () => dispatch(addBackupsToSidebar())
-    }
-  };
-};
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-const paginated = Pagey((ownProps, params, filters) =>
-  getLinodes(params, filters)
-    .then((response) => {
-
-      return Bluebird.map(response.data, requestMostRecentBackupForLinode)
-        .then(linodes => ({ ...response, data: linodes }));
-    })
-);
-
-const data = compose(
-  paginated,
-  connected,
-  withUpdatingLinodes,
-);
+const connected = connect(mapStateToProps);
 
 export const enhanced = compose(
   withRouter,
   styled,
   setDocs(ListLinodes.docs),
-  data,
-  withSnackbar
+  withPaginatedLinodes,
+  withSnackbar,
+  connected,
 );
 
-const getNotificationMessageByEntityId = (id: number, notifications: Linode.Notification[]): undefined | string => {
-  const found = notifications.find((n) => n.entity !== null && n.entity.id === id);
-  return found ? found.message : undefined;
-}
-
-const addNotificationToLinode = (notifications: Linode.Notification[]) => (linode: Linode.Linode) => ({
-  ...linode,
-  notification: getNotificationMessageByEntityId(linode.id, notifications)
-});
-
-export default enhanced(ListLinodes) as typeof ListLinodes;
+export default enhanced(ListLinodes);
