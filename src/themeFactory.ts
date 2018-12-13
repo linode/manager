@@ -1039,14 +1039,24 @@ const themeDefaults: ThemeOptions = {
     MuiTableSortLabel: {
       root: {
         fontSize: '.9rem',
-        color: '#111',
+        transition: 'color 225ms ease-in-out',
+        '&:hover': {
+          color: primaryColors.main,
+        }
       },
       active: {
         color: primaryColors.main,
         '&:focus': {
-          color: primaryColors.main,
+          outline: '1px dotted #999',
+          '&:hover': {
+            color: primaryColors.main,
+          }
         },
       },
+      icon: {
+        opacity: 1,
+        marginTop: 2
+      }
     },
     MuiTooltip: {
       popper: {
