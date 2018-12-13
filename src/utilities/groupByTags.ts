@@ -1,7 +1,7 @@
 type Tag = string;
 interface Tagged { tags: Tag[] };
 interface Grouped { group: string };
-type GroupedBy<T> = [string, T[]][]
+export type GroupedBy<T> = [string, T[]][]
 
 /** The key on which we will store entities without tags. */
 export const NONE = `No Tags`;

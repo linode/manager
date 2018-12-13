@@ -1,3 +1,4 @@
+import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Hidden from 'src/components/core/Hidden';
@@ -6,7 +7,7 @@ import Grid from 'src/components/Grid';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { groupByTags } from 'src/utilities/groupByTags';
+import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
 import CardView from './CardView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
@@ -34,7 +35,10 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
     return <ListLinodesEmptyState />
   }
 
-  const groupedLinodes = groupByTags(linodesData);
+  const groupedLinodes = compose(
+    sortGroupedLinodes,
+    groupByTags,
+  )(linodesData);
 
   const Component = view
     ? view === 'grid'
@@ -86,3 +90,30 @@ const withLinodes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 export default withLinodes(DisplayGroupedLinodes);
+
+/**
+ * Moves the NONE to the top, and alphabetically sorts the remainder.
+ */
+const sortGroupedLinodes = (groups: GroupedBy<Linode.Linode>) => {
+  let foundUntaggedIndex;
+  let idx = 0;
+  const len = groups.length;
+  for (; idx < len; idx++) {
+    const [tag] = groups[idx];
+    if (tag === NONE) {
+      foundUntaggedIndex = idx;
+      break;
+    }
+  }
+
+  if (typeof foundUntaggedIndex === 'undefined') {
+    return groups;
+  }
+
+  return [
+    groups[foundUntaggedIndex],
+    ...groups
+      .filter(([tag]) => tag !== NONE)
+      .sort(([a], [b]) => a > b ? 0 : -1),
+  ];
+}
