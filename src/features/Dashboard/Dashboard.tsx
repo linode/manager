@@ -50,7 +50,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
   } = props;
 
   const hasGroupsToImport =
-    entitiesWithGroupsToImport.linodes.length > 1
+    entitiesWithGroupsToImport.linodes.length > 0
     // @todo: Uncomment when domain support is added
     // && entitiesWithGroupsToImport.domains.length > 1
 
