@@ -40,9 +40,7 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display error on create image without setting a password', () => {
         const errorMsg = 'Password cannot be blank.';
-        Rebuild.imagesSelect.click();
-        browser.pause(500);
-        Rebuild.imageOptions[0].click();
+        Rebuild.selectImage();
         Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
         Rebuild.submit.click();
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
@@ -52,6 +50,7 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = generatePassword();
+        Rebuild.selectImage();
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });
