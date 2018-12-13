@@ -10,6 +10,12 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     overflowX: 'auto',
+    '& tbody': {
+      transition: [theme.transitions.create('opacity')]
+    },
+    '& tbody.sorting': {
+      opacity: .5,
+    }
   },
   responsive: {
     [theme.breakpoints.down('sm')]: {

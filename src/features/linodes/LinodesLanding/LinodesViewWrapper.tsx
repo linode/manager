@@ -22,6 +22,7 @@ interface ViewProps {
   handleOrderChange: PaginatedLinodes['handleOrderChange'];
   order: PaginatedLinodes['order'];
   orderBy?: PaginatedLinodes['orderBy'];
+  isSorting?: PaginatedLinodes['isSorting'];
 }
 
 const CardView: React.StatelessComponent<ViewProps> = (props) => {
@@ -63,6 +64,7 @@ const RowView: React.StatelessComponent<ViewProps> = (props) => {
     openConfigDrawer,
     order,
     orderBy,
+    isSorting,
     toggleConfirmation,
   } = props;
 
@@ -80,6 +82,7 @@ const RowView: React.StatelessComponent<ViewProps> = (props) => {
                   direction={order}
                   active={isActive('label')}
                   handleClick={handleOrderChange}
+                  isLoading={isSorting}
                 >
                   Linode
                 </TableSortCell>
@@ -99,7 +102,7 @@ const RowView: React.StatelessComponent<ViewProps> = (props) => {
                 <TableCell />
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody className={isSorting ? 'sorting' : ''}>
               {linodes.map(linode =>
                 <LinodeRow
                   key={linode.id}
