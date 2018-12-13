@@ -18,7 +18,6 @@ import Tags from 'src/components/Tags';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-import { getType } from 'src/services/linodes';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import { displayType, typeLabelDetails } from '../presentation';
@@ -241,18 +240,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       ],
     )
       || this.props.theme.name !== nextProps.theme.name
-  }
-
-  componentDidMount() {
-    const { linodeType } = this.props;
-    if (!linodeType) { return }
-    getType(linodeType)
-      .then((data: Linode.LinodeType) => {
-        if (data.successor && data.successor !== null) {
-          this.setState({ mutationAvailable: true })
-        }
-      })
-      .catch((e: Error) => e)
   }
 
   handleConsoleButtonClick = () => {

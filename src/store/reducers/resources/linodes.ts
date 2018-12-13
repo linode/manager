@@ -1,9 +1,10 @@
+import * as Bluebird from 'bluebird';
 import { Dispatch, Reducer } from "redux";
 import { ThunkAction } from 'redux-thunk';
+import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getLinode, getLinodes } from "src/services/linodes";
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
-
 
 /**
  * State
@@ -113,14 +114,17 @@ const requestLinodes = () => (dispatch: Dispatch<State>) => {
   dispatch(getLinodesRequest());
 
   return getAll<Linode.Linode>(getLinodes)()
-    .then(({ data }) => {
-      dispatch(getLinodesSuccess(data));
-      return data;
+    .then(getBackupsForLinodes)
+    .then((linodes) => {
+      dispatch(getLinodesSuccess(linodes));
+      return linodes;
     })
     .catch((err) => {
       dispatch(getLinodesFailure(err));
     });
 };
+
+const getBackupsForLinodes = ({ data }: { data: Linode.Linode[] }) => Bluebird.map(data, requestMostRecentBackupForLinode);
 
 type RequestLinodeForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
 const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, getState) => {
@@ -128,6 +132,7 @@ const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, get
 
   getLinode(id)
     .then(response => response.data)
+    .then(requestMostRecentBackupForLinode)
     .then(linode => {
       if (results.includes(id)) {
         return dispatch(updateLinode(linode));

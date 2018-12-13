@@ -21,10 +21,6 @@ namespace Linode {
     /** Added by UI */
     recentEvent?: Linode.Event;
     notifications?: Linode.Notification[];
-  }
-
-  export interface EnhancedLinode extends Linode.Linode {
-    recentEvent?: Linode.Event;
     notification?: string;
     mostRecentBackup?: string;
   }

@@ -1,9 +1,10 @@
 import * as React from 'react';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Grid from 'src/components/Grid';
-import { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -12,24 +13,24 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 import LinodeRow from './LinodeRow/LinodeRow';
+import ListLinodesEmptyState from './ListLinodesEmptyState';
+import withPaginatedLinodes, { PaginatedLinodes } from './withPaginatedLinodes';
 
-type PaginatedLinodes = PaginationProps<Linode.Linode>;
 interface ViewProps {
-  linodes: Linode.EnhancedLinode[];
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
-  handleOrderChange: PaginatedLinodes['handleOrderChange'];
-  order: PaginatedLinodes['order'];
-  orderBy?: PaginatedLinodes['orderBy'];
 }
+type CombinedProps =
+  & ViewProps
+  & PaginatedLinodes;
 
-const CardView: React.StatelessComponent<ViewProps> = (props) => {
-  const { linodes, images, openConfigDrawer, toggleConfirmation } = props;
+const CardView: React.StatelessComponent<CombinedProps> = (props) => {
+  const { linodesData, images, openConfigDrawer, toggleConfirmation } = props;
 
   return (
     <Grid container>
-      {linodes.map(linode =>
+      {linodesData.map(linode =>
         <LinodeCard
           key={linode.id}
           linodeId={linode.id}
@@ -56,10 +57,10 @@ const CardView: React.StatelessComponent<ViewProps> = (props) => {
   )
 };
 
-const RowView: React.StatelessComponent<ViewProps> = (props) => {
+const RowView: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     handleOrderChange,
-    linodes,
+    linodesData,
     openConfigDrawer,
     order,
     orderBy,
@@ -100,7 +101,7 @@ const RowView: React.StatelessComponent<ViewProps> = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {linodes.map(linode =>
+              {linodesData.map(linode =>
                 <LinodeRow
                   key={linode.id}
                   linodeId={linode.id}
@@ -126,15 +127,54 @@ const RowView: React.StatelessComponent<ViewProps> = (props) => {
     </Paper>
   );
 };
+
 interface Props extends ViewProps {
-  view: 'grid' | 'list';
+  view: undefined | 'grid' | 'list';
 }
 
-const LinodesViewWrapper: React.StatelessComponent<Props> = (props) => {
+const LinodesViewWrapper: React.StatelessComponent<Props & PaginatedLinodes> = (props) => {
   const { view, ...rest } = props;
-  const Component = view === 'grid' ? CardView : RowView;
 
-  return <Component {...rest} />
+  if (props.linodesData.length === 0) {
+    return <ListLinodesEmptyState />
+  }
+
+  /**
+   * If the viewport is small display card view.
+   *
+   * If the user has selected a view by param or localStorage, use that.
+   *
+   * If the user has more than three Liodes, display List.
+   */
+  const Component = view
+    ? view === 'grid'
+      ? CardView
+      : RowView
+    : props.linodesCount >= 3
+      ? RowView
+      : CardView;
+
+  return (
+    <>
+      <Hidden mdUp>
+        <CardView {...rest} />
+      </Hidden>
+      <Hidden smDown>
+        <Component {...rest} />
+      </Hidden>
+      <Grid item xs={12}>
+        {
+          <PaginationFooter
+            count={props.linodesCount}
+            handlePageChange={props.handlePageChange}
+            handleSizeChange={props.handlePageSizeChange}
+            pageSize={props.pageSize}
+            page={props.page}
+          />
+        }
+      </Grid>
+    </>
+  )
 };
 
-export default LinodesViewWrapper;
+export default withPaginatedLinodes(LinodesViewWrapper);
