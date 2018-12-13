@@ -23,6 +23,7 @@ const OPEN = '@@manager/tagImportDrawer/OPEN';
 const UPDATE = '@@manager/tagImportDrawer/UPDATE';
 const SUCCESS = '@@manager/tagImportDrawer/SUCCESS';
 const ERROR = '@@manager/tagImportDrawer/ERROR';
+const RESET = '@@manager/tagImportDrawer/RESET';
 
 interface Close extends Action {
   type: typeof CLOSE;
@@ -45,6 +46,10 @@ interface Error extends Action {
   payload: ErrorPayload;
 }
 
+interface Reset extends Action {
+  type: typeof RESET;
+}
+
 type ErrorPayload = TagError[];
 
 export const closeGroupDrawer = (): Close => ({
@@ -58,6 +63,7 @@ export const openGroupDrawer = (): Open => ({
 export const handleSuccess = actionCreator<void>(`SUCCESS`);
 export const handleError = actionCreator<ErrorPayload>(`ERROR`);
 export const handleUpdate = actionCreator<void>(`UPDATE`);
+export const handleReset = actionCreator<void>(`RESET`);
 
 export const defaultState: State = {
   open: false,
@@ -72,6 +78,7 @@ type ActionTypes =
   | Error
   | Success
   | Update
+  | Reset
 
 export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
   switch (action.type) {
@@ -109,6 +116,9 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
         errors: [],
         success: false,
       }
+
+    case RESET:
+      return defaultState;
 
     default:
       return state;

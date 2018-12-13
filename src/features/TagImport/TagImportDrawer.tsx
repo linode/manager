@@ -2,10 +2,10 @@ import { compose as _compose, defaultTo, map, uniq } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
-// import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { isEmpty, pathOr } from 'ramda';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose } from 'recompose';
+import { compose, lifecycle } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -15,6 +15,7 @@ import Notice from 'src/components/Notice';
 import {
   addTagsToEntities,
   closeGroupDrawer as _close,
+  handleReset,
 } from 'src/store/reducers/tagImportDrawer'
 import getEntitiesWithGroupsToImport,
   {
@@ -48,6 +49,7 @@ interface DispatchProps {
 
 type CombinedProps = StateProps
   & DispatchProps
+  & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
 export const getGroupImportList = (entities: GroupImportProps[]) => {
@@ -59,14 +61,13 @@ export const getGroupImportList = (entities: GroupImportProps[]) => {
   return importList;
 }
 
-const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
+export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     actions: { close, update },
     entitiesWithGroupsToImport: { linodes }, // { linodes, domains } after Domains are available
     errors,
     loading,
     open,
-    success
   } = props;
 
   const linodeGroups = getGroupImportList(linodes);
@@ -80,21 +81,14 @@ const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         <Grid container direction={'column'} >
           <Grid item>
             <Typography variant="body1">
-             This will import Display Groups from Classic Manager and convert them
-             to tags. <strong>Your existing tags will not be affected.</strong>
+            This will import Display Groups from Classic Manager and convert them
+            to tags. <strong>Your existing tags will not be affected.</strong>
             </Typography>
           </Grid>
           {!isEmpty(errors) &&
             <Grid item>
               <Notice error spacingBottom={0} >
                 There was an error importing your display groups.
-              </Notice>
-            </Grid>
-          }
-          {success &&
-            <Grid item>
-              <Notice success spacingBottom={0} >
-                Your display groups have been imported successfully.
               </Notice>
             </Grid>
           }
@@ -154,9 +148,25 @@ const connected = connect(mapStateToProps, mapDispatchToProps)
 
 const styled = withStyles(styles);
 
+const withUpdates = lifecycle({
+  componentDidUpdate(prevProps: CombinedProps) {
+    const { actions: { close }, success, enqueueSnackbar } = this.props;
+    if (!prevProps.success && success) {
+      enqueueSnackbar(
+        'Your display groups have been imported successfully.',
+        {variant: 'success'}
+      );
+      close();
+      handleReset();
+    }
+  }
+})
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
   connected,
+  withSnackbar,
+  withUpdates,
 )(TagImportDrawer);
 
 export default enhanced;
