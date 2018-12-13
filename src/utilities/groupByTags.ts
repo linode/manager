@@ -4,7 +4,7 @@ interface Grouped { group: string };
 type GroupedBy<T> = [string, T[]][]
 
 /** The key on which we will store entities without tags. */
-export const NONE = `__none__`;
+export const NONE = `No Tags`;
 
 /** Safely push onto an array. */
 const addTo = <T>(list: T[] = [], i: T) => [...list, i];

@@ -6,7 +6,7 @@ import Grid from 'src/components/Grid';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { groupByTags, NONE } from 'src/utilities/groupByTags';
+import { groupByTags } from 'src/utilities/groupByTags';
 import CardView from './CardView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
@@ -49,7 +49,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
       {groupedLinodes.map(([tag, linodes]) => {
         return (
           <React.Fragment key={tag}>
-            {tag !== NONE && <Typography variant="h1">{tag}</Typography>}
+            <Typography variant="h1">{tag}</Typography>
             <Paginate data={linodes} pageSize={25}>
               {(paginatedProps) => (
                 <React.Fragment>
