@@ -153,7 +153,7 @@ export const gatherResponsesAndErrors = (
         ['response', 'data', 'errors', 0, 'reason'], error);
       return {
         ...accumulator,
-        errors: [...accumulator.errors, { entityId: entity.id, reason }]
+        errors: [...accumulator.errors, { entityId: entity.id, reason, entityLabel: entity.label }]
       }
     })
 }

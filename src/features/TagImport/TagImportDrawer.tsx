@@ -36,7 +36,7 @@ interface StateProps {
   open: boolean;
   loading: boolean;
   success: boolean;
-  errors: string[];
+  errors: TagError[];
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
 }
 
@@ -85,13 +85,16 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
             to tags. <strong>Your existing tags will not be affected.</strong>
             </Typography>
           </Grid>
-          {!isEmpty(errors) &&
-            <Grid item>
+          {!isEmpty(errors) && errors.map((error, idx: number) =>
+            <Grid key={idx} item>
               <Notice error spacingBottom={0} >
-                There was an error importing your display groups.
+                {error.entityLabel
+                  ? `Error adding tag to ${error.entityLabel}: ${error.reason}`
+                  : error.reason
+                }
               </Notice>
             </Grid>
-          }
+          )}
           <Grid item data-qa-linode-group-list>
             <DisplayGroupList entity="Linode" groups={linodeGroups} />
           </Grid>

@@ -61,6 +61,7 @@ declare interface VolumeDrawerState {
 
 declare interface TagError {
   entityId: string | number;
+  entityLabel?: string;
   reason: string;
 }
 declare interface TagImportDrawerState {
