@@ -1,4 +1,4 @@
-import { groupByTags } from "./groupByTags";
+import { groupByTags, NONE } from "./groupByTags";
 /**
  * [Tag, Linode.Linode[]]s
  */
@@ -9,8 +9,8 @@ describe('groupByTags', () => {
       { id: 2, tags: [], },
       { id: 3, tags: [], },
     ];
+    const expected = [[NONE, values]];
     const result = groupByTags(values);
-    const expected = [['__none__', values]];
 
     expect(result).toEqual(expected)
   });
