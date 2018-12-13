@@ -34,11 +34,11 @@ interface Error extends Action {
 
 type ErrorPayload = TagError[];
 
-export const closeTagDrawer = (): Close => ({
+export const closeGroupDrawer = (): Close => ({
   type: CLOSE,
 });
 
-export const openTagDrawer = (): Open => ({
+export const openGroupDrawer = (): Open => ({
   type: OPEN,
 });
 
@@ -47,7 +47,7 @@ export const handleError = actionCreator<ErrorPayload>(`ERROR`);
 export const handleUpdate = actionCreator<void>(`UPDATE`);
 
 export const defaultState: State = {
-  open: true,
+  open: false,
   errors: [],
   loading: false,
   success: false,

@@ -7,7 +7,9 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
+import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
@@ -34,6 +36,7 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     openBackupDrawer: () => void;
+    openImportDrawer: () => void;
   }
 }
 
@@ -42,7 +45,7 @@ type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     accountBackups,
-    actions: { openBackupDrawer },
+    actions: { openBackupDrawer, openImportDrawer },
     backupError,
     linodesWithoutBackups,
     managed,
@@ -78,8 +81,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
         }
         {hasGroupsToImport &&
           <ImportGroupsCard
-            // @todo: use reducer to open drawer instead of this dummy fn
-            openImportDrawer={() => console.log('change this')}
+            openImportDrawer={openImportDrawer}
           />
         }
         <BlogDashboardCard />
@@ -93,14 +95,14 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
-  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state) // <-- Memoized selector
+  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state), // <-- Memoized selector
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
   return {
     actions: {
-      openBackupDrawer: () => dispatch(handleOpen())
-      // openImportDrawer; () => dispatch(handleOpenImportDrawer())
+      openBackupDrawer: () => dispatch(handleOpen()),
+      openImportDrawer: () => dispatch(openGroupDrawer())
     }
   };
 };

@@ -2,17 +2,17 @@ import tagDrawer, * as T from './tagImportDrawer';
 
 describe("tagImportDrawer Redux duck", () => {
   describe("reducer", () => {
-    it.skip("should be closed by default", () => {
+    it("should be closed by default", () => {
       expect(T.defaultState).toHaveProperty('open', false);
     })
     it("should handle OPEN", () => {
-      expect(tagDrawer(T.defaultState, T.openTagDrawer())).toEqual(
+      expect(tagDrawer(T.defaultState, T.openGroupDrawer())).toEqual(
         {...T.defaultState, open: true}
       )
     });
     it("should handle CLOSE", () => {
       const newState = tagDrawer(
-        {...T.defaultState, open: true }, T.closeTagDrawer());
+        {...T.defaultState, open: true }, T.closeGroupDrawer());
       expect(newState).toHaveProperty('open', false)
     });
     it("should handle UPDATE", () => {
