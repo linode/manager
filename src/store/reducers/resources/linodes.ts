@@ -33,7 +33,7 @@ const getLinodesFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
 const addLinode = actionCreator<Linode.Linode>('add');
 
-const updateLinode = actionCreator<Linode.Linode>('update');
+export const updateLinode = actionCreator<Linode.Linode>('update');
 
 const deleteLinode = actionCreator<number>('delete');
 

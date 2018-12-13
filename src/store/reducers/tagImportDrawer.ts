@@ -5,14 +5,16 @@ import { ThunkAction } from 'redux-thunk';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { updateLinode } from 'src/services/linodes';
-import getEntitiesWithGroupsToImport from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { updateLinode as _updateLinode } from 'src/store/reducers/resources/linodes';
+import getEntitiesWithGroupsToImport,
+  { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 
 const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
 type State = ApplicationState['tagImportDrawer'];
 
 interface Accumulator {
-  success: number[];
+  success: Linode.Linode[]; // | Linode.Domain[]
   errors: TagError[];
 }
 
@@ -119,26 +121,29 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
  * gatherResponsesAndErrors
  *
  * This magic is needed to accumulate errors from any failed requests, since
- * we need to enable backups for each Linode individually. The final response
+ * we need to import display groups for each entity individually. The final response
  * will be available in the .then() handler for Bluebird.reduce (below), and has
  * the form:
  *
  * {
- *  success: number[] Linodes that successfully enabled Backups.
+ *  success: number[] IDs of successfully updated entities.
  *  errors: TagError[] Accumulated errors.
  * }
  */
-export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: number) => {
-  return updateLinode(linodeId, {}).then(() => ({
+export const gatherResponsesAndErrors = (
+  accumulator: Accumulator,
+  entity: GroupImportProps) => {
+  return updateLinode(entity.id, {tags: [...entity.tags, entity.group!]})
+    .then((linode) => ({
     ...accumulator,
-    success: [...accumulator.success, linodeId]
-  }))
+    success: [...accumulator.success, linode]
+    }))
     .catch((error) => {
       const reason = pathOr('Error adding tag.',
         ['response', 'data', 'errors', 0, 'reason'], error);
       return {
         ...accumulator,
-        errors: [...accumulator.errors, { entityId: linodeId, reason }]
+        errors: [...accumulator.errors, { entityId: entity.id, reason }]
       }
     })
 }
@@ -155,8 +160,11 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispa
       else {
         dispatch(handleSuccess());
       }
-      /** @todo */
-      // dispatch(requestLinodesWithoutBackups());
+      // We want to update the successfully updated Linodes in the store
+      // regardless of whether there were any errors elsewhere.
+      response.success.forEach(
+        (linode: Linode.Linode) => dispatch(_updateLinode(linode)),
+      )
     })
     .catch(() => dispatch(
       handleError([{ entityId: 0, reason: "There was an error enabling backups." }])
