@@ -156,6 +156,7 @@ const themeDefaults: ThemeOptions = {
     grey3: '#ccc',
     white: '#fff',
     black: '#222',
+    offBlack: primaryColors.offBlack,
     boxShadow: '#ddd',
     focusBorder: '#999',
     absWhite: '#fff',
