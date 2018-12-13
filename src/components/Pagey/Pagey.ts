@@ -34,6 +34,7 @@ interface State<T={}> {
   count: number;
   error?: Error;
   loading: boolean;
+  isSorting?: boolean;
   page: number;
   pages?: number;
   pageSize: number;
@@ -60,6 +61,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
     state: State = {
       count: 0,
       loading: true,
+      isSorting: false,
       page: 1,
       pageSize: 25,
       error: undefined,
@@ -101,6 +103,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       if (this.state.orderBy) {
         filters['+order_by'] = this.state.orderBy;
         filters['+order'] = this.state.order;
+        this.state.isSorting = false;
       }
       return requestFn(this.props, { page: this.state.page, page_size: this.state.pageSize }, filters)
         .then((response) => {
@@ -129,8 +132,8 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ page }, () => { this.request() })
     };
 
-    public handleOrderChange = (orderBy: string, order: Order = 'asc') => {
-      this.setState({ orderBy, order, page: 1 }, () => this.request());
+    public handleOrderChange = (orderBy: string, order: Order = 'asc', isSorting: boolean) => {
+      this.setState({ orderBy, order, page: 1, isSorting: true }, () => this.request());
     };
 
     public handleSearch = (filter: any) => {

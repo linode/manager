@@ -563,7 +563,6 @@ export const dark = createTheme({
     },
     MuiTableSortLabel: {
       root: {
-        color: '#fff',
         textDecoration: 'underline',
       },
     },
