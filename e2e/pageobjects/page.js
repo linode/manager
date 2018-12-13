@@ -147,8 +147,9 @@ export default class Page {
 
     toastDisplays(expectedMessage, timeout=constants.wait.normal) {
         this.toast.waitForVisible(timeout);
-        const displayedMsg = $$(this.toast.selector).find(toast => toast.getText() === expectedMessage);
-        expect(displayedMsg).toBeTruthy();
+        browser.waitUntil(() => {
+            return $$(this.toast.selector).find(toast => toast.getText() === expectedMessage)
+        },timeout);
         this.toast.waitForVisible(timeout, true);
     }
 
