@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Hidden from 'src/components/core/Hidden';
 import Grid from 'src/components/Grid';
+import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -26,7 +27,7 @@ type CombinedProps =
   & WithLinodes;
 
 const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
-  const { view, ...rest } = props;
+  const { view, linodesCount, ...rest } = props;
 
   if (props.linodesCount === 0) {
     return <ListLinodesEmptyState />
@@ -41,29 +42,46 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
       : CardView;
 
   return (
-    <Paginate data={props.linodesData} pageSize={25}>
-      {(paginatedProps) => (
-        <React.Fragment>
-          <Hidden mdUp>
-            <CardView {...rest} {...paginatedProps} />
-          </Hidden>
-          <Hidden smDown>
-            <Component {...rest} {...paginatedProps} />
-          </Hidden>
-          <Grid item xs={12}>
-            {
-              <PaginationFooter
-                count={paginatedProps.count}
-                handlePageChange={paginatedProps.handlePageChange}
-                handleSizeChange={paginatedProps.handlePageSizeChange}
-                pageSize={paginatedProps.pageSize}
-                page={paginatedProps.page}
-              />
-            }
-          </Grid>
-        </React.Fragment>
+    <OrderBy data={props.linodesData} order={'asc'} orderBy={'label'}>
+      {({ data, handleOrderChange, order, orderBy }) => (
+        <Paginate data={data} pageSize={25}>
+          {({ data, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+            const finalProps = {
+              ...rest,
+              data,
+              pageSize,
+              page,
+              handlePageSizeChange,
+              handlePageChange,
+              handleOrderChange,
+              order,
+              orderBy,
+            };
+            return (
+              <React.Fragment>
+                <Hidden mdUp>
+                  <CardView {...finalProps} />
+                </Hidden>
+                <Hidden smDown>
+                  <Component showHead {...finalProps} />
+                </Hidden>
+                <Grid item xs={12}>
+                  {
+                    <PaginationFooter
+                      count={linodesCount}
+                      handlePageChange={handlePageChange}
+                      handleSizeChange={handlePageSizeChange}
+                      pageSize={pageSize}
+                      page={page}
+                    />
+                  }
+                </Grid>
+              </React.Fragment>
+            )
+          }}
+        </Paginate>
       )}
-    </Paginate>
+    </OrderBy>
   )
 };
 

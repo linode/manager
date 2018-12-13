@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -11,6 +12,7 @@ import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
 import CardView from './CardView';
 import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
+import SortableTableHead from './SortableTableHead';
 
 interface Props {
   images: Linode.Image[];
@@ -29,16 +31,11 @@ type CombinedProps =
   & WithLinodes;
 
 const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) => {
-  const { view, linodesData, ...rest } = props;
+  const { view, linodesData, linodesCount, ...rest } = props;
 
   if (props.linodesCount === 0) {
     return <ListLinodesEmptyState />
   }
-
-  const groupedLinodes = compose(
-    sortGroupedLinodes,
-    groupByTags,
-  )(linodesData);
 
   const Component = view
     ? view === 'grid'
@@ -49,38 +46,62 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
       : CardView;
 
   return (
-    <React.Fragment>
-      {groupedLinodes.map(([tag, linodes]) => {
+    <OrderBy data={linodesData} order={'asc'} orderBy={'label'}>
+      {({ data, handleOrderChange, order, orderBy }) => {
+
+        const groupedLinodes = compose(sortGroupedLinodes, groupByTags)(data);
+        const sortableTableHeadProps = { handleOrderChange, order, orderBy };
+
         return (
-          <React.Fragment key={tag}>
-            <Typography variant="h1">{tag}</Typography>
-            <Paginate data={linodes} pageSize={25}>
-              {(paginatedProps) => (
-                <React.Fragment>
-                  <Hidden mdUp>
-                    <CardView {...rest} {...paginatedProps} />
-                  </Hidden>
-                  <Hidden smDown>
-                    <Component {...rest} {...paginatedProps} />
-                  </Hidden>
-                  <Grid item xs={12}>
-                    {
-                      <PaginationFooter
-                        count={paginatedProps.count}
-                        handlePageChange={paginatedProps.handlePageChange}
-                        handleSizeChange={paginatedProps.handlePageSizeChange}
-                        pageSize={paginatedProps.pageSize}
-                        page={paginatedProps.page}
-                      />
-                    }
-                  </Grid>
+          <React.Fragment>
+            {view === 'list' && <SortableTableHead {...sortableTableHeadProps} />}
+            {groupedLinodes.map(([tag, linodes]) => {
+              return (
+                <React.Fragment key={tag}>
+                  <Typography variant="h1">{tag}</Typography>
+                  <Paginate data={linodes} pageSize={25}>
+                    {({ data, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+                      const finalProps = {
+                        ...rest,
+                        data,
+                        pageSize,
+                        page,
+                        handlePageSizeChange,
+                        handlePageChange,
+                        handleOrderChange,
+                        order,
+                        orderBy,
+                      };
+                      return (
+                        <React.Fragment>
+                          <Hidden mdUp>
+                            <CardView {...finalProps} />
+                          </Hidden>
+                          <Hidden smDown>
+                            <Component {...finalProps} />
+                          </Hidden>
+                          <Grid item xs={12}>
+                            {
+                              <PaginationFooter
+                                count={linodesCount}
+                                handlePageChange={handlePageChange}
+                                handleSizeChange={handlePageSizeChange}
+                                pageSize={pageSize}
+                                page={page}
+                              />
+                            }
+                          </Grid>
+                        </React.Fragment>
+                      )
+                    }}
+                  </Paginate>
                 </React.Fragment>
-              )}
-            </Paginate>
+              )
+            })}
           </React.Fragment>
-        )
-      })}
-    </React.Fragment>
+        );
+      }}
+    </OrderBy>
   );
 };
 

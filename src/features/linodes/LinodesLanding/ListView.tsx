@@ -1,75 +1,50 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import Grid from 'src/components/Grid';
+import { OrderByProps } from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Paginate';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import LinodeRow from './LinodeRow/LinodeRow';
+import SortableTableHead from './SortableTableHead';
 
-interface WithLinodes {
+interface Props {
   data: Linode.Linode[];
-}
-
-interface ViewProps {
   images: Linode.Image[];
+  showHead?: boolean;
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
 }
 
 type CombinedProps =
-  & ViewProps
-  & WithLinodes
+  & Props
+  & OrderByProps
   & PaginationProps;
-
 
 export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     handleOrderChange,
-    data,
-    openConfigDrawer,
     order,
     orderBy,
+    data,
+    openConfigDrawer,
     toggleConfirmation,
+    showHead,
   } = props;
 
-  const isActive = (label: string) => label === orderBy;
+  const sortableTableHeadProps = {
+    handleOrderChange,
+    order,
+    orderBy,
+  };
 
   return (
     <Paper>
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
           <Table arial-label="List of Linodes">
-            <TableHead data-qa-table-head>
-              <TableRow>
-                <TableSortCell
-                  label='label'
-                  direction={order}
-                  active={isActive('label')}
-                  handleClick={handleOrderChange}
-                >
-                  Linode
-                </TableSortCell>
-                <TableCell>Plan</TableCell>
-                <TableCell noWrap>Last Backup</TableCell>
-                <TableCell>IP Addresses</TableCell>
-                <TableCell>Region</TableCell>
-                {/** @todo Enable sorting by region once ARB-1014 is resolved. */}
-                {/* <TableSortCell
-                  label='region'
-                  direction={order}
-                  active={isActive('region')}
-                  handleClick={handleOrderChange}
-                >
-                  Region
-                </TableSortCell> */}
-                <TableCell />
-              </TableRow>
-            </TableHead>
+            {showHead && <SortableTableHead {...sortableTableHeadProps} />}
             <TableBody>
               {data.map(linode =>
                 <LinodeRow

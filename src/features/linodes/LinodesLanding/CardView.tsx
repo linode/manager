@@ -1,24 +1,23 @@
 import * as React from 'react';
 import Grid from 'src/components/Grid';
+import { OrderByProps } from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Paginate';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
-interface WithLinodes {
+interface Props {
   data: Linode.Linode[];
-}
-
-interface ViewProps {
   images: Linode.Image[];
+  showHead?: boolean;
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
 }
 
 type CombinedProps =
   & PaginationProps
-  & ViewProps
-  & WithLinodes;
+  & OrderByProps
+  & Props;
 
 const CardView: React.StatelessComponent<CombinedProps> = (props) => {
   const { data, images, openConfigDrawer, toggleConfirmation } = props;
