@@ -1,4 +1,4 @@
-import { compose as _compose, defaultTo, map, uniq } from 'ramda';
+import { compose as _compose, isNil, map, reject, uniq } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
@@ -54,8 +54,8 @@ type CombinedProps = StateProps
 
 export const getGroupImportList = (entities: GroupImportProps[]) => {
   const importList: any = _compose(
-    defaultTo([]),         // Always return something
-    uniq,                  // Only return each group once
+    uniq,                                           // Only return each group once
+    reject(isNil),                                  // No undefined/null results
     map((entity: GroupImportProps) => entity.group) // Extract group from GIP object
   )(entities);
   return importList;
@@ -86,7 +86,7 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
             </Typography>
           </Grid>
           {!isEmpty(errors) && errors.map((error, idx: number) =>
-            <Grid key={idx} item>
+            <Grid key={idx} item data-qa-import-error>
               <Notice error spacingBottom={0} >
                 {error.entityLabel
                   ? `Error adding tag to ${error.entityLabel}: ${error.reason}`

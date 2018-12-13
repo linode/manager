@@ -38,5 +38,11 @@ describe("tagImportDrawer Redux duck", () => {
       );
       expect(newState).toHaveProperty('errors', errors);
     });
+    it("should handle RESET", () => {
+      const newState = tagDrawer({
+        open: true, loading: true, success: true, errors: []
+      }, T.handleReset() as any);
+      expect(newState).toEqual(T.defaultState);
+    })
   });
 });
