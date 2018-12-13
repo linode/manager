@@ -239,7 +239,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
