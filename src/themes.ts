@@ -75,6 +75,7 @@ export const dark = createTheme({
     grey3: '#999',
     white: '#32363C',
     black: '#fff',
+    offBlack: primaryColors.offBlack,
     boxShadow: '#222',
     focusBorder: '#999',
     absWhite: '#000',
