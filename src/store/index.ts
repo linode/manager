@@ -9,7 +9,7 @@ import events, { defaultState as eventsDefaultState } from './reducers/events';
 import features, { defaultState as featuresDefaultState } from './reducers/features';
 import notifications, { DEFAULT_STATE as notificationsDefaultState } from './reducers/notifications';
 import __resources, { defaultState as resourcesDefaultState } from './reducers/resources';
-import tagImportDrawer from './reducers/tagImportDrawer';
+import tagImportDrawer, { defaultState as tagDrawerDefaultState } from './reducers/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from './reducers/volumeDrawer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
@@ -37,6 +37,7 @@ const defaultState: ApplicationState = {
   notifications: notificationsDefaultState,
   domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
+  tagImportDrawer: tagDrawerDefaultState,
 };
 
 const enhancers = compose(
