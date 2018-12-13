@@ -5,8 +5,10 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPage from '@material-ui/icons/LastPage';
 
-import PageButton, { Props as PageButtonProps } from 'src/components/PaginationControls/PageButton';
+import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendEvent } from 'src/utilities/analytics';
+
+import PageNumbers from './PageNumbers';
 
 interface Props {
   count: number;
@@ -16,7 +18,7 @@ interface Props {
   onClickHandler: (page?: number) => void;
 }
 
-interface PageObject {
+export interface PageObject {
   disabled: boolean;
   number: number;
 }
@@ -137,20 +139,12 @@ export class PaginationControls extends React.Component<Props, State> {
         <PageButton data-qa-page-previous onClick={this.handlePreviousPageClick} disabled={disableHead} aria-label="Previous Page" >
           <KeyboardArrowLeft />
         </PageButton>
-        {
-          this.state.pages.map(({ number, disabled }) => (
-            <PageNumber
-              number={number}
-              handlePageClick={this.handlePageClick}
-              data-qa-page-to={number}
-              key={number}
-              disabled={disabled}
-              arial-label={`Page ${number}`}
-            >
-              {number}
-            </PageNumber>
-          ))
-        }
+        <PageNumbers
+          pages={this.state.pages}
+          numOfPages={numPages}
+          handlePageClick={this.handlePageClick}
+          page={page}
+        />
         <PageButton data-qa-page-next onClick={this.handleNextPageClick} disabled={disableTail} aria-label="Next Page" >
           <KeyboardArrowRight />
         </PageButton>
@@ -165,22 +159,3 @@ export class PaginationControls extends React.Component<Props, State> {
 };
 
 export default PaginationControls;
-
-
-interface PageNumberProps extends PageButtonProps {
-  number: number;
-  handlePageClick: (n: number) => void;
-}
-
-class PageNumber extends React.PureComponent<PageNumberProps> {
-  onClick = () => this.props.handlePageClick(this.props.number);
-
-  render() {
-    const { onClick, children, handlePageClick, ...rest } = this.props;
-
-    return (
-      <PageButton {...rest} onClick={this.onClick}>
-        {children}
-      </PageButton>);
-  }
-};
