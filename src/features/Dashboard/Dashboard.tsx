@@ -49,10 +49,11 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
     entitiesWithGroupsToImport
   } = props;
 
+  // Display the CTA if there is at least 1 group to import
   const hasGroupsToImport =
-    entitiesWithGroupsToImport.linodes.length > 0
+    entitiesWithGroupsToImport.linodes.length >= 1
     // @todo: Uncomment when domain support is added
-    // && entitiesWithGroupsToImport.domains.length > 1
+    // && entitiesWithGroupsToImport.domains.length >= 1
 
   return (
     <Grid container spacing={24}>
@@ -77,9 +78,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
         }
         {hasGroupsToImport &&
           <ImportGroupsCard
-            domainsWithGroupsToImport={{'1234':  ['s']}}
-            linodesWithGroupsToImport={{'1234':  ['s']}}
-            // @todo: use reducer to open drawer
+            // @todo: use reducer to open drawer instead of this dummy fn
             openImportDrawer={() => console.log('change this')}
           />
         }
@@ -94,7 +93,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
-  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state)
+  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state) // <-- Memoized selector
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {

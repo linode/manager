@@ -10,6 +10,8 @@ const state = {
 };
 
 describe('Entities that have groups to import', () => {
+  // Type "state" as "any" to avoid having to use an entire mock
+  // ApplicationState object for testing.
   const entities = entitiesWithGroupsToImport(state as any);
 
   describe('linodes', () => {

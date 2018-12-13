@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-// import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
@@ -8,11 +7,8 @@ import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root'
-| 'itemTitle'
 | 'header'
-| 'icon'
 | 'section'
-| 'sectionLink'
 | 'title'
 | 'button';
 
@@ -24,21 +20,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     textAlign: 'center',
     fontSize: 18,
   },
-  icon: {
-    color: theme.color.blueDTwhite,
-    margin: theme.spacing.unit,
-    fontSize: 32,
-  },
-  itemTitle: {
-    marginBottom: theme.spacing.unit,
-    color: theme.palette.primary.main,
-  },
   section: {
     padding: theme.spacing.unit * 3,
     borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  sectionLink: {
-    cursor: 'pointer',
   },
   title: {
     background: theme.bg.tableHeader,
@@ -54,17 +38,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 });
 
 interface Props {
-  linodesWithGroupsToImport: Record<string, string[]>;
-  domainsWithGroupsToImport: Record<string, string[]>
   openImportDrawer: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ImportGroupsCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, domainsWithGroupsToImport, linodesWithGroupsToImport, openImportDrawer } = props;
-
-  if (!linodesWithGroupsToImport && !domainsWithGroupsToImport) { return null; }
+export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, openImportDrawer } = props;
 
   return (
     <DashboardCard>
@@ -74,18 +54,12 @@ export const ImportGroupsCard: React.StatelessComponent<CombinedProps> = (props)
           [classes.title]: true
         }
       )}>
-        <Typography className={classes.header} variant="h1">
+        <Typography className={classes.header} variant="h1" data-qa-group-cta-header>
           Import Your Display Group to Tags
         </Typography>
       </Paper>
-      <Paper className={classNames(
-        {
-          [classes.section]: true,
-          [classes.sectionLink]: true
-        }
-        )}
-      >
-        <Typography variant="body1" >
+      <Paper className={classes.section}>
+        <Typography variant="body1" data-qa-group-cta-body>
           This will import Display Groups from Classic Manager and convert them to tags.
           Your existing tags will not be affected.
         </Typography>
@@ -102,8 +76,8 @@ export const ImportGroupsCard: React.StatelessComponent<CombinedProps> = (props)
   );
 };
 
-ImportGroupsCard.displayName = "ImportGroupsCard";
+GroupImportCard.displayName = "ImportGroupsCard";
 
 const styled = withStyles(styles);
 
-export default styled(ImportGroupsCard);
+export default styled(GroupImportCard);
