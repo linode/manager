@@ -237,22 +237,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const usersDisplayChoice = getDisplayFormat(params.view);
 
-    const view = usersDisplayChoice
-      ? usersDisplayChoice
-      : this.props.linodesCount >= 3
-        ? 'list'
-        : 'grid'
-
-    const display: 'grid' | 'list' =
-      ['sm', 'xs'].includes(width)
-        ? 'grid'
-        : view
-          ? view === 'grid'
-            ? 'grid'
-            : 'list'
-          : linodesCount >= 3
-            ? 'list'
-            : 'grid';
+    const display: 'grid' | 'list' = getDisplayType(width, linodesCount, usersDisplayChoice);
 
     const component = display === 'grid' ? CardView : ListView;
 
@@ -306,7 +291,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 label="Group by Tag:"
               />
             </div>
-            <ToggleBox handleClick={this.changeView} status={view} />
+            <ToggleBox handleClick={this.changeView} status={display} />
           </Hidden>
         </Grid>
         <Grid item xs={12}>
@@ -402,10 +387,6 @@ interface StateProps {
   linodesRequestLoading: boolean;
 }
 
-/**
- * 'linodes' are provided by pagination and 'notifications' are provided by redux. We're using MSTP
- * to join the Notifications to the appropriate Linode and provide that to the component.
- */
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => {
   return {
     managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
@@ -426,6 +407,7 @@ const connected = connect(mapStateToProps);
 export const enhanced = compose(
   withRouter,
 
+  /** I hate what I did here, and I promise Ill make it better. Eventually. */
   withStateHandlers(
     (ownProps: RouteProps) => {
       const { location } = ownProps;
@@ -459,4 +441,27 @@ export default enhanced(withWidth()(ListLinodes));
 const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
   return stringify(updater(paramsAsObject));
+};
+
+const getDisplayType = (width: string, linodesCount: number, userSelect?: 'grid' | 'list') => {
+  /**
+   * We force the use of grid view at sm and xs viewports.
+   */
+  if (['sm', 'xs'].includes(width)) {
+    return 'grid';
+  }
+
+  /**
+   * If the user has made a selection (via URL param or localStorage) then use that value.
+   */
+  if (userSelect) {
+    return userSelect;
+  }
+
+  /**
+   * Default to choosing based on the total number of Linodes.
+   * Note: Don't use data.length, otherwise the last page of 100000 Linodes will
+   * display as a grid (and people don't like it).
+   */
+  return linodesCount >= 3 ? 'list' : 'grid';
 };
