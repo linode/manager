@@ -97,19 +97,21 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     <React.Fragment>
                       <TableBody>
                         <TableRow>
-                          <TableCell colSpan={6}>{tag}</TableCell>
+                          <TableCell colSpan={7}>{tag}</TableCell>
                         </TableRow>
                         <Component {...finalProps} />
+                        <TableRow>
+                          <TableCell colSpan={7}>
+                            <PaginationFooter
+                              count={count}
+                              handlePageChange={handlePageChange}
+                              handleSizeChange={handlePageSizeChange}
+                              pageSize={pageSize}
+                              page={page}
+                            />
+                          </TableCell>
+                        </TableRow>
                       </TableBody>
-                      <Grid item xs={12}>
-                        <PaginationFooter
-                          count={count}
-                          handlePageChange={handlePageChange}
-                          handleSizeChange={handlePageSizeChange}
-                          pageSize={pageSize}
-                          page={page}
-                        />
-                      </Grid>
                     </React.Fragment>
                   )
                 }}
