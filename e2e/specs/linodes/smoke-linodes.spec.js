@@ -11,20 +11,15 @@ import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
 import SearchResults from '../../pageobjects/search-results.page';
 
 describe('List Linodes Suite', () => {
-    const linodeLabel = `AutoLinode${timestamp()}`;
     const linode = {
         linodeLabel: `AutoLinode${timestamp()}`,
         privateIp: false,
         tags: [`AutoTag${timestamp()}`]
     }
-    const assertActionMenuItems = () => {
-        expect([ListLinodes.powerOffMenu.isVisible(), ListLinodes.powerOnMenu.isVisible()]).toContain(true);
-        expect(ListLinodes.launchConsoleMenu.isVisible()).toBe(true);
-        expect(ListLinodes.rebootMenu.isVisible()).toBe(true);
-        expect(ListLinodes.viewGraphsMenu.isVisible()).toBe(true);
-        expect(ListLinodes.resizeMenu.isVisible()).toBe(true);
-        expect(ListLinodes.enableBackupsMenu.isVisible()).toBe(true);
-        expect(ListLinodes.settingsMenu.isVisible()).toBe(true);
+
+    const assertActionMenuItems = (linode) => {
+        const expectedOptions = ['Reboot', 'Power Off', 'Launch Console', 'View Graphs', 'Resize', 'Enable Backups', 'Settings'];
+        ListLinodes.actionMenuOptionExists($(ListLinodes.getLinodeSelector(linode)), expectedOptions);
         browser.click('body');
         ListLinodes.actionMenuItem.waitForExist(constants.wait.normal, true);
     }
@@ -70,23 +65,16 @@ describe('List Linodes Suite', () => {
         });
 
         it('should display action menu and linode action menu items', () => {
-            // Click first Linode Action Menu
-            ListLinodes.linode[0].$(ListLinodes.linodeActionMenu.selector).click();
-
-            ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
-            assertActionMenuItems();
-
-            browser.refresh();
+            assertActionMenuItems(linode.linodeLabel);
         });
 
         it('should display launch console button', () => {
-            ListLinodes.linodeLabel.waitForVisible(constants.wait.normal);
-            const consoleButton = ListLinodes.linode[0].$(ListLinodes.launchConsole.selector);
+            const consoleButton = $(`${ListLinodes.getLinodeSelector(linode.linodeLabel)} ${ListLinodes.launchConsole.selector}`);
             expect(consoleButton.isVisible()).toBe(true);
         });
 
         it('should display reboot button', () => {
-            const rebootButton = ListLinodes.linode[0].$(ListLinodes.rebootButton.selector);
+            const rebootButton = $(`${ListLinodes.getLinodeSelector(linode.linodeLabel)} ${ListLinodes.rebootButton.selector}`);
             expect(rebootButton.isVisible()).toBe(true);
         });
     });
@@ -127,14 +115,7 @@ describe('List Linodes Suite', () => {
         });
 
         it('should display action menu and linode action menu items', () => {
-            linodes.forEach(l => {
-                const actionMenu = l.$(ListLinodes.linodeActionMenu.selector);
-                expect(actionMenu.isVisible()).toBe(true);
-            });
-            linodes[0].$(ListLinodes.linodeActionMenu.selector).click();
-
-            ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
-            assertActionMenuItems();
+            assertActionMenuItems(linode.linodeLabel);
         });
 
         it('tags should be clickable in list view and navigate to search result page for the tag', () => {

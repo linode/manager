@@ -183,9 +183,11 @@ export default class Page {
       browser.jsClick(`${trimActionMenu}="${item}"]`);
     }
 
-    actionMenuOptionExists(actionMenuRow,option) {
+    actionMenuOptionExists(actionMenuRow,options) {
         this.openActionMenu(actionMenuRow);
-        expect($(`[data-qa-action-menu-item="${option}"]`).isVisible()).toBe(true);
+        options.forEach((option) => {
+            expect($(`[data-qa-action-menu-item="${option}"]`).isVisible()).toBe(true)
+        });
     }
 
     closeDrawer() {

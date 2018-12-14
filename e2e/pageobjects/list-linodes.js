@@ -51,11 +51,16 @@ export class ListLinodes extends Page {
         }
     }
 
+    getLinodeSelector(linode){
+        return `[data-qa-linode="${linode}"]`;
+    }
+
     navigateToDetail(linode) {
-       const linodeLink = linode ? $$(`[data-qa-linode="${linode}"] a>div`)[0] : this.linode[0].$$('a>div')[0];
+       const linodeLink = linode ? $$(`${this.getLinodeSelector(linode)} a>div`)[0] : this.linode[0].$$('a>div')[0];
        linodeLink.waitForVisible(constants.wait.normal);
        linodeLink.click();
     }
+
     gridElemsDisplay() {
         const header = this.subheader;
         this.linode.forEach(l => {
@@ -91,9 +96,9 @@ export class ListLinodes extends Page {
     }
 
     getStatus(linode) {
-        return $(`[data-qa-linode="${linode}"] ${this.status.selector}`).getAttribute('data-qa-status');
+        return $(`${this.getLinodeSelector(linode)} ${this.status.selector}`).getAttribute('data-qa-status');
     }
-
+    
     reboot(linode) {
         const activeView = this.activeView.getAttribute('data-qa-active-view');
 
@@ -121,11 +126,11 @@ export class ListLinodes extends Page {
     }
 
     powerOff(linode) {
-        this.selectActionMenuItemV2(`[data-qa-linode="${linode}"]`,'Power Off');
+        this.selectActionMenuItemV2(this.getLinodeSelector(linode),'Power Off');
         this.acceptDialog('Powering Off');
 
         browser.waitUntil(function() {
-            return browser.isVisible(`[data-qa-linode="${linode}"] [data-qa-status="offline"]`);
+            return browser.isVisible(`${this.getLinodeSelector(linode)} [data-qa-status="offline"]`);
         }, constants.wait.minute * 3, 'Failed to power down linode');
     }
 
@@ -153,7 +158,7 @@ export class ListLinodes extends Page {
     waitUntilBooted(label) {
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
         browser.waitForVisible('[data-qa-loading="true"]', constants.wait.long, true);
-        browser.waitForVisible(`[data-qa-linode="${label}"] [data-qa-status="running"]`, constants.wait.minute * 3);
+        browser.waitForVisible(`${this.getLinodeSelector(linode)} [data-qa-status="running"]`, constants.wait.minute * 3);
     }
 
     acceptDialog(dialogTitle) {

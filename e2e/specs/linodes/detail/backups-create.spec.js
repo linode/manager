@@ -67,7 +67,7 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
 
     it('Backups can be deployed to new linodes', () => {
         const backupRow = $(`[data-qa-backup-name=${snapshot}]`).$('..');
-        Backups.actionMenuOptionExists(backupRow,'Deploy New Linode');
+        Backups.actionMenuOptionExists(backupRow,['Deploy New Linode']);
         $('body').click();
     });
 
