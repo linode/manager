@@ -3,6 +3,9 @@ import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
 
+import { Provider } from 'react-redux';
+import store from 'src/store';
+
 interface State {
   selected: number;
 }
@@ -134,15 +137,17 @@ class InteractiveExample extends React.Component<{}, State> {
 
   render() {
     return (
-      <StaticRouter>
-        <React.Fragment>
-          {
-            this
-              .createItems()
-              .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
-          }
-        </React.Fragment>
-      </StaticRouter>
+      <Provider store={store}>
+        <StaticRouter>
+          <React.Fragment>
+            {
+              this
+                .createItems()
+                .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
+            }
+          </React.Fragment>
+        </StaticRouter>
+      </Provider>
     );
   }
 }
