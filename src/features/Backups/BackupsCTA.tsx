@@ -67,7 +67,7 @@ interface DispatchProps {
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
-  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => l.backups.enabled),
+  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources','accountSettings','data','managed'], state)
 })
 
