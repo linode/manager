@@ -12,20 +12,20 @@ import Typography, { TypographyProps } from 'src/components/core/Typography';
 import TextField from '../TextField';
 
 type ClassNames = 'root'
-| 'container'
-| 'initial'
-| 'edit'
-| 'textField'
-| 'inputRoot'
-| 'input'
-| 'button'
-| 'icon'
-| 'save'
-| 'close'
-| 'headline'
-| 'title'
-| 'editIcon'
-| 'underlineOnHover';
+  | 'container'
+  | 'initial'
+  | 'edit'
+  | 'textField'
+  | 'inputRoot'
+  | 'input'
+  | 'button'
+  | 'icon'
+  | 'save'
+  | 'close'
+  | 'headline'
+  | 'title'
+  | 'editIcon'
+  | 'underlineOnHover';
 
 const styles: StyleRulesCallback = (theme) => ({
   '@keyframes fadeIn': {
@@ -132,7 +132,7 @@ const styles: StyleRulesCallback = (theme) => ({
 });
 
 interface Props {
-  onEdit: (text: string) => void;
+  onEdit: (text: string) => Promise<any>;
   onCancel: () => void;
   text: string;
   errorText?: string;
@@ -155,42 +155,41 @@ export class EditableText extends React.Component<FinalProps, State> {
     text: this.props.text,
   };
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.text !== this.state.text) {
-      this.setState({ text: nextProps.text });
-    }
-    if (nextProps.errorText) {
-      this.setState({ isEditing: true });
-    } else {
-      this.setState({ isEditing: false });
-    }
-  }
-
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ text: e.target.value });
   }
 
-  toggleEditing = () => {
-    this.setState({ isEditing: !this.state.isEditing });
+  openEdit = () => {
+    this.setState({ isEditing: true });
   }
 
-  finishEditing = (text: string) => {
-    if (text === this.props.text && !this.props.errorText) {
-      this.setState({ isEditing: false });
+  finishEditing = () => {
+    const { text } = this.state;
+    /** 
+     * if the entered text is different from the original text
+     * provided, run the update callback
+     * 
+     * only exit editing mode if promise resolved
+     */
+    if (text !== this.props.text) {
+      this.props.onEdit(text)
+        .then(() => {
+          this.setState({ isEditing: false })
+        })
+        .catch(e => e);
     }
-    this.props.onEdit(text);
   }
 
   cancelEditing = () => {
-    this.props.onCancel();
+    /** cancel editing and invoke callback function and revert text to original */
+    this.setState({ isEditing: false, text: this.props.text }, () => {
+      this.props.onCancel()
+    })
   }
 
-  handleSaveEdit = () => {
-    this.finishEditing(this.state.text);
-  }
-
+  /** confirm or cancel edits if the enter or escape keys are pressed, respectively */
   handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') { this.finishEditing(this.state.text); }
+    if (e.key === 'Enter') { this.finishEditing(); }
     if (e.key === 'Escape' || e.key === 'Esc') { this.cancelEditing(); }
   }
 
@@ -200,7 +199,7 @@ export class EditableText extends React.Component<FinalProps, State> {
     const { isEditing, text } = this.state;
 
     const labelText = (
-      <Typography className={classes.root} { ...rest } variant="h1" data-qa-editable-text>
+      <Typography className={classes.root} {...rest} variant="h1" data-qa-editable-text>
         {this.state.text}
       </Typography>
     );
@@ -208,70 +207,71 @@ export class EditableText extends React.Component<FinalProps, State> {
     return (
       !isEditing
         ? (
-            <div className={`${classes.container} ${classes.initial}`}>
-              <React.Fragment>
-                {!!labelLink
-                  ?
-                    <Link to={labelLink!} className={classes.underlineOnHover}>
-                      {labelText}
-                    </Link>
-                  :
-                    labelText
-                }
-                <Button
-                  className={`${classes.button} ${classes.editIcon}`}
-                  onClick={this.toggleEditing}
-                  data-qa-edit-button
-                  aria-label={`Edit ${labelText}`}
-                >
-                  <Edit className={`${classes.icon} ${classes.edit}`}/>
-                </Button>
-              </React.Fragment>
-            </div>
-          )
+          <div className={`${classes.container} ${classes.initial}`}>
+            <React.Fragment>
+              {!!labelLink
+                ?
+                <Link to={labelLink!} className={classes.underlineOnHover}>
+                  {labelText}
+                </Link>
+                :
+                labelText
+              }
+              {/** pencil icon */}
+              <Button
+                className={`${classes.button} ${classes.editIcon}`}
+                onClick={this.openEdit}
+                data-qa-edit-button
+                aria-label={`Edit ${labelText}`}
+              >
+                <Edit className={`${classes.icon} ${classes.edit}`} />
+              </Button>
+            </React.Fragment>
+          </div>
+        )
         : (
-            <ClickAwayListener
-              onClickAway={this.cancelEditing}
-              mouseEvent="onMouseDown"
-            >
-              <div className={`${classes.container} ${classes.edit}`} data-qa-edit-field>
-                <TextField
-                  className={classes.textField}
-                  type="text"
-                  onChange={this.onChange}
-                  onKeyDown={this.handleKeyPress}
-                  value={text}
-                  errorText={this.props.errorText}
-                  {...rest}
-                  InputProps={{ className: classes.inputRoot }}
-                  inputProps={{
-                    className: classnames({
-                      [classes.headline]: this.props.typeVariant === 'h1',
-                      [classes.title]: this.props.typeVariant === 'h2',
-                      [classes.input]: true,
-                    }),
-                  }}
-                  autoFocus={true}
+          <ClickAwayListener
+            onClickAway={this.cancelEditing}
+            mouseEvent="onMouseDown"
+          >
+            <div className={`${classes.container} ${classes.edit}`} data-qa-edit-field>
+              <TextField
+                className={classes.textField}
+                type="text"
+                onChange={this.onChange}
+                onKeyDown={this.handleKeyPress}
+                value={text}
+                errorText={this.props.errorText}
+                {...rest}
+                InputProps={{ className: classes.inputRoot }}
+                inputProps={{
+                  className: classnames({
+                    [classes.headline]: this.props.typeVariant === 'h1',
+                    [classes.title]: this.props.typeVariant === 'h2',
+                    [classes.input]: true,
+                  }),
+                }}
+                autoFocus={true}
+              />
+              <Button
+                className={classes.button}
+                onClick={this.finishEditing}
+                data-qa-save-edit
+              >
+                <Check
+                  className={`${classes.icon} ${classes.save}`}
                 />
-                <Button
-                  className={classes.button}
-                  onClick={this.handleSaveEdit}
-                  data-qa-save-edit
-                >
-                  <Check
-                    className={`${classes.icon} ${classes.save}`}
-                  />
-                </Button>
-                <Button
-                  className={classes.button}
-                  onClick={this.cancelEditing}
-                  data-qa-cancel-edit
-                >
-                  <Close
-                    className={`${classes.icon} ${classes.close}`}
-                  />
-                </Button>
-              </div>
+              </Button>
+              <Button
+                className={classes.button}
+                onClick={this.cancelEditing}
+                data-qa-cancel-edit
+              >
+                <Close
+                  className={`${classes.icon} ${classes.close}`}
+                />
+              </Button>
+            </div>
           </ClickAwayListener>
         )
     );

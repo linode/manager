@@ -428,9 +428,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   // breaks the layout)
   updateLabel = (label: string) => {
     const { data: linode } = this.state.context.linode;
-    if (!linode) { return; }
-
-    updateLinode(linode.id, { label })
+    /** "!" is okay because linode being undefined is being handled by render() */
+    return updateLinode(linode!.id, { label })
       .then((linodeResponse) => {
         this.composeState(
           set(L.linode.data, linodeResponse),
@@ -441,18 +440,21 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       .catch((err) => {
         const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
         const errorStrings: string[] = errors.map(e => e.reason);
-        this.setState({ labelInput: { label, errorText: errorStrings[0] } }, () => {
+        /** "!" is okay because linode being undefined is being handled by render() */
+        this.setState({ labelInput: { label: linode!.label, errorText: errorStrings[0] } }, () => {
           scrollErrorIntoView();
         });
+        return Promise.reject(errorStrings[0])
       });
   }
 
   cancelUpdate = () => {
-    const { data: linode } = this.state.context.linode;
-    if (!linode) { return; }
-
-    this.setState({ labelInput: { label: linode.label, errorText: '' } });
-    this.forceUpdate();
+    /** @todo figure out why this logic was here in the first place */
+    // const { data: linode } = this.state.context.linode;
+    // if (!linode) { return; }
+    
+    // this.setState({ labelInput: { label: linode.label, errorText: '' } });
+    // this.forceUpdate();
   }
 
   openMutateDrawer = () => {
