@@ -1,5 +1,7 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import Chip from 'src/components/core/Chip';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -12,6 +14,18 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 
+type ClassNames = 'root' | 'tagHeaderRow' | 'tagHeader';
+
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  root: {},
+  tagHeaderRow: {
+    backgroundColor: theme.bg.offWhite,
+  },
+  tagHeader: {
+    marginLeft: 5,
+  },
+});
+
 interface Props {
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
@@ -21,7 +35,7 @@ interface Props {
   data: Linode.Linode[];
 }
 
-type CombinedProps = Props & OrderByProps;
+type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
 
 const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -31,6 +45,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
     order,
     orderBy,
     handleOrderChange,
+    classes,
     ...rest
   } = props;
 
@@ -96,21 +111,10 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                   return (
                     <React.Fragment>
                       <TableBody>
-                        <TableRow>
-                          <TableCell colSpan={7}>{tag}</TableCell>
+                        <TableRow className={classes.tagHeaderRow}>
+                          <TableCell colSpan={7}><Chip className={classes.tagHeader} label={tag} /></TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                        <TableRow>
-                          <TableCell colSpan={7}>
-                            <PaginationFooter
-                              count={count}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              pageSize={pageSize}
-                              page={page}
-                            />
-                          </TableCell>
-                        </TableRow>
                       </TableBody>
                     </React.Fragment>
                   )
@@ -126,7 +130,9 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
   return null;
 };
 
-export default DisplayGroupedLinodes;
+const styled = withStyles(styles);
+
+export default styled(DisplayGroupedLinodes);
 
 /**
  * Moves the NONE to the top, and alphabetically sorts the remainder.
