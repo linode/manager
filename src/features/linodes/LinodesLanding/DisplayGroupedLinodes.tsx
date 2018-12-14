@@ -65,15 +65,13 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     <React.Fragment>
                       <Component {...finalProps} />
                       <Grid item xs={12}>
-                        {
-                          <PaginationFooter
-                            count={count}
-                            handlePageChange={handlePageChange}
-                            handleSizeChange={handlePageSizeChange}
-                            pageSize={pageSize}
-                            page={page}
-                          />
-                        }
+                        <PaginationFooter
+                          count={count}
+                          handlePageChange={handlePageChange}
+                          handleSizeChange={handlePageSizeChange}
+                          pageSize={pageSize}
+                          page={page}
+                        />
                       </Grid>
                     </React.Fragment>
                   )
@@ -88,7 +86,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
 
   if (display === 'list') {
     return (
-      <>
+      <TableWrapper {...tableWrapperProps}>
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <React.Fragment key={tag}>
@@ -97,24 +95,20 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                   const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
                   return (
                     <React.Fragment>
-                      <TableWrapper {...tableWrapperProps}>
-                        <TableBody>
-                          <TableRow>
-                            <TableCell colSpan={6}>{tag}</TableCell>
-                          </TableRow>
-                          <Component {...finalProps} />
-                        </TableBody>
-                      </TableWrapper>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell colSpan={6}>{tag}</TableCell>
+                        </TableRow>
+                        <Component {...finalProps} />
+                      </TableBody>
                       <Grid item xs={12}>
-                        {
-                          <PaginationFooter
-                            count={count}
-                            handlePageChange={handlePageChange}
-                            handleSizeChange={handlePageSizeChange}
-                            pageSize={pageSize}
-                            page={page}
-                          />
-                        }
+                        <PaginationFooter
+                          count={count}
+                          handlePageChange={handlePageChange}
+                          handleSizeChange={handlePageSizeChange}
+                          pageSize={pageSize}
+                          page={page}
+                        />
                       </Grid>
                     </React.Fragment>
                   )
@@ -123,7 +117,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
             </React.Fragment>
           )
         })}
-      </>
+      </TableWrapper>
     );
   }
 
