@@ -1,7 +1,7 @@
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { parse, stringify } from 'qs';
-import { omit, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -22,7 +22,7 @@ import Toggle from 'src/components/Toggle';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
-import { views } from 'src/utilities/storage';
+import { storage, views } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
@@ -56,7 +56,7 @@ interface State {
 
 interface Params {
   view?: string;
-  groupByTag?: string;
+  groupByTag?: 'true' | 'false';
 }
 
 type RouteProps = RouteComponentProps<Params>
@@ -409,21 +409,16 @@ export const enhanced = compose(
   /** I hate what I did here, and I promise Ill make it better. Eventually. */
   withStateHandlers(
     (ownProps: RouteProps) => {
-      const { location } = ownProps;
-      const params: Params = parse(location.search, { ignoreQueryPrefix: true })
-
-      return { groupByTags: params.groupByTag }
+      const localStorageSelection = storage.views.grouped.get();
+      return {
+        groupByTags: localStorageSelection === undefined
+          ? true
+          : localStorageSelection
+      }
     },
     {
       toggleGroupByTag: (state, ownProps) => (e, checked) => {
-        const { history, location } = ownProps;
-
-        const updatedParams = updateParams<Params>(location.search, (params) => {
-          return params.groupByTag ? omit(['groupByTag'], params) : { ...params, groupByTag: 'true' }
-        });
-
-        history.push(`?${updatedParams}`);
-
+        storage.views.grouped.set(checked ? 'true' : 'false')
         return { ...state, groupByTags: checked };
       },
     },
