@@ -44,6 +44,14 @@ describe('TagImportDrawer', () => {
     it("should display a Notice for each error", () => {
       component.setProps({ errors });
       expect(component.find('[data-qa-import-error]')).toHaveLength(errors.length);
-    })
-  })
+    });
+    it("should call update() when the Import button is clicked", () => {
+      component.find('[data-qa-submit]').simulate('click');
+      expect(props.actions.update).toHaveBeenCalled();
+    });
+    it("should call close() when the cancel button is clicked", () => {
+      component.find('[data-qa-cancel]').simulate('click');
+      expect(props.actions.close).toHaveBeenCalled();
+    });
+  });
 });
