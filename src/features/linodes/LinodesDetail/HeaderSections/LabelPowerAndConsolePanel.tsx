@@ -1,9 +1,11 @@
 import { last } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import LinodePowerControl from '../LinodePowerControl';
 
 type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'cta' | 'launchButton';
@@ -63,7 +65,7 @@ interface Props {
   labelInput: LabelInput;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
 const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, linode, launchLish, openConfigDrawer, labelInput } = props;
@@ -99,9 +101,9 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
           data-qa-launch-console
           disableFocusRipple={true}
           disableRipple={true}
-          >
+        >
           Launch Console
-    </Button>
+        </Button>
         <LinodePowerControl
           status={linode.status}
           recentEvent={linode.recentEvent}
@@ -116,4 +118,8 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
 
 const styled = withStyles(styles);
 
-export default styled(LabelPowerAndConsolePanel);
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  styled,
+  RenderGuard
+)(LabelPowerAndConsolePanel);
+

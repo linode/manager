@@ -128,6 +128,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
           status={linodeStatus}
         />
         <LabelPowerAndConsolePanel
+          updateFor={[linodeLabel, linodeStatus, linodeRecentEvent]}
           launchLish={this.launchLish}
           linode={{
             id: linodeId,
