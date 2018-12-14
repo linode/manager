@@ -1,13 +1,7 @@
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import TableBody from 'src/components/core/TableBody';
-import Grid from 'src/components/Grid';
-import { OrderByProps } from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Paginate';
-import Table from 'src/components/Table';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import LinodeRow from './LinodeRow/LinodeRow';
-import SortableTableHead from './SortableTableHead';
 
 interface Props {
   data: Linode.Linode[];
@@ -19,57 +13,34 @@ interface Props {
 
 type CombinedProps =
   & Props
-  & OrderByProps
   & PaginationProps;
 
 export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    data,
-    openConfigDrawer,
-    toggleConfirmation,
-    showHead,
-  } = props;
-
-  const sortableTableHeadProps = {
-    handleOrderChange,
-    order,
-    orderBy,
-  };
-
+  const { data, openConfigDrawer, toggleConfirmation } = props;
   return (
-    <Paper>
-      <Grid container className="my0">
-        <Grid item xs={12} className="py0">
-          <Table arial-label="List of Linodes">
-            {showHead && <SortableTableHead {...sortableTableHeadProps} />}
-            <TableBody>
-              {data.map(linode =>
-                <LinodeRow
-                  key={linode.id}
-                  linodeId={linode.id}
-                  linodeType={linode.type}
-                  linodeStatus={linode.status}
-                  linodeIpv4={linode.ipv4}
-                  linodeIpv6={linode.ipv6}
-                  linodeRegion={linode.region}
-                  linodeNotification={linode.notification}
-                  linodeLabel={linode.label}
-                  linodeBackups={linode.backups}
-                  linodeTags={linode.tags}
-                  linodeRecentEvent={linode.recentEvent}
-                  openConfigDrawer={openConfigDrawer}
-                  toggleConfirmation={toggleConfirmation}
-                  mostRecentBackup={linode.mostRecentBackup}
-                />,
-              )}
-            </TableBody>
-          </Table>
-        </Grid>
-      </Grid>
-    </Paper>
+    <>
+      {
+        data.map(linode =>
+          <LinodeRow
+            key={linode.id}
+            linodeId={linode.id}
+            linodeType={linode.type}
+            linodeStatus={linode.status}
+            linodeIpv4={linode.ipv4}
+            linodeIpv6={linode.ipv6}
+            linodeRegion={linode.region}
+            linodeNotification={linode.notification}
+            linodeLabel={linode.label}
+            linodeBackups={linode.backups}
+            linodeTags={linode.tags}
+            linodeRecentEvent={linode.recentEvent}
+            openConfigDrawer={openConfigDrawer}
+            toggleConfirmation={toggleConfirmation}
+            mostRecentBackup={linode.mostRecentBackup}
+          />,
+        )
+      }
+    </>
   );
 };
 

@@ -1,116 +1,138 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import Hidden from 'src/components/core/Hidden';
+import TableBody from 'src/components/core/TableBody';
+import TableCell from 'src/components/core/TableCell';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import OrderBy from 'src/components/OrderBy';
+import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
-import CardView from './CardView';
-import ListLinodesEmptyState from './ListLinodesEmptyState';
-import ListView from './ListView';
-import SortableTableHead from './SortableTableHead';
+import TableWrapper from './TableWrapper';
 
 interface Props {
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
-  view: undefined | 'grid' | 'list';
+  display: 'grid' | 'list';
+  component: any;
+  data: Linode.Linode[];
+  count: number;
 }
 
-interface WithLinodes {
-  linodesData: Linode.Linode[];
-  linodesCount: number;
-}
-
-type CombinedProps =
-  & Props
-  & WithLinodes;
+type CombinedProps = Props & OrderByProps;
 
 const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) => {
-  const { view, linodesData, linodesCount, ...rest } = props;
+  const {
+    data,
+    count,
+    display,
+    component: Component,
+    order,
+    orderBy,
+    handleOrderChange,
+    ...rest
+  } = props;
 
-  if (props.linodesCount === 0) {
-    return <ListLinodesEmptyState />
+  const orderedGroupedLinodes = compose(sortGroupedLinodes, groupByTags)(data);
+  const tableWrapperProps = { handleOrderChange, order, orderBy };
+
+  if (display === 'grid') {
+    return (
+      <>
+        {orderedGroupedLinodes.map(([tag, linodes]) => {
+          return (
+            <React.Fragment key={tag}>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="h1">{tag}</Typography>
+                </Grid>
+              </Grid>
+              <Paginate data={linodes} pageSize={25}>
+                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+                  const finalProps = {
+                    ...rest,
+                    data: paginatedData,
+                    pageSize,
+                    page,
+                    handlePageSizeChange,
+                    handlePageChange,
+                    handleOrderChange,
+                    order,
+                    orderBy,
+                  };
+                  return (
+                    <React.Fragment>
+                      <Component {...finalProps} />
+                      <Grid item xs={12}>
+                        {
+                          <PaginationFooter
+                            count={count}
+                            handlePageChange={handlePageChange}
+                            handleSizeChange={handlePageSizeChange}
+                            pageSize={pageSize}
+                            page={page}
+                          />
+                        }
+                      </Grid>
+                    </React.Fragment>
+                  )
+                }}
+              </Paginate>
+            </React.Fragment>
+          )
+        })}
+      </>
+    );
   }
 
-  const Component = view
-    ? view === 'grid'
-      ? CardView
-      : ListView
-    : props.linodesCount >= 3
-      ? ListView
-      : CardView;
+  if (display === 'list') {
+    return (
+      <>
+        {orderedGroupedLinodes.map(([tag, linodes]) => {
+          return (
+            <React.Fragment key={tag}>
+              <Paginate data={linodes} pageSize={25}>
+                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+                  const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
+                  return (
+                    <React.Fragment>
+                      <TableWrapper {...tableWrapperProps}>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell colSpan={6}>{tag}</TableCell>
+                          </TableRow>
+                          <Component {...finalProps} />
+                        </TableBody>
+                      </TableWrapper>
+                      <Grid item xs={12}>
+                        {
+                          <PaginationFooter
+                            count={count}
+                            handlePageChange={handlePageChange}
+                            handleSizeChange={handlePageSizeChange}
+                            pageSize={pageSize}
+                            page={page}
+                          />
+                        }
+                      </Grid>
+                    </React.Fragment>
+                  )
+                }}
+              </Paginate>
+            </React.Fragment>
+          )
+        })}
+      </>
+    );
+  }
 
-  return (
-    <OrderBy data={linodesData} order={'asc'} orderBy={'label'}>
-      {({ data, handleOrderChange, order, orderBy }) => {
-
-        const groupedLinodes = compose(sortGroupedLinodes, groupByTags)(data);
-        const sortableTableHeadProps = { handleOrderChange, order, orderBy };
-
-        return (
-          <React.Fragment>
-            {view === 'list' && <SortableTableHead {...sortableTableHeadProps} />}
-            {groupedLinodes.map(([tag, linodes]) => {
-              return (
-                <React.Fragment key={tag}>
-                  <Typography variant="h1">{tag}</Typography>
-                  <Paginate data={linodes} pageSize={25}>
-                    {({ data, handlePageChange, handlePageSizeChange, page, pageSize }) => {
-                      const finalProps = {
-                        ...rest,
-                        data,
-                        pageSize,
-                        page,
-                        handlePageSizeChange,
-                        handlePageChange,
-                        handleOrderChange,
-                        order,
-                        orderBy,
-                      };
-                      return (
-                        <React.Fragment>
-                          <Hidden mdUp>
-                            <CardView {...finalProps} />
-                          </Hidden>
-                          <Hidden smDown>
-                            <Component {...finalProps} />
-                          </Hidden>
-                          <Grid item xs={12}>
-                            {
-                              <PaginationFooter
-                                count={linodesCount}
-                                handlePageChange={handlePageChange}
-                                handleSizeChange={handlePageSizeChange}
-                                pageSize={pageSize}
-                                page={page}
-                              />
-                            }
-                          </Grid>
-                        </React.Fragment>
-                      )
-                    }}
-                  </Paginate>
-                </React.Fragment>
-              )
-            })}
-          </React.Fragment>
-        );
-      }}
-    </OrderBy>
-  );
+  return null;
 };
 
-const withLinodes = connect((state: ApplicationState, ownProps) => ({
-  linodesData: state.__resources.linodes.entities,
-  linodesCount: state.__resources.linodes.results.length,
-}));
-
-export default withLinodes(DisplayGroupedLinodes);
+export default DisplayGroupedLinodes;
 
 /**
  * Moves the NONE to the top, and alphabetically sorts the remainder.

@@ -5,7 +5,6 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 import { ListLinodes } from './LinodesLanding';
 
-
 const RoutedListLinodes = withRouter(ListLinodes);
 
 describe('ListLinodes', () => {
@@ -15,6 +14,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            linodesData={[]}
+            width={'lg'}
             classes={{ root: '', title: '' }}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
@@ -38,6 +39,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            linodesData={[]}
+            width={'lg'}
             classes={{ root: '', title: '' }}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
@@ -65,6 +68,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            linodesData={[]}
+            width={'lg'}
             classes={{ root: '', title: '' }}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}

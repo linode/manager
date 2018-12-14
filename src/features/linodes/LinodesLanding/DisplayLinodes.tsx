@@ -1,93 +1,82 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import Hidden from 'src/components/core/Hidden';
+import TableBody from 'src/components/core/TableBody';
 import Grid from 'src/components/Grid';
-import OrderBy from 'src/components/OrderBy';
+import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import CardView from './CardView';
-import ListLinodesEmptyState from './ListLinodesEmptyState';
-import ListView from './ListView';
+import TableWrapper from './TableWrapper';
 
 interface Props {
-  view?: 'grid' | 'list';
   images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
+  display: 'grid' | 'list';
+  component: any;
+  data: Linode.Linode[];
+  count: number;
 }
 
-interface WithLinodes {
-  linodesData: Linode.Linode[];
-  linodesCount: number;
-};
-
-type CombinedProps =
-  & Props
-  & WithLinodes;
+type CombinedProps = Props & OrderByProps;
 
 const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
-  const { view, linodesCount, ...rest } = props;
-
-  if (props.linodesCount === 0) {
-    return <ListLinodesEmptyState />
-  }
-
-  const Component = view
-    ? view === 'grid'
-      ? CardView
-      : ListView
-    : props.linodesCount >= 3
-      ? ListView
-      : CardView;
+  const {
+    data,
+    count,
+    display,
+    component: Component,
+    order,
+    orderBy,
+    handleOrderChange,
+    ...rest
+  } = props;
 
   return (
-    <OrderBy data={props.linodesData} order={'asc'} orderBy={'label'}>
-      {({ data, handleOrderChange, order, orderBy }) => (
-        <Paginate data={data} pageSize={25}>
-          {({ data, handlePageChange, handlePageSizeChange, page, pageSize }) => {
-            const finalProps = {
-              ...rest,
-              data,
-              pageSize,
-              page,
-              handlePageSizeChange,
-              handlePageChange,
-              handleOrderChange,
-              order,
-              orderBy,
-            };
-            return (
-              <React.Fragment>
-                <Hidden mdUp>
-                  <CardView {...finalProps} />
-                </Hidden>
-                <Hidden smDown>
-                  <Component showHead {...finalProps} />
-                </Hidden>
-                <Grid item xs={12}>
-                  {
-                    <PaginationFooter
-                      count={linodesCount}
-                      handlePageChange={handlePageChange}
-                      handleSizeChange={handlePageSizeChange}
-                      pageSize={pageSize}
-                      page={page}
-                    />
-                  }
-                </Grid>
-              </React.Fragment>
-            )
-          }}
-        </Paginate>
-      )}
-    </OrderBy>
+    <Paginate data={data} pageSize={25}>
+      {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+        const componentProps = {
+          ...rest,
+          data: paginatedData,
+          pageSize,
+          page,
+          handlePageSizeChange,
+          handlePageChange,
+        };
+        const tableWrapperProps = {
+          handleOrderChange,
+          order,
+          orderBy,
+        }
+        return (
+          <React.Fragment>
+            {
+              display === 'list' &&
+              <TableWrapper {...tableWrapperProps}>
+                <TableBody>
+                  <Component showHead {...componentProps} />
+                </TableBody>
+              </TableWrapper>
+            }
+            {
+              display === 'grid' &&
+              <Component showHead {...componentProps} />
+            }
+            <Grid item xs={12}>
+              {
+                <PaginationFooter
+                  count={count}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                  pageSize={pageSize}
+                  page={page}
+                />
+              }
+            </Grid>
+          </React.Fragment>
+        )
+      }}
+    </Paginate>
   )
 };
 
-const withLinodes = connect((state: ApplicationState) => ({
-  linodesData: state.__resources.linodes.entities,
-  linodesCount: state.__resources.linodes.results.length,
-}))
-
-export default withLinodes(DisplayLinodes);
+export default DisplayLinodes;
