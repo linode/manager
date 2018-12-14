@@ -235,9 +235,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     const params: Params = parse(this.props.location.search, { ignoreQueryPrefix: true });
 
-    const usersDisplayChoice = getDisplayFormat(params.view);
+    const userSelectedDisplay = getUserSelectedDisplay(params.view);
 
-    const display: 'grid' | 'list' = getDisplayType(width, linodesCount, usersDisplayChoice);
+    const display: 'grid' | 'list' = getDisplayType(width, linodesCount, userSelectedDisplay);
 
     const component = display === 'grid' ? CardView : ListView;
 
@@ -304,12 +304,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 order,
                 orderBy,
               }
-              return (
-                <React.Fragment>
-                  {groupByTags && <DisplayGroupedLinodes {...finalProps} />}
-                  {!groupByTags && <DisplayLinodes {...finalProps} />}
-                </React.Fragment>
-              )
+              const render = groupByTags
+                ? <DisplayGroupedLinodes {...finalProps} />
+                : <DisplayLinodes {...finalProps} />;
+
+              return render;
             }}
           </OrderBy>
         </Grid>
@@ -364,7 +363,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   closePowerAlert = () => this.setState({ powerAlertOpen: false });
 }
 
-const getDisplayFormat = (value?: string): undefined | 'grid' | 'list' => {
+const getUserSelectedDisplay = (value?: string): undefined | 'grid' | 'list' => {
   /** Value comes from the URL */
   if (value) {
     return value === 'grid' ? 'grid' : 'list';
