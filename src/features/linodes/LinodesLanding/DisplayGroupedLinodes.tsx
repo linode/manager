@@ -5,7 +5,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -14,10 +13,18 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 
-type ClassNames = 'root' | 'tagHeaderRow' | 'tagHeader';
+type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  tagGridRow: {
+    padding: theme.spacing.unit,
+    background: theme.bg.pureWhite,
+    marginBottom: theme.spacing.unit * 3,
+    '& [data-qa-linode] > div': {
+      border: `1px solid ${theme.palette.divider}`,
+    }
+  },
   tagHeaderRow: {
     backgroundColor: theme.bg.offWhite,
   },
@@ -57,10 +64,10 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
       <>
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
-            <React.Fragment key={tag}>
+            <div key={tag} className={classes.tagGridRow}>
               <Grid container>
                 <Grid item xs={12}>
-                  <Typography variant="h1">{tag}</Typography>
+                  <Chip className={classes.tagHeader} label={tag} style={{ marginTop: 8 }} />
                 </Grid>
               </Grid>
               <Paginate data={linodes} pageSize={25}>
@@ -92,7 +99,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                   )
                 }}
               </Paginate>
-            </React.Fragment>
+            </div>
           )
         })}
       </>
