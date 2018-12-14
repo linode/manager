@@ -19,20 +19,51 @@ const PageNumbers: React.StatelessComponent<Props & StyleProps> = (props) => {
   return (
     <React.Fragment>
       {
-        take(5, pages).map(({ number, disabled }) => (
-          <PageNumber
-            number={number}
-            data-qa-page-to={number}
-            key={number}
-            disabled={disabled}
-            arial-label={`Page ${number}`}
-            {...rest}
-          >
-            {number}
-          </PageNumber>
-        ))
+        /** display "1 ... " if we're on a page higher than 5 */
+        (page >= 5)
+          ? <React.Fragment>
+            <PageNumber
+              number={pages.length}
+              data-qa-page-to={1}
+              disabled={page === 1}
+              arial-label={`Page 1`}
+              {...rest}
+            >
+              1
+            </PageNumber>
+            <span className={classes.ellipses}>...</span>
+          </React.Fragment>
+          : null
       }
       {
+        (page < 5)
+          ? take(5, pages).map(({ number, disabled }) => (
+            <PageNumber
+              number={number}
+              data-qa-page-to={number}
+              key={number}
+              disabled={disabled}
+              arial-label={`Page ${number}`}
+              {...rest}
+            >
+              {number}
+            </PageNumber>
+          ))
+          : pages.slice(page - 3, page + 2).map(({ number, disabled }) => (
+            <PageNumber
+              number={number}
+              data-qa-page-to={number}
+              key={number}
+              disabled={disabled}
+              arial-label={`Page ${number}`}
+              {...rest}
+            >
+              {number}
+            </PageNumber>
+          ))
+      }
+      {
+        /** if we have more than 5 pages, show " ... lastPage# " */
         (numOfPages > 5)
           ? <React.Fragment>
             <span className={classes.ellipses}>...</span>
