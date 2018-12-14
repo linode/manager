@@ -16,7 +16,7 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodesData={[]}
             width={'lg'}
-            classes={{ root: '', title: '' }}
+            classes={{ root:'', title: '', tagGroup: '' }}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
             groupByTags={false}
@@ -41,7 +41,7 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodesData={[]}
             width={'lg'}
-            classes={{ root: '', title: '' }}
+            classes={{ root: '', title: '', tagGroup: '' }}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
             groupByTags={false}
@@ -70,7 +70,7 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodesData={[]}
             width={'lg'}
-            classes={{ root: '', title: '' }}
+            classes={{ root: '', title: '', tagGroup: '' }}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
             groupByTags={false}

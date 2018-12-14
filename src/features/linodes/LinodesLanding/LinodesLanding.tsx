@@ -12,6 +12,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -31,6 +32,17 @@ import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
+
+type ClassNames = 'tagGroup';
+
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  title: {
+    flex: 1
+  },
+  tagGroup: {
+    flexDirection: 'row-reverse'
+  },
+});
 
 interface ConfigDrawerState {
   open: boolean;
@@ -68,7 +80,8 @@ type CombinedProps =
   & RouteProps
   & StyleProps
   & SetDocsProps
-  & InjectedNotistackProps;
+  & InjectedNotistackProps
+  & WithStyles<ClassNames>;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -219,7 +232,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesCount,
       linodesData,
       groupByTags,
-      width
+      width,
+      classes
     } = this.props;
 
     const {
@@ -270,7 +284,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <Grid container>
         <DocumentTitleSegment segment="Linodes" />
-        <Grid item xs={12}>
+        <Grid container justify="space-between" item xs={12}>
+        <Grid item className={classes.title}>
           <Typography
             role="header"
             variant="h1"
@@ -279,18 +294,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           >
             Linodes
           </Typography>
+          </Grid>
           <Hidden smDown>
-            <div>
-              <FormControlLabel
-                className="toggleLabel"
-                control={
-                  <Toggle
-                    onChange={this.props.toggleGroupByTag}
-                    checked={this.props.groupByTags} />
-                }
-                label="Group by Tag:"
-              />
-            </div>
+            <FormControlLabel
+              className={classes.tagGroup}
+              control={
+                <Toggle
+                  onChange={this.props.toggleGroupByTag}
+                  checked={this.props.groupByTags} />
+              }
+              label="Group by Tag:"
+            />
             <ToggleBox handleClick={this.changeView} status={display} />
           </Hidden>
         </Grid>
@@ -401,6 +415,8 @@ interface ToggleGroupByTagsProps {
   toggleGroupByTag: (e: React.ChangeEvent<any>, checked: boolean) => void;
 }
 
+const styler = withStyles(styles);
+
 const connected = connect(mapStateToProps);
 
 export const enhanced = compose(
@@ -425,12 +441,13 @@ export const enhanced = compose(
   ),
 
   styled,
+  styler,
   setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
 );
 
-export default enhanced(withWidth()(ListLinodes));
+export default styler(enhanced(withWidth()(ListLinodes)));
 
 const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
