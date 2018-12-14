@@ -19,7 +19,6 @@ interface Props {
   display: 'grid' | 'list';
   component: any;
   data: Linode.Linode[];
-  count: number;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -27,7 +26,6 @@ type CombinedProps = Props & OrderByProps;
 const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     data,
-    count,
     display,
     component: Component,
     order,
@@ -51,7 +49,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                 </Grid>
               </Grid>
               <Paginate data={linodes} pageSize={25}>
-                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
                   const finalProps = {
                     ...rest,
                     data: paginatedData,
@@ -95,7 +93,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
           return (
             <React.Fragment key={tag}>
               <Paginate data={linodes} pageSize={25}>
-                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
                   const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
                   return (
                     <React.Fragment>

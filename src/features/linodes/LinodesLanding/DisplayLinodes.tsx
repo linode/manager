@@ -14,7 +14,6 @@ interface Props {
   display: 'grid' | 'list';
   component: any;
   data: Linode.Linode[];
-  count: number;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -22,7 +21,6 @@ type CombinedProps = Props & OrderByProps;
 const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     data,
-    count,
     display,
     component: Component,
     order,
@@ -64,7 +62,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
             <Grid item xs={12}>
               {
                 <PaginationFooter
-                  count={count}
+                  count={data.length}
                   handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}

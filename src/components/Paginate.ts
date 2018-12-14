@@ -17,6 +17,7 @@ export interface PaginationProps extends State {
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
   data: any[];
+  count: number;
 }
 
 interface State {
