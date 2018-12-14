@@ -177,7 +177,7 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispa
       )
     })
     .catch(() => dispatch(
-      handleError([{ entityId: 0, reason: "There was an error enabling backups." }])
+      handleError([{ entityId: 0, reason: "There was an error importing your display groups." }])
     ));
 }
 
