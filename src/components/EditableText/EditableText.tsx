@@ -165,10 +165,10 @@ export class EditableText extends React.Component<FinalProps, State> {
 
   finishEditing = () => {
     const { text } = this.state;
-    /** 
+    /**
      * if the entered text is different from the original text
      * provided, run the update callback
-     * 
+     *
      * only exit editing mode if promise resolved
      */
     if (text !== this.props.text) {

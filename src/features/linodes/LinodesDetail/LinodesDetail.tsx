@@ -452,8 +452,8 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     /** @todo figure out why this logic was here in the first place */
     // const { data: linode } = this.state.context.linode;
     // if (!linode) { return; }
-    
-    // this.setState({ labelInput: { label: linode.label, errorText: '' } });
+    const { labelInput } = this.state;
+    this.setState({ labelInput: { ...labelInput, errorText: '' } });
     // this.forceUpdate();
   }
 
