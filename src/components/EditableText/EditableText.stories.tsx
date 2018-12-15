@@ -18,6 +18,7 @@ class InteractiveEditableText extends React.Component {
 
   editText = (value: string) => {
     this.setState({ text: value });
+    return Promise.resolve('hello world')
   }
 
   cancelEdit = () => {

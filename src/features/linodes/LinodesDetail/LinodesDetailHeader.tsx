@@ -22,7 +22,7 @@ import { requestNotifications } from 'src/store/reducers/notifications';
 interface LabelInput {
   label: string;
   errorText: string;
-  onEdit: (label: string) => void;
+  onEdit: (label: string) => Promise<any>;
   onCancel: () => void;
 }
 
@@ -88,7 +88,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   editLabel = (value: string) => {
-    this.props.labelInput.onEdit(value)
+    return this.props.labelInput.onEdit(value)
   }
 
   handleUpdateTags = (tagsList: string[]) => {

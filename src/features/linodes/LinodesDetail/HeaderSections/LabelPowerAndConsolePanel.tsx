@@ -53,7 +53,7 @@ interface LabelInput {
   label: string;
   errorText: string;
   onCancel: () => void;
-  onEdit: (value: string) => void;
+  onEdit: (value: string) => Promise<any>;
 }
 
 interface Props {

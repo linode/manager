@@ -16,6 +16,7 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
 
   onEdit = (value: string) => {
     this.setState({ text: value });
+    return Promise.resolve('hello world')
   }
 
   onCancel = () => {

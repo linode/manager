@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 interface EditableProps {
   onCancel: () => void;
-  onEdit: (value: string) => void;
+  onEdit: (value: string) => Promise<any>;
   errorText?: string;
 }
 
