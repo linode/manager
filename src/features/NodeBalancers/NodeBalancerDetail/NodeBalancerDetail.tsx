@@ -107,19 +107,21 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
-    updateNodeBalancer(nodeBalancer.id, { label })
-    .then(() => {
-      this.setState({ nodeBalancer: { ...nodeBalancer, label }, ApiError: undefined,
-        labelInput: label });
-    })
-    .catch((error) => {
-      this.setState(() => ({
-        ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
-        labelInput: label,
-      }), () => {
-        scrollErrorIntoView();
+    return updateNodeBalancer(nodeBalancer.id, { label })
+      .then(() => {
+        this.setState({
+          nodeBalancer: { ...nodeBalancer, label }, ApiError: undefined,
+          labelInput: label
+        });
+      })
+      .catch((error) => {
+        this.setState(() => ({
+          ApiError: pathOr(defaultError, ['response', 'data', 'errors'], error),
+          labelInput: label,
+        }), () => {
+          scrollErrorIntoView();
+        });
       });
-    });
   }
 
   updateTags = (tags: string[]) => {
