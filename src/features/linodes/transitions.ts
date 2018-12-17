@@ -1,3 +1,5 @@
+import { capitalizeAllWords } from 'src/utilities/capitalize';
+
 export const transitionStatus = [
   'booting',
   'shutting_down',
@@ -35,5 +37,5 @@ export const transitionText = (status: string, recentEvent?: Linode.Event): stri
   } else {
     event = status.replace('_', ' ');
   }
-  return event.charAt(0).toUpperCase() + event.slice(1);
+  return capitalizeAllWords(event);
 }
