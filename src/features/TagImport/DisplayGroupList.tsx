@@ -39,7 +39,7 @@ export const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props)
       <div className={classes.groupBox}>
         {groups.map((group:string, idx: number) =>
           <Typography
-            key={`import-group-item-${idx}`}
+            key={`${entity}-group-item-${idx}`}
             className={classes.groupItem}
             data-qa-display-group-item
           >
