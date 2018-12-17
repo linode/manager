@@ -53,15 +53,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: entitiesFromPayload(payload),
       results: resultsFromPayload(payload),
-      lastUpdate: Date.now(),
+      lastUpdated: Date.now(),
       loading: false,
     };
   }
 
   if (isType(action, getDomainsFailure)) {
-    return {
+
+    // This could be an Axios error (network) or API error
+    const error = action.payload instanceof Error ?
+      [{ reason: 'Network error' }]
+      : action.payload;
+
+      return {
       ...state,
-      error: action.payload,
+      error,
       loading: false,
     };
   }
