@@ -20,6 +20,13 @@ declare interface ApplicationState {
       lastUpdated: number;
       error?: Linode.ApiFieldError[];
     },
+    domains: {
+      results: number[];
+      entities: Linode.Domain[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
   },
   authentication: AuthState;
   backups: BackupDrawerState;

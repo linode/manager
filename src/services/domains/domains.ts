@@ -1,4 +1,6 @@
 import { API_ROOT } from 'src/constants';
+import store from 'src/store';
+import { actions } from 'src/store/reducers/resources/domains';
 
 import Request,
 {
@@ -64,7 +66,11 @@ export const updateDomain = (domainId: number, data: Partial<Linode.Domain>) =>
     setMethod('PUT'),
     setData(data, updateDomainSchema),
   )
-    .then(response => response.data);
+    .then(response => response.data)
+    .then(domain => {
+      store.dispatch(actions.updateDomain(domain));
+      return domain;
+    })
 
 /**
  * Deletes a Domain from Linode's DNS Manager. The Domain will be removed from Linode's nameservers shortly after this
