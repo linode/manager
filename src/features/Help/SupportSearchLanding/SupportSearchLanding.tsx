@@ -11,7 +11,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
-import { parseQueryParams } from 'src/utilities/queryParams';
+import { getQueryParam } from 'src/utilities/queryParams';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import DocumentationResults, { SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
@@ -83,8 +83,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
   }
 
   searchFromParams() {
-    const queryFromParams = parseQueryParams(this.props.location.search)['?query'];
-    const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
+    const query = getQueryParam(this.props.location.search, 'query');
     this.setState({ query });
     this.props.searchAlgolia(query);
   }
