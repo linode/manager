@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setURL } from '../index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 import { updateProfileSchema } from './profile.schema';
 
 type Profile = Linode.Profile;
@@ -60,3 +60,16 @@ export const getMyGrants = () => Request<Linode.Grants>(
   setURL(`${API_ROOT}/profile/grants`),
   setMethod('GET'),
 ).then(response => response.data);
+
+/**
+ * getTrustedDevices
+ * 
+ * Returns a paginated list of all trusted devices associated with the user's profile.
+ */
+export const getTrustedDevices = (params: any, filter: any) =>
+  Request<Linode.ResourcePage<Linode.Device>>(
+    setURL(`${API_ROOT}/profile/devices`),
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
+  ).then(response => response.data)

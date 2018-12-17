@@ -25,33 +25,33 @@ type ClassNames = 'root'
   | 'showHideText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-    root: {
-      padding: theme.spacing.unit * 3,
-      paddingBottom: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
-    },
-    container: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-      justifyContent: 'left',
-      marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
-    },
-    title: {
-      marginBottom: theme.spacing.unit,
-    },
-    visibility: {
-      color: theme.palette.primary.main,
-      padding: 0,
-      border: 0,
-    },
-    showHideText: {
-      fontSize: '1rem',
-      marginLeft: theme.spacing.unit * 2,
-      color: theme.palette.text.primary,
-    },
-  });
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  },
+  container: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'left',
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  },
+  title: {
+    marginBottom: theme.spacing.unit,
+  },
+  visibility: {
+    color: theme.palette.primary.main,
+    padding: 0,
+    border: 0,
+  },
+  showHideText: {
+    fontSize: '1rem',
+    marginLeft: theme.spacing.unit * 2,
+    color: theme.palette.text.primary,
+  },
+});
 
 interface Props {
   clearState: () => void;
@@ -118,7 +118,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
         error: undefined,
         open: false,
         submitting: false,
-  }
+      }
     });
   }
 
@@ -137,36 +137,36 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
   disableTFA = () => {
     disableTwoFactor()
-    .then((response) => {
-      this.props.actions.updateProfile({
+      .then((response) => {
+        this.props.actions.updateProfile({
           ...this.props.profile,
-        two_factor_auth: false,
-      });
-      this.setState({
-        success: "Two-factor authentication has been disabled.",
-        twoFactorEnabled: false,
-        twoFactorConfirmed: false,
-        disableDialog: {
-          error: undefined,
-          open: false,
-          success: undefined,
-          submitting: false,
-        }
-      });
-    })
-    .catch((error) => {
-      const fallbackError = [{ reason: 'There was an error disabling TFA.' }];
-      const disableError = pathOr(fallbackError, ['response', 'data', 'errors'], error);
-      this.setState({
-        twoFactorEnabled: true,
-        disableDialog: {
-          error: disableError[0].reason,
-          submitting: false,
-          open: true,
-          success: undefined,
-        }
-      });
-    })
+          two_factor_auth: false,
+        });
+        this.setState({
+          success: "Two-factor authentication has been disabled.",
+          twoFactorEnabled: false,
+          twoFactorConfirmed: false,
+          disableDialog: {
+            error: undefined,
+            open: false,
+            success: undefined,
+            submitting: false,
+          }
+        });
+      })
+      .catch((error) => {
+        const fallbackError = [{ reason: 'There was an error disabling TFA.' }];
+        const disableError = pathOr(fallbackError, ['response', 'data', 'errors'], error);
+        this.setState({
+          twoFactorEnabled: true,
+          disableDialog: {
+            error: disableError[0].reason,
+            submitting: false,
+            open: true,
+            success: undefined,
+          }
+        });
+      })
   }
 
   getActions = () => {
@@ -201,10 +201,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       .catch((error) => {
         const fallbackError = [{ reason: 'There was an error retrieving your secret key. Please try again.' }];
         this.setState({
-            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-            loading: false,
-            twoFactorEnabled: false,
-          }, () => {
+          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          loading: false,
+          twoFactorEnabled: false,
+        }, () => {
           scrollErrorIntoView();
         });
       });
@@ -257,23 +257,23 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
             className={classes.title}
             data-qa-title
           >
-              Two-Factor Authentication (TFA)
+            Two-Factor Authentication (TFA)
           </Typography>
           <FormControl fullWidth>
             <FormControlLabel
               label={twoFactorEnabled ? "Enabled" : "Disabled"}
               control={
-              <Toggle
-                checked={twoFactorEnabled}
-                onChange={this.toggleTwoFactorEnabled}
-                data-qa-toggle-tfa={twoFactorEnabled}
-              />
+                <Toggle
+                  checked={twoFactorEnabled}
+                  onChange={this.toggleTwoFactorEnabled}
+                  data-qa-toggle-tfa={twoFactorEnabled}
+                />
               }
             />
           </FormControl>
           <Typography
-              variant="body1"
-              data-qa-copy
+            variant="body1"
+            data-qa-copy
           >
             Two-factor authentication increases the security of your Linode account by requiring two different
             forms of authentication to log in: your account password and a security token. You can set up a
@@ -283,24 +283,24 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
             <div className={classes.container}>
               {showQRCode
                 ? <Button
-                    type="secondary"
-                    className={classes.visibility}
-                    onClick={this.toggleHidden}
-                    destructive
-                    data-qa-hide-show-code
-                  >
-                    <SettingsBackupRestore />
-                    <span className={classes.showHideText}>Hide QR Code</span>
-                  </Button>
+                  type="secondary"
+                  className={classes.visibility}
+                  onClick={this.toggleHidden}
+                  destructive
+                  data-qa-hide-show-code
+                >
+                  <SettingsBackupRestore />
+                  <span className={classes.showHideText}>Hide QR Code</span>
+                </Button>
                 : <Button
-                    type="secondary"
-                    className={classes.visibility}
-                    onClick={this.toggleHidden}
-                    data-qa-hide-show-code
-                  >
-                    <SettingsBackupRestore />
-                    <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
-                  </Button>
+                  type="secondary"
+                  className={classes.visibility}
+                  onClick={this.toggleHidden}
+                  data-qa-hide-show-code
+                >
+                  <SettingsBackupRestore />
+                  <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
+                </Button>
               }
             </div>
           }
@@ -321,11 +321,11 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
           actions={this.getActions}
         >
           {this.state.disableDialog.error &&
-          <Notice error text={this.state.disableDialog.error} />
-        }
-        <Typography>Are you sure you want to disable two-factor authentication?</Typography>
-      </ConfirmationDialog>
-    </React.Fragment>
+            <Notice error text={this.state.disableDialog.error} />
+          }
+          <Typography>Are you sure you want to disable two-factor authentication?</Typography>
+        </ConfirmationDialog>
+      </React.Fragment>
     )
   }
 }

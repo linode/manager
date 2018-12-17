@@ -8,6 +8,7 @@ import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import SecuritySettings from './SecuritySettings';
+import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 
 type ClassNames = 'root' | 'title';
@@ -65,7 +66,8 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
               clearState={this.clearState}
               updateProfile={actions.updateProfile}
             />
-            {ipWhitelisting &&
+            <TrustedDevices />
+            {!ipWhitelisting &&
               <SecuritySettings
                 updateProfile={actions.updateProfile}
                 onSuccess={this.onWhitelistingDisable}

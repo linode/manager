@@ -54,4 +54,13 @@ namespace Linode {
     secret: string;
     expiry: Date;
   }
+
+  export interface Device {
+    created: string;
+    last_authenticated: string;
+    last_remote_addr: string;
+    id: number;
+    user_agent: string;
+    expiry: string;
+  }
 }
