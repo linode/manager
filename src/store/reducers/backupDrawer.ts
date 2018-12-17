@@ -15,6 +15,7 @@ interface Accumulator {
   success: number[];
   errors: BackupError[];
 }
+
 interface Action {
   type: string;
   error?: Error;

@@ -26,6 +26,7 @@ declare interface ApplicationState {
   documentation: DocumentationState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
+  tagImportDrawer: TagImportDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
   /** @todo extract */
@@ -58,11 +59,21 @@ declare interface VolumeDrawerState {
   message?: string;
 }
 
+declare interface TagError {
+  entityId: string | number;
+  entityLabel?: string;
+  reason: string;
+}
+declare interface TagImportDrawerState {
+  open: boolean;
+  loading: boolean;
+  errors: TagError[];
+  success: boolean;
+}
+
 declare interface SidebarState {
   backupsCTA: boolean;
 }
-
-
 declare interface BackupError {
   linodeId: number;
   reason: string;

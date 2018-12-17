@@ -6,8 +6,11 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import TagImportDrawer from 'src/features/TagImport';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
+import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
@@ -34,6 +37,7 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     openBackupDrawer: () => void;
+    openImportDrawer: () => void;
   }
 }
 
@@ -42,7 +46,7 @@ type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     accountBackups,
-    actions: { openBackupDrawer },
+    actions: { openBackupDrawer, openImportDrawer },
     backupError,
     linodesWithoutBackups,
     managed,
@@ -56,35 +60,37 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
     // && entitiesWithGroupsToImport.domains.length >= 1
 
   return (
-    <Grid container spacing={24}>
-      <DocumentTitleSegment segment="Dashboard" />
-      <Grid item xs={12}>
-        <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
+    <React.Fragment>
+      <Grid container spacing={24}>
+        <DocumentTitleSegment segment="Dashboard" />
+        <Grid item xs={12}>
+          <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <LinodesDashboardCard />
+          <VolumesDashboardCard />
+          <NodeBalancersDashboardCard />
+          <DomainsDashboardCard />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <TransferDashboardCard />
+          {(!managed && !backupError) &&
+            <BackupsDashboardCard
+              accountBackups={accountBackups}
+              linodesWithoutBackups={linodesWithoutBackups.length}
+              openBackupDrawer={openBackupDrawer}
+            />
+          }
+          {hasGroupsToImport &&
+            <ImportGroupsCard
+              openImportDrawer={openImportDrawer}
+            />
+          }
+          <BlogDashboardCard />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={7}>
-        <LinodesDashboardCard />
-        <VolumesDashboardCard />
-        <NodeBalancersDashboardCard />
-        <DomainsDashboardCard />
-      </Grid>
-      <Grid item xs={12} md={5}>
-        <TransferDashboardCard />
-        {(!managed && !backupError) &&
-          <BackupsDashboardCard
-            accountBackups={accountBackups}
-            linodesWithoutBackups={linodesWithoutBackups.length}
-            openBackupDrawer={openBackupDrawer}
-          />
-        }
-        {hasGroupsToImport &&
-          <ImportGroupsCard
-            // @todo: use reducer to open drawer instead of this dummy fn
-            openImportDrawer={() => console.log('change this')}
-          />
-        }
-        <BlogDashboardCard />
-      </Grid>
-    </Grid>
+      <TagImportDrawer />
+    </React.Fragment>
   );
 }
 
@@ -93,14 +99,14 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
-  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state) // <-- Memoized selector
+  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state), // <-- Memoized selector
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
   return {
     actions: {
-      openBackupDrawer: () => dispatch(handleOpen())
-      // openImportDrawer; () => dispatch(handleOpenImportDrawer())
+      openBackupDrawer: () => dispatch(handleOpen()),
+      openImportDrawer: () => dispatch(openGroupDrawer())
     }
   };
 };

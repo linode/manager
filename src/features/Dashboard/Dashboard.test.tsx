@@ -6,8 +6,8 @@ import { Dashboard } from './Dashboard';
 const props = {
   accountBackups: false,
   actions: {
-    getLinodesWithoutBackups: jest.fn(),
     openBackupDrawer: jest.fn(),
+    openImportDrawer: jest.fn(),
   },
   linodesWithoutBackups: [],
   managed: false,
