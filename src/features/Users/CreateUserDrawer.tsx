@@ -71,8 +71,8 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
       })
       .catch((errResponse) => {
         const errors = pathOr([
-            { reason: 'An unexpected error occured while creating the user.'}
-          ], ['response', 'data', 'errors'], errResponse);
+          { reason: 'An unexpected error occured while creating the user.' }
+        ], ['response', 'data', 'errors'], errResponse);
         this.setState({ errors, submitting: false });
       })
   }
@@ -132,7 +132,13 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         />
         <FormControlLabel
           style={{ marginTop: 8 }}
-          label="Restricted User"
+          label={
+            (restricted)
+              ? `Restricted (This user will have limited access to account features).
+              This can be changed later.`
+              : `Unrestricted (This user will have full access to account features).
+              This can be changed later.`
+          }
           control={
             <Toggle
               checked={restricted}
