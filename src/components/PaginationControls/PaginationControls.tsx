@@ -141,9 +141,8 @@ export class PaginationControls extends React.Component<Props, State> {
         </PageButton>
         <PageNumbers
           pages={this.state.pages}
-          numOfPages={numPages}
           handlePageClick={this.handlePageClick}
-          page={page}
+          currentPage={page}
         />
         <PageButton data-qa-page-next onClick={this.handleNextPageClick} disabled={disableTail} aria-label="Next Page" >
           <KeyboardArrowRight />
