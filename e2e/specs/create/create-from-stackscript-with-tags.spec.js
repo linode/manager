@@ -3,7 +3,11 @@ const { constants } = require('../../constants');
 
 import ListLinodes from '../../pageobjects/list-linodes';
 import ConfigureLinode from '../../pageobjects/configure-linode';
-import { apiDeleteAllLinodes, timestamp } from '../../utils/common';
+import {
+    apiDeleteAllLinodes,
+    timestamp,
+    waitForLinodeStatus,
+} from '../../utils/common';
 
 describe('Create Linode From StackScript - Tags Suite', () => {
     let existingTag, newTag;
@@ -71,7 +75,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
         ConfigureLinode.label.setValue(label);
         ConfigureLinode.password.setValue(password);
         ConfigureLinode.deploy.click();
-        ListLinodes.waitUntilBooted(label);
+        waitForLinodeStatus(label, 'running');
     });
 
     it('should display the tagged linode created from a stackscript on list linodes', () => {

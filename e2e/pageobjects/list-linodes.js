@@ -98,7 +98,7 @@ export class ListLinodes extends Page {
     getStatus(linode) {
         return $(`${this.getLinodeSelector(linode)} ${this.status.selector}`).getAttribute('data-qa-status');
     }
-    
+
     reboot(linode) {
         const activeView = this.activeView.getAttribute('data-qa-active-view');
 
@@ -153,12 +153,6 @@ export class ListLinodes extends Page {
         browser.waitUntil(function() {
             return browser.isVisible(`[data-qa-active-view="${view}"]`);
         }, constants.wait.short);
-    }
-
-    waitUntilBooted(label) {
-        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-        browser.waitForVisible('[data-qa-loading="true"]', constants.wait.long, true);
-        browser.waitForVisible(`${this.getLinodeSelector(linode)} [data-qa-status="running"]`, constants.wait.minute * 3);
     }
 
     acceptDialog(dialogTitle) {

@@ -37,7 +37,7 @@ export const createGenericLinode = (label) => {
     ConfigureLinode.baseDisplay();
     ConfigureLinode.generic(label);
     ConfigureLinode.deploy.click();
-    ListLinodes.waitUntilBooted(label);
+    waitForLinodeStatus(label, 'running');
 }
 
 export const deleteLinode = (label) => {

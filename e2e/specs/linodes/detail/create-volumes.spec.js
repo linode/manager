@@ -43,6 +43,8 @@ describe('Linode Detail - Volumes Suite', () => {
 
     const checkVolumeDetail = (testVolume,testLinode) => {
         browser.url(constants.routes.volumes);
+        browser.pause(750);
+        VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         let trimSelector = VolumeDetail.volumeAttachment.selector.replace(']','')
         const linodeAttachedToCell = `${trimSelector}="${testLinode}"]`;
         $(linodeAttachedToCell).waitForVisible(constants.wait.normal);

@@ -1,6 +1,10 @@
 const { constants } = require('../../constants');
 
-import { timestamp, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    timestamp,
+    apiDeleteAllLinodes,
+    waitForLinodeStatus,
+} from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
@@ -60,7 +64,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     it('should deploy the tagged linode', () => {
         ConfigureLinode.generic(linodeName);
         ConfigureLinode.deploy.click();
-        ListLinodes.waitUntilBooted(linodeName);
+        waitForLinodeStatus(linodeName, 'running');
     });
 
     describe('List Linodes - Tags Suite', () => {
