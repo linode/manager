@@ -29,8 +29,11 @@ export const linodeInTransition = (status: string, recentEvent?: Linode.Event): 
 }
 
 export const transitionText = (status: string, recentEvent?: Linode.Event): string => {
+  let event;
   if (recentEvent && transitionAction.includes(recentEvent.action)) {
-    return recentEvent.action.replace('linode_', '').replace('_', ' ');
+    event = recentEvent.action.replace('linode_', '').replace('_', ' ');
+  } else {
+    event = status.replace('_', ' ');
   }
-  return status.replace('_', ' ');
+  return event.charAt(0).toUpperCase() + event.slice(1);
 }
