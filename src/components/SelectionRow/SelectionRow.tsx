@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 
 import Button from 'src/components/Button';
+import Chip from 'src/components/core/Chip';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
@@ -13,7 +14,6 @@ import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
 import TableRow from 'src/components/TableRow';
-import Tag from 'src/components/Tag';
 import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/reducers/stackScriptDrawer';
 
@@ -272,7 +272,7 @@ export default recompose<CombinedProps, Props & RenderGuardProps>(
 )(SelectionRow);
 
 const createTag: (images: string) => JSX.Element =
-  v => <Tag label={v} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;
+  v => <Chip label={v} key={v} style={{ margin: '2px 2px', outline: 0 }} role="term" />;
 
 const createTags: (images: string[]) => JSX.Element[] =
   map(createTag);

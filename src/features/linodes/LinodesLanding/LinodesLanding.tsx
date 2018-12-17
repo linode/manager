@@ -255,6 +255,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         order={this.props.order}
         orderBy={this.props.orderBy}
         handleOrderChange={this.props.handleOrderChange}
+        isSorting={this.props.isSorting}
       />
     )
   }
