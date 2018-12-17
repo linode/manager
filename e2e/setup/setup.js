@@ -153,7 +153,7 @@ exports.createVolumeUnattached = (token,label,region,size,tags) => {
 
       const volumesConfig = {
           region: region ? region : 'us-east',
-          size: size ? size : 20,
+          size: size ?  size : 20,
           label: label
       }
 

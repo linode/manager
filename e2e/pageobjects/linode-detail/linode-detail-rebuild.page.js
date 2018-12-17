@@ -38,7 +38,7 @@ class Rebuild extends Page {
             targetImage.click();
             return this;
         }
-        console.log(this.selectOptions);
+  
         const imageOption = this.selectOptions[0];
         const imageName = imageOption.getText();
 
