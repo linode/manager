@@ -52,7 +52,11 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
     setURL(`${API_ROOT}/domains`),
     setMethod('POST'),
   )
-    .then(response => response.data);
+    .then(response => response.data)
+    .then(domain => {
+      store.dispatch(actions.addDomain(domain));
+      return domain;
+    });
 
 /**
  * Update information about a Domain in Linode's DNS Manager.
@@ -83,7 +87,10 @@ export const deleteDomain = (domainID: number) =>
     setURL(`${API_ROOT}/domains/${domainID}`),
     setMethod('DELETE'),
   )
-    .then(response => response.data);
+    .then(response => {
+      store.dispatch(actions.deleteDomain(domainID));
+      return response.data;
+    });
 
 /**
  * Clones a Domain.
