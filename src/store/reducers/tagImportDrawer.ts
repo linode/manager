@@ -1,9 +1,10 @@
 import * as Bluebird from 'bluebird';
-import { isEmpty, pathOr } from 'ramda';
+import { curry, isEmpty, pathOr } from 'ramda';
 import { Action, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import actionCreatorFactory from 'typescript-fsa';
 
+import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
 import { updateLinode as _updateLinode } from 'src/store/reducers/resources/linodes';
 import getEntitiesWithGroupsToImport,
@@ -13,8 +14,8 @@ const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
 type State = ApplicationState['tagImportDrawer'];
 
-interface Accumulator {
-  success: Linode.Linode[]; // | Linode.Domain[]
+interface Accumulator<T> {
+  success: T[];
   errors: TagError[];
 }
 
@@ -141,9 +142,10 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
  * }
  */
 export const gatherResponsesAndErrors = (
-  accumulator: Accumulator,
+  cb: (id: number, data: any) => Promise<Linode.Linode|Linode.Domain>,
+  accumulator: Accumulator<Linode.Linode | Linode.Domain>,
   entity: GroupImportProps) => {
-  return updateLinode(entity.id, {tags: [...entity.tags, entity.group!]})
+  return cb(entity.id, {tags: [...entity.tags, entity.group!]})
     .then((updatedEntity) => ({
     ...accumulator,
     success: [...accumulator.success, updatedEntity]
@@ -158,27 +160,47 @@ export const gatherResponsesAndErrors = (
     })
 }
 
+const curriedAccumulator = curry(gatherResponsesAndErrors);
+const domainAccumulator = curriedAccumulator(updateDomain);
+const linodeAccumulator = curriedAccumulator(updateLinode);
+
+const handleAccumulatedResponsesAndErrors = (
+  linodeResponses: Accumulator<Linode.Linode>,
+  domainResponses: Accumulator<Linode.Domain>,
+  dispatch: Dispatch<State>
+  ) => {
+    const totalErrors = [...linodeResponses.errors, ...domainResponses.errors]
+    if (!isEmpty(totalErrors)) {
+      dispatch(handleError(totalErrors));
+    }
+    else {
+      dispatch(handleSuccess());
+    }
+    // We want to update the successfully updated Linodes in the store
+    // regardless of whether there were any errors elsewhere.
+    linodeResponses.success.forEach(
+      (linode: Linode.Linode) => dispatch(_updateLinode(linode)),
+    );
+    domainResponses.success.forEach(
+      (domain: Linode.Domain) => console.log('calling _updateDomain with ', domain.id) // dispatch(_updateDomain(domain)),
+    );
+}
+
 type ImportGroupsAsTagsThunk = () => ThunkAction<void, ApplicationState, undefined>;
 export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispatch<State>, getState) => {
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
-  Bluebird.reduce(entities.linodes as any, gatherResponsesAndErrors, { success: [], errors: [] })
-    .then(response => {
-      if (response.errors && !isEmpty(response.errors)) {
-        dispatch(handleError(response.errors));
-      }
-      else {
-        dispatch(handleSuccess());
-      }
-      // We want to update the successfully updated Linodes in the store
-      // regardless of whether there were any errors elsewhere.
-      response.success.forEach(
-        (linode: Linode.Linode) => dispatch(_updateLinode(linode)),
-      )
-    })
+  // Mocking
+  entities.domains = [{id: 1162098, group: 'this-group', label: 'My domain', tags: ["tag1"]}];
+  Bluebird.join(
+    Bluebird.reduce(entities.linodes as any, linodeAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.domains as any, domainAccumulator, { success: [], errors: [] }),
+    dispatch,
+    handleAccumulatedResponsesAndErrors,
+  )
     .catch(() => dispatch(
       // Errors from individual requests will be accumulated and passed to .then(); hitting
-      // this block indicates something went wrong with .reduce() itself.
+      // this block indicates something went wrong with .reduce() or .join()
       handleError([{ entityId: 0, reason: "There was an error importing your display groups." }])
     ));
 }
