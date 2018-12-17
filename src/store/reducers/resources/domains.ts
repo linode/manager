@@ -1,7 +1,5 @@
-// import * as Bluebird from 'bluebird';
 import { Dispatch, Reducer } from "redux";
 import { ThunkAction } from 'redux-thunk';
-// import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getDomain, getDomains } from "src/services/domains";
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
@@ -110,7 +108,6 @@ const requestDomains = () => (dispatch: Dispatch<State>) => {
   dispatch(getDomainsRequest());
 
   return getAll<Linode.Domain>(getDomains)()
-    // .then(getBackupsForLinodes)
     .then((domains) => {
       dispatch(getDomainsSuccess(domains.data));
       return domains;
@@ -120,15 +117,12 @@ const requestDomains = () => (dispatch: Dispatch<State>) => {
     });
 };
 
-// const getBackupsForLinodes = ({ data }: { data: Linode.Linode[] }) => Bluebird.map(data, requestMostRecentBackupForLinode);
-
 type RequestDomainForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
 const requestDomainForStore: RequestDomainForStoreThunk = (id) => (dispatch, getState) => {
   const { results } = getState().__resources.domains;
 
   getDomain(id)
     .then(response => response)
-    // .then(requestMostRecentBackupForLinode)
     .then(domain => {
       if (results.includes(id)) {
         return dispatch(updateDomain(domain));
