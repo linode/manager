@@ -86,7 +86,7 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
             </Typography>
           </Grid>
           {!isEmpty(errors) && errors.map((error, idx: number) =>
-            <Grid key={idx} item data-qa-import-error>
+            <Grid key={`tag-error-notice-${idx}`} item data-qa-import-error>
               <Notice error spacingBottom={0} >
                 {error.entityLabel
                   ? `Error adding tag to ${error.entityLabel}: ${error.reason}`

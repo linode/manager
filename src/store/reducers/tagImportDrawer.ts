@@ -136,7 +136,7 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
  * the form:
  *
  * {
- *  success: number[] IDs of successfully updated entities.
+ *  success: Entity[] Array of successfully updated entities.
  *  errors: TagError[] Accumulated errors.
  * }
  */
@@ -144,9 +144,9 @@ export const gatherResponsesAndErrors = (
   accumulator: Accumulator,
   entity: GroupImportProps) => {
   return updateLinode(entity.id, {tags: [...entity.tags, entity.group!]})
-    .then((linode) => ({
+    .then((updatedEntity) => ({
     ...accumulator,
-    success: [...accumulator.success, linode]
+    success: [...accumulator.success, updatedEntity]
     }))
     .catch((error) => {
       const reason = pathOr('Error adding tag.',
@@ -177,6 +177,8 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispa
       )
     })
     .catch(() => dispatch(
+      // Errors from individual requests will be accumulated and passed to .then(); hitting
+      // this block indicates something went wrong with .reduce() itself.
       handleError([{ entityId: 0, reason: "There was an error importing your display groups." }])
     ));
 }
