@@ -81,7 +81,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
         <Grid container direction="row" justify="center" alignItems="center">
           <Grid item xs={11}>
             <Typography className={classes.header} variant="h1" data-qa-group-cta-header>
-              Import Your Display Group to Tags
+              Import Your Display Groups to Tags
             </Typography>
           </Grid>
           <Grid item xs={1}>
