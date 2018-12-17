@@ -7,9 +7,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 type ClassNames = 'root' | 'helperText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-
-  },
+  root: {},
   helperText: {
     marginBottom: theme.spacing.unit * 2,
   }
@@ -21,7 +19,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ImportGroupsAsTags: React.StatelessComponent<CombinedProps> = (props) => {
+export const ImportGroupsAsTags: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, openDrawer } = props;
   return (
     <ExpansionPanel
@@ -33,7 +31,7 @@ const ImportGroupsAsTags: React.StatelessComponent<CombinedProps> = (props) => {
         Import Display Groups from Classic Manager and convert them to tags.
         Your existing tags will not be affected.
       </Typography>
-      <Button type="primary" onClick={openDrawer}>
+      <Button type="primary" onClick={openDrawer} data-qa-open-group-import-drawer>
         Import Display Groups
       </Button>
     </ExpansionPanel>
