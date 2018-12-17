@@ -10,6 +10,7 @@ import TagImportDrawer from 'src/features/TagImport';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { storage } from 'src/utilities/storage';
 
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
@@ -43,6 +44,15 @@ interface DispatchProps {
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
+const shouldDisplayGroupImportCTA = (groupedEntities: GroupedEntitiesForImport) => {
+  const userHasDisabledCTA = storage.hideGroupImportCTA.get();
+  return (
+    !userHasDisabledCTA &&
+    groupedEntities.linodes.length >= 0 // &&
+    // groupedEntities.domains.length >= 0
+  )
+}
+
 export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     accountBackups,
@@ -52,12 +62,6 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
     managed,
     entitiesWithGroupsToImport
   } = props;
-
-  // Display the CTA if there is at least 1 group to import
-  const hasGroupsToImport =
-    entitiesWithGroupsToImport.linodes.length >= 1
-    // @todo: Uncomment when domain support is added
-    // && entitiesWithGroupsToImport.domains.length >= 1
 
   return (
     <React.Fragment>
@@ -81,9 +85,10 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
               openBackupDrawer={openBackupDrawer}
             />
           }
-          {hasGroupsToImport &&
+          {shouldDisplayGroupImportCTA(entitiesWithGroupsToImport) &&
             <ImportGroupsCard
               openImportDrawer={openImportDrawer}
+              dismiss={storage.hideGroupImportCTA.set}
             />
           }
           <BlogDashboardCard />

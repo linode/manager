@@ -25,6 +25,7 @@ const THEME = 'themeChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
+const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
@@ -60,6 +61,10 @@ export const storage = {
     ) =>
       Cookies.set('loginCloudManager', v, options),
   },
+  hideGroupImportCTA: {
+    get: (): 'true' | 'false' =>  getStorage(HIDE_DISPLAY_GROUPS_CTA),
+    set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, 'true')
+  }
 }
 
 export const { theme, notifications, views } = storage;
