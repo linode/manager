@@ -8,7 +8,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     backgroundColor: theme.bg.offWhiteDT,
     border: '1px solid ' + `${theme.color.borderPagination}`,
-    borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
     minHeight: 40,
