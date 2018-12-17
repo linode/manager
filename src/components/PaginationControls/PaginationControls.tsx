@@ -18,60 +18,7 @@ interface Props {
   onClickHandler: (page?: number) => void;
 }
 
-export interface PageObject {
-  disabled: boolean;
-  number: number;
-}
-
-interface State {
-  pages: PageObject[];
-};
-
-const calPages = (count: number, pageSize: number) => Math.ceil(count / pageSize);
-
-const createPagesArray = (count: number, pageSize: number) => Array.from(Array(calPages(count, pageSize)));
-
-const createPageObject = (handler: (n: number) => void, page: number) => (v: void, idx: number) => {
-  const number = idx + 1;
-  return ({
-    disabled: page === number,
-    number,
-  });
-};
-
-const createPages = (
-  count: number,
-  onClickHandler: (n: number) => void,
-  page: number,
-  pageSize: number,
-) => createPagesArray(count, pageSize).map(createPageObject(onClickHandler, page));
-
-export class PaginationControls extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    const { count, pageSize, onClickHandler, page } = props;
-
-    this.state = {
-      pages: createPages(count, onClickHandler, page, pageSize),
-    }
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (
-      prevProps.count === this.props.count
-      && prevProps.page === this.props.page
-      && prevProps.pageSize === this.props.pageSize
-    ) {
-      return;
-    }
-
-    const { count, onClickHandler, page, pageSize } = this.props;
-
-    this.setState({
-      pages: createPages(count, onClickHandler, page, pageSize),
-    });
-  }
-
+export class PaginationControls extends React.Component<Props, {}> {
   handleSendEvent = (eventLabel: string) => {
     const { eventCategory } = this.props;
 
@@ -124,7 +71,7 @@ export class PaginationControls extends React.Component<Props, State> {
   render() {
     /** API paging starts at 1. Don't they know arrays starts at 0? */
     const { count, page, pageSize, } = this.props;
-    const numPages = Math.ceil(count / pageSize);
+    const numPages = calNumOfPages(count, pageSize);
     const disableHead = page === 1;
     const disableTail = page >= numPages;
 
@@ -138,7 +85,7 @@ export class PaginationControls extends React.Component<Props, State> {
           <KeyboardArrowLeft />
         </PageButton>
         <PageNumbers
-          pages={this.state.pages}
+          numOfPages={calNumOfPages(count, pageSize)}
           handlePageClick={this.handlePageClick}
           currentPage={page}
         />
@@ -156,3 +103,13 @@ export class PaginationControls extends React.Component<Props, State> {
 };
 
 export default PaginationControls;
+
+/**
+ * 
+ * @param { number } count - the amount of total things returned from the API
+ * @param { number } pageSize - the selected page size filter returned from the API
+ * 
+ * @todo remove this function altogether. This information is returned from the API
+ * making this function unnecessary
+ */
+const calNumOfPages = (count: number, pageSize: number) => Math.ceil(count / pageSize);

@@ -4,18 +4,14 @@ import withStyles, { StyleProps } from './PageNumbers.styles';
 
 import PageButton, { Props as PageButtonProps } from 'src/components/PaginationControls/PageButton';
 
-import { PageObject } from './PaginationControls';
-
 interface Props {
   currentPage: number;
-  pages: PageObject[]
+  numOfPages: number;
   handlePageClick: (n: number) => void
 }
 
 const PageNumbers: React.StatelessComponent<Props & StyleProps> = (props) => {
-  const { pages, currentPage, classes, ...rest } = props;
-
-  const numOfPages = pages.length;
+  const { numOfPages, currentPage, classes, ...rest } = props;
 
   return (
     <React.Fragment>
@@ -37,16 +33,16 @@ const PageNumbers: React.StatelessComponent<Props & StyleProps> = (props) => {
           : null
       }
       {
-        pageNumbersToRender(currentPage, pages).map(({ number, disabled }) => (
+        pageNumbersToRender(currentPage, numOfPages).map((eachPage) => (
           <PageNumber
-            number={number}
-            data-qa-page-to={number}
-            key={number}
-            disabled={disabled}
-            arial-label={`Page ${number}`}
+            number={eachPage}
+            data-qa-page-to={eachPage}
+            key={eachPage}
+            disabled={eachPage === currentPage}
+            arial-label={`Page ${eachPage}`}
             {...rest}
           >
-            {number}
+            {eachPage}
           </PageNumber>
         ))
       }
@@ -59,13 +55,13 @@ const PageNumbers: React.StatelessComponent<Props & StyleProps> = (props) => {
           ? <React.Fragment>
             <span className={classes.ellipses}>...</span>
             <PageNumber
-              number={pages.length}
-              data-qa-page-to={pages.length}
-              disabled={currentPage === pages.length}
-              arial-label={`Page ${pages.length}`}
+              number={numOfPages}
+              data-qa-page-to={numOfPages}
+              disabled={currentPage === numOfPages}
+              arial-label={`Page ${numOfPages}`}
               {...rest}
             >
-              {pages.length}
+              {numOfPages}
             </PageNumber>
           </React.Fragment>
           : null
@@ -95,16 +91,22 @@ export class PageNumber extends React.PureComponent<PageNumberProps> {
 };
 
 
-const pageNumbersToRender = (currentPage: number, pages: PageObject[]) => {
-  const numOfPages = pages.length;
-
+/**
+ * 
+ * @param { number } currentPage - current page we're on 
+ * @param { number } numOfPages - total number of pages returned from the API
+ */
+const pageNumbersToRender = (currentPage: number, numOfPages: number) => {
+  /** creates an array of numbers, starting at 1, created from the numOfPages returned from API */
+  const arrOfPageNumbers = Array.from(Array(numOfPages).keys()).map((value, index) => index + 1)
   /** return first 5 pages if we on a page under 5 */
   if (currentPage < 5) {
-    return take(5, pages);
+    return take(5, arrOfPageNumbers);
     /** return 2 pages below and 2 pages above current page  */
   } else if (currentPage >= 5 && currentPage <= numOfPages - 4) {
-    return pages.slice(currentPage - 3, currentPage + 2);
+    return arrOfPageNumbers.slice(currentPage - 3, currentPage + 2);
   }
 
-  return pages.slice(numOfPages - 5);
+  /** otherwise just return the last 5 pages */
+  return arrOfPageNumbers.slice(numOfPages - 5);
 }
