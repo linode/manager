@@ -98,10 +98,9 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
           <Grid item data-qa-linode-group-list>
             <DisplayGroupList entity="Linode" groups={linodeGroups} />
           </Grid>
-          {/* @todo add when Domains have been cached in Redux */}
-          {/* <Grid item data-qa-domain-group-list>
+          <Grid item data-qa-domain-group-list>
             <DisplayGroupList entity="Domain" groups={["group1", "group2"]} />
-          </Grid>*/}
+          </Grid>
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button

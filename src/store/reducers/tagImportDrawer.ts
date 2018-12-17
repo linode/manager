@@ -164,6 +164,22 @@ const curriedAccumulator = curry(gatherResponsesAndErrors);
 const domainAccumulator = curriedAccumulator(updateDomain);
 const linodeAccumulator = curriedAccumulator(updateLinode);
 
+/**
+ *  handleAccumulatedResponsesAndErrors
+ *
+ *  Bluebird.join() returns a tuple containing the responses of each of its joined Promises.
+ *  In this case, we get separate accumulated success/error responses for Linodes and Domains,
+ *  along with dispatch which is passed down so that actions can be dispatched from the handler.
+ *
+ *  Handles 3 basic cases:
+ *  ~ No errors returned (indicating all entities were tagged successfully)
+ *  ~ Some entities were updated successfully, but some errors occurred
+ *  ~ Every request failed
+ *
+ *  Higher-level errors (failures in Bluebird.reduce() or Bluebird.join() ) are handled in the
+ *  catch block of Bluebird.join()
+ *
+ */
 const handleAccumulatedResponsesAndErrors = (
   linodeResponses: Accumulator<Linode.Linode>,
   domainResponses: Accumulator<Linode.Domain>,
@@ -200,7 +216,8 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispa
   )
     .catch(() => dispatch(
       // Errors from individual requests will be accumulated and passed to .then(); hitting
-      // this block indicates something went wrong with .reduce() or .join()
+      // this block indicates something went wrong with .reduce() or .join().
+      // It's unclear under what circumstances this could ever actually fire.
       handleError([{ entityId: 0, reason: "There was an error importing your display groups." }])
     ));
 }
