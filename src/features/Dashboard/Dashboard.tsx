@@ -6,6 +6,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import TagImportDrawer from 'src/features/TagImport';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
@@ -59,34 +60,37 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
     // && entitiesWithGroupsToImport.domains.length >= 1
 
   return (
-    <Grid container spacing={24}>
-      <DocumentTitleSegment segment="Dashboard" />
-      <Grid item xs={12}>
-        <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
+    <React.Fragment>
+      <Grid container spacing={24}>
+        <DocumentTitleSegment segment="Dashboard" />
+        <Grid item xs={12}>
+          <Typography variant="h1" data-qa-dashboard-header>Dashboard</Typography>
+        </Grid>
+        <Grid item xs={12} md={7}>
+          <LinodesDashboardCard />
+          <VolumesDashboardCard />
+          <NodeBalancersDashboardCard />
+          <DomainsDashboardCard />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <TransferDashboardCard />
+          {(!managed && !backupError) &&
+            <BackupsDashboardCard
+              accountBackups={accountBackups}
+              linodesWithoutBackups={linodesWithoutBackups.length}
+              openBackupDrawer={openBackupDrawer}
+            />
+          }
+          {hasGroupsToImport &&
+            <ImportGroupsCard
+              openImportDrawer={openImportDrawer}
+            />
+          }
+          <BlogDashboardCard />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={7}>
-        <LinodesDashboardCard />
-        <VolumesDashboardCard />
-        <NodeBalancersDashboardCard />
-        <DomainsDashboardCard />
-      </Grid>
-      <Grid item xs={12} md={5}>
-        <TransferDashboardCard />
-        {(!managed && !backupError) &&
-          <BackupsDashboardCard
-            accountBackups={accountBackups}
-            linodesWithoutBackups={linodesWithoutBackups.length}
-            openBackupDrawer={openBackupDrawer}
-          />
-        }
-        {hasGroupsToImport &&
-          <ImportGroupsCard
-            openImportDrawer={openImportDrawer}
-          />
-        }
-        <BlogDashboardCard />
-      </Grid>
-    </Grid>
+      <TagImportDrawer />
+    </React.Fragment>
   );
 }
 

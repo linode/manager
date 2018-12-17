@@ -19,7 +19,6 @@ import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
 import Footer from 'src/features/Footer';
-import TagImportDrawer from 'src/features/TagImport';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -349,7 +348,6 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainCreateDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
-                <TagImportDrawer />
               </div>
             </RegionsProvider>
           </React.Fragment>
