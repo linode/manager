@@ -72,7 +72,7 @@ interface State {
 
 type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
-class SupportSearchLanding extends React.Component<CombinedProps, State> {
+export class SupportSearchLanding extends React.Component<CombinedProps, State> {
   searchIndex:any = null;
   state: State = {
     query: '',
