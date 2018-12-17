@@ -112,6 +112,6 @@ export default PaginationControls;
  * @param { number } pageSize - the selected page size filter returned from the API
  * 
  * @todo remove this function altogether. This information is returned from the API
- * making this function unnecessary
+ * and can be passed down as props making this function unnecessary
  */
 const calNumOfPages = (count: number, pageSize: number) => Math.ceil(count / pageSize);
