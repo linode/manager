@@ -52,13 +52,13 @@ exports.login = (username, password, credFilePath) => {
         console.log(browser.getSource());
 
     }
-    
+
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
     loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
     letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
-    $(loginButton).click();
+    browser.click(loginButton);
 
     try {
         browser.waitUntil(function() {
@@ -68,20 +68,20 @@ exports.login = (username, password, credFilePath) => {
         console.log('failed to login!');
         if (browser.getText('.alert').includes('This field is required.')) {
             browser.trySetValue('#password', password);
-            $(loginButton).click();
+            browser.click(loginButton);
         }
     }
 
     if(browser.isExisting('.Modal') && browser.getUrl().includes('login')){
-        $('.btn.btn-primary').click();
-    }
-
-    if (browser.isExisting('.Modal')) {
-        $(letsGoButton).click();
+        browser.click('.btn.btn-primary');
     }
 
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
-    browser.waitForVisible('[data-qa-circle-progress]', constants.wait.long, true);
+
+    if (browser.waitForVisible('[role="dialog"]')) {
+        browser.click(letsGoButton);
+        browser.waitForVisible('[role="dialog"]', constants.wait.long, true)
+    }
 
     if (credFilePath) {
         exports.storeToken(credFilePath, username);

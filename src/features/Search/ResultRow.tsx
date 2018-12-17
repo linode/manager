@@ -150,6 +150,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
     <TableRow
       className={classes.root}
       rowLink={result.data.path}
+      data-qa-result-row={result.label}
     >
       <Hidden smDown>
         <TableCell className={classes.iconTableCell}>

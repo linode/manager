@@ -3,8 +3,6 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 export class VolumeDetail extends Page {
-    get drawerTitle() { return $('[data-qa-drawer-title]'); }
-    get drawerClose() { return $('[data-qa-close-drawer]'); }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get createButton() { return $('[data-qa-placeholder-button]'); }
     get createIconLink() { return $('[data-qa-icon-text-link="Create a Volume"]'); }
@@ -12,11 +10,14 @@ export class VolumeDetail extends Page {
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
     get regionField() { return $('[data-qa-region]'); }
-    get attachToLinode() { return $(`${this.drawerBase.selector} [data-qa-enhanced-select]`); }
+    get selectLinodeOrVolume() { return $(`${this.drawerBase.selector} [data-qa-enhanced-select]`); }
+    get linodeSelect() { return $('[data-qa-linode-select]'); }
+    get linodeAttachOption() { return $('[data-qa-linode-menu-item]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
+    get attachRegion() { return $('[data-qa-attach-to-region]'); }
     get attachRegions() { return $$('[data-qa-attach-to-region]'); }
-    get submit() { return $(this.submitButton.selector); }
-    get cancel() { return $(this.cancelButton.selector); }
+    get submit() { return this.submitButton; }
+    get cancel() { return this.cancelButton; }
     get volumeCell() { return $$('[data-qa-volume-cell]'); }
     get volumeCellElem() { return $('[data-qa-volume-cell]'); }
     get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
@@ -31,17 +32,21 @@ export class VolumeDetail extends Page {
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
     get copyToolTips() { return $$('[data-qa-copy-tooltip]'); }
     get configHelpMessages() { return $$('[data-qa-config-help-msg]'); }
-    get volumePrice() { return $(this.drawerPrice.selector); }
-    get volumePriceBillingInterval() { return $(this.drawerBillingInterval.selector); }
-
-    volAttachedToLinode(linodeLabel) {
-        browser.waitUntil(function() {
-            const attachedToLinode = $$('[data-qa-volume-cell]')
-                .filter(e => e.$('[data-qa-volume-cell-attachment]')
-                    .getText().includes(linodeLabel));
-            return attachedToLinode.length > 0;
-        }, constants.wait.normal);
-    }
+    get volumePrice() { return this.drawerPrice; }
+    get volumePriceBillingInterval() { return this.drawerBillingInterval; }
+    get volumeCreateSizeHelpText() { return $('[data-qa-volume-size-help]'); }
+    get volumeCreateHelpText() { return $('[data-qa-volume-help]'); }
+    get volumeCreateRegionHelp() { return $('[data-qa-volume-region]'); }
+    get volumeselectLinodeOrVolumeHelpText() { return $('[data-qa-volume-attach-help]'); }
+    get createFileSystemCommand() { return $('[data-qa-make-filesystem] input'); }
+    get createMountDirCommand() { return $('[data-qa-mountpoint] input'); }
+    get mountCommand() { return $('[data-qa-mount] input'); }
+    get mountOnBootCommand() { return $('[data-qa-boot-mount] input'); }
+    get umountCommand() { return $('[data-qa-umount] input'); }
+    get fileSystemCheckCommand() { return $('[data-qa-check-filesystem] input'); }
+    get resizeFileSystemCommand() { return $('[data-qa-resize-filesystem] input'); }
+    get creatAndAttachRadio() { return $('[data-qa-radio="Create and Attach Volume"]'); }
+    get attachExistingVolume() { return $('[data-qa-radio="Attach Existing Volume"]'); }
 
     removeAllVolumes() {
         const pageObject = this;
@@ -56,8 +61,7 @@ export class VolumeDetail extends Page {
     closeVolumeDrawer() {
         this.drawerClose.click();
         this.drawerTitle.waitForVisible(constants.wait.short, true);
-        browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
-        this.globalCreate.waitForVisible();
+        browser.pause(500);
     }
 
     defaultDrawerElemsDisplay() {
@@ -71,7 +75,52 @@ export class VolumeDetail extends Page {
         expect(this.region.isVisible()).toBe(true);
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        this.attachToLinode.waitForVisible(constants.wait.normal);
+        this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
+    }
+
+    volumeAttachedToLinodeDrawerDisplays() {
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.creatAndAttachRadio.waitForVisible(constants.wait.normal);
+        this.attachExistingVolume.waitForVisible(constants.wait.normal);
+        this.label.waitForVisible(constants.wait.normal);
+        this.size.waitForVisible(constants.wait.normal);
+        this.tagsMultiSelect.waitForVisible(constants.wait.normal);
+    }
+
+    attachExistingVolumeToLinodeDrawerDisplays() {
+        this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
+    }
+
+    attachExistingVolumeToLinode(volumeLabel){
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.attachExistingVolumeToLinodeDrawerDisplays();
+        this.attachExistingVolume.click();
+        this.attachExistingVolumeToLinodeDrawerDisplays();
+        this.selectLinodeOrVolume.$('..').$('..').click();
+        this.selectOption.waitForVisible(constants.wait.normal);
+        this.selectOptions.find(option => option.getText() === volumeLabel).click();
+        this.selectOption.waitForVisible(constants.wait.normal,true);
+        this.submit.click();
+        this.drawerBase.waitForVisible(constants.wait.normal,true);
+    }
+
+    volumeConfigurationDrawerDisplays(){
+        this.createFileSystemCommand.waitForVisible(constants.wait.normal);
+        this.createMountDirCommand.waitForVisible(constants.wait.normal);
+        this.mountCommand.waitForVisible(constants.wait.normal);
+        this.mountOnBootCommand.waitForVisible(constants.wait.normal);
+        expect(this.copyToolTips.length).toBe(4);
+        expect(this.drawerTitle.getText()).toEqual('Volume Configuration');
+    }
+
+    createVolumeAttachedToLinode(volumeLabel,size,tag){
+        this.volumeAttachedToLinodeDrawerDisplays();
+        this.label.$('input').setValue(volumeLabel);
+        this.size.$('input').setValue(size);
+        if(tag){
+            this.addTagToTagInput(tag);
+        }
+        this.submitButton.click();
     }
 
     getVolumeId(label) {
@@ -108,18 +157,12 @@ export class VolumeDetail extends Page {
         browser.trySetValue('[data-qa-size] input', volume.size);
 
         if (volume.hasOwnProperty('region')) {
-            this.region.waitForVisible();
-            this.region.click();
-            const volumeRegion = `[data-qa-attach-to-region="${volume.region}"]`;
-            $(volumeRegion).waitForVisible(constants.wait.normal);
-            browser.jsClick(volumeRegion);
-
-            browser.waitForVisible('[data-qa-attach-to-region]', constants.wait.short, true);
+            this.selectRegion(volume.region);
             browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);
         }
 
         if (volume.hasOwnProperty('attachedLinode')) {
-            this.attachToLinode.click();
+            this.selectLinodeOrVolume.click();
             this.selectOption.waitForVisible(constants.wait.normal);
 
             const optionToSelect =
@@ -127,53 +170,68 @@ export class VolumeDetail extends Page {
 
             optionToSelect[0].click();
         }
-        // this.region.setValue(volume.region);
+
+        if(volume.hasOwnProperty('tag')) {
+            this.addTagToTagInput(volume.tag);
+        }
+
         this.submit.click();
 
         if (volume.hasOwnProperty('attachedLinode')) {
             browser.waitForVisible(`[data-qa-volume-cell-attachment="${volume.attachedLinode}"]`, constants.wait.long * 2);
         }
-
-      /*  if (volume.hasOwnProperty('region')) {
-            browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
-        }*/
     }
 
-    editVolume(volume, newLabel) {
-        browser.waitForVisible('[data-qa-drawer-title]', constants.wait.normal);
-        browser.waitForVisible('[data-qa-volume-label] input', constants.wait.normal);
-
+    editVolume(newLabel, tag=undefined) {
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.label.waitForVisible(constants.wait.normal);
         browser.trySetValue('[data-qa-volume-label] input', newLabel, constants.wait.normal);
-
+        if(tag){
+          if(this.multiOption.isVisible()){
+              const tags = $$(this.multiOption.selector).length;
+              this.multiOption.$('..').$('..').$('input').setValue(tag);
+              this.selectOptions[0].waitForVisible(constants.wait.normal);
+              this.selectOptions[0].click();
+              browser.waitUntil(() => {
+                  return $$(this.multiOption.selector).length === tags + 1;
+              },constants.wait.normal);
+          }else{
+              this.addTagToTagInput(tag);
+          }
+        }
         this.submit.click();
-
-        browser.waitUntil(function() {
-            return newLabel === $(`[data-qa-volume-cell="${volume.id}"]`).$('[data-qa-volume-cell-label]').getText();
-        }, constants.wait.normal, 'Volume label failed to be updated');
+        this.drawerBase.waitForVisible(constants.wait.normal, true);
+        browser.waitUntil(() => {
+            return $$(this.volumeCellLabel.selector).find(label => label.getText().includes(newLabel));
+        },constants.wait.normal);
     }
 
-    resizeVolume(volume, newSize) {
-        // Placeholder volume action
+    resizeVolume(newSize) {
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.size.waitForVisible(constants.wait.normal);
+        $(`${this.size.selector} input`).setValue(newSize);
+        const volumePrice = newSize * 0.1;
+        expect(this.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
+        this.submit.click();
+        this.waitForNotice('Volume scheduled to be resized.');
+        this.umountCommand.waitForVisible(constants.wait.normal);
+        this.fileSystemCheckCommand.waitForVisible(constants.wait.normal);
+        this.resizeFileSystemCommand.waitForVisible(constants.wait.normal);
+        this.mountCommand.waitForVisible(constants.wait.normal);
     }
 
-    attachVolume(linodeLabel, volume) {
-        browser.waitForVisible('[data-qa-drawer-title]');
-        browser.waitForVisible('[data-qa-mode-radio-group]', constants.wait.normal);
-
-        const attachRadio = $('[data-qa-mode-radio-group] [data-qa-radio="Attach Existing Volume"]');
-
-        attachRadio.click();
-
-        this.multiSelect.waitForVisible(constants.wait.normal);
-        browser.jsClick(this.multiSelect.selector);
-
-        this.selectOption.waitForVisible(constants.wait.normal);
-
-        this.selectOptions[0].click();
-        this.selectOption.waitForVisible(constants.wait.normal, true);
-
-        browser.click(this.submitButton.selector);
-        browser.waitForVisible(`[data-qa-volume-cell="${volume.id}"]`, constants.wait.normal);
+    attachVolumeFromVolumeLanding(linode) {
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.linodeSelect.waitForVisible(constants.wait.normal);
+        this.linodeSelect.click();
+        this.linodeAttachOption.waitForVisible(constants.wait.normal);
+        const linodeAttach = this.linodeAttachOption.selector.replace(']','');
+        browser.jsClick(`${linodeAttach}="${linode}"]`)
+        this.linodeAttachOption.waitForVisible(constants.wait.normal,true);
+        this.submitButton.click();
+        this.drawerBase.waitForVisible(constants.wait.normal,false);
+        const attachedTo = this.volumeAttachment.selector.replace(']','');
+        $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.normal);
     }
 
     detachVolume(volume, detach=true) {
@@ -198,23 +256,24 @@ export class VolumeDetail extends Page {
         }
     }
 
-    detachConfirm(volumeId) {
+    confirmDetachORDelete() {
         this.dialogTitle.waitForVisible(constants.wait.normal);
         browser.click('[data-qa-confirm]');
-
         this.dialogTitle.waitForVisible(constants.wait.normal, true);
-
-        browser.waitForVisible(`[data-qa-volume-cell="${volumeId}"]`, constants.wait.long, true);
-
-        // Wait for progress bars to not display on volume detail pages
-        if (!browser.getUrl().includes('/linodes')) {
-            // browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long);
-            // browser.waitForVisible('[data-qa-volume-loading]', constants.wait.long, true);
-        }
     }
 
-    cloneVolume(volume, newLabel) {
-        // Placeholder volume action
+    cloneVolume(newClone,currentSize) {
+        const startVolumes = this.volumeCell.length;
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.label.waitForVisible(constants.wait.normal);
+        this.label.$('input').setValue(newClone);
+        const volumePrice = currentSize * 0.1;
+        expect(this.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
+        this.submitButton.click();
+        this.drawerBase.waitForVisible(constants.wait.normal,true);
+        browser.waitUntil(() => {
+            return this.volumeCell.length === startVolumes + 1;
+        }, constants.wait.minute);
     }
 
     removeVolume(volumeElement) {
@@ -277,8 +336,10 @@ export class VolumeDetail extends Page {
         expect(volumesDisplayed).toContain([volume.label, volume.size]);
     }
 
-    assertActionMenuItems() {
-        const menuItems = [ "Show Configuration", "Edit Volume", "Resize", "Clone", "Detach" ]
+    assertActionMenuItems(attached=true) {
+        this.actionMenuItem.waitForVisible(constants.wait.normal);
+        const menuItems =
+          attached ? ["Show Configuration", "Edit Volume", "Resize", "Clone", "Detach" ] : ["Show Configuration", "Edit Volume", "Resize", "Clone", "Attach", "Delete" ];
         const actionMenuItem=this.actionMenuItem.selector.replace(']','');
         menuItems.forEach(item => expect($(`${actionMenuItem}="${item}"`).isVisible()).toBe(true));
     }
@@ -295,6 +356,25 @@ export class VolumeDetail extends Page {
         });
 
         expect(this.copyToolTips.length).toBe(4);
+    }
+
+    selectRegion(region) {
+        this.region.waitForVisible();
+        this.region.click();
+        const regionSelector = this.attachRegion.selector.replace(']','');
+        const volumeRegion = `${regionSelector}="${region}"]`;
+        browser.waitUntil(() => {
+            return this.attachRegions.length > 0;
+        }, constants.wait.normal);
+        browser.jsClick(volumeRegion);
+        this.attachRegion.waitForVisible(constants.wait.short, true);
+    }
+
+    checkVolumeConfigurationCommands(volumeLabel){
+        expect(this.createFileSystemCommand.getAttribute('value')).toEqual(`mkfs.ext4 "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}"`);
+        expect(this.createMountDirCommand.getAttribute('value')).toEqual(`mkdir "/mnt/${volumeLabel}"`);
+        expect(this.mountCommand.getAttribute('value')).toEqual(`mount "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}" "/mnt/${volumeLabel}"`);
+        expect(this.mountOnBootCommand.getAttribute('value')).toEqual(`/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel} ext4 defaults,noatime 0 2`);
     }
 }
 

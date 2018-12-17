@@ -55,6 +55,7 @@ export default class Page {
     get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
+    get enterKey() { return '\uE007'; }
 
     constructor() {
         this.pageTitle = 'Base page';
@@ -146,8 +147,9 @@ export default class Page {
 
     toastDisplays(expectedMessage, timeout=constants.wait.normal) {
         this.toast.waitForVisible(timeout);
-        const displayedMsg = this.toast.getText();
-        expect(displayedMsg).toBe(expectedMessage);
+        browser.waitUntil(() => {
+            return $$(this.toast.selector).find(toast => toast.getText() === expectedMessage)
+        },timeout);
         this.toast.waitForVisible(timeout, true);
     }
 
@@ -181,9 +183,11 @@ export default class Page {
       browser.jsClick(`${trimActionMenu}="${item}"]`);
     }
 
-    actionMenuOptionExists(actionMenuRow,option) {
+    actionMenuOptionExists(actionMenuRow,options) {
         this.openActionMenu(actionMenuRow);
-        expect($(`[data-qa-action-menu-item="${option}"]`).isVisible()).toBe(true);
+        options.forEach((option) => {
+            expect($(`[data-qa-action-menu-item="${option}"]`).isVisible()).toBe(true)
+        });
     }
 
     closeDrawer() {
@@ -227,9 +231,19 @@ export default class Page {
         const createTagSelect = $$('[data-qa-enhanced-select]')[1].$('..').$('input');
         createTagSelect.waitForVisible(constants.wait.normal);
         createTagSelect.setValue(tagName);
-        createTagSelect.addValue('\uE007');
+        createTagSelect.addValue(this.enterKey);
         browser.waitUntil(() => {
             return this.tags.length === expectedCount;
         }, constants.wait.normal);
+    }
+
+    checkTagsApplied(expectedTags){
+        browser.waitUntil(() => {
+            return this.tags.length > 0;
+        },constants.wait.normal);
+        const appliedTags = this.tags.map(tag => tag.getText());
+        expectedTags.forEach((tag) => {
+            expect(appliedTags.includes(tag)).toBe(true);
+        });
     }
 }

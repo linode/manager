@@ -399,7 +399,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       return isVolumeUpdating(volume.recentEvent)
         ? (
           <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
-            <TableCell data-qa-volume-cell-label>
+            <TableCell data-qa-volume-cell-label={label}>
               {label}
               <RenderTags tags={volume.tags} />
             </TableCell>
@@ -410,7 +410,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         )
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-            <TableCell parentColumn="Label" data-qa-volume-cell-label>
+            <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
               {volume.label}
               <RenderTags tags={volume.tags} />
             </TableCell>

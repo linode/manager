@@ -95,12 +95,12 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             {status && <NoticePanel success={status.success} error={status.generalError} />}
 
-            <Typography variant="body1">
+            <Typography variant="body1" data-qa-volume-size-help>
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
               $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
             </Typography>
 
-            <Typography variant="body1" className={classes.copy}>
+            <Typography variant="body1" className={classes.copy} data-qa-volume-help>
               Volumes must be created in a particular region. You can choose to create a volume in
               a region and attach it later to a Linode in the same region. If you select a Linode
               from the field below, the Volume will be automatically created in that Linode’s
@@ -191,4 +191,3 @@ const initialValues: FormState = {
 const styled = withStyles(styles);
 
 export default styled(CreateVolumeForm);
-

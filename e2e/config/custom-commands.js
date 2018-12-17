@@ -13,7 +13,8 @@ const {
     getUserProfile,
     updateUserProfile,
     putGlobalSetting,
-    getGlobalSettings
+    getGlobalSettings,
+    createVolumeUnattached,
 } = require('../setup/setup');
 
 const {
@@ -208,6 +209,11 @@ exports.browserCommands = () => {
 
     browser.addCommand('getGlobalSettings', function async(token) {
         return getGlobalSettings(token)
+            .then(res => res);
+    });
+
+    browser.addCommand('createVolumeUnattached', function async(token,label,region,size,tags) {
+        return createVolumeUnattached(token,label,region,size,tags)
             .then(res => res);
     });
 }

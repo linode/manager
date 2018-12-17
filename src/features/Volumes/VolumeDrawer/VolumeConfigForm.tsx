@@ -44,6 +44,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         <CopyableTextField
           className={classes.copyField}
           value={`mkfs.ext4 "${props.volumePath}"`}
+          data-qa-make-filesystem
         />
       </div>
 
@@ -54,6 +55,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         <CopyableTextField
           className={classes.copyField}
           value={`mkdir "/mnt/${props.volumeLabel}"`}
+          data-qa-mountpoint
         />
       </div>
 
@@ -64,6 +66,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         <CopyableTextField
           className={classes.copyField}
           value={`mount "${props.volumePath}" "/mnt/${props.volumeLabel}"`}
+          data-qa-mount
         />
       </div>
 
@@ -76,6 +79,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = (props) => {
         <CopyableTextField
           className={classes.copyField}
           value={`${props.volumePath} /mnt/${props.volumeLabel} ext4 defaults,noatime 0 2`}
+          data-qa-boot-mount
         />
       </div>
       <ActionsPanel>
