@@ -149,7 +149,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
               entity={entityType}
               results={results[entityType]}
               loading={loading}
-              groupSize={5}
+              groupSize={100}
             />
           )}
         </Grid>
