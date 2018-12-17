@@ -5,13 +5,14 @@ import Page from '../page';
 class Rebuild extends Page {
     get title() { return $('[data-qa-title]'); }
     get description() { return $('[data-qa-rebuild-desc]'); }
-    get imagesSelect() { return $('[data-qa-rebuild-image]'); }
+    get imageSelectSelector() { return '[data-qa-enhanced-select="Select an Image"]';}
+    get imagesSelect() { return $(`${this.imageSelectSelector}>div>div`); }
     get password() { return $('[data-qa-hide] input'); }
     get submit() { return $('[data-qa-rebuild]'); }
     get imageSelectHeader() { return $('[data-qa-select-header]'); }
     get imageOption() { return $('[data-qa-image-option]'); }
     get imageOptions() { return $$(this.imageOption.selector); }
-    get imageError() { return $('[data-qa-image-error]'); }
+    get imageError() { return $(`${this.imageSelectSelector}>p`); }
 
     assertElemsDisplay() {
         const expectedTitle = 'Rebuild';
@@ -29,29 +30,22 @@ class Rebuild extends Page {
 
     selectImage(label) {
         this.imagesSelect.click();
-
-        /*
-          Use waitUntil here instead of standard waitForExist
-          Due to chromedriver request throttling issue
-        */
-        browser.waitUntil(function() {
-            return $('[data-qa-image-option]').isVisible();
-        }, constants.wait.normal);
-
+        browser.pause(500);
         if (label) {
             const targetImage =
-                this.imageOptions
-                    .filter(option => option.getText().includes(label));
-            targetImage[0].click();
+                this.selectOptions
+                    .find(option => option.getText().includes(label));
+            targetImage.click();
             return this;
         }
-
-        const imageOption = this.imageOptions[0];
+  
+        const imageOption = this.selectOptions[0];
         const imageName = imageOption.getText();
 
         imageOption.click();
         // Expect image select to update with imageName
-        expect(this.imagesSelect.getText()).toBe(imageName);
+        const selectedOptionAttribute = this.imageSelectSelector.split('=');
+        expect($(`${selectedOptionAttribute[0]}="${imageName}"]`).isVisible()).toBe(true);
 
         return this;
     }
@@ -59,7 +53,7 @@ class Rebuild extends Page {
     rebuild() {
         const toastMessage = 'Linode rebuild started.';
         browser.jsClick(this.submit.selector);
-        this.toastDisplays(toastMessage);
+        this.toastDisplays(toastMessage, constants.wait.minute);
     }
 }
 

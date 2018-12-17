@@ -1,17 +1,27 @@
 const { constants } = require('../../constants');
 
 import { flatten } from 'ramda';
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    timestamp,
+    waitForLinodeStatus,
+} from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('List Linodes - Actions - Reboot Suite', () => {
-    const rebootTimeout = constants.wait.minute * 3;
+    const linode = `AutoLinode${timestamp()}`;
+
+    const waitForRebootListView = (linode) => {
+        const linodeRow = $(ListLinodes.getLinodeSelector(linode));
+        browser.waitUntil(() => {
+             return linodeRow.$('..').$('[data-qa-loading] [data-qa-status="rebooting"]').isVisible();
+        }, constants.wait.normal);
+    }
 
     beforeAll(() => {
         browser.url(constants.routes.linodes);
-        apiCreateLinode();
-
-        browser.waitForVisible('[data-qa-linode]', constants.wait.normal);
+        apiCreateLinode(linode);
     });
 
     afterAll(() => {
@@ -28,16 +38,11 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should update status on reboot to rebooting', () => {
-            browser.waitUntil(function() {
-                const currentStatus = linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status');
-                return currentStatus === 'rebooting';
-            }, 10000);
+            waitForLinodeStatus(linode, 'rebooting', constants.wait.short);
         });
 
         it('should display running status after booted', () => {
-            browser.waitUntil(function() {
-                return linodes[0].$(ListLinodes.status.selector).getAttribute('data-qa-status') === 'running';
-            }, rebootTimeout);
+            waitForLinodeStatus(linode, 'running');
         });
 
         it('should display all grid view elements after reboot', () => {
@@ -55,25 +60,24 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should reboot linode on click', () => {
-            ListLinodes.selectActionMenuItem(ListLinodes.linode[0], 'Reboot');
+            ListLinodes.selectActionMenuItemV2(ListLinodes.getLinodeSelector(linode), 'Reboot');
             ListLinodes.acceptDialog('Confirm Reboot');
-            browser.waitForVisible('[data-qa-loading]', constants.wait.normal);
         });
 
         it('should update status on reboot to rebooting', () => {
-            browser.waitForVisible('[data-qa-status="rebooting"]', constants.wait.normal);
+            waitForRebootListView(linode);
         });
 
-        it('should hide action menu', () => {
-            // Wait for action menu to no longer be visible
-            browser.waitUntil(function() {
-                const actionMenuMap = flatten(ListLinodes.linode.map(l => l.$(ListLinodes.linodeActionMenu.selector)));
-                return actionMenuMap.length === totalLinodes -1;
-            }, 10000);
+        it('should display the linear progress bar above the linode row details', () => {
+            const linodeRow = $(ListLinodes.getLinodeSelector(linode));
+            expect(linodeRow.$(ListLinodes.linodeLabel.selector).isVisible()).toBe(true);
+            expect(linodeRow.$(ListLinodes.ip.selector).isVisible()).toBe(true);
+            expect(linodeRow.$(ListLinodes.region.selector).isVisible()).toBe(true);
+            expect(linodeRow.$(ListLinodes.actionMenu.selector).isVisible()).toBe(true);
         });
 
         it('should display running status after booted', () => {
-            browser.waitForVisible('[data-qa-status="running"]', rebootTimeout);
+            waitForLinodeStatus(linode, 'running');
         });
 
         it('should display all list view elements after reboot', () => {

@@ -1,6 +1,10 @@
 const { constants } = require('../../constants');
 
-import { timestamp, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    timestamp,
+    apiDeleteAllLinodes,
+    waitForLinodeStatus,
+} from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
@@ -60,14 +64,14 @@ describe('Create Linode from Image - With Tags Suite', () => {
     it('should deploy the tagged linode', () => {
         ConfigureLinode.generic(linodeName);
         ConfigureLinode.deploy.click();
-        ListLinodes.waitUntilBooted(linodeName);
+        waitForLinodeStatus(linodeName, 'running');
     });
 
     describe('List Linodes - Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
             assertTagsDisplay(addedTags);
         });
-        //Tests below are affected by bug M3-1671
+
         it('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
@@ -77,8 +81,6 @@ describe('Create Linode from Image - With Tags Suite', () => {
 
     describe('Linode Detail - Tags Suite', () => {
         it('should navigate to linode detail', () => {
-            // It should navigate to Linode detail page
-            browser.waitForVisible(`[data-qa-linode="${linodeName}"]`, constants.wait.normal);
             ListLinodes.navigateToDetail(linodeName);
             LinodeDetail.landingElemsDisplay();
         });
