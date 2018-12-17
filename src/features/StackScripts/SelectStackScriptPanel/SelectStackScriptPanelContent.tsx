@@ -49,7 +49,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
-  request: (username: string, params: Params, filter: any) =>
+  request: (usernames: string[], params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
@@ -157,7 +157,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
 
     return request(
-      filteredUser,
+      [filteredUser],
       { page, page_size: 50 },
       filter)
       .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {

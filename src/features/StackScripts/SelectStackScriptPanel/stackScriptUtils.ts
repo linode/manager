@@ -6,7 +6,13 @@ export const getStackScriptsByUser = (username: string, params?: any, filter?: a
     username,
   });
 
-export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
+  export const getStackScriptsByUsers = (usernames: string[], params?: any, filter?: any) =>
+  getStackscripts(params, {
+    ...filter,
+    '+or': usernames.map(name => ({ username: name })),
+  });
+
+export const getCommunityStackscripts = (currentUser: string[], params?: any, filter?: any) =>
   getStackscripts(params, {
     ...filter,
     '+and': [

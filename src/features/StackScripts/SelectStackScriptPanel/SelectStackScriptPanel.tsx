@@ -5,7 +5,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
-import { getCommunityStackscripts, getStackScriptsByUser } from './stackScriptUtils';
+import { getCommunityStackscripts, getStackScriptsByUsers } from './stackScriptUtils';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -78,10 +78,23 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
-        request={getStackScriptsByUser}
+        request={getStackScriptsByUsers}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={0}
+        resetStackScriptSelection={this.maybeResetStackScript}
+      />,
+    },
+    {
+      title: 'Account StackScripts',
+      render: () => <SelectStackScriptPanelContent
+        onSelect={this.props.onSelect}
+        publicImages={this.props.publicImages}
+        currentUser={this.props.username}
+        request={getStackScriptsByUsers}
+        selectedStackScriptIDFromQuery={this.props.selectedId}
+        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
+        key={1}
         resetStackScriptSelection={this.maybeResetStackScript}
       />,
     },
@@ -91,9 +104,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
-        request={getStackScriptsByUser}
+        request={getStackScriptsByUsers}
         selectedStackScriptIDFromQuery={this.props.selectedId}
-        key={1}
+        key={2}
         isLinodeStackScripts={true}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         resetStackScriptSelection={this.maybeResetStackScript}
@@ -110,12 +123,13 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         resetStackScriptSelection={this.maybeResetStackScript}
-        key={2}
+        key={3}
       />,
     },
   ];
 
   myTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('my'));
+  accountTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('account'));
   linodeTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('linode'));
   communityTabIndex = this.createTabs.findIndex(tab => tab.title.toLowerCase().includes('community'));
 
@@ -127,10 +141,13 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   ** seeing the panel. Default to 0 index if no query string
   */
   getInitTab = () => {
-    const { onSelect, selectedUsername, username } = this.props;
+    const { onSelect, selectedUsername, username, accountUsernames } = this.props;
 
     if (username === selectedUsername) {
       return this.myTabIndex;
+    }
+    if (selectedUsername && accountUsernames.indexOf(selectedUsername) !== -1) {
+      return this.accountTabIndex;
     }
     if (selectedUsername === 'linode') {
       return this.linodeTabIndex;
@@ -181,10 +198,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   username: string;
+  accountUsernames: string[];
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile),
+  accountUsernames: [],
 });
 
 const connected = connect(mapStateToProps);
