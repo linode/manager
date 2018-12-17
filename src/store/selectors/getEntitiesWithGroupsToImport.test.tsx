@@ -1,11 +1,10 @@
-import { linodes } from 'src/__data__';
+import { domains, linodes } from 'src/__data__';
 import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';
 
 const state = {
   __resources: {
     linodes: { entities: linodes },
-    // @todo: Uncomment when domain support is added
-    // domains  { entities: domains}
+    domains: { entities: domains }
   }
 };
 
@@ -34,24 +33,23 @@ describe('Entities that have groups to import', () => {
     });
   });
 
-  // @todo: Uncomment when domain support is added
-  // describe('domains', () => {
-  //   it('returns an object with a "domains" property', () => {
-  //     expect(entities.domains).toBeDefined();
-  //     expect(entities.domains).toBeInstanceOf(Array);
-  //   });
+  describe('domains', () => {
+    it('returns an object with a "domains" property', () => {
+      expect(entities.domains).toBeDefined();
+      expect(entities.domains).toBeInstanceOf(Array);
+    });
 
-  //   it('each element in "domains" array has group', () => {
-  //     entities.domains.forEach(linode => {
-  //       expect(linode.group).toBeDefined();
-  //       expect(linode.group).not.toEqual('');
-  //     });
-  //   });
+    it('each element in "domains" array has group', () => {
+      entities.domains.forEach(linode => {
+        expect(linode.group).toBeDefined();
+        expect(linode.group).not.toEqual('');
+      });
+    });
 
-  //   it('each element in "domains" array has group that is NOT a tag', () => {
-  //     entities.domains.forEach(linode => {
-  //       expect(linode.tags.indexOf(linode.group!)).toBe(-1);
-  //     });
-  //   });
-  // });
+    it('each element in "domains" array has group that is NOT a tag', () => {
+      entities.domains.forEach(linode => {
+        expect(linode.tags.indexOf(linode.group!)).toBe(-1);
+      });
+    });
+  });
 });
