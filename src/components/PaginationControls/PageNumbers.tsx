@@ -95,8 +95,12 @@ export class PageNumber extends React.PureComponent<PageNumberProps> {
  * 
  * @param { number } currentPage - current page we're on 
  * @param { number } numOfPages - total number of pages returned from the API
+ * 
+ * This function is determining what page numbers to show in the pagination footer.
+ * It will either return pages 1 - 5, 5 pages in the middle, or the last 5 pages depending
+ * on what the current page is
  */
-const pageNumbersToRender = (currentPage: number, numOfPages: number) => {
+export const pageNumbersToRender = (currentPage: number, numOfPages: number) => {
   /** creates an array of numbers, starting at 1, created from the numOfPages returned from API */
   const arrOfPageNumbers = Array.from(Array(numOfPages).keys()).map((value, index) => index + 1)
   /** return first 5 pages if we on a page under 5 */
