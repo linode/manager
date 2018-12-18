@@ -27,6 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   section: {
     padding: theme.spacing.unit * 3,
     borderBottom: `1px solid ${theme.palette.divider}`,
+    textAlign: 'center',
   },
   title: {
     background: theme.bg.tableHeader,

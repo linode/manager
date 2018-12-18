@@ -22,17 +22,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: theme.spacing.unit * 3,
   },
   tagHeaderRow: {
-    backgroundColor: theme.bg.tableHeader,
+    backgroundColor: theme.bg.main,
     height: 'auto',
     '& td': {
-      padding: '8px 15px',
+      padding: '10px 0',
+      borderBottom: 'none',
     },
   },
   tagHeader: {
+    marginBottom: 2,
   },
   tagHeaderOuter: {
-    backgroundColor: theme.bg.tableHeader,
-    padding: '8px 10px',
   },
   paginationCell: {
     paddingTop: 2,
@@ -77,7 +77,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
               <Grid container>
                 <Grid item xs={12}>
                   <div className={classes.tagHeaderOuter}>
-                    <Typography className={classes.tagHeader} variant="body2">{tag}</Typography>
+                    <Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography>
                   </div>
                 </Grid>
               </Grid>
@@ -130,10 +130,9 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     <React.Fragment>
                       <TableBody>
                         <TableRow className={classes.tagHeaderRow}>
-                          <TableCell colSpan={7}><Typography className={classes.tagHeader} variant="body2">{tag}</Typography></TableCell>
+                          <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                      </TableBody>
                       {count > 25 && <TableRow>
                         <TableCell colSpan={7} className={classes.paginationCell}>
                           <PaginationFooter
@@ -145,6 +144,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                           />
                         </TableCell>
                       </TableRow>}
+                      </TableBody>
                     </React.Fragment>
                   )
                 }}
