@@ -25,14 +25,14 @@ export const ImportGroupsAsTags: React.StatelessComponent<CombinedProps> = (prop
     <ExpansionPanel
       className={classes.root}
       defaultExpanded={true}
-      heading={"Import Display Groups"}
+      heading={"Import Display Groups as Tags!"}
     >
       <Typography variant="body1" className={classes.helperText}>
-        Import Display Groups from Classic Manager and convert them to tags.
-        Your existing tags will not be affected.
+      You now have the ability to import your Display Groups in the Classic Manager to tags and they will be associated to your Domains and Linodes.  
+      This will give you the ability to organize and view your Linodes by tags. Your existing tags will not be affected.
       </Typography>
       <Button type="primary" onClick={openDrawer} data-qa-open-group-import-drawer>
-        Import Display Groups
+        Import Display Groups!
       </Button>
     </ExpansionPanel>
   );

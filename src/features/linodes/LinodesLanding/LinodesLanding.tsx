@@ -33,7 +33,7 @@ import ListView from './ListView';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
 
-type ClassNames = 'tagGroup';
+type ClassNames = 'tagGroup' | 'tagToggle';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   title: {
@@ -41,6 +41,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   tagGroup: {
     flexDirection: 'row-reverse'
+  },
+  tagToggle: {
+    '&.checked': {
+      '& .square': {
+        fill: `${theme.color.toggleActive} !important`,
+      },
+    },
+    '& > span:last-child': {
+      backgroundColor: '#f4f4f4 !important',
+      opacity: 0.38,
+      borderColor: '#999 !important',
+    },
+    '& .square': {
+      fill: '##abadaf !important',
+    },
   },
 });
 
@@ -300,6 +315,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               className={classes.tagGroup}
               control={
                 <Toggle
+                  className={classes.tagToggle + (this.props.groupByTags ? ' checked' : ' unchecked')}
                   onChange={this.props.toggleGroupByTag}
                   checked={this.props.groupByTags} />
               }
