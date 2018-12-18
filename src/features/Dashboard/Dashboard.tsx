@@ -46,9 +46,10 @@ type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 const shouldDisplayGroupImportCTA = (groupedEntities: GroupedEntitiesForImport) => {
   const userHasDisabledCTA = storage.hideGroupImportCTA.get();
+  const { linodes, domains } = groupedEntities;
   return (
     !userHasDisabledCTA &&
-    (groupedEntities.linodes.length >= 0 || groupedEntities.domains.length >= 0)
+    (linodes.length > 0 || domains.length > 0)
   )
 }
 
