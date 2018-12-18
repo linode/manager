@@ -23,13 +23,14 @@ interface Props {
   loading: boolean;
   error?: Error;
   data?: Linode.Device[];
+  triggerDeletion: (deviceId: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
   render() {
-    const { loading, error, data } = this.props;
+    const { loading, error, data, triggerDeletion } = this.props;
     if (loading) {
       return <TableRowLoading colSpan={4} />
     }
@@ -51,7 +52,12 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
               <TableCell parentColumn="Expires">
                 <DateTimeDisplay value={eachDevice.expiry} />
               </TableCell>
-              <TableCell><Button>Untrust</Button></TableCell>
+              <TableCell>
+                <UntrustButton
+                  deviceId={eachDevice.id}
+                  triggerDeletion={triggerDeletion}
+                />
+              </TableCell>
             </TableRow>
           )
         })}
@@ -63,3 +69,19 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
 const styled = withStyles(styles);
 
 export default styled(TrustedDevicesTable);
+
+interface ButtonProps {
+  deviceId?: number;
+  triggerDeletion: (deviceId: number) => void;
+}
+class UntrustButton extends React.PureComponent<ButtonProps, {}> {
+  handleDelete = () => {
+    const { triggerDeletion, deviceId } = this.props;
+    if (!!deviceId) { triggerDeletion(deviceId) }
+  }
+  render() {
+    return (
+      <Button onClick={this.handleDelete}>Untrust</Button>
+    )
+  }
+}

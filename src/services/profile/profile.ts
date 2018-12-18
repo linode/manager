@@ -73,3 +73,15 @@ export const getTrustedDevices = (params: any, filter: any) =>
     setXFilter(filter),
     setParams(params)
   ).then(response => response.data)
+
+/**
+ * deleteTrustedDevice
+ * 
+ * Deletes a trusted device from a user's profile 
+ */
+export const deleteTrustedDevice = (id: number) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/profile/devices/${id}`),
+    setMethod('DELETE'),
+  ).then(response => response.data)
+

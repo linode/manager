@@ -4,7 +4,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import * as React from 'react';
-import { compose, lifecycle } from 'recompose';
+import { compose, lifecycle, StateHandlerMap, withStateHandlers } from 'recompose';
 
 import { getTrustedDevices } from 'src/services/profile';
 
@@ -18,6 +18,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 
+import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
 type ClassNames = 'root' | 'title';
@@ -33,20 +34,35 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   }
 });
 
-type CombinedProps = PaginationProps<Linode.Device> & WithStyles<ClassNames>;
+type CombinedProps = PaginationProps<Linode.Device>
+  & WithStyles<ClassNames>
+  & StateUpdaters
+  & DialogState;
 
 class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
+  handleDeleteDevice = (deviceId: number) => {
+    this.props.setSelectedDevice(deviceId)
+    this.props.toggleDialog()
+  }
+
+  refreshList = () => {
+    this.props.handleOrderChange('expiry', 'asc');
+  }
+
   render() {
     const {
       classes,
       loading,
-      error,
       data: devices,
       count,
       page,
+      error,
       pageSize,
       handlePageChange,
-      handlePageSizeChange
+      handlePageSizeChange,
+      toggleDialog,
+      selectedDeviceId,
+      dialogOpen
     } = this.props;
     return (
       <Paper className={classes.root}>
@@ -70,7 +86,9 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
             <TrustedDevicesTable
               error={error}
               data={devices}
-              loading={loading} />
+              loading={loading}
+              triggerDeletion={this.handleDeleteDevice}
+            />
           </TableBody>
           {devices && devices.length > 0 &&
             <PaginationFooter
@@ -83,6 +101,12 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
             />
           }
         </Table>
+        <Dialog
+          open={dialogOpen}
+          closeDialog={toggleDialog}
+          deviceId={selectedDeviceId}
+          refreshListOfDevices={this.refreshList}
+        />
       </Paper>
     );
   }
@@ -102,8 +126,40 @@ const withRequestOnMount = lifecycle<PaginationProps<Linode.Device>, {}>({
   }
 })
 
+export interface DialogState {
+  dialogOpen: boolean;
+  selectedDeviceId?: number;
+}
+
+export interface StateUpdaters {
+  toggleDialog: () => void;
+  setSelectedDevice: (deviceId: number) => void;
+}
+
+type StateAndStateUpdaters = StateHandlerMap<DialogState> &
+  StateUpdaters;
+
+const withDialogHandlers = withStateHandlers<
+  DialogState,
+  StateAndStateUpdaters,
+  {}
+  >(
+    {
+      dialogOpen: false,
+      selectedDeviceId: undefined
+    }, {
+      toggleDialog: (state: DialogState) => () => ({
+        dialogOpen: !state.dialogOpen
+      }),
+      setSelectedDevice: () => (deviceId: number) => ({
+        selectedDeviceId: deviceId
+      })
+    }
+  )
+
 export default compose<CombinedProps, {}>(
+  withDialogHandlers,
   paginated,
   withRequestOnMount,
-  styled
+  styled,
 )(TrustedDevices);
