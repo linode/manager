@@ -154,7 +154,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     deleteUser(username)
       .then(() => {
         this.props.onDelete();
-        this.props.enqueueSnackbar(`${username} has been deleted successfully.`, { variant: 'info' })
+        this.props.enqueueSnackbar(`${username} has been deleted successfully.`, { variant: 'success' });
       })
       .catch(() => {
         this.setState({
@@ -322,7 +322,7 @@ const paginated = Pagey((ownProps, params, filters) => getUsers(params, filters)
     )
       .then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))));
 
-export default compose<{}, CombinedProps>(
+export default compose<CombinedProps, {}>(
   withRouter,
   setDocs(UsersLanding.docs),
   styled,
