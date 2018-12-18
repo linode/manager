@@ -26,6 +26,7 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getRegions } from 'src/services/misc';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
+import { async as domainsAsync } from 'src/store/reducers/resources/domains';
 import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
@@ -216,8 +217,9 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { getAccountSettings, getNotifications, getProfile, requestLinodes, requestTypes } = this.props.actions;
+    const { getAccountSettings, getNotifications, getProfile, requestDomains, requestLinodes, requestTypes } = this.props.actions;
 
+    requestDomains();
     requestLinodes();
     requestTypes();
 
@@ -373,6 +375,7 @@ interface DispatchProps {
     getProfile: () => void;
     getNotifications: () => void;
     getAccountSettings: () => void;
+    requestDomains: () => void;
     requestLinodes: () => void;
     requestTypes: () => void;
   },
@@ -384,6 +387,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
       getProfile: () => dispatch(requestProfile()),
       getNotifications: () => dispatch(requestNotifications()),
       getAccountSettings: () => dispatch(requestAccountSettings()),
+      requestDomains: () => dispatch(domainsAsync.requestDomains()),
       requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
     }

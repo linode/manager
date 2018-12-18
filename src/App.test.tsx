@@ -34,6 +34,7 @@ it('renders without crashing', () => {
               getAccountSettings: jest.fn(),
               getProfile: jest.fn(),
               getNotifications: jest.fn(),
+              requestDomains: jest.fn(),
               requestLinodes: jest.fn(),
               requestTypes: jest.fn(),
             }}
