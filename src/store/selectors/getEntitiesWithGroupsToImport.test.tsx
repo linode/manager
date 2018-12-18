@@ -40,16 +40,47 @@ describe('Entities that have groups to import', () => {
     });
 
     it('each element in "domains" array has group', () => {
-      entities.domains.forEach(linode => {
-        expect(linode.group).toBeDefined();
-        expect(linode.group).not.toEqual('');
+      entities.domains.forEach(domain => {
+        expect(domain.group).toBeDefined();
+        expect(domain.group).not.toEqual('');
       });
     });
 
     it('each element in "domains" array has group that is NOT a tag', () => {
-      entities.domains.forEach(linode => {
-        expect(linode.tags.indexOf(linode.group!)).toBe(-1);
+      entities.domains.forEach(domain => {
+        expect(domain.tags.indexOf(domain.group!)).toBe(-1);
       });
+    });
+
+    it('ignores case', () => {
+      const domain: Linode.Domain = {
+        master_ips: [],
+        domain: 'testing.com',
+        expire_sec: 0,
+        group: 'Production',
+        axfr_ips: [],
+        refresh_sec: 0,
+        id: 9999999,
+        description: '',
+        type: 'master',
+        tags: [
+          'production'
+        ],
+        retry_sec: 0,
+        soa_email: '',
+        status: 'active',
+        ttl_sec: 0,
+        zonefile: {rendered: '', status: 'current'}
+      };
+
+      const newState = {
+        __resources: {
+          linodes: { entities: linodes },
+          domains: { entities: [domain] }
+        }
+      };
+      const newEntities = entitiesWithGroupsToImport(newState as any);
+      expect(newEntities.domains.length).toBe(0);
     });
   });
 });
