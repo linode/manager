@@ -129,7 +129,8 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
 * the slug to the display name
 */
 const stripImageName = (images: string[]) => {
-  return images.map((image: string) => {
+  return images.map((image: string | null) => {
+    if (!image) { return '' }
     return image.replace('linode/', '');
   });
 };
