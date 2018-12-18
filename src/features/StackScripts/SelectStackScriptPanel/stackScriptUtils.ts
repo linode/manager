@@ -21,7 +21,7 @@ export const getCommunityStackscripts = (currentUser: string, params?: any, filt
   getUsers().then(response => getStackscripts(params, {
     ...filter,
     '+and': response.data.reduce(
-      (acc, user) => (user.username === currentUser ? acc : [...acc, { username: { '+neq': user.username } }]),
+      (acc, user) => ([...acc, { username: { '+neq': user.username } }]),
       [
         { username: { '+neq': 'linode' } }
       ]
