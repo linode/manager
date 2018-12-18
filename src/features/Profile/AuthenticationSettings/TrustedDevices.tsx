@@ -97,7 +97,8 @@ const styled = withStyles(styles);
 
 const withRequestOnMount = lifecycle<PaginationProps<Linode.Device>, {}>({
   componentDidMount() {
-    this.props.request();
+    /** initial request for trusted devices, ordered by which ones expire first */
+    this.props.handleOrderChange('expiry', 'asc');
   }
 })
 
