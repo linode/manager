@@ -8,7 +8,7 @@ type ClassNames = 'root' | 'groupBox' | 'groupItem';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    background: theme.bg.offWhite,
+    background: theme.bg.tableHeader,
     padding: theme.spacing.unit * 2
   },
   groupBox: {

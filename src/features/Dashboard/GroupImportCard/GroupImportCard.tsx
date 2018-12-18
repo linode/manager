@@ -51,6 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     right: 0,
     cursor: 'pointer',
     border: 'none',
+    color: theme.palette.text.primary,
     backgroundColor: 'transparent',
     [theme.breakpoints.down('md')]: {
       position: 'relative',
