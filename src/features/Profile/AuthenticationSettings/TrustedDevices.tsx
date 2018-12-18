@@ -10,10 +10,13 @@ import { getTrustedDevices } from 'src/services/profile';
 
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
-// import PaginationFooter from 'src/components/PaginationFooter';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 import TrustedDevicesTable from './TrustedDevicesTable';
 
@@ -34,7 +37,17 @@ type CombinedProps = PaginationProps<Linode.Device> & WithStyles<ClassNames>;
 
 class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
   render() {
-    const { classes, loading, error, data: devices } = this.props;
+    const {
+      classes,
+      loading,
+      error,
+      data: devices,
+      count,
+      page,
+      pageSize,
+      handlePageChange,
+      handlePageSizeChange
+    } = this.props;
     return (
       <Paper className={classes.root}>
         <Typography
@@ -46,12 +59,29 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
           Trusted Devices
         </Typography>
         <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Device</TableCell>
+              <TableCell>Expires</TableCell>
+              <TableCell />
+            </TableRow>
+          </TableHead>
           <TableBody>
             <TrustedDevicesTable
               error={error}
               data={devices}
               loading={loading} />
           </TableBody>
+          {devices && devices.length > 0 &&
+            <PaginationFooter
+              count={count}
+              page={page}
+              pageSize={pageSize}
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              eventCategory="Trusted Devices Panel"
+            />
+          }
         </Table>
       </Paper>
     );
