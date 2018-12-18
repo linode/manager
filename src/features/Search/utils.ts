@@ -5,7 +5,8 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
+import { displayType } from 'src/features/linodes/presentation';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 export interface SearchResults {
   linodes: Item[];
@@ -55,7 +56,7 @@ export const searchLinodes = (
     value: linode.id,
     data: {
       tags: getMatchingTags(linode.tags, query),
-      description: linodeDescription(
+      description: getLinodeDescription(
         displayType(linode.type, typesData),
         linode.specs.memory,
         linode.specs.disk,
@@ -141,21 +142,6 @@ export const searchImages = (images: Linode.Image[], query: string) =>
       created: image.created,
     }
   }));
-
-  export const linodeDescription = (
-    typeLabel: string,
-    memory: number,
-    disk: number,
-    vcpus: number,
-    imageId: string,
-    images: Linode.Image[]
-  ) => {
-    const image = (images && images.find((img:Linode.Image) => img.id === imageId))
-      || { label: 'Unknown Image' };
-    const imageDesc = image.label;
-    const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
-    return `${imageDesc}, ${typeDesc}`;
-  }
 
   export const searchAll = (
     _linodes: Linode.Linode[],
