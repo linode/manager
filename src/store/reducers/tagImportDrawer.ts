@@ -1,11 +1,11 @@
 import * as Bluebird from 'bluebird';
-import { isEmpty, pathOr } from 'ramda';
+import { curry, isEmpty, pathOr } from 'ramda';
 import { Action, Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import actionCreatorFactory from 'typescript-fsa';
 
+import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
-import { updateLinode as _updateLinode } from 'src/store/reducers/resources/linodes';
 import getEntitiesWithGroupsToImport,
   { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 
@@ -13,8 +13,8 @@ const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
 type State = ApplicationState['tagImportDrawer'];
 
-interface Accumulator {
-  success: Linode.Linode[]; // | Linode.Domain[]
+interface Accumulator<T> {
+  success: T[];
   errors: TagError[];
 }
 
@@ -141,44 +141,75 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
  * }
  */
 export const gatherResponsesAndErrors = (
-  accumulator: Accumulator,
+  cb: (id: number, data: any) => Promise<Linode.Linode|Linode.Domain>,
+  accumulator: Accumulator<Linode.Linode | Linode.Domain>,
   entity: GroupImportProps) => {
-  return updateLinode(entity.id, {tags: [...entity.tags, entity.group!]})
-    .then((updatedEntity) => ({
-    ...accumulator,
-    success: [...accumulator.success, updatedEntity]
-    }))
-    .catch((error) => {
-      const reason = pathOr('Error adding tag.',
-        ['response', 'data', 'errors', 0, 'reason'], error);
-      return {
-        ...accumulator,
-        errors: [...accumulator.errors, { entityId: entity.id, reason, entityLabel: entity.label }]
-      }
-    })
+    // @todo if the API decides to enforce lowercase tags, remove this lowercasing.
+    return cb(entity.id, {tags: [...entity.tags, entity.group!.toLowerCase()]})
+      .then((updatedEntity) => ({
+      ...accumulator,
+      success: [...accumulator.success, updatedEntity]
+      }))
+      .catch((error) => {
+        const reason = pathOr('Error adding tag.',
+          ['response', 'data', 'errors', 0, 'reason'], error);
+        return {
+          ...accumulator,
+          errors: [...accumulator.errors, { entityId: entity.id, reason, entityLabel: entity.label }]
+        }
+      })
+}
+
+const curriedAccumulator = curry(gatherResponsesAndErrors);
+const domainAccumulator = curriedAccumulator(updateDomain);
+const linodeAccumulator = curriedAccumulator(updateLinode);
+
+/**
+ *  handleAccumulatedResponsesAndErrors
+ *
+ *  Bluebird.join() returns a tuple containing the responses of each of its joined Promises.
+ *  In this case, we get separate accumulated success/error responses for Linodes and Domains,
+ *  along with dispatch which is passed down so that actions can be dispatched from the handler.
+ *
+ *  Handles 3 basic cases:
+ *  ~ No errors returned (indicating all entities were tagged successfully)
+ *  ~ Some entities were updated successfully, but some errors occurred
+ *  ~ Every request failed
+ *
+ *  Higher-level errors (failures in Bluebird.reduce() or Bluebird.join() ) are handled in the
+ *  catch block of Bluebird.join()
+ *
+ */
+const handleAccumulatedResponsesAndErrors = (
+  linodeResponses: Accumulator<Linode.Linode>,
+  domainResponses: Accumulator<Linode.Domain>,
+  dispatch: Dispatch<State>
+  ) => {
+    const totalErrors = [...linodeResponses.errors, ...domainResponses.errors]
+    if (!isEmpty(totalErrors)) {
+      dispatch(handleError(totalErrors));
+    }
+    else {
+      dispatch(handleSuccess());
+    }
+    // @todo do we need to update entities in store here? Seems to be currently handled with post-request events
+    // in services
 }
 
 type ImportGroupsAsTagsThunk = () => ThunkAction<void, ApplicationState, undefined>;
 export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispatch<State>, getState) => {
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
-  Bluebird.reduce(entities.linodes as any, gatherResponsesAndErrors, { success: [], errors: [] })
-    .then(response => {
-      if (response.errors && !isEmpty(response.errors)) {
-        dispatch(handleError(response.errors));
-      }
-      else {
-        dispatch(handleSuccess());
-      }
-      // We want to update the successfully updated Linodes in the store
-      // regardless of whether there were any errors elsewhere.
-      response.success.forEach(
-        (linode: Linode.Linode) => dispatch(_updateLinode(linode)),
-      )
-    })
+  Bluebird.join(
+    Bluebird.reduce(entities.linodes as any, linodeAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.domains as any, domainAccumulator, { success: [], errors: [] }),
+    dispatch,
+    handleAccumulatedResponsesAndErrors,
+  )
     .catch(() => dispatch(
       // Errors from individual requests will be accumulated and passed to .then(); hitting
-      // this block indicates something went wrong with .reduce() itself.
+      // this block indicates something went wrong with .reduce() or .join().
+      // It's unclear under what circumstances this could ever actually fire.
       handleError([{ entityId: 0, reason: "There was an error importing your display groups." }])
     ));
 }

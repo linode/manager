@@ -64,14 +64,14 @@ export const getGroupImportList = (entities: GroupImportProps[]) => {
 export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     actions: { close, update },
-    entitiesWithGroupsToImport: { linodes }, // { linodes, domains } after Domains are available
+    entitiesWithGroupsToImport: { linodes, domains },
     errors,
     loading,
     open,
   } = props;
 
   const linodeGroups = getGroupImportList(linodes);
-  // const domainGroups = getGroupImportList(domains);
+  const domainGroups = getGroupImportList(domains);
   return (
     <Drawer
         title="Import Display Groups to Tags"
@@ -98,10 +98,9 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
           <Grid item data-qa-linode-group-list>
             <DisplayGroupList entity="Linode" groups={linodeGroups} />
           </Grid>
-          {/* @todo add when Domains have been cached in Redux */}
-          {/* <Grid item data-qa-domain-group-list>
-            <DisplayGroupList entity="Domain" groups={["group1", "group2"]} />
-          </Grid>*/}
+          <Grid item data-qa-domain-group-list>
+            <DisplayGroupList entity="Domain" groups={domainGroups} />
+          </Grid>
           <Grid item>
             <ActionsPanel style={{ marginTop: 16 }} >
               <Button
