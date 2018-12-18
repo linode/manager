@@ -30,7 +30,7 @@ describe('GroupImportCard', () => {
   it('renders a header', () => {
     const header = wrapper.find('[data-qa-group-cta-header]');
     expect(header).toHaveLength(1);
-    expect(header.children().text()).toBe('Import Your Display Groups to Tags')
+    expect(header.children().text()).toBe('Import Display Groups as Tags!')
   });
 
   it('renders body text', () => {
