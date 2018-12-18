@@ -144,19 +144,20 @@ export const gatherResponsesAndErrors = (
   cb: (id: number, data: any) => Promise<Linode.Linode|Linode.Domain>,
   accumulator: Accumulator<Linode.Linode | Linode.Domain>,
   entity: GroupImportProps) => {
-  return cb(entity.id, {tags: [...entity.tags, entity.group!]})
-    .then((updatedEntity) => ({
-    ...accumulator,
-    success: [...accumulator.success, updatedEntity]
-    }))
-    .catch((error) => {
-      const reason = pathOr('Error adding tag.',
-        ['response', 'data', 'errors', 0, 'reason'], error);
-      return {
-        ...accumulator,
-        errors: [...accumulator.errors, { entityId: entity.id, reason, entityLabel: entity.label }]
-      }
-    })
+    // @todo if the API decides to enforce lowercase tags, remove this lowercasing.
+    return cb(entity.id, {tags: [...entity.tags, entity.group!.toLowerCase()]})
+      .then((updatedEntity) => ({
+      ...accumulator,
+      success: [...accumulator.success, updatedEntity]
+      }))
+      .catch((error) => {
+        const reason = pathOr('Error adding tag.',
+          ['response', 'data', 'errors', 0, 'reason'], error);
+        return {
+          ...accumulator,
+          errors: [...accumulator.errors, { entityId: entity.id, reason, entityLabel: entity.label }]
+        }
+      })
 }
 
 const curriedAccumulator = curry(gatherResponsesAndErrors);
