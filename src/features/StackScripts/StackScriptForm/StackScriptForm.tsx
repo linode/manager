@@ -304,8 +304,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
 * @TODO Deprecate once we have a reliable way of mapping
 * the slug to the display name
 */
-const stripImageName = (image: string | null) => {
-  if (!image) { return '' }
+const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
 
