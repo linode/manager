@@ -141,13 +141,10 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   ** seeing the panel. Default to 0 index if no query string
   */
   getInitTab = () => {
-    const { onSelect, selectedUsername, username, accountUsernames } = this.props;
+    const { onSelect, selectedUsername, username } = this.props;
 
     if (username === selectedUsername) {
       return this.myTabIndex;
-    }
-    if (selectedUsername && accountUsernames.indexOf(selectedUsername) !== -1) {
-      return this.accountTabIndex;
     }
     if (selectedUsername === 'linode') {
       return this.linodeTabIndex;
@@ -198,12 +195,10 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   username: string;
-  accountUsernames: string[];
 }
 
 const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile),
-  accountUsernames: [],
 });
 
 const connected = connect(mapStateToProps);
