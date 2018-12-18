@@ -1,7 +1,8 @@
-import { Dispatch, Reducer } from "redux";
+import { pathOr } from 'ramda';
+import { Dispatch, Reducer } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { getDomain, getDomains } from "src/services/domains";
-import { getAll } from "src/utilities/getAll";
+import { getDomain, getDomains } from 'src/services/domains';
+import { getAll } from 'src/utilities/getAll';
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 /**
@@ -59,15 +60,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getDomainsFailure)) {
-
-    // This could be an Axios error (network) or API error
-    const error = action.payload instanceof Error ?
-      [{ reason: 'Network error' }]
-      : action.payload;
-
-      return {
+    const { payload } = action;
+    return {
       ...state,
-      error,
+      error: payload,
       loading: false,
     };
   }
@@ -119,7 +115,9 @@ const requestDomains = () => (dispatch: Dispatch<State>) => {
       return domains;
     })
     .catch((err) => {
-      dispatch(getDomainsFailure(err));
+      const defaultError = [{ reason: 'An unexpected error has occurred.' }];
+      const errors = pathOr(defaultError, ['response', 'data', 'errors'], err);
+      dispatch(getDomainsFailure(errors));
     });
 };
 
