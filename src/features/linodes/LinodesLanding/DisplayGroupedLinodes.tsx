@@ -4,7 +4,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import TableWrapper from './TableWrapper';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -12,6 +11,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
+import TableWrapper from './TableWrapper';
 
 type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell';
 
