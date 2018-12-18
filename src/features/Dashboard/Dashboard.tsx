@@ -48,8 +48,8 @@ const shouldDisplayGroupImportCTA = (groupedEntities: GroupedEntitiesForImport) 
   const userHasDisabledCTA = storage.hideGroupImportCTA.get();
   return (
     !userHasDisabledCTA &&
-    groupedEntities.linodes.length >= 0 // &&
-    // groupedEntities.domains.length >= 0
+    groupedEntities.linodes.length >= 0 &&
+    groupedEntities.domains.length >= 0
   )
 }
 
