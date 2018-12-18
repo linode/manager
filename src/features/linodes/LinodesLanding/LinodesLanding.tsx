@@ -422,13 +422,12 @@ const connected = connect(mapStateToProps);
 export const enhanced = compose(
   withRouter,
 
-  /** I hate what I did here, and I promise Ill make it better. Eventually. */
-  withStateHandlers(
+    withStateHandlers(
     (ownProps: RouteProps) => {
       const localStorageSelection = storage.views.grouped.get();
       return {
         groupByTags: localStorageSelection === undefined
-          ? true
+          ? false
           : localStorageSelection
       }
     },
