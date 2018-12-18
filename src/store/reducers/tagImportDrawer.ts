@@ -6,7 +6,6 @@ import actionCreatorFactory from 'typescript-fsa';
 
 import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
-import { updateLinode as _updateLinode } from 'src/store/reducers/resources/linodes';
 import getEntitiesWithGroupsToImport,
   { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 
@@ -192,22 +191,14 @@ const handleAccumulatedResponsesAndErrors = (
     else {
       dispatch(handleSuccess());
     }
-    // We want to update the successfully updated Linodes in the store
-    // regardless of whether there were any errors elsewhere.
-    linodeResponses.success.forEach(
-      (linode: Linode.Linode) => dispatch(_updateLinode(linode)),
-    );
-    domainResponses.success.forEach(
-      (domain: Linode.Domain) => console.log('calling _updateDomain with ', domain.id) // dispatch(_updateDomain(domain)),
-    );
+    // @todo do we need to update entities in store here? Seems to be currently handled with post-request events
+    // in services
 }
 
 type ImportGroupsAsTagsThunk = () => ThunkAction<void, ApplicationState, undefined>;
 export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispatch<State>, getState) => {
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
-  // Mocking
-  entities.domains = [{id: 1162098, group: 'this-group', label: 'My domain', tags: ["tag1"]}];
   Bluebird.join(
     Bluebird.reduce(entities.linodes as any, linodeAccumulator, { success: [], errors: [] }),
     Bluebird.reduce(entities.domains as any, domainAccumulator, { success: [], errors: [] }),
