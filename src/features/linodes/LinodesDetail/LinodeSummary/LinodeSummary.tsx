@@ -214,7 +214,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
     const { classes } = this.props;
-    const data = pathOr([[]], ['data','cpu'], stats);
+    const data = pathOr([], ['data','cpu'], stats);
 
     const metrics = getMetrics(data);
     const format = formatPercentage;
@@ -262,17 +262,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
 
     const v4Data = {
-      publicIn: pathOr([[]], ['data','netv4','in'], stats),
-      publicOut: pathOr([[]], ['data','netv4','out'], stats),
-      privateIn: pathOr([[]], ['data','netv4','private_in'], stats),
-      privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
+      publicIn: pathOr([], ['data','netv4','in'], stats),
+      publicOut: pathOr([], ['data','netv4','out'], stats),
+      privateIn: pathOr([], ['data','netv4','private_in'], stats),
+      privateOut: pathOr([], ['data','netv4','private_out'], stats)
     };
 
     // Need these to calculate Total Traffic
     const v6Data = {
-      publicIn: pathOr([[]], ['data','netv6','in'], stats),
-      publicOut: pathOr([[]], ['data','netv6','out'], stats),
-      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
+      publicIn: pathOr([], ['data','netv6','in'], stats),
+      publicOut: pathOr([], ['data','netv6','out'], stats),
+      privateIn: pathOr([], ['data','netv6','private_in'], stats),
     };
 
     const format = formatBitsPerSecond;
@@ -384,10 +384,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
 
     const data = {
-      publicIn: pathOr([[]], ['data','netv6','in'], stats),
-      publicOut: pathOr([[]], ['data','netv6','out'], stats),
-      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
-      privateOut: pathOr([[]], ['data','netv6','private_out'], stats)
+      publicIn: pathOr([], ['data','netv6','in'], stats),
+      publicOut: pathOr([], ['data','netv6','out'], stats),
+      privateIn: pathOr([], ['data','netv6','private_in'], stats),
+      privateOut: pathOr([], ['data','netv6','private_out'], stats)
     };
 
     const format = formatBitsPerSecond;
@@ -492,8 +492,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
 
     const data = {
-      io: pathOr([[]], ['data','io','io'], stats),
-      swap: pathOr([[]], ['data','io','swap'], stats)
+      io: pathOr([], ['data','io','io'], stats),
+      swap: pathOr([], ['data','io','swap'], stats)
     };
 
     const format = formatNumber;
