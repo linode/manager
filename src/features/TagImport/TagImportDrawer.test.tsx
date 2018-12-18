@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { linodes } from 'src/__data__/groupImports';
+import { domains, linodes } from 'src/__data__/groupImports';
 
 import { getGroupImportList, TagImportDrawer } from './TagImportDrawer'
 
@@ -14,7 +14,7 @@ const props = {
   errors: [],
   loading: false,
   success: false,
-  entitiesWithGroupsToImport: { linodes },
+  entitiesWithGroupsToImport: { domains, linodes },
   onPresentSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
   classes: { root: ''}
