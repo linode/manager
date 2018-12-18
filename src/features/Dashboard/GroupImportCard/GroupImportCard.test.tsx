@@ -4,6 +4,8 @@ import { GroupImportCard } from './GroupImportCard';
 
 describe('GroupImportCard', () => {
   const mockFn = jest.fn();
+  const dismiss = jest.fn();
+  const hide = jest.fn();
   const wrapper = shallow(
     <GroupImportCard
       classes={{
@@ -11,9 +13,13 @@ describe('GroupImportCard', () => {
         header: '',
         section: '',
         title: '',
-        button: ''
+        button: '',
+        icon: '',
       }}
       openImportDrawer={mockFn}
+      dismiss={dismiss}
+      hide={hide}
+      hidden={false}
     />
   );
 
@@ -24,7 +30,7 @@ describe('GroupImportCard', () => {
   it('renders a header', () => {
     const header = wrapper.find('[data-qa-group-cta-header]');
     expect(header).toHaveLength(1);
-    expect(header.children().text()).toBe('Import Your Display Group to Tags')
+    expect(header.children().text()).toBe('Import Your Display Groups to Tags')
   });
 
   it('renders body text', () => {
@@ -38,6 +44,11 @@ describe('GroupImportCard', () => {
 
   it('executes function on button click', () => {
     wrapper.find('WithStyles(wrappedButton)').simulate('click');
-    expect(mockFn.mock.calls.length).toEqual(1);
+    expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+  it('calls hide and dismiss when the close button is clicked', () => {
+    wrapper.find('[data-qa-dismiss-cta]').simulate('click', { preventDefault: jest.fn() });
+    expect(dismiss).toHaveBeenCalledTimes(1);
+    expect(hide).toHaveBeenCalledTimes(1);
   });
 });
