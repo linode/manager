@@ -15,8 +15,15 @@ export interface GroupImportProps {
 // Linodes and Domains are the only entities with Display Groups.
 type GroupedEntity = Linode.Linode | Linode.Domain;
 
-// Returns TRUE if "group" is NOT in "tags".
-export const uniqueGroup = (entity: GroupedEntity) => entity.group && !entity.tags.includes(entity.group);
+// Returns TRUE if "group" is NOT in "tags". (CASE IGNORED)
+export const uniqueGroup = (entity: GroupedEntity) => {
+  if (!entity.group) { return false };
+
+  const lowercaseGroup = entity.group.toLowerCase();
+  const lowercaseTags = entity.tags.map(tag => tag.toLowerCase());
+
+  return !lowercaseTags.includes(lowercaseGroup);
+}
 
 const L = {
   label: lensPath(['label']),
@@ -34,7 +41,7 @@ export const extractProps = (entity: GroupedEntity) => ({
 
 
 const linodeSelector = (state: ApplicationState) => state.__resources.linodes.entities;
-const domainSelector = (state: ApplicationState) => state.__resources.domains.entities
+const domainSelector = (state: ApplicationState) => state.__resources.domains.entities;
 
 // Selector that returns Linodes and Domains that have a GROUP without
 // corresponding TAG.
