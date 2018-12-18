@@ -5,7 +5,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
-import { getCommunityStackscripts, getStackScriptsByUsers } from './stackScriptUtils';
+import { getAccountStackScripts, getCommunityStackscripts, getStackScriptsByUser } from './stackScriptUtils';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -78,7 +78,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
-        request={getStackScriptsByUsers}
+        request={getStackScriptsByUser}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={0}
@@ -91,7 +91,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
-        request={getStackScriptsByUsers}
+        request={getAccountStackScripts}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={1}
@@ -104,7 +104,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         onSelect={this.props.onSelect}
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
-        request={getStackScriptsByUsers}
+        request={getStackScriptsByUser}
         selectedStackScriptIDFromQuery={this.props.selectedId}
         key={2}
         isLinodeStackScripts={true}

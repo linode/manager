@@ -1,3 +1,4 @@
+import { getUsers } from 'src/services/account';
 import { getStackscripts } from 'src/services/stackscripts';
 
 export const getStackScriptsByUser = (username: string, params?: any, filter?: any) =>
@@ -6,17 +7,24 @@ export const getStackScriptsByUser = (username: string, params?: any, filter?: a
     username,
   });
 
-  export const getStackScriptsByUsers = (usernames: string[], params?: any, filter?: any) =>
-  getStackscripts(params, {
-    ...filter,
-    '+or': usernames.map(name => ({ username: name })),
-  });
+export const getAccountStackScripts = (currentUser: string, params?: any, filter?: any) =>
+  getUsers().then(response => getStackscripts(params, {
+      ...filter,
+      '+or': response.data.reduce((acc, user) => (
+        user.username === currentUser ? acc : [...acc, { username: user.username }]),
+        []
+      ),
+    })
+  );
 
-export const getCommunityStackscripts = (currentUser: string[], params?: any, filter?: any) =>
-  getStackscripts(params, {
+export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
+  getUsers().then(response => getStackscripts(params, {
     ...filter,
-    '+and': [
-      { username: { '+neq': 'linode' } },
-      { username: { '+neq': currentUser } },
-    ],
-  });
+    '+and': response.data.reduce(
+      (acc, user) => (user.username === currentUser ? acc : [...acc, { username: { '+neq': user.username } }]),
+      [
+        { username: { '+neq': 'linode' } }
+      ]
+    ),
+  })
+);
