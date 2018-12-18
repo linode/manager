@@ -31,7 +31,7 @@ const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
 const addDomain = actionCreator<Linode.Domain>('add');
 
-export const updateDomain = actionCreator<Linode.Domain>('update');
+const updateDomain = actionCreator<Linode.Domain>('update');
 
 const deleteDomain = actionCreator<number>('delete');
 
