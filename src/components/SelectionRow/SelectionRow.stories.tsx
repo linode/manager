@@ -1,10 +1,26 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
-
-import { Provider } from 'react-redux';
 import store from 'src/store';
+
+import  axios from 'axios';
+import  MockAdapter from 'axios-mock-adapter';
+
+import { API_ROOT } from '../../constants';
+
+const ACCOUNT_EVENTS = `${API_ROOT}/account/events`;
+
+const mock = new MockAdapter(axios);
+
+mock
+  .onGet(ACCOUNT_EVENTS).reply(200, {
+    data: [],
+    page: 1,
+    pages: 1,
+    results: 0
+  })
 
 interface State {
   selected: number;
@@ -138,14 +154,16 @@ class InteractiveExample extends React.Component<{}, State> {
   render() {
     return (
       <Provider store={store}>
-        <StaticRouter>
-          <React.Fragment>
-            {
-              this
-                .createItems()
-                .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
-            }
-          </React.Fragment>
+        <StaticRouter context={{}}>
+          <table>
+            <tbody>
+              {
+                this
+                  .createItems()
+                  .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
+              }
+            </tbody>
+          </table>
         </StaticRouter>
       </Provider>
     );
