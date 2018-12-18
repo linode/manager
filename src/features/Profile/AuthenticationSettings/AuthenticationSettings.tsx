@@ -67,7 +67,7 @@ export class AuthenticationSettings extends React.Component<CombinedProps, State
               updateProfile={actions.updateProfile}
             />
             <TrustedDevices />
-            {!ipWhitelisting &&
+            {ipWhitelisting &&
               <SecuritySettings
                 updateProfile={actions.updateProfile}
                 onSuccess={this.onWhitelistingDisable}
