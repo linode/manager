@@ -81,7 +81,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
         <Grid container direction="row" justify="center" alignItems="center">
           <Grid item xs={11}>
             <Typography className={classes.header} variant="h1" data-qa-group-cta-header>
-              Import Your Display Groups to Tags
+              Import Display Groups as Tags
             </Typography>
           </Grid>
           <Grid item xs={1}>
@@ -97,8 +97,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
       </Paper>
       <Paper className={classes.section}>
         <Typography variant="body1" data-qa-group-cta-body>
-          This will import Display Groups from Classic Manager and convert them to tags.
-          Your existing tags will not be affected.
+          You now have the ability to import your Display Groups in the Classic Manager to tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. <strong>Your existing tags will not be affected.</strong>
         </Typography>
         <Button
           type="primary"
