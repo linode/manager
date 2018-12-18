@@ -56,18 +56,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     flexDirection: 'column',
   },
   logoItem: {
-    padding: '10px 0 8px 26px',
+    padding: '10px 0 8px 12px',
   },
   listItem: {
-    padding: '16px 40px 16px 34px',
     borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
     flexShrink: 0,
-    [theme.breakpoints.down('md')]: {
-      paddingTop: 10,
-      paddingBottom: 10,
-    },
+    padding: '10px 30px 10px 24px',
     '&:hover': {
       borderLeftColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {

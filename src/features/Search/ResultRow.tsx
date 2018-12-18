@@ -150,6 +150,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
     <TableRow
       className={classes.root}
       rowLink={result.data.path}
+      data-qa-result-row={result.label}
     >
       <Hidden smDown>
         <TableCell className={classes.iconTableCell}>
@@ -180,7 +181,7 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
         {result.data.created &&
           <React.Fragment>
             <Typography >
-              Created <DateTimeDisplay value={result.data.created} />
+              <DateTimeDisplay value={result.data.created} />
             </Typography>
           </React.Fragment>
         }

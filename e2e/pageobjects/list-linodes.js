@@ -51,8 +51,14 @@ export class ListLinodes extends Page {
         }
     }
 
+    getLinodeSelector(linode){
+        return `[data-qa-linode="${linode}"]`;
+    }
+
     navigateToDetail(linode) {
-       linode ? $(`[data-qa-linode="${linode}"]`).$('a').click() : this.linode[0].$('a').click();
+       const linodeLink = linode ? $$(`${this.getLinodeSelector(linode)} a>div`)[0] : this.linode[0].$$('a>div')[0];
+       linodeLink.waitForVisible(constants.wait.normal);
+       linodeLink.click();
     }
 
     gridElemsDisplay() {
@@ -90,7 +96,7 @@ export class ListLinodes extends Page {
     }
 
     getStatus(linode) {
-        return linode.$(this.status.selector).getAttribute('data-qa-status');
+        return $(`${this.getLinodeSelector(linode)} ${this.status.selector}`).getAttribute('data-qa-status');
     }
 
     reboot(linode) {
@@ -120,11 +126,11 @@ export class ListLinodes extends Page {
     }
 
     powerOff(linode) {
-        this.selectActionMenuItem(linode, 'Power Off');
+        this.selectActionMenuItemV2(this.getLinodeSelector(linode),'Power Off');
         this.acceptDialog('Powering Off');
 
         browser.waitUntil(function() {
-            return browser.isVisible('[data-qa-status="offline"]');
+            return browser.isVisible(`${this.getLinodeSelector(linode)} [data-qa-status="offline"]`);
         }, constants.wait.minute * 3, 'Failed to power down linode');
     }
 
@@ -147,12 +153,6 @@ export class ListLinodes extends Page {
         browser.waitUntil(function() {
             return browser.isVisible(`[data-qa-active-view="${view}"]`);
         }, constants.wait.short);
-    }
-
-    waitUntilBooted(label) {
-        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-        browser.waitForVisible('[data-qa-loading="true"]', constants.wait.long, true);
-        browser.waitForVisible(`[data-qa-linode="${label}"] [data-qa-status="running"]`, constants.wait.minute * 3);
     }
 
     acceptDialog(dialogTitle) {

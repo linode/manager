@@ -26,6 +26,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
+const displayMap = {
+  linodes: "Linodes",
+  domains: "Domains",
+  volumes: "Volumes",
+  nodebalancers: "NodeBalancers",
+  images: "Images",
+}
+
 interface State {
   query: string;
   results: SearchResults;
@@ -146,7 +154,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
           {Object.keys(results).map((entityType, idx: number) =>
             <ResultGroup
               key={idx}
-              entity={entityType}
+              entity={displayMap[entityType]}
               results={results[entityType]}
               loading={loading}
               groupSize={100}

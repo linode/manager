@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.41.0",
+  "version": "0.42.0",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -142,7 +142,7 @@
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
-    "release": "./scripts/release_change.log"
+    "release": "./scripts/release_changelog.sh"
   },
   "husky": {
     "hooks": {

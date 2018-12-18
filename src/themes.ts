@@ -75,6 +75,7 @@ export const dark = createTheme({
     grey3: '#999',
     white: '#32363C',
     black: '#fff',
+    offBlack: primaryColors.offBlack,
     boxShadow: '#222',
     focusBorder: '#999',
     absWhite: '#000',
@@ -223,6 +224,7 @@ export const dark = createTheme({
     MuiChip: {
       root: {
         color: primaryColors.text,
+        backgroundColor: primaryColors.main,
       }
     },
     MuiCardActions: {
@@ -563,7 +565,6 @@ export const dark = createTheme({
     },
     MuiTableSortLabel: {
       root: {
-        color: '#fff',
         textDecoration: 'underline',
       },
     },
