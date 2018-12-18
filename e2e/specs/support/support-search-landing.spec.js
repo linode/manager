@@ -19,17 +19,17 @@ describe('Support Search - Suite', () => {
         }
     }
 
-    const checkDocumentationLink = (artlieTitle) => {
+    const checkDocumentationLink = (articleTitle) => {
         switchTab();
-        expect(browser.getTitle()).toEqual(artlieTitle.trim());
+        expect(browser.getTitle()).toEqual(articleTitle.trim());
         expect(browser.getUrl()).toContain('/docs/');
         browser.close();
         $('body').click();
     }
 
-    const checkCommuntitySiteLink = (postTilte) => {
+    const checkCommuntitySiteLink = (postTitle) => {
         switchTab();
-        expect(browser.getTitle()).toEqual(`${postTilte.trim()} | Linode Questions`);
+        expect(browser.getTitle()).toEqual(`${postTitle.trim()} | Linode Questions`);
         expect(browser.getUrl()).toContain('/community/questions/');
         browser.close();
         $('body').click();
