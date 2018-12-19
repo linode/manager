@@ -63,6 +63,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   openImportDrawer: () => void;
   dismiss: () => void;
+  theme: string;
 }
 
 interface HandlerProps {
@@ -104,7 +105,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
       </Paper>
       <Paper className={classes.section}>
         <Typography variant="body1" data-qa-group-cta-body>
-          You now have the ability to import your Display Groups in the Classic Manager to tags and they will be associated to your Domains and Linodes. 
+          You now have the ability to import your Display Groups in the Classic Manager to tags and they will be associated to your Domains and Linodes.
           This will give you the ability to organize and view your Linodes by tags. Your existing tags will not be affected.
         </Typography>
         <Button
@@ -130,7 +131,7 @@ const enhanced = compose<CombinedProps, Props>(
     {
       hide: () => () => ({ hidden: true })
     }),
-  onlyUpdateForKeys(['hidden'])
+  onlyUpdateForKeys(['hidden', 'theme'])
 )(GroupImportCard)
 
 export default enhanced;
