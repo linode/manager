@@ -20,9 +20,9 @@ export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <>
       {
-        data.map(linode =>
+        data.map((linode, idx: number) =>
           <LinodeRow
-            key={linode.id}
+            key={`linode-row-${idx}`}
             linodeId={linode.id}
             linodeType={linode.type}
             linodeStatus={linode.status}

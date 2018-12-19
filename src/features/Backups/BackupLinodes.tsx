@@ -41,7 +41,7 @@ export const BackupLinodes: React.StatelessComponent<CombinedProps> = (props) =>
     <React.Fragment>
       {linodes && linodes.map((linode: ExtendedLinode, idx: number) => {
         const error = pathOr('', ['linodeError', 'reason'], linode);
-        return <React.Fragment key={idx}>
+        return <React.Fragment key={`backup-linode-${idx}`}>
           <TableRow data-qa-linodes >
             <TableCell data-qa-linode-label parentColumn="Label">
               <Typography variant="body1" >
