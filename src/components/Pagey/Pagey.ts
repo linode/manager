@@ -30,6 +30,11 @@ export type Order = 'asc' | 'desc';
 
 export type OrderBy = undefined | string;
 
+interface Filter {
+  order: Order;
+  orderBy: string;
+}
+
 interface State<T={}> {
   count: number;
   error?: Error;
@@ -51,7 +56,7 @@ export interface PaginationProps<T> extends State<T> {
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: HandleOrderChange;
   handleSearch: (newFilter: any) => void;
-  onDelete: () => void;
+  onDelete: (defaultSortOrder?: Filter) => void;
 }
 
 const asc: 'asc' = 'asc';
@@ -71,8 +76,9 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       searching: false,
     }
 
-    private onDelete = () => {
+    private onDelete = (defaultSortOrder?: Filter) => {
       const { page, data } = this.state;
+
       /*
        * Basically, if we're on page 2 and the user deletes the last entity
        * on the page, send the user back to the previous page, AKA the max number
@@ -88,7 +94,16 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
        * page and pages states
        */
       if (data && data.length === 1) {
+        /** if we've provided a sort order, run handleOrderChange() */
+        if (!!defaultSortOrder) {
+          return this.handleOrderChange(defaultSortOrder.orderBy, defaultSortOrder.order, page - 1)
+        }
         return this.handlePageChange(page - 1);
+      }
+
+      /** if we've provided a default sort order, fetch with the filter */
+      if (!!defaultSortOrder) {
+        return this.handleOrderChange(defaultSortOrder.orderBy, defaultSortOrder.order, page);
       }
 
       return this.request();
@@ -114,6 +129,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
             loading: false,
             error: undefined,
             isSorting: false,
+            searching: false,
           });
         })
         .catch((response) => {
@@ -132,15 +148,12 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ page }, () => { this.request() })
     };
 
-    public handleOrderChange = (orderBy: string, order: Order = 'asc', isSorting: boolean) => {
-      this.setState({ orderBy, order, page: 1, isSorting: true }, () => this.request());
+    public handleOrderChange = (orderBy: string, order: Order = 'asc', page: number = 1) => {
+      this.setState({ orderBy, order, page, isSorting: true }, () => this.request());
     };
 
     public handleSearch = (filter: any) => {
-      this.setState({ filter, page: 1, searching: true }, () => {
-        return this.request()
-          .then(() => this.setState({ searching: false }))
-      });
+      this.setState({ filter, page: 1, searching: true }, () => this.request());
     }
 
     public render() {

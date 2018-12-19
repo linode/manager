@@ -46,7 +46,7 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
   }
 
   refreshList = () => {
-    this.props.handleOrderChange('expiry', 'asc');
+    this.props.onDelete({ orderBy: 'expiry', order: 'asc' });
   }
 
   render() {
