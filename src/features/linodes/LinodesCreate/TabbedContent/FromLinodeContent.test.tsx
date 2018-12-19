@@ -15,6 +15,8 @@ const mockProps = {
   getTypeInfo: jest.fn(),
   history: null,
   accountBackups: false,
+  enqueueSnackbar: jest.fn(),
+  onPresentSnackbar: jest.fn(),
 };
 
 describe('FromImageContent', () => {

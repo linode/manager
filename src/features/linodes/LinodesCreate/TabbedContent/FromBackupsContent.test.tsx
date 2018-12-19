@@ -24,7 +24,9 @@ const mockProps = {
       createTag: jest.fn(),
       getLinodeTagList: jest.fn(),
     }
-  }
+  },
+  enqueueSnackbar: jest.fn(),
+  onPresentSnackbar: jest.fn(),
 };
 
 const mockPropsWithNotice = {
@@ -50,7 +52,9 @@ const mockPropsWithNotice = {
       createTag: jest.fn(),
       getLinodeTagList: jest.fn(),
     }
-  }
+  },
+  enqueueSnackbar: jest.fn(),
+  onPresentSnackbar: jest.fn(),
 };
 
 describe('FromBackupsContent', () => {

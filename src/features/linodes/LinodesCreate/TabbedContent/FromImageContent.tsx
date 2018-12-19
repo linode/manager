@@ -1,7 +1,9 @@
-import { compose, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
+import { compose } from 'recompose';
+import AccessPanel, { Disabled } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -11,7 +13,7 @@ import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPa
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
+import userSSHKeyHoc, { State as UserSSHKeyProps } from 'src/features/linodes/userSSHKeyHoc';
 import { createLinode } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -49,9 +51,6 @@ interface Props {
   getRegionInfo: (selectedRegionID: string | null) => Info;
   history: any;
   accountBackups: boolean;
-
-  /** Comes from HOC */
-  userSSHKeys: UserSSHKeyObject[];
   handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
@@ -84,7 +83,11 @@ const errorResources = {
   image: 'Image',
 };
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & UserSSHKeyProps
+  & InjectedNotistackProps
+  & WithStyles<ClassNames>;
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -170,6 +173,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     })
       .then((linode: Linode.Linode) => {
         if (privateIP) { allocatePrivateIP(linode.id); }
+
+        this.props.enqueueSnackbar(`Your Linode ${label} is being created.`, { variant: 'success' });
+
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -268,7 +274,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             updateFor={[tags, label, errors]}
           />
           <AccessPanel
-           /* disable the password field if we haven't selected an image */
+            /* disable the password field if we haven't selected an image */
             passwordFieldDisabled={this.props.handleDisablePasswordField(!!selectedImageID)}
             error={hasErrorFor('root_pass')}
             password={password}
@@ -338,6 +344,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose(styled, userSSHKeyHoc);
+const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
 
-export default enhanced(FromImageContent) as any;
+export default enhanced(FromImageContent);

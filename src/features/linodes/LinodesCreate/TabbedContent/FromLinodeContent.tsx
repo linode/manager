@@ -1,3 +1,4 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -80,7 +81,10 @@ const errorResources = {
   root_pass: 'A root password',
 };
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & InjectedNotistackProps
+  & WithStyles<ClassNames>;
 
 export class FromLinodeContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -157,6 +161,9 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
+
+        this.props.enqueueSnackbar(`Your Linode is being cloned.`, { variant: 'success' });
+
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -322,4 +329,4 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(FromLinodeContent);
+export default styled(withSnackbar(FromLinodeContent));
