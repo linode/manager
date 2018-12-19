@@ -33,7 +33,6 @@ export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
             linodeLabel={linode.label}
             linodeBackups={linode.backups}
             linodeTags={linode.tags}
-            linodeRecentEvent={linode.recentEvent}
             openConfigDrawer={openConfigDrawer}
             toggleConfirmation={toggleConfirmation}
             mostRecentBackup={linode.mostRecentBackup}

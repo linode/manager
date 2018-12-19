@@ -35,7 +35,6 @@ const CardView: React.StatelessComponent<CombinedProps> = (props) => {
           linodeLabel={linode.label}
           linodeBackups={linode.backups}
           linodeTags={linode.tags}
-          linodeRecentEvent={linode.recentEvent}
           imageLabel={safeGetImageLabel(images, linode.image)}
           openConfigDrawer={openConfigDrawer}
           linodeSpecDisk={linode.specs.disk}

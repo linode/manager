@@ -210,7 +210,6 @@ interface Props {
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
   linodeTags: string[];
-  linodeRecentEvent?: Linode.Event;
   linodeSpecDisk: number;
   linodeSpecMemory: number;
   linodeSpecVcpus: number;
@@ -237,13 +236,13 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       nextProps,
       this.props,
       [
-        'linodeStatus',
-        'linodeRegion',
-        'linodeNotification',
-        'linodeRecentEvent',
-        'linodeLabel',
-        'linodeIpv6',
         'linodeIpv4',
+        'linodeIpv6',
+        'linodeLabel',
+        'linodeNotification',
+        'linodeRegion',
+        'linodeStatus',
+        'recentEvent',
         'typesData',
       ],
     )
@@ -318,12 +317,12 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
+    const { classes, openConfigDrawer, linodeId, linodeLabel, recentEvent,
       linodeStatus, linodeBackups, toggleConfirmation, typesData, linodeType,
       linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4,
       linodeIpv6, imageLabel, linodeTags } = this.props;
-    const loading = linodeInTransition(linodeStatus, linodeRecentEvent);
-    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
+    const loading = linodeInTransition(linodeStatus, recentEvent);
+    const value = (recentEvent && recentEvent.percent_complete) || 1;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -349,7 +348,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
             {loading && <Grid container className={classes.cardSection}>
               <Grid item>
                 <Typography variant="body2" className={classes.statusText}>
-                  {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
+                  {transitionText(linodeStatus, recentEvent)}: {value}%
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} lg={6} xl={6}>
@@ -357,7 +356,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
                   <LinearProgress value={value} />
                 </div>
               </Grid>
-            </Grid>}            
+            </Grid>}
             <div className={classes.cardSection} data-qa-linode-summary>
               {typesData && `${displayType(linodeType, typesData || [])}: `}
               {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
@@ -400,12 +399,16 @@ class LinodeCard extends React.Component<CombinedProps, State> {
 }
 
 import { connect } from 'react-redux';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
+
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
+  recentEvent?: Linode.Event;
 }
 
-const withTypes = connect((state: ApplicationState, ownProps) => ({
+const withTypes = connect((state: ApplicationState, { linodeId }: Props) => ({
   typesData: state.__resources.types.entities,
+  recentEvent: recentEventForLinode(linodeId)(state)
 }));
 
 

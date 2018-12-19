@@ -4,6 +4,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import LinodeRowWithState from './LinodeRowWithState';
 
@@ -28,7 +29,6 @@ interface Props {
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
   linodeTags: string[];
-  linodeRecentEvent?: Linode.Event;
   mostRecentBackup?: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
@@ -48,15 +48,15 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       nextProps,
       this.props,
       [
-        'linodeStatus',
-        'linodeRegion',
-        'linodeNotification',
-        'linodeRecentEvent',
-        'linodeLabel',
-        'linodeIpv6',
-        'linodeIpv4',
         'displayType',
+        'linodeIpv4',
+        'linodeIpv6',
+        'linodeLabel',
+        'linodeNotification',
+        'linodeRegion',
+        'linodeStatus',
         'mutationAvailable',
+        'recentEvent',
       ],
     )
       || this.props.theme.name !== nextProps.theme.name
@@ -69,7 +69,6 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       linodeIpv4,
       linodeIpv6,
       linodeLabel,
-      linodeRecentEvent,
       linodeRegion,
       linodeStatus,
       linodeTags,
@@ -79,13 +78,14 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       toggleConfirmation,
       mutationAvailable,
       displayType,
+      recentEvent,
     } = this.props;
 
-    const loading = linodeInTransition(this.props.linodeStatus, this.props.linodeRecentEvent);
+    const loading = linodeInTransition(this.props.linodeStatus, this.props.recentEvent);
 
     return <LinodeRowWithState
       loading={loading}
-      linodeRecentEvent={linodeRecentEvent}
+      linodeRecentEvent={recentEvent}
       linodeBackups={linodeBackups}
       linodeId={linodeId}
       linodeIpv4={linodeIpv4}
@@ -101,16 +101,17 @@ class LinodeRow extends React.Component<CombinedProps, State> {
       displayType={displayType}
       mutationAvailable={mutationAvailable}
     />;
-    }
+  }
 }
 
 interface WithTypesProps {
   mutationAvailable: boolean;
   displayType: string;
+  recentEvent?: Linode.Event;
 }
 
 const mapStateToProps: MapStateToProps<WithTypesProps, Props, ApplicationState> = (state, ownProps) => {
-  const { linodeType } = ownProps;
+  const { linodeType, linodeId } = ownProps;
   const { entities, results } = state.__resources.types;
 
 
@@ -119,6 +120,7 @@ const mapStateToProps: MapStateToProps<WithTypesProps, Props, ApplicationState> 
   return ({
     displayType: type === null ? 'No Plan' : type === undefined ? 'Unknown Plan' : type.label,
     mutationAvailable: hasMutation(type),
+    recentEvent: recentEventForLinode(linodeId)(state),
   })
 };
 
