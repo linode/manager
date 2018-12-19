@@ -12,7 +12,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -33,18 +32,6 @@ import ListLinodesEmptyState from './ListLinodesEmptyState';
 import ListView from './ListView';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
-
-type ClassNames = 'tagGroup' | 'tagToggle';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  title: {
-    flex: 1
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse'
-  },
-  tagToggle: {},
-});
 
 interface ConfigDrawerState {
   open: boolean;
@@ -82,8 +69,7 @@ type CombinedProps =
   & RouteProps
   & StyleProps
   & SetDocsProps
-  & InjectedNotistackProps
-  & WithStyles<ClassNames>;
+  & InjectedNotistackProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   static eventCategory = 'linodes landing';
@@ -295,14 +281,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       <Grid container>
         <DocumentTitleSegment segment="Linodes" />
         <Grid container justify="space-between" item xs={12}>
-        <Grid item className={classes.title}>
-          <Typography
-            role="header"
-            variant="h1"
-            className={this.props.classes.title}
-            data-qa-title
-          >
-            Linodes
+          <Grid item className={classes.title}>
+            <Typography
+              role="header"
+              variant="h1"
+              className={this.props.classes.title}
+              data-qa-title
+            >
+              Linodes
           </Typography>
           </Grid>
           <Hidden smDown>
@@ -310,7 +296,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               className={classes.tagGroup}
               control={
                 <Toggle
-                  className={classes.tagToggle + (this.props.groupByTags ? ' checked' : ' unchecked')}
+                  className={(this.props.groupByTags ? ' checked' : ' unchecked')}
                   onChange={this.props.toggleGroupByTag}
                   checked={this.props.groupByTags} />
               }
@@ -426,38 +412,24 @@ interface ToggleGroupByTagsProps {
   toggleGroupByTag: (e: React.ChangeEvent<any>, checked: boolean) => void;
 }
 
-const styler = withStyles(styles);
-
 const connected = connect(mapStateToProps);
 
-export const enhanced = compose(
-  withRouter,
-
-    withStateHandlers(
-    (ownProps: RouteProps) => {
-      const localStorageSelection = storage.views.grouped.get();
-      return {
-        groupByTags: localStorageSelection === undefined
-          ? false
-          : localStorageSelection
-      }
+const toggleGroupState = withStateHandlers(
+  (ownProps: RouteProps) => {
+    const localStorageSelection = storage.views.grouped.get();
+    return {
+      groupByTags: localStorageSelection === undefined
+        ? false
+        : localStorageSelection
+    }
+  },
+  {
+    toggleGroupByTag: (state, ownProps) => (e, checked) => {
+      storage.views.grouped.set(checked ? 'true' : 'false')
+      return { ...state, groupByTags: checked };
     },
-    {
-      toggleGroupByTag: (state, ownProps) => (e, checked) => {
-        storage.views.grouped.set(checked ? 'true' : 'false')
-        return { ...state, groupByTags: checked };
-      },
-    },
-  ),
-
-  styled,
-  styler,
-  setDocs(ListLinodes.docs),
-  withSnackbar,
-  connected,
+  },
 );
-
-export default styler(enhanced(withWidth()(ListLinodes)));
 
 const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   const paramsAsObject: T = parse(params, { ignoreQueryPrefix: true });
@@ -486,3 +458,15 @@ const getDisplayType = (width: string, linodesCount: number, userSelect?: 'grid'
    */
   return linodesCount >= 3 ? 'list' : 'grid';
 };
+
+export const enhanced = compose(
+  withRouter,
+  toggleGroupState,
+  styled,
+  setDocs(ListLinodes.docs),
+  withSnackbar,
+  withWidth(),
+  connected,
+);
+
+export default enhanced(ListLinodes);

@@ -1,11 +1,13 @@
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'title' | 'tagGroup';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
   title: {
-    marginbottom: theme.spacing.unit * 2,
+    flex: 1
+  },
+  tagGroup: {
+    flexDirection: 'row-reverse'
   },
 });
 

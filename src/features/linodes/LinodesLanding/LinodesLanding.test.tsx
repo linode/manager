@@ -8,6 +8,7 @@ import { ListLinodes } from './LinodesLanding';
 const RoutedListLinodes = withRouter(ListLinodes);
 
 describe('ListLinodes', () => {
+  const classes = { title: '', tagGroup: '' };
 
   it('renders without error', () => {
     shallow(
@@ -16,7 +17,7 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodesData={[]}
             width={'lg'}
-            classes={{ root:'', title: '', tagGroup: '', tagToggle: '' }}
+            classes={classes}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
             groupByTags={false}
@@ -41,7 +42,7 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodesData={[]}
             width={'lg'}
-            classes={{ root: '', title: '', tagGroup: '', tagToggle: '' }}
+            classes={classes}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
             groupByTags={false}
@@ -70,7 +71,7 @@ describe('ListLinodes', () => {
           <RoutedListLinodes
             linodesData={[]}
             width={'lg'}
-            classes={{ root: '', title: '', tagGroup: '', tagToggle: '' }}
+            classes={classes}
             clearDocs={clearDocs}
             enqueueSnackbar={jest.fn()}
             groupByTags={false}
