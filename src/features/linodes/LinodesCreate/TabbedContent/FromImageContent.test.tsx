@@ -23,7 +23,9 @@ const mockProps = {
       createTag: jest.fn(),
       getLinodeTagList: jest.fn(),
     }
-  }
+  },
+  enqueueSnackbar: jest.fn(),
+  onPresentSnackbar: jest.fn(),
 };
 
 describe('FromImageContent', () => {
