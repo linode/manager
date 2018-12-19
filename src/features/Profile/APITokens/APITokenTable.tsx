@@ -10,6 +10,7 @@ import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
@@ -386,12 +387,16 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell parentColumn="Created">
           <Typography variant="body1" data-qa-token-created>
-            {token.created}
+            <DateTimeDisplay value={token.created} humanizeCutoff="year"/>
           </Typography>
         </TableCell>
         <TableCell parentColumn="Expires">
           <Typography variant="body1" data-qa-token-expiry>
-            {token.expiry}
+            {
+              (isWayInTheFuture(token.expiry))
+                ? 'never'
+                : <DateTimeDisplay value={token.expiry} humanizeCutoff="month" />
+            }
           </Typography>
         </TableCell>
         <TableCell>
@@ -539,29 +544,12 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     </Button>
 }
 
-const formatDates = (aLongTimeFromNow: any) => (token: Linode.Token): Linode.Token => {
-  const created = moment.utc(token.created).local();
-  const expiry = moment.utc(token.expiry).local();
-
-  return {
-    ...token,
-    created: created > aLongTimeFromNow ? 'never' : created.fromNow(),
-    expiry: expiry > aLongTimeFromNow ? 'never' : expiry.fromNow(),
-  };
-}
-
-const updateTokensResponse = (response: Linode.ResourcePage<Linode.Token>) => {
-  const now = moment.utc().add(10, 's').format();
-  const isPastNow = isPast(now);
-  const aLongTimeFromNow = moment.utc().add(100, 'year');
-
-  return {
-    ...response,
-    data: response
-      .data
-      .filter((token) => isPastNow(token.expiry))
-      .map(formatDates(aLongTimeFromNow))
-  }
+/**
+ * return true if the given time is past 100 year in the future
+ */
+export const isWayInTheFuture = (time: string) => {
+  const wayInTheFuture = moment.utc().add(100, 'years').format();
+  return isPast(wayInTheFuture)(time)
 }
 
 const styled = withStyles(styles);
@@ -569,11 +557,8 @@ const styled = withStyles(styles);
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
   if (ownProps.type === 'OAuth Client Token') {
     return getAppTokens(params, filters)
-      .then(updateTokensResponse);
   } else {
     return getPersonalAccessTokens(params, filters)
-      .then(response => response)
-      .then(updateTokensResponse)
   }
 }
 
