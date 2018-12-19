@@ -155,7 +155,7 @@ class UserProfile extends React.Component<CombinedProps> {
     });
     deleteUser(username)
       .then(() => {
-        this.props.enqueueSnackbar(`${username} has been deleted successfully.`, { variant: 'success' });
+        this.props.enqueueSnackbar(`User ${username} has been deleted successfully.`, { variant: 'success' });
         push(`/account/users`, { deletedUsername: username });
       })
       .catch(() => {
