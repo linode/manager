@@ -1,4 +1,4 @@
-import { compose as _compose, isNil, map, reject, uniq } from 'ramda';
+import { compose as _compose, isNil, map, reject, sort, uniq } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
@@ -24,6 +24,7 @@ import getEntitiesWithGroupsToImport,
   } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 
 
+import sortAlphabetically from 'src/utilities/sortAlphabetically';
 import DisplayGroupList from './DisplayGroupList';
 
 type ClassNames = 'root';
@@ -52,8 +53,10 @@ type CombinedProps = StateProps
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
+
 export const getGroupImportList = (entities: GroupImportProps[]) => {
   const importList: any = _compose(
+    sort(sortAlphabetically),
     uniq,                                           // Only return each group once
     reject(isNil),                                  // No undefined/null results
     map((entity: GroupImportProps) => entity.group) // Extract group from GIP object
