@@ -7,7 +7,6 @@ import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root'
@@ -28,29 +27,43 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   section: {
     padding: theme.spacing.unit * 3,
     borderBottom: `1px solid ${theme.palette.divider}`,
+    textAlign: 'center',
   },
   title: {
     background: theme.bg.tableHeader,
+    position: 'relative',
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'center',
     padding: `${theme.spacing.unit}px !important`,
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+    },
   },
   button: {
-    marginTop: '18px'
+    marginTop: '18px',
   },
   icon: {
+    position: 'absolute',
+    top: 10,
+    right: 0,
     cursor: 'pointer',
-    float: 'right',
     border: 'none',
+    color: theme.palette.text.primary,
     backgroundColor: 'transparent',
+    [theme.breakpoints.down('md')]: {
+      position: 'relative',
+      top: 3,
+    }
   }
 });
 
 interface Props {
   openImportDrawer: () => void;
   dismiss: () => void;
+  theme: string;
 }
 
 interface HandlerProps {
@@ -78,26 +91,21 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
           [classes.title]: true
         }
       )}>
-        <Grid container direction="row" justify="center" alignItems="center">
-          <Grid item xs={11}>
-            <Typography className={classes.header} variant="h1" data-qa-group-cta-header>
-              Import Display Groups as Tags
-            </Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <button
-              className={classes.icon}
-              onClick={handleClick}
-              data-qa-dismiss-cta
-            >
-              <Close />
-            </button>
-          </Grid>
-        </Grid>
+        <Typography className={classes.header} variant="h1" component="h3" data-qa-group-cta-header>
+          Import Display Groups as Tags
+        </Typography>
+        <div>
+          <button
+          className={classes.icon}
+          onClick={handleClick}
+          data-qa-dismiss-cta
+        >
+          <Close />
+        </button></div>
       </Paper>
       <Paper className={classes.section}>
         <Typography variant="body1" data-qa-group-cta-body>
-          You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. <strong>Your existing tags will not be affected.</strong>
+        You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. <strong>Your existing tags will not be affected.</strong>
         </Typography>
         <Button
           type="primary"
@@ -122,7 +130,7 @@ const enhanced = compose<CombinedProps, Props>(
     {
       hide: () => () => ({ hidden: true })
     }),
-  onlyUpdateForKeys(['hidden'])
+  onlyUpdateForKeys(['hidden', 'theme'])
 )(GroupImportCard)
 
 export default enhanced;

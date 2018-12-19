@@ -1,10 +1,10 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import Chip from 'src/components/core/Chip';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -13,23 +13,32 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 
-type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader';
+type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+  },
   tagGridRow: {
-    padding: theme.spacing.unit,
-    background: theme.bg.pureWhite,
     marginBottom: theme.spacing.unit * 3,
-    '& [data-qa-linode] > div': {
-      border: `1px solid ${theme.palette.divider}`,
-    }
   },
   tagHeaderRow: {
-    backgroundColor: theme.bg.offWhite,
+    backgroundColor: theme.bg.main,
+    height: 'auto',
+    '& td': {
+      padding: '10px 0',
+      borderBottom: 'none',
+    },
   },
   tagHeader: {
-    marginLeft: 5,
+    marginBottom: 2,
+  },
+  tagHeaderOuter: {
+  },
+  paginationCell: {
+    paddingTop: 2,
+    '& div:first-child': {
+      marginTop: 0,
+    },
   },
 });
 
@@ -67,7 +76,9 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
             <div key={tag} className={classes.tagGridRow}>
               <Grid container>
                 <Grid item xs={12}>
-                  <Chip className={classes.tagHeader} label={tag} style={{ marginTop: 8 }} />
+                  <div className={classes.tagHeaderOuter}>
+                    <Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography>
+                  </div>
                 </Grid>
               </Grid>
               <Paginate data={linodes} pageSize={25}>
@@ -119,12 +130,11 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     <React.Fragment>
                       <TableBody>
                         <TableRow className={classes.tagHeaderRow}>
-                          <TableCell colSpan={7}><Chip className={classes.tagHeader} label={tag} /></TableCell>
+                          <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                      </TableBody>
-                      <TableRow>
-                        <TableCell colSpan={7}>
+                      {count > 25 && <TableRow>
+                        <TableCell colSpan={7} className={classes.paginationCell}>
                           <PaginationFooter
                             count={count}
                             handlePageChange={handlePageChange}
@@ -133,7 +143,8 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                             page={page}
                           />
                         </TableCell>
-                      </TableRow>
+                      </TableRow>}
+                      </TableBody>
                     </React.Fragment>
                   )
                 }}

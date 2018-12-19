@@ -8,6 +8,7 @@ describe('GroupImportCard', () => {
   const hide = jest.fn();
   const wrapper = shallow(
     <GroupImportCard
+      theme="someThemeName"
       classes={{
         root: '',
         header: '',
