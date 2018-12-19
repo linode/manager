@@ -1,4 +1,4 @@
-import sortAlphabetically from './sortAlphabetically';
+import { sortAlphabetically } from './sort-by';
 
 describe('sortAlphabetically', () => {
   it('returns -1 if the first value is smaller', () => {

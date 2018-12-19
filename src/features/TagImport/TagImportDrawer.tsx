@@ -24,7 +24,7 @@ import getEntitiesWithGroupsToImport,
   } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 
 
-import sortAlphabetically from 'src/utilities/sortAlphabetically';
+import { sortAlphabetically } from 'src/utilities/sort-by';
 import DisplayGroupList from './DisplayGroupList';
 
 type ClassNames = 'root';
