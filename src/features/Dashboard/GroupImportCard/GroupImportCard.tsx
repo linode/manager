@@ -63,6 +63,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
 interface Props {
   openImportDrawer: () => void;
   dismiss: () => void;
+  theme: string;
 }
 
 interface HandlerProps {
@@ -129,7 +130,7 @@ const enhanced = compose<CombinedProps, Props>(
     {
       hide: () => () => ({ hidden: true })
     }),
-  onlyUpdateForKeys(['hidden'])
+  onlyUpdateForKeys(['hidden', 'theme'])
 )(GroupImportCard)
 
 export default enhanced;

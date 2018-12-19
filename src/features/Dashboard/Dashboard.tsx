@@ -1,8 +1,9 @@
 
-import { compose, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -11,7 +12,6 @@ import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { storage } from 'src/utilities/storage';
-
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
@@ -20,6 +20,7 @@ import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
+
 
 type ClassNames = 'root';
 
@@ -42,7 +43,7 @@ interface DispatchProps {
   }
 }
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames> & WithTheme;
 
 const shouldDisplayGroupImportCTA = (groupedEntities: GroupedEntitiesForImport) => {
   const userHasDisabledCTA = storage.hideGroupImportCTA.get();
@@ -87,6 +88,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
           }
           {shouldDisplayGroupImportCTA(entitiesWithGroupsToImport) &&
             <ImportGroupsCard
+              theme={props.theme.name}
               openImportDrawer={openImportDrawer}
               dismiss={storage.hideGroupImportCTA.set}
             />
@@ -118,9 +120,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles);
+const styled = withStyles(styles, { withTheme: true });
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected,
 )(Dashboard);

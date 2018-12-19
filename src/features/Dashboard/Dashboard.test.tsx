@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { light } from 'src/themes';
 import { Dashboard } from './Dashboard';
 
 const props = {
@@ -13,7 +13,8 @@ const props = {
   managed: false,
   backupError: undefined,
   entitiesWithGroupsToImport: { linodes: [], domains: [] },
-  classes: { root: ''}
+  classes: { root: ''},
+  theme: light,
 }
 
 const component = shallow(
