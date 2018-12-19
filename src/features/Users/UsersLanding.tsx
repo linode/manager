@@ -154,7 +154,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     deleteUser(username)
       .then(() => {
         this.props.onDelete();
-        this.props.enqueueSnackbar(`${username} has been deleted successfully.`, { variant: 'success' });
+        this.props.enqueueSnackbar(`User ${username} has been deleted successfully.`, { variant: 'success' });
       })
       .catch(() => {
         this.setState({
