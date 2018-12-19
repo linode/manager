@@ -74,15 +74,14 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
   const domainGroups = getGroupImportList(domains);
   return (
     <Drawer
-        title="Import Display Groups to Tags"
+        title="Import Display Groups as Tags"
         open={open}
         onClose={close}
       >
         <Grid container direction={'column'} >
           <Grid item>
             <Typography variant="body1">
-            This will import Display Groups from Classic Manager and convert them
-            to tags. <strong>Your existing tags will not be affected.</strong>
+              You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. <strong>Your existing tags will not be affected.</strong>
             </Typography>
           </Grid>
           {!isEmpty(errors) && errors.map((error, idx: number) =>
@@ -109,7 +108,7 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
                 type="primary"
                 data-qa-submit
               >
-                Import
+                Import Display Groups Now
               </Button>
               <Button
                 onClick={close}
