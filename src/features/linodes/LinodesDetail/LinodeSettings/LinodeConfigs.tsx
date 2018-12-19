@@ -1,4 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -19,8 +20,9 @@ import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { resetEventsPolling } from 'src/events';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { deleteLinodeConfig, getLinodeConfigs } from 'src/services/linodes';
+import { deleteLinodeConfig, getLinodeConfigs, linodeReboot } from 'src/services/linodes';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 
@@ -178,6 +180,23 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     this.setConfirmDelete({ open: true, id, label });
   }
 
+  handleBoot = (linodeId: number, configId: number, label: string) => {
+    linodeReboot(linodeId, configId)
+      .then(() => { resetEventsPolling() })
+      .catch(errorResponse => {
+        const errors = pathOr(
+          [{reason: `Error booting ${label}`}],
+          ['response','data','errors'],
+          errorResponse
+        )
+        errors.map((error: Linode.ApiFieldError) => {
+          this.props.enqueueSnackbar(error.reason, {
+            variant: 'error'
+          });
+        })
+      });
+  }
+
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
     const { linodeId } = this.props;
@@ -220,6 +239,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           pageSize={this.props.pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="linode configs"
         />
       </React.Fragment>
     );
@@ -244,6 +264,8 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         <TableCell>
           <LinodeConfigActionMenu
             config={config}
+            linodeId={this.props.linodeId}
+            onBoot={this.handleBoot}
             onEdit={this.openForEditing}
             onDelete={this.confirmDelete}
           />

@@ -77,7 +77,7 @@ export interface UserSSHKeyObject {
   username: string;
   selected: boolean;
   keys: string[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => void;
+  onSSHKeyChange: (e: React.ChangeEvent<HTMLInputElement>, result: boolean) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -120,7 +120,7 @@ class AccessPanel extends React.Component<CombinedProps> {
     return (
       <React.Fragment>
         <TableHeader title="SSH Keys"/>
-        <Table isResponsive={false}>
+        <Table isResponsive={false} border spacingBottom={16}>
           <TableHead>
             <TableRow>
               <TableCell className={classes.cellCheckbox} />
@@ -132,7 +132,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             {users.map(({
               gravatarUrl,
               keys,
-              onChange,
+              onSSHKeyChange,
               selected,
               username,
             }) => (
@@ -140,12 +140,12 @@ class AccessPanel extends React.Component<CombinedProps> {
                   <TableCell className={classes.cellCheckbox}>
                     <CheckBox
                       checked={selected}
-                      onChange={onChange}
+                      onChange={onSSHKeyChange}
                     />
                   </TableCell>
                   <TableCell className={classes.cellUser}>
                     <div className={classes.userWrapper}>
-                      <img src={gravatarUrl} className={classes.gravatar} />
+                      <img src={gravatarUrl} className={classes.gravatar} alt={username} />
                       {username}
                     </div>
                   </TableCell>

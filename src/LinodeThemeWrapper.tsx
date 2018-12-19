@@ -6,10 +6,14 @@ import { theme as themeStorage } from 'src/utilities/storage';
 interface State {
   themeChoice: 'light' | 'dark';
 }
+type RenderChildren = (toggle: () => void) => React.ReactNode;
+interface Props {
+  children: RenderChildren | React.ReactNode;
+}
 
 const themes = { light, dark }
 
-class LinodeThemeWrapper extends React.Component<{}, State> {
+class LinodeThemeWrapper extends React.Component<Props, State> {
   state: State = {
     themeChoice: 'light',
   };
@@ -40,14 +44,19 @@ class LinodeThemeWrapper extends React.Component<{}, State> {
   }
 
   render() {
+    const { children } = this.props;
     const { themeChoice } = this.state;
     const theme = themes[themeChoice];
+
     return (
       <MuiThemeProvider theme={theme}>
-        {React.cloneElement(this.props.children as any, { toggleTheme: this.toggleTheme })}
+        {isRenderChildren(children) ? children(this.toggleTheme) : children}
       </MuiThemeProvider>
     );
   }
 }
+const isRenderChildren = (c: RenderChildren | React.ReactNode): c is RenderChildren => {
+  return typeof c === 'function';
+};
 
 export default LinodeThemeWrapper;

@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.42.0] - 2018.12.17
+
+### Added:
+- Add Total Traffic to stats (#4221)
+- Styling for Stats/Units (#4220)
+- Paypal Client-Side Validation (#4222)
+- Revert  error poc (#4212) (#4223)
+- Reorder providers. Convert ThemeProvider to renderChildren.
+- style toast messages
+- create component abstraction for toasts
+- add: toasts story
+- pass props to tags to close suggestion menu on click\
+- error poc (#4212)
+- make CVV field optional (#4214)
+- Add analytics to GetAllEntities() (#4203)
+- Correct permission decision logic in API token utils. (#4204)
+- code cleanup and destructure new asSuggestion prop
+- style tags inside search result suggestion
+- event propagation and focus styles
+- Stats/Units on graphs (#4205)
+- make tags in selects consistent with new styles
+- refactor tag button styles
+- Tag links (#4195)
+- updating back up data section for dark theme (#4199)
+- updating copy icon component colors, removing the override from IP address component (#4198)
+- better padding for dashboard table cells
+- Make clickable row UX more consistent
+- switch volume columns (#4197)
+- add search data (#4182)
+- Upgrade Typography component consistent with @material-ui/core@3.5.1 (#4180)
+- Display resize instructions on form submission. (#4189)
+- Add SSH key event message... (#4190)
+- Refresh volumes list on volume_clone event. (#4191)
+- Report counts of successes and failures for backups (#4187)
+- Remove sendToast for enqueSnacback (#4185)
+- Replace Toasts with Notistack (#4163)
+
+### Changed:
+- reduce main nav items padding under medium breakpoint
+- update progress bar for linodes (#4230)
+- Update docs links to Cloud Manager versions. (#4224)
+- update notistck version and remove unecessary declaration
+- Update email notification setting label for clarity (#4216)
+- Events polling updated. (#4181)
+
+### Fixed:
+- fix: send config id with attach volume request (#4228)
+- Edit SOA drawer loading button styling bug (#4210)
+- fix typing for notistack
+- Fix NodeBalancer Tag Error (#4194)
+- Fix mutation error handling (#4179)
+
 ## [0.41.0] - 2018.12.04
 
 ##Added:

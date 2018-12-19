@@ -455,6 +455,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           count={this.props.count}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="api tokens table"
         />
 
         <APITokenDrawer

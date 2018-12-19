@@ -125,7 +125,7 @@ exports.config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: process.env.DOCKER ? 'https://manager-local:3000' : process.env.REACT_APP_APP_ROOT,
+    baseUrl: process.env.REACT_APP_APP_ROOT,
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: process.env.DOCKER || process.env.BROWSERSTACK_USERNAME ? 30000 : 10000,
@@ -283,11 +283,11 @@ exports.config = {
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
      */
-    beforeSuite: function (suite) {
+    /*beforeSuite: function (suite) {
         // Click beta notice button
         browser.waitForVisible('[data-qa-dialog-content] button');
         browser.click('[data-qa-dialog-content] button');
-    },
+    },*/
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
      * @param {Object} test test details

@@ -9,6 +9,7 @@ import events, { defaultState as eventsDefaultState } from './reducers/events';
 import features, { defaultState as featuresDefaultState } from './reducers/features';
 import notifications, { DEFAULT_STATE as notificationsDefaultState } from './reducers/notifications';
 import __resources, { defaultState as resourcesDefaultState } from './reducers/resources';
+import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from './reducers/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from './reducers/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from './reducers/volumeDrawer';
 
@@ -19,12 +20,13 @@ const reducers = combineReducers<ApplicationState>({
   authentication,
   backups,
   documentation,
-  features,
-  volumeDrawer,
-  notifications,
   domainDrawer,
   events,
+  features,
+  notifications,
+  stackScriptDrawer,
   tagImportDrawer,
+  volumeDrawer,
 });
 
 const defaultState: ApplicationState = {
@@ -32,12 +34,13 @@ const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
   documentation: documentationDefaultState,
-  features: featuresDefaultState,
-  volumeDrawer: volumeDrawerDefaultState,
-  notifications: notificationsDefaultState,
   domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
+  features: featuresDefaultState,
+  notifications: notificationsDefaultState,
+  stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
+  volumeDrawer: volumeDrawerDefaultState,
 };
 
 const enhancers = compose(

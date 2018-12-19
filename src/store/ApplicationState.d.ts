@@ -36,6 +36,7 @@ declare interface ApplicationState {
   tagImportDrawer: TagImportDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
+  stackScriptDrawer: StackScriptDrawerState;
   /** @todo extract */
   events: {
     events: ExtendedEvent[];
@@ -103,6 +104,11 @@ declare interface DomainDrawerState {
   mode: string;
   cloneId?: number;
   domain?: string;
+}
+
+declare interface StackScriptDrawerState {
+  open: boolean;
+  stackScriptId?: number;
 }
 
 declare interface RequestableData<D> {

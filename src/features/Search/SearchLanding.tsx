@@ -10,7 +10,7 @@ import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getAllEntities } from 'src/utilities/getAll';
-import { parseQueryParams } from 'src/utilities/queryParams';
+import { getQueryParam } from 'src/utilities/queryParams';
 
 import ResultGroup from './ResultGroup';
 import { emptyResults, searchAll, SearchResults } from './utils';
@@ -24,6 +24,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: 10,
   },
 });
+
+const displayMap = {
+  linodes: "Linodes",
+  domains: "Domains",
+  volumes: "Volumes",
+  nodebalancers: "NodeBalancers",
+  images: "Images",
+}
 
 interface State {
   query: string;
@@ -44,17 +52,6 @@ type CombinedProps =
 
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
-  getQuery = () => {
-    let queryFromParams;
-    try {
-      queryFromParams = parseQueryParams(this.props.location.search)['?query'];
-    }
-    catch {
-      queryFromParams = ''
-    }
-    const query = queryFromParams ? decodeURIComponent(queryFromParams) : '';
-    return query;
-  }
 
   getInitialResults = () => {
     return pathOr(
@@ -65,7 +62,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
   }
 
   state: State = {
-    query: this.getQuery(),
+    query: getQueryParam(this.props.location.search, 'query'),
     results: this.getInitialResults(),
     error: false,
     loading: false,
@@ -155,10 +152,10 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
           {Object.keys(results).map((entityType, idx: number) =>
             <ResultGroup
               key={idx}
-              entity={entityType}
+              entity={displayMap[entityType]}
               results={results[entityType]}
               loading={loading}
-              groupSize={5}
+              groupSize={25}
             />
           )}
         </Grid>

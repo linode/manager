@@ -3,7 +3,7 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { OAuthCallbackPage } from 'src/layouts/OAuth';
-import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
+import { parseQueryParams } from 'src/utilities/queryParams';
 
 describe('layouts/OAuth', () => {
   const dispatch = jest.fn();
@@ -63,26 +63,12 @@ describe('layouts/OAuth', () => {
     expect(redirectMock).toBeCalledWith('/asdf', historyMock);
   });
 
-  describe('splitIntoTwo', () => {
-    it('splits a string into two parts', () => {
-      const res = splitIntoTwo('split&this', '&');
-      expect(res[0]).toBe('split');
-      expect(res[1]).toBe('this');
-    });
-
-    it('raises an error if the string can\'t be split', () => {
-      expect(() => {
-        splitIntoTwo('split&this', '%');
-      }).toThrow();
-    });
-  });
-
   describe('parseQueryParams', () => {
     it('parses query params of the expected format', () => {
       const res = parseQueryParams('entity=key&color=bronze&weight=20%20grams') as Linode.TodoAny;
       expect(res.entity).toBe('key');
       expect(res.color).toBe('bronze');
-      expect(res.weight).toBe('20%20grams');
+      expect(res.weight).toBe('20 grams');
     });
 
     it('returns an empty object for an empty string', () => {

@@ -15,6 +15,7 @@ import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { createLinode } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
@@ -494,6 +495,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             }
           </Sticky>
         </Grid>
+        <StackScriptDrawer />
       </React.Fragment>
     );
   }

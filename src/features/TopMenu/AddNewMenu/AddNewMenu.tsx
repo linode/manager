@@ -10,17 +10,19 @@ import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
+import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/reducers/domainDrawer';
 import { openForCreating as openVolumeDrawerForCreating } from 'src/store/reducers/volumeDrawer';
-import AddNewMenuItem, { MenuItem } from './AddNewMenuItem';
+import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
 type CSSClasses = 'wrapper'
   | 'menu'
   | 'button'
   | 'caret'
   | 'mobileCreate'
-  | 'mobileButton';
+  | 'mobileButton'
+  | 'hidden';
 
 const styles: StyleRulesCallback = (theme) => ({
   wrapper: {
@@ -52,6 +54,10 @@ const styles: StyleRulesCallback = (theme) => ({
     width: 32,
     height: 32,
   },
+  hidden: {
+    height: 0,
+    padding: 0,
+  },
 });
 
 interface Props {
@@ -71,7 +77,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     anchorEl: undefined,
   };
 
-  items: MenuItem[] = [
+  items: MenuItems[] = [
     {
       title: 'Linode',
       onClick: (e) => {
@@ -131,12 +137,10 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       <div className={classes.wrapper}>
         <Button
           type="primary"
-          aria-owns={anchorEl ? 'add-new-menu' : undefined}
-          aria-expanded={anchorEl ? true : undefined}
-          aria-haspopup="true"
           onClick={this.handleClick}
           className={classes.button}
           data-qa-add-new-menu-button
+          aria-label="Linode Create"
         >
           Create {
             anchorEl
@@ -155,6 +159,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.menu}
         >
+          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {this.items.map((i, idx) =>
             <AddNewMenuItem
               key={idx}

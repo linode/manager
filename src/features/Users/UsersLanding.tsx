@@ -102,7 +102,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   static docs: Linode.Doc[] = [
     {
       title: 'Accounts and Password',
-      src: 'https://www.linode.com/docs/platform/accounts-and-passwords/',
+      src: 'https://www.linode.com/docs/platform/manager/accounts-and-passwords-new-manager/',
       body: `Maintaining your user Linode Manager accounts, passwords, and
       contact information is just as important as administering your Linode.
       This guide shows you how to control access to the Linode Manager,
@@ -112,7 +112,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     },
     {
       title: 'Linode Manager Security Controls',
-      src: 'https://www.linode.com/docs/security/linode-manager-security-controls/',
+      src: 'https://www.linode.com/docs/security/linode-manager-security-controls-new-manager/',
       body: `The Linode Manager is the gateway to all of your Linode products
       and services, and you should take steps to protect it from unauthorized
       access. This guide documents several of Linode Manager’s features that
@@ -289,6 +289,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           pageSize={this.props.pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="users landing"
         />
         <CreateUserDrawer
           open={createDrawerOpen}

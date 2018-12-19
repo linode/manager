@@ -6,7 +6,9 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   onEdit: (config: Linode.Config) => void;
   onDelete: (id: number, label: string) => void;
+  onBoot: (linodeId: number, configId: number, label: string) => void;
   config: Linode.Config;
+  linodeId: number;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -22,8 +24,21 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
     onDelete(id, label)
   }
 
+  handleBoot = () => {
+    const { config: { id, label }, linodeId, onBoot } = this.props;
+    onBoot(linodeId, id, label);
+  }
+
   createConfigActions = () => (closeMenu: Function): Action[] => {
     const actions = [
+      {
+        title: 'Boot This Config',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          this.handleBoot();
+          closeMenu();
+        },
+      },
       {
         title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {

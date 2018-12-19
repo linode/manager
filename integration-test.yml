@@ -16,7 +16,7 @@ services:
   manager-local:
     environment:
       - HTTPS=true
-      - REACT_APP_APP_ROOT=https://manager-local:3000
+      - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
       - REACT_APP_LOGIN_ROOT=${REACT_APP_LOGIN_ROOT}
       - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
       - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
@@ -30,6 +30,7 @@ services:
   manager-e2e:
     environment:
       - DOCKER=true
+      - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
       - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
       - MANAGER_USER=${MANAGER_USER}
       - MANAGER_PASS=${MANAGER_PASS}
@@ -42,6 +43,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./e2e/test-results:/src/e2e/test-results
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
     depends_on:
       - manager-local

@@ -67,6 +67,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}
                   page={page}
+                  eventCategory={'linodes landing'}
                 />
               }
             </Grid>

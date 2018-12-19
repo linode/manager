@@ -156,6 +156,7 @@ const themeDefaults: ThemeOptions = {
     grey3: '#ccc',
     white: '#fff',
     black: '#222',
+    offBlack: primaryColors.offBlack,
     boxShadow: '#ddd',
     focusBorder: '#999',
     absWhite: '#fff',
@@ -845,21 +846,20 @@ const themeDefaults: ThemeOptions = {
         },
       },
     },
+    MuiSnackbar: {
+      root: { 
+      }
+    },
     MuiSnackbarContent: {
       root: {
         boxShadow: '0 0 5px #ddd',
         color: '#606469',
-        padding: 16,
-        margin: 16,
-        backgroundColor: 'transparent',
+        backgroundColor: 'white',
+        borderLeft: `6px solid transparent`,
+        borderRadius: 0,
         [breakpoints.up('md')]: {
-          margin: 0,
+          borderRadius: 0,
         },
-      },
-      message: {
-        margin: '0 auto',
-        width: '100%',
-        padding: 0,
       },
     },
     MuiSwitch: {
@@ -1040,14 +1040,24 @@ const themeDefaults: ThemeOptions = {
     MuiTableSortLabel: {
       root: {
         fontSize: '.9rem',
-        color: '#111',
+        transition: 'color 225ms ease-in-out',
+        '&:hover': {
+          color: primaryColors.main,
+        }
       },
       active: {
         color: primaryColors.main,
         '&:focus': {
-          color: primaryColors.main,
+          outline: '1px dotted #999',
+          '&:hover': {
+            color: primaryColors.main,
+          }
         },
       },
+      icon: {
+        opacity: 1,
+        marginTop: 2
+      }
     },
     MuiTooltip: {
       popper: {

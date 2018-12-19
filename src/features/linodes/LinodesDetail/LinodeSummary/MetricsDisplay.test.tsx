@@ -1,31 +1,29 @@
 import { shallow } from 'enzyme';
-import { compose } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
-import { appendPercentSign, formatNumber } from 'src/utilities/statMetrics';
+import { formatPercentage } from 'src/utilities/statMetrics';
 import { metricsBySection, MetricsDisplay } from './MetricsDisplay';
 
 
 describe('CPUMetrics', () => {
-  const mockMetrics = { max: 10, average: 5.5, last: 7.75, total: 40 };
-  const format = compose(appendPercentSign, formatNumber);
+  const mockMetrics = { max: 10, average: 5.5, last: 7.75, total: 40, length: 3 };
 
   const wrapper = shallow(
     <MetricsDisplay
-      classes={{root: '', legend: '', red: '', yellow: '', blue: 'blue', green: ''}}
+      classes={{root: '', legend: '', red: '', yellow: '', blue: 'blue', green: '', text: '', tableHeadInner: ''}}
       rows={[
         {
           legendTitle: 'Legend Title',
           legendColor: 'blue',
           data: mockMetrics,
-          format
+          format: formatPercentage
         }
       ]}
     />
   );
 
   it('renders a table', () => {
-    expect(wrapper.find('WithStyles(Table)')).toHaveLength(1);
+    expect(wrapper.find('WithStyles(WrappedTable)')).toHaveLength(1);
   });
 
   it('renders Max, Avg, and Last table headers', () => {
@@ -57,13 +55,13 @@ describe('CPUMetrics', () => {
         legendTitle: 'Legend Title 1',
         legendColor: 'blue',
         data: mockMetrics,
-        format
+        format: formatPercentage
       },
       {
         legendTitle: 'Legend Title 2',
         legendColor: 'red',
         data: { max: 80, average: 90, last: 100, total: 110 },
-        format
+        format: formatPercentage
       }
     ]});
     expect(wrapper.find('[data-qa-legend-title]')).toHaveLength(2);
@@ -71,7 +69,7 @@ describe('CPUMetrics', () => {
 });
 
 describe('metrics by section', () => {
-  const metrics = { max: 10, average: 5, last: 8, total: 80 };
+  const metrics = { max: 10, average: 5, last: 8, total: 80, length: 10 };
   expect(metricsBySection(metrics)).toHaveLength(3);
   expect(metricsBySection(metrics)).toBeInstanceOf(Array);
   expect(metricsBySection(metrics)[0]).toEqual(metrics.max);

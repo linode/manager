@@ -10,6 +10,7 @@ type CSSClasses = 'root'
 | 'noTopMargin'
 | 'mini'
 | 'tag'
+| 'sort'
 | 'hasValueInside'
 | 'green'
 | 'valueInside';
@@ -71,6 +72,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       stroke: 'white',
     },
   },
+  sort: {
+    width: '14px !important',
+    height: '14px !important',
+    padding: 0,
+    position: 'relative',
+    top: 4,
+    marginLeft: 8,
+    marginRight: 4,
+  },
   valueInside: {
     position: 'absolute',
     marginTop: theme.spacing.unit / 2,
@@ -99,6 +109,7 @@ interface Props extends CircularProgressProps {
   noInner?: boolean;
   mini?: boolean;
   tag?: boolean;
+  sort?: boolean;
   children?: JSX.Element;
   green?: boolean;
 }
@@ -108,7 +119,7 @@ type CombinedProps = Props & WithStyles<CSSClasses>;
 const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props) => {
   const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
-  const { children, classes, noTopMargin, green, mini, tag, ...rest } = props;
+  const { children, classes, noTopMargin, green, mini, tag, sort, ...rest } = props;
 
   const outerClasses = {
     [classes.root]: true,
@@ -154,6 +165,7 @@ const circleProgressComponent: React.StatelessComponent<CombinedProps> = (props)
           className={classNames({
             [classes.mini]: true,
             [classes.tag]: tag,
+            [classes.sort]: sort,
           })}
           data-qa-circle-progress
         />

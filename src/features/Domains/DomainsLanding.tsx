@@ -242,6 +242,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           pageSize={this.props.pageSize}
           handlePageChange={this.props.handlePageChange}
           handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="domains landing"
         />
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}

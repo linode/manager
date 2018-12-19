@@ -104,6 +104,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                           handleSizeChange={handlePageSizeChange}
                           pageSize={pageSize}
                           page={page}
+                          eventCategory={'linodes landing'}
                         />
                       </Grid>
                     </React.Fragment>
@@ -141,6 +142,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                             handleSizeChange={handlePageSizeChange}
                             pageSize={pageSize}
                             page={page}
+                            eventCategory={'linodes landing'}
                           />
                         </TableCell>
                       </TableRow>}

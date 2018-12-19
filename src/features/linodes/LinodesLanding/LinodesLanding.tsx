@@ -23,6 +23,7 @@ import Toggle from 'src/components/Toggle';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { getImages } from 'src/services/images';
+import { sendEvent } from 'src/utilities/analytics';
 import { storage, views } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -99,6 +100,8 @@ type CombinedProps =
   & WithStyles<ClassNames>;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
+  static eventCategory = 'linodes landing';
+
   mounted: boolean = false;
 
   state: State = {
@@ -193,6 +196,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     } else {
       views.linode.set('list');
     }
+
+    sendEvent({
+      category: ListLinodes.eventCategory,
+      action: 'switch view',
+      label: style
+    })
   }
 
   selectConfig = (id: number) => {

@@ -3,14 +3,16 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { transitionText } from 'src/features/linodes/transitions';
-import LinodeRowHeadCell from './LinodeRowHeadCell';
 
-type ClassNames = 'bodyRow' | 'status';
+type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   bodyRow: {
     height: 77,
+  },
+  bodyCell: {
+    border: 0,
+    paddingBottom: 0,
   },
   status: {
     textTransform: 'capitalize',
@@ -22,10 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   linodeId: number;
-  linodeLabel: string;
   linodeRecentEvent?: Linode.Event;
-  linodeStatus: Linode.LinodeStatus;
-  linodeTags: string[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -34,28 +33,16 @@ const LinodeRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
     linodeId,
-    linodeLabel,
     linodeRecentEvent,
-    linodeStatus,
-    linodeTags,
+    children,
   } = props;
 
   const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
 
   return (
     <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
-      <LinodeRowHeadCell
-        linodeId={linodeId}
-        linodeLabel={linodeLabel}
-        linodeTags={linodeTags}
-        linodeStatus={linodeStatus}
-      />
-      <TableCell colSpan={5}>
-        {typeof value === 'number' &&
-          <div className={classes.status}>
-            {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
-          </div>
-        }
+      { children }
+      <TableCell colSpan={5} className={classes.bodyCell}>
         <LinearProgress value={value} />
       </TableCell>
     </TableRow>

@@ -1,7 +1,8 @@
+import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
-import Divider from 'src/components/core/Divider';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+
 
 type CSSClasses = 'root'
 | 'content'
@@ -20,8 +21,8 @@ const styles: StyleRulesCallback = (theme) => ({
     paddingRight: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     maxWidth: '350px',
-    cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     transition: 'background-color .2s ease-in-out',
@@ -31,7 +32,7 @@ const styles: StyleRulesCallback = (theme) => ({
     '& .outerCircle': {
       stroke: theme.bg.main,
     },
-    '&:hover': {
+    '&:hover, &:focus': {
       ...theme.animateCircleIcon,
       backgroundColor: theme.bg.offWhiteDT,
     },
@@ -58,14 +59,14 @@ const styles: StyleRulesCallback = (theme) => ({
   },
 });
 
-export interface MenuItem {
+export interface MenuItems {
   title: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   body: string;
   ItemIcon: React.ComponentClass<any>;
 }
 
-interface Props extends MenuItem {
+interface Props extends MenuItems {
   index: number;
   count: number;
 }
@@ -78,31 +79,30 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
-    const { classes, title, onClick, body, ItemIcon, index, count } = this.props;
+    const { classes, title, onClick, body, ItemIcon } = this.props;
 
     return (
       <React.Fragment>
-        <li onClick={onClick} className={classes.root} data-qa-add-new-menu={title}>
+        <MenuItem
+          onClick={onClick}
+          className={classes.root}
+          data-qa-add-new-menu={title}
+          button
+          component="li"
+          aria-label={`Create ${title}`}
+        >
           <div className={classes.iconWrapper}>
             <ItemIcon />
           </div>
           <div className={classes.content}>
             <Typography role="header" variant="h3">
-              <a
-                href="javascript:void(0)"
-                onClick={onClick}
-                title={title}
-                className={classes.titleLink}
-              >
-                {title}
-              </a>
+              {title}
             </Typography>
             <Typography variant="body1" className={classes.body}>
               {body}
             </Typography>
           </div>
-        </li>
-        {index + 1 !== count && <Divider />}
+        </MenuItem>
       </React.Fragment>
     );
   }
