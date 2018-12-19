@@ -175,7 +175,7 @@ export default reducer;
  * the form:
  *
  * {
- *  success: number[] Linodes that successfully enabled Backups.
+ *  success: Linode[] Linodes that successfully enabled Backups.
  *  errors: BackupError[] Accumulated errors.
  * }
  */
@@ -205,7 +205,6 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
 
   const linodesWithoutBackups = entities
     .filter(linode => !linode.backups.enabled)
-    // .map(linode => linode.id);
 
   dispatch(handleEnable());
   Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, { success: [], errors: [] })

@@ -22,9 +22,9 @@ const CardView: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Grid container>
-      {data.map(linode =>
+      {data.map((linode, idx: number) =>
         <LinodeCard
-          key={linode.id}
+          key={`linode-card-${idx}`}
           linodeId={linode.id}
           linodeStatus={linode.status}
           linodeIpv4={linode.ipv4}
