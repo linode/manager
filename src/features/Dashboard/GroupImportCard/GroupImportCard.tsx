@@ -113,7 +113,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
           className={classes.button}
           data-qa-open-import-drawer-button
         >
-          Import Display Groups!
+          Import Display Groups
         </Button>
       </Paper>
     </DashboardCard>
