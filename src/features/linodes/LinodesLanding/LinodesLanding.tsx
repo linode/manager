@@ -43,21 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   tagGroup: {
     flexDirection: 'row-reverse'
   },
-  tagToggle: {
-    '&.checked': {
-      '& .square': {
-        fill: `${theme.color.toggleActive} !important`,
-      },
-    },
-    '& > span:last-child': {
-      backgroundColor: '#f4f4f4 !important',
-      opacity: 0.38,
-      borderColor: '#999 !important',
-    },
-    '& .square': {
-      fill: '##abadaf !important',
-    },
-  },
+  tagToggle: {},
 });
 
 interface ConfigDrawerState {
