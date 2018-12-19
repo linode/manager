@@ -91,7 +91,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
         }
       )}>
         <Typography className={classes.header} variant="h1" component="h3" data-qa-group-cta-header>
-          Import Display Groups as Tags!
+          Import Display Groups as Tags
         </Typography>
         <div>
           <button
@@ -104,8 +104,7 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
       </Paper>
       <Paper className={classes.section}>
         <Typography variant="body1" data-qa-group-cta-body>
-          You now have the ability to import your Display Groups in the Classic Manager to tags and they will be associated to your Domains and Linodes. 
-          This will give you the ability to organize and view your Linodes by tags. Your existing tags will not be affected.
+        You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. <strong>Your existing tags will not be affected.</strong>
         </Typography>
         <Button
           type="primary"
