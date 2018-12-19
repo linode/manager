@@ -36,6 +36,8 @@ const addLinode = actionCreator<Linode.Linode>('add');
 
 export const updateLinode = actionCreator<Linode.Linode>('update');
 
+export const updateMultipleLinodes = actionCreator<Linode.Linode[]>('update_multiple')
+
 const deleteLinode = actionCreator<number>('delete');
 
 export const actions = { addLinode, updateLinode, deleteLinode, };
@@ -82,6 +84,22 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       entities: state.entities.map((linode) => linode.id === payload.id ? payload : linode),
+    }
+  }
+
+  if (isType(action, updateMultipleLinodes)) {
+    const { payload } = action; /** list of successfully updated Linodes */
+    return {
+      ...state,
+      entities: [
+        ...state.entities
+          .filter(eachEntity => {
+            return payload.some(eachLinode => {
+              return eachLinode.id === eachEntity.id
+            })
+          }),
+        ...payload
+      ]
     }
   }
 

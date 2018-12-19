@@ -5,6 +5,8 @@ import { ThunkAction } from 'redux-thunk';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
+import { updateMultipleLinodes } from 'src/store/reducers/resources/linodes';
+
 
 // HELPERS
 
@@ -12,7 +14,7 @@ import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
 type State = BackupDrawerState;
 
 interface Accumulator {
-  success: number[];
+  success: Linode.Linode[];
   errors: BackupError[];
 }
 
@@ -177,17 +179,17 @@ export default reducer;
  *  errors: BackupError[] Accumulated errors.
  * }
  */
-export const gatherResponsesAndErrors = (accumulator: Accumulator, linodeId: number) => {
-  return enableBackups(linodeId).then(() => ({
+export const gatherResponsesAndErrors = (accumulator: Accumulator, linode: Linode.Linode) => {
+  return enableBackups(linode.id).then(() => ({
     ...accumulator,
-    success: [...accumulator.success, linodeId]
+    success: [...accumulator.success, linode]
   }))
     .catch((error) => {
       const reason = pathOr('Backups could not be enabled for this Linode.',
         ['response', 'data', 'errors', 0, 'reason'], error);
       return {
         ...accumulator,
-        errors: [...accumulator.errors, { linodeId, reason }]
+        errors: [...accumulator.errors, { linodeId: linode.id, reason }]
       }
     })
 }
@@ -203,7 +205,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
 
   const linodesWithoutBackups = entities
     .filter(linode => !linode.backups.enabled)
-    .map(linode => linode.id);
+    // .map(linode => linode.id);
 
   dispatch(handleEnable());
   Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, { success: [], errors: [] })
@@ -216,6 +218,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
       }
       /** @todo */
       // dispatch(requestLinodesWithoutBackups());
+      dispatch(updateMultipleLinodes(response.success));
     })
     .catch(() => dispatch(
       handleEnableError([{ linodeId: 0, reason: "There was an error enabling backups." }])
