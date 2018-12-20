@@ -134,9 +134,9 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           style={{ marginTop: 8 }}
           label={
             (restricted)
-              ? `Restricted (This user will have limited access to account features).
+              ? `This user will have limited access to account features.
               This can be changed later.`
-              : `Unrestricted (This user will have full access to account features).
+              : `This user will have full access to account features.
               This can be changed later.`
           }
           control={
