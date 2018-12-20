@@ -75,7 +75,6 @@ interface Props {
 type CombinedProps = Props &  StateProps & WithStyles<ClassNames>;
 
 interface State {
-  shouldPreSelectStackScript: boolean;
   stackScript?: Linode.StackScript.Response;
   stackScriptError: boolean;
   stackScriptLoading: boolean;
@@ -84,7 +83,6 @@ interface State {
 class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
 
   state: State = {
-    shouldPreSelectStackScript: true,
     stackScriptLoading: false,
     stackScriptError: false
   }
@@ -94,9 +92,11 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   componentDidMount() {
     if (this.props.selectedId) {
       this.setState({stackScriptLoading: true});
-      this.setState({  });
       getStackScript(this.props.selectedId).then(stackScript => {
         this.setState({stackScript, stackScriptLoading: false});
+        if (this.props.onSelect) {
+          this.props.onSelect(stackScript.id, stackScript.label, stackScript.username, stackScript.images, stackScript.user_defined_fields);
+        }
       }).catch(e => {
         this.setState({stackScriptLoading: false, stackScriptError: true});
       })
@@ -116,8 +116,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
         request={getStackScriptsByUser}
-        selectedStackScriptIDFromQuery={this.props.selectedId}
-        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={0}
         resetStackScriptSelection={this.maybeResetStackScript}
         category="my"
@@ -130,8 +128,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
         request={getAccountStackScripts}
-        selectedStackScriptIDFromQuery={this.props.selectedId}
-        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         key={1}
         resetStackScriptSelection={this.maybeResetStackScript}
         category="account"
@@ -144,10 +140,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
         request={getStackScriptsByUser}
-        selectedStackScriptIDFromQuery={this.props.selectedId}
         key={2}
         category="linode"
-        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         resetStackScriptSelection={this.maybeResetStackScript}
       />,
     },
@@ -159,8 +153,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         publicImages={this.props.publicImages}
         currentUser={this.props.username}
         request={getCommunityStackscripts}
-        selectedStackScriptIDFromQuery={this.props.selectedId}
-        shouldPreSelectStackScript={this.state.shouldPreSelectStackScript}
         resetStackScriptSelection={this.maybeResetStackScript}
         key={3}
       />,
@@ -185,7 +177,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     * however, we don't want the user to have their stackscript still preselected
     * when they change StackScript tabs
     */
-    this.setState({ shouldPreSelectStackScript: false });
     this.maybeResetStackScript();
   }
 

@@ -11,7 +11,7 @@ import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
-import { deleteStackScript, getStackScript, updateStackScript } from 'src/services/stackscripts';
+import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
 import { sendEvent } from 'src/utilities/analytics';
 import StackScriptTableHead from './PanelContent/StackScriptTableHead';
 import StackScriptsSection from './StackScriptsSection';
@@ -56,8 +56,6 @@ interface Props {
   currentUser: string;
   category: 'my' | 'account' | 'linode' | 'community';
   publicImages: Linode.Image[];
-  selectedStackScriptIDFromQuery: number | undefined;
-  shouldPreSelectStackScript: boolean;
   resetStackScriptSelection: () => void;
 }
 
@@ -116,7 +114,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SelectStackScriptPanelContent extends React.Component<CombinedProps, State> {
   state: State = {
-    selected: this.props.selectedStackScriptIDFromQuery || undefined,
+    selected: undefined,
     currentPage: 1,
     loading: true,
     gettingMoreStackScripts: false,
@@ -150,7 +148,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   getDataAtPage = (page: number,
     filter: any = this.state.currentFilter,
     isSorting: boolean = false) => {
-    const { request, currentUser, category, selectedStackScriptIDFromQuery } = this.props;
+    const { request, currentUser, category } = this.props;
     this.setState({ gettingMoreStackScripts: true, isSorting });
 
     const filteredUser = (category === 'linode') ? 'linode' : currentUser;
@@ -191,33 +189,15 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
           this.getNext();
           return;
         }
-        /*
-        * END @TODO
-        */
 
-        /*
-        * We need to further clean up the data because when we are preselecting
-        * a stackscript based on the URL query string, it's possible for the
-        * stackscript to appear again on the first page or any subsequent page
-        * so we need to filter out that stackscript so we don't run into
-        * the duplicate key error
-        */
-        const cleanedData = (!!selectedStackScriptIDFromQuery)
-          ? newDataWithoutDeprecatedDistros.filter((stackScript, index) => {
-            if (index !== 0) {
-              return stackScript.id !== selectedStackScriptIDFromQuery;
-            }
-            return stackScript;
-          })
-          : newDataWithoutDeprecatedDistros;
         this.setState({
-          listOfStackScripts: cleanedData,
+          listOfStackScripts: newDataWithoutDeprecatedDistros,
           gettingMoreStackScripts: false,
           loading: false,
           isSorting: false,
           getMoreStackScriptsFailed: false,
         });
-        return cleanedData;
+        return newDataWithoutDeprecatedDistros;
       })
       .catch((e: any) => {
         if (!this.mounted) { return; }
@@ -227,36 +207,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   }
 
   componentDidMount() {
-    const { selectedStackScriptIDFromQuery, shouldPreSelectStackScript,
-      onSelect } = this.props;
     this.mounted = true;
-    /*
-    * if the user is coming to the StackScripts panel from a query string
-    * we need to first request the stackscript that's in the query string
-    * and then prepend it to the first page request.
-    * The only issue here is that we could end up with duplicate entries
-    * in the list of data, but this is handled in getDataAtPage()
-    */
-    if (!!selectedStackScriptIDFromQuery && shouldPreSelectStackScript) {
-      return getStackScript(selectedStackScriptIDFromQuery)
-        .then(data => {
-          this.setState({ listOfStackScripts: [data] });
-          if (!!onSelect) {
-            // preselect our stackscript here
-            onSelect(data.id, data.label, data.username,
-              data.images, data.user_defined_fields)
-          }
-          return data;
-        })
-        .then(data => {
-          this.getDataAtPage(0)
-        })
-        .catch(e => {
-          if (!this.mounted) { return; }
-          this.props.resetStackScriptSelection();
-          this.setState({ error: e.response });
-        });
-    }
     return this.getDataAtPage(0);
   }
 

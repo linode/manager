@@ -19,12 +19,13 @@ export const getAccountStackScripts = (currentUser: string, params?: any, filter
     if (response.data.length === 1) {
       return Promise.resolve(emptyStackScriptsResult); 
     }
+
     return getStackscripts(params, {
       ...filter,
-      '+or': response.data.reduce((acc, user) => (
-        user.username === currentUser ? acc : [...acc, { username: user.username }]),
-        []
-      ),
+      '+and': [{'+or': response.data.reduce((acc, user) => (
+          user.username === currentUser ? acc : [...acc, { username: user.username }]
+        ), [])
+      }],
     });
   });
 
