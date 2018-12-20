@@ -75,7 +75,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-class ActionMenu extends React.Component<CombinedProps, State> {
+export class ActionMenu extends React.Component<CombinedProps, State> {
   state = {
     actions: [],
     anchorEl: undefined,
