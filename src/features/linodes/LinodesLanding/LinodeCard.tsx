@@ -321,8 +321,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       linodeStatus, linodeBackups, toggleConfirmation, typesData, linodeType,
       linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4,
       linodeIpv6, imageLabel, linodeTags } = this.props;
-    const loading = linodeInTransition(linodeStatus, recentEvent);
-    const value = (recentEvent && recentEvent.percent_complete) || 1;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -345,18 +343,18 @@ class LinodeCard extends React.Component<CombinedProps, State> {
           />
           <Divider />
           <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
-            {loading && <Grid container className={classes.cardSection}>
-              <Grid item>
-                <Typography variant="body2" className={classes.statusText}>
-                  {transitionText(linodeStatus, recentEvent)}: {value}%
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={6} xl={6}>
-                <div className={classes.statusProgress}>
-                  <LinearProgress value={value} />
-                </div>
-              </Grid>
-            </Grid>}
+            {
+              recentEvent && linodeInTransition(linodeStatus, recentEvent) &&
+              <ProgressDisplay
+                text={transitionText(linodeStatus, recentEvent)}
+                progress={recentEvent.percent_complete}
+                classes={{
+                  statusProgress: classes.statusProgress,
+                  statusText: classes.statusText,
+                  cardSection: classes.cardSection,
+                }}
+              />
+            }
             <div className={classes.cardSection} data-qa-linode-summary>
               {typesData && `${displayType(linodeType, typesData || [])}: `}
               {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
@@ -416,3 +414,28 @@ export default compose(
   withStyles(styles, { withTheme: true }),
   withTypes,
 )(LinodeCard) as React.ComponentType<Props>;
+
+const ProgressDisplay: React.StatelessComponent<{
+  progress: null | number;
+  text: string;
+  classes: {
+    cardSection: string;
+    statusProgress: string;
+    statusText: string;
+  };
+}> = (props) => {
+  const { classes, text, progress } = props;
+  const displayProgress = progress ? `${progress}%` : ``;
+  return (
+    <Grid container className={classes.cardSection}>
+      <Grid item>
+        <Typography variant="body2" className={classes.statusText}>{text}: {displayProgress}</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} lg={6} xl={6}>
+        <div className={classes.statusProgress}>
+          {progress ? <LinearProgress value={progress} /> : <LinearProgress variant="indeterminate" />}
+        </div>
+      </Grid>
+    </Grid>
+  );
+};

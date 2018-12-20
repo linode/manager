@@ -121,7 +121,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      {loading && <LinodeRowLoading linodeId={linodeId} linodeRecentEvent={linodeRecentEvent}>
+      {loading && <LinodeRowLoading linodeStatus={linodeStatus} linodeId={linodeId} linodeRecentEvent={linodeRecentEvent}>
         {headCell}
       </ LinodeRowLoading>}
       <TableRow
