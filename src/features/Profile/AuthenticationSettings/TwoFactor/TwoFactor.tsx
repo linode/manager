@@ -1,7 +1,8 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
-import { compose, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -12,6 +13,7 @@ import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
+import ToggleState from 'src/components/ToggleState';
 import { disableTwoFactor, getTFAToken } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -55,6 +57,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   clearState: () => void;
+  twoFactor?: boolean;
+  username?: string;
+  updateProfile: (profile: Partial<Linode.Profile>) => void;
 }
 
 interface ConfirmDisable {
@@ -305,13 +310,19 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
             </div>
           }
           {twoFactorEnabled && showQRCode && username && twoFactorConfirmed !== undefined &&
-            <EnableTwoFactorForm
-              secret={secret}
-              username={username}
-              loading={loading}
-              onSuccess={this.confirmToken}
-              twoFactorConfirmed={twoFactorConfirmed}
-            />
+            <ToggleState>
+              {({ open: dialogOpen, toggle: toggleDialog }) => (
+                <EnableTwoFactorForm
+                  secret={secret}
+                  username={username}
+                  loading={loading}
+                  onSuccess={this.confirmToken}
+                  twoFactorConfirmed={twoFactorConfirmed}
+                  toggleDialog={toggleDialog}
+                  dialogOpen={dialogOpen}
+                />
+              )}
+            </ToggleState>
           }
         </Paper>
         <ConfirmationDialog
@@ -358,6 +369,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<any, any, any>(styled, connected);
-
-export default enhanced(TwoFactor);
+export default compose<CombinedProps, Props>(
+  styled,
+  connected
+)(TwoFactor);

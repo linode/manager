@@ -27,6 +27,8 @@ interface Props {
   username: string;
   twoFactorConfirmed: boolean;
   onSuccess: () => void;
+  dialogOpen: boolean;
+  toggleDialog: () => void;
 }
 
 interface State {
