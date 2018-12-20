@@ -7,7 +7,7 @@ import { equals, update } from 'ramda';
 export const findAndReplaceOrAppend = <T extends { id: number | string }>(list: T[], item: T): T[] => {
   const foundId = findById(list, item.id);
 
-  if (foundId) {
+  if (foundId > -1) {
     if(!equals(list[foundId], item)){
       return update(foundId, item, list);
     }
@@ -18,7 +18,7 @@ export const findAndReplaceOrAppend = <T extends { id: number | string }>(list: 
  return [...list, item];
 }
 
-export const findById = <T extends { id?: number | string }>(list: T[], id: number | string): undefined | number => {
+export const findById = <T extends { id?: number | string }>(list: T[], id: number | string): number => {
   let idx = 0
   const len = list.length;
 
@@ -29,5 +29,5 @@ export const findById = <T extends { id?: number | string }>(list: T[], id: numb
     }
   }
 
-  return;
+  return -1;
 };
