@@ -198,3 +198,24 @@ export const createUnattachedVolumes = (volumeObjArray) => {
         browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal)
     });
 }
+
+export const switchTab = () => {
+    browser.waitUntil(() => {
+        return browser.getTabIds().length === 2;
+    }, constants.wait.normal);
+    browser.pause(2000);
+    const tabs = browser.getTabIds();
+    const manager = tabs[0];
+    const newTab = tabs[1]
+    browser.switchTab(newTab);
+}
+
+export const getDistrobutionLabel = (distrobutionTags) => {
+    const token = readToken(browser.options.testUser);
+    let distrobutionLabel = [];
+    distrobutionTags.forEach((distro) => {
+        const distroDetails = browser.getLinodeImage(token,distro.trim());
+        distrobutionLabel.push(distroDetails.label);
+    });
+    return distrobutionLabel;
+}

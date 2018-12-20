@@ -67,8 +67,8 @@ describe('Create Linode From StackScript - Tags Suite', () => {
         const label = `L${timestamp()}`;
         ConfigureLinode.linodeStackScriptTab.click();
         ConfigureLinode.progressBar.waitForVisible(constants.wait.normal, true);
-        ConfigureLinode.stackScriptRow(stackscript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRow(stackscript).click();
+        ConfigureLinode.stackScriptRowByTitle(stackscript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(stackscript).click();
         ConfigureLinode.images[0].click();
         ConfigureLinode.regions[0].click();
         ConfigureLinode.plans[0].click();

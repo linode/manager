@@ -26,11 +26,25 @@ class ListStackScripts extends Page {
     get stackScriptRows() { return $$('[data-qa-table-row]'); }
     get stackScriptTitle() { return $('[data-qa-stackscript-title]'); }
     get stackScriptDeploys() { return $('[data-qa-stackscript-deploys]'); }
+    get stackScriptCompatibleDistrobutions() { return $('[data-qa-stackscript-images]'); }
     get stackScriptActionMenu() { return $('[data-qa-action-menu]'); }
     get stackScriptActionMenuLink() { return $('[data-qa-action-menu-link]'); }
     get stackScriptRevision() { return $('[data-qa-stackscript-revision]'); }
 
     get docsHelperLink() { return $('[data-qa-doc]'); }
+
+    stackScriptRowByTitle(title){
+        const selector = this.stackScriptRow.selector.replace(']', '');
+        return $(`${selector}="${title}"]`);
+    }
+
+    stackScriptDetailPage(title){
+        if(title){
+            this.stackScriptRowByTitle(title).$('a').click();
+        }else{
+            this.stackScriptRow.$('a').click();
+        }
+    }
 
     baseElementsDisplay() {
         this.header.waitForVisible(constants.wait.normal);
@@ -52,7 +66,6 @@ class ListStackScripts extends Page {
     stackScriptMetadataDisplay() {
         return ConfigureLinode.stackScriptMetadataDisplay();
     }
-
 }
 
 export default new ListStackScripts();

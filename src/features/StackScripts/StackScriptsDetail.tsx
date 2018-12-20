@@ -46,7 +46,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 type CombinedProps = RouteProps & WithStyles<ClassNames> & SetDocsProps;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
-  
+
   state: State = {
     loading: true,
     stackScript: undefined
@@ -97,6 +97,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
               type="primary"
               className={classes.button}
               href={`/linodes/create?type=fromStackScript&stackScriptID=${stackScript.id}&stackScriptUsername=${stackScript.username}`}
+              data-qa-stack-deploy
             >
               Deploy New Linode
             </Button>

@@ -86,10 +86,10 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="h1" component="h2">
+        <Typography role="header" variant="h1" component="h2" data-qa-stack-title={label}>
           { label }
         </Typography>
-        <Typography variant="h3" className={classes.author}>
+        <Typography variant="h3" className={classes.author} data-qa-stack-author={username}>
           by&nbsp;
           <ExternalLink text={username} link={`https://www.linode.com/stackscripts/profile/${username}`} data-qa-community-stack-link/>
         </Typography>

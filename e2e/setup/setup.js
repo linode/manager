@@ -451,3 +451,17 @@ exports.getGlobalSettings = (token) => {
             });
     });
 }
+
+exports.getLinodeImage = (token, imageId) => {
+  return new Promise((resolve, reject) => {
+      const endpoint = `/images/linode/${imageId}`;
+
+      return getAxiosInstance(token)
+          .get(endpoint)
+          .then(response => resolve(response.data))
+          .catch(error => {
+              console.error("Error", error);
+              reject(error);
+          });
+  });
+}
