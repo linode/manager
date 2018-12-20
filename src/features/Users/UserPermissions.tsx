@@ -743,8 +743,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <Grid item>
             <Typography role="header" variant="h2">
               {restricted
-                ? 'On (This user has limited access to this account).'
-                : 'Off (This user has full access to this account).'
+                ? 'On'
+                : 'Off'
               }
             </Typography>
           </Grid>
