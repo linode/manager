@@ -12,8 +12,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props extends TableCellProps {
   active: boolean;
   label: string;
-  direction: 'asc' | 'desc';
-  handleClick: (key: string, order?: 'asc' | 'desc') => void;
+  direction?: 'asc' | 'desc';
+  handleClick?: (key: string, order?: 'asc' | 'desc') => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -25,7 +25,10 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
     const nextOrder = (direction === 'asc')
       ? 'desc'
       : 'asc';
-    return handleClick(label.toLowerCase(), nextOrder);
+
+    if (handleClick) {
+      return handleClick(label.toLowerCase(), nextOrder);
+    }
   }
 
   render() {

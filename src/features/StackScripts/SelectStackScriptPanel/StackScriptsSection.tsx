@@ -6,6 +6,7 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import SelectionRow from 'src/components/SelectionRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
+import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root' | 'loadingWrapper';
@@ -45,11 +46,11 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
 
   const renderStackScriptTable = () => {
     return (!!onSelect)
-    ? selectStackScript()
-    : listStackScript()
+    ? selectStackScript
+    : listStackScript
   }
 
-  const selectStackScript = () => (s: Linode.StackScript.Response) => (
+  const selectStackScript = (s: Linode.StackScript.Response) => (
     <SelectionRow
       key={s.id}
       label={s.label}
@@ -68,7 +69,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     />
   )
 
-const listStackScript = () => (s: Linode.StackScript.Response) => (
+const listStackScript = (s: Linode.StackScript.Response) => (
     <SelectionRow
       key={s.id}
       label={s.label}
@@ -122,16 +123,6 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
       }
     </TableBody>
   );
-};
-
-/*
-* @TODO Deprecate once we have a reliable way of mapping
-* the slug to the display name
-*/
-const stripImageName = (images: string[]) => {
-  return images.map((image: string) => {
-    return image.replace('linode/', '');
-  });
 };
 
 const styled = withStyles(styles);

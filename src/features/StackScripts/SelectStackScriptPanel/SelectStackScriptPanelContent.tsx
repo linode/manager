@@ -54,8 +54,7 @@ interface Props {
   onSelect?: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   currentUser: string;
-  isLinodeStackScripts?: boolean;
-  isCommunityStackScripts?: boolean;
+  category: 'my' | 'account' | 'linode' | 'community';
   publicImages: Linode.Image[];
   selectedStackScriptIDFromQuery: number | undefined;
   shouldPreSelectStackScript: boolean;
@@ -151,10 +150,10 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   getDataAtPage = (page: number,
     filter: any = this.state.currentFilter,
     isSorting: boolean = false) => {
-    const { request, currentUser, isLinodeStackScripts, selectedStackScriptIDFromQuery } = this.props;
+    const { request, currentUser, category, selectedStackScriptIDFromQuery } = this.props;
     this.setState({ gettingMoreStackScripts: true, isSorting });
 
-    const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
+    const filteredUser = (category === 'linode') ? 'linode' : currentUser;
 
     return request(
       filteredUser,
@@ -548,11 +547,10 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     const {
       request,
       currentUser,
-      isLinodeStackScripts,
-      isCommunityStackScripts
+      category
     } = this.props;
     const { currentFilter } = this.state;
-    const filteredUser = (isLinodeStackScripts) ? 'linode' : currentUser;
+    const filteredUser = (category === 'linode') ? 'linode' : currentUser;
 
     const lowerCaseValue = value.toLowerCase().trim();
 
@@ -562,7 +560,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
      * only allow for advanced search if we're on the community
      * stackscripts tab
      */
-    if (!!isCommunityStackScripts &&
+    if (category === 'community' &&
       (
         lowerCaseValue.includes('username:')
       || lowerCaseValue.includes('label:')

@@ -113,6 +113,7 @@ export interface Props {
   images: string[];
   deploymentsActive: number;
   updated: string;
+  disabledCheckedSelect?: boolean;
   onSelect?: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   showDeployLink?: boolean;
@@ -136,6 +137,7 @@ export class SelectionRow extends React.Component<CombinedProps, {}> {
     const {
       classes,
       onSelect,
+      disabledCheckedSelect,
       checked,
       label,
       description,
@@ -217,6 +219,11 @@ export class SelectionRow extends React.Component<CombinedProps, {}> {
           {onSelect &&
             <TableCell>
               <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
+            </TableCell>
+          }
+          {disabledCheckedSelect &&
+            <TableCell>
+              <Radio checked disabled onChange={onSelect} id={`${stackScriptID}`} />
             </TableCell>
           }
           <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>

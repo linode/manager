@@ -51,8 +51,8 @@ type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 interface Props {
   isSelecting?: boolean;
-  handleClickTableHeader: (value: string) => void;
-  sortOrder: SortOrder;
+  handleClickTableHeader?: (value: string) => void;
+  sortOrder?: SortOrder;
   currentFilterType: CurrentFilter | null;
 }
 
