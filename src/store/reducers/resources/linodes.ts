@@ -3,7 +3,7 @@ import { Dispatch, Reducer } from "redux";
 import { ThunkAction } from 'redux-thunk';
 import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getLinode, getLinodes } from "src/services/linodes";
-import { findAndReplace } from 'src/utilities/findAndReplace';
+import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
@@ -86,7 +86,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     return {
       ...state,
-      entities: findAndReplace(entities, payload)
+      entities: findAndReplaceOrAppend(entities, payload)
     }
   }
 

@@ -2,15 +2,20 @@ import { equals, update } from 'ramda';
 
 /**
  * Will find and replace an item, by ID, only if the item is different than the existing.
+ * If it's not found in the list, it will be appended.
  */
-export const findAndReplace = <T extends { id: number | string }>(list: T[], item: T): T[] => {
+export const findAndReplaceOrAppend = <T extends { id: number | string }>(list: T[], item: T): T[] => {
   const foundId = findById(list, item.id);
 
-  if (foundId && !equals(list[foundId], item)) {
-    return update(foundId, item, list);
+  if (foundId) {
+    if(!equals(list[foundId], item)){
+      return update(foundId, item, list);
+    }
+
+    return list;
   }
 
-  return list;
+ return [...list, item];
 }
 
 export const findById = <T extends { id?: number | string }>(list: T[], id: number | string): undefined | number => {
