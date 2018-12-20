@@ -6,6 +6,7 @@ declare interface ApplicationState {
   __resources: {
     profile: RequestableData<Linode.Profile>,
     accountSettings: RequestableData<Linode.AccountSettings>
+    account: RequestableData<Linode.Account>
   },
   authentication: AuthState;
   backups: RequestableData<Linode.Linode[]>;
