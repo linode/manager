@@ -30,11 +30,6 @@ export type Order = 'asc' | 'desc';
 
 export type OrderBy = undefined | string;
 
-interface Filter {
-  order: Order;
-  orderBy: string;
-}
-
 interface State<T={}> {
   count: number;
   error?: Error;
@@ -56,7 +51,7 @@ export interface PaginationProps<T> extends State<T> {
   request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: HandleOrderChange;
   handleSearch: (newFilter: any) => void;
-  onDelete: (defaultSortOrder?: Filter) => void;
+  onDelete: () => void;
 }
 
 const asc: 'asc' = 'asc';
@@ -76,7 +71,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       searching: false,
     }
 
-    private onDelete = (defaultSortOrder?: Filter) => {
+    private onDelete = () => {
       const { page, data } = this.state;
 
       /*
@@ -94,16 +89,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
        * page and pages states
        */
       if (data && data.length === 1) {
-        /** if we've provided a sort order, run handleOrderChange() */
-        if (!!defaultSortOrder) {
-          return this.handleOrderChange(defaultSortOrder.orderBy, defaultSortOrder.order, page - 1)
-        }
         return this.handlePageChange(page - 1);
-      }
-
-      /** if we've provided a default sort order, fetch with the filter */
-      if (!!defaultSortOrder) {
-        return this.handleOrderChange(defaultSortOrder.orderBy, defaultSortOrder.order, page);
       }
 
       return this.request();

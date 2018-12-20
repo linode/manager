@@ -42,7 +42,7 @@ type CombinedProps = PaginationProps<Linode.Device>
 
 class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
   refreshList = () => {
-    this.props.onDelete({ orderBy: 'expiry', order: 'asc' });
+    this.props.onDelete();
   }
 
   render() {
