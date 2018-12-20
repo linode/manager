@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.42.0] - 2018.12.20
+### Added:
+- Users can now display their Linodes grouped by its tags.
+- Users can import existing display groups from Linodes and Domains as tags from the dashboard.
+ - For example; If a user were to have three Linodes in the display group "production", a new tag
+ of "production" would be created and applied to those three Linodes.
+ - The existing display groups remain unchanged.
+
+### Fixed:
+- Linode chart statistics sometimes cause a crash.
+- Viewing one StackScript, out of 1100, caused the application to crash. Gee thanks!
+- URL encoded text was being injected into the search bar.
+
 ## [0.42.0] - 2018.12.17
 
 ### Added:
@@ -64,7 +77,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Tags can be added/removed from an existing NodeBalancer
 
 ##Changed:
-- Search results page link appears first in the search bar results   
+- Search results page link appears first in the search bar results
 - Reverted StackScript table pagination
 
 ## [0.40.0] - 2018.12.03
