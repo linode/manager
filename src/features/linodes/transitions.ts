@@ -7,7 +7,8 @@ export const transitionStatus = [
   'migrating',
   'resizing',
   'rebuilding',
-  'restoring'
+  'restoring',
+  'cloning',
 ];
 
 export const transitionAction = [

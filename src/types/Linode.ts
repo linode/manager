@@ -7,7 +7,7 @@ namespace Linode {
     created: string;
     region: string;
     image: string | null;
-    group?: string;
+    group: string;
     ipv4: string[];
     ipv6: string;
     label: string;
@@ -17,12 +17,10 @@ namespace Linode {
     hypervisor: Hypervisor;
     specs: LinodeSpecs;
     watchdog_enabled: boolean;
-    recentEvent?: Linode.Event;
     tags: string[];
-  }
-
-  export interface EnhancedLinode extends Linode.Linode {
+    /** Added by UI */
     recentEvent?: Linode.Event;
+    notifications?: Linode.Notification[];
     notification?: string;
     mostRecentBackup?: string;
   }

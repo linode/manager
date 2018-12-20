@@ -32,11 +32,13 @@ const UPDATE_EVENTS_AS_SEEN = `UPDATE_EVENTS_AS_SEEN`;
 
 const actionCreator = actionCreatorFactory(`@@manager/events`);
 
-const addEvents = actionCreator<Event[]>(ADD_EVENTS);
+export const addEvents = actionCreator<Event[]>(ADD_EVENTS);
 
-const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
+export const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
 
 export const actions = { addEvents, updateEventsAsSeen };
+
+
 
 /** Reducer */
 export default (state = defaultState, action: AnyAction) => {
@@ -45,15 +47,15 @@ export default (state = defaultState, action: AnyAction) => {
     const { payload: events } = action;
     const {
       events: prevEvents,
-      inProgressEvents: prevInProgressEvents
+      inProgressEvents: prevInProgressEvents,
+      mostRecentEventTime,
     } = state;
     const updatedEvents = updateEvents(prevEvents, events);
 
     return {
       ...state,
       events: updatedEvents,
-      /** We're iterating over the new events since it will always contain the most recent events. */
-      mostRecentEventTime: events.reduce(mostRecentCreated, epoch),
+      mostRecentEventTime: events.reduce(mostRecentCreated, mostRecentEventTime),
       countUnseenEvents: getNumUnseenEvents(updatedEvents),
       inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
     };
@@ -69,6 +71,7 @@ export default (state = defaultState, action: AnyAction) => {
 
   return state;
 };
+
 
 
 /** Helpers */
@@ -122,7 +125,7 @@ export const updateEvents = compose(
   /** Nested compose to get around Ramda's shotty typing. */
   compose(
     /** Take only the last 25 events. */
-    updateRight<Event[], Event[]>((prevEvents, events) => take(25, events)),
+    updateRight<Event[], Event[]>((prevEvents, events) => take(100, events)),
 
     /** Marked events "_deleted". */
     updateRight<Event[], Event[]>((prevEvents, events) => setDeletedEvents(events)),
@@ -165,6 +168,8 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) => arr
 export const isInProgressEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete < 100;
 
 export const isCompletedEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete === 100;
+
+export const isEntityEvent = (e: Linode.Event): e is Linode.EntityEvent => Boolean(e.entity);
 
 /**
  * Iterate through new events.

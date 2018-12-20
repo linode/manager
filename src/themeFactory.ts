@@ -163,6 +163,7 @@ const themeDefaults: ThemeOptions = {
     blueDTwhite: '#3683DC',
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
+    toggleActive: '#606469',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,

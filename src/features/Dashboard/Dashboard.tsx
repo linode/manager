@@ -1,18 +1,26 @@
-import { compose, pathOr } from 'ramda';
+
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import { handleOpen, requestLinodesWithoutBackups } from 'src/store/reducers/backupDrawer';
+import TagImportDrawer from 'src/features/TagImport';
+import { handleOpen } from 'src/store/reducers/backupDrawer';
+import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
+import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
+import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
+
 
 type ClassNames = 'root';
 
@@ -25,28 +33,39 @@ interface StateProps {
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
+  entitiesWithGroupsToImport: GroupedEntitiesForImport;
 }
 
 interface DispatchProps {
   actions: {
-    getLinodesWithoutBackups: () => void;
     openBackupDrawer: () => void;
+    openImportDrawer: () => void;
   }
 }
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames> & WithTheme;
 
-export class Dashboard extends React.Component<CombinedProps, {}> {
+const shouldDisplayGroupImportCTA = (groupedEntities: GroupedEntitiesForImport) => {
+  const userHasDisabledCTA = storage.hideGroupImportCTA.get();
+  const { linodes, domains } = groupedEntities;
+  return (
+    !userHasDisabledCTA &&
+    (linodes.length > 0 || domains.length > 0)
+  )
+}
 
-  render() {
-    const {
-      accountBackups,
-      actions: { openBackupDrawer },
-      backupError,
-      linodesWithoutBackups,
-      managed,
-    } = this.props;
-    return (
+export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
+  const {
+    accountBackups,
+    actions: { openBackupDrawer, openImportDrawer },
+    backupError,
+    linodesWithoutBackups,
+    managed,
+    entitiesWithGroupsToImport
+  } = props;
+
+  return (
+    <React.Fragment>
       <Grid container spacing={24}>
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
@@ -67,34 +86,43 @@ export class Dashboard extends React.Component<CombinedProps, {}> {
               openBackupDrawer={openBackupDrawer}
             />
           }
+          {shouldDisplayGroupImportCTA(entitiesWithGroupsToImport) &&
+            <ImportGroupsCard
+              theme={props.theme.name}
+              openImportDrawer={openImportDrawer}
+              dismiss={storage.hideGroupImportCTA.set}
+            />
+          }
           <BlogDashboardCard />
         </Grid>
       </Grid>
-    );
-  }
+      <TagImportDrawer />
+    </React.Fragment>
+  );
 }
 
 const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
   accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
-  linodesWithoutBackups: pathOr([],['backups', 'data'], state),
+  linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
+  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state), // <-- Memoized selector
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
   return {
     actions: {
-      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
-      openBackupDrawer: () => dispatch(handleOpen())
+      openBackupDrawer: () => dispatch(handleOpen()),
+      openImportDrawer: () => dispatch(openGroupDrawer())
     }
   };
 };
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const styled = withStyles(styles);
+const styled = withStyles(styles, { withTheme: true });
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected,
 )(Dashboard);

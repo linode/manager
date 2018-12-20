@@ -24,6 +24,8 @@ export const setStorage = (key: string, value: string) => {
 const THEME = 'themeChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
+const GROUP_LINODES = 'GROUP_LINODES';
+const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
@@ -45,7 +47,11 @@ export const storage = {
     linode: {
       get: (): LinodeView => getStorage(LINODE_VIEW),
       set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
-    }
+    },
+    grouped: {
+      get: (): 'true' | 'false' => getStorage(GROUP_LINODES),
+      set: (v: 'true' | 'false') => setStorage(GROUP_LINODES, v),
+    },
   },
   loginCloudManager: {
     get: () => Cookies.get('loginCloudManager'),
@@ -55,6 +61,10 @@ export const storage = {
     ) =>
       Cookies.set('loginCloudManager', v, options),
   },
+  hideGroupImportCTA: {
+    get: (): 'true' | 'false' =>  getStorage(HIDE_DISPLAY_GROUPS_CTA),
+    set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, 'true')
+  }
 }
 
 export const { theme, notifications, views } = storage;

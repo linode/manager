@@ -11,7 +11,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-import { withTypes } from 'src/context/types';
 import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
@@ -79,10 +78,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   };
 };
 
-interface TypesContextProps {
-  typesData?: Linode.LinodeType[];
-}
-
 interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
@@ -99,9 +94,10 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = LinodeContextProps &
-  TypesContextProps &
-  WithStyles<ClassNames>;
+type CombinedProps =
+ & LinodeContextProps
+ & WithTypesProps
+ & WithStyles<ClassNames>;
 
 const chartHeight = 300;
 
@@ -649,7 +645,14 @@ const imageContext = withImage((context) => ({
   imageData: context.data!,
 }))
 
-const typesContext = withTypes(({ data: typesData }) => ({ typesData }))
+
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
+}));
 
 interface StateProps {
   volumesData?: Linode.Volume[]
@@ -664,7 +667,7 @@ const connected = connect(mapStateToProps);
 const enhanced = compose(
   connected,
   styled,
-  typesContext,
+  withTypes,
   linodeContext,
   imageContext,
 );
