@@ -115,6 +115,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Logo width={115} height={43} />
             </Grid>
             <Grid item xs={6}>
+              <Typography variant='body2'>Invoice Date: {date}</Typography>
               <Typography variant="subtitle1">Remit To:</Typography>
               <Typography variant='body2'>Linode, LLC</Typography>
               <Typography variant='body2'>249 Arch St.</Typography>
@@ -130,7 +131,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Typography variant='body2'>{city},{state}, {zip}, {country}</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant='h3' className={classes.invoiceHeader}>Invoice Date: {date}</Typography>
+              <Typography variant='h3' className={classes.invoiceHeader}>Invoice: #{invoice.id}</Typography>
               <InvoiceTable loading={false} items={items} errors={errors} />
             </Grid>
             <Grid item xs={12}>
