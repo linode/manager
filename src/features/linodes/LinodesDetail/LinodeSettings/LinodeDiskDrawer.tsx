@@ -228,9 +228,11 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
         <Grid container direction="row">
-          <Grid item>
-            <ModeSelect modes={modeList} selected={selectedMode} onChange={this.onModeChange} />
-          </Grid>
+          {mode === 'create' &&
+            <Grid item>
+              <ModeSelect modes={modeList} selected={selectedMode} onChange={this.onModeChange} />
+            </Grid>
+          }
           <Grid item xs={12}>
             {generalError && <Notice error spacingBottom={8} errorGroup="linode-disk-drawer" text={generalError} />}
           </Grid>
