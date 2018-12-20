@@ -45,28 +45,30 @@ export class Footer extends React.PureComponent<CombinedProps> {
     const { classes } = this.props;
 
     return (
-      <Grid container spacing={32} className={classes.container}>
-        <Grid item className={classes.version}>
-          {this.renderVersion(classes.link)}
+      <footer>
+        <Grid container spacing={32} className={classes.container}>
+          <Grid item className={classes.version}>
+            {this.renderVersion(classes.link)}
+          </Grid>
+          <Grid item>
+            <a
+              className={classes.link}
+              href="https://developers.linode.com"
+              target="_blank"
+            >
+              API Reference
+            </a>
+          </Grid>
+          <Grid item style={{ paddingLeft: 0 }}>
+            <a
+              className={classes.link}
+              href="mailto:feedback@linode.com"
+            >
+              Provide Feedback
+            </a>
+          </Grid>
         </Grid>
-        <Grid item>
-          <a
-            className={classes.link}
-            href="https://developers.linode.com"
-            target="_blank"
-          >
-            API Reference
-          </a>
-        </Grid>
-        <Grid item style={{ paddingLeft: 0 }}>
-          <a
-            className={classes.link}
-            href="mailto:feedback@linode.com"
-          >
-            Provide Feedback
-          </a>
-        </Grid>
-      </Grid>
+      </footer>
     );
   }
 

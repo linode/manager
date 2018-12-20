@@ -25,8 +25,63 @@ body {
 }
 
 @media print {
+  /** Setting margins */       
+  @page { margin: 1cm }
+
   body {
-    background-color: #fff;
+    font: 13pt Georgia, "Times New Roman", Times, serif;
+    line-height: 1.3;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  #root {
+    width: 100%; 
+    margin: 0; 
+    float: none;
+  }
+
+  header,
+  footer,
+  svg {
+    display: none !important;
+  }
+
+  h1 {
+    font-size: 24pt;
+    color: #000 !important;
+  }
+  
+  h2, h3, h4 {
+    font-size: 14pt;
+    margin-top: 25px;
+    color: #000 !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tr {
+    display: table-row !important;
+  }
+
+  tbody > tr > td {
+    display: table-cell !important;
+    min-height: auto;
+    padding: 5px !important;
+    border-bottom: 1px solid #f4f4f4 !important;
+    color: #000 !important;
+  }
+
+  /* td > span:first-child {
+    display: none;
+  } */
+  
+  td > span:last-child {
+    text-align: left;
+    word-break: normal;
+    margin-left: 0;
   }
 }
 
