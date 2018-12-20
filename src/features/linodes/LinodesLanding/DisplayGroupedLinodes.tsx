@@ -1,3 +1,4 @@
+
 import { compose } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -181,13 +182,14 @@ const sortGroupedLinodes = (groups: GroupedBy<Linode.Linode>) => {
   }
 
   if (typeof foundUntaggedIndex === 'undefined') {
-    return groups;
+    return groups
+    .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1);
   }
 
   return [
     groups[foundUntaggedIndex],
     ...groups
       .filter(([tag]) => tag !== NONE)
-      .sort(([a], [b]) => a > b ? 0 : -1),
+      .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1),
   ];
 }
