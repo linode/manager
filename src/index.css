@@ -67,12 +67,6 @@ body {
     border-bottom: 1px solid #f4f4f4 !important;
     color: #000 !important;
   }
-
-  @media (max-width: 600px) {
-    td > span:first-child {
-      display: none;
-    }
-  }
   
   td > span:last-child {
     text-align: left;
