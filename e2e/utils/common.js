@@ -219,3 +219,4 @@ export const getDistrobutionLabel = (distrobutionTags) => {
     });
     return distrobutionLabel;
 }
+

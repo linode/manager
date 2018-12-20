@@ -133,6 +133,7 @@ class SupportSearchLanding extends React.Component<CombinedProps, State> {
         <Grid item>
           {searchError && <Notice error>{searchError}</Notice>}
           <TextField
+            data-qa-search-landing-input
             className={classes.searchBoxInner}
             placeholder="Search Linode documentation and community questions"
             value={query}

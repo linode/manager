@@ -63,7 +63,7 @@ const searchItem: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <ListItem className={classes.root} component="div">
+      <ListItem className={classes.root} component="div" data-qa-search-result={source}>
         <div className={classes.row}>
           <div className={classes.label} dangerouslySetInnerHTML={{__html: getLabel()}} />
           {!isFinal && <Arrow className={classes.icon} />}
