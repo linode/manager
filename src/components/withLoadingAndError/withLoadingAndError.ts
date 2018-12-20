@@ -11,6 +11,8 @@ export interface LoadingAndErrorHandlers {
   clearLoadingAndErrors: () => void;
 }
 
+export type Props = LoadingAndErrorHandlers & LoadingAndErrorState;
+
 type StateAndStateUpdaters = StateHandlerMap<LoadingAndErrorState> &
   LoadingAndErrorHandlers;
 

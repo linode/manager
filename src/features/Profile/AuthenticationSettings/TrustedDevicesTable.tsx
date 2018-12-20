@@ -23,14 +23,20 @@ interface Props {
   loading: boolean;
   error?: Error;
   data?: Linode.Device[];
-  triggerDeletion: (deviceId: number) => void;
+  setDevice: (deviceId: number) => void;
+  toggleDialog: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
+  triggerDeletion = (deviceId: number) => {
+    this.props.setDevice(deviceId);
+    this.props.toggleDialog();
+  }
+
   render() {
-    const { loading, error, data, triggerDeletion } = this.props;
+    const { loading, error, data } = this.props;
     if (loading) {
       return <TableRowLoading colSpan={4} />
     }
@@ -55,7 +61,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
               <TableCell>
                 <UntrustButton
                   deviceId={eachDevice.id}
-                  triggerDeletion={triggerDeletion}
+                  triggerDeletion={this.triggerDeletion}
                 />
               </TableCell>
             </TableRow>

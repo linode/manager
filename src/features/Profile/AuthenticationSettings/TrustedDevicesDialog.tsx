@@ -13,7 +13,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { LoadingAndErrorHandlers, LoadingAndErrorState, withLoadingAndError }
+import { Props as LoadingAndErrorProps, withLoadingAndError }
   from 'src/components/withLoadingAndError';
 
 type ClassNames = 'root';
@@ -30,8 +30,7 @@ interface Props {
 }
 
 type CombinedProps = Props
-  & LoadingAndErrorHandlers
-  & LoadingAndErrorState
+  & LoadingAndErrorProps
   & WithStyles<ClassNames>;
 
 class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {

@@ -1,2 +1,2 @@
-export { withLoadingAndError, LoadingAndErrorHandlers, LoadingAndErrorState }
+export { withLoadingAndError, LoadingAndErrorHandlers, LoadingAndErrorState, Props }
   from './withLoadingAndError';

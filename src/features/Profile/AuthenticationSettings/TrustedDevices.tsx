@@ -17,6 +17,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import ToggleState from 'src/components/ToggleState';
 
 import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
@@ -40,11 +41,6 @@ type CombinedProps = PaginationProps<Linode.Device>
   & DialogState;
 
 class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
-  handleDeleteDevice = (deviceId: number) => {
-    this.props.setSelectedDevice(deviceId)
-    this.props.toggleDialog()
-  }
-
   refreshList = () => {
     this.props.onDelete({ orderBy: 'expiry', order: 'asc' });
   }
@@ -60,54 +56,59 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
       pageSize,
       handlePageChange,
       handlePageSizeChange,
-      toggleDialog,
       selectedDeviceId,
-      dialogOpen
+      setSelectedDevice
     } = this.props;
     return (
-      <Paper className={classes.root}>
-        <Typography
-          role="header"
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
-          Trusted Devices
+      <ToggleState>
+        {({ open: dialogOpen, toggle: toggleDialog }) => (
+
+          <Paper className={classes.root}>
+            <Typography
+              role="header"
+              variant="h2"
+              className={classes.title}
+              data-qa-title
+            >
+              Trusted Devices
         </Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Device</TableCell>
-              <TableCell>Expires</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TrustedDevicesTable
-              error={error}
-              data={devices}
-              loading={loading}
-              triggerDeletion={this.handleDeleteDevice}
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Device</TableCell>
+                  <TableCell>Expires</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TrustedDevicesTable
+                  error={error}
+                  data={devices}
+                  loading={loading}
+                  toggleDialog={toggleDialog}
+                  setDevice={setSelectedDevice}
+                />
+              </TableBody>
+              {devices && devices.length > 0 &&
+                <PaginationFooter
+                  count={count}
+                  page={page}
+                  pageSize={pageSize}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                  eventCategory="Trusted Devices Panel"
+                />
+              }
+            </Table>
+            <Dialog
+              open={dialogOpen}
+              closeDialog={toggleDialog}
+              deviceId={selectedDeviceId}
+              refreshListOfDevices={this.refreshList}
             />
-          </TableBody>
-          {devices && devices.length > 0 &&
-            <PaginationFooter
-              count={count}
-              page={page}
-              pageSize={pageSize}
-              handlePageChange={handlePageChange}
-              handleSizeChange={handlePageSizeChange}
-              eventCategory="Trusted Devices Panel"
-            />
-          }
-        </Table>
-        <Dialog
-          open={dialogOpen}
-          closeDialog={toggleDialog}
-          deviceId={selectedDeviceId}
-          refreshListOfDevices={this.refreshList}
-        />
-      </Paper>
+          </Paper>
+        )}
+      </ToggleState>
     );
   }
 }
@@ -127,12 +128,10 @@ const withRequestOnMount = lifecycle<PaginationProps<Linode.Device>, {}>({
 })
 
 export interface DialogState {
-  dialogOpen: boolean;
   selectedDeviceId?: number;
 }
 
 export interface StateUpdaters {
-  toggleDialog: () => void;
   setSelectedDevice: (deviceId: number) => void;
 }
 
@@ -145,12 +144,8 @@ const withDialogHandlers = withStateHandlers<
   {}
   >(
     {
-      dialogOpen: false,
       selectedDeviceId: undefined
     }, {
-      toggleDialog: (state: DialogState) => () => ({
-        dialogOpen: !state.dialogOpen
-      }),
       setSelectedDevice: () => (deviceId: number) => ({
         selectedDeviceId: deviceId
       })
