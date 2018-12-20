@@ -15,11 +15,14 @@ import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { async } from 'src/store/reducers/resources/account';
 import InvoiceTable from './InvoiceTable';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper';
+type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'logoWrapper' | 'invoiceHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+  },
+  logoWrapper: {
+    textAlign: 'center',
   },
   titleWrapper: {
     display: 'flex',
@@ -32,6 +35,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       height: 34,
     },
   },
+  invoiceHeader: {
+    marginBottom: 25,
+  }
 });
 
 interface State {
@@ -105,11 +111,10 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
       <LinodeThemeWrapper>
         <Paper className={classes.root}>
           <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.logoWrapper}>
               <Logo width={115} height={43} />
             </Grid>
             <Grid item xs={6}>
-              <Typography variant='body2'>Invoice Date: {date}</Typography>
               <Typography variant="subtitle1">Remit To:</Typography>
               <Typography variant='body2'>Linode, LLC</Typography>
               <Typography variant='body2'>249 Arch St.</Typography>
@@ -125,6 +130,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Typography variant='body2'>{city},{state}, {zip}, {country}</Typography>
             </Grid>
             <Grid item xs={12}>
+              <Typography variant='h3' className={classes.invoiceHeader}>Invoice Date: {date}</Typography>
               <InvoiceTable loading={false} items={items} errors={errors} />
             </Grid>
             <Grid item xs={12}>
