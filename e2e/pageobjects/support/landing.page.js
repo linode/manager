@@ -4,7 +4,10 @@ import Page from '../page';
 
 export class SupportLanding extends Page {
     get searchHeading() { return $('[data-qa-search-heading]'); }
-    get searchField() { return $('[data-qa-enhanced-select-input]'); }
+    get searchField() { return $('[data-qa-enhanced-select-input] input'); }
+    get searchResultLinkType() { return 'data-qa-search-result'; }
+    get searchResult() { return `[${this.searchResultLinkType}]`; }
+    get searchResults() { return $$(this.searchResult); }
     get externalLink() { return '[data-qa-external-link]';}
     get docLink() { return $(` [data-qa-documentation-link] ${this.externalLink}`); }
     get docLinks() { return $$(` [data-qa-documentation-link] ${this.externalLink}`); }
@@ -26,6 +29,11 @@ export class SupportLanding extends Page {
         expect(this.communityTile.isVisible()).toBe(true);
         expect(this.adaTile.isVisible()).toBe(true);
         expect(this.supportTile.isVisible()).toBe(true);
+    }
+
+    search(query){
+      this.searchField.setValue('cloud');
+      browser.pause(750);
     }
 }
 
