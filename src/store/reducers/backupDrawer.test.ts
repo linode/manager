@@ -7,14 +7,6 @@ const error: BackupError = { linodeId: 123456, reason: 'Error'};
 const apiError = mockAPIFieldErrors([]);
 const linodes = [linode1, linode2];
 
-const mockFn = jest.fn();
-jest.mock('axios', () => ({
-  default: (args: any) => mockFn(args)
-}));
-
-mockFn.mockReturnValueOnce(Promise.resolve(1));
-mockFn.mockReturnValueOnce(Promise.reject());
-
 describe("Redux backups", () => {
   describe("reducer", () => {
     it("should handle OPEN", () => {
