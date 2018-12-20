@@ -209,3 +209,14 @@ export const switchTab = () => {
     const newTab = tabs[1]
     browser.switchTab(newTab);
 }
+
+export const getDistrobutionLabel = (distrobutionTags) => {
+    const token = readToken(browser.options.testUser);
+    let distrobutionLabel = [];
+    distrobutionTags.forEach((distro) => {
+        const distroDetails = browser.getLinodeImage(token,distro.trim());
+        distrobutionLabel.push(distroDetails.label);
+    });
+    return distrobutionLabel;
+}
+

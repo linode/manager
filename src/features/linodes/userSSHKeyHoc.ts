@@ -6,7 +6,7 @@ import { getUsers } from 'src/services/account';
 import { getSSHKeys } from 'src/services/profile';
 import { getEmailHash } from 'src/utilities/gravatar';
 
-interface State {
+export interface State {
   userSSHKeys: UserSSHKeyObject[];
 }
 

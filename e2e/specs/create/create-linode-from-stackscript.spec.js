@@ -44,8 +44,8 @@ describe('Create Linode - Create from StackScript Suite', () => {
         const linodeScript = 'StackScript Bash Library';
         const noticeMsg = 'Region is required.';
 
-        ConfigureLinode.stackScriptRow(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRow(linodeScript).click();
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
         browser.pause(500);
         ConfigureLinode.deploy.click();
         ConfigureLinode.waitForNotice(noticeMsg);
@@ -61,15 +61,15 @@ describe('Create Linode - Create from StackScript Suite', () => {
 
     it('should display user-defined fields on selection of a stackscript containing UD fields', () => {
         const wordPressStackScript = 'WordPress';
-        ConfigureLinode.stackScriptRow(wordPressStackScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRow(wordPressStackScript).click();
+        ConfigureLinode.stackScriptRowByTitle(wordPressStackScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(wordPressStackScript).click();
         ConfigureLinode.userDefinedFieldsHeader.waitForVisible(constants.wait.normal);
     });
 
     it('should create from stackscript', () => {
         const linodeScript = 'StackScript Bash Library';
-        ConfigureLinode.stackScriptRow(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRow(linodeScript).click();
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
         ConfigureLinode.plans[0].click();
 
         ConfigureLinode.images[0].click();
