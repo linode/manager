@@ -8,6 +8,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import { resetEventsPolling } from 'src/events';
 import { deleteLinode } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -32,6 +33,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['submitting']), true));
     deleteLinode(this.props.linodeId)
       .then((response) => {
+        resetEventsPolling();
         this.props.history.push('/linodes');
       })
       .catch((error) => {

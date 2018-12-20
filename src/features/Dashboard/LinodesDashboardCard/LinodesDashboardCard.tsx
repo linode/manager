@@ -1,7 +1,7 @@
-import { compose, take } from 'ramda';
+import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Subscription } from 'rxjs/Subscription';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -14,12 +14,10 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { withTypes } from 'src/context/types';
-import { events$ } from 'src/events';
 import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { displayType } from 'src/features/linodes/presentation';
-import { getLinodes } from 'src/services/linodes';
+import { isEntityEvent, isInProgressEvent } from 'src/store/reducers/events';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -56,66 +54,13 @@ interface ConnectedProps {
   types: Linode.LinodeType[]
 }
 
-interface TypesContext {
-  typesLoading: boolean;
-  typesData?: Linode.LinodeType[];
-}
+type CombinedProps =
+  ConnectedProps
+  & WithUpdatingLinodesProps
+  & WithTypesProps
+  & WithStyles<ClassNames>;
 
-interface State {
-  loading: boolean;
-  errors?: Linode.ApiFieldError[];
-  data?: Linode.Linode[];
-  results?: number;
-}
-
-type CombinedProps = ConnectedProps & TypesContext & WithStyles<ClassNames>;
-
-class LinodesDashboardCard extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: true,
-  };
-
-  mounted: boolean = false;
-
-  subscription: Subscription;
-
-  requestLinodes = (initial: boolean = false) => {
-    if (!this.mounted) { return; }
-
-    if (initial) {
-      this.setState({ loading: true });
-    }
-
-    getLinodes({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
-      .then(({ data, results }) => {
-        if (!this.mounted) { return; }
-        this.setState({
-          loading: false,
-          data: take(5, data),
-          results,
-        })
-      })
-      .catch((error) => {
-        this.setState({ loading: false, errors: [{ reason: 'Unable to load Linodes.' }] })
-      })
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-
-    this.requestLinodes(true);
-
-    this.subscription = events$
-      .filter(e => !e._initial)
-      .filter(e => Boolean(e.entity && e.entity.type === 'linode'))
-      .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
-      .subscribe(() => this.requestLinodes(false));
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    this.subscription.unsubscribe();
-  }
+class LinodesDashboardCard extends React.Component<CombinedProps> {
 
   render() {
     const { classes } = this.props;
@@ -132,23 +77,22 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderAction = () => this.state.results && this.state.results > 5
+  renderAction = () => this.props.linodes.length > 5
     ? <Link to={'/linodes'}>View All</Link>
     : null;
 
   renderContent = () => {
-    const { loading, data, errors } = this.state;
-    const { typesLoading } = this.props;
-    if (loading || typesLoading) {
+    const { loading, linodes, error } = this.props;
+    if (loading) {
       return this.renderLoading();
     }
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (error) {
+      return this.renderErrors(error);
     }
 
-    if (data && data.length > 0) {
-      return this.renderData(data);
+    if (linodes.length > 0) {
+      return this.renderData(linodes);
     }
 
     return this.renderEmpty();
@@ -183,7 +127,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
                   </Grid>
                   <Grid item>
                     <Typography variant="body1" data-qa-linode-plan>
-                      { typesData && displayType(type, typesData || []) }
+                      {typesData && displayType(type, typesData || [])}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -204,14 +148,58 @@ class LinodesDashboardCard extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const typesContext = withTypes((context) => ({
-  typesLoading: context.loading,
-  typesData: context.data,
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
 }));
 
-const enhanced = compose(styled, typesContext);
+interface WithUpdatingLinodesProps {
+  linodes: Linode.Linode[]
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
+}
 
-const isFoundInData = (id: number, data: Linode.Linode[] = []): boolean =>
-  data.reduce((result, linode) => result || linode.id === id, false);
+const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
+  return {
+    linodes: compose(
+      mergeEvents(state.events.events),
+      take(5),
+      sortBy(prop('label')),
+    )(state.__resources.linodes.entities),
+    loading: state.__resources.linodes.loading,
+    error: state.__resources.linodes.error,
+  };
+});
+
+const mergeEvents = (events: Linode.Event[]) => (linodes: Linode.Linode[]) =>
+  events
+    .reduce((updatedLinodes, event) => {
+      if (isWantedEvent(event)) {
+        return updatedLinodes.map(linode => event.entity.id === linode.id
+          ? { ...linode, recentEvent: event }
+          : linode
+        )
+      }
+
+      return updatedLinodes;
+    }, linodes);
+
+const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
+
+  if(!isInProgressEvent(e)){
+    return false;
+  }
+
+  if (isEntityEvent(e)) {
+    return e.entity.type === 'linode';
+  }
+
+  return false;
+}
+
+const enhanced = compose(withUpdatingLinodes, styled, withTypes);
 
 export default enhanced(LinodesDashboardCard) as React.ComponentType<{}>;

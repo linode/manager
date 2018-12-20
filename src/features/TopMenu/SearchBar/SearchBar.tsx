@@ -3,13 +3,13 @@ import Search from '@material-ui/icons/Search';
 import * as moment from 'moment';
 import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 import _Option from 'react-select/lib/components/Option';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { withTypes } from 'src/context/types';
 import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
 import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
@@ -125,10 +125,6 @@ type ClassNames =
   },
 });
 
-interface TypesContextProps {
-  typesData?: Linode.LinodeType[];
-}
-
 interface State {
   searchText: string;
   searchActive: boolean;
@@ -143,7 +139,8 @@ interface State {
   menuOpen: boolean;
 }
 
-type CombinedProps = TypesContextProps
+type CombinedProps =
+  & WithTypesProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
@@ -387,15 +384,16 @@ class SearchBar extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
 
-const typesContext = withTypes(({
-  data: typesData,
-}) => ({
-  typesData,
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
 }));
 
 export default compose(
   styled,
-  typesContext,
+  withTypes,
   withRouter,
 )(SearchBar) as React.ComponentType<{}>;
