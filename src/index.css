@@ -74,9 +74,11 @@ body {
     color: #000 !important;
   }
 
-  /* td > span:first-child {
-    display: none;
-  } */
+  @media (max-width: 959px) {
+    td > span:first-child {
+      display: none;
+    }
+  }
   
   td > span:last-child {
     text-align: left;
