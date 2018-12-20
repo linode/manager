@@ -4,7 +4,7 @@ import {
   WithStyles,
 } from '@material-ui/core/styles';
 import * as React from 'react';
-import { compose, lifecycle } from 'recompose';
+import { compose, lifecycle, StateHandlerMap, withStateHandlers } from 'recompose';
 
 import { getTrustedDevices } from 'src/services/profile';
 
@@ -17,7 +17,9 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import ToggleState from 'src/components/ToggleState';
 
+import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
 type ClassNames = 'root' | 'title';
@@ -33,57 +35,80 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   }
 });
 
-type CombinedProps = PaginationProps<Linode.Device> & WithStyles<ClassNames>;
+type CombinedProps = PaginationProps<Linode.Device>
+  & WithStyles<ClassNames>
+  & StateUpdaters
+  & DialogState;
 
 class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
+  refreshList = () => {
+    this.props.onDelete();
+  }
+
   render() {
     const {
       classes,
       loading,
-      error,
       data: devices,
       count,
       page,
+      error,
       pageSize,
       handlePageChange,
-      handlePageSizeChange
+      handlePageSizeChange,
+      selectedDeviceId,
+      setSelectedDevice
     } = this.props;
     return (
-      <Paper className={classes.root}>
-        <Typography
-          role="header"
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
-          Trusted Devices
+      <ToggleState>
+        {({ open: dialogOpen, toggle: toggleDialog }) => (
+
+          <Paper className={classes.root}>
+            <Typography
+              role="header"
+              variant="h2"
+              className={classes.title}
+              data-qa-title
+            >
+              Trusted Devices
         </Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Device</TableCell>
-              <TableCell>Expires</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TrustedDevicesTable
-              error={error}
-              data={devices}
-              loading={loading} />
-          </TableBody>
-          {devices && devices.length > 0 &&
-            <PaginationFooter
-              count={count}
-              page={page}
-              pageSize={pageSize}
-              handlePageChange={handlePageChange}
-              handleSizeChange={handlePageSizeChange}
-              eventCategory="Trusted Devices Panel"
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Device</TableCell>
+                  <TableCell>Expires</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TrustedDevicesTable
+                  error={error}
+                  data={devices}
+                  loading={loading}
+                  toggleDialog={toggleDialog}
+                  setDevice={setSelectedDevice}
+                />
+              </TableBody>
+              {devices && devices.length > 0 &&
+                <PaginationFooter
+                  count={count}
+                  page={page}
+                  pageSize={pageSize}
+                  handlePageChange={handlePageChange}
+                  handleSizeChange={handlePageSizeChange}
+                  eventCategory="Trusted Devices Panel"
+                />
+              }
+            </Table>
+            <Dialog
+              open={dialogOpen}
+              closeDialog={toggleDialog}
+              deviceId={selectedDeviceId}
+              refreshListOfDevices={this.refreshList}
             />
-          }
-        </Table>
-      </Paper>
+          </Paper>
+        )}
+      </ToggleState>
     );
   }
 }
@@ -102,8 +127,34 @@ const withRequestOnMount = lifecycle<PaginationProps<Linode.Device>, {}>({
   }
 })
 
+export interface DialogState {
+  selectedDeviceId?: number;
+}
+
+export interface StateUpdaters {
+  setSelectedDevice: (deviceId: number) => void;
+}
+
+type StateAndStateUpdaters = StateHandlerMap<DialogState> &
+  StateUpdaters;
+
+const withDialogHandlers = withStateHandlers<
+  DialogState,
+  StateAndStateUpdaters,
+  {}
+  >(
+    {
+      selectedDeviceId: undefined
+    }, {
+      setSelectedDevice: () => (deviceId: number) => ({
+        selectedDeviceId: deviceId
+      })
+    }
+  )
+
 export default compose<CombinedProps, {}>(
+  withDialogHandlers,
   paginated,
   withRequestOnMount,
-  styled
+  styled,
 )(TrustedDevices);

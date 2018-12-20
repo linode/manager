@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props extends DialogProps {
-  actions?: (props: any) => JSX.Element;
+  actions?: ((props: any) => JSX.Element) | JSX.Element;
   error?: string;
   onClose: () => void;
 }
@@ -38,20 +38,22 @@ const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
   } = props;
   return (
     <Dialog
-      { ...dialogProps }
+      {...dialogProps}
       disableBackdropClick={true}
     >
       <DialogTitle id="alert-dialog-title" data-qa-dialog-title className="dialog-title">{title}</DialogTitle>
       <DialogContent data-qa-dialog-content className="dialog-content">
-        { children }
-      { error &&
-        <DialogContentText className={`${classes.error} error-for-scroll`}>
-          { error }
-        </DialogContentText>
-      }
+        {children}
+        {error &&
+          <DialogContentText className={`${classes.error} error-for-scroll`}>
+            {error}
+          </DialogContentText>
+        }
       </DialogContent>
       <DialogActions className={classes.actions}>
-        { actions && actions(dialogProps) }
+        {actions && typeof actions === 'function'
+          ? actions(dialogProps)
+          : actions}
       </DialogActions>
     </Dialog>
   );
