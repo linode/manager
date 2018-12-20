@@ -74,7 +74,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
         open={open}
         title={`Untrust Device`}
         onClose={closeDialog}
-        error={error && 'There was an issue removing your device.'}
+        error={error}
         actions={
           <DialogActions
             closeDialog={this.handleCloseDialog}
