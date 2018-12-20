@@ -1,21 +1,15 @@
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router-dom';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { UserMenu } from './UserMenu';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import store from 'src/store';
 
-import UserMenu from './UserMenu';
-
+const classes = { button: '', hidden: '', leftIcon: '', menu: '', menuItem: '', userWrapper: '', username: '' }
 it('renders without crashing', () => {
-  mount(
-    <LinodeThemeWrapper>
-      <Provider store={store}>
-        <StaticRouter location="/" context={{}}>
-          <UserMenu />
-        </StaticRouter>
-      </Provider>
-    </LinodeThemeWrapper>,
+  shallow(
+    <UserMenu
+      classes={classes}
+      {...reactRouterProps}
+    />
   );
 });
