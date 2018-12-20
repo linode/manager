@@ -31,7 +31,7 @@ describe('Breadcrumb component', () => {
     wrapper.setProps({
       labelOptions: { prefixComponent: <React.Fragment /> }
     })
-    expect(wrapper.find('[data-qa-prefixWrapper]')).toHaveLength(1);
+    expect(wrapper.find('[data-qa-prefixwrapper]')).toHaveLength(1);
   });
 
   it('renders editable text when given editable props', () => {

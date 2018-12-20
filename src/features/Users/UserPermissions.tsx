@@ -737,7 +737,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         <Grid container alignItems="center" style={{ width: 'auto' }}>
           <Grid item>
             <Typography role="header" variant="h2" data-qa-restrict-access={restricted}>
-              Restrict Access:
+              Limit Account Access:
               </Typography>
           </Grid>
           <Grid item>
