@@ -113,7 +113,7 @@ describe('utilities/backups', () => {
           },
         } as Linode.LinodeBackupsResponse;
 
-        expect(mostRecentFromResponse(response)).toBeNull();
+        expect(mostRecentFromResponse(response)).toBeUndefined();
       });
     });
 
@@ -139,7 +139,7 @@ describe('utilities/backups', () => {
           }
         } as Linode.LinodeBackupsResponse;
 
-        expect(mostRecentFromResponse(response)).toBeNull();
+        expect(mostRecentFromResponse(response)).toBeUndefined();
       });
     });
   });

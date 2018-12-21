@@ -15,7 +15,6 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
 import { withRegions } from 'src/context/regions';
-import { withTypes } from 'src/context/types';
 import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
 import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
@@ -40,17 +39,12 @@ type ClassNames =
   'root'
   | 'main';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   main: {
   },
 });
-
-interface TypesContextProps {
-  typesData: ExtendedType[];
-  typesLoading: boolean;
-}
 
 interface RegionsContextProps {
   regionsData: ExtendedRegion[];
@@ -62,7 +56,8 @@ interface PreloadedProps {
   linodes: { response: Linode.LinodeWithBackups[] };
 }
 
-type CombinedProps = TypesContextProps
+type CombinedProps =
+  & WithTypesProps
   & RegionsContextProps
   & WithStyles<ClassNames>
   & PreloadedProps
@@ -141,12 +136,12 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
       this.setState({ selectedTab: this.stackScriptTabIndex });
     }
 
-    if(options.stackScriptUsername) {
-      this.setState({selectedStackScriptTabFromQueryString: options.stackScriptUsername})
+    if (options.stackScriptUsername) {
+      this.setState({ selectedStackScriptTabFromQueryString: options.stackScriptUsername })
     }
 
-    if(options.stackScriptID) {
-      this.setState({selectedStackScriptIDFromQueryString: +options.stackScriptID || undefined})
+    if (options.stackScriptID) {
+      this.setState({ selectedStackScriptIDFromQueryString: +options.stackScriptID || undefined })
     }
 
     if (options.linodeID) {
@@ -347,11 +342,11 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   render() {
     const { selectedTab } = this.state;
 
-    const { classes, regionsLoading, typesLoading } = this.props;
+    const { classes, regionsLoading } = this.props;
 
     const tabRender = this.tabs[selectedTab].render;
 
-    if (regionsLoading || typesLoading) { return <CircleProgress />; }
+    if (regionsLoading) { return <CircleProgress />; }
 
     return (
       <StickyContainer>
@@ -388,31 +383,33 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const typesContext = withTypes(({ data, loading }) => {
-  return {
-    typesData: compose(
-      map<Linode.LinodeType, ExtendedType>((type) => {
-        const { label, memory, vcpus, disk, price: { monthly, hourly } } = type;
-        return {
-          ...type,
-          heading: label,
-          subHeadings: [
-            `$${monthly}/mo ($${hourly}/hr)`,
-            typeLabelDetails(memory, disk, vcpus),
-          ],
-        };
-      }),
-      /* filter out all the deprecated types because we don't to display them */
-      filter<any>((eachType: Linode.LinodeType) => {
-        if (!eachType.successor) {
-          return true;
-        }
-        return eachType.successor === null
-      }),
-    )(data || []),
-    typesLoading: loading,
-  };
-});
+interface WithTypesProps {
+  typesData: ExtendedType[];
+};
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: compose(
+    map<Linode.LinodeType, ExtendedType>((type) => {
+      const { label, memory, vcpus, disk, price: { monthly, hourly } } = type;
+      return {
+        ...type,
+        heading: label,
+        subHeadings: [
+          `$${monthly}/mo ($${hourly}/hr)`,
+          typeLabelDetails(memory, disk, vcpus),
+        ],
+      };
+    }),
+    /* filter out all the deprecated types because we don't to display them */
+    filter<any>((eachType: Linode.LinodeType) => {
+      if (!eachType.successor) {
+        return true;
+      }
+      return eachType.successor === null
+    }),
+  )(state.__resources.types.entities),
+}));
+
 
 const regionsContext = withRegions(({
   data: regionsData,
@@ -442,7 +439,7 @@ const styled = withStyles(styles);
 export default compose(
   preloaded,
   regionsContext,
-  typesContext,
+  withTypes,
   styled,
   withRouter,
   connected

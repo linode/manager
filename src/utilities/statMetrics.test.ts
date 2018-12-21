@@ -41,6 +41,20 @@ describe('Stat Metrics', () => {
     expect(metrics.last).toBe(0);
     expect(getMetrics([...data, [0, 8]]).last).toBe(8);
   });
+
+  it('does not crash with unexpected inputs', () => {
+    const emptyResponse = { max: 0, average: 0, last: 0, total: 0, length: 0 };
+    expect(getMetrics([])).toEqual(emptyResponse);
+    expect(getMetrics(undefined as any)).toEqual(emptyResponse);
+    expect(getMetrics(null as any)).toEqual(emptyResponse);
+    expect(getMetrics(12 as any)).toEqual(emptyResponse);
+    expect(getMetrics('hello' as any)).toEqual(emptyResponse);
+    expect(getMetrics({} as any)).toEqual(emptyResponse);
+    expect(getMetrics([[], []] as any)).toEqual({average: 0, last: 0, length: 2, max: 0, total: 0});
+    expect(getMetrics([[], ['hello']] as any)).toEqual({average: 0, last: 0, length: 2, max: 0, total: 0});
+    expect(getMetrics([[], ['hello', 3]] as any)).toEqual({average: 1.5, last: 3, length: 2, max: 3, total: 3});
+    expect(getMetrics([[3, 'hello'], ['hello', 3]] as any)).toEqual({average: 1.5, last: 3, length: 2, max: 3, total: 3});
+  });
 });
 
 describe('total traffic', () => {

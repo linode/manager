@@ -1,5 +1,3 @@
-import { isEmpty } from 'ramda';
-
 export interface Metrics {
   max: number;
   average: number;
@@ -14,7 +12,7 @@ export interface Metrics {
 export const getMetrics = (data: number[][]): Metrics => {
 
   // If there's no data
-  if (isEmpty(data[0])) {
+  if (!data || !Array.isArray(data) || data.length < 1) {
     return { max: 0, average: 0, last: 0, total: 0, length: 0 };
   }
 
@@ -23,6 +21,7 @@ export const getMetrics = (data: number[][]): Metrics => {
 
   // The data is large, so we get everything we need in one iteration
   data.forEach(([_, value]: number[], idx): void => {
+    if (!value || isNaN(value)) { return; }
 
     if (value > max) {
       max = value;
@@ -38,7 +37,7 @@ export const getMetrics = (data: number[][]): Metrics => {
     ? sum/length
     : 0;
 
-  const last = data[length-1][1];
+  const last = data[length-1][1] || 0;
 
   return { max, average, last, total: sum, length};
 }

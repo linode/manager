@@ -82,6 +82,7 @@ export const dark = createTheme({
     blueDTwhite: '#fff',
     borderRow: 'rgba(0, 0, 0, 0.15)',
     tableHeaderText: '#fff',
+    toggleActive: '#444',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
