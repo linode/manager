@@ -12,8 +12,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import { StackScripts } from 'src/documentation';
 import { getLinodeImages } from 'src/services/images';
 
-// import StackScriptPanel from './LandingPanel/StackScriptPanel';
-import SelectStackScriptPanel from './SelectStackScriptPanel';
+import StackScriptPanel from './StackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -77,7 +76,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           </Grid>
         </Grid>
         <Grid container>
-          <SelectStackScriptPanel
+          <StackScriptPanel
             publicImages={images.response}
             noHeader={true}
           />

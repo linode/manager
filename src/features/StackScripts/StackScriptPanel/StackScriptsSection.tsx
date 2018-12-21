@@ -20,8 +20,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 export interface Props {
-  onSelect?: (s: Linode.StackScript.Response) => void;
-  selectedId?: number;
   data: Linode.StackScript.Response[];
   isSorting: boolean;
   publicImages: Linode.Image[];
@@ -34,14 +32,15 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    onSelect,
-    selectedId,
     data,
     isSorting,
     classes,
+    triggerDelete,
+    currentUser,
+    triggerMakePublic
   } = props;
 
-  const selectStackScript = (s: Linode.StackScript.Response) => (
+const listStackScript = (s: Linode.StackScript.Response) => (
     <SelectionRow
       key={s.id}
       label={s.label}
@@ -51,20 +50,42 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
-      onSelect={() => onSelect!(s)}
-      checked={selectedId === s.id}
-      updateFor={[selectedId === s.id]}
+      showDeployLink={true}
       stackScriptID={s.id}
-      canDelete={false}
-      canEdit={false}
+      triggerDelete={triggerDelete}
+      triggerMakePublic={triggerMakePublic}
+      canDelete={canDelete(s.username, s.is_public)}
+      canEdit={canEdit(s.username)}
     />
   )
+
+  /*
+  * We can only delete a stackscript if it's ours
+  * and it's not publicly available
+  */
+  const canDelete = (stackScriptUser: string, stackScriptIsPublic: boolean) => {
+    if (stackScriptUser === currentUser && !stackScriptIsPublic) {
+      return true;
+    }
+    return false;
+  }
+
+  /*
+  * We can only edit a stackscript if it's ours
+  * it doesn't matter if it's public or not
+  */
+  const canEdit = (stackScriptUser: string) => {
+    if (stackScriptUser === currentUser) {
+      return true;
+    }
+    return false;
+  }
 
   return (
     <TableBody>
       {!isSorting
         ? data && data
-          .map(selectStackScript)
+          .map(listStackScript)
         : <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
             <CircleProgress noTopMargin/>
