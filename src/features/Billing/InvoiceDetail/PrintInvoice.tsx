@@ -20,6 +20,9 @@ type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'logoWrapper' | 'invo
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+    '@media print': {
+      backgroundColor: 'transparent !important',
+    },
   },
   logoWrapper: {
     textAlign: 'center',

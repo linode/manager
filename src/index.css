@@ -29,7 +29,7 @@ body {
   @page { margin: 1cm }
 
   body {
-    font: 13pt Georgia, "Times New Roman", Times, serif;
+    font-size: 13pt;
     line-height: 1.3;
     background: #fff !important;
     color: #000 !important;
@@ -46,18 +46,34 @@ body {
     color: #000 !important;
   }
   
-  h2, h3, h4 {
+  h2, h3, h4, h5, h6 {
     font-size: 14pt;
     margin-top: 25px;
     color: #000 !important;
   }
 
+  p {
+    color: #000 !important;
+  }
+
+  .tableWrapper {
+    border: 1px solid #f4f4f4 !important;
+  }
+
   thead {
     display: table-header-group !important;
+    border-bottom: 1px solid #f4f4f4 !important;
+  }
+
+  th {
+    color: #000 !important;
+    border-bottom: 1px solid #f4f4f4 !important;
+    background-color: transparent !important;
   }
 
   tr {
     display: table-row !important;
+    background-color: transparent !important;
   }
 
   tbody > tr > td {
