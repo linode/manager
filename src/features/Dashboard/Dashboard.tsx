@@ -98,7 +98,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
   entitiesWithGroupsToImport: (
-    (!storage.hideGroupImportCTA.get() || !storage.hasImportedGroups.get())
+    (!storage.hideGroupImportCTA.get() && !storage.hasImportedGroups.get())
       ? getEntitiesWithGroupsToImport(state)
       : emptyGroupedEntities),
 });
