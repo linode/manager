@@ -50,7 +50,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
     const { selectedLinodeID, handleSelection } = this.props;
     return (
       <SelectionCard
-        key={linode.id}
+        key={`selection-card-${linode.id}`}
         onClick={(e) => { handleSelection(linode); }}
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}

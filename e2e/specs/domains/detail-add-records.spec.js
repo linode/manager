@@ -387,8 +387,7 @@ describe('Domains - Detail - Add Records Suite', () => {
     });
 
     it('Tags are displayed in domain list view', () => {
-        const displayedTags = ListDomains.tags.map(tag => tag.getText());
-        expect(displayedTags).toEqual(domainTags);
+        ListDomains.checkTagsApplied(domainTags);
     });
 
     afterAll(() => {

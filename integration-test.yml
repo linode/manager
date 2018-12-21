@@ -43,6 +43,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./e2e/test-results:/src/e2e/test-results
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
     depends_on:
       - manager-local

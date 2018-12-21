@@ -30,28 +30,27 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.popoverMsg.waitForVisible(constants.wait.normal);
     });
 
-    it('should display image options in the select', () => {
-        Rebuild.imagesSelect.click();
-        Rebuild.imageOption.waitForVisible(constants.wait.normal);
-        $('body').click();
-        Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
-    });
-
     it('should display error on create an image without selecting an image', () => {
         Rebuild.submit.click();
         expect(Rebuild.imageError.isVisible()).toBe(true);
         expect(Rebuild.imageError.getText()).toBe('Image cannot be blank.');
+        browser.refresh();
+        Rebuild.assertElemsDisplay();
     });
 
     it('should display error on create image without setting a password', () => {
         const errorMsg = 'Password cannot be blank.';
         Rebuild.selectImage();
-        browser.jsClick(Rebuild.submit.selector);
+        Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
+        Rebuild.submit.click();
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
+        browser.refresh();
+        Rebuild.assertElemsDisplay();
     });
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = generatePassword();
+        Rebuild.selectImage();
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });
