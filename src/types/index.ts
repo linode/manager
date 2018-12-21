@@ -93,6 +93,7 @@ namespace Linode {
     'linode_delete' |
     'linode_migrate' |
     'linode_reboot' |
+    'linode_resize' |
     'linode_rebuild' |
     'linode_shutdown' |
     'linode_snapshot' |
@@ -132,6 +133,13 @@ namespace Linode {
     time_remaining: null | number;
     username: string;
     _initial?: boolean;
+  }
+/**
+ * Represents an event which has an entity. For use with type guards.
+ * https://www.typescriptlang.org/docs/handbook/advanced-types.html
+ */
+  export interface EntityEvent extends Event {
+    entity: Entity;
   }
 
   export interface ApiFieldError {

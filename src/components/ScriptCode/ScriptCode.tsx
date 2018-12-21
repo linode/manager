@@ -63,11 +63,11 @@ export class ScriptCode extends React.Component<PropsWithStyles, {}> {
     return (
       <div className={classes.container}>
         <table className={classes.table}>
-          <tbody>
+          <tbody data-qa-script-code>
             {script.split('\n').map((line, counter) => (
               <tr className={classes.row} key={'scriptCodeLine' + counter}>
                 <td className={classes.numberCell}>{counter + 1}</td>
-                <td className={classes.codeCell}><pre className={classes.code}>{line}</pre></td>
+                <td className={classes.codeCell}><pre className={classes.code} data-qa-script>{line}</pre></td>
               </tr>
             ))}
             {/* Empty row at the end */}

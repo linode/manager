@@ -79,7 +79,6 @@ setInterval(
         const timeout = INTERVAL * pollIteration;
         /** Update the dealing */
         eventRequestDeadline = now + timeout;
-
         /* Update the iteration to a maximum of 16. */
         pollIteration = Math.min(pollIteration * 2, 16);
       }

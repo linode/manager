@@ -114,15 +114,15 @@ describe("BackupDrawer component", () => {
       component.setProps({ enableSuccess: true });
       expect(actions.close).toHaveBeenCalled();
     });
-    it("should request un-backed-up Linodes on load, if the list is empty", () => {
-      component.instance().componentDidMount!();
-      expect(actions.getLinodesWithoutBackups).toHaveBeenCalledTimes(1);
-    });
-    it("should not request Linodes in cDM if there are already Linodes in props", () => {
-      component.setProps({ linodesWithoutBackups: [linode3]});
-      component.instance().componentDidMount!();
-      expect(actions.getLinodesWithoutBackups).not.toHaveBeenCalled();
-    });
+    // it("should request un-backed-up Linodes on load, if the list is empty", () => {
+    //   component.instance().componentDidMount!();
+    //   expect(actions.getLinodesWithoutBackups).toHaveBeenCalledTimes(1);
+    // });
+    // it("should not request Linodes in cDM if there are already Linodes in props", () => {
+    //   component.setProps({ linodesWithoutBackups: [linode3]});
+    //   component.instance().componentDidMount!();
+    //   expect(actions.getLinodesWithoutBackups).not.toHaveBeenCalled();
+    // });
     it("should display an error Notice", () => {
       expect(component.find('WithStyles(Notice)')).toHaveLength(0);
       component.setProps({ enableErrors: [error]});

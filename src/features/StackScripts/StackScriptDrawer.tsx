@@ -28,7 +28,7 @@ interface StateProps {
 type CombinedProps = DispatchProps
   & StateProps;
 
-class StackScriptDrawer extends React.Component<CombinedProps, State> {
+export class StackScriptDrawer extends React.Component<CombinedProps, State> {
 
   state: State = {
     loading: true,

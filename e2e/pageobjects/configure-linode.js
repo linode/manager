@@ -110,6 +110,10 @@ class ConfigureLinode extends Page {
         expect(this.addons.length).toBe(2);
     }
 
+    stackScriptRow(stackScriptTitle){
+        return $(`[data-qa-table-row="${stackScriptTitle}"] [data-qa-radio]`);
+    }
+
     stackScriptTableDisplay() {
         this.stackScriptTableHeader.waitForVisible();
         expect(this.stackScriptTableHeader.getText()).toBe('StackScript');

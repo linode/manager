@@ -5,14 +5,35 @@ declare interface ExtendedEvent extends Linode.Event {
 declare interface ApplicationState {
   __resources: {
     profile: RequestableData<Linode.Profile>,
-    accountSettings: RequestableData<Linode.AccountSettings>
+    accountSettings: RequestableData<Linode.AccountSettings>;
+    types: {
+      results: string[];
+      entities: Linode.LinodeType[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
+    linodes: {
+      results: number[];
+      entities: Linode.Linode[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
+    domains: {
+      results: number[];
+      entities: Linode.Domain[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
   },
   authentication: AuthState;
-  backups: RequestableData<Linode.Linode[]>;
+  backups: BackupDrawerState;
   documentation: DocumentationState;
-  sidebar: SidebarState;
   features: FeaturesState;
   volumeDrawer: VolumeDrawerState;
+  tagImportDrawer: TagImportDrawerState;
   notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
   stackScriptDrawer: StackScriptDrawerState;
@@ -46,16 +67,26 @@ declare interface VolumeDrawerState {
   message?: string;
 }
 
+declare interface TagError {
+  entityId: string | number;
+  entityLabel?: string;
+  reason: string;
+}
+declare interface TagImportDrawerState {
+  open: boolean;
+  loading: boolean;
+  errors: TagError[];
+  success: boolean;
+}
+
 declare interface SidebarState {
   backupsCTA: boolean;
 }
-
-
 declare interface BackupError {
   linodeId: number;
   reason: string;
 }
-declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
+declare interface BackupDrawerState {
   open: boolean;
   enabling: boolean;
   enableErrors: BackupError[];
@@ -64,6 +95,8 @@ declare interface BackupDrawerState extends RequestableData<Linode.Linode[]> {
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;
+  error?: Error | Linode.ApiFieldError[];
+  data?: Linode.Linode[];
 }
 
 declare interface DomainDrawerState {

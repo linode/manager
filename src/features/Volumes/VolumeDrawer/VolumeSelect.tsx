@@ -143,7 +143,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
           onChange={this.setSelectedVolume}
           onInputChange={this.onInputChange}
         />
-        {!error && <FormHelperText>Only volumes in this Linode's region are displayed.</FormHelperText>}
+        {!error && <FormHelperText data-qa-volume-region>Only volumes in this Linode's region are displayed.</FormHelperText>}
       </FormControl>
     );
   }

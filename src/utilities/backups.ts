@@ -4,7 +4,7 @@ export const collectBackups = ({ automatic, snapshot }: Linode.LinodeBackupsResp
   snapshot.in_progress,
 ].filter(Boolean);
 
-export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => null | string = (response) => {
+export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => undefined | string = (response) => {
 
   return collectBackups(response)
 
@@ -15,11 +15,11 @@ export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => null |
     .filter((backup: Linode.LinodeBackup) => typeof backup.finished === 'string')
 
     /** Return the highest value date. */
-    .reduce((result: null | string, { finished }: Linode.LinodeBackup) => {
-      if (result === null) { return finished; }
+    .reduce((result: undefined | string, { finished }: Linode.LinodeBackup) => {
+      if (result === undefined) { return finished; }
 
       if (new Date(finished) > new Date(result)) { return finished; }
 
       return result;
-    }, null);
+    }, undefined);
 };

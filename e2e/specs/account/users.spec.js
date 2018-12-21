@@ -21,7 +21,7 @@ describe('Account - Users Suite', () => {
     it('should display root user in the table', () => {
         const rootUserName = Users.getTableDetails(undefined,Users.username.selector,browser.options.testUser);
         const rootUserRestrictions = Users.getTableDetails(0,Users.userRestriction.selector);
-        expect(rootUserName).not.toBeNull();
+        expect(rootUserName).toBeTruthy();
         expect(rootUserRestrictions.getText()).toMatch(/unrestricted/ig);
     });
 

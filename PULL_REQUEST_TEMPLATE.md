@@ -1,5 +1,3 @@
-# Cloud Manager Pull Request Template
-
 ## Description
 
 Please start the pull request title with the jira ticket corresponding to the work if applicable. Please include a short summary of the feature added, the change, or issue fixed.

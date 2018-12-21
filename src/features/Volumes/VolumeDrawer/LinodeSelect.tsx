@@ -164,7 +164,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
           onInputChange={this.onInputChange}
           data-qa-select-linode
         />
-        {!error && <FormHelperText>Only Linodes in the selected region are displayed.</FormHelperText>}
+        {!error && <FormHelperText data-qa-volume-region>Only Linodes in the selected region are displayed.</FormHelperText>}
       </FormControl>
     );
   }
@@ -173,4 +173,3 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 export default styled(LinodeSelect);
-

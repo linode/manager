@@ -15,11 +15,9 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Tags from 'src/components/Tags';
-import { withTypes } from 'src/context/types';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-import { getType } from 'src/services/linodes';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import { displayType, typeLabelDetails } from '../presentation';
@@ -212,7 +210,6 @@ interface Props {
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
   linodeTags: string[];
-  linodeRecentEvent?: Linode.Event;
   linodeSpecDisk: number;
   linodeSpecMemory: number;
   linodeSpecVcpus: number;
@@ -223,14 +220,9 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-interface TypesContextProps {
-  typesLoading: boolean;
-  typesData: Linode.LinodeType[];
-}
-
 type CombinedProps =
   & Props
-  & TypesContextProps
+  & WithTypesProps
   & WithTheme
   & WithStyles<CSSClasses>;
 
@@ -244,35 +236,17 @@ class LinodeCard extends React.Component<CombinedProps, State> {
       nextProps,
       this.props,
       [
-        'linodeStatus',
-        'linodeRegion',
-        'linodeNotification',
-        'linodeRecentEvent',
-        'linodeLabel',
-        'linodeIpv6',
         'linodeIpv4',
+        'linodeIpv6',
+        'linodeLabel',
+        'linodeNotification',
+        'linodeRegion',
+        'linodeStatus',
+        'recentEvent',
         'typesData',
-        'typesLoading',
       ],
     )
-      || haveAnyBeenModified<State>(
-        nextState,
-        this.state,
-        ['mutationAvailable']
-      )
       || this.props.theme.name !== nextProps.theme.name
-  }
-
-  componentDidMount() {
-    const { linodeType } = this.props;
-    if (!linodeType) { return }
-    getType(linodeType)
-      .then((data: Linode.LinodeType) => {
-        if (data.successor && data.successor !== null) {
-          this.setState({ mutationAvailable: true })
-        }
-      })
-      .catch((e: Error) => e)
   }
 
   handleConsoleButtonClick = () => {
@@ -343,12 +317,10 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, openConfigDrawer, linodeId, linodeLabel, linodeRecentEvent,
+    const { classes, openConfigDrawer, linodeId, linodeLabel, recentEvent,
       linodeStatus, linodeBackups, toggleConfirmation, typesData, linodeType,
       linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4,
       linodeIpv6, imageLabel, linodeTags } = this.props;
-    const loading = linodeInTransition(linodeStatus, linodeRecentEvent);
-    const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -371,18 +343,18 @@ class LinodeCard extends React.Component<CombinedProps, State> {
           />
           <Divider />
           <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
-            {loading && <Grid container className={classes.cardSection}>
-              <Grid item>
-                <Typography variant="body2" className={classes.statusText}>
-                  {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={6} xl={6}>
-                <div className={classes.statusProgress}>
-                  <LinearProgress value={value} />
-                </div>
-              </Grid>
-            </Grid>}            
+            {
+              recentEvent && linodeInTransition(linodeStatus, recentEvent) &&
+              <ProgressDisplay
+                text={transitionText(linodeStatus, recentEvent)}
+                progress={recentEvent.percent_complete}
+                classes={{
+                  statusProgress: classes.statusProgress,
+                  statusText: classes.statusText,
+                  cardSection: classes.cardSection,
+                }}
+              />
+            }
             <div className={classes.cardSection} data-qa-linode-summary>
               {typesData && `${displayType(linodeType, typesData || [])}: `}
               {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
@@ -424,12 +396,46 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 }
 
-const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => ({
-  typesData,
-  typesLoading,
+import { connect } from 'react-redux';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
+
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+  recentEvent?: Linode.Event;
+}
+
+const withTypes = connect((state: ApplicationState, { linodeId }: Props) => ({
+  typesData: state.__resources.types.entities,
+  recentEvent: recentEventForLinode(linodeId)(state)
 }));
+
 
 export default compose(
   withStyles(styles, { withTheme: true }),
-  typesContext,
+  withTypes,
 )(LinodeCard) as React.ComponentType<Props>;
+
+const ProgressDisplay: React.StatelessComponent<{
+  progress: null | number;
+  text: string;
+  classes: {
+    cardSection: string;
+    statusProgress: string;
+    statusText: string;
+  };
+}> = (props) => {
+  const { classes, text, progress } = props;
+  const displayProgress = progress ? `${progress}%` : ``;
+  return (
+    <Grid container className={classes.cardSection}>
+      <Grid item>
+        <Typography variant="body2" className={classes.statusText}>{text}: {displayProgress}</Typography>
+      </Grid>
+      <Grid item xs={12} sm={6} lg={6} xl={6}>
+        <div className={classes.statusProgress}>
+          {progress ? <LinearProgress value={progress} /> : <LinearProgress variant="indeterminate" />}
+        </div>
+      </Grid>
+    </Grid>
+  );
+};

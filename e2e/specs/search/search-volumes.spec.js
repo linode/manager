@@ -1,66 +1,61 @@
 const { constants } = require('../../constants');
 
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
+import {
+    timestamp,
+    createUnattachedVolumes,
+    apiDeleteAllVolumes,
+} from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
-import ListLinodes from '../../pageobjects/list-linodes';
-import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
+import SearchResults from '../../pageobjects/search-results.page';
 import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
 describe('Header - Search - Volumes Suite', () => {
     const testVolume = {
-        label: `A${new Date().getTime()}`,
-        size: '10',
-    }
-    let linodeName;
-
-    function navigateToVolumes(label) {
-        if (!browser.getUrl().includes(constants.routes.linodes)) {
-            browser.url(constants.routes.linodes);
-        }
-
-        browser.waitForVisible(`[data-qa-linode="${label}"]`);
-        browser.click(`[data-qa-linode="${label}"] a`);
-        LinodeDetail
-            .landingElemsDisplay()
-            .changeTab('Volumes');
-        browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
+        label: `AutoVolume${timestamp()}`,
+        tags: [`AutoTag${timestamp()}`]
     }
 
-    afterAll(() => {
-        apiDeleteAllLinodes();
-    });
+    const assertVolumeDisplaysInSearchSuggestion = (query) => {
+        SearchBar.executeSearch(query);
+        SearchBar.suggestion.waitForVisible(constants.wait.normal);
+        const volumeSuggestion = SearchBar.suggestions.find(suggestion => suggestion.getText().includes(testVolume.label));
+        expect(volumeSuggestion).toBeTruthy();
+        $('body').click();
+        SearchBar.suggestion.waitForVisible(constants.wait.norma, true);
+    }
 
     beforeAll(() => {
-        browser.url(constants.routes.linodes);
-
-        apiCreateLinode();
-
-        linodeName = ListLinodes.linode[0].$(ListLinodes.linodeLabel.selector).getText();
-
-        ListLinodes.shutdownIfRunning(ListLinodes.linode[0]);
-
-        navigateToVolumes(linodeName);
-        const volumeCount = VolumeDetail.volumeCellElem.isVisible() ? VolumeDetail.volumeCell.length : 0;
-
-        VolumeDetail.createVolume(testVolume, 'placeholder');
-
-        // Wait until the volume is created before searching for it
-        browser.waitUntil(function() {
-            return VolumeDetail.volumeCell.length === volumeCount + 1;
-        }, constants.wait.long, 'Volume failed to be created');
-
-        testVolume['id'] = VolumeDetail.getVolumeId(testVolume.label);
+        createUnattachedVolumes([testVolume]);
     });
 
-    it('should display search results for volumes', () => {
-        browser.url(constants.routes.linodes);
+    afterAll(() => {
+        apiDeleteAllVolumes();
+    });
+
+    it('volume displays in search result suggestion when searching by name', () => {
         SearchBar.assertSearchDisplays();
-        SearchBar.executeSearch(testVolume.label);
-        browser.waitForVisible('[data-qa-suggestion]', constants.wait.normal);
+        assertVolumeDisplaysInSearchSuggestion(testVolume.label);
     });
 
-    it('should navigate to linode detail volume page', () => {
-        browser.click('[data-qa-suggestion]');
+    it('volume displays in search result suggestions when searching by applied tag', () => {
+        assertVolumeDisplaysInSearchSuggestion(testVolume.tags[0]);
+    });
+
+    it('searching for volume by name and pressing enter navigates to the search results page', () => {
+        SearchBar.searchAndNavigateToResults(testVolume.label);
+        SearchResults.waitForSearchResult('volumes',testVolume.label);
+        expect(browser.getUrl()).toContain(`/search?query=${testVolume.label}`);
+    });
+
+    it('searching for volume by tag and pressing enter navigates to the search results page', () => {
+        browser.url(constants.routes.volumes);
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+        SearchBar.searchAndNavigateToResults(testVolume.tags[0]);
+        SearchResults.waitForSearchResult('volumes',testVolume.label);
+        expect(browser.getUrl()).toContain(`/search?query=${testVolume.tags[0]}`);
+    });
+
+    it('tags are displayed on the search results row for the volume when tag is the query', () => {
+        expect(SearchResults.getTagsAppliedToResult(testVolume.label)).toEqual(testVolume.tags);
     });
 });
