@@ -19,12 +19,14 @@ import {
 } from 'src/store/reducers/tagImportDrawer'
 import getEntitiesWithGroupsToImport,
   {
+    emptyGroupedEntities,
     GroupedEntitiesForImport,
     GroupImportProps,
   } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 
 
 import { sortAlphabetically } from 'src/utilities/sort-by';
+import { storage } from 'src/utilities/storage';
 import DisplayGroupList from './DisplayGroupList';
 
 type ClassNames = 'root';
@@ -134,7 +136,10 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
     loading: pathOr(false, ['tagImportDrawer', 'loading'], state),
     errors: pathOr([], ['tagImportDrawer', 'errors'], state),
     success: pathOr(false, ['tagImportDrawer', 'success'], state),
-    entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state),
+    entitiesWithGroupsToImport: (
+      !storage.hasImportedGroups.get()
+        ? getEntitiesWithGroupsToImport(state)
+        : emptyGroupedEntities),
   });
 };
 

@@ -7,7 +7,8 @@ import actionCreatorFactory from 'typescript-fsa';
 import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
 import getEntitiesWithGroupsToImport,
-  { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+{ GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { storage } from 'src/utilities/storage';
 
 const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
@@ -206,6 +207,7 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispa
     dispatch,
     handleAccumulatedResponsesAndErrors,
   )
+    .then(() => storage.hasImportedGroups.set())
     .catch(() => dispatch(
       // Errors from individual requests will be accumulated and passed to .then(); hitting
       // this block indicates something went wrong with .reduce() or .join().

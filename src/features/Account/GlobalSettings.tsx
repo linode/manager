@@ -10,7 +10,9 @@ import TagImportDrawer from 'src/features/TagImport';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
-import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
+import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
@@ -80,12 +82,6 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       entitiesWithGroupsToImport,
     } = this.props;
 
-    // Only show the import groups option if the user has groups available to import
-    const hasGroupsToImport =
-    entitiesWithGroupsToImport.linodes.length >= 1
-    // @todo: Uncomment when domain support is added
-    // && entitiesWithGroupsToImport.domains.length >= 1
-
     if (loading) { return <CircleProgress /> }
     if (error) { return <ErrorState errorText={"There was an error retrieving your account data."} /> }
 
@@ -103,7 +99,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
-        {hasGroupsToImport &&
+        {shouldDisplayGroupImport(entitiesWithGroupsToImport) &&
           <ImportGroupsAsTags
             openDrawer={openImportDrawer}
           />
@@ -121,7 +117,10 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   updateError: path(['__resources', 'accountSettings', 'updateError'], state),
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   networkHelperEnabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'network_helper'], state),
-  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state),
+  entitiesWithGroupsToImport: (
+    !storage.hasImportedGroups.get()
+      ? getEntitiesWithGroupsToImport(state)
+      : emptyGroupedEntities),
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
