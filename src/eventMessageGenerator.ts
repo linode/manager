@@ -28,6 +28,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   community_question_reply: {
     notification: e => `There has been a reply to your thread "${e.entity!.label}".`,
   },
+  community_like: {
+    notification: e => e.entity!.label
+  },
   credit_card_updated: {
     notification: e => `Credit card information has been updated.`,
   },
