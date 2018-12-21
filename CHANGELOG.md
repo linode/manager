@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.42.0] - 2018.12.20
+## [0.43.0] - 2018.12.20
 ### Added:
 - Users can now display their Linodes grouped by its tags.
 - Users can import existing display groups from Linodes and Domains as tags from the dashboard.
