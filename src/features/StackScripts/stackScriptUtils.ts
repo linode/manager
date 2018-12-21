@@ -40,3 +40,62 @@ export const getCommunityStackscripts = (currentUser: string, params?: any, filt
     ),
   })
 );
+
+export const StackScriptTabs = [
+  {
+    title: 'My StackScripts',
+    request: getStackScriptsByUser,
+    category: 'my'
+  },
+  {
+    title: 'Account StackScripts',
+    request: getAccountStackScripts,
+    category: 'account'
+  },
+  {
+    title: 'Linode StackScripts',
+    request: getStackScriptsByUser,
+    category: 'linode'
+  },
+  {
+    title: 'Community StackScripts',
+    request: getCommunityStackscripts,
+    category: 'community'
+  },
+];
+
+export type AcceptedFilters = 'username' | 'description' | 'label'
+
+export const generateSpecificFilter = (
+  key: AcceptedFilters,
+  searchTerm: string
+) => {
+  return {
+    [key]: {
+      ["+contains"]: searchTerm
+    }
+  }
+}
+
+export const generateCatchAllFilter = (searchTerm: string) => {
+  return {
+    ["+or"]: [
+      {
+        "label": {
+          ["+contains"]: searchTerm
+        },
+      },
+      {
+        "username": {
+          ["+contains"]: searchTerm
+        },
+      },
+      {
+        "description": {
+          ["+contains"]: searchTerm
+        },
+      },
+    ],
+  };
+}
+

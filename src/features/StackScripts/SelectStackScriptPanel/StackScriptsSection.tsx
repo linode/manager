@@ -4,10 +4,10 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import SelectionRow from 'src/components/SelectionRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
+import StackScriptSelectionRow from '../StackScriptSelectionRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
@@ -25,8 +25,6 @@ export interface Props {
   data: Linode.StackScript.Response[];
   isSorting: boolean;
   publicImages: Linode.Image[];
-  triggerDelete: (id: number, label: string) => void;
-  triggerMakePublic: (id: number, label: string) => void;
   currentUser: string;
 }
 
@@ -42,7 +40,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   } = props;
 
   const selectStackScript = (s: Linode.StackScript.Response) => (
-    <SelectionRow
+    <StackScriptSelectionRow
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}

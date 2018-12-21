@@ -1,20 +1,18 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
-import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
 import { sendEvent } from 'src/utilities/analytics';
-import StackScriptTableHead from './PanelContent/StackScriptTableHead';
 import StackScriptsSection from './StackScriptsSection';
+
+import StackScriptTableHead from '../Partials/StackScriptTableHead';
+import { AcceptedFilters, generateCatchAllFilter, generateSpecificFilter } from '../stackScriptUtils'
 
 type ClassNames = 'root'
   | 'emptyState'
@@ -51,10 +49,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props {
   request: (username: string, params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
-  onSelect?: (id: number, label: string, username: string, images: string[],
+  onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   currentUser: string;
-  category: 'my' | 'account' | 'linode' | 'community';
+  category: string;
   publicImages: Linode.Image[];
   resetStackScriptSelection: () => void;
 }
@@ -86,8 +84,6 @@ interface FilterInfo {
 }
 
 type SortOrder = 'asc' | 'desc';
-
-type AcceptedFilters = 'username' | 'description' | 'label'
 
 interface State {
   currentPage: number;
@@ -236,7 +232,6 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
   }
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
-    if (!this.props.onSelect) { return; }
     this.props.onSelect(
       stackscript.id,
       stackscript.label,
@@ -272,7 +267,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     }
   }
 
-  handleClickTableHeader= (value: string) => {
+  handleClickTableHeader = (value: string) => {
     const { currentSearchFilter, sortOrder } = this.state;
 
     const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
@@ -295,204 +290,6 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     });
   }
 
-  handleOpenDeleteDialog = (id: number, label: string) => {
-    this.setState({
-      dialog: {
-        delete: {
-          open: true,
-        },
-        makePublic: {
-          open: false,
-        },
-        stackScriptID: id,
-        stackScriptLabel: label,
-      }
-    })
-  }
-
-  handleOpenMakePublicDialog = (id: number, label: string) => {
-    this.setState({
-      dialog: {
-        delete: {
-          open: false,
-        },
-        makePublic: {
-          open: true,
-        },
-        stackScriptID: id,
-        stackScriptLabel: label,
-      }
-    })
-  }
-
-  handleCloseDialog = () => {
-    this.setState({
-      dialog: {
-        ...this.state.dialog,
-        delete: {
-          open: false,
-        },
-        makePublic: {
-          open: false,
-        },
-      }
-    })
-  }
-
-  handleDeleteStackScript = () => {
-    deleteStackScript(this.state.dialog.stackScriptID!)
-      .then(response => {
-        this.setState({
-          dialog: {
-            delete: {
-              open: false,
-            },
-            makePublic: {
-              open: false,
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: '',
-          }
-        });
-        this.getDataAtPage(1, this.state.currentFilter, true);
-      })
-      .catch(e => {
-        this.setState({
-          dialog: {
-            delete: {
-              open: false,
-            },
-            makePublic: {
-              open: false,
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: '',
-          },
-          fieldError: {
-            reason: 'Unable to complete your request at this time'
-          }
-        })
-      });
-  }
-
-  handleMakePublic = () => {
-    const { dialog, currentFilter } = this.state;
-
-    updateStackScript(dialog.stackScriptID!, { is_public: true })
-      .then(response => {
-        if (!this.mounted) { return; }
-        this.setState({
-          successMessage: `${dialog.stackScriptLabel} successfully published to the public library`,
-          dialog: {
-            delete: {
-              open: false,
-            },
-            makePublic: {
-              open: false,
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: '',
-          }
-        });
-        this.getDataAtPage(1, currentFilter, true);
-      })
-      .catch(e => {
-        this.setState({
-          dialog: {
-            delete: {
-              open: false,
-            },
-            makePublic: {
-              open: false,
-            },
-            stackScriptID: undefined,
-            stackScriptLabel: '',
-          },
-          fieldError: {
-            reason: 'Unable to complete your request at this time'
-          }
-        })
-      });
-  }
-
-
-  renderConfirmMakePublicActions = () => {
-    return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button
-            type="cancel"
-            onClick={this.handleCloseDialog}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="secondary"
-            destructive
-            onClick={this.handleMakePublic}>
-            Yes, make me a star!
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
-    )
-  }
-
-  renderConfirmDeleteActions = () => {
-    return (
-      <React.Fragment>
-        <ActionsPanel>
-          <Button
-            type="cancel"
-            onClick={this.handleCloseDialog}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="secondary"
-            destructive
-            onClick={this.handleDeleteStackScript}>
-            Delete
-          </Button>
-        </ActionsPanel>
-      </React.Fragment>
-    )
-  }
-
-  renderDeleteStackScriptDialog = () => {
-    const { dialog } = this.state;
-
-    return (
-      <ConfirmationDialog
-        title={`Delete ${dialog.stackScriptLabel}?`}
-        open={dialog.delete.open}
-        actions={this.renderConfirmDeleteActions}
-        onClose={this.handleCloseDialog}
-      >
-        <Typography>
-          Are you sure you want to delete this StackScript?
-        </Typography>
-      </ConfirmationDialog>
-    )
-  }
-
-  renderMakePublicDialog = () => {
-    const { dialog } = this.state;
-
-    return (
-      <ConfirmationDialog
-        title={`Woah, just a word of caution...`}
-        open={dialog.makePublic.open}
-        actions={this.renderConfirmMakePublicActions}
-        onClose={this.handleCloseDialog}
-      >
-        <Typography>
-          Are you sure you want to make {dialog.stackScriptLabel} public?
-          This action cannot be undone, nor will you be able to delete the StackScript once
-          made available to the public.
-        </Typography>
-      </ConfirmationDialog>
-    )
-  }
 
   handleSearch = (value: string) => {
     const {
@@ -611,10 +408,6 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       return <CircleProgress noTopMargin />;
     }
 
-    const selectProps = (!!this.props.onSelect)
-      ? { onSelect: this.handleSelectStackScript }
-      : {}
-
     return (
       <React.Fragment>
         {fieldError && fieldError.reason &&
@@ -654,18 +447,15 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 handleClickTableHeader={this.handleClickTableHeader}
                 sortOrder={sortOrder}
                 currentFilterType={currentFilterType}
-                /* conditional styles will be applied if we're selecting a StackScript */
-                isSelecting={!!Object.keys(selectProps).length}
+                isSelecting
               />
               <StackScriptsSection
                 isSorting={isSorting}
                 selectedId={this.state.selected}
                 data={this.state.listOfStackScripts}
                 publicImages={publicImages}
-                triggerDelete={this.handleOpenDeleteDialog}
-                triggerMakePublic={this.handleOpenMakePublicDialog}
                 currentUser={currentUser}
-                {...selectProps}
+                onSelect={this.handleSelectStackScript}
               />
             </Table>
             {/*
@@ -714,44 +504,9 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
             }
           </div>
         }
-        {this.renderDeleteStackScriptDialog()}
-        {this.renderMakePublicDialog()}
       </React.Fragment>
     );
   }
-}
-
-const generateSpecificFilter = (
-  key: AcceptedFilters,
-  searchTerm: string
-) => {
-  return {
-    [key]: {
-      ["+contains"]: searchTerm
-    }
-  }
-}
-
-const generateCatchAllFilter = (searchTerm: string) => {
-  return {
-    ["+or"]: [
-      {
-        "label": {
-          ["+contains"]: searchTerm
-        },
-      },
-      {
-        "username": {
-          ["+contains"]: searchTerm
-        },
-      },
-      {
-        "description": {
-          ["+contains"]: searchTerm
-        },
-      },
-    ],
-  };
 }
 
 const styled = withStyles(styles);

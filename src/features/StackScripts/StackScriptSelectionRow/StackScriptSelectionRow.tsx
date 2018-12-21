@@ -14,7 +14,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMore from 'src/components/ShowMore';
 import TableRow from 'src/components/TableRow';
 import Tag from 'src/components/Tag';
-import StackScriptsActionMenu from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
+import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/reducers/stackScriptDrawer';
 
 type ClassNames = 'root'
@@ -132,7 +132,7 @@ interface DispatchProps {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & DispatchProps & RenderGuardProps;
 
-export class SelectionRow extends React.Component<CombinedProps, {}> {
+export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> {
   render() {
     const {
       classes,
@@ -276,7 +276,7 @@ export default recompose<CombinedProps, Props & RenderGuardProps>(
   connect(undefined, mapDispatchToProps),
   RenderGuard,
   withStyles(styles),
-)(SelectionRow);
+)(StackScriptSelectionRow);
 
 const createTag: (images: string) => JSX.Element =
   v => <Tag label={v} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;

@@ -78,7 +78,6 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         <Grid container>
           <StackScriptPanel
             publicImages={images.response}
-            noHeader={true}
           />
         </Grid>
       </React.Fragment>

@@ -13,8 +13,10 @@ import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
 import { sendEvent } from 'src/utilities/analytics';
-import StackScriptTableHead from './PanelContent/StackScriptTableHead';
+import StackScriptTableHead from '../Partials/StackScriptTableHead';
+import { AcceptedFilters, generateCatchAllFilter, generateSpecificFilter  } from '../stackScriptUtils'
 import StackScriptsSection from './StackScriptsSection';
+
 
 type ClassNames = 'root'
   | 'emptyState'
@@ -52,7 +54,7 @@ interface Props {
   request: (username: string, params: Params, filter: any) =>
     Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   currentUser: string;
-  category: 'my' | 'account' | 'linode' | 'community';
+  category: string;
   publicImages: Linode.Image[];
 }
 
@@ -83,8 +85,6 @@ interface FilterInfo {
 }
 
 type SortOrder = 'asc' | 'desc';
-
-type AcceptedFilters = 'username' | 'description' | 'label'
 
 interface State {
   currentPage: number;
@@ -694,39 +694,6 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
-}
-
-const generateSpecificFilter = (
-  key: AcceptedFilters,
-  searchTerm: string
-) => {
-  return {
-    [key]: {
-      ["+contains"]: searchTerm
-    }
-  }
-}
-
-const generateCatchAllFilter = (searchTerm: string) => {
-  return {
-    ["+or"]: [
-      {
-        "label": {
-          ["+contains"]: searchTerm
-        },
-      },
-      {
-        "username": {
-          ["+contains"]: searchTerm
-        },
-      },
-      {
-        "description": {
-          ["+contains"]: searchTerm
-        },
-      },
-    ],
-  };
 }
 
 const styled = withStyles(styles);

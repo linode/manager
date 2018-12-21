@@ -2,11 +2,11 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import StackScriptPanelContent from './StackScriptPanelContent';
-import { getAccountStackScripts, getCommunityStackscripts, getStackScriptsByUser } from './stackScriptUtils';
+
+import { StackScriptTabs } from '../stackScriptUtils';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -16,8 +16,7 @@ export interface ExtendedLinode extends Linode.Linode {
 type ClassNames = 'root'
   | 'creating'
   | 'table'
-  | 'link'
-  | 'selecting';
+  | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -36,14 +35,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     overflowY: 'scroll',
     '-webkit-appearance': 'none',
   },
-  selecting: {
-    minHeight: '400px',
-    maxHeight: '1000px',
-    overflowX: 'auto',
-    overflowY: 'scroll',
-    paddingTop: 0,
-    marginTop: theme.spacing.unit * 2,
-  },
   link: {
     display: 'block',
     textAlign: 'right',
@@ -55,20 +46,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props {
   error?: string;
   publicImages: Linode.Image[];
-  noHeader?: boolean;
 }
 
 type CombinedProps = Props &  StateProps & WithStyles<ClassNames>;
 
-interface State {
-  stackScriptError: boolean;
-}
-
-class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
-
-  state: State = {
-    stackScriptError: false
-  }
+class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 
   mounted: boolean = false;
 
@@ -80,69 +62,29 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  createTabs = [
-    {
-      title: 'My StackScripts',
-      render: () => <StackScriptPanelContent
-        publicImages={this.props.publicImages}
-        currentUser={this.props.username}
-        request={getStackScriptsByUser}
-        key={0}
-        category="my"
-      />,
-    },
-    {
-      title: 'Account StackScripts',
-      render: () => <StackScriptPanelContent
-        publicImages={this.props.publicImages}
-        currentUser={this.props.username}
-        request={getAccountStackScripts}
-        key={1}
-        category="account"
-      />,
-    },
-    {
-      title: 'Linode StackScripts',
-      render: () => <StackScriptPanelContent
-        publicImages={this.props.publicImages}
-        currentUser={this.props.username}
-        request={getStackScriptsByUser}
-        key={2}
-        category="linode"
-      />,
-    },
-    {
-      title: 'Community StackScripts',
-      render: () => <StackScriptPanelContent
-        category="community"
-        publicImages={this.props.publicImages}
-        currentUser={this.props.username}
-        request={getCommunityStackscripts}
-        key={3}
-      />,
-    },
-  ];
-
-  getInitTab = () => {
-    return 0;
-  }
+  createTabs = StackScriptTabs.map(tab => ({
+    title: tab.title,
+    render: () => <StackScriptPanelContent
+      publicImages={this.props.publicImages}
+      currentUser={this.props.username}
+      request={tab.request}
+      key={tab.category + '-tab'}
+      category={tab.category}
+    />
+  }));
 
   render() {
-    const { error, noHeader, classes } = this.props;
-    const { stackScriptError } = this.state;
+    const { error, classes } = this.props;
 
     return (
       <React.Fragment>
-        {stackScriptError && <Typography variant="body2">
-          An error occured while loading selected stackScript. Please, choose one of the list.
-        </Typography>}
         <TabbedPanel
           error={error}
           rootClass={classes.root}
-          shrinkTabContent={(!noHeader) ? classes.creating : classes.selecting}
-          header={(noHeader) ? "" : "Select StackScript"}
+          shrinkTabContent={classes.creating}
           tabs={this.createTabs}
-          initTab={this.getInitTab()}
+          header=""
+          initTab={0}
         />
       </React.Fragment>
     );

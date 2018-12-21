@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { StaticRouter } from 'react-router-dom';
-import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
+import StackScriptSelectionRow, { StackScriptSelectionRowProps } from './index';
 
 interface State {
   selected: number;
@@ -12,7 +12,7 @@ class InteractiveExample extends React.Component<{}, State> {
     selected: 0,
   };
 
-  createItems = (): SelectionRowProps[] => [
+  createItems = (): StackScriptSelectionRowProps[] => [
     {
       checked: this.state.selected === 0,
       onSelect: () => this.setState({ selected: 0 }),
@@ -139,7 +139,7 @@ class InteractiveExample extends React.Component<{}, State> {
           {
             this
               .createItems()
-              .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
+              .map((item, idx) => React.createElement(StackScriptSelectionRow, { key: idx, ...item }))
           }
         </React.Fragment>
       </StaticRouter>
@@ -147,5 +147,5 @@ class InteractiveExample extends React.Component<{}, State> {
   }
 }
 
-storiesOf('SelectionRow', module)
+storiesOf('StackScriptSelectionRow', module)
   .add('Interactive example', () => (<InteractiveExample />));
