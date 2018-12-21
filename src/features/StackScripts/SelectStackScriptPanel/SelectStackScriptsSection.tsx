@@ -30,7 +30,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
+const SelectStackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     onSelect,
     selectedId,
@@ -75,4 +75,4 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
 
 const styled = withStyles(styles);
 
-export default styled(StackScriptsSection) as React.StatelessComponent<Props>;
+export default styled(SelectStackScriptsSection) as React.StatelessComponent<Props>;

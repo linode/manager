@@ -9,7 +9,7 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { sendEvent } from 'src/utilities/analytics';
-import StackScriptsSection from './StackScriptsSection';
+import SelectStackScriptsSection from './SelectStackScriptsSection';
 
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import { AcceptedFilters, generateCatchAllFilter, generateSpecificFilter } from '../stackScriptUtils'
@@ -449,7 +449,7 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
                 currentFilterType={currentFilterType}
                 isSelecting
               />
-              <StackScriptsSection
+              <SelectStackScriptsSection
                 isSorting={isSorting}
                 selectedId={this.state.selected}
                 data={this.state.listOfStackScripts}
