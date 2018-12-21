@@ -14,20 +14,28 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
 
-type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell';
+type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell' | 'groupContainer';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   tagGridRow: {
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: 20,
   },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
     height: 'auto',
     '& td': {
-      padding: '10px 0',
+      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+      padding: '20px 0 10px',
       borderBottom: 'none',
+    },
+  },
+  groupContainer: {
+    '&:first-of-type': {
+      '& $tagHeaderRow > td': {
+        padding: '10px 0',
+      },
     },
   },
   tagHeader: {
@@ -130,7 +138,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                   const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
                   return (
                     <React.Fragment>
-                      <TableBody>
+                      <TableBody className={classes.groupContainer}>
                         <TableRow className={classes.tagHeaderRow}>
                           <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
                         </TableRow>
