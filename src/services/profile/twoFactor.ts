@@ -50,8 +50,9 @@ export const disableTwoFactor = () =>
  * being locked out of your Account.
  */
 export const confirmTwoFactor = (tfa_code: string) =>
-  Request<string>(
+  Request<{ scratch: string }>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tfa-enable-confirm`),
     setData({ tfa_code })
   )
+    .then(response => response.data)

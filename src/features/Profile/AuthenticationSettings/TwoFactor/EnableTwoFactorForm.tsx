@@ -26,8 +26,7 @@ interface Props {
   secret: string;
   username: string;
   twoFactorConfirmed: boolean;
-  onSuccess: () => void;
-  dialogOpen: boolean;
+  onSuccess: (scratchCode: string) => void;
   toggleDialog: () => void;
 }
 
@@ -76,7 +75,9 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           submitting: false,
           token: '',
         });
-        this.props.onSuccess();
+        this.props.onSuccess(response.scratch);
+        /** toggle the scratch code dialog */
+        this.props.toggleDialog();
       })
       .catch((error) => {
         if (!this.mounted) { return; }

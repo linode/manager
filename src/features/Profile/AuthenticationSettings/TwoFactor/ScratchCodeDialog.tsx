@@ -16,6 +16,7 @@ class TrustedDevicesDialog extends React.PureComponent<Props, {}> {
     const {
       open,
       closeDialog,
+      scratchCode
     } = this.props;
 
     return (
@@ -30,7 +31,17 @@ class TrustedDevicesDialog extends React.PureComponent<Props, {}> {
         }
       >
         <Typography>
-          {`Her is your scratch code dummy`}
+          {`Here is your scratch code. Please note that you can only use this code once.
+          This is the only time it will appear. Be sure to make a note of it and keep it
+          secure:`}
+        </Typography>
+        <Typography
+          style={{
+            marginTop: '16px'
+          }}
+          variant="h5"
+        >
+          {scratchCode}
         </Typography>
       </ConfirmationDialog>
     );
