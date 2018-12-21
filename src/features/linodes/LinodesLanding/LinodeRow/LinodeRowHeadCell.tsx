@@ -5,7 +5,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import Tags from 'src/components/Tags';
-import { transitionText } from 'src/features/linodes/transitions';
+import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
 type ClassNames = 'root' | 'link' | 'tagWrapper' | 'loadingStatus' | 'labelWrapper';
@@ -58,8 +58,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
     linodeRecentEvent,
   } = props;
 
-  const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
-
 
   return (
     <TableCell
@@ -74,9 +72,14 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
           <Grid item className="py0">
             <div className={loading ? classes.labelWrapper : ''}>
-              {loading && <Typography variant="body2" className={classes.loadingStatus}>
-              {transitionText(linodeStatus, linodeRecentEvent)}: {value}%
-              </Typography>}
+              {
+                linodeRecentEvent && linodeInTransition(linodeStatus, linodeRecentEvent) &&
+                <ProgressDisplay
+                  className={classes.loadingStatus}
+                  text={transitionText(linodeStatus, linodeRecentEvent)}
+                  progress={linodeRecentEvent.percent_complete}
+                />
+              }
               <Typography role="header" variant="h3" data-qa-label>
                 {linodeLabel}
               </Typography>
@@ -94,3 +97,14 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles);
 
 export default styled(LinodeRowHeadCell);
+
+const ProgressDisplay: React.StatelessComponent<{ className: string; progress: null | number; text: string }> = (props) => {
+  const { progress, text, className } = props;
+  const displayProgress = progress ? `${progress}%` : `scheduled`;
+
+  return (
+    <Typography variant="body2" className={className}>
+      {text}: {displayProgress}
+    </Typography>
+  );
+}

@@ -3,6 +3,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
 
@@ -24,6 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   linodeId: number;
+  linodeStatus: Linode.LinodeStatus;
   linodeRecentEvent?: Linode.Event;
 }
 
@@ -33,17 +35,19 @@ const LinodeRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
     linodeId,
+    linodeStatus,
     linodeRecentEvent,
     children,
   } = props;
 
-  const value = (linodeRecentEvent && linodeRecentEvent.percent_complete) || 1;
-
   return (
     <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
-      { children }
+      {children}
       <TableCell colSpan={5} className={classes.bodyCell}>
-        <LinearProgress value={value} />
+        {
+          linodeRecentEvent && linodeInTransition(linodeStatus, linodeRecentEvent) &&
+          <ProgressDisplay progress={linodeRecentEvent.percent_complete} />
+          }
       </TableCell>
     </TableRow>
   );
@@ -52,3 +56,11 @@ const LinodeRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles);
 
 export default styled(LinodeRowLoading);
+
+const ProgressDisplay: React.StatelessComponent<{ progress: null | number }> = (props) => {
+  const { progress } = props;
+
+  return progress
+    ? <LinearProgress value={progress} />
+    : <LinearProgress variant='indeterminate' />
+}
