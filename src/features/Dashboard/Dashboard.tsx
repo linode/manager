@@ -10,7 +10,8 @@ import Grid from 'src/components/Grid';
 import TagImportDrawer from 'src/features/TagImport';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
-import getEntitiesWithGroupsToImport, { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
 import BlogDashboardCard from './BlogDashboardCard';
@@ -20,7 +21,6 @@ import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-
 
 type ClassNames = 'root';
 
@@ -44,15 +44,6 @@ interface DispatchProps {
 }
 
 type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames> & WithTheme;
-
-const shouldDisplayGroupImportCTA = (groupedEntities: GroupedEntitiesForImport) => {
-  const userHasDisabledCTA = storage.hideGroupImportCTA.get();
-  const { linodes, domains } = groupedEntities;
-  return (
-    !userHasDisabledCTA &&
-    (linodes.length > 0 || domains.length > 0)
-  )
-}
 
 export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -86,7 +77,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
               openBackupDrawer={openBackupDrawer}
             />
           }
-          {shouldDisplayGroupImportCTA(entitiesWithGroupsToImport) &&
+          {!storage.hideGroupImportCTA.get() && shouldDisplayGroupImport(entitiesWithGroupsToImport) &&
             <ImportGroupsCard
               theme={props.theme.name}
               openImportDrawer={openImportDrawer}
@@ -106,7 +97,10 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
   backupError: pathOr(false, ['backups', 'error'], state),
-  entitiesWithGroupsToImport: getEntitiesWithGroupsToImport(state), // <-- Memoized selector
+  entitiesWithGroupsToImport: (
+    (!storage.hideGroupImportCTA.get() && !storage.hasImportedGroups.get())
+      ? getEntitiesWithGroupsToImport(state)
+      : emptyGroupedEntities),
 });
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {

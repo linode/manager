@@ -26,6 +26,7 @@ const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
+const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
@@ -64,6 +65,10 @@ export const storage = {
   hideGroupImportCTA: {
     get: (): 'true' | 'false' =>  getStorage(HIDE_DISPLAY_GROUPS_CTA),
     set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, 'true')
+  },
+  hasImportedGroups: {
+    get: (): 'true' | 'false' =>  getStorage(HAS_IMPORTED_GROUPS),
+    set: () => setStorage(HAS_IMPORTED_GROUPS, 'true')
   }
 }
 

@@ -12,6 +12,11 @@ export interface GroupImportProps {
   tags: string[];
 }
 
+export const emptyGroupedEntities = {
+  linodes: [],
+  domains: []
+};
+
 // Linodes and Domains are the only entities with Display Groups.
 type GroupedEntity = Linode.Linode | Linode.Domain;
 
