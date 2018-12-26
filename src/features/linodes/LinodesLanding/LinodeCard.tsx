@@ -1,5 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Flag from 'src/assets/icons/flag.svg';
 import Button from 'src/components/Button';
@@ -9,7 +10,6 @@ import CardContent from 'src/components/core/CardContent';
 import CardHeader from 'src/components/core/CardHeader';
 import Divider from 'src/components/core/Divider';
 import IconButton from 'src/components/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -18,182 +18,15 @@ import Tags from 'src/components/Tags';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import { displayType, typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
+import styled, { StyleProps } from './LinodeCard.style';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
-
-type CSSClasses =
-  'customeMQ'
-  | 'cardSection'
-  | 'flexContainer'
-  | 'cardHeader'
-  | 'cardContent'
-  | 'cardLoadingContainer'
-  | 'distroIcon'
-  | 'rightMargin'
-  | 'actionMenu'
-  | 'cardActions'
-  | 'button'
-  | 'consoleButton'
-  | 'rebootButton'
-  | 'loadingStatusText'
-  | 'flag'
-  | 'flagContainer'
-  | 'linkWrapper'
-  | 'StatusIndicatorWrapper'
-  | 'link'
-  | 'statusProgress'
-  | 'statusText'
-  | 'wrapHeader';
-
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
-  customeMQ: {
-    '@media (min-width: 600px) and (max-width: 680px)': {
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
-    },
-    '@media (min-width: 1280px) and (max-width: 1400px)': {
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
-    },
-  },
-  cardSection: {
-    ...theme.typography.body1,
-    marginBottom: theme.spacing.unit,
-    paddingTop: theme.spacing.unit,
-    paddingLeft: 3,
-    paddingRight: 3,
-    color: theme.palette.text.primary,
-  },
-  flexContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    position: 'relative',
-    '& .title': {
-      minHeight: 48,
-      padding: `0 ${theme.spacing.unit * 3}px`,
-    },
-  },
-  cardHeader: {
-    fontFamily: 'LatoWebBold',
-    color: 'black',
-    marginLeft: theme.spacing.unit,
-    // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
-    minWidth: 0,
-  },
-  cardContent: {
-    flex: 1,
-    [theme.breakpoints.up('sm')]: {
-      minHeight: 230,
-    },
-  },
-  cardLoadingContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    height: '100%',
-  },
-  distroIcon: {
-    marginTop: theme.spacing.unit,
-    width: theme.spacing.unit * 3,
-  },
-  rightMargin: {
-    marginRight: theme.spacing.unit,
-  },
-  actionMenu: {
-    position: 'relative',
-    top: 9,
-    '& button': {
-      height: 48,
-    },
-  },
-  cardActions: {
-    backgroundColor: theme.bg.offWhite,
-    padding: 0,
-  },
-  button: {
-    padding: '12px 12px 14px',
-    height: '100%',
-    margin: 0,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-    transition: theme.transitions.create(['background-color', 'color']),
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-    },
-    '&:focus': {
-      outline: '1px dotted #999',
-    },
-  },
-  consoleButton: {
-    width: '50%',
-    /** @todo This was theme.pale, which doesnt exist. */
-    // borderColor: theme.pale,
-    borderRight: '1px solid ' + theme.palette.divider,
-  },
-  rebootButton: {
-    width: '50%',
-  },
-  loadingStatusText: {
-    fontSize: '1.1rem',
-    textTransform: 'capitalize',
-    position: 'relative',
-    top: - theme.spacing.unit * 2,
-  },
-  flagContainer: {
-    padding: 0,
-    position: 'relative',
-    zIndex: 5,
-  },
-  flag: {
-    transition: theme.transitions.create('opacity'),
-    opaity: 1,
-    '&:hover': {
-      opacity: .75,
-    },
-  },
-  link: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    height: 48,
-    width: '100%',
-    '&:hover': {
-      backgroundColor: 'transparent',
-      '& + .title h3': {
-        color: theme.palette.primary.main,
-      },
-    },
-  },
-  StatusIndicatorWrapper: {
-    position: 'relative',
-    top: 2,
-  },
-  linkWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-    // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
-    minWidth: 0,
-  },
-  wrapHeader: {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  },
-  statusProgress: {
-    paddingRight: 0,
-    paddingTop: 6
-  },
-  statusText: {
-  }
-});
 
 interface State {
   mutationAvailable: boolean;
@@ -223,8 +56,7 @@ interface Props {
 type CombinedProps =
   & Props
   & WithTypesProps
-  & WithTheme
-  & WithStyles<CSSClasses>;
+  & StyleProps;
 
 class LinodeCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -396,9 +228,6 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 }
 
-import { connect } from 'react-redux';
-import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
-
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
   recentEvent?: Linode.Event;
@@ -411,7 +240,7 @@ const withTypes = connect((state: ApplicationState, { linodeId }: Props) => ({
 
 
 export default compose(
-  withStyles(styles, { withTheme: true }),
+  styled,
   withTypes,
 )(LinodeCard) as React.ComponentType<Props>;
 
