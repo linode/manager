@@ -1,11 +1,22 @@
-import { compose, prop, reverse, sortBy, when } from 'ramda';
+import { compose, cond, length, path, prop, reverse, sortBy, when } from 'ramda';
 import * as React from 'react';
 import { Order } from 'src/components/Pagey';
+import { isArray as _isArray } from 'util';
+
+const isArray = (arr: any[], columnName: string) => {
+  const targetColumn = path([columnName], arr[0]);
+  return _isArray(targetColumn);
+}
 
 const orderList: <T>(order: Order, orderBy: keyof T) => (list: T[]) => T[] = (order, orderBy) => (list) => {
+  console.log(orderBy);
+  const orderedField = prop(orderBy as string);
   return compose<any, any, any>(
     when(() => order === 'desc', reverse),
-    sortBy(prop(orderBy as string)), /** I spent a long, long time trying to type this. */
+    cond([
+      [(a) => isArray(a, orderBy as string), sortBy(compose(length, orderedField))], // If the field to sort is an array (e.g. tags)
+      [() => true, sortBy(orderedField), /** I spent a long, long time trying to type this. */]
+    ]),
   )(list);
 };
 
