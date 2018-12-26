@@ -18,7 +18,6 @@ import Tags from 'src/components/Tags';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import { displayType, typeLabelDetails } from '../presentation';
@@ -27,6 +26,7 @@ import LinodeActionMenu from './LinodeActionMenu';
 import styled, { StyleProps } from './LinodeCard.style';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
+import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
 interface State {
   mutationAvailable: boolean;
@@ -56,6 +56,7 @@ interface Props {
 type CombinedProps =
   & Props
   & WithTypesProps
+  & WithRecentEvent
   & StyleProps;
 
 class LinodeCard extends React.Component<CombinedProps, State> {
@@ -230,18 +231,16 @@ class LinodeCard extends React.Component<CombinedProps, State> {
 
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
-  recentEvent?: Linode.Event;
 }
 
 const withTypes = connect((state: ApplicationState, { linodeId }: Props) => ({
   typesData: state.__resources.types.entities,
-  recentEvent: recentEventForLinode(linodeId)(state)
 }));
-
 
 export default compose(
   styled,
   withTypes,
+  withRecentEvent,
 )(LinodeCard) as React.ComponentType<Props>;
 
 const ProgressDisplay: React.StatelessComponent<{
