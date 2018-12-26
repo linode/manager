@@ -34,7 +34,7 @@ interface Props {
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
 }
 
-type CombinedProps =
+export type CombinedProps =
   & Props
   & HasMutationAvailable
   & WithDisplayType
@@ -42,7 +42,7 @@ type CombinedProps =
   & WithNotifications
   & StyleProps
 
-const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
+export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
     linodeBackups,
@@ -131,7 +131,7 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(LinodeRow);
 
-const RenderFlag: React.StatelessComponent<{
+export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
   linodeNotifications: Linode.Notification[],
   classes: any
@@ -163,3 +163,5 @@ const RenderFlag: React.StatelessComponent<{
   }
   return null;
 }
+
+RenderFlag.displayName = `RenderFlag`;
