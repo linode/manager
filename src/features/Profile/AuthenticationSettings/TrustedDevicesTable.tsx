@@ -56,7 +56,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
             <TableRow key={eachDevice.id}>
               <TableCell parentColumn="Device">{eachDevice.user_agent}</TableCell>
               <TableCell parentColumn="Expires">
-                <DateTimeDisplay value={eachDevice.expiry} />
+                <DateTimeDisplay value={eachDevice.expiry} humanizeCutoff="month" />
               </TableCell>
               <TableCell>
                 <UntrustButton
