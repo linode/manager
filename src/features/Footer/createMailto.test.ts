@@ -15,14 +15,12 @@ describe('mailto', () => {
 
   it('contains a subject', () => {
     const queryString = parse(mailto.split('?')[1]);
-    expect(queryString).toHaveProperty('Subject');
-    expect(queryString.Subject).toBe('Cloud Manager User Feedback');
+    expect(queryString).toHaveProperty('Subject', 'Cloud Manager User Feedback');
   });
 
   it('contains a body', () => {
     const queryString = parse(mailto.split('?')[1]);
-    expect(queryString).toHaveProperty('Body');
-    expect(queryString.Body).toBe('\n\nmy-user-agent');
+    expect(queryString).toHaveProperty('Body', '\n\nmy-user-agent');
   });
 
   it('doesn\'t include body if user agent is bad input', () => {
