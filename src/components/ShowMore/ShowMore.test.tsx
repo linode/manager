@@ -1,20 +1,26 @@
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import Chip from 'src/components/core/Chip';
+import { ShowMore } from './ShowMore';
 
-import ShowMore from './ShowMore';
+const mockRender = jest.fn();
+const classes = {
+  chip: '', label: '', popover: '', link: ''
+}
+
+const props = {
+  classes,
+  items: ['a', 'b'],
+  render: mockRender
+}
 
 describe('ShowMore', () => {
-  const mockRender = jest.fn();
 
-  const wrapper = mount(
-    <LinodeThemeWrapper>
+  const wrapper = shallow(
       <ShowMore
-        items={['a', 'b']}
-        render={mockRender}
+        {...props}
       />
-    </LinodeThemeWrapper>,
   );
 
   it('should call provided render function with items.', () => {
@@ -22,7 +28,12 @@ describe('ShowMore', () => {
   });
 
   it('should render a chip with items.length', () => {
-    const chipText = wrapper.find('Chip button span').text();
-    expect(chipText).toBe('+2');
+    expect(wrapper.containsMatchingElement(<Chip label="+2" />)).toBeTruthy();
+  });
+
+  it('should render a link instead of a chip if asLink is true', () => {
+    wrapper.setProps({ asLink: true });
+    expect(wrapper.find('[data-qa-show-more-chip]')).toHaveLength(0);
+    expect(wrapper.find('[data-qa-show-more-link]')).toHaveLength(1);
   });
 });

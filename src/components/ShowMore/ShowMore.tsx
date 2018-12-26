@@ -52,7 +52,7 @@ interface Props<T> {
   asLink?: boolean;
 }
 
-class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
+export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   state = {
     anchorEl: undefined,
   };
