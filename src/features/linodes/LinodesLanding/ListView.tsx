@@ -24,18 +24,17 @@ export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
           <LinodeRow
             key={`linode-row-${idx}`}
             linodeId={linode.id}
-            linodeType={linode.type}
             linodeStatus={linode.status}
             linodeIpv4={linode.ipv4}
             linodeIpv6={linode.ipv6}
             linodeRegion={linode.region}
-            linodeNotification={linode.notification}
             linodeLabel={linode.label}
             linodeBackups={linode.backups}
             linodeTags={linode.tags}
             openConfigDrawer={openConfigDrawer}
             toggleConfirmation={toggleConfirmation}
             mostRecentBackup={linode.mostRecentBackup}
+            linodeType={linode.type}
           />,
         )
       }
