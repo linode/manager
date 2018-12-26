@@ -21,7 +21,7 @@ interface Props {
   orderBy?: string;
 }
 
-const sortData = curry((orderBy: string, order: Order, obj1: any, obj2: any) => {
+export const sortData = curry((orderBy: string, order: Order, obj1: any, obj2: any) => {
   /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
   *  we want to sort by the length of the array. Otherwise, do a simple comparison.
   */
