@@ -4,7 +4,10 @@ import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
-type CSSClasses =  'chip' | 'label' | 'popover';
+type CSSClasses =  'chip'
+  | 'label'
+  | 'popover'
+  | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   chip: {
@@ -28,6 +31,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     paddingLeft: 6,
     paddingRight: 6,
   },
+  link: {
+    color: `${theme.color.blueDTwhite} !important`,
+  },
   popover: {
     minWidth: 'auto',
     maxWidth: 400,
@@ -43,6 +49,7 @@ interface Props<T> {
   items: T[];
   render: (items: T[]) => any;
   chipProps?: ChipProps;
+  asLink?: boolean;
 }
 
 class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
@@ -63,27 +70,40 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   }
 
   render() {
-    const { classes, render, items, chipProps } = this.props;
+    const { asLink, classes, render, items, chipProps } = this.props;
     const { anchorEl } = this.state;
 
     return (
       <React.Fragment>
-        <Chip
-          className={classNames(
-            {
-              [classes.chip]: true,
-              'active': anchorEl,
-            },
-            'chip',
-          )}
-          label={`+${items.length}`}
-          classes={{ label: classes.label }}
-          onClick={this.handleClick}
-          {...chipProps}
-          data-qa-show-more-chip
-          component="button"
-          clickable
-        />
+        {asLink
+          ?
+            <a
+              aria-label="Expand Tags"
+              className={classes.link}
+              onClick={this.handleClick}
+              data-qa-show-more-link
+            >
+              {items.length}
+            </a>
+          :
+            <Chip
+              className={classNames(
+                {
+                  [classes.chip]: true,
+                  'active': anchorEl,
+                },
+                'chip',
+              )}
+              label={`+${items.length}`}
+              classes={{ label: classes.label }}
+              onClick={this.handleClick}
+              {...chipProps}
+              data-qa-show-more-chip
+              component="button"
+              clickable
+            />
+        }
+
         <Popover
           classes={{ paper: classes.popover }}
           anchorEl={anchorEl}

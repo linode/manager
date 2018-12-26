@@ -21,7 +21,7 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
         >
           Linode
         </TableSortCell>
-        <TableCell>Plan</TableCell>
+        <TableCell>Tags</TableCell>
         <TableCell noWrap>Last Backup</TableCell>
         <TableCell>IP Addresses</TableCell>
         <TableSortCell
