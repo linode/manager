@@ -4,8 +4,8 @@ import { connect, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import LinodeRowWithState from './LinodeRowWithState';
 
 type ClassNames = 'root';
@@ -38,13 +38,14 @@ interface Props {
 type CombinedProps =
   & Props
   & WithTypesProps
+  & WithRecentEvent
   & WithTheme
   & WithStyles<ClassNames>;
 
 class LinodeRow extends React.Component<CombinedProps, State> {
 
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
-    return haveAnyBeenModified<Props & WithTypesProps>(
+    return haveAnyBeenModified<CombinedProps & WithTypesProps>(
       nextProps,
       this.props,
       [
@@ -107,20 +108,16 @@ class LinodeRow extends React.Component<CombinedProps, State> {
 interface WithTypesProps {
   mutationAvailable: boolean;
   displayType: string;
-  recentEvent?: Linode.Event;
 }
 
 const mapStateToProps: MapStateToProps<WithTypesProps, Props, ApplicationState> = (state, ownProps) => {
-  const { linodeType, linodeId } = ownProps;
+  const { linodeType } = ownProps;
   const { entities, results } = state.__resources.types;
-
-
   const type = getType(entities, results, linodeType);
 
   return ({
     displayType: type === null ? 'No Plan' : type === undefined ? 'Unknown Plan' : type.label,
     mutationAvailable: hasMutation(type),
-    recentEvent: recentEventForLinode(linodeId)(state),
   })
 };
 
@@ -128,6 +125,7 @@ const connected = connect(mapStateToProps);
 
 export default compose(
   withStyles(styles, { withTheme: true }),
+  withRecentEvent,
   connected,
 )(LinodeRow) as React.ComponentType<Props>;
 
