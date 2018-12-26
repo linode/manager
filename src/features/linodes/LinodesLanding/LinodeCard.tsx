@@ -49,7 +49,7 @@ interface Props {
     linodeId: number, linodeLabel: string) => void;
 }
 
-type CombinedProps =
+export type CombinedProps =
   & Props
   & WithDisplayType
   & WithRecentEvent
@@ -57,7 +57,7 @@ type CombinedProps =
   & HasMutationAvailable
   & StyleProps;
 
-class LinodeCard extends React.PureComponent<CombinedProps> {
+export class LinodeCard extends React.PureComponent<CombinedProps> {
 
   handleConsoleButtonClick = () => {
     sendEvent({
@@ -77,67 +77,34 @@ class LinodeCard extends React.PureComponent<CombinedProps> {
     toggleConfirmation('reboot', linodeId, linodeLabel);
   }
 
-  renderFlag = () => {
-    /*
-    * Render either a flag for if the Linode has a notification
-    * or if it has a pending mutation available. Mutations take
-    * precedent over notifications
-    */
-    const { linodeNotifications, mutationAvailable, classes } = this.props;
-    if (mutationAvailable) {
-      return (
-        <Grid item className={classes.flagContainer}>
-          <Tooltip title="There is a free upgrade available for this Linode">
-            <IconButton>
-              <Flag className={classes.flag} />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      )
-    }
-
-    if (linodeNotifications.length > 0) {
-      return linodeNotifications.map((notification, idx) => (
-        <Grid key={idx} item className={classes.flagContainer}>
-          <Tooltip title={notification.message}><Flag className={classes.flag} /></Tooltip>
-        </Grid>
-      ))
-    }
-
-    return null;
-  }
-
-  renderTitle() {
-    const { classes, linodeStatus, linodeLabel, linodeId } = this.props;
-
-    return (
-      <Grid container alignItems="center">
-        <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
-          <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
-            <LinodeStatusIndicator status={linodeStatus} />
-          </Grid>
-          <Grid item className={classes.cardHeader + ' py0'}>
-            <Typography role="header" className={classes.wrapHeader} variant="h3" data-qa-label>
-              {linodeLabel}
-            </Typography>
-          </Grid>
-        </Link>
-        {this.renderFlag()}
-      </Grid>
-    );
-  }
-
   render() {
     const { classes, openConfigDrawer, linodeId, linodeLabel, recentEvent,
       linodeStatus, linodeBackups, toggleConfirmation, displayType, linodeSpecMemory,
-      linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4, linodeIpv6, imageLabel, linodeTags
+      linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4, linodeIpv6, imageLabel, linodeTags,
+      mutationAvailable, linodeNotifications
     } = this.props;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
         <Card className={classes.flexContainer}>
           <CardHeader
-            subheader={this.renderTitle()}
+            subheader={
+              <RenderTitle
+                classes={{
+                  wrapHeader: classes.wrapHeader,
+                  linkWrapper: classes.linkWrapper,
+                  flagContainer: classes.flagContainer,
+                  flag: classes.flag,
+                  cardHeader: classes.cardHeader,
+                  StatusIndicatorWrapper: classes.StatusIndicatorWrapper,
+                }}
+                linodeId={linodeId}
+                linodeLabel={linodeLabel}
+                linodeNotifications={linodeNotifications}
+                linodeStatus={linodeStatus}
+                mutationAvailable={mutationAvailable}
+              />
+            }
             action={
               <div className={classes.actionMenu}>
                 <LinodeActionMenu
@@ -238,3 +205,86 @@ const ProgressDisplay: React.StatelessComponent<{
     </Grid>
   );
 };
+
+export const RenderTitle: React.StatelessComponent<{
+  classes: {
+    linkWrapper: string;
+    StatusIndicatorWrapper: string;
+    wrapHeader: string;
+    flagContainer: string;
+    cardHeader: string;
+    flag: string;
+  }
+  linodeStatus: Linode.LinodeStatus;
+  linodeLabel: string;
+  linodeId: number;
+  mutationAvailable: boolean;
+  linodeNotifications: Linode.Notification[];
+}> = (props) => {
+  const { classes, linodeStatus, linodeLabel, linodeId, mutationAvailable, linodeNotifications } = props;
+
+  return (
+    <Grid container alignItems="center">
+      <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
+        <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
+          <LinodeStatusIndicator status={linodeStatus} />
+        </Grid>
+        <Grid item className={classes.cardHeader + ' py0'}>
+          <Typography role="header" className={classes.wrapHeader} variant="h3" data-qa-label>
+            {linodeLabel}
+          </Typography>
+        </Grid>
+      </Link>
+      <RenderFlag
+        classes={{ flag: classes.flag, flagContainer: classes.flagContainer }}
+        linodeNotifications={linodeNotifications}
+        mutationAvailable={mutationAvailable}
+      />
+    </Grid>
+  );
+};
+
+RenderTitle.displayName = `RenderTitle`;
+
+export const RenderFlag: React.StatelessComponent<{
+  mutationAvailable: boolean;
+  linodeNotifications: Linode.Notification[],
+  classes: any
+}> = (props) => {
+  /*
+  * Render either a flag for if the Linode has a notification
+  * or if it has a pending mutation available. Mutations take
+  * precedent over notifications
+  */
+  const { mutationAvailable, classes, linodeNotifications } = props;
+
+  if (mutationAvailable) {
+    return (
+      <Grid item className={classes.flagContainer}>
+        <Tooltip title="There is a free upgrade available for this Linode">
+          <IconButton>
+            <Flag className={classes.flag} />
+          </IconButton>
+        </Tooltip>
+      </Grid>
+    )
+  }
+
+  if (linodeNotifications.length > 0) {
+    return (
+      <>
+        {
+          linodeNotifications.map((notification, idx) => (
+            <Grid key={idx} item className={classes.flagContainer}>
+              <Tooltip title={notification.message}><Flag className={classes.flag} /></Tooltip>
+            </Grid>
+          ))
+        }
+      </>
+    )
+  }
+
+  return null;
+}
+
+RenderFlag.displayName = `RenderFlag`;
