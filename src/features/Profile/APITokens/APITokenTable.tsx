@@ -387,7 +387,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         </TableCell>
         <TableCell parentColumn="Created">
           <Typography variant="body1" data-qa-token-created>
-            <DateTimeDisplay value={token.created} humanizeCutoff="year"/>
+            <DateTimeDisplay value={token.created} humanizeCutoff="month"/>
           </Typography>
         </TableCell>
         <TableCell parentColumn="Expires">
