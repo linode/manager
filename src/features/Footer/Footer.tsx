@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import createMailto from './createMailto';
 
 type CSSClasses = 'container'
   | 'link'
@@ -61,7 +62,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
         <Grid item style={{ paddingLeft: 0 }}>
           <a
             className={classes.link}
-            href="mailto:feedback@linode.com"
+            href={createMailto(navigator.userAgent || '')}
           >
             Provide Feedback
           </a>
