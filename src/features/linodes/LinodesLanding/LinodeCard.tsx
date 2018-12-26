@@ -18,19 +18,16 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import { sendEvent } from 'src/utilities/analytics';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import { typeLabelDetails } from '../presentation';
+import hasMutationAvailable, { HasMutationAvailable } from './hasMutationAvailable';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import styled, { StyleProps } from './LinodeCard.style';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import withDisplayType, { WithDisplayType } from './withDisplayType';
+import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
-
-interface State {
-  mutationAvailable: boolean;
-}
 
 interface Props {
   linodeId: number;
@@ -39,7 +36,6 @@ interface Props {
   linodeIpv6: string;
   linodeRegion: string;
   linodeType: null | string;
-  linodeNotification?: string;
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
   linodeTags: string[];
@@ -57,30 +53,11 @@ type CombinedProps =
   & Props
   & WithDisplayType
   & WithRecentEvent
+  & WithNotifications
+  & HasMutationAvailable
   & StyleProps;
 
-class LinodeCard extends React.Component<CombinedProps, State> {
-  state: State = {
-    mutationAvailable: false,
-  }
-
-  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
-    return haveAnyBeenModified<CombinedProps>(
-      nextProps,
-      this.props,
-      [
-        'linodeIpv4',
-        'linodeIpv6',
-        'linodeLabel',
-        'linodeNotification',
-        'linodeRegion',
-        'linodeStatus',
-        'recentEvent',
-        'displayType',
-      ],
-    )
-      || this.props.theme.name !== nextProps.theme.name
-  }
+class LinodeCard extends React.PureComponent<CombinedProps> {
 
   handleConsoleButtonClick = () => {
     sendEvent({
@@ -106,8 +83,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
     * or if it has a pending mutation available. Mutations take
     * precedent over notifications
     */
-    const { mutationAvailable } = this.state;
-    const { linodeNotification, classes } = this.props;
+    const { linodeNotifications, mutationAvailable, classes } = this.props;
     if (mutationAvailable) {
       return (
         <Grid item className={classes.flagContainer}>
@@ -119,13 +95,15 @@ class LinodeCard extends React.Component<CombinedProps, State> {
         </Grid>
       )
     }
-    if (linodeNotification) {
-      return (
-        <Grid item className={classes.flagContainer}>
-          <Tooltip title={linodeNotification}><Flag className={classes.flag} /></Tooltip>
+
+    if (linodeNotifications.length > 0) {
+      return linodeNotifications.map((notification, idx) => (
+        <Grid key={idx} item className={classes.flagContainer}>
+          <Tooltip title={notification.message}><Flag className={classes.flag} /></Tooltip>
         </Grid>
-      )
+      ))
     }
+
     return null;
   }
 
@@ -228,11 +206,12 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 }
 
-
 export default compose(
   styled,
   withDisplayType,
   withRecentEvent,
+  withNotifications,
+  hasMutationAvailable,
 )(LinodeCard) as React.ComponentType<Props>;
 
 const ProgressDisplay: React.StatelessComponent<{
