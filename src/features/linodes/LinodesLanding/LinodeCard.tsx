@@ -1,6 +1,5 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Flag from 'src/assets/icons/flag.svg';
 import Button from 'src/components/Button';
@@ -20,12 +19,13 @@ import { linodeInTransition, transitionText } from 'src/features/linodes/transit
 import { lishLaunch } from 'src/features/Lish';
 import { sendEvent } from 'src/utilities/analytics';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import { displayType, typeLabelDetails } from '../presentation';
+import { typeLabelDetails } from '../presentation';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import styled, { StyleProps } from './LinodeCard.style';
 import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
+import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
 interface State {
@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps =
   & Props
-  & WithTypesProps
+  & WithDisplayType
   & WithRecentEvent
   & StyleProps;
 
@@ -76,7 +76,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
         'linodeRegion',
         'linodeStatus',
         'recentEvent',
-        'typesData',
+        'displayType',
       ],
     )
       || this.props.theme.name !== nextProps.theme.name
@@ -151,9 +151,9 @@ class LinodeCard extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, openConfigDrawer, linodeId, linodeLabel, recentEvent,
-      linodeStatus, linodeBackups, toggleConfirmation, typesData, linodeType,
-      linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4,
-      linodeIpv6, imageLabel, linodeTags } = this.props;
+      linodeStatus, linodeBackups, toggleConfirmation, displayType, linodeSpecMemory,
+      linodeSpecDisk, linodeSpecVcpus, linodeRegion, linodeIpv4, linodeIpv6, imageLabel, linodeTags
+    } = this.props;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={linodeLabel}>
@@ -189,8 +189,7 @@ class LinodeCard extends React.Component<CombinedProps, State> {
               />
             }
             <div className={classes.cardSection} data-qa-linode-summary>
-              {typesData && `${displayType(linodeType, typesData || [])}: `}
-              {typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}
+              {`${displayType}: ${typeLabelDetails(linodeSpecMemory, linodeSpecDisk, linodeSpecVcpus)}`}
             </div>
             <div className={classes.cardSection} data-qa-region>
               <RegionIndicator region={linodeRegion} />
@@ -229,17 +228,10 @@ class LinodeCard extends React.Component<CombinedProps, State> {
   }
 }
 
-interface WithTypesProps {
-  typesData: Linode.LinodeType[];
-}
-
-const withTypes = connect((state: ApplicationState, { linodeId }: Props) => ({
-  typesData: state.__resources.types.entities,
-}));
 
 export default compose(
   styled,
-  withTypes,
+  withDisplayType,
   withRecentEvent,
 )(LinodeCard) as React.ComponentType<Props>;
 

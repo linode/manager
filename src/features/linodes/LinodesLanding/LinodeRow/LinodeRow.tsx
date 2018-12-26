@@ -4,7 +4,9 @@ import { connect, MapStateToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+import getLinodeType from 'src/utilities/getLinodeType';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
+import withDisplayType, { WithDisplayType } from '../withDisplayType';
 import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import LinodeRowWithState from './LinodeRowWithState';
 
@@ -38,6 +40,7 @@ interface Props {
 type CombinedProps =
   & Props
   & WithTypesProps
+  & WithDisplayType
   & WithRecentEvent
   & WithTheme
   & WithStyles<ClassNames>;
@@ -107,16 +110,14 @@ class LinodeRow extends React.Component<CombinedProps, State> {
 
 interface WithTypesProps {
   mutationAvailable: boolean;
-  displayType: string;
 }
 
 const mapStateToProps: MapStateToProps<WithTypesProps, Props, ApplicationState> = (state, ownProps) => {
   const { linodeType } = ownProps;
   const { entities, results } = state.__resources.types;
-  const type = getType(entities, results, linodeType);
+  const type = getLinodeType(entities, results, linodeType);
 
   return ({
-    displayType: type === null ? 'No Plan' : type === undefined ? 'Unknown Plan' : type.label,
     mutationAvailable: hasMutation(type),
   })
 };
@@ -126,17 +127,9 @@ const connected = connect(mapStateToProps);
 export default compose(
   withStyles(styles, { withTheme: true }),
   withRecentEvent,
+  withDisplayType,
   connected,
 )(LinodeRow) as React.ComponentType<Props>;
-
-const getType = <T extends any>(entities: T[], ids: string[], id: null | string) => {
-  if (id === null) {
-    return null;
-  }
-
-  const foundIndex = ids.indexOf(id);
-  return foundIndex > -1 ? entities[foundIndex] : undefined
-}
 
 const hasMutation = (type?: null | Linode.LinodeType) => {
   if (!type) {
