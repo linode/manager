@@ -62,7 +62,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
         <Grid item style={{ paddingLeft: 0 }}>
           <a
             className={classes.link}
-            href={createMailto(navigator.userAgent || '')}
+            href={createMailto(window.navigator.userAgent || '')}
           >
             Provide Feedback
           </a>
