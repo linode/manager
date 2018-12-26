@@ -33,6 +33,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   link: {
     color: `${theme.color.blueDTwhite} !important`,
+    '&:hover' : {
+      textDecoration: 'underline',
+    }
   },
   popover: {
     minWidth: 'auto',
