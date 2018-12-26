@@ -65,7 +65,7 @@ const userAgentDetection = () => {
       return (
         <Typography>
           Your Web Browser (<strong>{b.name}</strong>) is not compatible with the Linode Manager.
-          Please update to <a href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank">Miscrosoft Edge</a> for more security,
+          Please update to <a href="https://www.microsoft.com/en-us/windows/microsoft-edge" target="_blank">Microsoft Edge</a> for more security,
           speed and the best experience on this site.
         </Typography>
       )
