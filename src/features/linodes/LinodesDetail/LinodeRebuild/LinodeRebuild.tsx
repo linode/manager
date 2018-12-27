@@ -11,9 +11,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { rebuildLinode } from 'src/services/linodes';
@@ -67,7 +65,6 @@ interface State {
 type CombinedProps =
   & Props
   & ContextProps
-  & WithImages
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
@@ -137,20 +134,11 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   onPasswordChange = (value: string) => this.setState({ password: value });
 
   render() {
-    const { classes, images, imageError, linodeLabel, userSSHKeys } = this.props;
+    const { classes, linodeLabel, userSSHKeys } = this.props;
     const { errors } = this.state;
 
-    if (imageError) {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
-          <ErrorState errorText="There was an error retrieving images information." />
-        </React.Fragment>
-      );
-    }
-
     const getErrorFor = getAPIErrorFor({}, errors);
-    const imageFieldError = getErrorFor('image');
+    // const imageFieldError = getErrorFor('image'); @todo move out of render and use utility functions
     const passwordError = getErrorFor('password');
 
     return (
@@ -172,8 +160,6 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             distribution. Rebuilding will destroy all data.
           </Typography>
           <ImageAndPassword
-            images={images}
-            imageError={imageFieldError}
             onImageChange={this.handleImageSelect}
             onPasswordChange={this.onPasswordChange}
             password={this.state.password || ''}
@@ -209,8 +195,6 @@ export default compose<CombinedProps, Props>(
   styled,
   userSSHKeyHoc,
   withSnackbar,
-  withImages((ownProps, images, imagesLoading, imageError) =>
-    ({ ...ownProps, images, imagesLoading, imageError })),
 )(LinodeRebuild);
 
 

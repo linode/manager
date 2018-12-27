@@ -14,7 +14,6 @@ import Grid from 'src/components/Grid';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from './ImageAndPassword';
@@ -63,7 +62,7 @@ interface State {
   selectedMode: diskMode;
 }
 
-type CombinedProps = Props & WithImages & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const modes = {
   EMPTY: 'create_empty' as diskMode,
@@ -199,8 +198,6 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     const {
       open,
       mode,
-      images,
-      imageError,
       onSubmit,
       submitting,
       onClose,
@@ -229,8 +226,6 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             {selectedMode === modes.EMPTY && <this.filesystemField /> }
             {selectedMode === modes.IMAGE &&
               <ImageAndPassword
-                images={images}
-                imageError={imageError}
                 onImageChange={this.onImageChange}
                 password={password || ''}
                 passwordError={passwordError}
@@ -260,8 +255,6 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withImages((ownProps, images, imagesLoading, imageError) =>
-    ({ ...ownProps, images, imagesLoading, imageError })),
 )(LinodeDiskDrawer);
 
 export default enhanced;

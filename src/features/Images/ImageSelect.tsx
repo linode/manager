@@ -73,6 +73,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               id={'image-select'}
               isMulti={false}
               errorText={imageError}
+              disabled={Boolean(imageError)}
               onChange={onSelect}
               options={renderedImages as any}
               placeholder="Select an Image"

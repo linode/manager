@@ -4,6 +4,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
 
 type ClassNames = 'root';
@@ -14,8 +15,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 
 interface Props {
-  images: Linode.Image[];
-  imageError?: string;
   onImageChange: (selected: Item<string>) => void;
 
   password: string;
@@ -25,7 +24,7 @@ interface Props {
   userSSHKeys: UserSSHKeyObject[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithImages & WithStyles<ClassNames>;
 
 export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props) => {
   const {
@@ -42,7 +41,7 @@ export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props)
     <React.Fragment>
       <ImageSelect
         images={images}
-        imageError={imageError}
+        imageError={imageError} // @todo address image error from Redux vs. API error on form submit
         onSelect={onImageChange}
       />
       <AccessPanel
@@ -60,6 +59,8 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
+  withImages((ownProps, images, imagesLoading, imageError) =>
+    ({ ...ownProps, images, imagesLoading, imageError })),
 )(ImageAndPassword);
 
 export default enhanced;
