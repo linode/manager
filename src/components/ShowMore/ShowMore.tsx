@@ -4,7 +4,10 @@ import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
-type CSSClasses =  'chip' | 'label' | 'popover';
+type CSSClasses =  'chip'
+  | 'label'
+  | 'popover'
+  | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   chip: {
@@ -28,6 +31,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     paddingLeft: 6,
     paddingRight: 6,
   },
+  link: {
+    color: `${theme.color.blueDTwhite} !important`,
+    '&:hover' : {
+      textDecoration: 'underline',
+    }
+  },
   popover: {
     minWidth: 'auto',
     maxWidth: 400,
@@ -45,7 +54,7 @@ interface Props<T> {
   chipProps?: ChipProps;
 }
 
-class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
+export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
   state = {
     anchorEl: undefined,
   };
@@ -84,6 +93,7 @@ class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
           component="button"
           clickable
         />
+
         <Popover
           classes={{ paper: classes.popover }}
           anchorEl={anchorEl}
