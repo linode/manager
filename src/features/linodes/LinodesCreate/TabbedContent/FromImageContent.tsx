@@ -19,6 +19,7 @@ import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
+import deriveDefaultLabel from '../deriveDefaultLabel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
@@ -64,6 +65,7 @@ interface State {
   privateIP: boolean;
   password: string | null;
   isMakingRequest: boolean;
+  hasUserTypedCustomLabel: boolean;
   initTab?: number;
   tags: Tag[];
 }
@@ -100,6 +102,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     privateIP: false,
     isMakingRequest: false,
     initTab: pathOr(null, ['history', 'location', 'state', 'initTab'], this.props),
+    hasUserTypedCustomLabel: false,
     tags: [],
   };
 
@@ -118,7 +121,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   handleTypeLabel = (e: any) => {
-    this.setState({ label: e.target.value });
+    this.setState({ label: e.target.value, hasUserTypedCustomLabel: true });
   }
 
   handleChangeTags = (selected: Tag[]) => {
@@ -195,6 +198,19 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       });
   }
 
+  getLabel = () => {
+    const { hasUserTypedCustomLabel, label, selectedImageID, selectedRegionID, selectedTypeID } = this.state;
+
+    // If a user has typed in the 'label' input field, don't derive a default label name
+    if (hasUserTypedCustomLabel) { return label; }
+
+    const defaultLabel = deriveDefaultLabel(selectedImageID, selectedRegionID, selectedTypeID);
+
+    // TODO: add increment logic here
+
+    return defaultLabel;
+  }
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -204,7 +220,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { errors, backups, privateIP, label, selectedImageID, tags,
+    const { errors, backups, privateIP, selectedImageID, tags,
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
 
@@ -222,6 +238,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     const typeInfo = getTypeInfo(selectedTypeID);
 
     const hasBackups = backups || accountBackups;
+
+    const label = this.getLabel();
+
 
     return (
       <React.Fragment>
