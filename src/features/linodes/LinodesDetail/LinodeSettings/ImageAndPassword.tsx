@@ -13,9 +13,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
 
-
 interface Props {
   onImageChange: (selected: Item<string>) => void;
+  imageFieldError?: string;
 
   password: string;
   passwordError?: string;
@@ -30,6 +30,7 @@ export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props)
   const {
     images,
     imageError,
+    imageFieldError,
     onImageChange,
     onPasswordChange,
     password,
@@ -41,7 +42,8 @@ export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props)
     <React.Fragment>
       <ImageSelect
         images={images}
-        imageError={imageError} // @todo address image error from Redux vs. API error on form submit
+        imageError={imageError}
+        imageFieldError={imageFieldError}
         onSelect={onImageChange}
       />
       <AccessPanel

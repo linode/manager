@@ -209,6 +209,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
 
     const generalError = this.getErrors('none');
     const passwordError = this.getErrors('root_pass');
+    const imageFieldError = this.getErrors('image');
 
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
@@ -227,6 +228,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             {selectedMode === modes.IMAGE &&
               <ImageAndPassword
                 onImageChange={this.onImageChange}
+                imageFieldError={imageFieldError}
                 password={password || ''}
                 passwordError={passwordError}
                 onPasswordChange={this.props.onPasswordChange}

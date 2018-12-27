@@ -30,6 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface Props {
   images: Linode.Image[];
   imageError?: string;
+  imageFieldError?: string;
   onSelect: (selected: Item<string>) => void;
 }
 
@@ -63,7 +64,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, imageError, onSelect } = this.props;
+    const { classes, imageError, imageFieldError, onSelect } = this.props;
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
@@ -72,7 +73,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
             <Select
               id={'image-select'}
               isMulti={false}
-              errorText={imageError}
+              errorText={imageError || imageFieldError}
               disabled={Boolean(imageError)}
               onChange={onSelect}
               options={renderedImages as any}

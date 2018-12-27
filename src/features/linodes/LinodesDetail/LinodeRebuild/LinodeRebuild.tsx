@@ -78,7 +78,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       this.setState({ selected: undefined });
       return;
     }
-    this.setState({ selected: selectedItem!.value });
+    this.setState({ selected: selectedItem!.value, errors: [] });
   }
 
   onSubmit = () => {
@@ -138,7 +138,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     const { errors } = this.state;
 
     const getErrorFor = getAPIErrorFor({}, errors);
-    // const imageFieldError = getErrorFor('image'); @todo move out of render and use utility functions
+    const imageFieldError = getErrorFor('image'); // @todo move out of render and use utility functions
     const passwordError = getErrorFor('password');
 
     return (
@@ -160,6 +160,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             distribution. Rebuilding will destroy all data.
           </Typography>
           <ImageAndPassword
+            imageFieldError={imageFieldError}
             onImageChange={this.handleImageSelect}
             onPasswordChange={this.onPasswordChange}
             password={this.state.password || ''}
