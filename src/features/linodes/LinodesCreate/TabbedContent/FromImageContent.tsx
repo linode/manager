@@ -149,11 +149,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   label = () => {
-    const { selectedImageID, selectedRegionID, selectedTypeID } = this.state;
+    const { selectedImageID, selectedRegionID } = this.state;
     const { getLabel } = this.props;
 
     return getLabel({
-      image: selectedImageID, region: selectedRegionID, type: selectedTypeID
+      image: selectedImageID, region: selectedRegionID
     });
   }
 
