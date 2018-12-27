@@ -7,7 +7,9 @@ import Tag from 'src/components/Tag';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    backgroundColor: 'transparent',
+  },
 });
 
 interface Props {
@@ -17,9 +19,9 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeRowTags: React.StatelessComponent<CombinedProps> = (props) => {
-  const { tags } = props;
+  const { tags, classes } = props;
   return (
-    <Paper>
+    <Paper className={classes.root}>
       {tags.map((tag, idx) =>
         <Tag
           key={`linode-row-tag-item-${idx}`}

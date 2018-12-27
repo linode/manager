@@ -11,7 +11,7 @@ import Tooltip from 'src/components/core/Tooltip';
 type ClassNames =
   | 'root'
   | 'tagLink'
-  | 'wrapper'
+  | 'wrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
