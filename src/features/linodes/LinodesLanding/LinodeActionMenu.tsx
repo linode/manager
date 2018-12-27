@@ -36,6 +36,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             })
             lishLaunch(linodeId);
             e.preventDefault();
+            e.stopPropagation();
           },
         },
         {
@@ -47,6 +48,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             })
             push(`/linodes/${linodeId}/summary`);
             e.preventDefault();
+            e.stopPropagation();
           },
         },
         {
@@ -58,6 +60,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             })
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
+            e.stopPropagation();
           },
         },
         {
@@ -69,6 +72,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             })
             push(`/linodes/${linodeId}/backup`);
             e.preventDefault();
+            e.stopPropagation();
           },
         },
         {
@@ -80,6 +84,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             })
             push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
+            e.stopPropagation();
           },
         },
       ];
@@ -91,7 +96,9 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             sendEvent({
               category: 'Linode Action Menu Item',
               action: 'Power On Linode',
-            })
+            });
+            e.preventDefault();
+            e.stopPropagation();
             powerOnLinode(openConfigDrawer, linodeId, linodeLabel);
             closeMenu();
           },
@@ -108,6 +115,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
                 action: 'Reboot Linode',
               })
               e.preventDefault();
+              e.stopPropagation();
               toggleConfirmation('reboot', linodeId, linodeLabel);
               closeMenu();
             },
@@ -119,6 +127,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
                 category: 'Linode Action Menu Item',
                 action: 'Power Off Linode',
               })
+              e.preventDefault();
+              e.stopPropagation();
               toggleConfirmation('power_down', linodeId, linodeLabel);
               closeMenu();
             },
@@ -139,6 +149,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
               state: { enableOnLoad: true }
             });
             e.preventDefault();
+            e.stopPropagation();
           },
         })
       }

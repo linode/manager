@@ -55,15 +55,16 @@ class TableRow extends React.Component<CombinedProps> {
   // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
   const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
   const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
+
   if (!isButton && !isAnchor) {
     e.stopPropagation();
     if (typeof(target) === 'string') {
       this.props.history.push(target);
     }
   }
-  // @alioso should this be outside of the if statement above?
   if (typeof(target) === 'function') { target(e) };
-  }
+}
+
 
   render() {
     const { classes, className, rowLink, staticContext, ...rest } = this.props;
