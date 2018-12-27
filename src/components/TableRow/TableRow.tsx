@@ -51,7 +51,7 @@ class TableRow extends React.Component<CombinedProps> {
     const body = document.body as any;
 
   // return if a modal is open
-  if (body.getAttribute('style') === null || body.getAttribute('style').indexOf('overflow: hidden') === 0) { return; }
+  if (body.getAttribute('style') !== null && body.getAttribute('style').indexOf('overflow: hidden') !== 0) { return; }
   // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
   const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
   const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
