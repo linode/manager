@@ -32,7 +32,7 @@ import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volu
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { ConfigsProvider, ImageProvider, LinodeProvider } from './context';
+import { ConfigsProvider, LinodeProvider } from './context';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodesDetailHeader from './LinodesDetailHeader';
 import MutateDrawer from './MutateDrawer';
@@ -561,7 +561,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ConfigsProvider value={this.state.context.configs}>
           <React.Fragment>
-            <ImageProvider value={this.state.context.image}>
+            <>
               <LinodeProvider value={this.state.context.linode}>
                 <React.Fragment>
                   <LinodesDetailHeader
@@ -614,7 +614,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   }
                 </React.Fragment>
               </LinodeProvider>
-            </ImageProvider>
+            </>
           </React.Fragment>
         </ConfigsProvider>
       </React.Fragment>
