@@ -27,6 +27,7 @@ import { getRegions } from 'src/services/misc';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { async as domainsAsync } from 'src/store/reducers/resources/domains';
+import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
@@ -220,6 +221,7 @@ export class App extends React.Component<CombinedProps, State> {
     const { actions } = this.props;
 
     actions.requestDomains();
+    actions.requestImages();
     actions.requestLinodes();
     actions.requestNotifications();
     actions.requestProfile();
@@ -372,6 +374,7 @@ const themeDataAttr = () => {
 interface DispatchProps {
   actions: {
     requestDomains: () => void;
+    requestImages: () => void;
     requestLinodes: () => void;
     requestNotifications: () => void;
     requestProfile: () => void;
@@ -384,6 +387,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
   return {
     actions: {
       requestDomains: () => dispatch(domainsAsync.requestDomains()),
+      requestImages: () => dispatch(imagesAsync.requestImages()),
       requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
       requestNotifications: () => dispatch(requestNotifications()),
       requestProfile: () => dispatch(requestProfile()),
