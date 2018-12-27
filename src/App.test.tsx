@@ -32,6 +32,7 @@ it('renders without crashing', () => {
             profileLoading={false}
             actions={{
               requestDomains: jest.fn(),
+              requestImages: jest.fn(),
               requestLinodes: jest.fn(),
               requestNotifications: jest.fn(),
               requestProfile: jest.fn(),
