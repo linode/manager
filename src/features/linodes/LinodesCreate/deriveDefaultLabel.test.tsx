@@ -1,13 +1,17 @@
-import { deriveDefaultLabel } from './deriveDefaultLabel';
+import { deriveDefaultLabel, LabelOptions } from './deriveDefaultLabel';
 
 describe('create label name', () => {
   it('creates label name with image, region, type', () => {
-    expect(deriveDefaultLabel('ubuntu', 'newark', '1gb')).toBe('ubuntu-newark-1gb');
+    const options: LabelOptions = { image: 'ubuntu', region: 'newark', type: '1gb' };
+    expect(deriveDefaultLabel(options)).toBe('ubuntu-newark-1gb');
   });
 
   it('works without all params', () => {
-    expect(deriveDefaultLabel('ubuntu', null, '1gb')).toBe('ubuntu-1gb');
-    expect(deriveDefaultLabel(null, null, '1gb')).toBe('1gb');
-    expect(deriveDefaultLabel('ubuntu', 'newark', null)).toBe('ubuntu-newark');
+    let options: LabelOptions = { image: 'ubuntu', region: 'newark' };
+    expect(deriveDefaultLabel(options)).toBe('ubuntu-newark');
+    options = { type: '1gb' };
+    expect(deriveDefaultLabel(options)).toBe('1gb');
+    options = { image: 'ubuntu', region: 'newark' };
+    expect(deriveDefaultLabel(options)).toBe('ubuntu-newark');
   });
 });

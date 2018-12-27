@@ -19,9 +19,9 @@ import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
-import deriveDefaultLabel from '../deriveDefaultLabel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -89,6 +89,7 @@ type CombinedProps =
   & Props
   & UserSSHKeyProps
   & InjectedNotistackProps
+  & LabelProps
   & WithStyles<ClassNames>;
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
@@ -121,7 +122,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   handleTypeLabel = (e: any) => {
-    this.setState({ label: e.target.value, hasUserTypedCustomLabel: true });
+    this.props.updateCustomLabel(e);
   }
 
   handleChangeTags = (selected: Tag[]) => {
@@ -198,18 +199,18 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       });
   }
 
-  getLabel = () => {
-    const { hasUserTypedCustomLabel, label, selectedImageID, selectedRegionID, selectedTypeID } = this.state;
+  // getLabel = () => {
+  //   const { hasUserTypedCustomLabel, label, selectedImageID, selectedRegionID, selectedTypeID } = this.state;
 
-    // If a user has typed in the 'label' input field, don't derive a default label name
-    if (hasUserTypedCustomLabel) { return label; }
+  //   // If a user has typed in the 'label' input field, don't derive a default label name
+  //   if (hasUserTypedCustomLabel) { return label; }
 
-    const defaultLabel = deriveDefaultLabel(selectedImageID, selectedRegionID, selectedTypeID);
+  //   const defaultLabel = deriveDefaultLabel(selectedImageID, selectedRegionID, selectedTypeID);
 
-    // TODO: add increment logic here
+  //   // TODO: add increment logic here
 
-    return defaultLabel;
-  }
+  //   return defaultLabel;
+  // }
 
   componentWillUnmount() {
     this.mounted = false;
@@ -225,7 +226,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 
     const { accountBackups, classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo, userSSHKeys } = this.props;
+      getLabel, getRegionInfo, getTypeInfo, updateCustomLabel, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -239,8 +240,9 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
     const hasBackups = backups || accountBackups;
 
-    const label = this.getLabel();
-
+    const label = getLabel({
+      image: selectedImageID, region: selectedRegionID, type: selectedTypeID
+    });
 
     return (
       <React.Fragment>
@@ -282,7 +284,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
-              onChange: this.handleTypeLabel,
+              onChange: updateCustomLabel,
               errorText: hasErrorFor('label'),
             }}
             tagsInputProps={{
@@ -361,8 +363,15 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
+const styled = withStyles(styles);
+const withLabels = WithLabelGenerator({}); // @todo: find better name
+
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withSnackbar,
+  userSSHKeyHoc,
+  withLabels
+);
 
 export default enhanced(FromImageContent);

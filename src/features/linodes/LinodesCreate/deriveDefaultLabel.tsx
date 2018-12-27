@@ -1,11 +1,22 @@
-export const deriveDefaultLabel = (
-  imageID: string | null,
-  regionID: string | null,
-  typeID: string | null ): string => {
-
-    // TODO: map to custom ID abbreviations
-
-    // Some params might be null, so filter those out
-    return [imageID, regionID, typeID].filter(Boolean).join('-');
+import { compose, filter, join } from 'ramda';
+export interface LabelOptions {
+  image?: string | null;
+  region?: string | null;
+  type?: string | null;
+  stackScript?: string | null;
 }
+
+export const deriveDefaultLabel = (options: LabelOptions): string => {
+  const { image, region, type, stackScript } = options;
+
+  // TODO: map to custom ID abbreviations
+
+  const values = [image, region, type, stackScript];
+
+  return compose(
+    join('-'),
+    filter(Boolean) // Some params might be null or undefined, so filter those out
+  )(values);
+}
+
 export default deriveDefaultLabel;
