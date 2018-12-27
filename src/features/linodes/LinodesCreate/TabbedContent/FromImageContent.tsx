@@ -148,13 +148,21 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     };
   }
 
+  label = () => {
+    const { selectedImageID, selectedRegionID, selectedTypeID } = this.state;
+    const { getLabel } = this.props;
+
+    return getLabel({
+      image: selectedImageID, region: selectedRegionID, type: selectedTypeID
+    });
+  }
+
   createNewLinode = () => {
     const { history, userSSHKeys } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
       selectedTypeID,
-      label,
       password,
       backups,
       privateIP,
@@ -162,6 +170,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     } = this.state;
 
     this.setState({ isMakingRequest: true });
+
+    const label = this.label();
 
     createLinode({
       region: selectedRegionID,
@@ -213,7 +223,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 
     const { accountBackups, classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getLabel, getRegionInfo, getTypeInfo, updateCustomLabel, userSSHKeys } = this.props;
+      getRegionInfo, getTypeInfo, updateCustomLabel, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -227,9 +237,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
     const hasBackups = backups || accountBackups;
 
-    const label = getLabel({
-      image: selectedImageID, region: selectedRegionID, type: selectedTypeID
-    });
+    const label = this.label();
 
     return (
       <React.Fragment>
