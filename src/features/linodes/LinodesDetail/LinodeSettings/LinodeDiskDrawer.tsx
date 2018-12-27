@@ -170,6 +170,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       onChange={this.onLabelChange}
       errorText={this.getErrors('label')}
       errorGroup="linode-disk-drawer"
+      data-qa-label
     />
   );
 
@@ -208,6 +209,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               MB
             </InputAdornment>,
         }}
+        data-qa-disk-size
       />
       <FormHelperText style={{ marginTop: 8 }}>
         Maximum Size: {this.props.maximumSize} MB

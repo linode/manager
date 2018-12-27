@@ -39,7 +39,7 @@ describe('Account - Restricted User Suite', () => {
 
 
         //const restrictedUser = Users.getUserRow(userConfig.username);
-        expect(Users.getTableDetails(undefined,Users.userRestriction.selector,userConfig.username).getText()).toMatch(/Restricted/ig);
+        expect(Users.getTableDetails(undefined,Users.userRestriction.selector,userConfig.username).getText()).toMatch(/Limited/ig);
     });
 
     it('should view restricted user profile', () => {

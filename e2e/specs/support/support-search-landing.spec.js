@@ -62,7 +62,7 @@ describe('Support Search - Suite', () => {
     });
 
     describe('Support Search Landing Page', () => {
-
+        const searchTerm = 'test';
         const verifyViewMoreNavigation = (pageTitle, expectedUrlPath) => {
             browser.waitUntil(() => {
                 return browser.getTitle() === pageTitle;
@@ -73,12 +73,12 @@ describe('Support Search - Suite', () => {
         }
         //TODO replace with proper search test after v0.43.0 is merged into develop
         beforeAll(() => {
-            SupportLanding.searchField.setValue(SupportLanding.enterKey);
+            SupportLanding.searchField.setValue(searchTerm);
+            SupportLanding.searchField.addValue(SupportLanding.enterKey);
             SupportSearchLanding.searchLandingDisplays();
         });
 
         it('Search landing page displays first 5 results of Documentation and Community Site', () =>{
-            SupportSearchLanding.search('test');
             expect(SupportSearchLanding.resultSet('Documentation').length).toBe(5);
             expect(SupportSearchLanding.resultSet('Community Posts').length).toBe(5);
         });
@@ -102,9 +102,9 @@ describe('Support Search - Suite', () => {
             verifyViewMoreNavigation('Search Linode Docs','/docs/search');
         });
 
-        it('View more Documentation links to the Linode Documentation search page', () => {
+        it('View more Community links to the Linode Community search page', () => {
             SupportSearchLanding.viewMoreCommunity.click();
-            verifyViewMoreNavigation('Linode Community Questions','/community/questions/search');
+            verifyViewMoreNavigation(`Linode Questions matching ${searchTerm}`,'/community/questions/search');
         });
 
     });

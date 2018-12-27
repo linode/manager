@@ -372,5 +372,5 @@ exports.config = {
         return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
             .then(res => resolve(res))
             .catch(error => console.error('Error:', error));
-    }
+    } 
 }

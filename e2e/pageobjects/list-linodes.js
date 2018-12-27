@@ -4,7 +4,7 @@ import Page from './page';
 
 export class ListLinodes extends Page {
     // Grid/List Linode Card/Rows
-    get subheader() { return $('[data-qa-title]'); }
+    get subheader() { return this.pageTitle; }
     get confirmDialogTitle() { return $('[data-qa-dialog-title]'); }
     get confirmDialogSubmit() { return $('[data-qa-confirm-cancel]'); }
     get confirmDialogCancel() { return $('[data-qa-cancel-cancel]'); }

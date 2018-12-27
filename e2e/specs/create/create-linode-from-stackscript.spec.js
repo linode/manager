@@ -67,9 +67,10 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should create from stackscript', () => {
-        const linodeScript = 'StackScript Bash Library';
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
+        const lampStackScript = 'LAMP Stack';
+        browser.scroll(0,-500);
+        ConfigureLinode.stackScriptRow(lampStackScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRow(lampStackScript).click();
         ConfigureLinode.plans[0].click();
 
         ConfigureLinode.images[0].click();

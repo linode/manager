@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+const { generatePassword } = require('../../utils/common')
 
 import Page from '../page';
 
@@ -31,6 +32,68 @@ class Settings extends Page {
     get watchdogPanel() { return $('[data-qa-watchdog-panel]'); }
     get watchdogToggle() { return $('[data-qa-watchdog-toggle]'); }
     get watchdogDesc() { return $('[data-qa-watchdog-desc]'); }
+
+    //Add disk drawer
+    get createEmptyDisk() { return $('[data-qa-radio="Create Empty Disk"]'); }
+    get createFromImage() { return $('[data-qa-radio="Create from Image"]'); }
+    get diskLabelInput() { return $(`${this.drawerBase.selector} [data-qa-label] input`); }
+    get diskSizeInput() { return $('[data-qa-disk-size]'); }
+    get addDiskButton() { return $('[data-qa-disk-submit]'); }
+    get password() { return $('[data-qa-password-input] input'); }
+
+
+    addDiskDrawerDisplays(){
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.createEmptyDisk.waitForVisible(constants.wait.normal);
+        this.createFromImage.waitForVisible(constants.wait.normal);
+        this.diskLabelInput.waitForVisible(constants.wait.normal);
+        this.diskSizeInput.waitForVisible(constants.wait.normal);
+        this.addDiskButton.waitForVisible(constants.wait.normal);
+    }
+
+    addDisk(diskLabel){
+      let i = 0;
+        do {
+            this.addDiskButton.click();
+            browser.pause(2000);
+            i++;
+        } while ( $('[data-qa-error]').isVisible() && i < 5);
+        this.drawerBase.waitForVisible(constants.wait.normal,true);
+        this.diskRow(diskLabel).waitForVisible(constants.wait.normal);
+    }
+
+    diskRow(diskLabel){
+        return $(`[data-qa-disk="${diskLabel}"]`);
+    }
+
+    setDiskSize(diskSize){
+        this.diskSizeInput.$('div').click();
+        browser.pause(500);
+        this.diskSizeInput.$('input').setValue('');
+        this.diskSizeInput.$('input').addValue(diskSize);
+    }
+
+    addEmptyDisk(diskLabel,diskSize){
+        this.diskLabelInput.setValue(diskLabel);
+        this.setDiskSize(diskSize);
+        this.addDisk(diskLabel);
+    }
+
+    addDiskFromImage(diskLabel,diskSize){
+        this.createFromImage.click();
+        this.password.waitForVisible(constants.wait.normal);
+        const imageSelect = $(`${this.drawerBase.selector} ${this.multiSelect.selector}`);
+        imageSelect.waitForVisible(constants.wait.normal);
+        this.diskLabelInput.setValue(diskLabel);
+        imageSelect.click();
+        browser.pause(500);
+        this.selectOptions[0].click();
+        this.selectOption.waitForVisible(constants.wait.normal,true);
+        this.password.setValue(generatePassword());
+        this.setDiskSize(diskSize);
+        browser.pause(2000);
+        this.addDisk(diskLabel);
+    }
 
     getConfigLabels() {
         return this.linodeConfigs.map(c => c.getAttribute('data-qa-config'));
