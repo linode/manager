@@ -1,37 +1,42 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import { StaticRouter } from 'react-router-dom';
-import SelectionRow, { SelectionRowProps } from 'src/components/SelectionRow';
-import store from 'src/store';
+import { SelectionRow } from 'src/components/SelectionRow';
 
-import  axios from 'axios';
-import  MockAdapter from 'axios-mock-adapter';
-
-import { API_ROOT } from '../../constants';
-
-const ACCOUNT_EVENTS = `${API_ROOT}/account/events`;
-
-const mock = new MockAdapter(axios);
-
-mock
-  .onGet(ACCOUNT_EVENTS).reply(200, {
-    data: [],
-    page: 1,
-    pages: 1,
-    results: 0
-  })
 
 interface State {
   selected: number;
 }
+
+const classes = {
+  root: "padding: 14px, border-bottom: solid 1px #ccc",
+  labelCell: "background: '#fff', margin-bottom: 14",
+  respPadding: "",
+  colImages: "",
+  libTitleContainer: "",
+  libRadio: "",
+  libRadioLabel: "",
+  libTitle: "",
+  libTitleLink: "",
+  libDescription: "",
+  images: "",
+  stackScriptCell: "",
+  stackScriptUsername: "",
+  deployButton: "",
+  detailsButton: ""
+}
+
+const openStackScriptDrawer = () => {
+  return true;
+}
+
 
 class InteractiveExample extends React.Component<{}, State> {
   state: State = {
     selected: 0,
   };
 
-  createItems = (): SelectionRowProps[] => [
+
+  createItems = () => [
     {
       checked: this.state.selected === 0,
       onSelect: () => this.setState({ selected: 0 }),
@@ -52,6 +57,8 @@ class InteractiveExample extends React.Component<{}, State> {
       canDelete: false,
       canEdit: false,
       isPublic: false,
+      classes,
+      openStackScriptDrawer,
     },
     {
       checked: this.state.selected === 1,
@@ -72,6 +79,8 @@ class InteractiveExample extends React.Component<{}, State> {
       canDelete: false,
       canEdit: false,
       isPublic: false,
+      classes,
+      openStackScriptDrawer,
     },
     {
       checked: this.state.selected === 2,
@@ -92,6 +101,8 @@ class InteractiveExample extends React.Component<{}, State> {
       canDelete: false,
       canEdit: false,
       isPublic: false,
+      classes,
+      openStackScriptDrawer,
     },
     {
       label: 'Livin\' on a Prayer',
@@ -109,6 +120,8 @@ class InteractiveExample extends React.Component<{}, State> {
       canDelete: false,
       canEdit: false,
       isPublic: false,
+      classes,
+      openStackScriptDrawer,
     },
     {
       label: 'Sweet Child O\' Mine',
@@ -129,6 +142,8 @@ class InteractiveExample extends React.Component<{}, State> {
       canDelete: false,
       canEdit: false,
       isPublic: false,
+      classes,
+      openStackScriptDrawer,
     },
     {
       label: 'Africa',
@@ -148,24 +163,22 @@ class InteractiveExample extends React.Component<{}, State> {
       canDelete: false,
       canEdit: false,
       isPublic: false,
+      classes,
+      openStackScriptDrawer,
     },
   ]
 
   render() {
     return (
-      <Provider store={store}>
-        <StaticRouter context={{}}>
-          <table>
-            <tbody>
-              {
-                this
-                  .createItems()
-                  .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
-              }
-            </tbody>
-          </table>
-        </StaticRouter>
-      </Provider>
+      <table>
+        <tbody>
+          {
+            this
+              .createItems()
+              .map((item, idx) => React.createElement(SelectionRow, { key: idx, ...item }))
+          }
+        </tbody>
+      </table>
     );
   }
 }
