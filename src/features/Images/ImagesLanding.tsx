@@ -1,5 +1,4 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -29,6 +28,7 @@ import TableCell from 'src/components/TableCell';
 import { Images } from 'src/documentation';
 import { events$ } from 'src/events';
 import { deleteImage, getImages } from 'src/services/images';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
 
@@ -217,8 +217,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         });
       })
       .catch((err) => {
-        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
-        const error: string = errors.length > 0 ? errors[0].reason : "There was an error deleting the image."
+        const error = getErrorStringOrDefault(err, "There was an error deleting the image.");
         this.setState({ removeDialog: { ...removeDialog, error } });
       })
   }

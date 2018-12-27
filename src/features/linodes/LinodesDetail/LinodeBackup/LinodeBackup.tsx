@@ -32,6 +32,7 @@ import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot } from 'src/services/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
@@ -245,7 +246,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr([], ['response', 'data', 'errors'], errorResponse)
+        getAPIErrorOrDefault(errorResponse)
           .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
             variant: 'error'
           }));
@@ -266,11 +267,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr(
-          [{ reason: 'There was an error disabling backups' }],
-          ['response', 'data', 'errors'],
-          errorResponse
-        )
+        getAPIErrorOrDefault(errorResponse, 'There was an error disabling backups')
           /**  @todo move this error to the actual modal */
           .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
             variant: 'error'
@@ -292,10 +289,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch((errorResponse) => {
-        pathOr(
-          [{ reason: 'There was an error taking a snapshot' }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        getAPIErrorOrDefault(
+          errorResponse,
+          'There was an error taking a snapshot',
         )
           .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
             variant: 'error'
@@ -317,7 +313,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         this.setState({
           settingsForm: {
             ...settingsForm,
-            errors: path(['response', 'data', 'errors'], err),
+            errors: getAPIErrorOrDefault(err),
           },
         }, () => {
           scrollErrorIntoView();
