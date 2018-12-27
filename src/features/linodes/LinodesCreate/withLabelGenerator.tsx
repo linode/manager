@@ -3,8 +3,9 @@ import { deriveDefaultLabel, LabelOptions } from './deriveDefaultLabel';
 // import { connect } from 'redux';
 
 export interface LabelProps {
+  customLabel: string;
   updateCustomLabel: (e: any) => void;
-  getLabel: (args: Partial<LabelOptions>) => string;
+  getLabel: (args?: Partial<LabelOptions>) => string;
 }
 
 export interface LabelState {
@@ -13,7 +14,7 @@ export interface LabelState {
 }
 
 // @todo: do we actually need options?
-const WithLabelGenerator = (options: any /* @todo: type */) => (Component: React.ComponentType<any>) => {
+export const WithLabelGenerator = (options: any /* @todo: type */) => (Component: React.ComponentType<any>) => {
   class WrappedComponent extends React.PureComponent<{}, LabelState> {
     state: LabelState = {
       customLabel: '',
@@ -24,11 +25,11 @@ const WithLabelGenerator = (options: any /* @todo: type */) => (Component: React
       this.setState({ customLabel: e.target.value, hasUserTypedCustomLabel: true });
     }
 
-    getLabel = (args: Partial<LabelOptions>) => {
+    getLabel = (args?: Partial<LabelOptions>) => {
       const { hasUserTypedCustomLabel, customLabel } = this.state;
 
       // If a user has typed in the 'label' input field, don't derive a default label name
-      if (hasUserTypedCustomLabel) { return customLabel; }
+      if (hasUserTypedCustomLabel || !args) { return customLabel; }
 
       const defaultLabel = deriveDefaultLabel(args);
 

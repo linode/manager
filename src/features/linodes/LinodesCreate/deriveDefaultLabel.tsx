@@ -1,4 +1,5 @@
 import { compose, filter, join } from 'ramda';
+
 export interface LabelOptions {
   image?: string | null;
   region?: string | null;

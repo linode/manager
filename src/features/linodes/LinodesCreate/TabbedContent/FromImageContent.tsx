@@ -199,19 +199,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       });
   }
 
-  // getLabel = () => {
-  //   const { hasUserTypedCustomLabel, label, selectedImageID, selectedRegionID, selectedTypeID } = this.state;
-
-  //   // If a user has typed in the 'label' input field, don't derive a default label name
-  //   if (hasUserTypedCustomLabel) { return label; }
-
-  //   const defaultLabel = deriveDefaultLabel(selectedImageID, selectedRegionID, selectedTypeID);
-
-  //   // TODO: add increment logic here
-
-  //   return defaultLabel;
-  // }
-
   componentWillUnmount() {
     this.mounted = false;
   }
