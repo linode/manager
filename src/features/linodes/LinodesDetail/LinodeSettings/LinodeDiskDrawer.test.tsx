@@ -27,7 +27,8 @@ const props = {
   filesystem: "ext4",
   size: 50,
   imagesLoading: false,
-  imageError: undefined
+  imageError: undefined,
+  images: []
 }
 
 const component = shallow(<LinodeDiskDrawer {...props} />)

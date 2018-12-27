@@ -2,7 +2,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { isNil, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
+import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 
@@ -13,15 +13,15 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
-import { getImages } from 'src/services/images';
 import { rebuildLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
 
-import { ImageSelect } from 'src/features/Images';
+import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
 type ClassNames = 'root'
  | 'title'
@@ -59,8 +59,6 @@ interface ContextProps {
 }
 
 interface State {
-  images: Linode.Image[];
-  imagesError?: string;
   errors?: Linode.ApiFieldError[];
   selected?: string;
   password?: string;
@@ -69,21 +67,13 @@ interface State {
 type CombinedProps =
   & Props
   & ContextProps
+  & WithImages
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
   state: State = {
-    images: [],
-  }
-
-  componentDidMount() {
-    getImages().then(response => {
-      this.setState({ images: response.data });
-    })
-      .catch(error => {
-        this.setState({ imagesError: error }); // @todo check typing
-      })
+    errors: []
   }
 
   handleImageSelect = (selectedItem: Item<string> | null) => {
@@ -147,10 +137,10 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
   onPasswordChange = (value: string) => this.setState({ password: value });
 
   render() {
-    const { classes, linodeLabel, userSSHKeys } = this.props;
-    const { errors, images, imagesError } = this.state;
+    const { classes, images, imageError, linodeLabel, userSSHKeys } = this.props;
+    const { errors } = this.state;
 
-    if (imagesError) {
+    if (imageError) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
@@ -160,7 +150,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
     }
 
     const getErrorFor = getAPIErrorFor({}, errors);
-    const imageError = getErrorFor('image');
+    const imageFieldError = getErrorFor('image');
     const passwordError = getErrorFor('password');
 
     return (
@@ -181,19 +171,15 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             either restore from a backup or start over with a fresh Linux
             distribution. Rebuilding will destroy all data.
           </Typography>
-          <ImageSelect
+          <ImageAndPassword
             images={images}
-            imageError={imageError}
-            onSelect={this.handleImageSelect}
-          />
-          <AccessPanel
-            noPadding
+            imageError={imageFieldError}
+            onImageChange={this.handleImageSelect}
+            onPasswordChange={this.onPasswordChange}
             password={this.state.password || ''}
-            handleChange={this.onPasswordChange}
-            error={passwordError}
-            users={userSSHKeys.length > 0 ? userSSHKeys : []}
+            passwordError={passwordError}
+            userSSHKeys={userSSHKeys.length > 0 ? userSSHKeys : []}
           />
-
           <ActionsPanel>
             <Button
               type="secondary"
@@ -222,7 +208,9 @@ export default compose<CombinedProps, Props>(
   SectionErrorBoundary,
   styled,
   userSSHKeyHoc,
-  withSnackbar
+  withSnackbar,
+  withImages((ownProps, images, imagesLoading, imageError) =>
+    ({ ...ownProps, images, imagesLoading, imageError })),
 )(LinodeRebuild);
 
 

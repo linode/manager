@@ -14,7 +14,7 @@ import Grid from 'src/components/Grid';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from './ImageAndPassword';
@@ -39,12 +39,6 @@ interface EditableFields {
   password?: string;
   passwordError?: string;
   userSSHKeys?: UserSSHKeyObject[];
-}
-
-interface WithImages {
-  images?: Linode.Image[];
-  imagesLoading: boolean;
-  imageError?: string;
 }
 
 interface Props extends EditableFields {
@@ -235,7 +229,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             {selectedMode === modes.EMPTY && <this.filesystemField /> }
             {selectedMode === modes.IMAGE &&
               <ImageAndPassword
-                images={images || []}
+                images={images}
                 imageError={imageError}
                 onImageChange={this.onImageChange}
                 password={password || ''}

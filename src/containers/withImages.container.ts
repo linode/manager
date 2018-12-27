@@ -4,6 +4,12 @@ const isEmpty = (error?: Linode.ApiFieldError[]) => {
   return error && error.length > 0;
 }
 
+export interface WithImages {
+  images: Linode.Image[];
+  imagesLoading: boolean;
+  imageError?: string;
+}
+
 export default <TInner extends {}, TOutter extends {}>(
   mapImagesToProps: (ownProps: TOutter, images: Linode.Image[], imagesLoading: boolean, imageError?: string ) => TInner,
 ) => connect((state: ApplicationState, ownProps: TOutter) => {
