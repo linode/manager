@@ -1,73 +1,29 @@
 import * as React from 'react';
-import { StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, ChildrenProps, styled } from '../StackScriptPanelContentBase';
+import { ChildrenProps, StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, styled } from '../StackScriptPanelContentBase';
 import SelectStackScriptsSection from './SelectStackScriptsSection';
 
 interface Props {
-  request: (username: string, params: Params, filter: any) =>
-    Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
-  currentUser: string;
-  category: string;
-  publicImages: Linode.Image[];
   resetStackScriptSelection: () => void;
 }
 
-type CurrentFilter = 'label' | 'deploys' | 'revision';
-
-interface DialogVariantProps {
-  open: boolean;
-}
-interface Dialog {
-  makePublic: DialogVariantProps,
-  delete: DialogVariantProps,
-  stackScriptID: number | undefined;
-  stackScriptLabel: string;
-}
-
-interface Params {
-  page?: number;
-  page_size?: number;
-}
-
-type APIFilters = 'label'
-| 'deployments_active'
-| 'updated'
-
-interface FilterInfo {
-  apiFilter: APIFilters | null;
-  currentFilter: CurrentFilter | null;
-}
-
-type SortOrder = 'asc' | 'desc';
+type CombinedProps = StackScriptPanelContentBaseProps & Props;
 
 interface State {
-  currentPage: number;
   selected?: number;
-  loading?: boolean;
-  gettingMoreStackScripts: boolean;
-  allStackScriptsLoaded: boolean;
-  getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
-  listOfStackScripts: Linode.StackScript.Response[]; // @TODO type correctly
-  sortOrder: SortOrder;
-  currentFilterType: CurrentFilter | null;
-  currentFilter: any; // @TODO type correctly
-  currentSearchFilter: any;
-  isSorting: boolean;
-  error?: Error;
-  fieldError: Linode.ApiFieldError | undefined;
-  isSearching: boolean;
-  didSearch: boolean;
-  successMessage: string;
 }
 
-class SelectStackScriptPanelContent<StackScriptPanelContentBaseProps, State> extends StackScriptPanelContentBase {
+type CombinedState = StackScriptPanelContentBaseState & State;
 
+class SelectStackScriptPanelContent extends StackScriptPanelContentBase<CombinedProps, CombinedState> {
 
-  getDefaultState = () => ({
-    ...super.getDefaultState(),
-    selected: undefined,
-  });
+  getDefaultState(): CombinedState {
+    return {
+      ...super.getDefaultState(),
+      selected: undefined,
+    };
+  }
 
   isSelecting = true;
 
@@ -83,16 +39,18 @@ class SelectStackScriptPanelContent<StackScriptPanelContentBaseProps, State> ext
       stackscript.images,
       stackscript.user_defined_fields,
     );
-    this.setState({ selected: stackscript.id });
+    this.setState({ selected: stackscript.id } as CombinedState);
   }
 
 
   renderChildren(baseProps: ChildrenProps) {
+    const state: CombinedState = this.state;
+
     return <SelectStackScriptsSection
-      selectedId={this.state.selected}
+      selectedId={state.selected}
       onSelect={this.handleSelectStackScript}
       isSorting={baseProps.isSorting}
-      data={this.state.listOfStackScripts}
+      data={state.listOfStackScripts}
       publicImages={baseProps.publicImages}
       currentUser={baseProps.currentUser}
     />

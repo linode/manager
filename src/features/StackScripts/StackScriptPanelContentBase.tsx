@@ -70,7 +70,7 @@ interface FilterInfo {
 
 type SortOrder = 'asc' | 'desc';
 
-export type StackScriptPanelContentBaseState = {
+export interface StackScriptPanelContentBaseState {
   currentPage: number;
   loading?: boolean;
   gettingMoreStackScripts: boolean;
@@ -91,13 +91,13 @@ export type StackScriptPanelContentBaseState = {
 
 export type StackScriptPanelContentBaseProps = Props & WithStyles<ClassNames>;
 
-export type ChildrenProps = {
+export interface ChildrenProps {
   isSorting: boolean;
   publicImages: Linode.Image[];
   currentUser: string;
 }
 
-export class StackScriptPanelContentBase extends React.Component<StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState> {
+export class StackScriptPanelContentBase<P extends StackScriptPanelContentBaseProps, S extends StackScriptPanelContentBaseState> extends React.Component<P, StackScriptPanelContentBaseState> {
   
   public getDefaultState(): StackScriptPanelContentBaseState {
     return {
@@ -117,7 +117,7 @@ export class StackScriptPanelContentBase extends React.Component<StackScriptPane
       isSearching: false,
       didSearch: false,
       successMessage: '',
-    };
+    } as StackScriptPanelContentBaseState as S;
   }
 
   state: StackScriptPanelContentBaseState = this.getDefaultState();

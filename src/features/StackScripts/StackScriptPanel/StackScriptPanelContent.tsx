@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, ChildrenProps, styled } from '../StackScriptPanelContentBase';
-import Button from 'src/components/Button';
+import { ChildrenProps, StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, styled } from '../StackScriptPanelContentBase';
 import StackScriptsSection from './StackScriptsSection';
+
 import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
@@ -17,14 +18,14 @@ interface DialogState {
   stackScriptLabel: string;  
 }
 
-type State = {
+interface State {
   dialog: DialogState;
 };
 
 export type combinedState = StackScriptPanelContentBaseState & State;
 
 
-class StackScriptPanelContent extends StackScriptPanelContentBase {
+class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPanelContentBaseProps, combinedState> {
 
 
   getDefaultState(): combinedState {
@@ -57,7 +58,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
         stackScriptID: id,
         stackScriptLabel: label,
       }
-    })
+    } as combinedState)
   }
 
   handleOpenMakePublicDialog = (id: number, label: string) => {
@@ -72,7 +73,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
         stackScriptID: id,
         stackScriptLabel: label,
       }
-    })
+    } as combinedState)
   }
 
   handleCloseDialog = () => {
@@ -86,7 +87,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
           open: false,
         },
       }
-    })
+    } as combinedState)
   }
 
   handleDeleteStackScript = () => {
@@ -103,7 +104,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
             stackScriptID: undefined,
             stackScriptLabel: '',
           }
-        });
+        } as combinedState);
         this.getDataAtPage(1, this.state.currentFilter, true);
       })
       .catch(e => {
@@ -121,7 +122,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
           fieldError: {
             reason: 'Unable to complete your request at this time'
           }
-        })
+        } as combinedState)
       });
   }
 
@@ -143,7 +144,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
             stackScriptID: undefined,
             stackScriptLabel: '',
           }
-        });
+        } as combinedState);
         this.getDataAtPage(1, currentFilter, true);
       })
       .catch(e => {
@@ -161,7 +162,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase {
           fieldError: {
             reason: 'Unable to complete your request at this time'
           }
-        })
+        } as combinedState)
       });
   }
 
