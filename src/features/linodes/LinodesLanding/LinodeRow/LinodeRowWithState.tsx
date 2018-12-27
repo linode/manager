@@ -6,7 +6,6 @@ import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { displayType } from 'src/features/linodes/presentation';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
@@ -85,9 +84,7 @@ interface Props {
   mutationAvailable: boolean;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
-  typesData?: Linode.LinodeType[];
-  typesLoading: boolean;
-
+  displayType: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -105,13 +102,11 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
     linodeRegion,
     linodeStatus,
     linodeTags,
-    linodeType,
     mostRecentBackup,
     mutationAvailable,
     openConfigDrawer,
     toggleConfirmation,
-    typesData,
-    typesLoading,
+    displayType,
     linodeRecentEvent,
   } = props;
 
@@ -126,7 +121,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      {loading && <LinodeRowLoading linodeId={linodeId} linodeRecentEvent={linodeRecentEvent}>
+      {loading && <LinodeRowLoading linodeStatus={linodeStatus} linodeId={linodeId} linodeRecentEvent={linodeRecentEvent}>
         {headCell}
       </ LinodeRowLoading>}
       <TableRow
@@ -139,9 +134,7 @@ const LinodeRowLoaded: React.StatelessComponent<CombinedProps> = (props) => {
       >
         {!loading && headCell}
         <TableCell parentColumn="Plan" className={classes.planCell}>
-          {!typesLoading &&
-            <Typography variant="body1">{displayType(linodeType, typesData || [])}</Typography>
-          }
+          <Typography variant="body1">{displayType}</Typography>
         </TableCell>
         <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>

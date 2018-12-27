@@ -74,7 +74,7 @@ describe('Header - Search Suite', () => {
         const currentUrl = browser.getUrl();
 
         SearchBar.executeSearch(testLinode);
-        browser.waitForVisible(SearchBar.suggestion, constants.wait.normal);
+        browser.waitForVisible(SearchBar.suggestion.selector, constants.wait.normal);
         browser.pause(2000);
         SearchBar.suggestions[0].click();
 

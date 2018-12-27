@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 interface EditableProps {
   onCancel: () => void;
-  onEdit: (value: string) => void;
+  onEdit: (value: string) => Promise<any>;
   errorText?: string;
 }
 
@@ -118,7 +118,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
       </Link>
 
       {labelOptions && labelOptions.prefixComponent &&
-        <div className={classes.prefixComponentWrapper} data-qa-prefixWrapper>
+        <div className={classes.prefixComponentWrapper} data-qa-prefixwrapper>
           {labelOptions.prefixComponent}
         </div>
       }

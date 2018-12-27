@@ -66,7 +66,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const modes = {
+export const modes = {
   EMPTY: 'create_empty' as diskMode,
   IMAGE: 'from_image' as diskMode,
 }
@@ -84,7 +84,13 @@ const modeList: Mode<diskMode>[] = [
   }
 ]
 
-class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
+const submitLabelMap = {
+  'create': 'Add',
+  'rename': 'Rename',
+  'resize': 'Resize'
+}
+
+export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     hasErrorFor: (v) => null,
     initialSize: this.props.size,
@@ -228,9 +234,11 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
         <Grid container direction="row">
-          <Grid item>
-            <ModeSelect modes={modeList} selected={selectedMode} onChange={this.onModeChange} />
-          </Grid>
+          {mode === 'create' &&
+            <Grid item data-qa-mode-toggle>
+              <ModeSelect modes={modeList} selected={selectedMode} onChange={this.onModeChange} />
+            </Grid>
+          }
           <Grid item xs={12}>
             {generalError && <Notice error spacingBottom={8} errorGroup="linode-disk-drawer" text={generalError} />}
           </Grid>
@@ -252,8 +260,10 @@ class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>
-              <Button onClick={onSubmit} type="primary" loading={submitting}>Submit</Button>
-              <Button onClick={onClose} type="secondary" className="cancel">
+              <Button onClick={onSubmit} type="primary" loading={submitting} data-qa-disk-submit>
+                {submitLabelMap[mode]}
+              </Button>
+              <Button onClick={onClose} type="secondary" className="cancel" data-qa-disk-cancel>
                 Cancel
               </Button>
             </ActionsPanel>

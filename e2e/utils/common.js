@@ -37,7 +37,7 @@ export const createGenericLinode = (label) => {
     ConfigureLinode.baseDisplay();
     ConfigureLinode.generic(label);
     ConfigureLinode.deploy.click();
-    ListLinodes.waitUntilBooted(label);
+    waitForLinodeStatus(label, 'running');
 }
 
 export const deleteLinode = (label) => {
@@ -62,19 +62,35 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
-
-    if (linodeLabel) {
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, constants.wait.long);
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-status="running"]`, constants.wait.minute * 3);
-    } else {
-        browser.waitForVisible(`[data-qa-linode="${linode.label}"]`, constants.wait.long);
-        browser.waitForVisible(`[data-qa-linode="${linode.label}"] [data-qa-status="running"]`, constants.wait.minute * 3);
-    }
+    waitForLinodeStatus(linodeLabel ? linodeLabel : linode.label, 'running');
 
     if (privateIp) {
         linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
     }
+
     return linode;
+}
+ export const apiCreateMultipleLinodes = (arrayOfLinodeCreateObj) => {
+    let linodes = [];
+    const token = readToken(browser.options.testUser);
+
+    arrayOfLinodeCreateObj.forEach((linodeObj) => {
+        const newLinodePass = crypto.randomBytes(20).toString('hex');
+        const linode = browser.createLinode(token, newLinodePass, linodeObj.linodeLabel, linodeObj.tags, linodeObj.type, linodeObj.region);
+        linodes.push(linode);
+    });
+
+    browser.url(constants.routes.linodes);
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
+
+    arrayOfLinodeCreateObj.forEach((linodeObj,i) => {
+        waitForLinodeStatus(linodeObj.linodeLabel ? linodeObj.linodeLabel : linodes[i].label, 'running');
+        if (linodeObj.privateIp) {
+            linodes[i]['privateIp'] = browser.allocatePrivateIp(token, linodes[i].id).address;
+        }
+    });
+
+    return linodes;
 }
 
 export const waitForLinodeStatus = (linodeLabel, status, timeout=constants.wait.minute) => {
@@ -166,3 +182,41 @@ export const checkEnvironment = () => {
         pending('Feature not available in Testing or Dev environmnet');
     }
 }
+
+export const createUnattachedVolumes = (volumeObjArray) => {
+    let volumes = [];
+    const token = readToken(browser.options.testUser);
+
+    volumeObjArray.forEach((volumeObj) => {
+        const volume = browser.createVolumeUnattached(token,volumeObj.label,volumeObj.region,volumeObj.size,volumeObj.tags);
+    });
+
+    browser.url(constants.routes.volumes);
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
+
+    volumeObjArray.forEach((volumeObj) => {
+        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal)
+    });
+}
+
+export const switchTab = () => {
+    browser.waitUntil(() => {
+        return browser.getTabIds().length === 2;
+    }, constants.wait.normal);
+    browser.pause(2000);
+    const tabs = browser.getTabIds();
+    const manager = tabs[0];
+    const newTab = tabs[1]
+    browser.switchTab(newTab);
+}
+
+export const getDistrobutionLabel = (distrobutionTags) => {
+    const token = readToken(browser.options.testUser);
+    let distrobutionLabel = [];
+    distrobutionTags.forEach((distro) => {
+        const distroDetails = browser.getLinodeImage(token,distro.trim());
+        distrobutionLabel.push(distroDetails.label);
+    });
+    return distrobutionLabel;
+}
+

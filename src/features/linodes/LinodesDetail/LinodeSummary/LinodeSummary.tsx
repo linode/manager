@@ -11,7 +11,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-import { withTypes } from 'src/context/types';
 import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
@@ -79,10 +78,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
   };
 };
 
-interface TypesContextProps {
-  typesData?: Linode.LinodeType[];
-}
-
 interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
@@ -99,9 +94,10 @@ interface State {
   statsError?: string;
 }
 
-type CombinedProps = LinodeContextProps &
-  TypesContextProps &
-  WithStyles<ClassNames>;
+type CombinedProps =
+ & LinodeContextProps
+ & WithTypesProps
+ & WithStyles<ClassNames>;
 
 const chartHeight = 300;
 
@@ -214,7 +210,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
     const { classes } = this.props;
-    const data = pathOr([[]], ['data','cpu'], stats);
+    const data = pathOr([], ['data','cpu'], stats);
 
     const metrics = getMetrics(data);
     const format = formatPercentage;
@@ -239,7 +235,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -262,17 +258,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
 
     const v4Data = {
-      publicIn: pathOr([[]], ['data','netv4','in'], stats),
-      publicOut: pathOr([[]], ['data','netv4','out'], stats),
-      privateIn: pathOr([[]], ['data','netv4','private_in'], stats),
-      privateOut: pathOr([[]], ['data','netv4','private_out'], stats)
+      publicIn: pathOr([], ['data','netv4','in'], stats),
+      publicOut: pathOr([], ['data','netv4','out'], stats),
+      privateIn: pathOr([], ['data','netv4','private_in'], stats),
+      privateOut: pathOr([], ['data','netv4','private_out'], stats)
     };
 
     // Need these to calculate Total Traffic
     const v6Data = {
-      publicIn: pathOr([[]], ['data','netv6','in'], stats),
-      publicOut: pathOr([[]], ['data','netv6','out'], stats),
-      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
+      publicIn: pathOr([], ['data','netv6','in'], stats),
+      publicOut: pathOr([], ['data','netv6','out'], stats),
+      privateIn: pathOr([], ['data','netv6','private_in'], stats),
     };
 
     const format = formatBitsPerSecond;
@@ -328,7 +324,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -346,7 +342,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -364,17 +360,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            {rangeSelection === '24' &&
-              <Grid item xs={12} lg={6} className={classes.totalTraffic}>
-                <TotalTraffic
-                  inTraffic={totalTraffic.inTraffic}
-                  outTraffic={totalTraffic.outTraffic}
-                  combinedTraffic={totalTraffic.combinedTraffic}
-                />
-              </Grid>
-            }
           </Grid>
         </div>
+        {rangeSelection === '24' &&
+          <Grid item xs={12} sm={6} className={classes.totalTraffic}>
+            <TotalTraffic
+              inTraffic={totalTraffic.inTraffic}
+              outTraffic={totalTraffic.outTraffic}
+              combinedTraffic={totalTraffic.combinedTraffic}
+            />
+          </Grid>
+        }
       </React.Fragment>
     )
   }
@@ -384,10 +380,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
 
     const data = {
-      publicIn: pathOr([[]], ['data','netv6','in'], stats),
-      publicOut: pathOr([[]], ['data','netv6','out'], stats),
-      privateIn: pathOr([[]], ['data','netv6','private_in'], stats),
-      privateOut: pathOr([[]], ['data','netv6','private_out'], stats)
+      publicIn: pathOr([], ['data','netv6','in'], stats),
+      publicOut: pathOr([], ['data','netv6','out'], stats),
+      privateIn: pathOr([], ['data','netv6','private_in'], stats),
+      privateOut: pathOr([], ['data','netv6','private_out'], stats)
     };
 
     const format = formatBitsPerSecond;
@@ -436,7 +432,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -454,7 +450,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -472,17 +468,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            {rangeSelection === '24' &&
-              <Grid item xs={12} lg={6}>
-                <TotalTraffic
-                  inTraffic={totalTraffic.inTraffic}
-                  outTraffic={totalTraffic.outTraffic}
-                  combinedTraffic={totalTraffic.combinedTraffic}
-                />
-              </Grid>
-            }
           </Grid>
         </div>
+        {rangeSelection === '24' &&
+          <Grid item xs={12} sm={6} className={classes.totalTraffic}>
+            <TotalTraffic
+              inTraffic={totalTraffic.inTraffic}
+              outTraffic={totalTraffic.outTraffic}
+              combinedTraffic={totalTraffic.combinedTraffic}
+            />
+          </Grid>
+        }
       </React.Fragment>
     )
   }
@@ -492,8 +488,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const { rangeSelection, stats } = this.state;
 
     const data = {
-      io: pathOr([[]], ['data','io','io'], stats),
-      swap: pathOr([[]], ['data','io','swap'], stats)
+      io: pathOr([], ['data','io','io'], stats),
+      swap: pathOr([], ['data','io','swap'], stats)
     };
 
     const format = formatNumber;
@@ -523,7 +519,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -535,7 +531,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 ]}
               />
             </Grid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} sm={6}>
               <MetricsDisplay
                 rows={[
                   {
@@ -649,7 +645,14 @@ const imageContext = withImage((context) => ({
   imageData: context.data!,
 }))
 
-const typesContext = withTypes(({ data: typesData }) => ({ typesData }))
+
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
+}));
 
 interface StateProps {
   volumesData?: Linode.Volume[]
@@ -664,7 +667,7 @@ const connected = connect(mapStateToProps);
 const enhanced = compose(
   connected,
   styled,
-  typesContext,
+  withTypes,
   linodeContext,
   imageContext,
 );

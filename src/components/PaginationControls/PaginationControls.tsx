@@ -5,6 +5,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPage from '@material-ui/icons/LastPage';
 
+import Hidden from 'src/components/core/Hidden';
 import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendEvent } from 'src/utilities/analytics';
 
@@ -22,7 +23,9 @@ export class PaginationControls extends React.Component<Props, {}> {
   handleSendEvent = (eventLabel: string) => {
     const { eventCategory } = this.props;
 
-    if (!eventCategory) { return };
+    if (!eventCategory) {
+      return
+    };
 
     sendEvent({
       category: eventCategory,
@@ -77,9 +80,11 @@ export class PaginationControls extends React.Component<Props, {}> {
 
     return (
       <div>
-        <PageButton data-qa-page-first onClick={this.handleFirstPageClick} disabled={disableHead} aria-label="First Page" >
-          <FirstPage />
-        </PageButton>
+        <Hidden xsDown>
+          <PageButton data-qa-page-first onClick={this.handleFirstPageClick} disabled={disableHead} aria-label="First Page" >
+            <FirstPage />
+          </PageButton>
+        </Hidden>
 
         <PageButton data-qa-page-previous onClick={this.handlePreviousPageClick} disabled={disableHead} aria-label="Previous Page" >
           <KeyboardArrowLeft />
@@ -93,9 +98,11 @@ export class PaginationControls extends React.Component<Props, {}> {
           <KeyboardArrowRight />
         </PageButton>
 
-        <PageButton data-qa-page-last onClick={this.handleLastPageClick} disabled={disableTail} aria-label="Last Page" >
-          <LastPage />
-        </PageButton>
+        <Hidden xsDown>
+          <PageButton data-qa-page-last onClick={this.handleLastPageClick} disabled={disableTail} aria-label="Last Page" >
+            <LastPage />
+          </PageButton>
+        </Hidden>
       </div >
     );
   }

@@ -15,12 +15,8 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
-    margin: `${theme.spacing.unit}px`,
-    [theme.breakpoints.up('sm')]: {
-      position: 'absolute',
-      right: 0,
-      top: 0,
-    },
+    margin: theme.spacing.unit,
+    marginRight: -theme.spacing.unit,
   },
   button: {
     borderWidth: 1,

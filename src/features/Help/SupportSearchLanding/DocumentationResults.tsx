@@ -86,7 +86,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
         onClick={() => window.open(result.data.href, '_newtab')}
         tabIndex={1}
       >
-        <Typography variant="body1" className={classes.label} >
+        <Typography variant="body1" className={classes.label} data-qa-search-result>
           {result.label}
           <OpenInNew className={classes.icon} />
         </Typography>
@@ -104,7 +104,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
 
   return (
     <div className={classes.root}>
-      <Typography variant="h1" className={classes.header}>
+      <Typography variant="h1" className={classes.header} data-qa-results={sectionTitle}>
         { `Most Relevant ${sectionTitle}` }
       </Typography>
       <Paper>
@@ -113,7 +113,7 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
         </nav>
       </Paper>
       <Typography variant="body2" className={classes.moreResults}>
-        <a href={target} className={classes.link} >View more {sectionTitle}</a>
+        <a href={target} className={classes.link} data-qa-view-more={sectionTitle}>View more {sectionTitle}</a>
       </Typography>
     </div>
   )

@@ -1,49 +1,33 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter, withRouter } from 'react-router-dom';
-
-import { linodes as mockLinodes } from 'src/__data__';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { clearDocs, setDocs } from 'src/store/reducers/documentation';
-
 import { ListLinodes } from './LinodesLanding';
-
-import { pageyProps } from 'src/__data__/pageyProps';
 
 const RoutedListLinodes = withRouter(ListLinodes);
 
-const actions = {
-  getLinodesWithoutBackups: jest.fn(),
-  clearSidebar: jest.fn(),
-  setSidebar: jest.fn(),
-}
-
 describe('ListLinodes', () => {
-  let linodes: Linode.Linode[];
-
-  beforeEach(() => {
-    linodes = mockLinodes;
-  });
+  const classes = { title: '', tagGroup: '' };
 
   it('renders without error', () => {
     shallow(
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            enqueueSnackbar={jest.fn()}
-            onPresentSnackbar={jest.fn()}
-            /** Pagination */
-            classes={{ root: '', title: '' }}
-            setDocs={setDocs}
+            linodesData={[]}
+            width={'lg'}
+            classes={classes}
             clearDocs={clearDocs}
-            typesRequest={jest.fn}
-            typesLoading={false}
-            typesLastUpdated={1}
-            actions={actions}
-            linodesWithoutBackups={[]}
+            enqueueSnackbar={jest.fn()}
+            groupByTags={false}
+            linodesCount={0}
+            linodesRequestError={undefined}
+            linodesRequestLoading={false}
             managed={false}
-            data={linodes}
-            {...pageyProps}
+            onPresentSnackbar={jest.fn()}
+            setDocs={setDocs}
+            toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -56,20 +40,19 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            enqueueSnackbar={jest.fn()}
-            onPresentSnackbar={jest.fn()}
-            /** Pagination Props */
-            {...pageyProps}
-            data={[]}
-            classes={{ root: '', title: '' }}
-            setDocs={setDocs}
+            linodesData={[]}
+            width={'lg'}
+            classes={classes}
             clearDocs={clearDocs}
-            typesRequest={jest.fn}
-            typesLoading={false}
-            typesLastUpdated={1}
-            actions={actions}
-            linodesWithoutBackups={[]}
+            enqueueSnackbar={jest.fn()}
+            groupByTags={false}
+            linodesCount={0}
+            linodesRequestError={undefined}
+            linodesRequestLoading={false}
             managed={false}
+            onPresentSnackbar={jest.fn()}
+            setDocs={setDocs}
+            toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -86,21 +69,19 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
-            enqueueSnackbar={jest.fn()}
-            onPresentSnackbar={jest.fn()}
-            /** Pagination Props */
-            {...pageyProps}
-            count={linodes.length}
-            data={linodes}
-            classes={{ root: '', title: '' }}
-            setDocs={setDocs}
+            linodesData={[]}
+            width={'lg'}
+            classes={classes}
             clearDocs={clearDocs}
-            typesRequest={jest.fn}
-            typesLoading={false}
-            typesLastUpdated={1}
-            actions={actions}
-            linodesWithoutBackups={[]}
+            enqueueSnackbar={jest.fn()}
+            groupByTags={false}
+            linodesCount={0}
+            linodesRequestError={undefined}
+            linodesRequestLoading={false}
             managed={false}
+            onPresentSnackbar={jest.fn()}
+            setDocs={setDocs}
+            toggleGroupByTag={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

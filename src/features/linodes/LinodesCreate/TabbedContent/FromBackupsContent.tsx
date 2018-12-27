@@ -1,4 +1,5 @@
 import * as Promise from 'bluebird';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -77,7 +78,10 @@ interface State {
   tags: Tag[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & InjectedNotistackProps
+  & WithStyles<ClassNames>;
 
 interface Notice {
   text: string;
@@ -228,6 +232,9 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
+
+        this.props.enqueueSnackbar(`Your Linode ${label} is being created.`, { variant: 'success' });
+
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -420,4 +427,4 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(FromBackupsContent);
+export default styled(withSnackbar(FromBackupsContent));

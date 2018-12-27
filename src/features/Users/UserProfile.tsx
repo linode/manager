@@ -1,7 +1,9 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -60,7 +62,12 @@ interface State {
   userDeleteError: boolean;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps =
+  & Props
+  & InjectedNotistackProps
+  & StateProps
+  & WithStyles<ClassNames>
+  & RouteComponentProps<{}>;
 
 class UserProfile extends React.Component<CombinedProps> {
   state: State = {
@@ -89,7 +96,7 @@ class UserProfile extends React.Component<CombinedProps> {
       success,
       errors
     } = this.props;
-    const hasErrorFor = getAPIErrorsFor({ username: "Username" }, errors,)
+    const hasErrorFor = getAPIErrorsFor({ username: "Username" }, errors)
     const generalError = hasErrorFor('none');
     return (
       <Paper className={classes.root}>
@@ -148,6 +155,7 @@ class UserProfile extends React.Component<CombinedProps> {
     });
     deleteUser(username)
       .then(() => {
+        this.props.enqueueSnackbar(`User ${username} has been deleted successfully.`, { variant: 'success' });
         push(`/account/users`, { deletedUsername: username });
       })
       .catch(() => {
@@ -249,4 +257,11 @@ export const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(connected(UserProfile)));
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withRouter,
+  connected,
+  withSnackbar,
+);
+
+export default enhanced(UserProfile);

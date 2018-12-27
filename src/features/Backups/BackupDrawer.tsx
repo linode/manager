@@ -11,16 +11,7 @@ import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { withTypes } from 'src/context/types';
-import {
-  enableAllBackups,
-  enableAutoEnroll,
-  handleAutoEnrollToggle,
-  handleClose,
-  handleResetError,
-  handleResetSuccess,
-  requestLinodesWithoutBackups
-} from 'src/store/reducers/backupDrawer';
+import { enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess } from 'src/store/reducers/backupDrawer';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
@@ -38,16 +29,10 @@ export interface LinodeWithTypeInfo extends Linode.Linode {
   typeInfo?: Linode.LinodeType;
 }
 
-interface TypesContextProps {
-  typesLoading: boolean;
-  typesData: Linode.LinodeType[];
-}
-
 interface DispatchProps {
   actions: {
     enable: () => void;
     enroll: () => void;
-    getLinodesWithoutBackups: () => void;
     close: () => void;
     dismissError: () => void;
     dismissSuccess: () => void;
@@ -73,7 +58,7 @@ interface StateProps {
 
 type CombinedProps = DispatchProps
   & StateProps
-  & TypesContextProps
+  & WithTypesProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
@@ -97,12 +82,6 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
 }
 export class BackupDrawer extends React.Component<CombinedProps, {}> {
 
-  componentDidMount() {
-    if (isEmpty(this.props.linodesWithoutBackups)) {
-      this.props.actions.getLinodesWithoutBackups();
-    }
-  }
-
   componentDidUpdate() {
     const { close, dismissSuccess } = this.props.actions;
     const { autoEnroll, enableSuccess, updatedCount } = this.props;
@@ -113,9 +92,9 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
         ? `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups, and
         all new Linodes will automatically be backed up.`
         : `${updatedCount} ${pluralizedLinodes} been enrolled in automatic backups.`
-        this.props.enqueueSnackbar(text, {
-          variant: 'success'
-        });
+      this.props.enqueueSnackbar(text, {
+        variant: 'success'
+      });
       dismissSuccess();
       close();
     }
@@ -215,7 +194,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   return {
     actions: {
       enable: () => dispatch(enableAllBackups()),
-      getLinodesWithoutBackups: () => dispatch(requestLinodesWithoutBackups()),
       close: () => dispatch(handleClose()),
       dismissError: () => dispatch(handleResetError()),
       dismissSuccess: () => dispatch(handleResetSuccess()),
@@ -255,17 +233,17 @@ export const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], 
 
 const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
-  const linodes = pathOr([], ['backups', 'data'], state);
+  const linodes = state.__resources.linodes.entities.filter((l) => !l.backups.enabled);
   return ({
     accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
     backupLoadError: path(['backups', 'error'], state),
     backupsLoading: path(['backups', 'loading'], state),
     enableErrors,
-    enableSuccess: path(['backups','enableSuccess'], state),
+    enableSuccess: path(['backups', 'enableSuccess'], state),
     updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
-    open: path(['backups','open'], state),
-    loading: pathOr(false, ['backups','loading'], state),
-    enabling: pathOr(false, ['backups','enabling'], state),
+    open: path(['backups', 'open'], state),
+    loading: pathOr(false, ['backups', 'loading'], state),
+    enabling: pathOr(false, ['backups', 'enabling'], state),
     linodesWithoutBackups: enhanceLinodes(linodes, enableErrors, ownProps.typesData),
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
@@ -277,14 +255,17 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const styled = withStyles(styles);
 
-const typesContext = withTypes(({ data: typesData, loading: typesLoading }) => ({
-  typesData,
-  typesLoading,
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
 }));
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  typesContext,
+  withTypes,
   connected,
   withSnackbar
 );
