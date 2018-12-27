@@ -1,6 +1,9 @@
 import { take } from 'ramda';
 import * as React from 'react';
+import { debounce } from 'throttle-debounce';
 import withStyles, { StyleProps } from './PageNumbers.styles';
+
+import windowIsNarrowerThan from 'src/utilities/breakpoints';
 
 import PageButton, { Props as PageButtonProps } from 'src/components/PaginationControls/PageButton';
 
@@ -10,64 +13,81 @@ interface Props {
   handlePageClick: (n: number) => void
 }
 
-const PageNumbers: React.StatelessComponent<Props & StyleProps> = (props) => {
-  const { numOfPages, currentPage, classes, ...rest } = props;
+class PageNumbers extends React.PureComponent<Props & StyleProps> {
+  forceRefresh = debounce(400, false, () => {
+    /** 
+     * forcing update because we want the shown page numbers to update
+     * based on screen size. See pageNumbersToRender() function
+     */
+    return this.forceUpdate();
+  })
 
-  return (
-    <React.Fragment>
-      {
-        /** display "1 ... " if we're on a page higher than 5 */
-        (currentPage >= 5)
-          ? <React.Fragment>
+  componentDidMount() {
+    window.addEventListener("resize", this.forceRefresh as any)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.forceRefresh as any)
+  }
+
+  render() {
+    const { numOfPages, currentPage, classes, ...rest } = this.props;
+    return (
+      <React.Fragment>
+        {
+          /** display "1 ... " if we're on a page higher than 5 */
+          (currentPage >= 5)
+            ? <React.Fragment>
+              <PageNumber
+                number={1}
+                data-qa-page-to={1}
+                disabled={currentPage === 1}
+                arial-label={`Page 1`}
+                {...rest}
+              >
+                1
+            </PageNumber>
+              <span className={classes.ellipses}>...</span>
+            </React.Fragment>
+            : null
+        }
+        {
+          pageNumbersToRender(currentPage, numOfPages).map((eachPage) => (
             <PageNumber
-              number={1}
-              data-qa-page-to={1}
-              disabled={currentPage === 1}
-              arial-label={`Page 1`}
+              number={eachPage}
+              data-qa-page-to={eachPage}
+              key={eachPage}
+              disabled={eachPage === currentPage}
+              arial-label={`Page ${eachPage}`}
               {...rest}
             >
-              1
+              {eachPage}
             </PageNumber>
-            <span className={classes.ellipses}>...</span>
-          </React.Fragment>
-          : null
-      }
-      {
-        pageNumbersToRender(currentPage, numOfPages).map((eachPage) => (
-          <PageNumber
-            number={eachPage}
-            data-qa-page-to={eachPage}
-            key={eachPage}
-            disabled={eachPage === currentPage}
-            arial-label={`Page ${eachPage}`}
-            {...rest}
-          >
-            {eachPage}
-          </PageNumber>
-        ))
-      }
-      {
-        /** 
-         * if we have more than 5 pages and we're on a page that is
-         * not one of the last 5 pages, show " ... lastPage# " 
-         */
-        (numOfPages > 5 && currentPage <= numOfPages - 4)
-          ? <React.Fragment>
-            <span className={classes.ellipses}>...</span>
-            <PageNumber
-              number={numOfPages}
-              data-qa-page-to={numOfPages}
-              disabled={currentPage === numOfPages}
-              arial-label={`Page ${numOfPages}`}
-              {...rest}
-            >
-              {numOfPages}
-            </PageNumber>
-          </React.Fragment>
-          : null
-      }
-    </React.Fragment>
-  )
+          ))
+        }
+        {
+          /** 
+           * if we have more than 5 pages and we're on a page that is
+           * not one of the last 5 pages, show " ... lastPage# " 
+           */
+          (numOfPages > 5 && currentPage <= numOfPages - 4)
+            ? <React.Fragment>
+              <span className={classes.ellipses}>...</span>
+              <PageNumber
+                number={numOfPages}
+                data-qa-page-to={numOfPages}
+                disabled={currentPage === numOfPages}
+                arial-label={`Page ${numOfPages}`}
+                {...rest}
+              >
+                {numOfPages}
+              </PageNumber>
+            </React.Fragment>
+            : null
+        }
+      </React.Fragment>
+    )
+  }
 };
 
 export default withStyles(PageNumbers);
@@ -108,7 +128,10 @@ export const pageNumbersToRender = (currentPage: number, numOfPages: number) => 
     return take(5, arrOfPageNumbers);
     /** return 2 pages below and 2 pages above current page  */
   } else if (currentPage >= 5 && currentPage <= numOfPages - 4) {
-    return arrOfPageNumbers.slice(currentPage - 3, currentPage + 2);
+    /** basically, if we're on small window size, show less buttons in the pagination footer */
+    const indexStart = windowIsNarrowerThan(700) ? 2 : 3;
+    const indexEnd = windowIsNarrowerThan(700) ? 1 : 2;
+    return arrOfPageNumbers.slice(currentPage - indexStart, currentPage + indexEnd);
   }
 
   /** otherwise just return the last 5 pages */
