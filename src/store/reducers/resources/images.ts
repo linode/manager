@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import { Reducer } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { getImages } from "src/services/images";
@@ -87,7 +88,12 @@ const requestImages = (): ThunkAction<Promise<Linode.Image[]>, State, undefined>
       return data;
     })
     .catch((err) => {
-      dispatch(getImagesFailure(err))
+      const ApiError = pathOr(
+        [{ reason: "There was an error retrieving your Images."}],
+        ['response', 'data', 'errors'],
+        err
+      )
+      dispatch(getImagesFailure(ApiError))
       return err;
     })
 };
