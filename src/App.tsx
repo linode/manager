@@ -217,11 +217,14 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { getAccountSettings, getNotifications, getProfile, requestDomains, requestLinodes, requestTypes } = this.props.actions;
+    const { actions } = this.props;
 
-    requestDomains();
-    requestLinodes();
-    requestTypes();
+    actions.requestDomains();
+    actions.requestLinodes();
+    actions.requestNotifications();
+    actions.requestProfile();
+    actions.requestSettings();
+    actions.requestTypes();
 
     /*
      * We want to listen for migration events side-wide
@@ -254,10 +257,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (notifications.welcome.get() === 'open') {
       this.setState({ welcomeBanner: true });
     }
-
-    getProfile();
-    getNotifications();
-    getAccountSettings();
 
     this.state.regionsContext.request();
   }
@@ -372,11 +371,11 @@ const themeDataAttr = () => {
 
 interface DispatchProps {
   actions: {
-    getProfile: () => void;
-    getNotifications: () => void;
-    getAccountSettings: () => void;
     requestDomains: () => void;
     requestLinodes: () => void;
+    requestNotifications: () => void;
+    requestProfile: () => void;
+    requestSettings: () => void;
     requestTypes: () => void;
   },
 }
@@ -384,11 +383,11 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
   return {
     actions: {
-      getProfile: () => dispatch(requestProfile()),
-      getNotifications: () => dispatch(requestNotifications()),
-      getAccountSettings: () => dispatch(requestAccountSettings()),
       requestDomains: () => dispatch(domainsAsync.requestDomains()),
       requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
+      requestNotifications: () => dispatch(requestNotifications()),
+      requestProfile: () => dispatch(requestProfile()),
+      requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
     }
   };
