@@ -15,7 +15,7 @@ import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { async } from 'src/store/reducers/resources/account';
 import InvoiceTable from './InvoiceTable';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'logoWrapper' | 'invoiceHeader';
+type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'logoWrapper' | 'invoiceHeader' | 'logo';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -26,6 +26,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   logoWrapper: {
     textAlign: 'center',
+  },
+  logo: {
+    width: 180,
+    height: 63,
+    '& g': {
+      fill: '#000',
+    }
   },
   titleWrapper: {
     display: 'flex',
@@ -115,7 +122,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Grid container>
             <Grid item xs={12} className={classes.logoWrapper}>
-              <Logo width={115} height={43} />
+              <Logo className={classes.logo} />
             </Grid>
             <Grid item xs={6}>
               <Typography variant='body2'>Invoice Date: {date}</Typography>
