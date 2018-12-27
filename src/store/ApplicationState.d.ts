@@ -13,6 +13,13 @@ declare interface ApplicationState {
       lastUpdated: number;
       error?: Linode.ApiFieldError[];
     },
+    images: {
+      results: string[];
+      entities: Linode.Image[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
     linodes: {
       results: number[];
       entities: Linode.Linode[];
