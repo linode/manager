@@ -21,27 +21,29 @@ type State = {
   dialog: DialogState;
 };
 
-export type combinedState = StackScriptPanelContentBaseState<State>;
+export type combinedState = StackScriptPanelContentBaseState & State;
 
 
-class StackScriptPanelContent<StackScriptPanelContentBaseProps, combinedState> extends StackScriptPanelContentBase<StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState> {
+class StackScriptPanelContent extends StackScriptPanelContentBase {
 
 
-  getDefaultState = () => ({
-    ...super.getDefaultState(),
-    dialog: {
-      makePublic: {
-        open: false,
-      },
-      delete: {
-        open: false,
-      },
-      stackScriptID: undefined,
-      stackScriptLabel: '',
+  getDefaultState(): combinedState {
+    return {
+      ...super.getDefaultState(),
+      dialog: {
+        makePublic: {
+          open: false,
+        },
+        delete: {
+          open: false,
+        },
+        stackScriptID: undefined,
+        stackScriptLabel: '',
+      }
     }
-  });
+  }
 
-  state: StackScriptPanelContentBaseState = this.getDefaultState();
+  state: combinedState = this.getDefaultState();
 
   handleOpenDeleteDialog = (id: number, label: string) => {
     this.setState({

@@ -70,7 +70,7 @@ interface FilterInfo {
 
 type SortOrder = 'asc' | 'desc';
 
-export interface StackScriptPanelContentBaseState {
+export type StackScriptPanelContentBaseState = {
   currentPage: number;
   loading?: boolean;
   gettingMoreStackScripts: boolean;
