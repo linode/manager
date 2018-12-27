@@ -1,5 +1,6 @@
-import { clamp, pathOr } from 'ramda';
+import { clamp } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -13,7 +14,7 @@ import Grid from 'src/components/Grid';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { getImages } from 'src/services/images';
+import withImages from 'src/containers/withImages.container';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from './ImageAndPassword';
@@ -40,6 +41,10 @@ interface EditableFields {
   userSSHKeys?: UserSSHKeyObject[];
 }
 
+interface WithImages {
+  images?: Linode.Image[];
+}
+
 interface Props extends EditableFields {
   mode: 'create' | 'rename' | 'resize';
   open: boolean;
@@ -60,11 +65,10 @@ interface State {
   hasErrorFor?: (v: string) => any,
   initialSize: number;
   selectedMode: diskMode;
-  images: Linode.Image[];
   imageError?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithImages & WithStyles<ClassNames>;
 
 export const modes = {
   EMPTY: 'create_empty' as diskMode,
@@ -95,26 +99,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     hasErrorFor: (v) => null,
     initialSize: this.props.size,
     selectedMode: modes.EMPTY,
-    images: [],
   };
-
-  componentDidMount() {
-    getImages()
-      .then((response) => {
-        this.setState({
-          images: response.data,
-        });
-      })
-      .catch((errors) => {
-        this.setState({
-          imageError: pathOr(
-            "There was an error loading your images.",
-            ["response", "data", "errors", 0, "reason"],
-            errors,
-          )
-        })
-      });
-  }
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     return {
@@ -219,6 +204,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     const {
       open,
       mode,
+      images,
       onSubmit,
       submitting,
       onClose,
@@ -226,7 +212,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       password,
       userSSHKeys,
     } = this.props;
-    const { images, imageError, selectedMode } = this.state;
+    const { imageError, selectedMode } = this.state;
 
     const generalError = this.getErrors('none');
     const passwordError = this.getErrors('root_pass');
@@ -247,7 +233,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             {selectedMode === modes.EMPTY && <this.filesystemField /> }
             {selectedMode === modes.IMAGE &&
               <ImageAndPassword
-                images={images}
+                images={images || []}
                 imageError={imageError}
                 onImageChange={this.onImageChange}
                 password={password || ''}
@@ -276,4 +262,9 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(LinodeDiskDrawer);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withImages((ownProps, images) => ({ ...ownProps, images })),
+)(LinodeDiskDrawer);
+
+export default enhanced;
