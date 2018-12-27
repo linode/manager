@@ -31,11 +31,11 @@ it('renders without crashing', () => {
             userId={123456}
             profileLoading={false}
             actions={{
-              getAccountSettings: jest.fn(),
-              getProfile: jest.fn(),
-              getNotifications: jest.fn(),
               requestDomains: jest.fn(),
               requestLinodes: jest.fn(),
+              requestNotifications: jest.fn(),
+              requestProfile: jest.fn(),
+              requestSettings: jest.fn(),
               requestTypes: jest.fn(),
             }}
             documentation={[]}
