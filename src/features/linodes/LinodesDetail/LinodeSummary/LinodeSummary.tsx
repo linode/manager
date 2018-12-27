@@ -11,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-import { withImage, withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { setUpCharts } from 'src/utilities/charts';
@@ -82,7 +82,6 @@ interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
   linodeData: Linode.Linode;
-  imageData: Linode.Image;
   volumesData: Linode.Volume[];
 }
 
@@ -552,7 +551,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   render() {
     const {
       linodeData: linode,
-      imageData: image,
       volumesData: volumes,
       classes,
       typesData,
@@ -581,7 +579,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
-        <SummaryPanel linode={linode} image={image} volumes={volumes} typesLongLabel={longLabel} />
+        <SummaryPanel linode={linode} volumes={volumes} typesLongLabel={longLabel} linodeImageId={linode.image} />
 
         <React.Fragment>
           <div className={classes.graphControls}>
@@ -637,14 +635,9 @@ const styled = withStyles(styles);
 const linodeContext = withLinode((context) => ({
   linodeCreated: context.data!.created,
   linodeId: context.data!.id,
-
-  linodeData: context.data, /** @todo get rid of this */
+  /** @todo get rid of this */
+  linodeData: context.data,
 }));
-
-const imageContext = withImage((context) => ({
-  imageData: context.data!,
-}))
-
 
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
@@ -658,18 +651,17 @@ interface StateProps {
   volumesData?: Linode.Volume[]
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+const withVolumesData: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
   volumesData: state.features.linodeDetail.volumes.data,
 });
 
-const connected = connect(mapStateToProps);
+const connected = connect(withVolumesData);
 
 const enhanced = compose(
   connected,
   styled,
   withTypes,
   linodeContext,
-  imageContext,
 );
 
 export default enhanced(LinodeSummary);
