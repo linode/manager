@@ -16,8 +16,9 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     width: '15%',
-    height: '100%',
+    height: '20px !important',
     paddingTop: '0 !important',
+    paddingBottom: '0 !important',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
@@ -26,9 +27,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     color: `${theme.color.blueDTwhite} !important`,
   },
   wrapper: {
-    width: '100% !important',
-    height: '100% !important',
-  }
+    width: '50% !important',
+    height: '20px !important',
+  },
 });
 
 interface Props {
@@ -62,9 +63,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
             </div>
           </Tooltip>
         : <Typography>0</Typography>
-
       }
-
     </TableCell>
   )
 };
