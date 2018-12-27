@@ -110,8 +110,22 @@ class ConfigureLinode extends Page {
         expect(this.addons.length).toBe(2);
     }
 
+    stackScriptRowByTitle(stackScriptTitle){
+        const selector = this.stackScriptRow.selector.replace(']','');
+        return $(`${selector}="${stackScriptTitle}"] [data-qa-radio]`);
+    }
+
+    stackScripShowDetails(title){
+        const selector = this.stackScriptRow.selector.replace(']','');
+        if(title){
+            $(`${selector}="${title}"] button`).click();
+        }else{
+            $$(`${this.stackScriptRow.selector} button`)[0].click();
+        }
+    }
+
     stackScriptTableDisplay() {
-        this.stackScriptTableHeader.waitForVisible();
+        this.stackScriptTableHeader.waitForVisible(constants.wait.normal);
         expect(this.stackScriptTableHeader.getText()).toBe('StackScript');
         expect(this.stackScriptDeploysHeader.getText()).toBe('Active Deploys');
         expect(this.stackScriptRevisionsHeader.getText()).toBe('Last Revision');

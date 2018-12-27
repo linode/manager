@@ -24,8 +24,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     minWidth: 200,
   },
   deploys: {
-    width: '10%',
-    minWidth: 100,
+    width: '15%',
+    minWidth: 140,
   },
   revisions: {
     width: '15%',

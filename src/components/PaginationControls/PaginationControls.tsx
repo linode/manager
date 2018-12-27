@@ -73,7 +73,9 @@ export class PaginationControls extends React.Component<Props, State> {
   handleSendEvent = (eventLabel: string) => {
     const { eventCategory } = this.props;
 
-    if (!eventCategory) return;
+    if (!eventCategory) {
+      return
+    };
 
     sendEvent({
       category: eventCategory,
@@ -136,7 +138,7 @@ export class PaginationControls extends React.Component<Props, State> {
           <KeyboardArrowLeft />
         </PageButton>
         {
-          this.state.pages.map(({ number, disabled}) => (
+          this.state.pages.map(({ number, disabled }) => (
             <PageNumber
               number={number}
               handlePageClick={this.handlePageClick}
@@ -174,7 +176,7 @@ class PageNumber extends React.PureComponent<PageNumberProps> {
   onClick = () => this.props.handlePageClick(this.props.number);
 
   render() {
-    const { onClick, children, handlePageClick, ...rest} = this.props;
+    const { onClick, children, handlePageClick, ...rest } = this.props;
 
     return (
       <PageButton {...rest} onClick={this.onClick}>

@@ -3,7 +3,11 @@ const { constants } = require('../../constants');
 import SshKeys from '../../pageobjects/profile/ssh-keys.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
 import ListLinodes from '../../pageobjects/list-linodes';
-import { apiDeleteAllLinodes, apiRemoveSshKeys } from '../../utils/common';
+import {
+    apiDeleteAllLinodes,
+    apiRemoveSshKeys,
+    waitForLinodeStatus,
+} from '../../utils/common';
 
 describe('Profile - SSH Keys Suite', () => {
     const testKey = {
@@ -50,7 +54,7 @@ describe('Profile - SSH Keys Suite', () => {
             ConfigureLinode.randomPassword();
             ConfigureLinode.sshKeys[0].$('input').click();
             ConfigureLinode.deploy.click();
-            ListLinodes.waitUntilBooted(linodeLabel);
+            waitForLinodeStatus(linodeLabel, 'running');
         });
     });
 

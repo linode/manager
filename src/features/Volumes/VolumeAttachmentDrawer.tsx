@@ -201,10 +201,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           <Button
             type="primary"
             onClick={this.attachToLinode}
+            data-qa-submit
           >
             Save
           </Button>
-          <Button onClick={this.handleClose}>
+          <Button onClick={this.handleClose} data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>

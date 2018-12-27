@@ -8,7 +8,6 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
-import { withTypes } from 'src/context/types';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getAllEntities } from 'src/utilities/getAll';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -26,6 +25,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
+const displayMap = {
+  linodes: "Linodes",
+  domains: "Domains",
+  volumes: "Volumes",
+  nodebalancers: "NodeBalancers",
+  images: "Images",
+}
+
 interface State {
   query: string;
   results: SearchResults;
@@ -38,11 +45,10 @@ interface State {
   error: boolean;
 }
 
-interface TypesContextProps {
-  typesData?: Linode.LinodeType[];
-}
-
-type CombinedProps = TypesContextProps & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps =
+  & WithTypesProps
+  & RouteComponentProps<{}>
+  & WithStyles<ClassNames>;
 
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -146,10 +152,10 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
           {Object.keys(results).map((entityType, idx: number) =>
             <ResultGroup
               key={idx}
-              entity={entityType}
+              entity={displayMap[entityType]}
               results={results[entityType]}
               loading={loading}
-              groupSize={5}
+              groupSize={100}
             />
           )}
         </Grid>
@@ -160,10 +166,13 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const typesContext = withTypes(({
-  data: typesData,
-}) => ({
-  typesData,
+import { connect } from 'react-redux';
+interface WithTypesProps {
+  typesData: Linode.LinodeType[];
+}
+
+const withTypes = connect((state: ApplicationState, ownProps) => ({
+  typesData: state.__resources.types.entities,
 }));
 
 const reloaded = reloadableWithRouter(
@@ -176,7 +185,7 @@ const reloaded = reloadableWithRouter(
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  typesContext,
+  withTypes,
   reloaded,
 )(SearchLanding);
 

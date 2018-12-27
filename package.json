@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.41.0",
+  "version": "0.43.0",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -89,6 +89,7 @@
     "recompose": "^0.30.0",
     "redux": "^3.7.2",
     "redux-thunk": "2.2.0",
+    "reselect": "^4.0.0",
     "rxjs": "^5.5.6",
     "source-map-loader": "^0.2.1",
     "style-loader": "0.19.0",
@@ -142,7 +143,7 @@
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
-    "release": "./scripts/release_change.log"
+    "release": "./scripts/release_changelog.sh"
   },
   "husky": {
     "hooks": {
@@ -171,6 +172,7 @@
     "@types/moment-timezone": "^0.5.4",
     "@types/node": "^9.4.6",
     "@types/promise.prototype.finally": "^2.0.2",
+    "@types/qs": "^6.5.1",
     "@types/ramda": "^0.25.18",
     "@types/react": "^16.4.0",
     "@types/react-dom": "^16.0.6",

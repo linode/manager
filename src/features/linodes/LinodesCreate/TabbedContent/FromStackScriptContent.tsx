@@ -1,6 +1,8 @@
-import { assocPath, compose, pathOr } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
+import { compose } from 'recompose';
 import AccessPanel, { Disabled, UserSSHKeyObject } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -106,7 +108,10 @@ const errorResources = {
   image: 'image',
 };
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & InjectedNotistackProps
+  & WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -130,7 +135,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   mounted: boolean = false;
 
   handleSelectStackScript = (id: number, label: string, username: string,
-     stackScriptImages: string[], userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
+    stackScriptImages: string[], userDefinedFields: Linode.StackScript.UserDefinedField[]) => {
     const { images } = this.props;
     const filteredImages = images.filter((image) => {
       for (const stackScriptImage of stackScriptImages) {
@@ -268,6 +273,9 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
+
+        this.props.enqueueSnackbar(`Your Linode ${label} is being created.`, { variant: 'success' });
+
         resetEventsPolling();
         history.push('/linodes');
       })
@@ -457,6 +465,13 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             {
               (props: StickyProps) => {
                 const displaySections = [];
+
+                if (selectedStackScriptUsername && selectedStackScriptLabel) {
+                  displaySections.push({
+                    title: selectedStackScriptUsername + ' / ' + selectedStackScriptLabel
+                  });
+                }
+
                 if (imageInfo) {
                   displaySections.push(imageInfo);
                 }
@@ -503,6 +518,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
 const styled = withStyles(styles);
 
-const enhanced = compose(styled, userSSHKeyHoc);
+const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
 
 export default enhanced(FromStackScriptContent) as any;

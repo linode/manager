@@ -11,7 +11,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
-    minHeight: 40,
+    height: 40,
     color: theme.palette.text.primary,
     '& svg': {
       fontSize: 22,
@@ -26,9 +26,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: '#fff',
-    },
-    '&$disabled': {
-      color: '#ccc',
     },
   },
 });

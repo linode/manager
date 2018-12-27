@@ -86,21 +86,21 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="h1" component="h2">
+        <Typography role="header" variant="h1" component="h2" data-qa-stack-title={label}>
           { label }
         </Typography>
-        <Typography variant="h3" className={classes.author}>
+        <Typography variant="h3" className={classes.author} data-qa-stack-author={username}>
           by&nbsp;
-          <ExternalLink text={username} link={`https://www.linode.com/stackscripts/profile/${username}`} />
+          <ExternalLink text={username} link={`https://www.linode.com/stackscripts/profile/${username}`} data-qa-community-stack-link/>
         </Typography>
-        <Typography variant="body2" className={classes.deployments}>
+        <Typography variant="body2" className={classes.deployments} data-qa-stack-deployments>
           {deployments_total} deployments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
         </Typography>
         <div className={classes.description}>
-          {description && <Typography variant="body2" className={classes.descriptionText}>
+          {description && <Typography variant="body2" className={classes.descriptionText} data-qa-stack-description>
             { description }
           </Typography>}
-          {imagesList.length !== 0 && <Typography variant="body2">
+          {imagesList.length !== 0 && <Typography variant="body2" data-qa-compatible-distro>
             <strong>Compatible with: </strong>
             { imagesList.map(image => image.label).join(', ' ) }
           </Typography>}

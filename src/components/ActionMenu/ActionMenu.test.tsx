@@ -1,37 +1,18 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
-import { StaticRouter } from 'react-router-dom';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { ActionMenu } from './ActionMenu';
 
-import ActionMenu from './ActionMenu';
+const classes = { actionSingleLink: '', button: '', hidden: '', item: '', root: '' };
 
 describe('ActionMenu', () => {
   const action = { title: 'whatever', onClick: () => undefined };
-  // const createActionsOne = (closeMenu: Function) => {
-  //   return [action];
-  // };
   const createActionsMany = (closeMenu: Function) => {
     return [action, action, action];
   };
 
-  // it('should render a link when provided one action.', () => {
-  //   const result = mount(
-  //     <StaticRouter context={{}}>
-  //       <ActionMenu createActions={createActionsOne} />
-  //     </StaticRouter>,
-  //   );
-  //   expect(result.find('a')).toHaveLength(1);
-  // });
-
-  it('should render a menu when provided many or one action(s).', () => {
-    const result = mount(
-      <LinodeThemeWrapper>
-        <StaticRouter context={{}}>
-          <ActionMenu createActions={createActionsMany}/>
-        </StaticRouter>
-      </LinodeThemeWrapper>,
-    );
+  it.skip('should render a menu when provided many or one action(s).', () => {
+    const result = mount(<ActionMenu classes={classes} createActions={createActionsMany} />);
     expect(result.find('WithStyles(ActionMenu)')).toHaveLength(1);
 
     result.find('IconButton').simulate('click');

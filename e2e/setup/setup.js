@@ -147,6 +147,31 @@ exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
     });
 }
 
+exports.createVolumeUnattached = (token,label,region,size,tags) => {
+  return new Promise((resolve, reject) => {
+      const volumesEndpoint = '/volumes';
+
+      const volumesConfig = {
+          region: region ? region : 'us-east',
+          size: size ? size : 20,
+          label: label
+      }
+
+      if(tags){
+          volumesConfig['tags'] = tags;
+      }
+
+      return getAxiosInstance(token).post(volumesEndpoint, volumesConfig)
+          .then(response => {
+              resolve(response.data);
+          })
+          .catch(error => {
+              console.error('Error', error);
+              reject(error);
+          });
+  });
+}
+
 exports.allocatePrivateIp = (token, linodeId) => {
     return new Promise((resolve, reject) => {
         const ipsEndpoint = `/linode/instances/${linodeId}/ips`;
@@ -425,4 +450,18 @@ exports.getGlobalSettings = (token) => {
                 reject(error);
             });
     });
+}
+
+exports.getLinodeImage = (token, imageId) => {
+  return new Promise((resolve, reject) => {
+      const endpoint = `/images/linode/${imageId}`;
+
+      return getAxiosInstance(token)
+          .get(endpoint)
+          .then(response => resolve(response.data))
+          .catch(error => {
+              console.error("Error", error);
+              reject(error);
+          });
+  });
 }

@@ -31,6 +31,8 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromStackScriptContent
+      enqueueSnackbar={jest.fn()}
+      onPresentSnackbar={jest.fn()}
       handleDisablePasswordField={jest.fn()}
       classes={{
         root: '',
@@ -49,6 +51,8 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromStackScriptContent
+      enqueueSnackbar={jest.fn()}
+      onPresentSnackbar={jest.fn()}
       handleDisablePasswordField={jest.fn()}
       classes={{
         root: '',
@@ -88,7 +92,7 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectImage panel if no compatibleImages', () => {
-    component.setState({ compatibleImages: [{label: 'linode/centos7', is_public: true}] });
+    component.setState({ compatibleImages: [{ label: 'linode/centos7', is_public: true }] });
     expect(component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')).toHaveLength(1);
   });
 

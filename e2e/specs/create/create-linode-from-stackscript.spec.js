@@ -44,8 +44,9 @@ describe('Create Linode - Create from StackScript Suite', () => {
         const linodeScript = 'StackScript Bash Library';
         const noticeMsg = 'Region is required.';
 
-        $$(ConfigureLinode.stackScriptTitle.selector)
-            .filter(el => el.getText().includes(linodeScript))[0].click();
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
+        browser.pause(500);
         ConfigureLinode.deploy.click();
         ConfigureLinode.waitForNotice(noticeMsg);
     });
@@ -59,28 +60,17 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should display user-defined fields on selection of a stackscript containing UD fields', () => {
-        let i = 0;
-        const stackScripts = ConfigureLinode.stackScriptRows
-            .map(s => s.getAttribute('data-qa-table-row'));
-
-        while (!ConfigureLinode.userDefinedFieldsHeader.isVisible()) {
-            browser.jsClick(`[data-qa-table-row="${stackScripts[i]}"]`);
-            i++;
-        }
+        const wordPressStackScript = 'WordPress';
+        ConfigureLinode.stackScriptRowByTitle(wordPressStackScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(wordPressStackScript).click();
+        ConfigureLinode.userDefinedFieldsHeader.waitForVisible(constants.wait.normal);
     });
 
     it('should create from stackscript', () => {
+        const linodeScript = 'StackScript Bash Library';
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
         ConfigureLinode.plans[0].click();
-
-        const stackScripts = ConfigureLinode.stackScriptRows
-            .map(s => s.getAttribute('data-qa-table-row'));
-        let i = 0;
-
-        // Select a stackscript that does not have user-defined fields
-        while (ConfigureLinode.userDefinedFieldsHeader.isVisible()) {
-            browser.jsClick(`[data-qa-table-row="${stackScripts[i]}"]`);
-            i++;
-        }
 
         ConfigureLinode.images[0].click();
         const imageName = ConfigureLinode.images[0].$('[data-qa-select-card-subheading]').getText();

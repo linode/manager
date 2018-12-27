@@ -156,12 +156,14 @@ const themeDefaults: ThemeOptions = {
     grey3: '#ccc',
     white: '#fff',
     black: '#222',
+    offBlack: primaryColors.offBlack,
     boxShadow: '#ddd',
     focusBorder: '#999',
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
+    toggleActive: '#606469',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -1038,14 +1040,24 @@ const themeDefaults: ThemeOptions = {
     MuiTableSortLabel: {
       root: {
         fontSize: '.9rem',
-        color: '#111',
+        transition: 'color 225ms ease-in-out',
+        '&:hover': {
+          color: primaryColors.main,
+        }
       },
       active: {
         color: primaryColors.main,
         '&:focus': {
-          color: primaryColors.main,
+          outline: '1px dotted #999',
+          '&:hover': {
+            color: primaryColors.main,
+          }
         },
       },
+      icon: {
+        opacity: 1,
+        marginTop: 2
+      }
     },
     MuiTooltip: {
       popper: {

@@ -1,19 +1,10 @@
 import backups, * as B from './backupDrawer';
 
-import { linode1, linode2 } from 'src/__data__/linodes';
+import { linode1 } from 'src/__data__/linodes';
 import { mockAPIFieldErrors } from 'src/services/';
 
 const error: BackupError = { linodeId: 123456, reason: 'Error'};
 const apiError = mockAPIFieldErrors([]);
-const linodes = [linode1, linode2];
-
-const mockFn = jest.fn();
-jest.mock('axios', () => ({
-  default: (args: any) => mockFn(args)
-}));
-
-mockFn.mockReturnValueOnce(Promise.resolve(1));
-mockFn.mockReturnValueOnce(Promise.reject());
 
 describe("Redux backups", () => {
   describe("reducer", () => {
@@ -36,33 +27,18 @@ describe("Redux backups", () => {
         expect(newState).toHaveProperty('open', false);
 
     });
-    it("should handle ERROR", () => {
-      const newState = backups(
-        {...B.defaultState, loading: true, }, B.handleError('Error'));
-      expect(newState).toHaveProperty('loading', false);
-      expect(newState).toHaveProperty('error', 'Error');
-    });
-    it("should handle LOAD", () => {
-      const newState = backups(B.defaultState, B.startRequest());
-      expect(newState).toHaveProperty('loading', true);
-    });
-    it("should handle SUCCESS", () => {
-      const newState = backups(B.defaultState, B.handleSuccess(linodes));
-      expect(newState.data).toEqual(linodes);
-    });
     it("should handle ENABLE", () => {
       const newState = backups(B.defaultState, B.handleEnable());
       expect(newState).toHaveProperty('enabling', true);
     });
     it("should handle ENABLE_SUCCESS", () => {
       const newState = backups(
-        {...B.defaultState, data: linodes, enabling: true},
+        {...B.defaultState, enabling: true},
         B.handleEnableSuccess([linode1.id])
       );
       expect(newState).toHaveProperty('enabling', false);
       expect(newState).toHaveProperty('enableSuccess', true);
       expect(newState).toHaveProperty('updatedCount', 1);
-      expect(newState.data).not.toContain(linode1);
     });
     it("should handle ENABLE_ERROR", () => {
       const newState = backups(

@@ -25,8 +25,8 @@ describe('StackScripts - List Suite', () => {
         const stackScriptToDeploy = $$(`${ListStackScripts.stackScriptTitle.selector}`)[0].getText();
         ListStackScripts.selectActionMenuItemV2(ListStackScripts.stackScriptRow.selector, 'Deploy New Linode');
         ConfigureLinode.stackScriptTableDisplay();
-        const selectedStackScript = ConfigureLinode.stackScriptRows.filter(row => row.$('[data-qa-radio="true"]'));
-        expect(stackScriptToDeploy).toBe(selectedStackScript[0].$(ConfigureLinode.stackScriptTitle.selector).getText());
+        const selectedStackScript = ConfigureLinode.stackScriptRows.find(row => row.$('[data-qa-radio="true"]'));
+        expect(selectedStackScript.$(ConfigureLinode.stackScriptTitle.selector).getText()).toContain(stackScriptToDeploy);
     });
 
     it('should contain the deploy with stackscript query params in the create url', () => {

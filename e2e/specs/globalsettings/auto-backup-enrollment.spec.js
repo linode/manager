@@ -5,6 +5,7 @@ import {
     timestamp,
     retrieveGlobalSettings,
     apiDeleteAllLinodes,
+    switchTab,
 } from '../../utils/common';
 import Dashboard from '../../pageobjects/dashboard.page';
 import GlobalSettings from '../../pageobjects/account/global-settings.page';
@@ -19,15 +20,7 @@ describe('Backup Auto Enrollment Suite', () => {
     const linodeLabel = `TestLinode${timestamp()}`;
 
     const checkBackupPricingPageLink = () => {
-        const start = new Date().getTime();
-        browser.waitUntil(() => {
-            //wait 3 seconds for page load
-            return browser.getTabIds().length === 2 && (new Date().getTime() - start) > 3000;
-        }, constants.wait.normal);
-        const tabs = browser.getTabIds();
-        const manager = tabs[0];
-        const backupPricing = tabs[1]
-        browser.switchTab(backupPricing);
+        switchTab();
         expect(browser.getTitle()).toEqual('Protect Your Data with Backups - Linode');
         browser.close();
     }
@@ -127,7 +120,7 @@ describe('Backup Auto Enrollment Suite', () => {
 
     it('Confirming enable backups will enable backups for all existing linodes', () => {
         EnableAllBackupsDrawer.submitButton.click();
-        ListLinodes.toastDisplays('All of your Linodes have been enrolled in automatic backups.');
+        ListLinodes.toastDisplays('1 Linode has been enrolled in automatic backups.');
         expect(ListLinodes.enableAllBackups.isVisible()).toBe(false);
         ListLinodes.navigateToDetail();
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);

@@ -1,8 +1,9 @@
 import { map as mapPromise } from 'bluebird';
 import * as memoize from 'memoizee';
-import { compose } from 'ramda';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -84,12 +85,12 @@ interface State {
   newUsername?: string;
   deleteConfirmDialogOpen: boolean;
   toDeleteUsername?: string;
-  deletedUsername?: string;
   userDeleteError?: boolean;
 }
 
 type CombinedProps =
-  WithStyles<ClassNames>
+  & WithStyles<ClassNames>
+  & InjectedNotistackProps
   & PaginationProps<Linode.User>
   & RouteComponentProps<{}>;
 
@@ -124,15 +125,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   ];
 
   componentDidMount() {
-    const { location: { state: locationState } } = this.props;
     this.props.request();
-    // this.setUserAvatars()
-
-    if (locationState && locationState.deletedUsername) {
-      this.setState({
-        deletedUsername: locationState.deletedUsername,
-      })
-    }
   }
 
   addUser = () => {
@@ -154,7 +147,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   onDeleteConfirm = (username: string) => {
     this.setState({
       newUsername: undefined,
-      deletedUsername: undefined,
       userDeleteError: false,
       deleteConfirmDialogOpen: false,
     });
@@ -162,6 +154,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     deleteUser(username)
       .then(() => {
         this.props.onDelete();
+        this.props.enqueueSnackbar(`User ${username} has been deleted successfully.`, { variant: 'success' });
       })
       .catch(() => {
         this.setState({
@@ -207,8 +200,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           </Link>
         </TableCell>
         <TableCell parentColumn="Email Address" data-qa-user-email>{user.email}</TableCell>
-        <TableCell parentColumn="Restricted" data-qa-user-restriction>
-          {user.restricted ? 'Restricted' : 'Unrestricted'}
+        <TableCell parentColumn="Account Access" data-qa-user-restriction>
+          {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
         <TableCell>
           <ActionMenu
@@ -227,7 +220,6 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       newUsername,
       toDeleteUsername,
       deleteConfirmDialogOpen,
-      deletedUsername,
       userDeleteError
     } = this.state;
 
@@ -254,16 +246,9 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         {newUsername &&
           <Notice success text={`User ${newUsername} created successfully`} />
         }
-        {deletedUsername &&
-          <Notice
-            style={{ marginTop: newUsername ? 16 : 0 }}
-            success
-            text={`User ${deletedUsername} deleted successfully`}
-          />
-        }
         {userDeleteError &&
           <Notice
-            style={{ marginTop: (newUsername || deletedUsername) ? 16 : 0 }}
+            style={{ marginTop: newUsername ? 16 : 0 }}
             error
             text={`Error when deleting user, please try again later`}
           />
@@ -274,7 +259,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
               <TableRow>
                 <TableCell data-qa-username-column>Username</TableCell>
                 <TableCell data-qa-email-column>Email Address</TableCell>
-                <TableCell data-qa-restriction-column>Restricted</TableCell>
+                <TableCell data-qa-restriction-column>Account Access</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -337,9 +322,10 @@ const paginated = Pagey((ownProps, params, filters) => getUsers(params, filters)
     )
       .then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))));
 
-export default compose<any, any, any, any, any>(
+export default compose<CombinedProps, {}>(
   withRouter,
   setDocs(UsersLanding.docs),
   styled,
-  paginated
+  paginated,
+  withSnackbar,
 )(UsersLanding);

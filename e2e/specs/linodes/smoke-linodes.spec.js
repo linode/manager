@@ -1,26 +1,31 @@
 const { constants } = require('../../constants');
 
 import { flatten } from 'ramda';
-import { apiCreateLinode, apiDeleteAllLinodes, timestamp } from '../../utils/common';
+import {
+    apiCreateMultipleLinodes,
+    apiDeleteAllLinodes,
+    timestamp,
+} from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
-import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page'
+import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
+import SearchResults from '../../pageobjects/search-results.page';
 
 describe('List Linodes Suite', () => {
-    function assertActionMenuItems() {
-        expect([ListLinodes.powerOffMenu.isVisible(), ListLinodes.powerOnMenu.isVisible()]).toContain(true);
-        expect(ListLinodes.launchConsoleMenu.isVisible()).toBe(true);
-        expect(ListLinodes.rebootMenu.isVisible()).toBe(true);
-        expect(ListLinodes.viewGraphsMenu.isVisible()).toBe(true);
-        expect(ListLinodes.resizeMenu.isVisible()).toBe(true);
-        expect(ListLinodes.enableBackupsMenu.isVisible()).toBe(true);
-        expect(ListLinodes.settingsMenu.isVisible()).toBe(true);
+    const linode = {
+        linodeLabel: `AutoLinode${timestamp()}`,
+        privateIp: false,
+        tags: [`AutoTag${timestamp()}`]
+    }
+
+    const assertActionMenuItems = (linode) => {
+        const expectedOptions = ['Reboot', 'Power Off', 'Launch Console', 'View Graphs', 'Resize', 'Enable Backups', 'Settings'];
+        ListLinodes.actionMenuOptionExists($(ListLinodes.getLinodeSelector(linode)), expectedOptions);
+        browser.click('body');
+        ListLinodes.actionMenuItem.waitForExist(constants.wait.normal, true);
     }
 
     beforeAll(() => {
-        browser.url(constants.routes.linodes);
-        apiCreateLinode(undefined, undefined, [`tag${timestamp()}`]);
-
-        browser.waitForVisible('[data-qa-linode]', constants.wait.normal);
+        apiCreateMultipleLinodes([linode]);
     });
 
     afterAll(() => {
@@ -60,23 +65,16 @@ describe('List Linodes Suite', () => {
         });
 
         it('should display action menu and linode action menu items', () => {
-            // Click first Linode Action Menu
-            ListLinodes.linode[0].$(ListLinodes.linodeActionMenu.selector).click();
-
-            ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
-            assertActionMenuItems();
-
-            browser.refresh();
+            assertActionMenuItems(linode.linodeLabel);
         });
 
         it('should display launch console button', () => {
-            ListLinodes.linodeLabel.waitForVisible(constants.wait.normal);
-            const consoleButton = ListLinodes.linode[0].$(ListLinodes.launchConsole.selector);
+            const consoleButton = $(`${ListLinodes.getLinodeSelector(linode.linodeLabel)} ${ListLinodes.launchConsole.selector}`);
             expect(consoleButton.isVisible()).toBe(true);
         });
 
         it('should display reboot button', () => {
-            const rebootButton = ListLinodes.linode[0].$(ListLinodes.rebootButton.selector);
+            const rebootButton = $(`${ListLinodes.getLinodeSelector(linode.linodeLabel)} ${ListLinodes.rebootButton.selector}`);
             expect(rebootButton.isVisible()).toBe(true);
         });
     });
@@ -117,27 +115,14 @@ describe('List Linodes Suite', () => {
         });
 
         it('should display action menu and linode action menu items', () => {
-            linodes.forEach(l => {
-                const actionMenu = l.$(ListLinodes.linodeActionMenu.selector);
-                expect(actionMenu.isVisible()).toBe(true);
-            });
-            linodes[0].$(ListLinodes.linodeActionMenu.selector).click();
-
-            ListLinodes.actionMenuItem.waitForVisible(constants.wait.normal);
-            assertActionMenuItems();
+            assertActionMenuItems(linode.linodeLabel);
         });
 
-        it('tags should be clickable in list view', () => {
-            /* Dismiss the action menu by clicking the body
-               And polling for the action menu item to no longer exist
-            */
-            browser.click('body');
-            ListLinodes.actionMenuItem.waitForExist(constants.wait.normal, true);
-
+        it('tags should be clickable in list view and navigate to search result page for the tag', () => {
             expect(ListLinodes.tag.isVisible()).toBe(true);
             ListLinodes.tag.click();
-          
-            LinodeDetail.landingElemsDisplay();
+            SearchResults.waitForSearchResult('linodes',linode.linodeLabel);
+            expect(browser.getUrl()).toContain(`?query=${linode.tags[0]}`);
         });
     });
 });
