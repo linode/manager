@@ -1,37 +1,33 @@
 import * as React from 'react';
+import { compose, withStateHandlers } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ShowMore from 'src/components/ShowMore';
 import TableCell from 'src/components/TableCell';
-import Tag from 'src/components/Tag';
+
+import LinodeRowTags from './LinodeRowTags';
+
+import Tooltip from 'src/components/core/Tooltip';
 
 type ClassNames =
-  'icon'
-  | 'noBackupText'
   | 'root'
+  | 'tagLink'
   | 'wrapper'
-  | 'backupLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  icon: {
-    fontSize: 18,
-    fill: theme.color.grey1,
-  },
-  noBackupText: {
-    marginRight: '8px',
-  },
   root: {
     width: '15%',
+    height: '100%',
+    paddingTop: '0 !important',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
   },
-  wrapper: {
-    display: 'flex',
-    alignContent: 'center',
+  tagLink: {
+    color: `${theme.color.blueDTwhite} !important`,
   },
-  backupLink: {
-    display: 'flex'
+  wrapper: {
+    width: '100% !important',
+    height: '100% !important',
   }
 });
 
@@ -39,24 +35,32 @@ interface Props {
   tags: string[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface HandlerProps {
+  isOpen: boolean;
+  open: () => void;
+  close: () => void;
+}
 
-const renderTags = (tags: string[]) =>
-  tags.map((tag, idx) => <Tag key={`linode-row-tag-item-${idx}`} colorVariant='lightBlue' label={tag} />)
+type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
 const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, tags } = props;
+  const { classes, close, isOpen, open, tags } = props;
 
   return (
     <TableCell parentColumn="Tags" className={classes.root}>
       {tags.length > 0
-        ? <ShowMore
-            items={tags}
-            render={renderTags}
-            asLink
+        ? <Tooltip
+            title={<LinodeRowTags tags={tags} />}
+            placement="bottom-start"
+            leaveDelay={50}
+            onOpen={open}
+            onClose={close}
+            open={isOpen}
           >
-            <a>{tags.length}</a>
-          </ShowMore>
+            <div className={classes.wrapper}>
+              <a className={classes.tagLink}>{tags.length}</a>
+            </div>
+          </Tooltip>
         : <Typography>0</Typography>
 
       }
@@ -67,4 +71,15 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(LinodeRowTagCell);
+const handlers = withStateHandlers({ isOpen: false },
+  {
+    open: () => () => ({ isOpen: true }),
+    close: () => () => ({ isOpen: false })
+  });
+
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  handlers,
+)(LinodeRowTagCell);
+
+export default enhanced;
