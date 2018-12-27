@@ -1,50 +1,6 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Waypoint from 'react-waypoint';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import DebouncedSearch from 'src/components/DebouncedSearchTextField';
-import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
-import Table from 'src/components/Table';
-import { sendEvent } from 'src/utilities/analytics';
+import { StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, ChildrenProps, styled } from '../StackScriptPanelContentBase';
 import SelectStackScriptsSection from './SelectStackScriptsSection';
-
-import StackScriptTableHead from '../Partials/StackScriptTableHead';
-import { AcceptedFilters, generateCatchAllFilter, generateSpecificFilter } from '../stackScriptUtils'
-
-type ClassNames = 'root'
-  | 'emptyState'
-  | 'table'
-  | 'searchWrapper'
-  | 'searchBar';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
-  table: {
-    overflow: 'scroll',
-  },
-  emptyState: {
-    textAlign: 'center',
-    padding: '5em 2em',
-    [theme.breakpoints.up('sm')]: {
-      padding: '10em',
-    },
-  },
-  searchWrapper: {
-    position: 'sticky',
-    width: '100%',
-    top: 0,
-    zIndex: 11,
-    paddingBottom: theme.spacing.unit * 3,
-    backgroundColor: theme.bg.white,
-  },
-  searchBar: {
-    marginTop: 0,
-    backgroundColor: theme.color.white,
-  },
-});
 
 interface Props {
   request: (username: string, params: Params, filter: any) =>
@@ -100,136 +56,24 @@ interface State {
   isSorting: boolean;
   error?: Error;
   fieldError: Linode.ApiFieldError | undefined;
-  dialog: Dialog;
   isSearching: boolean;
   didSearch: boolean;
   successMessage: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+class SelectStackScriptPanelContent<StackScriptPanelContentBaseProps, State> extends StackScriptPanelContentBase {
 
-class SelectStackScriptPanelContent extends React.Component<CombinedProps, State> {
-  state: State = {
+
+  getDefaultState = () => ({
+    ...super.getDefaultState(),
     selected: undefined,
-    currentPage: 1,
-    loading: true,
-    gettingMoreStackScripts: false,
-    listOfStackScripts: [],
-    allStackScriptsLoaded: false,
-    getMoreStackScriptsFailed: false,
-    sortOrder: 'asc',
-    currentFilterType: null,
-    currentFilter: { ['+order_by']: 'deployments_active', ['+order']: 'desc' },
-    currentSearchFilter: {},
-    isSorting: false,
-    error: undefined,
-    fieldError: undefined,
-    dialog: {
-      makePublic: {
-        open: false,
-      },
-      delete: {
-        open: false,
-      },
-      stackScriptID: undefined,
-      stackScriptLabel: '',
-    },
-    isSearching: false,
-    didSearch: false,
-    successMessage: '',
-  };
+  });
+
+  isSelecting = true;
+
+  state: StackScriptPanelContentBaseState = this.getDefaultState();
 
   mounted: boolean = false;
-
-  getDataAtPage = (page: number,
-    filter: any = this.state.currentFilter,
-    isSorting: boolean = false) => {
-    const { request, currentUser, category } = this.props;
-    this.setState({ gettingMoreStackScripts: true, isSorting });
-
-    const filteredUser = (category === 'linode') ? 'linode' : currentUser;
-
-    return request(
-      filteredUser,
-      { page, page_size: 50 },
-      filter)
-      .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
-        if (!this.mounted) { return; }
-
-        /*
-        * if we have no results at all or if we've loaded all available results
-        */
-        if (!response.data.length || response.data.length === response.results) {
-          this.setState({ allStackScriptsLoaded: true });
-        }
-
-        /*
-        * if we're sorting, just return the requested data, since we're
-        * scrolling the user to the top and resetting the data
-        */
-        const newData = (isSorting) ? response.data : [...this.state.listOfStackScripts, ...response.data];
-
-        /*
-        * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
-        * basically, if the result set after filtering out StackScripts with
-        * deprecated distos is 0, request the next page with the same filter.
-        */
-        const newDataWithoutDeprecatedDistros =
-          newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
-
-        // we have to make sure both the original data set
-        // AND the filtered data set is 0 before we request the next page automatically
-        if (isSorting
-          && (newData.length !== 0
-            && newDataWithoutDeprecatedDistros.length === 0)) {
-          this.getNext();
-          return;
-        }
-
-        this.setState({
-          listOfStackScripts: newDataWithoutDeprecatedDistros,
-          gettingMoreStackScripts: false,
-          loading: false,
-          isSorting: false,
-          getMoreStackScriptsFailed: false,
-        });
-        return newDataWithoutDeprecatedDistros;
-      })
-      .catch((e: any) => {
-        if (!this.mounted) { return; }
-        if (page > 1) { this.setState({ getMoreStackScriptsFailed: true }) }
-        this.setState({ error: e.response, loading: false, gettingMoreStackScripts: false });
-      });
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-    return this.getDataAtPage(0);
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  getNext = (e?: any) => {
-    if (!this.mounted) { return; }
-    this.setState(
-      { currentPage: this.state.currentPage + 1 },
-      () => this.getDataAtPage(this.state.currentPage, this.state.currentFilter, this.state.isSorting),
-    );
-  }
-
-  hasNonDeprecatedImages = (stackScriptImages: string[]) => {
-    const { publicImages } = this.props;
-    for (const stackScriptImage of stackScriptImages) {
-      for (const publicImage of publicImages) {
-        if (stackScriptImage === publicImage.id) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
     this.props.onSelect(
@@ -242,273 +86,18 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
     this.setState({ selected: stackscript.id });
   }
 
-  generateFilterInfo = (value: CurrentFilter): FilterInfo => {
-    switch (value) {
-      case 'label':
-        return {
-          apiFilter: 'label',
-          currentFilter: 'label',
-        }
-      case 'deploys':
-        return {
-          apiFilter: 'deployments_active',
-          currentFilter: 'deploys',
-        }
-      case 'revision':
-        return {
-          apiFilter: 'updated',
-          currentFilter: 'revision'
-        }
-      default:
-        return {
-          apiFilter: null,
-          currentFilter: null,
-        }
-    }
+
+  renderChildren(baseProps: ChildrenProps) {
+    return <SelectStackScriptsSection
+      selectedId={this.state.selected}
+      onSelect={this.handleSelectStackScript}
+      isSorting={baseProps.isSorting}
+      data={this.state.listOfStackScripts}
+      publicImages={baseProps.publicImages}
+      currentUser={baseProps.currentUser}
+    />
   }
 
-  handleClickTableHeader = (value: string) => {
-    const { currentSearchFilter, sortOrder } = this.state;
-
-    const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
-    const targetFilter = value as CurrentFilter;
-    const filterInfo = this.generateFilterInfo(targetFilter);
-
-    /*
-    * If a search filter is applied, persist the search terms
-    * when we sort the table results
-    */
-    const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
-      ? { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder, ...currentSearchFilter }
-      : { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder }
-
-    this.getDataAtPage(1, filterWithSearch, true);
-    this.setState({
-      sortOrder: nextSortOrder,
-      currentFilterType: filterInfo.currentFilter,
-      currentFilter: { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder },
-    });
-  }
-
-
-  handleSearch = (value: string) => {
-    const {
-      request,
-      currentUser,
-      category
-    } = this.props;
-    const { currentFilter } = this.state;
-    const filteredUser = (category === 'linode') ? 'linode' : currentUser;
-
-    const lowerCaseValue = value.toLowerCase().trim();
-
-    let filter: any;
-
-    /**
-     * only allow for advanced search if we're on the community
-     * stackscripts tab
-     */
-    if (category === 'community' &&
-      (
-        lowerCaseValue.includes('username:')
-      || lowerCaseValue.includes('label:')
-        || lowerCaseValue.includes('description:'))
-    ) {
-      /**
-       * In this case, we have a search term that looks similar to the
-       * following: "username:hello world"
-       *
-       * In this case, we need to craft the filter so that the request is
-       * aware that we only want to search by username
-       */
-
-      const indexOfColon = lowerCaseValue.indexOf(':');
-      // everything before the colon is what we want to filter by
-      const filterKey = lowerCaseValue.substr(0, indexOfColon);
-      // everything after the colon is the term we want to search for
-      const searchTerm = lowerCaseValue.substr(indexOfColon + 1);
-      filter = generateSpecificFilter(filterKey as AcceptedFilters, searchTerm)
-    } else {
-      /**
-       * Otherwise, just generate a catch-all filter for
-       * username, description, and label
-       */
-      filter = generateCatchAllFilter(lowerCaseValue)
-    }
-
-    this.setState({
-      isSearching: true, // wether to show the loading spinner in search bar
-      didSearch: true, // table will show default empty state unless didSearch is true
-    });
-
-    sendEvent({
-      category: 'stackscripts',
-      action: 'search',
-      label: lowerCaseValue
-    });
-
-    request(
-      filteredUser,
-      { page: 1, page_size: 50 },
-      { ...filter, ...currentFilter }
-    )
-      .then((response) => {
-        if (!this.mounted) { return; }
-        this.setState({ listOfStackScripts: response.data, isSearching: false });
-        /*
-        * If we're searching for search result, prevent the user
-        * from loading more stackscripts
-        */
-        if (value) {
-          this.setState({
-            allStackScriptsLoaded: true,
-            currentSearchFilter: filter,
-           });
-        } else {
-          this.setState({
-            allStackScriptsLoaded: false,
-            currentSearchFilter: [],
-          });
-        }
-      })
-      .catch(e => {
-        if (!this.mounted) { return; }
-        this.setState({ error: e, isSearching: false })
-      });
-  }
-
-  render() {
-    const { classes, publicImages, currentUser } = this.props;
-    const {
-      currentFilterType,
-      isSorting,
-      error,
-      fieldError,
-      isSearching,
-      listOfStackScripts,
-      didSearch,
-      successMessage,
-      sortOrder,
-      allStackScriptsLoaded,
-      gettingMoreStackScripts,
-      getMoreStackScriptsFailed,
-    } = this.state;
-
-    if(error) {
-      return (
-        <div style={{ overflow: 'hidden' }}>
-          <ErrorState
-            errorText="There was an error loading your StackScripts. Please try again later."
-          />
-        </div>
-      )
-    }
-
-    if (this.state.loading) {
-      return <CircleProgress noTopMargin />;
-    }
-
-    return (
-      <React.Fragment>
-        {fieldError && fieldError.reason &&
-          <Notice text={fieldError.reason} error />
-        }
-        {successMessage &&
-          <Notice text={successMessage} success />
-        }
-        {/*
-        * We only want to show this empty state on the initial GET StackScripts request
-        * If the user is searching and 0 results come back, we just want to show
-        * an empty table, rather than showing a message indicating no StackScripts exist
-        */}
-        {!didSearch && listOfStackScripts.length === 0
-          ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
-            You do not have any StackScripts to select from. You must first
-          <Link to="/stackscripts/create"> create one.</Link>
-          </div>
-          : <React.Fragment>
-            <div className={classes.searchWrapper}>
-              <DebouncedSearch
-                placeholderText='Search by Label, Username, or Description'
-                onSearch={this.handleSearch}
-                className={classes.searchBar}
-                isSearching={isSearching}
-                /** uncomment when we upgrade to MUI v3 */
-                // toolTipText={`Hint: try searching for a specific item by prepending your
-                // search term with "username:", "label:", or "description:"`}
-              />
-            </div>
-            <Table
-              isResponsive={false}
-              aria-label="List of StackScripts"
-              noOverflow={true}
-              tableClass={classes.table}>
-              <StackScriptTableHead
-                handleClickTableHeader={this.handleClickTableHeader}
-                sortOrder={sortOrder}
-                currentFilterType={currentFilterType}
-                isSelecting
-              />
-              <SelectStackScriptsSection
-                isSorting={isSorting}
-                selectedId={this.state.selected}
-                data={this.state.listOfStackScripts}
-                publicImages={publicImages}
-                currentUser={currentUser}
-                onSelect={this.handleSelectStackScript}
-              />
-            </Table>
-            {/*
-            * show loading indicator if we're getting more stackscripts
-            * and if we're not showing the "get more stackscripts" button
-            */}
-            {gettingMoreStackScripts && !isSorting &&
-              <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}><CircleProgress mini /></div>
-            }
-          </React.Fragment>
-        }
-        {/*
-        * if we're sorting, or if we already loaded all results
-        * or if we're in the middle of getting more results, don't render
-        * the lazy load trigger
-        */}
-        {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts &&
-          <div style={{ textAlign: 'center' }}>
-            {/*
-            * If the lazy-load failed (marked by the catch in getNext),
-            * show the "Show more StackScripts button
-            * Otherwise, try to lazy load some more dang stackscripts
-            */}
-            {(!getMoreStackScriptsFailed)
-              ? <Waypoint
-                onEnter={this.getNext}
-              >
-                {/*
-                * The reason for this empty div is that there was some wonkiness when
-                * scrolling to the waypoint with trackpads. For some reason, the Waypoint
-                * would never be scrolled into view no matter how much you scrolled on the
-                * trackpad. Especially finicky at zoomed in browser sizes
-                */}
-                <div style={{ minHeight: '150px' }} />
-              </Waypoint>
-              : <Button
-                title="Show More StackScripts"
-                onClick={this.getNext}
-                value="Show More"
-                type="secondary"
-                disabled={this.state.gettingMoreStackScripts}
-                style={{ margin: '32px 0 32px 0' }}
-              >
-                Show More StackScripts
-              </Button>
-            }
-          </div>
-        }
-      </React.Fragment>
-    );
-  }
 }
-
-const styled = withStyles(styles);
 
 export default styled(SelectStackScriptPanelContent);

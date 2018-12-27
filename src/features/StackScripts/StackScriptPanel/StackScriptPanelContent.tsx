@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StackScriptPanelContentBase, StackScriptPanelContentBaseProps, ChildrenProps, styled } from '../StackScriptPanelContentBase';
+import { StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, ChildrenProps, styled } from '../StackScriptPanelContentBase';
 import Button from 'src/components/Button';
 import StackScriptsSection from './StackScriptsSection';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,10 +7,41 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
 
-class StackScriptPanelContent extends StackScriptPanelContentBase {
-  constructor(props: StackScriptPanelContentBaseProps) {
-    super(props);
-  }
+interface DialogVariantProps {
+  open: boolean;
+}
+interface DialogState {
+  makePublic: DialogVariantProps,
+  delete: DialogVariantProps,
+  stackScriptID: number | undefined;
+  stackScriptLabel: string;  
+}
+
+type State = {
+  dialog: DialogState;
+};
+
+export type combinedState = StackScriptPanelContentBaseState<State>;
+
+
+class StackScriptPanelContent<StackScriptPanelContentBaseProps, combinedState> extends StackScriptPanelContentBase<StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState> {
+
+
+  getDefaultState = () => ({
+    ...super.getDefaultState(),
+    dialog: {
+      makePublic: {
+        open: false,
+      },
+      delete: {
+        open: false,
+      },
+      stackScriptID: undefined,
+      stackScriptLabel: '',
+    }
+  });
+
+  state: StackScriptPanelContentBaseState = this.getDefaultState();
 
   handleOpenDeleteDialog = (id: number, label: string) => {
     this.setState({

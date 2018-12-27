@@ -54,16 +54,6 @@ interface Props {
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
-interface DialogVariantProps {
-  open: boolean;
-}
-interface Dialog {
-  makePublic: DialogVariantProps,
-  delete: DialogVariantProps,
-  stackScriptID: number | undefined;
-  stackScriptLabel: string;
-}
-
 interface Params {
   page?: number;
   page_size?: number;
@@ -80,7 +70,7 @@ interface FilterInfo {
 
 type SortOrder = 'asc' | 'desc';
 
-interface State {
+export interface StackScriptPanelContentBaseState {
   currentPage: number;
   loading?: boolean;
   gettingMoreStackScripts: boolean;
@@ -94,7 +84,6 @@ interface State {
   isSorting: boolean;
   error?: Error;
   fieldError: Linode.ApiFieldError | undefined;
-  dialog: Dialog;
   isSearching: boolean;
   didSearch: boolean;
   successMessage: string;
@@ -108,41 +97,34 @@ export type ChildrenProps = {
   currentUser: string;
 }
 
-export class StackScriptPanelContentBase extends React.Component<StackScriptPanelContentBaseProps, State> {
-  state: State = {
-    currentPage: 1,
-    loading: true,
-    gettingMoreStackScripts: false,
-    listOfStackScripts: [],
-    allStackScriptsLoaded: false,
-    getMoreStackScriptsFailed: false,
-    sortOrder: 'asc',
-    currentFilterType: null,
-    currentFilter: { ['+order_by']: 'deployments_active', ['+order']: 'desc' },
-    currentSearchFilter: {},
-    isSorting: false,
-    error: undefined,
-    fieldError: undefined,
-    dialog: {
-      makePublic: {
-        open: false,
-      },
-      delete: {
-        open: false,
-      },
-      stackScriptID: undefined,
-      stackScriptLabel: '',
-    },
-    isSearching: false,
-    didSearch: false,
-    successMessage: '',
-  };
+export class StackScriptPanelContentBase extends React.Component<StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState> {
+  
+  public getDefaultState(): StackScriptPanelContentBaseState {
+    return {
+      currentPage: 1,
+      loading: true,
+      gettingMoreStackScripts: false,
+      listOfStackScripts: [],
+      allStackScriptsLoaded: false,
+      getMoreStackScriptsFailed: false,
+      sortOrder: 'asc',
+      currentFilterType: null,
+      currentFilter: { ['+order_by']: 'deployments_active', ['+order']: 'desc' },
+      currentSearchFilter: {},
+      isSorting: false,
+      error: undefined,
+      fieldError: undefined,
+      isSearching: false,
+      didSearch: false,
+      successMessage: '',
+    };
+  }
 
+  state: StackScriptPanelContentBaseState = this.getDefaultState();
+  
   mounted: boolean = false;
 
-  constructor(props: StackScriptPanelContentBaseProps) {
-    super(props);
-  }
+  isSelecting: boolean = false;
 
   getDataAtPage = (page: number,
     filter: any = this.state.currentFilter,
@@ -170,7 +152,7 @@ export class StackScriptPanelContentBase extends React.Component<StackScriptPane
         * if we're sorting, just return the requested data, since we're
         * scrolling the user to the top and resetting the data
         */
-        const newData = (isSorting) ? response.data : [...this.state.listOfStackScripts, ...response.data];
+        const newData = isSorting ? response.data : [...this.state.listOfStackScripts, ...response.data];
 
         /*
         * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
@@ -188,7 +170,6 @@ export class StackScriptPanelContentBase extends React.Component<StackScriptPane
           this.getNext();
           return;
         }
-
         this.setState({
           listOfStackScripts: newDataWithoutDeprecatedDistros,
           gettingMoreStackScripts: false,
@@ -416,7 +397,7 @@ export class StackScriptPanelContentBase extends React.Component<StackScriptPane
         * If the user is searching and 0 results come back, we just want to show
         * an empty table, rather than showing a message indicating no StackScripts exist
         */}
-        {!didSearch && listOfStackScripts.length === 0
+        {!didSearch && listOfStackScripts && listOfStackScripts.length === 0
           ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
             You do not have any StackScripts to select from. You must first
           <Link to="/stackscripts/create"> create one.</Link>
@@ -442,6 +423,7 @@ export class StackScriptPanelContentBase extends React.Component<StackScriptPane
                 handleClickTableHeader={this.handleClickTableHeader}
                 sortOrder={sortOrder}
                 currentFilterType={currentFilterType}
+                isSelecting={this.isSelecting}
               />
               {this.renderChildren({
                 publicImages,
@@ -501,5 +483,3 @@ export class StackScriptPanelContentBase extends React.Component<StackScriptPane
 }
 
 export const styled = withStyles(styles);
-
-export default styled(StackScriptPanelContentBase);
