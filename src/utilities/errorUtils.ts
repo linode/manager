@@ -9,7 +9,7 @@ import { pathOr } from 'ramda';
        ? [{ 'reason': defaultError, field }]
        : [{ 'reason': defaultError }]
 
-      return errorResponse.length === 0 ? _defaultError : errorResponse
+      return pathOr(_defaultError, ['response', 'data', 'errors'], errorResponse);
    }
 
   export const getErrorStringOrDefault = (
