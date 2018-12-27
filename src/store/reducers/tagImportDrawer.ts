@@ -193,6 +193,7 @@ const handleAccumulatedResponsesAndErrors = (
     else {
       dispatch(handleSuccess());
     }
+    return totalErrors;
     // @todo do we need to update entities in store here? Seems to be currently handled with post-request events
     // in services
 }
@@ -207,7 +208,11 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispa
     dispatch,
     handleAccumulatedResponsesAndErrors,
   )
-    .then(() => storage.hasImportedGroups.set())
+    .then((totalErrors: TagError[]) => {
+      if (isEmpty(totalErrors)) {
+        storage.hasImportedGroups.set()
+      }
+    })
     .catch(() => dispatch(
       // Errors from individual requests will be accumulated and passed to .then(); hitting
       // this block indicates something went wrong with .reduce() or .join().

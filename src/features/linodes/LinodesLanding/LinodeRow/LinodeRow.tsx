@@ -1,149 +1,167 @@
-import { compose } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import Flag from 'src/assets/icons/flag.svg';
+import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
-import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
-import LinodeRowWithState from './LinodeRowWithState';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
-});
-
-interface State {
-  mutationAvailable: boolean;
-}
+import hasMutationAvailable, { HasMutationAvailable } from '../hasMutationAvailable';
+import IPAddress from '../IPAddress';
+import LinodeActionMenu from '../LinodeActionMenu';
+import RegionIndicator from '../RegionIndicator';
+import withDisplayType, { WithDisplayType } from '../withDisplayType';
+import withNotifications, { WithNotifications } from '../withNotifications';
+import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
+import styled, { StyleProps } from './LinodeRow.style';
+import LinodeRowBackupCell from './LinodeRowBackupCell';
+import LinodeRowHeadCell from './LinodeRowHeadCell';
+import LinodeRowLoading from './LinodeRowLoading';
 
 interface Props {
+  linodeBackups: Linode.LinodeBackups;
   linodeId: number;
-  linodeStatus: Linode.LinodeStatus;
   linodeIpv4: string[];
   linodeIpv6: string;
-  linodeRegion: string;
-  linodeType: null | string;
-  linodeNotification?: string;
   linodeLabel: string;
-  linodeBackups: Linode.LinodeBackups;
+  linodeRegion: string;
+  linodeStatus: Linode.LinodeStatus;
+  linodeType: null | string;
   linodeTags: string[];
   mostRecentBackup?: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
-  toggleConfirmation: (bootOption: Linode.BootAction,
-    linodeId: number, linodeLabel: string) => void;
+  toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
 }
 
-type CombinedProps =
+export type CombinedProps =
   & Props
-  & WithTypesProps
-  & WithTheme
-  & WithStyles<ClassNames>;
+  & HasMutationAvailable
+  & WithDisplayType
+  & WithRecentEvent
+  & WithNotifications
+  & StyleProps
 
-class LinodeRow extends React.Component<CombinedProps, State> {
+export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
+  const {
+    classes,
+    linodeBackups,
+    linodeId,
+    linodeIpv4,
+    linodeIpv6,
+    linodeLabel,
+    linodeNotifications,
+    linodeRegion,
+    linodeStatus,
+    linodeTags,
+    mostRecentBackup,
+    mutationAvailable,
+    openConfigDrawer,
+    toggleConfirmation,
+    displayType,
+    recentEvent,
+  } = props;
+  const loading = linodeInTransition(linodeStatus, recentEvent);
 
-  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
-    return haveAnyBeenModified<Props & WithTypesProps>(
-      nextProps,
-      this.props,
-      [
-        'displayType',
-        'linodeIpv4',
-        'linodeIpv6',
-        'linodeLabel',
-        'linodeNotification',
-        'linodeRegion',
-        'linodeStatus',
-        'mutationAvailable',
-        'recentEvent',
-      ],
-    )
-      || this.props.theme.name !== nextProps.theme.name
-  }
+  const headCell = <LinodeRowHeadCell
+    loading={loading}
+    linodeId={linodeId}
+    linodeRecentEvent={recentEvent}
+    linodeLabel={linodeLabel}
+    linodeTags={linodeTags}
+    linodeStatus={linodeStatus}
+  />
 
-  render() {
-    const {
-      linodeBackups,
-      linodeId,
-      linodeIpv4,
-      linodeIpv6,
-      linodeLabel,
-      linodeRegion,
-      linodeStatus,
-      linodeTags,
-      linodeType,
-      mostRecentBackup,
-      openConfigDrawer,
-      toggleConfirmation,
-      mutationAvailable,
-      displayType,
-      recentEvent,
-    } = this.props;
-
-    const loading = linodeInTransition(this.props.linodeStatus, this.props.recentEvent);
-
-    return <LinodeRowWithState
-      loading={loading}
-      linodeRecentEvent={recentEvent}
-      linodeBackups={linodeBackups}
-      linodeId={linodeId}
-      linodeIpv4={linodeIpv4}
-      linodeIpv6={linodeIpv6}
-      linodeLabel={linodeLabel}
-      linodeRegion={linodeRegion}
-      linodeStatus={linodeStatus}
-      linodeTags={linodeTags}
-      linodeType={linodeType}
-      mostRecentBackup={mostRecentBackup}
-      openConfigDrawer={openConfigDrawer}
-      toggleConfirmation={toggleConfirmation}
-      displayType={displayType}
-      mutationAvailable={mutationAvailable}
-    />;
-  }
-}
-
-interface WithTypesProps {
-  mutationAvailable: boolean;
-  displayType: string;
-  recentEvent?: Linode.Event;
-}
-
-const mapStateToProps: MapStateToProps<WithTypesProps, Props, ApplicationState> = (state, ownProps) => {
-  const { linodeType, linodeId } = ownProps;
-  const { entities, results } = state.__resources.types;
-
-
-  const type = getType(entities, results, linodeType);
-
-  return ({
-    displayType: type === null ? 'No Plan' : type === undefined ? 'Unknown Plan' : type.label,
-    mutationAvailable: hasMutation(type),
-    recentEvent: recentEventForLinode(linodeId)(state),
-  })
+  return (
+    <React.Fragment>
+      {loading && <LinodeRowLoading linodeStatus={linodeStatus} linodeId={linodeId} linodeRecentEvent={recentEvent}>
+        {headCell}
+      </ LinodeRowLoading>}
+      <TableRow
+        key={linodeId}
+        className={`${classes.bodyRow}`}
+        data-qa-loading
+        data-qa-linode={linodeLabel}
+        rowLink={`/linodes/${linodeId}`}
+        arial-label={linodeLabel}
+      >
+        {!loading && headCell}
+        <TableCell parentColumn="Plan" className={classes.planCell}>
+          <Typography variant="body1">{displayType}</Typography>
+        </TableCell>
+        <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
+        <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
+          <div className={classes.ipCellWrapper}>
+            <IPAddress ips={linodeIpv4} copyRight />
+            <IPAddress ips={[linodeIpv6]} copyRight />
+          </div>
+        </TableCell>
+        <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>
+          <RegionIndicator region={linodeRegion} />
+        </TableCell>
+        <TableCell className={classes.actionCell} data-qa-notifications>
+          <div className={classes.actionInner}>
+            <RenderFlag
+              mutationAvailable={mutationAvailable}
+              linodeNotifications={linodeNotifications}
+              classes={classes}
+            />
+            <LinodeActionMenu
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeStatus={linodeStatus}
+              linodeBackups={linodeBackups}
+              openConfigDrawer={openConfigDrawer}
+              toggleConfirmation={toggleConfirmation}
+            />
+          </div>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
 };
 
-const connected = connect(mapStateToProps);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withRecentEvent,
+  withDisplayType,
+  hasMutationAvailable,
+  withNotifications,
+);
 
-export default compose(
-  withStyles(styles, { withTheme: true }),
-  connected,
-)(LinodeRow) as React.ComponentType<Props>;
+export default enhanced(LinodeRow);
 
-const getType = <T extends any>(entities: T[], ids: string[], id: null | string) => {
-  if (id === null) {
-    return null;
+export const RenderFlag: React.StatelessComponent<{
+  mutationAvailable: boolean;
+  linodeNotifications: Linode.Notification[],
+  classes: any
+}> = (props) => {
+  /*
+  * Render either a flag for if the Linode has a notification
+  * or if it has a pending mutation available. Mutations take
+  * precedent over notifications
+  */
+  const { mutationAvailable, linodeNotifications, classes } = props;
+
+  if (mutationAvailable) {
+    return (
+      <Tooltip title="There is a free upgrade available for this Linode">
+        <Flag className={classes.flag} />
+      </Tooltip>
+    )
   }
-
-  const foundIndex = ids.indexOf(id);
-  return foundIndex > -1 ? entities[foundIndex] : undefined
+  if (linodeNotifications.length > 0) {
+    return (
+      <>
+        {
+          linodeNotifications.map((notification, idx) => (
+            <Tooltip key={idx} title={notification.message}><Flag className={classes.flag} /></Tooltip>
+          ))
+        }
+      </>
+    );
+  }
+  return null;
 }
 
-const hasMutation = (type?: null | Linode.LinodeType) => {
-  if (!type) {
-    return false;
-  }
-
-  return !!type.successor;
-}
+RenderFlag.displayName = `RenderFlag`;

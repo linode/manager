@@ -31,7 +31,6 @@ const CardView: React.StatelessComponent<CombinedProps> = (props) => {
           linodeIpv6={linode.ipv6}
           linodeRegion={linode.region}
           linodeType={linode.type}
-          linodeNotification={linode.notification}
           linodeLabel={linode.label}
           linodeBackups={linode.backups}
           linodeTags={linode.tags}

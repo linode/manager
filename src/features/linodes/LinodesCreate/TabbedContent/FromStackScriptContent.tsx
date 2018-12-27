@@ -465,6 +465,13 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             {
               (props: StickyProps) => {
                 const displaySections = [];
+
+                if (selectedStackScriptUsername && selectedStackScriptLabel) {
+                  displaySections.push({
+                    title: selectedStackScriptUsername + ' / ' + selectedStackScriptLabel
+                  });
+                }
+
                 if (imageInfo) {
                   displaySections.push(imageInfo);
                 }
