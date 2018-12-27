@@ -43,6 +43,8 @@ interface EditableFields {
 
 interface WithImages {
   images?: Linode.Image[];
+  imagesLoading: boolean;
+  imageError?: string;
 }
 
 interface Props extends EditableFields {
@@ -65,7 +67,6 @@ interface State {
   hasErrorFor?: (v: string) => any,
   initialSize: number;
   selectedMode: diskMode;
-  imageError?: string;
 }
 
 type CombinedProps = Props & WithImages & WithStyles<ClassNames>;
@@ -205,6 +206,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       open,
       mode,
       images,
+      imageError,
       onSubmit,
       submitting,
       onClose,
@@ -212,7 +214,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       password,
       userSSHKeys,
     } = this.props;
-    const { imageError, selectedMode } = this.state;
+    const { selectedMode } = this.state;
 
     const generalError = this.getErrors('none');
     const passwordError = this.getErrors('root_pass');
@@ -264,7 +266,8 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withImages((ownProps, images) => ({ ...ownProps, images })),
+  withImages((ownProps, images, imagesLoading, imageError) =>
+    ({ ...ownProps, images, imagesLoading, imageError })),
 )(LinodeDiskDrawer);
 
 export default enhanced;
