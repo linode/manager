@@ -54,7 +54,7 @@ export const searchLinodes = (
     label: linode.label,
     value: linode.id,
     data: {
-      tags: getMatchingTags(linode.tags, query),
+      tags: linode.tags,
       description: linodeDescription(
         displayType(linode.type, typesData),
         linode.specs.memory,
@@ -79,7 +79,7 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
       label: volume.label,
       value: volume.id,
       data: {
-        tags: getMatchingTags(volume.tags, query),
+        tags: volume.tags,
         description: volume.size + ' GiB',
         icon: 'VolumeIcon',
         path: `/volumes/${volume.id}`,
@@ -96,7 +96,7 @@ export const searchNodeBalancers = (nodebalancers: Linode.NodeBalancer[], query:
     label: nodebal.label,
     value: nodebal.id,
     data: {
-      tags: getMatchingTags(nodebal.tags || [], query),
+      tags: nodebal.tags,
       description: nodebal.hostname,
       icon: 'NodebalIcon',
       path: `/nodebalancers/${nodebal.id}`,
@@ -112,7 +112,7 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
         label: domain.domain,
         value: domain.id,
         data: {
-          tags: getMatchingTags(domain.tags, query),
+          tags: domain.tags,
           description: domain.description || domain.status,
           icon: 'DomainIcon',
           path: `/domains/${domain.id}`,
