@@ -267,6 +267,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         this.setState({
           errors,
           submitting: false,
+          successMessage: undefined,
         })
       });
   }
