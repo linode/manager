@@ -2,7 +2,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -18,6 +17,7 @@ import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
+import LinodeRowTagCell from './LinodeRowTagCell';
 
 interface Props {
   linodeBackups: Linode.LinodeBackups;
@@ -58,7 +58,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
     mutationAvailable,
     openConfigDrawer,
     toggleConfirmation,
-    displayType,
+    // displayType, @todo use for M3-2059
     recentEvent,
   } = props;
   const loading = linodeInTransition(linodeStatus, recentEvent);
@@ -86,9 +86,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
         arial-label={linodeLabel}
       >
         {!loading && headCell}
-        <TableCell parentColumn="Plan" className={classes.planCell}>
-          <Typography variant="body1">{displayType}</Typography>
-        </TableCell>
+        <LinodeRowTagCell tags={linodeTags} />
         <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
