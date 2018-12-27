@@ -57,6 +57,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
             onOpen={open}
             onClose={close}
             open={isOpen}
+            interactive={true}
           >
             <div className={classes.wrapper}>
               <a className={classes.tagLink}>{tags.length}</a>
