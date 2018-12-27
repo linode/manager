@@ -15,6 +15,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { deleteDomainRecord } from 'src/services/domains';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './DomainRecordActionMenu';
@@ -581,7 +582,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                     </TableHead>
                     <TableBody>
                       {
-                        type.data.map((data, idx) => {
+                        type.data.length === 0
+                        ? <TableRowEmptyState colSpan={type.columns.length}/>
+                        : type.data.map((data, idx) => {
                           return (
                             <TableRow key={idx} data-qa-record-row={type.title}>
                               {type.columns.length > 0
