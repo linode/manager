@@ -52,7 +52,6 @@ interface Props<T> {
   items: T[];
   render: (items: T[]) => any;
   chipProps?: ChipProps;
-  asLink?: boolean;
 }
 
 export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
@@ -73,39 +72,27 @@ export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasse
   }
 
   render() {
-    const { asLink, classes, render, items, chipProps } = this.props;
+    const { classes, render, items, chipProps } = this.props;
     const { anchorEl } = this.state;
 
     return (
       <React.Fragment>
-        {asLink
-          ?
-            <a
-              aria-label="Expand"
-              className={classes.link}
-              onClick={this.handleClick}
-              data-qa-show-more-link
-            >
-              {items.length}
-            </a>
-          :
-            <Chip
-              className={classNames(
-                {
-                  [classes.chip]: true,
-                  'active': anchorEl,
-                },
-                'chip',
-              )}
-              label={`+${items.length}`}
-              classes={{ label: classes.label }}
-              onClick={this.handleClick}
-              {...chipProps}
-              data-qa-show-more-chip
-              component="button"
-              clickable
-            />
-        }
+        <Chip
+          className={classNames(
+            {
+              [classes.chip]: true,
+              'active': anchorEl,
+            },
+            'chip',
+          )}
+          label={`+${items.length}`}
+          classes={{ label: classes.label }}
+          onClick={this.handleClick}
+          {...chipProps}
+          data-qa-show-more-chip
+          component="button"
+          clickable
+        />
 
         <Popover
           classes={{ paper: classes.popover }}
