@@ -81,7 +81,7 @@ export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasse
         {asLink
           ?
             <a
-              aria-label="Expand Tags"
+              aria-label="Expand"
               className={classes.link}
               onClick={this.handleClick}
               data-qa-show-more-link
