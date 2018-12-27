@@ -20,7 +20,7 @@ import EnableTwoFactorForm from './EnableTwoFactorForm';
 
 import ScratchDialog from './ScratchCodeDialog';
 
-import DiableTwoFactorDialog from './DiableTwoFactorDialog';
+import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 
 type ClassNames = 'root'
   | 'container'
@@ -159,28 +159,30 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 
   getToken = () => {
     this.setState({ loading: true });
-    getTFAToken()
+    return getTFAToken()
       .then((response) => {
-        this.setState({ secret: response.data.secret, loading: false })
+        this.setState({ secret: response.data.secret, loading: false, errors: undefined })
       })
       .catch((error) => {
         const fallbackError = [{ reason: 'There was an error retrieving your secret key. Please try again.' }];
         this.setState({
           errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
           loading: false,
-          twoFactorEnabled: false,
         }, () => {
           scrollErrorIntoView();
         });
+        return Promise.reject('Error');
       });
   }
 
   toggleHidden = () => {
     const { showQRCode } = this.state;
     if (!showQRCode) {
-      this.getToken();
+      return this.getToken()
+      .then(response => this.setState({showQRCode: !showQRCode}))
+      .catch(err => err)
     }
-    this.setState({ showQRCode: !this.state.showQRCode });
+    return this.setState({ showQRCode: !this.state.showQRCode });
   }
 
   toggleTwoFactorEnabled = (toggleEnabled: boolean) => {
@@ -276,7 +278,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                   closeDialog={toggleScratchDialog}
                   scratchCode={this.state.scratchCode}
                 />
-                <DiableTwoFactorDialog
+                <DisableTwoFactorDialog
                   onSuccess={this.disableTFASuccess}
                   open={disable2FAOpen}
                   closeDialog={toggleDisable2FA}

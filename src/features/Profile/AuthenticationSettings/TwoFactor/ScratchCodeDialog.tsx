@@ -11,7 +11,7 @@ interface Props {
   scratchCode: string;
 }
 
-class TrustedDevicesDialog extends React.PureComponent<Props, {}> {
+class ScratchCodeDialog extends React.PureComponent<Props, {}> {
   render() {
     const {
       open,
@@ -31,9 +31,10 @@ class TrustedDevicesDialog extends React.PureComponent<Props, {}> {
         }
       >
         <Typography>
-          {`Here is your scratch code. Please note that you can only use this code once.
-          This is the only time it will appear. Be sure to make a note of it and keep it
-          secure:`}
+          {`This scratch code can be used in place of two-factor authentication in the event
+          you cannot access your two-factor authentication device. It is limited to a one-time
+          use. Be sure to make a note of it and keep it secure, as this is the only time it
+          will appear:`}
         </Typography>
         <Typography
           style={{
@@ -48,7 +49,7 @@ class TrustedDevicesDialog extends React.PureComponent<Props, {}> {
   }
 }
 
-export default TrustedDevicesDialog;
+export default ScratchCodeDialog;
 
 interface ActionsProps {
   closeDialog: () => void;

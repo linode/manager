@@ -32,7 +32,7 @@ type CombinedProps = Props
   & LoadingAndErrorProps
   & WithStyles<ClassNames>;
 
-class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
+class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
   handleCloseDialog = () => {
     this.props.clearLoadingAndErrors();
     this.props.closeDialog();
@@ -76,7 +76,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
           <DialogActions
             closeDialog={this.handleCloseDialog}
             loading={loading}
-            handleDelete={this.handleDisableTFA}
+            handleDisable={this.handleDisableTFA}
           />
         }
       >
@@ -93,19 +93,19 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, Props>(
   styled,
   withLoadingAndError
-)(TrustedDevicesDialog);
+)(DisableTwoFactorDialog);
 
 interface ActionsProps {
   closeDialog: () => void;
   loading: boolean;
-  handleDelete: (deviceId?: number) => void;
+  handleDisable: (deviceId?: number) => void;
   deviceId?: number;
 }
 
 class DialogActions extends React.PureComponent<ActionsProps, {}> {
   handleSubmit = () => {
-    const { handleDelete, deviceId } = this.props;
-    return handleDelete(deviceId)
+    const { handleDisable, deviceId } = this.props;
+    return handleDisable(deviceId)
   }
   render() {
 
