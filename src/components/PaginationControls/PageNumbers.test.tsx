@@ -1,5 +1,15 @@
 import { pageNumbersToRender } from './PageNumbers';
 
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+  };
+});
+
 describe('pageNumbersToRender', () => {
   it('should return pages 1 through 5', () => {
     const page3 = pageNumbersToRender(3, 100)
