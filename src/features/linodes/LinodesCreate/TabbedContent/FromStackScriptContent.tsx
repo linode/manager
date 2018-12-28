@@ -26,6 +26,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root'
@@ -111,6 +112,7 @@ const errorResources = {
 type CombinedProps =
   & Props
   & InjectedNotistackProps
+  & LabelProps
   & WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.Component<CombinedProps, State> {
@@ -200,10 +202,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     this.setState({ selectedTypeID: id });
   }
 
-  handleTypeLabel = (e: any) => {
-    this.setState({ label: e.target.value });
-  }
-
   handleChangeTags = (selected: Tag[]) => {
     this.setState({ tags: selected })
   }
@@ -249,7 +247,6 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
       selectedTypeID,
       selectedStackScriptID,
       udf_data,
-      label,
       password,
       backups,
       privateIP,
@@ -257,6 +254,8 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     } = this.state;
 
     this.setState({ isMakingRequest: true });
+
+    const label = this.label();
 
     createLinode({
       region: selectedRegionID,
@@ -310,19 +309,32 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
     return images.filter((image: Linode.Image) => image.is_public)
   }
 
+  label = () => {
+    const { selectedStackScriptLabel, selectedImageID, selectedRegionID } = this.state;
+    const { getLabel, images } = this.props;
+
+    const selectedImage = images.find(img => img.id === selectedImageID);
+
+    const image = selectedImage && selectedImage.vendor;
+
+    return getLabel(selectedStackScriptLabel, image, selectedRegionID);
+  }
+
   render() {
     const { errors, userDefinedFields, udf_data, selectedImageID, selectedRegionID,
-      selectedStackScriptID, selectedTypeID, backups, privateIP, label, tags,
+      selectedStackScriptID, selectedTypeID, backups, privateIP, tags,
       password, isMakingRequest, compatibleImages, selectedStackScriptLabel,
       selectedStackScriptUsername } = this.state;
 
     const { accountBackups, notice, getBackupsMonthlyPrice, regions, types, classes,
-      getRegionInfo, getTypeInfo, images, userSSHKeys } = this.props;
+      getRegionInfo, getTypeInfo, images, userSSHKeys, updateCustomLabel } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const hasBackups = Boolean(backups || accountBackups);
+
+    const label = this.label();
 
 
     /*
@@ -429,7 +441,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
-              onChange: this.handleTypeLabel,
+              onChange: updateCustomLabel,
               errorText: hasErrorFor('label'),
             }}
             tagsInputProps={{
@@ -517,7 +529,13 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 }
 
 const styled = withStyles(styles);
+const withLabels = WithLabelGenerator({}); // @todo: find better name
 
-const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withSnackbar,
+  userSSHKeyHoc,
+  withLabels
+);
 
 export default enhanced(FromStackScriptContent) as any;

@@ -205,11 +205,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     const selectedLinode = linodes.find(l => l.id === selectedLinodeID);
     const linodeLabel = selectedLinode && selectedLinode.label;
 
-    return getLabel(
-      linodeLabel,
-      'clone',
-      selectedRegionID ,
-    );
+    return getLabel(linodeLabel, 'clone', selectedRegionID);
   }
 
   render() {
