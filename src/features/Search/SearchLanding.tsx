@@ -8,6 +8,7 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
+import withImages from 'src/containers/withImages.container';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getAllEntities } from 'src/utilities/getAll';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -47,6 +48,7 @@ interface State {
 
 type CombinedProps =
   & WithTypesProps
+  & WithImagesProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
@@ -98,7 +100,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
     nodebalancers: Linode.NodeBalancer[],
     volumes: Linode.Volume[],
     domains: Linode.Domain[],
-    images: Linode.Image[]
   ) => {
     if (!this.mounted) { return; }
     this.setState({
@@ -106,17 +107,16 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
       nodebalancers,
       volumes,
       domains,
-      images,
     }, this.search)
   }
 
   search = () => {
-    const { linodes, volumes, domains, nodebalancers, images, query } = this.state;
-    const { typesData } = this.props;
+    const { linodes, volumes, domains, nodebalancers, query } = this.state;
+    const { imagesData, typesData } = this.props;
 
     const queryLower = query.toLowerCase();
     const searchResults: SearchResults = searchAll(
-      linodes, volumes, nodebalancers, domains, images, queryLower, typesData,
+      linodes, volumes, nodebalancers, domains, imagesData, queryLower, typesData,
     );
     this.setState({ results: searchResults, loading: false });
   }
@@ -183,10 +183,20 @@ const reloaded = reloadableWithRouter(
   },
 );
 
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+  imagesLoading: boolean;
+}
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes,
   reloaded,
+  withImages((ownProps, imagesData, imagesLoading) => ({
+    ...ownProps,
+    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesLoading,
+  }))
 )(SearchLanding);
 
 export default enhanced;
