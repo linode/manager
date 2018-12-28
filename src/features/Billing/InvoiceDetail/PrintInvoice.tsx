@@ -138,7 +138,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Typography variant='body2'>{company}</Typography>
               <Typography variant='body2'>{address_1}</Typography>
               <Typography variant='body2'>{address_2}</Typography>
-              <Typography variant='body2'>{city},{state}, {zip}, {country}</Typography>
+              <Typography variant='body2'>{city}, {state}, {zip}, {country}</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='h3' className={classes.invoiceHeader}>Invoice: #{invoice.id}</Typography>
