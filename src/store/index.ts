@@ -1,6 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import eventsMiddleware from './middleware/events';
+import combineEventsMiddleware from './middleware/combineEventsMiddleware';
+import linodeEvents from './middleware/linodeEvents';
 import authentication, { defaultState as authenticationDefaultState } from './reducers/authentication';
 import backups, { defaultState as backupsDefaultState } from './reducers/backupDrawer';
 import documentation, { defaultState as documentationDefaultState } from './reducers/documentation';
@@ -44,7 +45,12 @@ const defaultState: ApplicationState = {
 };
 
 const enhancers = compose(
-  applyMiddleware(thunk, eventsMiddleware),
+  applyMiddleware(
+    thunk,
+    combineEventsMiddleware(
+      linodeEvents,
+    ),
+  ),
   reduxDevTools ? reduxDevTools() : (f: any) => f,
 ) as any;
 
