@@ -41,7 +41,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
   render() {
     const { classes, count, page, pageSize, handlePageChange, padded, eventCategory } = this.props;
 
-    if (count <= 25) { return null; }
+    if (count <= pageSize) { return null; }
 
     return (
       <Grid
