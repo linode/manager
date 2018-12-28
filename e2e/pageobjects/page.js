@@ -142,10 +142,12 @@ export default class Page {
 
     toastDisplays(expectedMessage, timeout=constants.wait.normal) {
         this.toast.waitForVisible(timeout);
+        let toastMessage;
         browser.waitUntil(() => {
-            return $$(this.toast.selector).find(toast => toast.getText() === expectedMessage)
+            toastMessage = $$(this.toast.selector).find(toast => toast.getText() === expectedMessage);
+            return toastMessage;
         },timeout);
-        this.toast.waitForVisible(timeout, true);
+        toastMessage.waitForVisible(timeout, true);
     }
 
     openActionMenu(actionMenuRow) {

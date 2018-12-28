@@ -55,9 +55,9 @@ class Settings extends Page {
       let i = 0;
         do {
             this.addDiskButton.click();
-            browser.pause(2000);
+            browser.pause(1000);
             i++;
-        } while ( $('[data-qa-error]').isVisible() && i < 5);
+        } while ($('[data-qa-error]').isVisible() && i < 5);
         this.drawerBase.waitForVisible(constants.wait.normal,true);
         this.diskRow(diskLabel).waitForVisible(constants.wait.normal);
     }
@@ -66,32 +66,26 @@ class Settings extends Page {
         return $(`[data-qa-disk="${diskLabel}"]`);
     }
 
-    setDiskSize(diskSize){
-        this.diskSizeInput.$('div').click();
-        browser.pause(500);
-        this.diskSizeInput.$('input').setValue('');
-        this.diskSizeInput.$('input').addValue(diskSize);
-    }
-
     addEmptyDisk(diskLabel,diskSize){
         this.diskLabelInput.setValue(diskLabel);
-        this.setDiskSize(diskSize);
+        this.diskSizeInput.$('input').setValue(diskSize);
         this.addDisk(diskLabel);
     }
 
     addDiskFromImage(diskLabel,diskSize){
         this.createFromImage.click();
         this.password.waitForVisible(constants.wait.normal);
-        const imageSelect = $(`${this.drawerBase.selector} ${this.multiSelect.selector}`);
+        const imageSelect = $('[data-qa-enhanced-select="Select an Image"] input');
         imageSelect.waitForVisible(constants.wait.normal);
         this.diskLabelInput.setValue(diskLabel);
         imageSelect.click();
-        browser.pause(500);
-        this.selectOptions[0].click();
-        this.selectOption.waitForVisible(constants.wait.normal,true);
+        imageSelect.setValue('Arch Linux');
+        $('[data-qa-option="linode/arch"]').waitForVisible(constants.wait.normal);
+        browser.jsClick('[data-qa-option="linode/arch"]');
+        browser.pause(250);
         this.password.setValue(generatePassword());
-        this.setDiskSize(diskSize);
-        browser.pause(2000);
+        this.diskSizeInput.$('input').setValue(diskSize);
+        browser.pause(1000);
         this.addDisk(diskLabel);
     }
 
@@ -133,18 +127,6 @@ class Settings extends Page {
 
         this.confirm.click();
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-
-        browser.waitUntil(function() {
-            if (browser.isVisible('[data-qa-placeholder-title]')) {
-                return true;
-            }
-
-            if (browser.isVisible('[data-qa-view]')) {
-                const labels = $$('[data-qa-label]').map(l => l.getText());
-                return !labels.include(linodeLabel);
-            }
-            return false;
-        }, constants.wait.normal, 'Linode failed to be removed');
     }
 
     updateLabel(label) {

@@ -55,7 +55,8 @@ describe('Account - User Detail - Username Suite', () => {
         });
 
         it('should succeed updating with a legitimate username', () => {
-            UserDetail.updateUsername(`Test${new Date().getTime()}`);
+            userConfig['username'] = `Test${new Date().getTime()}`;
+            UserDetail.updateUsername(userConfig.username);
             UserDetail.waitForNotice('User Profile updated successfully', constants.wait.normal);
         });
     });
@@ -74,7 +75,13 @@ describe('Account - User Detail - Username Suite', () => {
         });
 
         it('should remove the user', () => {
-            UserDetail.deleteUser();
+            UserDetail.deleteButton.click();
+            UserDetail.dialogTitle.waitForText(constants.wait.normal);
+            UserDetail.dialogTitle.$('..').$(UserDetail.dialogConfirmDelete.selector).click();
+            browser.waitUntil(() => {
+                return !browser.getUrl().includes(userConfig.username);
+            },constants.wait.normal);
+            Users.toastDisplays(`User ${userConfig.username.toLowerCase()} has been deleted successfully.`);
         });
     });
 });

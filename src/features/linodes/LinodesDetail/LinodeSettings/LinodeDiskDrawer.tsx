@@ -144,7 +144,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       return this.props.onSizeChange('');
     }
 
-    this.props.onSizeChange(clamp(0, this.props.maximumSize, valueAsNumber));
+    this.props.onSizeChange(valueAsNumber);
   };
 
   onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>

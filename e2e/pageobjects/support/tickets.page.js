@@ -6,7 +6,7 @@ export class SupportTickets extends Page {
     get openTicketsTab() { return $('[data-qa-tab="Open Tickets"]'); }
     get closedTicketsTab() { return $('[data-qa-tab="Closed Tickets"]'); }
     get supportHeader() { return $(this.breadcrumbStaticText.selector); }
-    get openTicketButton() { return this.addIcom('Open New Ticket'); }
+    get openTicketButton() { return this.addIcon('Open New Ticket'); }
 
     get supportCreateDateHeader() { return $('[data-qa-support-date-header]'); }
     get supportSubjectHeader() { return $('[data-qa-support-subject-header]'); }

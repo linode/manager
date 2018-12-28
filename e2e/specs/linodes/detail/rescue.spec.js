@@ -106,10 +106,11 @@ describe('Rescue Linode Suite', () => {
             Settings.expandPanel('Advanced Configurations');
             Settings.addIcon('Add a Configuration').waitForVisible(constants.wait.normal);
             Settings.addIcon('Add a Disk').waitForVisible(constants.wait.normal);
+            intialDisks.forEach(disk => Settings.diskRow(disk).waitForVisible(constants.wait.normal));
             browser.pause(500);
             Settings.addIcon('Add a Disk').click();
             Settings.addDiskDrawerDisplays();
-            Settings.addEmptyDisk(emptyDisk,'5000');
+            Settings.addEmptyDisk(emptyDisk, '5000');
         });
 
         it('Add a disk with an image', () => {
