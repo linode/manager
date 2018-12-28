@@ -2,6 +2,7 @@ import { pathOr } from 'ramda';
 import { Reducer } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { getImages } from "src/services/images";
+import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
@@ -33,7 +34,11 @@ const getImagesSuccess = actionCreator<Linode.Image[]>(`success`)
 
 const getImagesFailure = actionCreator<Linode.ApiFieldError[]>(`fail`)
 
-export const actions = {};
+const removeImage = actionCreator<number | string>(`remove`);
+
+const addOrUpdateImage = actionCreator<Linode.Image>('add_or_update');
+
+export const actions = { removeImage, addOrUpdateImage };
 
 
 
@@ -71,6 +76,33 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, removeImage)) {
+    const { payload } = action;
+    /**
+     * Events provide a numeric ID, but the actual ID is a string. So we have to respond
+     * to both potentials.
+     * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
+     */
+    const id = typeof payload === 'string' ? payload : `private/${payload}`
+    const updated = state.entities.filter((image) => image.id !== id);
+
+    return {
+      ...state,
+      entities: updated,
+      results: updated.map((i) => i.id),
+    };
+  }
+
+  if (isType(action, addOrUpdateImage)) {
+    const { payload } = action;
+    const updated = findAndReplaceOrAppend(state.entities, payload);
+    return {
+      ...state,
+      entities: updated,
+      results: updated.map((i) => i.id),
+    }
+  }
+
   return state;
 };
 
@@ -89,7 +121,7 @@ const requestImages = (): ThunkAction<Promise<Linode.Image[]>, State, undefined>
     })
     .catch((err) => {
       const ApiError = pathOr(
-        [{ reason: "There was an error retrieving your Images."}],
+        [{ reason: "There was an error retrieving your Images." }],
         ['response', 'data', 'errors'],
         err
       )
