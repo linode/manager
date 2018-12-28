@@ -1,9 +1,9 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import store from 'src/store';
-import { dedupeLabel, LabelProps, pad, WithLabelGenerator } from './withLabelGenerator';
+import { dedupeLabel, LabelProps, pad, withLabelGenerator } from './withLabelGenerator';
 
-const RawComponent = WithLabelGenerator(() => <div/>);
+const RawComponent = withLabelGenerator(() => <div/>);
 
 describe('withLabelGenerator HOC', () => {
   let wrapper: ShallowWrapper<LabelProps, {}>;

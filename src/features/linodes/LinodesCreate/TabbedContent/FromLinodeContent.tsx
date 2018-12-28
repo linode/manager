@@ -124,10 +124,6 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     this.setState({ selectedTypeID: id });
   }
 
-  handleTypeLabel = (e: any) => {
-    this.setState({ label: e.target.value });
-  }
-
   handleChangeTags = (selected: Tag[]) => {
     this.setState({ tags: selected })
   }

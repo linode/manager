@@ -21,7 +21,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
+import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -65,7 +65,6 @@ interface State {
   privateIP: boolean;
   password: string | null;
   isMakingRequest: boolean;
-  hasUserTypedCustomLabel: boolean;
   initTab?: number;
   tags: Tag[];
 }
@@ -103,7 +102,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     privateIP: false,
     isMakingRequest: false,
     initTab: pathOr(null, ['history', 'location', 'state', 'initTab'], this.props),
-    hasUserTypedCustomLabel: false,
     tags: [],
   };
 
@@ -119,10 +117,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
   handleSelectPlan = (id: string) => {
     this.setState({ selectedTypeID: id });
-  }
-
-  handleTypeLabel = (e: any) => {
-    this.props.updateCustomLabel(e);
   }
 
   handleChangeTags = (selected: Tag[]) => {
@@ -154,7 +148,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
     const selectedImage = images.find(img => img.id === selectedImageID);
 
-    // Use 'vendor' if it's a public image, otherwise use label (because 'vendor') will be null
+    // Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
     const image = selectedImage && (selectedImage.is_public
       ? selectedImage.vendor
       : selectedImage.label);
@@ -371,7 +365,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   userSSHKeyHoc,
-  WithLabelGenerator
+  withLabelGenerator
 );
 
 export default enhanced(FromImageContent);

@@ -25,7 +25,7 @@ import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
+import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -459,7 +459,7 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
-  WithLabelGenerator
+  withLabelGenerator
 );
 
 export default enhanced(FromBackupsContent);

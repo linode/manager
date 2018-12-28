@@ -26,7 +26,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
+import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root'
@@ -534,7 +534,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   userSSHKeyHoc,
-  WithLabelGenerator
+  withLabelGenerator
 );
 
 export default enhanced(FromStackScriptContent) as any;
