@@ -8,11 +8,8 @@ import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import PromiseLoader from 'src/components/PromiseLoader';
+import withImagesContainer from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
-import { getLinodeImages } from 'src/services/images';
-
-// import StackScriptPanel from './LandingPanel/StackScriptPanel';
 import SelectStackScriptPanel from './SelectStackScriptPanel';
 
 type ClassNames = 'root' | 'title';
@@ -24,19 +21,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface PreloadedProps {
-  images: { response: Linode.Image[] };
-}
-
 type CombinedProps = SetDocsProps
+  & WithImagesProps
   & WithStyles<ClassNames>
-  & PreloadedProps
   & RouteComponentProps<{}>;
-
-const preloaded = PromiseLoader<{}>({
-  images: () => getLinodeImages()
-    .then(response => response.data || []),
-});
 
 export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
   static docs = [
@@ -50,7 +38,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 
   render() {
 
-    const { classes, history, images } = this.props;
+    const { classes, history, imagesData } = this.props;
 
     return (
       <React.Fragment>
@@ -78,7 +66,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         </Grid>
         <Grid container>
           <SelectStackScriptPanel
-            publicImages={images.response}
+            publicImages={imagesData}
             noHeader={true}
           />
         </Grid>
@@ -89,8 +77,21 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
+interface WithImagesProps {
+  imagesData: Linode.Image[];
+  imagesLoading: boolean;
+  imagesError?: Linode.ApiFieldError[];
+}
+
 export default compose(
-  preloaded,
+
+  withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
+    ...ownProps,
+    imagesData: imagesData.filter((i) => i.is_public === true),
+    imagesLoading,
+    imagesError,
+  })),
+
   styled,
   withRouter,
   setDocs(StackScriptsLanding.docs),
