@@ -10,6 +10,7 @@ import _Option from 'react-select/lib/components/Option';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import withImages from 'src/containers/withImages.container';
 import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
 import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
@@ -141,6 +142,7 @@ interface State {
 
 type CombinedProps =
   & WithTypesProps
+  & WithImagesProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
@@ -174,7 +176,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
     volumes: [],
     nodebalancers: [],
     domains: [],
-    images: [],
     searchText: '',
     searchActive: false,
     resultsLoading: false,
@@ -212,7 +213,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
     nodebalancers: Linode.NodeBalancer[],
     volumes: Linode.Volume[],
     domains: Linode.Domain[],
-    images: Linode.Image[]
   ) => {
     if (!this.mounted) { return; }
     this.setState({
@@ -220,24 +220,23 @@ class SearchBar extends React.Component<CombinedProps, State> {
       nodebalancers,
       volumes,
       domains,
-      images,
       resultsLoading: false,
     }, this.getSearchSuggestions)
   }
 
   getSearchSuggestions = () => {
     const query = this.state.searchText;
-    const { typesData } = this.props;
+    const { imagesData, typesData } = this.props;
     if (!this.dataAvailable() || !query) {
       this.setState({ options: [], resultsLoading: false });
       return;
     };
 
-    const { linodes, volumes, domains, nodebalancers, images } = this.state;
+    const { linodes, volumes, domains, nodebalancers } = this.state;
 
     const queryLower = query.toLowerCase();
     const searchResults: SearchResults = searchAll(
-      linodes, volumes, nodebalancers, domains, images, queryLower, typesData,
+      linodes, volumes, nodebalancers, domains, imagesData, queryLower, typesData,
     );
 
     /* Keep options (for the Select) and searchResults separate so that we can
@@ -392,8 +391,18 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities,
 }));
 
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+  imagesLoading: boolean;
+}
+
 export default compose(
   styled,
   withTypes,
   withRouter,
+  withImages((ownProps, imagesData, imagesLoading) => ({
+    ...ownProps,
+    imagesData,
+    imagesLoading,
+  }))
 )(SearchBar) as React.ComponentType<{}>;
