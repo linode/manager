@@ -17,6 +17,8 @@ describe('StackScriptCreate', () => {
         backButton: '',
         createTitle: '',
       }}
+      imagesData={images}
+      imagesLoading={false}
       username="someguy"
       images={{ response: images }}
     />

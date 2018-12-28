@@ -1,7 +1,8 @@
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -327,7 +328,7 @@ interface WithImagesProps {
   imagesError?: Linode.ApiFieldError[];
 }
 
-export default compose(
+const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptCreate.docs),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
@@ -338,4 +339,6 @@ export default compose(
   styled,
   withRouter,
   connected,
-)(StackScriptCreate)
+);
+
+export default enhanced(StackScriptCreate)
