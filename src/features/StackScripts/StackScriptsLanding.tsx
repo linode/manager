@@ -2,6 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import AddNewLink from 'src/components/AddNewLink';
+import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -38,7 +39,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 
   render() {
 
-    const { classes, history, imagesData } = this.props;
+    const { classes, history, imagesData, imagesLoading } = this.props;
 
     return (
       <React.Fragment>
@@ -65,10 +66,14 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           </Grid>
         </Grid>
         <Grid container>
-          <SelectStackScriptPanel
-            publicImages={imagesData}
-            noHeader={true}
-          />
+          {
+            imagesLoading
+              ? <CircleProgress />
+              : <SelectStackScriptPanel
+                publicImages={imagesData}
+                noHeader={true}
+              />
+          }
         </Grid>
       </React.Fragment>
     );
