@@ -8,7 +8,6 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import TableWrapper from './TableWrapper';
 
 interface Props {
-  images: Linode.Image[];
   openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
   display: 'grid' | 'list';
