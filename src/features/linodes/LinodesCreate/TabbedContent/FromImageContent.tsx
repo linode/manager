@@ -23,6 +23,8 @@ import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
+const DEFAULT_IMAGE = 'linode/ubuntu18.10';
+
 type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -91,7 +93,7 @@ type CombinedProps =
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedImageID: pathOr(null, ['history', 'location', 'state', 'selectedImageId'], this.props),
+    selectedImageID: pathOr(DEFAULT_IMAGE, ['history', 'location', 'state', 'selectedImageId'], this.props),
     selectedTypeID: null,
     selectedRegionID: null,
     password: '',
@@ -106,7 +108,10 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   handleSelectImage = (id: string) => {
-    this.setState({ selectedImageID: id });
+    // Allow for deselecting an image
+    id === this.state.selectedImageID
+      ? this.setState({ selectedImageID: null })
+      : this.setState({ selectedImageID: id });
   }
 
   handleSelectRegion = (id: string) => {

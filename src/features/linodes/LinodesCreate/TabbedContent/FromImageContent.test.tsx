@@ -49,6 +49,10 @@ describe('FromImageContent', () => {
     />,
   );
 
+  it('should default to Ubuntu 18.10 as the selected image', () => {
+    expect(component.state().selectedImageID).toBe('linode/ubuntu18.10');
+  });
+
   it('should render a notice when passed a Notice prop', () => {
     expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
   });
