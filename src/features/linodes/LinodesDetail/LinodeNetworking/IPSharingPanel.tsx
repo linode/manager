@@ -257,11 +257,17 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         })
       })
       .catch((response) => {
-        const errors = pathOr([], ['response', 'data', 'errors'], response);
+        const errors = pathOr(
+          [{ reason: 'Unable to complete request at this time.' }],
+          ['response', 'data', 'errors'],
+          response,
+        );
+
         if (!this.mounted) { return ;}
         this.setState({
           errors,
           submitting: false,
+          successMessage: undefined,
         })
       });
   }
