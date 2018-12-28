@@ -149,12 +149,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   label = () => {
-    const { selectedImageID, selectedRegionID } = this.state;
-    const { getLabel } = this.props;
+    const { selectedImageID, selectedRegionID } = this.state;;
+    const { getLabel, images } = this.props;
 
-    return getLabel({
-      image: selectedImageID, region: selectedRegionID
-    });
+    // We'd prefer to use image 'vendor' instead of 'id'
+    const selectedImage = images.find(img => img.id === selectedImageID);
+    const image = selectedImage && selectedImage.vendor;
+
+    return getLabel({ image, region: selectedRegionID });
   }
 
   createNewLinode = () => {
