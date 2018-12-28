@@ -122,9 +122,9 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Grid container>
             <Grid item xs={12} className={classes.logoWrapper}>
-              <Logo className={classes.logo} />
+              <Logo className={classes.logo} data-qa-linode-logo/>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} data-qa-remit-to>
               <Typography variant='body2'>Invoice Date: {date}</Typography>
               <Typography variant="subtitle1">Remit To:</Typography>
               <Typography variant='body2'>Linode, LLC</Typography>
@@ -132,7 +132,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Typography variant='body2'>Philadelphia, PA 19106</Typography>
               <Typography variant='body2'>USA</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} data-qa-invoice-to>
               <Typography variant="subtitle1">Invoice To:</Typography>
               <Typography variant='body2'>{first_name} {last_name}</Typography>
               <Typography variant='body2'>{company}</Typography>
@@ -140,7 +140,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Typography variant='body2'>{address_2}</Typography>
               <Typography variant='body2'>{city}, {state}, {zip}, {country}</Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} data-qa-invoice-id>
               <Typography variant='h3' className={classes.invoiceHeader}>Invoice: #{invoice.id}</Typography>
               <InvoiceTable loading={false} items={items} errors={errors} />
             </Grid>
@@ -148,7 +148,7 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
               <Grid container justify="space-between">
                 <Grid item className={classes.titleWrapper} />
                 <Grid item className={classes.titleWrapper}>
-                  {invoice && <Typography role="header" variant="h2">Total ${Number(invoice.total).toFixed(2)}</Typography>}
+                  {invoice && <Typography role="header" variant="h2" data-qa-total={invoice.total}>Total ${Number(invoice.total).toFixed(2)}</Typography>}
                 </Grid>
               </Grid>
             </Grid>
@@ -174,4 +174,3 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, {}>(connected, styled, withRouter);
 
 export default enhanced(PrintInvoice);
-
