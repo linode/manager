@@ -1,5 +1,6 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -14,12 +15,17 @@ type ClassNames = 'root'
   | 'circleChildren'
   | 'used'
   | 'quota'
-  | 'initialLoader';
+  | 'initialLoader'
+  | 'title'
+  | 'divider';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginTop: 0,
     padding: theme.spacing.unit * 4,
+    '& strong': {
+      fontSize: '1.2em'
+    },
   },
   card: {
     [theme.breakpoints.down('sm')]: {
@@ -68,6 +74,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  title: {
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingBottom: theme.spacing.unit * 2
+  },
+  divider: {
+    backgroundColor: theme.palette.divider,
   },
 });
 
@@ -121,8 +137,10 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     return (
       <DashboardCard className={classes.card}>
         <Paper className={classes.root}>
+          <Typography variant='h2' className={classes.title}>This Month's Network Transfer Pool</Typography>
           <Grid
             container
+            direction="column"
             justify="center"
             alignItems="center"
             wrap="nowrap"
@@ -144,19 +162,26 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                   >
                     {renderPercentageString(poolUsagePct)}
                   </Typography>
-                  <Typography
-                    variant="body1"
-                    className={classes.quota}
-                    data-qa-transfer-quota
-                  >
-                    of {quota} GB
-                  </Typography>
                 </span>
               </CircleProgress>
             </Grid>
-            <Grid item>
-              <Typography variant='h2'>This Month's Network Transfer Pool</Typography>
-              <Typography>Network bandwidth during the current billing cycle.</Typography>
+            <Grid item container direction="column">
+              <Grid item>
+                <Typography>You have used {renderPercentageString(poolUsagePct)} of your available network bandwidth during the current billing cycle.</Typography>
+              </Grid>
+              <Grid item>
+                <Divider className={classes.divider}/>
+              </Grid>
+              <Grid item>
+                <Typography>Free: <strong>{quota - used}</strong> GB</Typography>
+                <Typography>Used: <strong>{used}</strong> GB</Typography>
+              </Grid>
+              <Grid item>
+                <Divider className={classes.divider} />
+              </Grid>
+              <Grid item>
+                <Typography>Total: <strong>{quota}</strong> GB</Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Paper>
