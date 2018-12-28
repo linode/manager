@@ -10,7 +10,7 @@ import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
 import SearchResults from '../../pageobjects/search-results.page';
 
-describe('List Linodes Suite', () => {
+xdescribe('List Linodes Suite', () => {
     const linode = {
         linodeLabel: `AutoLinode${timestamp()}`,
         privateIp: false,

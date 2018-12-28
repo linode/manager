@@ -53,11 +53,9 @@ describe('Rescue Linode Suite', () => {
         browser.pause(3000);
         do {
             Rescue.submitButton.click();
-            browser.pause(2000);
+            browser.pause(4000);
             i++;
-            console.log(`Try: ${i}`);
-            console.log($$(Rescue.toast.selector).map(toast => toast.getText()));
-        } while (!checkIfToastIsPresent('Linode rescue started.') && checkIfToastIsPresent('Linode busy.') && i < 8);
+        } while (!checkIfToastIsPresent('Linode rescue started.') && checkIfToastIsPresent('Linode busy.') && i < 10);
     }
 
     beforeAll(() => {

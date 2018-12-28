@@ -41,7 +41,7 @@ class Settings extends Page {
     get diskLabelInput() { return $(`${this.drawerBase.selector} [data-qa-label] input`); }
     get diskSizeInput() { return $('[data-qa-disk-size]'); }
     get addDiskButton() { return $('[data-qa-disk-submit]'); }
-    get password() { return $(`${this.drawerBase.selector} [data-qa-password-input] input`); }
+    get password() { return $('[data-qa-password-input] input'); }
 
 
     addDiskDrawerDisplays(){
@@ -59,7 +59,7 @@ class Settings extends Page {
             this.addDiskButton.click();
             browser.pause(2000);
             i++;
-        } while ($('[data-qa-error]').isVisible() && i < 5);
+        } while ($('[data-qa-error]').isVisible() && i < 10);
         this.drawerBase.waitForVisible(constants.wait.normal,true);
         this.diskRow(diskLabel).waitForVisible(constants.wait.normal);
     }
@@ -76,7 +76,8 @@ class Settings extends Page {
 
     addDiskFromImage(diskLabel, imageId, diskSize){
         this.createFromImage.click();
-        this.password.waitForVisible(constants.wait.normal);
+        const imagePassword = $(`${this.drawerBase.selector} ${this.password.selector}`);
+        imagePassword.waitForVisible(constants.wait.normal);
         const imageSelect = $('[data-qa-enhanced-select="Select an Image"] input');
         imageSelect.waitForVisible(constants.wait.normal);
         this.diskLabelInput.setValue(diskLabel);
@@ -86,7 +87,8 @@ class Settings extends Page {
         const imageSelection = `[data-qa-option="linode/${imageId}"]`;
         $(imageSelection).waitForVisible(constants.wait.normal);
         $(imageSelection).click();
-        this.password.setValue(generatePassword());
+        $(imageSelection).waitForVisible(constants.wait.normal,true);
+        imagePassword.setValue(generatePassword());
         this.diskSizeInput.$('input').setValue(diskSize);
         browser.pause(1000);
         this.addDisk(diskLabel);

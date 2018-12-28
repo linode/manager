@@ -3,7 +3,7 @@ import { switchTab } from '../../utils/common';
 import SupportLanding from '../../pageobjects/support/landing.page.js';
 import SupportSearchLanding from '../../pageobjects/support/search-landing.page.js';
 
-describe('Support Search - Suite', () => {
+xdescribe('Support Search - Suite', () => {
     beforeAll(() => {
         browser.url(constants.routes.support.landing);
         SupportLanding.baseElemsDisplay();
