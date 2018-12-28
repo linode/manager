@@ -1,5 +1,8 @@
 const { constants } = require('../../constants');
-const { generatePassword } = require('../../utils/common')
+const {
+    generatePassword,
+    getDistrobutionLabel,
+ } = require('../../utils/common')
 
 import Page from '../page';
 
@@ -22,7 +25,6 @@ class Settings extends Page {
     }
     get disk() { return $('[data-qa-disk]'); }
     get disks() { return $$('[data-qa-disk]'); }
-    get password() { return $('[data-qa-hide] input'); }
     get passwordSave() { return $('[data-qa-password-save]'); }
     get alerts() { return $$('[data-qa-alert]'); }
     get alert() { return $('data-qa-alert] > input'); }
@@ -39,7 +41,7 @@ class Settings extends Page {
     get diskLabelInput() { return $(`${this.drawerBase.selector} [data-qa-label] input`); }
     get diskSizeInput() { return $('[data-qa-disk-size]'); }
     get addDiskButton() { return $('[data-qa-disk-submit]'); }
-    get password() { return $('[data-qa-password-input] input'); }
+    get password() { return $(`${this.drawerBase.selector} [data-qa-password-input] input`); }
 
 
     addDiskDrawerDisplays(){
@@ -55,7 +57,7 @@ class Settings extends Page {
       let i = 0;
         do {
             this.addDiskButton.click();
-            browser.pause(1000);
+            browser.pause(2000);
             i++;
         } while ($('[data-qa-error]').isVisible() && i < 5);
         this.drawerBase.waitForVisible(constants.wait.normal,true);
@@ -72,17 +74,18 @@ class Settings extends Page {
         this.addDisk(diskLabel);
     }
 
-    addDiskFromImage(diskLabel,diskSize){
+    addDiskFromImage(diskLabel, imageId, diskSize){
         this.createFromImage.click();
         this.password.waitForVisible(constants.wait.normal);
         const imageSelect = $('[data-qa-enhanced-select="Select an Image"] input');
         imageSelect.waitForVisible(constants.wait.normal);
         this.diskLabelInput.setValue(diskLabel);
         imageSelect.click();
-        imageSelect.setValue('Arch Linux');
-        $('[data-qa-option="linode/arch"]').waitForVisible(constants.wait.normal);
-        browser.jsClick('[data-qa-option="linode/arch"]');
-        browser.pause(250);
+        const displayImage = getDistrobutionLabel([imageId])[0];
+        imageSelect.setValue(displayImage);
+        const imageSelection = `[data-qa-option="linode/${imageId}"]`;
+        $(imageSelection).waitForVisible(constants.wait.normal);
+        $(imageSelection).click();
         this.password.setValue(generatePassword());
         this.diskSizeInput.$('input').setValue(diskSize);
         browser.pause(1000);

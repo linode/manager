@@ -1,4 +1,4 @@
-import { clamp, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';

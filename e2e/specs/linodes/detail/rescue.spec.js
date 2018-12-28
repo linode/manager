@@ -50,11 +50,14 @@ describe('Rescue Linode Suite', () => {
             return $$(Rescue.toast.selector).find(toast => toast.getText() === message);
         }
         let i = 0;
+        browser.pause(3000);
         do {
             Rescue.submitButton.click();
             browser.pause(2000);
             i++;
-        } while (!checkIfToastIsPresent('Linode rescue started.') && checkIfToastIsPresent('Linode busy.') && i < 5);
+            console.log(`Try: ${i}`);
+            console.log($$(Rescue.toast.selector).map(toast => toast.getText()));
+        } while (!checkIfToastIsPresent('Linode rescue started.') && checkIfToastIsPresent('Linode busy.') && i < 8);
     }
 
     beforeAll(() => {
@@ -110,14 +113,14 @@ describe('Rescue Linode Suite', () => {
             browser.pause(500);
             Settings.addIcon('Add a Disk').click();
             Settings.addDiskDrawerDisplays();
-            Settings.addEmptyDisk(emptyDisk, '5000');
+            Settings.addEmptyDisk(emptyDisk,'5000');
         });
 
         it('Add a disk with an image', () => {
             browser.pause(500);
             Settings.addIcon('Add a Disk').click();
             Settings.addDiskDrawerDisplays();
-            Settings.addDiskFromImage(diskFromImage,'5000');
+            Settings.addDiskFromImage(diskFromImage,'arch','5000');
         });
 
         it('Added disks should display in rescue dropdown', () => {
@@ -139,7 +142,6 @@ describe('Rescue Linode Suite', () => {
         addAdditionalRescueDisk('sde', volumeLabels[0]);
         addAdditionalRescueDisk('sdf', volumeLabels[1]);
         addAdditionalRescueDisk('sdg', volumeLabels[2]);
-        browser.pause(4000);
         rescueAndWaitForLinodeNotBusy();
         Rescue.toastDisplays('Linode rescue started.');
         Rescue.linearProgress.waitForVisible(constants.wait.normal);

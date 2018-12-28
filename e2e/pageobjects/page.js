@@ -140,14 +140,19 @@ export default class Page {
         expect(sidebarTitle).toBe('Linode Docs');
     }
 
-    toastDisplays(expectedMessage, timeout=constants.wait.normal) {
+    toastDisplays(expectedMessage, timeout=constants.wait.normal, wait=true) {
         this.toast.waitForVisible(timeout);
         let toastMessage;
-        browser.waitUntil(() => {
-            toastMessage = $$(this.toast.selector).find(toast => toast.getText() === expectedMessage);
-            return toastMessage;
-        },timeout);
-        toastMessage.waitForVisible(timeout, true);
+        if(wait){
+            browser.waitUntil(() => {
+                toastMessage = $$(this.toast.selector).find(toast => toast.getText() === expectedMessage);
+                return toastMessage;
+            },timeout);
+            toastMessage.waitForVisible(timeout, true);
+        }else{
+            this.toast.waitForVisible(timeout, true);
+        }
+
     }
 
     openActionMenu(actionMenuRow) {
