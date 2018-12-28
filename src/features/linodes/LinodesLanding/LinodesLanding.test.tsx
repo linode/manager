@@ -15,6 +15,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            imagesLoading={false}
+            imagesError={undefined}
             linodesData={[]}
             width={'lg'}
             classes={classes}
@@ -40,6 +42,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            imagesLoading={false}
+            imagesError={undefined}
             linodesData={[]}
             width={'lg'}
             classes={classes}
@@ -69,6 +73,8 @@ describe('ListLinodes', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <RoutedListLinodes
+            imagesLoading={false}
+            imagesError={undefined}
             linodesData={[]}
             width={'lg'}
             classes={classes}
