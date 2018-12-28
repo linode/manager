@@ -23,9 +23,9 @@ describe('withLabelGenerator HOC', () => {
   });
 
   it('returns custom label after custom label has been altered', () => {
-    expect(wrapper.props().getLabel({ image: 'ubuntu' })).toBe('ubuntu');
+    expect(wrapper.props().getLabel('ubuntu')).toBe('ubuntu');
     wrapper.props().updateCustomLabel({ target: { value: 'hello world' } });
-    expect(wrapper.props().getLabel({ image: 'ubuntu' })).toBe('hello world');
+    expect(wrapper.props().getLabel('ubuntu')).toBe('hello world');
   });
 
   it('returns custom label if not given args', () => {

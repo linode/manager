@@ -1,26 +1,34 @@
 import { compose, filter, join, map } from 'ramda';
 
-export interface LabelOptions {
-  image?: string | null;
-  region?: string | null;
-  type?: string | null;
-  backup?: string | null;
-  stackScript?: string | null;
-}
+const API_MAX_LABEL_LENGTH = 32;
 
-export const deriveDefaultLabel = (options: LabelOptions): string => {
-  const { image, backup, region, type, stackScript } = options;
+export type LabelArgTypes = string | null | undefined;
 
-  // TODO: map to custom ID abbreviations
+export const deriveDefaultLabel = (...args: LabelArgTypes[]): string => {
 
-  const values = [image, backup, region, type, stackScript];
+  // Some params might be null or undefined, so filter those out
+  const filtered = filter(Boolean)(args);
+
+  // Max string length of each param. If we have to cut down the string because it's over
+  // the API limit, we cut each param down, rather
+  const maxLength = Math.floor(API_MAX_LABEL_LENGTH / filtered.length);
 
   return compose(
+    ensureSingleDashesAndUnderscores,
     join('-'),
-    map<string, string>(s => s.toLowerCase()),
-    // @todo: clamp to prevent going over char limit
-    filter(Boolean) // Some params might be null or undefined, so filter those out
-  )(values);
+    map((s: string) => {
+      return s.replace(/[^a-zA-Z0-9-_]/g, '')
+        .slice(0, maxLength)
+        .toLowerCase()
+    }),
+  )(filtered);
 }
 
 export default deriveDefaultLabel;
+
+
+// The API doesn't allow double dashes or underscores. Just in case joining the param
+// sections of the derived label name results in this, we need to do one final 'replace';
+export const ensureSingleDashesAndUnderscores = (s: string) => {
+  return s.replace(/--/g, '-').replace(/__/g, '_');
+}

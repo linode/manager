@@ -292,14 +292,18 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const selectedBackup = aggregateBackups(selectedLinode.currentBackups).find(b => b.id === selectedBackupID);
 
     if (!selectedBackup) {
-      return getLabel({ image: selectedLinode.label });
+      return getLabel(selectedLinode.label, 'backup');
     }
 
     const backup = selectedBackup.type !== 'auto'
       ? selectedBackup.label
       : 'auto'; // automatic backups have a label of 'null', so use a custom string for these
 
-    return getLabel({ image: selectedLinode.label, backup });
+    return getLabel(
+      selectedLinode.label,
+      backup,
+      'backup'
+    );
   }
 
   render() {

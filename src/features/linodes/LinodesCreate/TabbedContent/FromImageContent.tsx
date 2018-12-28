@@ -152,11 +152,15 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     const { selectedImageID, selectedRegionID } = this.state;;
     const { getLabel, images } = this.props;
 
-    // We'd prefer to use image 'vendor' instead of 'id'
     const selectedImage = images.find(img => img.id === selectedImageID);
-    const image = selectedImage && selectedImage.vendor;
 
-    return getLabel({ image, region: selectedRegionID });
+    // Use 'vendor' if it's a public image, otherwise use label (because 'vendor') will be null
+    const image = selectedImage && (selectedImage.is_public
+      ? selectedImage.vendor
+      : selectedImage.label);
+
+
+    return getLabel(image, selectedRegionID);
   }
 
   createNewLinode = () => {

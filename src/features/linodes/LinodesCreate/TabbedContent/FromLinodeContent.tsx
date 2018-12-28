@@ -23,6 +23,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -88,6 +89,7 @@ type CombinedProps =
   & Props
   & WithUpsertLinode
   & InjectedNotistackProps
+  & LabelProps
   & WithStyles<ClassNames>;
 
 export class FromLinodeContent extends React.Component<CombinedProps, State> {
@@ -148,13 +150,14 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       selectedRegionID,
       selectedTypeID,
       selectedLinodeID,
-      label, // optional
       backups, // optional
       privateIP,
       tags,
     } = this.state;
 
     this.setState({ isMakingRequest: true });
+
+    const label = this.label();
 
     cloneLinode(selectedLinodeID!, {
       region: selectedRegionID,
@@ -195,12 +198,26 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     this.mounted = true;
   }
 
+  label = () => {
+    const { selectedLinodeID, selectedRegionID } = this.state;
+    const { getLabel, linodes } = this.props;
+
+    const selectedLinode = linodes.find(l => l.id === selectedLinodeID);
+    const linodeLabel = selectedLinode && selectedLinode.label;
+
+    return getLabel(
+      linodeLabel,
+      'clone',
+      selectedRegionID ,
+    );
+  }
+
   render() {
-    const { errors, backups, privateIP, label, selectedLinodeID, tags,
+    const { errors, backups, privateIP, selectedLinodeID, tags,
       selectedRegionID, selectedTypeID, selectedDiskSize, isMakingRequest, } = this.state;
 
     const { accountBackups, notice, types, linodes, regions, extendLinodes, getBackupsMonthlyPrice,
-      getTypeInfo, getRegionInfo, classes } = this.props;
+      getTypeInfo, getRegionInfo, classes, updateCustomLabel } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -210,6 +227,8 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     const typeInfo = getTypeInfo(selectedTypeID);
 
     const hasBackups = backups || accountBackups;
+
+    const label = this.label();
 
     return (
       <React.Fragment>
@@ -263,7 +282,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                   labelFieldProps={{
                     label: 'Linode Label',
                     value: label || '',
-                    onChange: this.handleTypeLabel,
+                    onChange: updateCustomLabel,
                     errorText: hasErrorFor('label'),
                   }}
                   tagsInputProps={{
@@ -337,11 +356,13 @@ interface WithUpsertLinode {
 const WithUpsertLinode = connect(undefined, { upsertLinode });
 
 const styled = withStyles(styles);
+const withLabels = WithLabelGenerator({}); // @todo: find better name
 
 const enhanced = compose<CombinedProps, Props>(
   WithUpsertLinode,
   styled,
   withSnackbar,
+  withLabels
 );
 
 export default enhanced(FromLinodeContent);
