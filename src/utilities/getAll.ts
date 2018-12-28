@@ -129,18 +129,6 @@ export const getAllEntities = (cb: GetAllHandler) =>
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {
-      /**
-       * Get the number of public images for the purpose of substracting them
-       * from the count we send to analytics
-       */
-      /** for some reason typescript compiler thinks ...results is implicitly typed as 'any' */
-      // @ts-ignore
-      const numberOfPublicImages = results[4].data.reduce((acc, eachImage) => {
-        if (eachImage.is_public) {
-          return acc + 1;
-        }
-        return acc;
-      }, 0);
 
       const resultData = [
         results[0].data,
