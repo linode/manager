@@ -326,11 +326,11 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   render() {
     const { selectedTab } = this.state;
 
-    const { classes, regionsLoading } = this.props;
+    const { classes, regionsLoading, imagesLoading } = this.props;
 
     const tabRender = this.tabs[selectedTab].render;
 
-    if (regionsLoading) { return <CircleProgress />; }
+    if (regionsLoading || imagesLoading) { return <CircleProgress />; }
 
     return (
       <StickyContainer>
