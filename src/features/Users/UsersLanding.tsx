@@ -200,8 +200,8 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           </Link>
         </TableCell>
         <TableCell parentColumn="Email Address" data-qa-user-email>{user.email}</TableCell>
-        <TableCell parentColumn="Restricted" data-qa-user-restriction>
-          {user.restricted ? 'Restricted' : 'Unrestricted'}
+        <TableCell parentColumn="Account Access" data-qa-user-restriction>
+          {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
         <TableCell>
           <ActionMenu
@@ -259,7 +259,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
               <TableRow>
                 <TableCell data-qa-username-column>Username</TableCell>
                 <TableCell data-qa-email-column>Email Address</TableCell>
-                <TableCell data-qa-restriction-column>Restricted</TableCell>
+                <TableCell data-qa-restriction-column>Account Access</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>

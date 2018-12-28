@@ -129,9 +129,10 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
 * the slug to the display name
 */
 const stripImageName = (images: string[]) => {
-  return images.map((image: string) => {
-    return image.replace('linode/', '');
-  });
+  return images
+    /** fixes freak edge-case where the API is returning null in the array of images */
+    .filter((eachImage: string | null) => !!eachImage)
+    .map((filteredImage: string) => filteredImage.replace('linode/', ''))
 };
 
 const styled = withStyles(styles);

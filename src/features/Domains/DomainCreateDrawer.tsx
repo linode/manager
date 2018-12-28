@@ -23,6 +23,7 @@ import {
   CREATING,
   resetDrawer
 } from 'src/store/reducers/domainDrawer';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -256,7 +257,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         this.setState({
           submitting: false,
-          errors: pathOr([], ['response', 'data', 'errors'], err),
+          errors: getAPIErrorOrDefault(err),
         }, () => {
           scrollErrorIntoView();
         });
@@ -286,7 +287,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) { return; }
         this.setState({
           submitting: false,
-          errors: pathOr([], ['response', 'data', 'errors'], err),
+          errors: getAPIErrorOrDefault(err),
         }, () => {
           scrollErrorIntoView();
         });

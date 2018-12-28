@@ -1,5 +1,4 @@
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -9,6 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import InvoiceTable from './InvoiceTable';
 
 type ClassNames = 'root' | 'backButton' | 'titleWrapper';
@@ -60,9 +60,9 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
         items,
       })
     })
-      .catch((error) => {
+      .catch((errorResponse) => {
         this.setState({
-          errors: pathOr([{ reason: 'Unable to retrieve invoice details. ' }], ['response', 'data', 'errors'], error),
+          errors: getAPIErrorOrDefault(errorResponse, 'Unable to retrieve invoice details. '),
         })
       });
   };

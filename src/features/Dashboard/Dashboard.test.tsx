@@ -1,18 +1,20 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { light } from 'src/themes';
 import { Dashboard } from './Dashboard';
 
 const props = {
   accountBackups: false,
   actions: {
-    getLinodesWithoutBackups: jest.fn(),
     openBackupDrawer: jest.fn(),
+    openImportDrawer: jest.fn(),
   },
   linodesWithoutBackups: [],
   managed: false,
   backupError: undefined,
-  classes: { root: ''}
+  entitiesWithGroupsToImport: { linodes: [], domains: [] },
+  classes: { root: ''},
+  theme: light,
 }
 
 const component = shallow(
