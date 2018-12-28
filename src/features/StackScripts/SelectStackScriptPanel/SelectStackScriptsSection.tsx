@@ -7,7 +7,7 @@ import TableRow from 'src/components/core/TableRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
-import StackScriptSelectionRow from '../StackScriptSelectionRow';
+import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
@@ -45,7 +45,6 @@ const SelectStackScriptsSection: React.StatelessComponent<CombinedProps> = (prop
       label={s.label}
       stackScriptUsername={s.username}
       description={truncateText(s.description, 100)}
-      isPublic={s.is_public}
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
@@ -53,8 +52,6 @@ const SelectStackScriptsSection: React.StatelessComponent<CombinedProps> = (prop
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
-      canDelete={false}
-      canEdit={false}
     />
   )
 

@@ -15,8 +15,8 @@ import truncateText from 'src/utilities/truncateText';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
-import StackScriptSelectionRow from '../StackScriptSelectionRow';
 import { StackScriptTabs } from '../stackScriptUtils';
+import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -160,15 +160,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   stackScriptUsername={stackScript.username}
                   disabledCheckedSelect={true}
                   description={truncateText(stackScript.description, 100)}
-                  isPublic={stackScript.is_public}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, false)}
                   checked={selectedId === stackScript.id}
                   updateFor={[selectedId === stackScript.id]}
                   stackScriptID={stackScript.id}
-                  canDelete={false}
-                  canEdit={false}
                 />
               </tbody>
             </Table>

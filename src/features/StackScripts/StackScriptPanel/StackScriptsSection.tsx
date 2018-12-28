@@ -7,7 +7,7 @@ import TableRow from 'src/components/core/TableRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
-import StackScriptSelectionRow from '../StackScriptSelectionRow';
+import StackScriptRow from './StackScriptRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
@@ -41,7 +41,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
   } = props;
 
 const listStackScript = (s: Linode.StackScript.Response) => (
-    <StackScriptSelectionRow
+    <StackScriptRow
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
@@ -50,7 +50,6 @@ const listStackScript = (s: Linode.StackScript.Response) => (
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
-      showDeployLink={true}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}
