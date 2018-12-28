@@ -49,21 +49,20 @@ class TableRow extends React.Component<CombinedProps> {
 
   rowClick = (e: any, target: string | onClickFn ) =>  {
     const body = document.body as any;
+    // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
+    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
+    const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
 
-  // return if a modal is open
-  if (body.getAttribute('style') === null || body.getAttribute('style').indexOf('overflow: hidden') === 0) { return; }
-  // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
-  const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
-  const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
-  if (!isButton && !isAnchor) {
-    e.stopPropagation();
-    if (typeof(target) === 'string') {
-      this.props.history.push(target);
+    if (!isButton && !isAnchor) {
+      e.stopPropagation();
+      if (typeof(target) === 'string') {
+        this.props.history.push(target);
+        // return if a modal is open
+      } else if (body.getAttribute('style') !== null && body.getAttribute('style').indexOf('overflow: hidden') !== 0) { return; }
     }
+    if (typeof(target) === 'function') { target(e) };
   }
-  // @alioso should this be outside of the if statement above?
-  if (typeof(target) === 'function') { target(e) };
-  }
+
 
   render() {
     const { classes, className, rowLink, staticContext, ...rest } = this.props;
