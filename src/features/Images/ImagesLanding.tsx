@@ -64,7 +64,7 @@ interface State {
 }
 
 type CombinedProps =
-  & WithPublicImages
+  & WithPrivateImages
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
   & InjectedNotistackProps;
@@ -428,14 +428,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   };
 }
 
-interface WithPublicImages {
+interface WithPrivateImages {
   imagesData: Linode.Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
 
 
-const withPublicImages = connect((state: ApplicationState): WithPublicImages => ({
+const withPrivateImages = connect((state: ApplicationState): WithPrivateImages => ({
   imagesData: state.__resources.images.entities.filter(i => i.is_public === false),
   imagesLoading: state.__resources.images.loading,
   imagesError: state.__resources.images.error,
@@ -446,7 +446,7 @@ const styled = withStyles(styles);
 export default compose<CombinedProps, {}>(
   setDocs(ImagesLanding.docs),
   withRouter,
-  withPublicImages,
+  withPrivateImages,
   styled,
   withSnackbar
 )(ImagesLanding);
