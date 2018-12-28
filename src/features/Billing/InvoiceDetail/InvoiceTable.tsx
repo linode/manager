@@ -21,12 +21,12 @@ const InvoiceTable: React.StatelessComponent<Props> = (props) => {
     <Table border aria-label="Invoice Details">
       <TableHead>
         <TableRow>
-          <TableCell>Description</TableCell>
-          <TableCell>From</TableCell>
-          <TableCell>To</TableCell>
-          <TableCell>Quantity</TableCell>
-          <TableCell noWrap>Unit Price</TableCell>
-          <TableCell>Amount</TableCell>
+          <TableCell data-qa-column="Description">Description</TableCell>
+          <TableCell data-qa-column="From">From</TableCell>
+          <TableCell data-qa-column="To">To</TableCell>
+          <TableCell data-qa-column="Quantity">Quantity</TableCell>
+          <TableCell noWrap data-qa-column="Unit Price">Unit Price</TableCell>
+          <TableCell data-qa-column="Amount">Amount</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -36,7 +36,7 @@ const InvoiceTable: React.StatelessComponent<Props> = (props) => {
   );
 };
 
-const renderDate = (v: null | string) => v ? <DateTimeDisplay value={v} format={`Y-MM-DD HH:mm:ss`} /> : null;
+const renderDate = (v: null | string) => v ? <DateTimeDisplay value={v} format={`Y-MM-DD HH:mm:ss`} data-qa-invoice-date/> : null;
 
 const renderUnitPrice = (v: null | number) => v ? `$${v}` : null;
 
@@ -48,12 +48,12 @@ const RenderData: React.StatelessComponent<{ items: Linode.InvoiceItem[] }> = (p
     <>
       {items.map(({ label, from, to, quantity, unit_price, amount }) => (
         <TableRow key={`${label}-${from}-${to}`}>
-          <TableCell parentColumn="Description">{label}</TableCell>
-          <TableCell parentColumn="From">{renderDate(from)}</TableCell>
-          <TableCell parentColumn="To">{renderDate(to)}</TableCell>
-          <TableCell parentColumn="Quantity">{renderQuantity(quantity)}</TableCell>
-          <TableCell parentColumn="Unit Price">{renderUnitPrice(unit_price)}</TableCell>
-          <TableCell parentColumn="Amount">${amount}</TableCell>
+          <TableCell parentColumn="Description" data-qa-descrition>{label}</TableCell>
+          <TableCell parentColumn="From" data-qa-from>{renderDate(from)}</TableCell>
+          <TableCell parentColumn="To" data-qa-to>{renderDate(to)}</TableCell>
+          <TableCell parentColumn="Quantity" data-qa-quantity>{renderQuantity(quantity)}</TableCell>
+          <TableCell parentColumn="Unit Price" data-qa-unit-price>{renderUnitPrice(unit_price)}</TableCell>
+          <TableCell parentColumn="Amount" data-qa-amount>${amount}</TableCell>
         </TableRow>
       ))}
     </>
