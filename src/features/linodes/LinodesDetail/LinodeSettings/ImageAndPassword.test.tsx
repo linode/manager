@@ -8,6 +8,8 @@ import { ImageAndPassword } from './ImageAndPassword';
 const props = {
   classes: { root: ''},
   images,
+  imagesLoading: false,
+  imageError: undefined,
   onImageChange: jest.fn(),
   password: '',
   onPasswordChange: jest.fn(),
