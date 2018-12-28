@@ -8,13 +8,22 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
     backgroundColor: theme.bg.offWhiteDT,
     border: '1px solid ' + `${theme.color.borderPagination}`,
-    borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
     height: 40,
     color: theme.palette.text.primary,
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 27,
+      height: 30,
+      minHeight: 30,
+      fontSize: '0.8rem',
+      padding: 5,
+    },
     '& svg': {
       fontSize: 22,
+      [theme.breakpoints.down('xs')]: {
+        fontSize: 20,
+      },
     },
     '&.active': {
       backgroundColor: theme.bg.main,

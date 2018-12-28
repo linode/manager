@@ -34,14 +34,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface Props { }
-
 interface State {
   anchorEl?: HTMLElement;
 }
 
 type CombinedProps =
-  & Props
   & StateProps
   & DispatchProps
   & WithStyles<ClassNames>;
