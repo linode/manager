@@ -1,11 +1,16 @@
-import { compose, prop, reverse, sortBy, when } from 'ramda';
+import { compose, prop, reverse, sortBy, toLower, when } from 'ramda';
 import * as React from 'react';
 import { Order } from 'src/components/Pagey';
 
 const orderList: <T>(order: Order, orderBy: keyof T) => (list: T[]) => T[] = (order, orderBy) => (list) => {
   return compose<any, any, any>(
     when(() => order === 'desc', reverse),
-    sortBy(prop(orderBy as string)), /** I spent a long, long time trying to type this. */
+    sortBy(
+      compose(
+        when(v => typeof v === 'string', toLower),
+        prop(orderBy as string),
+      ),
+    ), /** I spent a long, long time trying to type this. */
   )(list);
 };
 
