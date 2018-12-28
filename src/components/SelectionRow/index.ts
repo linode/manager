@@ -1,5 +1,5 @@
-import SelectionRow, { Props as SelectionRowProps } from './SelectionRow';
+import SelectionRow, { Props as SelectionRowProps, SelectionRow as SelectionRowBase } from './SelectionRow';
 
-export { SelectionRowProps };
+export { SelectionRowProps, SelectionRowBase as SelectionRow };
 
 export default SelectionRow;
