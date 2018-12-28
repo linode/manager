@@ -13,7 +13,9 @@ const imageEventsHandler: EventHandler = (event, dispatch) => {
      * where the disk resides, not the image (as one would expect).
      */
     case 'disk_imagize':
-      return dispatch(async.requestImages());
+      if (['finished', 'notification'].includes(event.status)) {
+        return dispatch(async.requestImages());
+      }
 
     default:
       return;
