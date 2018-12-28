@@ -17,7 +17,8 @@ type ClassNames = 'root'
   | 'quota'
   | 'initialLoader'
   | 'title'
-  | 'divider';
+  | 'divider'
+  | 'itemText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -84,6 +85,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   divider: {
     backgroundColor: theme.palette.divider,
+  },
+  itemText: {
+    marginBottom: theme.spacing.unit,
   },
 });
 
@@ -173,7 +177,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 <Divider className={classes.divider}/>
               </Grid>
               <Grid item>
-                <Typography>Free: <strong>{quota - used}</strong> GB</Typography>
+                <Typography className={classes.itemText}>Free: <strong>{quota - used}</strong> GB</Typography>
                 <Typography>Used: <strong>{used}</strong> GB</Typography>
               </Grid>
               <Grid item>
