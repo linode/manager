@@ -23,7 +23,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import WithLabelGenerator, { LabelProps } from '../withLabelGenerator';
+import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -352,13 +352,12 @@ interface WithUpsertLinode {
 const WithUpsertLinode = connect(undefined, { upsertLinode });
 
 const styled = withStyles(styles);
-const withLabels = WithLabelGenerator({}); // @todo: find better name
 
 const enhanced = compose<CombinedProps, Props>(
   WithUpsertLinode,
   styled,
   withSnackbar,
-  withLabels
+  withLabelGenerator
 );
 
 export default enhanced(FromLinodeContent);

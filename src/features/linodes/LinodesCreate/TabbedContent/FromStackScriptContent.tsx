@@ -529,13 +529,12 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 }
 
 const styled = withStyles(styles);
-const withLabels = WithLabelGenerator({}); // @todo: find better name
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   userSSHKeyHoc,
-  withLabels
+  WithLabelGenerator
 );
 
 export default enhanced(FromStackScriptContent) as any;

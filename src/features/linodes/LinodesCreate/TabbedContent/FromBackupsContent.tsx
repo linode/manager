@@ -299,11 +299,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       ? selectedBackup.label
       : 'auto'; // automatic backups have a label of 'null', so use a custom string for these
 
-    return getLabel(
-      selectedLinode.label,
-      backup,
-      'backup'
-    );
+    return getLabel(selectedLinode.label, backup, 'backup');
   }
 
   render() {
@@ -459,12 +455,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
-const withLabels = WithLabelGenerator({}); // @todo: find better name
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
-  withLabels
+  WithLabelGenerator
 );
 
 export default enhanced(FromBackupsContent);

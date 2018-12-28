@@ -1,21 +1,20 @@
-;import * as React from 'react';
+import * as React from 'react';
+import { connect } from 'react-redux';
 import { deriveDefaultLabel, LabelArgTypes } from './deriveDefaultLabel';
-// import { connect } from 'redux';
 
 export interface LabelProps {
   customLabel: string;
   updateCustomLabel: (e: any) => void;
-  getLabel: (...args: any[]) => string;
-}
+  getLabel: (...args: any[]) => string;}
+
 
 export interface LabelState {
   customLabel: string;
   hasUserTypedCustomLabel: boolean;
 }
 
-// @todo: do we actually need options?
-export const WithLabelGenerator = (options: any /* @todo: type */) => (Component: React.ComponentType<any>) => {
-  class WrappedComponent extends React.PureComponent<{}, LabelState> {
+export const WithLabelGenerator = (Component: React.ComponentType<any>) => {
+  class WrappedComponent extends React.PureComponent<any, LabelState> {
     state: LabelState = {
       customLabel: '',
       hasUserTypedCustomLabel: false
@@ -33,12 +32,12 @@ export const WithLabelGenerator = (options: any /* @todo: type */) => (Component
 
       const defaultLabel = deriveDefaultLabel(...args);
 
+      const dedupedLabel = dedupeLabel(defaultLabel, this.props.linodeLabels);
+
       // In case the derived label doesn't match API requirements
-      if (!testAPIRequirements(defaultLabel)) { return customLabel; }
+      if (!testAPIRequirements(dedupedLabel)) { return customLabel; }
 
-      // TODO: add increment logic here
-
-      return defaultLabel;
+      return dedupedLabel;
     }
 
     render() {
@@ -50,13 +49,38 @@ export const WithLabelGenerator = (options: any /* @todo: type */) => (Component
       })
     }
   }
-  return WrappedComponent;
+  return connected(WrappedComponent);
 }
 
-// @todo: will need to connect to redux to check for existing labels (will increment if there are existing)
-export default WithLabelGenerator;
+const connected = connect((state: ApplicationState) => ({
+  linodeLabels: state.__resources.linodes.entities.map(l => l.label)
+}));
 
 const testAPIRequirements = (label: string) => {
   const linodeLabelRegExp = /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/;
-  return linodeLabelRegExp.test(label);
+  return linodeLabelRegExp.test(label) && label.length <= 32;
+}
+
+export default WithLabelGenerator;
+
+
+// Utilities
+export const dedupeLabel = (label: string, existingLabels: string[]): string => {
+  const ZERO_PAD_WIDTH = 3;
+
+  let dedupedLabel = label;
+  let i = 1;
+
+  const matchingLabels = existingLabels.filter(l => l.startsWith(label));
+
+  while (matchingLabels.find(l => l === dedupedLabel)) {
+    dedupedLabel = label + pad(i, ZERO_PAD_WIDTH);
+    i++;
+  }
+  return dedupedLabel;
+}
+
+export const pad = (n: number, width: number, padChar = '0'): string => {
+  const s = n + '';
+  return s.length >= width ? s : new Array(width - s.length + 1).join(padChar) + s;
 }

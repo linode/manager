@@ -28,6 +28,7 @@ const mockProps = {
   },
   updateCustomLabel: jest.fn(),
   getLabel: jest.fn(),
+  linodes: [],
   customLabel: ''
 };
 
