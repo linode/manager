@@ -42,9 +42,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
   },
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-  },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
   },
