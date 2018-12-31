@@ -62,8 +62,6 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-
-
 type CombinedProps =
   & RouteComponentProps<{ invoiceId: number }>
   & StateProps
@@ -89,6 +87,9 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
         invoice,
         items,
       })
+      setTimeout(() => {
+        window.print();
+      }, 500);
     })
       .catch((error) => {
         this.setState({
