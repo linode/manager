@@ -1,5 +1,5 @@
 import * as classNames from 'classnames';
-import { compose, pathOr } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import scriptLoader from 'react-async-script-loader';
 import * as ReactDOM from 'react-dom';
@@ -19,7 +19,9 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
 import { executePaypalPayment, makePayment, stagePaypalPayment } from 'src/services/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
 
 type ClassNames = 'root'
   | 'positive'
@@ -185,11 +187,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           success: true,
         })
       })
-      .catch((error) => {
+      .catch((errorResponse) => {
         this.setState({
           submitting: false,
-          errors: pathOr([{ reason: 'Unable to make a payment at this time.' }],
-            ['response', 'data', 'errors'], error),
+          errors: getAPIErrorOrDefault(errorResponse, 'Unable to make a payment at this time.')
         })
       })
   };
@@ -228,13 +229,12 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           successMessage: ''
         })
       })
-      .catch((error) => {
+      .catch((errorResponse) => {
         this.setState({
           isExecutingPaypalPayment: false,
           dialogOpen: false,
           usd: '',
-          errors: pathOr([{ reason: 'Unable to make a payment at this time.' }],
-            ['response', 'data', 'errors'], error),
+          errors: getAPIErrorOrDefault(errorResponse, 'Unable to make a payment at this time.')
         })
       });
   }
@@ -290,11 +290,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         })
         return response.payment_id;
       })
-      .catch((error) => {
+      .catch((errorResponse) => {
         this.setState({
           submitting: false,
-          errors: pathOr([{ reason: 'Unable to make a payment at this time.' }],
-            ['response', 'data', 'errors'], error),
+          errors: getAPIErrorOrDefault(errorResponse, 'Unable to make a payment at this time.')
         });
         return;
       })
@@ -533,7 +532,7 @@ export const isAllowedUSDAmount = (usd: number) => {
 }
 
 export const shouldEnablePaypalButton = (value: number | undefined) => {
-  /** 
+  /**
    * paypal button should be disabled if there is either
    * no value entered or it's below $5 or over $500 as per APIv4 requirements
    */
