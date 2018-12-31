@@ -115,7 +115,7 @@ interface Images {
   available: Linode.Image[];
   // image ids that are already selected
   selected: string[];
-  handleRemove: (index: number) => void;
+  handleRemove: (id: string) => void;
 }
 
 interface Props {
@@ -233,7 +233,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                       key={selectedImage}
                       label={stripImageName(selectedImage)}
                       colorVariant='lightBlue'
-                      onDelete={() => images.handleRemove(index)}
+                      onDelete={() => images.handleRemove(selectedImage)}
                       className={classes.targetTag}
                     />
                   )

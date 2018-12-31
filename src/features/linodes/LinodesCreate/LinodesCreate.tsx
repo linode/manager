@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
+import { compose as composeComponent } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -11,13 +12,12 @@ import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import PromiseLoader from 'src/components/PromiseLoader';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
+import withImages from 'src/containers/withImages.container';
+import withLinodes from 'src/containers/withLinodes.container';
 import { withRegions } from 'src/context/regions';
 import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
-import { getImages } from 'src/services/images';
-import { getLinodes } from 'src/services/linodes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { ExtendedLinode } from './SelectLinodePanel';
 import { ExtendedType } from './SelectPlanPanel';
@@ -51,16 +51,12 @@ interface RegionsContextProps {
   regionsLoading: boolean;
 }
 
-interface PreloadedProps {
-  images: { response: Linode.Image[] };
-  linodes: { response: Linode.LinodeWithBackups[] };
-}
-
 type CombinedProps =
+  & WithImagesProps
+  & WithLinodesProps
   & WithTypesProps
   & RegionsContextProps
   & WithStyles<ClassNames>
-  & PreloadedProps
   & StateProps
   & RouteComponentProps<{}>;
 
@@ -80,18 +76,6 @@ interface QueryStringOptions {
   stackScriptID: string;
   stackScriptUsername: string;
 }
-
-const preloaded = PromiseLoader<{}>({
-  linodes: () => getLinodes()
-    /*
-     * @todo: We're only allowing the user to select from their first 100
-     * Linodes
-     */
-    .then(response => response.data || []),
-
-  images: () => getImages()
-    .then(response => response.data || []),
-});
 
 const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
   const subheading = imageInfo
@@ -157,7 +141,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   setSelectedRegionByLinodeID(linodeID: number): void {
     const selectedLinode = filter(
       (linode: Linode.LinodeWithBackups) => linode.id === linodeID,
-      this.props.linodes.response
+      this.props.linodesData
     );
     if (selectedLinode.length > 0) {
       this.setState({ selectedRegionIDFromLinode: selectedLinode[0].region });
@@ -178,7 +162,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   }
 
   extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
-    const images = this.props.images.response || [];
+    const images = this.props.imagesData || [];
     const types = this.props.typesData || [];
     return linodes.map(linode =>
       compose<Linode.Linode, Partial<ExtendedLinode>, Partial<ExtendedLinode>>(
@@ -204,7 +188,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
           <FromImageContent
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regionsData}
-            images={this.props.images.response}
+            images={this.props.imagesData}
             types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
@@ -230,7 +214,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             selectedBackupFromQuery={this.state.selectedBackupIDFromQueryString}
             selectedLinodeFromQuery={this.state.selectedLinodeIDFromQueryString}
             selectedRegionIDFromLinode={this.state.selectedRegionIDFromLinode}
-            linodes={this.props.linodes.response}
+            linodes={this.props.linodesData}
             types={this.props.typesData}
             extendLinodes={this.extendLinodes}
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
@@ -255,7 +239,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regionsData}
             types={this.props.typesData}
-            linodes={this.props.linodes.response}
+            linodes={this.props.linodesData}
             extendLinodes={this.extendLinodes}
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
@@ -272,7 +256,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
           <FromStackScriptContent
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regionsData}
-            images={this.props.images.response}
+            images={this.props.imagesData}
             types={this.props.typesData}
             getTypeInfo={this.getTypeInfo}
             getRegionInfo={this.getRegionInfo}
@@ -342,11 +326,11 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   render() {
     const { selectedTab } = this.state;
 
-    const { classes, regionsLoading } = this.props;
+    const { classes, regionsLoading, imagesLoading } = this.props;
 
     const tabRender = this.tabs[selectedTab].render;
 
-    if (regionsLoading) { return <CircleProgress />; }
+    if (regionsLoading || imagesLoading) { return <CircleProgress />; }
 
     return (
       <StickyContainer>
@@ -436,8 +420,31 @@ const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose(
-  preloaded,
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+  imagesLoading: boolean;
+  imagesError?: string;
+}
+
+interface WithLinodesProps {
+  linodesData: Linode.Linode[]
+  linodesLoading: boolean;
+  linodesError?: Linode.ApiFieldError[];
+}
+
+export default composeComponent<CombinedProps, {}>(
+  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
+    ...ownProps,
+    imagesData,
+    imagesLoading,
+    imagesError,
+  })),
+  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
+    ...ownProps,
+    linodesData,
+    linodesLoading,
+    linodesError,
+  })),
   regionsContext,
   withTypes,
   styled,
