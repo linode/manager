@@ -5,7 +5,7 @@ export const linodeDescription = (
   memory: number,
   disk: number,
   vcpus: number,
-  imageId: string,
+  imageId: string | null,
   images: Linode.Image[]
 ) => {
   const image = (images && images.find((img:Linode.Image) => img.id === imageId))
