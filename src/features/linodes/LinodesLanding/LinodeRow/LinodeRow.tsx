@@ -6,9 +6,10 @@ import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import withImages from 'src/containers/withImages.container';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-// import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import hasMutationAvailable, { HasMutationAvailable } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
@@ -25,10 +26,12 @@ import LinodeRowTagCell from './LinodeRowTagCell';
 interface Props {
   linodeBackups: Linode.LinodeBackups;
   linodeId: number;
+  linodeImage: string | null;
   linodeIpv4: string[];
   linodeIpv6: string;
   linodeLabel: string;
   linodeRegion: string;
+  linodeSpecs: Linode.LinodeSpecs;
   linodeStatus: Linode.LinodeStatus;
   linodeType: null | string;
   linodeTags: string[];
@@ -41,6 +44,7 @@ export type CombinedProps =
   & Props
   & HasMutationAvailable
   & WithDisplayType
+  & WithImagesProps
   & WithRecentEvent
   & WithNotifications
   & StyleProps
@@ -48,13 +52,21 @@ export type CombinedProps =
 export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
+    displayType,
+    imagesData,
     linodeBackups,
     linodeId,
+    linodeImage,
     linodeIpv4,
     linodeIpv6,
     linodeLabel,
     linodeNotifications,
     linodeRegion,
+    linodeSpecs: {
+      memory,
+      disk,
+      vcpus,
+    },
     linodeStatus,
     linodeTags,
     mostRecentBackup,
@@ -66,8 +78,18 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
   } = props;
   const loading = linodeInTransition(linodeStatus, recentEvent);
 
+  const description = getLinodeDescription(
+    displayType,
+    memory,
+    disk,
+    vcpus,
+    linodeImage,
+    imagesData,
+    )
+
   const headCell = <LinodeRowHeadCell
     loading={loading}
+    linodeDescription={description}
     linodeId={linodeId}
     linodeRecentEvent={recentEvent}
     linodeLabel={linodeLabel}
@@ -126,10 +148,18 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+}
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withRecentEvent,
   withDisplayType,
+  withImages((ownProps, imagesData, imagesLoading) => ({
+    ...ownProps,
+    imagesData: imagesData.filter(i => i.is_public === true),
+  })),
   hasMutationAvailable,
   withNotifications,
 );

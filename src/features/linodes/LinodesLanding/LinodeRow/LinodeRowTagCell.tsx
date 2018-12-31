@@ -25,10 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   tagLink: {
     color: `${theme.color.blueDTwhite} !important`,
   },
-  wrapper: {
-    width: '50% !important',
-    height: '20px !important',
-  },
+  wrapper: {},
 });
 
 interface Props {

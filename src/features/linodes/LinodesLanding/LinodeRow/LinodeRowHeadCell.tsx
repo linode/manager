@@ -6,7 +6,13 @@ import TableCell from 'src/components/TableCell';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
-type ClassNames = 'root' | 'link' | 'tagWrapper' | 'loadingStatus' | 'labelWrapper' | 'status' | 'labelRow';
+type ClassNames = 'root'
+ | 'link'
+ | 'loadingStatus'
+ | 'labelWrapper'
+ | 'linodeDescription'
+ | 'status'
+ | 'labelRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
@@ -41,11 +47,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
-  }
+  },
+  linodeDescription: {
+    paddingTop: theme.spacing.unit / 2,
+  },
 });
 
 interface Props {
   loading: boolean;
+  linodeDescription: string;
   linodeId: number;
   linodeLabel: string;
   linodeStatus: Linode.LinodeStatus;
@@ -57,6 +67,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
   const {
     classes,
+    linodeDescription,
     linodeId,
     linodeLabel,
     linodeStatus,
@@ -88,6 +99,9 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
             <div className={classes.status} >
               <LinodeStatusIndicator status={linodeStatus} />
             </div>
+            <Typography className={classes.linodeDescription}>
+                {linodeDescription}
+            </Typography>
           </div>
         </div>
       </Link>
