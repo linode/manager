@@ -4,7 +4,6 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
-import Tags from 'src/components/Tags';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
@@ -41,7 +40,6 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeStatus: Linode.LinodeStatus;
-  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
 }
 
@@ -53,7 +51,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
     linodeId,
     linodeLabel,
     linodeStatus,
-    linodeTags,
     loading,
     linodeRecentEvent,
   } = props;
@@ -86,9 +83,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
             </div>
           </Grid>
         </Grid>
-        <div className={classes.tagWrapper}>
-          <Tags tags={linodeTags} />
-        </div>
       </Link>
     </TableCell>
   );
