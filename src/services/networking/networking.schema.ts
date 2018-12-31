@@ -19,5 +19,5 @@ export const assignAddressesSchema = object().shape({
 
 export const shareAddressesSchema = object().shape({
   linode_id: number().required(),
-  ips: array().of(string()).required()
+  ips: array().of(string())
 });

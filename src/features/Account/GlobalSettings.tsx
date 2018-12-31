@@ -11,6 +11,7 @@ import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
@@ -59,10 +60,9 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     if (!errors) {
       return;
     }
-    const errorText = pathOr(
-      "There was an error updating your account settings.",
-      ['response', 'data', 'errors', 0, 'reason'],
-      errors
+    const errorText = getErrorStringOrDefault(
+      errors,
+      "There was an error updating your account settings."
     );
 
     return this.props.enqueueSnackbar(errorText, {
