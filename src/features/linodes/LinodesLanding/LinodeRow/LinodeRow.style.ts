@@ -10,6 +10,9 @@ type ClassNames =
   | 'ipCellWrapper'
   | 'planCell'
   | 'regionCell'
+  | 'iconTableCell'
+  | 'icon'
+  | 'iconGridCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   actionCell: {
@@ -31,6 +34,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '&:hover .backupIcon': {
       fill: theme.palette.primary.main,
     },
+  },
+  iconTableCell: {
+    [theme.breakpoints.up('md')]: {
+      width: '4%',
+      padding: 4,
+    },
+  },
+  icon: {
+    position: 'relative',
+    top: 1,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
+  },
+  iconGridCell: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: 4,
   },
   ipCell: {
     width: '25%',

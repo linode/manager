@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
@@ -79,12 +81,17 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
       </ LinodeRowLoading>}
       <TableRow
         key={linodeId}
-        className={`${classes.bodyRow}`}
+        className={classes.bodyRow}
         data-qa-loading
         data-qa-linode={linodeLabel}
         rowLink={`/linodes/${linodeId}`}
         arial-label={linodeLabel}
       >
+        <TableCell className={classes.iconTableCell}>
+          <Grid item className={classes.iconGridCell}>
+            <LinodeIcon className={classes.icon} />
+          </Grid>
+        </TableCell>
         {!loading && headCell}
         <TableCell parentColumn="Plan" className={classes.planCell}>
           <Typography variant="body1">{displayType}</Typography>
