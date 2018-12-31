@@ -11,7 +11,8 @@ type CSSClasses =  'root'
 | 'icon'
 | 'row'
 | 'ip'
-| 'ipLink';
+| 'ipLink'
+| 'show';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes popUp': {
@@ -32,6 +33,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     '&:last-child': {
       marginBottom: 0,
     },
+    '&:hover': {
+      '& $show': {
+        opacity: 1
+      }
+    }
   },
   row: {
     display: 'flex',
@@ -60,7 +66,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     display: 'inline-block',
     width: 28,
     transition: theme.transitions.create(['color']),
+
   },
+  show: {
+    opacity: 0, // Hide until the component is hovered,
+    transition: theme.transitions.create(['opacity']),
+  }
 });
 
 interface Props {
@@ -98,7 +109,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes, copyRight } = this.props;
 
     return (
-      <div className={classes.ipLink} data-qa-copy-ip>
+      <div className={`${classes.ipLink} ${classes.show}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
