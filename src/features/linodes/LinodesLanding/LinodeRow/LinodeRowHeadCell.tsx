@@ -30,10 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: '100%'
     },
   },
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    marginLeft: theme.spacing.unit * 4,
-  },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
   },
