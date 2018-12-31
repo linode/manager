@@ -138,6 +138,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     return (
       <div className={`dif ${classes.root}`}>
         { this.renderIP(formattedIPS[0], copyRight) }
+        <span className={classes.show}>
         {
           formattedIPS.length > 1 && <ShowMore
             items={tail(formattedIPS)}
@@ -145,6 +146,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
               return ipsAsArray.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
             }} />
         }
+        </span>
       </div>
     );
   }
