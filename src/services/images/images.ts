@@ -1,5 +1,7 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
+import store from 'src/store';
+import { actions } from 'src/store/reducers/resources/images';
 import { createImageSchema, updateImageSchema } from './image.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -15,7 +17,7 @@ export const getImage = (imageId: string) =>
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('GET'),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 /**
  * Returns a paginated list of Images.
@@ -28,7 +30,7 @@ export const getImages = (params: any = {}, filters: any = {}) =>
     setParams(params),
     setXFilter(filters),
   )
-  .then(response => response.data);
+    .then(response => response.data);
 
 /**
  * Create a private gold-master Image from a Linode Disk.
@@ -53,7 +55,11 @@ export const createImage = (
     setURL(`${API_ROOT}/images`),
     setMethod('POST'),
     setData(data, createImageSchema)
-  );
+  ).then((response) => {
+    const { data } = response;
+    store.dispatch(actions.addOrUpdateImage(data))
+    return response;
+  });
 };
 
 /**
@@ -69,6 +75,7 @@ export const updateImage = (
   description?: string
 ) => {
 
+
   const data = {
     ...(label && { label }),
     ...(description && { description })
@@ -78,7 +85,12 @@ export const updateImage = (
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
     setData(data, updateImageSchema)
-  );
+  )
+    .then((response) => {
+      const { data } = response;
+      store.dispatch(actions.addOrUpdateImage(data))
+      return response;
+    });
 };
 
 /**
@@ -91,4 +103,8 @@ export const deleteImage = (imageId: string) => {
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('DELETE'),
   )
+    .then((response) => {
+      store.dispatch(actions.removeImage(imageId));
+      return response;
+    })
 }

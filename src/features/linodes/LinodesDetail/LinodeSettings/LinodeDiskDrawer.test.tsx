@@ -25,7 +25,7 @@ const props = {
   onResetImageMode: jest.fn(),
   label: "This drawer",
   filesystem: "ext4",
-  size: 50
+  size: 50,
 }
 
 const component = shallow(<LinodeDiskDrawer {...props} />)

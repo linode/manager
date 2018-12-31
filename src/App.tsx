@@ -27,6 +27,7 @@ import { getRegions } from 'src/services/misc';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { async as domainsAsync } from 'src/store/reducers/resources/domains';
+import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
@@ -217,11 +218,15 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    const { getAccountSettings, getNotifications, getProfile, requestDomains, requestLinodes, requestTypes } = this.props.actions;
+    const { actions } = this.props;
 
-    requestDomains();
-    requestLinodes();
-    requestTypes();
+    actions.requestDomains();
+    actions.requestImages();
+    actions.requestLinodes();
+    actions.requestNotifications();
+    actions.requestProfile();
+    actions.requestSettings();
+    actions.requestTypes();
 
     /*
      * We want to listen for migration events side-wide
@@ -254,10 +259,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (notifications.welcome.get() === 'open') {
       this.setState({ welcomeBanner: true });
     }
-
-    getProfile();
-    getNotifications();
-    getAccountSettings();
 
     this.state.regionsContext.request();
   }
@@ -372,11 +373,12 @@ const themeDataAttr = () => {
 
 interface DispatchProps {
   actions: {
-    getProfile: () => void;
-    getNotifications: () => void;
-    getAccountSettings: () => void;
     requestDomains: () => void;
+    requestImages: () => void;
     requestLinodes: () => void;
+    requestNotifications: () => void;
+    requestProfile: () => void;
+    requestSettings: () => void;
     requestTypes: () => void;
   },
 }
@@ -384,11 +386,12 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
   return {
     actions: {
-      getProfile: () => dispatch(requestProfile()),
-      getNotifications: () => dispatch(requestNotifications()),
-      getAccountSettings: () => dispatch(requestAccountSettings()),
       requestDomains: () => dispatch(domainsAsync.requestDomains()),
+      requestImages: () => dispatch(imagesAsync.requestImages()),
       requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
+      requestNotifications: () => dispatch(requestNotifications()),
+      requestProfile: () => dispatch(requestProfile()),
+      requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
     }
   };

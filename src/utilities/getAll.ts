@@ -4,7 +4,6 @@ import { range } from 'ramda';
 import { sendEvent } from 'src/utilities/analytics';
 
 import { getDomains } from 'src/services/domains';
-import { getImages } from 'src/services/images';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
@@ -50,7 +49,7 @@ export const getAll: <T>(getter: GetFunction) => (params?: any, filter?: any) =>
         .then(({ data: firstPageData, page, pages, results }) => {
 
           // If we only have one page, return it.
-          if (page === pages) { 
+          if (page === pages) {
             return {
               data: firstPageData,
               results
@@ -69,7 +68,7 @@ export const getAll: <T>(getter: GetFunction) => (params?: any, filter?: any) =>
             .then(resultPages => {
               const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage]
-            }, firstPageData); 
+            }, firstPageData);
               return {
                 data: combinedData,
                 results
@@ -104,14 +103,12 @@ const getAllLinodes = getAll<Linode.Linode>(getLinodes);
 const getAllNodeBalancers = getAll<Linode.NodeBalancer>(getNodeBalancers);
 const getAllVolumes = getAll<Linode.Volume>(getVolumes);
 const getAllDomains = getAll<Linode.Domain>(getDomains);
-const getAllImages = getAll<Linode.Image>(getImages);
 
 export type GetAllHandler = (
   linodes: Linode.Linode[],
   nodebalancers: Linode.NodeBalancer[],
   volumes: Linode.Volume[],
   domains: Linode.Domain[],
-  images: Linode.Image[]
 ) => any;
 
 /**
@@ -129,29 +126,15 @@ export const getAllEntities = (cb: GetAllHandler) =>
     getAllNodeBalancers(),
     getAllVolumes(),
     getAllDomains(),
-    getAllImages(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {
-      /**
-       * Get the number of public images for the purpose of substracting them
-       * from the count we send to analytics
-       */
-      /** for some reason typescript compiler thinks ...results is implicitly typed as 'any' */
-      // @ts-ignore
-      const numberOfPublicImages = results[4].data.reduce((acc, eachImage) => {
-        if (eachImage.is_public) {
-          return acc + 1;
-        }
-        return acc;
-      }, 0);
 
       const resultData = [
         results[0].data,
         results[1].data,
         results[2].data,
         results[3].data,
-        results[4].data,
       ]
 
       /** total number of entities returned, as determined by the results API property */
@@ -159,9 +142,6 @@ export const getAllEntities = (cb: GetAllHandler) =>
       + results[1].results
       + results[2].results
       + results[3].results
-      /** count of images without public images */
-      + (results[4].results - numberOfPublicImages)
-
       sendGetAllRequestToAnalytics(numOfEntities);
       /** for some reason typescript thinks ...results is implicitly typed as 'any' */
       // @ts-ignore
@@ -172,7 +152,7 @@ export const getAllEntities = (cb: GetAllHandler) =>
 /**
  * sends off an analytics event with how many entities came back from a search request
  * for the purposes of determining how many entities does an average user have.
- * 
+ *
  * @param { number } howManyThingsRequested - how many entities came back in our
  * network request to get all the things
  */
