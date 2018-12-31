@@ -8,6 +8,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+// import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import hasMutationAvailable, { HasMutationAvailable } from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
@@ -70,7 +71,6 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
     linodeId={linodeId}
     linodeRecentEvent={recentEvent}
     linodeLabel={linodeLabel}
-    linodeTags={linodeTags}
     linodeStatus={linodeStatus}
   />
 

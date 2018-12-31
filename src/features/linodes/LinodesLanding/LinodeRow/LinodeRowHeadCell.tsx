@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
-import Tags from 'src/components/Tags';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
@@ -50,7 +49,6 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeStatus: Linode.LinodeStatus;
-  linodeTags: string[];
   linodeRecentEvent?: Linode.Event;
 }
 
@@ -62,7 +60,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
     linodeId,
     linodeLabel,
     linodeStatus,
-    linodeTags,
     loading,
     linodeRecentEvent,
   } = props;
@@ -92,9 +89,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
               <LinodeStatusIndicator status={linodeStatus} />
             </div>
           </div>
-        </div>
-        <div className={classes.tagWrapper}>
-          <Tags tags={linodeTags} />
         </div>
       </Link>
     </TableCell>
