@@ -27,7 +27,7 @@ export interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
-export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> {
+export class StackScriptRow extends React.Component<CombinedProps, {}> {
   render() {
     const {
       classes,
@@ -114,4 +114,4 @@ export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> 
 export default recompose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
   withStyles(styles),
-)(StackScriptSelectionRow);
+)(StackScriptRow);
