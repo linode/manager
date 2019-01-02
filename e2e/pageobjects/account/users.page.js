@@ -4,11 +4,11 @@ import Page from '../page.js';
 
 class Users extends Page {
 
-    get usersHeader() { return $('[data-qa-title]'); }
+    get usersHeader() { return this.pageTitle; }
     get usernameColumn() { return $('[data-qa-username-column]'); }
     get emailColumn() { return $('[data-qa-email-column]'); }
     get restrictionColumn() { return $('[data-qa-restriction-column]'); }
-    get addUserButton() { return $('[data-qa-icon-text-link="Add a User"]'); }
+    get addUserButton() { return this.addIcon('Add a User'); }
 
     get userRow() { return $('[data-qa-user-row]'); }
     get userRows() { return $$('[data-qa-user-row]'); }

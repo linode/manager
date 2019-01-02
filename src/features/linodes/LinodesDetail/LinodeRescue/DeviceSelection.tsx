@@ -73,11 +73,12 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
                       className="selectHeader"
                       disabled
                       key={type}
+                      data-qa-type={titlecase(type)}
                     >
                       {titlecase(type)}
                     </MenuItem>,
                     ...(items as any[]).map(({ _id, label }) =>
-                      <MenuItem key={_id} value={_id}>{label}</MenuItem>),
+                      <MenuItem key={_id} value={_id} data-qa-option={label}>{label}</MenuItem>),
                   ])
               }
             </Select>

@@ -1,4 +1,8 @@
 const { constants } = require('../../constants');
+const {
+    generatePassword,
+    getDistrobutionLabel,
+ } = require('../../utils/common')
 
 import Page from '../page';
 
@@ -21,7 +25,6 @@ class Settings extends Page {
     }
     get disk() { return $('[data-qa-disk]'); }
     get disks() { return $$('[data-qa-disk]'); }
-    get password() { return $('[data-qa-hide] input'); }
     get passwordSave() { return $('[data-qa-password-save]'); }
     get alerts() { return $$('[data-qa-alert]'); }
     get alert() { return $('data-qa-alert] > input'); }
@@ -31,6 +34,65 @@ class Settings extends Page {
     get watchdogPanel() { return $('[data-qa-watchdog-panel]'); }
     get watchdogToggle() { return $('[data-qa-watchdog-toggle]'); }
     get watchdogDesc() { return $('[data-qa-watchdog-desc]'); }
+
+    //Add disk drawer
+    get createEmptyDisk() { return $('[data-qa-radio="Create Empty Disk"]'); }
+    get createFromImage() { return $('[data-qa-radio="Create from Image"]'); }
+    get diskLabelInput() { return $(`${this.drawerBase.selector} [data-qa-label] input`); }
+    get diskSizeInput() { return $('[data-qa-disk-size]'); }
+    get addDiskButton() { return $('[data-qa-disk-submit]'); }
+    get password() { return $('[data-qa-password-input] input'); }
+
+
+    addDiskDrawerDisplays(){
+        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.createEmptyDisk.waitForVisible(constants.wait.normal);
+        this.createFromImage.waitForVisible(constants.wait.normal);
+        this.diskLabelInput.waitForVisible(constants.wait.normal);
+        this.diskSizeInput.waitForVisible(constants.wait.normal);
+        this.addDiskButton.waitForVisible(constants.wait.normal);
+    }
+
+    addDisk(diskLabel){
+      let i = 0;
+        do {
+            this.addDiskButton.click();
+            browser.pause(2000);
+            i++;
+        } while ($('[data-qa-error]').isVisible() && i < 10);
+        this.drawerBase.waitForVisible(constants.wait.normal,true);
+        this.diskRow(diskLabel).waitForVisible(constants.wait.normal);
+    }
+
+    diskRow(diskLabel){
+        return $(`[data-qa-disk="${diskLabel}"]`);
+    }
+
+    addEmptyDisk(diskLabel,diskSize){
+        this.diskLabelInput.setValue(diskLabel);
+        this.diskSizeInput.$('input').setValue(diskSize);
+        this.addDisk(diskLabel);
+    }
+
+    addDiskFromImage(diskLabel, imageId, diskSize){
+        this.createFromImage.click();
+        const imagePassword = $(`${this.drawerBase.selector} ${this.password.selector}`);
+        imagePassword.waitForVisible(constants.wait.normal);
+        const imageSelect = $('[data-qa-enhanced-select="Select an Image"] input');
+        imageSelect.waitForVisible(constants.wait.normal);
+        this.diskLabelInput.setValue(diskLabel);
+        imageSelect.click();
+        const displayImage = getDistrobutionLabel([imageId])[0];
+        imageSelect.setValue(displayImage);
+        const imageSelection = `[data-qa-option="linode/${imageId}"]`;
+        $(imageSelection).waitForVisible(constants.wait.normal);
+        $(imageSelection).click();
+        $(imageSelection).waitForVisible(constants.wait.normal,true);
+        imagePassword.setValue(generatePassword());
+        this.diskSizeInput.$('input').setValue(diskSize);
+        browser.pause(1000);
+        this.addDisk(diskLabel);
+    }
 
     getConfigLabels() {
         return this.linodeConfigs.map(c => c.getAttribute('data-qa-config'));
@@ -70,18 +132,6 @@ class Settings extends Page {
 
         this.confirm.click();
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);
-
-        browser.waitUntil(function() {
-            if (browser.isVisible('[data-qa-placeholder-title]')) {
-                return true;
-            }
-
-            if (browser.isVisible('[data-qa-view]')) {
-                const labels = $$('[data-qa-label]').map(l => l.getText());
-                return !labels.include(linodeLabel);
-            }
-            return false;
-        }, constants.wait.normal, 'Linode failed to be removed');
     }
 
     updateLabel(label) {

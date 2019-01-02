@@ -34,20 +34,6 @@ class UserDetail extends Page {
         this.usernameField.$('input').setValue(username);
         this.saveButton.click();
     }
-
-    deleteUser() {
-        this.deleteButton.click();
-        this.dialogTitle.waitForText(constants.wait.normal);
-
-        expect(this.dialogTitle.getText()).toBe('Confirm Deletion');
-        expect(this.dialogContent.getText()).toContain('will be permanently deleted');
-        expect(this.dialogConfirmCancel.isVisible()).toBe(true);
-        expect(this.dialogConfirmDelete.isVisible()).toBe(true);
-
-        this.dialogTitle.$('..').$(this.dialogConfirmDelete.selector).click();
-        this.waitForNotice('deleted successfully', constants.wait.normal);
-        expect(browser.getUrl()).toMatch(/\/users$/);
-    }
 }
 
 export default new UserDetail();
