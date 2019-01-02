@@ -1,45 +1,58 @@
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-
-import IPAddress, { sortIPAddress } from './IPAddress';
+import { IPAddress, sortIPAddress } from './IPAddress';
 
 const publicIP = '8.8.8.8';
 const publicIP2 = '45.45.45.45';
 const privateIP = '192.168.220.103';
 const privateIP2 = '192.168.220.102';
 
+const classes = {
+  root: '',
+  left: '',
+  right: '',
+  icon: '',
+  row: '',
+  ip: '',
+  ipLink: '',
+  hide: 'hide'
+}
+
+const component = shallow(<IPAddress classes={classes} ips={['8.8.8.8', '8.8.4.4']}  />)
+
 describe('IPAddress', () => {
   it('should render without error and display and IP address', () => {
-    const result = mount(
-      <LinodeThemeWrapper>
-        <IPAddress
-          ips={['8.8.8.8']}
-        />
-      </LinodeThemeWrapper>,
-    );
-
-    const rendered = result.find('IPAddress');
-    const ipText = result.find('.ip').text();
+    const rendered = component.find('[data-qa-ip-main]');
+    const ipText = rendered.text();
 
     expect(rendered).toHaveLength(1);
     expect(ipText).toBe('8.8.8.8');
   });
 
-  it('should render ShowMore with props.items = IPs', () => {
-    const result = mount(
-      <LinodeThemeWrapper>
-        <IPAddress
-          ips={['8.8.8.8', '8.8.4.4']}
-          showMore
-        />
-      </LinodeThemeWrapper>,
-    );
-    const showmore = result.find('ShowMore');
+  it("should not display ShowMore button unless the showMore prop is passed", () => {
+    expect(component.find('[data-qa-ip-more]')).toHaveLength(0);
+  });
 
+  it('should render ShowMore with props.items = IPs', () => {
+    component.setProps({ showMore: true });
+    const showmore = component.find('[data-qa-ip-more]');
     expect(showmore.exists()).toBe(true);
     expect(showmore.prop('items')).toEqual(['8.8.4.4']);
+  });
+
+  it("should show the copy icon if copyRight is true", () => {
+    expect(component.find('[data-qa-copy-ip]')).toHaveLength(0);
+    component.setProps({ copyRight: true });
+    expect(component.find('[data-qa-copy-ip]')).toHaveLength(1);
+  });
+
+  it("should render the copyIcon, but not show it, if copyRight is true and showCopyOnHover is true", () => {
+    expect(component.find('.hide')).toHaveLength(0);
+    component.setProps({ copyRight: true, showCopyOnHover: true });
+    const copy = component.find('[data-qa-copy-ip]');
+    expect(copy).toHaveLength(1);
+    expect(component.find('.hide')).toHaveLength(1);
   });
 
   describe("IP address sorting", () => {
