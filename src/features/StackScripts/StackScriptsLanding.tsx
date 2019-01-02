@@ -47,13 +47,13 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         {!!history.location.state && !!history.location.state.successMessage &&
           <Notice success text={history.location.state.successMessage} />
         }
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item>
+        <Grid container justify="space-between" alignItems="flex-end" className="headerWithDoc">
+          <Grid item className="py0">
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               StackScripts
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="py0">
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink

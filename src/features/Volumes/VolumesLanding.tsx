@@ -255,7 +255,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
-        <Grid container justify="space-between" alignItems="flex-end" spacing={0}>
+        <Grid container justify="space-between" alignItems="flex-end" className="headerWithDoc">
           <Grid item className='py0'>
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               Volumes

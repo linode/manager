@@ -233,7 +233,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <Grid container>
         <DocumentTitleSegment segment="Linodes" />
-        <Grid container justify="space-between" item xs={12}>
+        <Grid container justify="space-between" item xs={12} className="headerWithDocLG">
           <Grid item className={classes.title}>
             <Typography
               role="header"

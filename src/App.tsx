@@ -150,8 +150,11 @@ const styles: StyleRulesCallback = (theme) => ({
     },
   },
   switchWrapperDocsColl: {
-    '& > div:first-child': {
+    '& .headerWithDoc': {
       paddingRight: 40,
+    },
+    '& .headerWithDocLG': {
+      paddingRight: 60,
     }
   },
   absSidebar: {

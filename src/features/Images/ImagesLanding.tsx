@@ -253,13 +253,13 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
-          <Grid item>
+        <Grid container justify="space-between" alignItems="flex-end" className="headerWithDoc" updateFor={[]}>
+          <Grid item className="py0">
             <Typography variant="h1" data-qa-title className={classes.title}>
               Images
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="py0">
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink

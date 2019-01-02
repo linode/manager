@@ -196,13 +196,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           label="Group by Tag:"
         />
         <DocumentTitleSegment segment="Domains" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
-          <Grid item>
+        <Grid container justify="space-between" alignItems="flex-end" className="headerWithDoc">
+          <Grid item className="py0">
             <Typography role="header" variant="h1" data-qa-title className={classes.title}>
               Domains
                     </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="py0">
             <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
               <Grid item>
                 <AddNewLink

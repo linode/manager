@@ -200,13 +200,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item>
+        <Grid container justify="space-between" alignItems="flex-end" className="headerWithDoc">
+          <Grid item className="py0">
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               NodeBalancers
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="py0">
             <Grid container alignItems="flex-end">
               <Grid item>
                 <AddNewLink
