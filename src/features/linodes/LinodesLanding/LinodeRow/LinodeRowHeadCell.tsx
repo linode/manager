@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -82,6 +83,9 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
     >
       <Link to={`/linodes/${linodeId}`} className={classes.link}>
         <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <LinodeIcon />
+          </Grid>
           <Grid item className="py0">
             <LinodeStatusIndicator status={linodeStatus} />
           </Grid>
