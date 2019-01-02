@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       marginBottom: 0,
     },
     '&:hover': {
-      '& $show': {
+      '& $hide': {
         opacity: 1
       }
     }
