@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: theme.spacing.unit / 4,
   },
   root: {
-    width: '30%',
+    width: '75%',
     '& h3': {
       transition: theme.transitions.create(['color']),
     },
