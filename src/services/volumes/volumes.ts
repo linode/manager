@@ -153,7 +153,7 @@ export const updateVolume = (volumeId: number, data: { label: string, tags?: str
 .then(volume => {
   store.dispatch(actions.updateVolume(volume))
   return volume;
-});;
+});
 
 /**
  * createVolume
