@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.44.0] - 2019.01.03
+### Added:
+- Printer friendly invoice page by navigating to Account > Billing info > Recent Invoices > Invoice
+  - Clicking Print/Download navigates to a printer friendly invoice page and opens a a browser print preview to print and save to a PDF.
+  - CTL/Command + P from the invoice page will achieve the same as clicking the Print/Download button.
+
 ## [0.43.0] - 2018.12.20
 ### Added:
 - Users can now display their Linodes grouped by its tags.
