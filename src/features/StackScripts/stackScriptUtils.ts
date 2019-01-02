@@ -106,7 +106,7 @@ export const getErrorText = (error: any) => {
   const reason = pathOr('', ['data', 'errors', 0, 'reason'], error);
 
   if (reason === 'Unauthorized') {
-    return 'You are not authorized to view StackScripts for this account. ';
+    return 'You are not authorized to view StackScripts for this account.';
   }
   return 'There was an error loading your StackScripts. Please try again later.';
 }
