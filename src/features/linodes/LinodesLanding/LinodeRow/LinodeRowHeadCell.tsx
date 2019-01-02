@@ -48,7 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   linodeDescription: {
     paddingTop: theme.spacing.unit / 2,
     [theme.breakpoints.up('lg')]: {
-      whiteSpace: 'nowrap',
+      whiteSpace: 'nowrap'
     }
   },
 });
