@@ -4,7 +4,7 @@ import { actions } from './actions';
 import { async } from './async';
 
 const { deleteVolume } = actions;
-const { requestVolumeForStore } = async;
+const { requestVolumeForStore, requestVolumes } = async;
 
 const volumeEventsHandler: EventHandler = (event, dispatch) => {
   const { action, entity, status } = event;
@@ -24,8 +24,11 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
 
     /** Create Volume */
     case 'volume_create':
-    case 'volume_clone':
       return handleVolumeCreation(dispatch, status, id);
+
+    /** Clone Volume */
+    case 'volume_clone':
+      return handleVolumeClone(dispatch, status, id);
 
     default:
       return;
@@ -70,6 +73,18 @@ const handleVolumeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
     case 'scheduled':
     case 'started':
       return dispatch(requestVolumeForStore(id));
+
+    default:
+      return;
+  }
+}
+
+const handleVolumeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number) => {
+  switch (status) {
+    case 'finished':
+    case 'failed':
+    case 'notification':
+      return dispatch(requestVolumes);
 
     default:
       return;
