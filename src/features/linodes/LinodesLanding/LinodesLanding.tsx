@@ -379,6 +379,13 @@ const toggleGroupState = withStateHandlers(
   {
     toggleGroupByTag: (state, ownProps) => (e, checked) => {
       storage.views.grouped.set(checked ? 'true' : 'false')
+
+      sendEvent({
+        category: ListLinodes.eventCategory,
+        action: 'group by tag',
+        label: String(checked),
+      });
+
       return { ...state, groupByTags: checked };
     },
   },
@@ -425,7 +432,7 @@ export const enhanced = compose(
   withSnackbar,
   withWidth(),
   connected,
-  withImages((ownProps,imagesData,imagesLoading,imagesError) => ({
+  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesLoading,
     imagesError,

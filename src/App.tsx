@@ -24,9 +24,9 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getRegions } from 'src/services/misc';
+import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
-import { async as domainsAsync } from 'src/store/reducers/resources/domains';
 import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
@@ -386,7 +386,7 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
   return {
     actions: {
-      requestDomains: () => dispatch(domainsAsync.requestDomains()),
+      requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(imagesAsync.requestImages()),
       requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
       requestNotifications: () => dispatch(requestNotifications()),

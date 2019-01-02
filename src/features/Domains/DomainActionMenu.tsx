@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { RouteComponentProps, withRouter } from 'react-router';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
@@ -7,10 +7,9 @@ interface Props {
   onClone: (domain: string, id: number) => void;
   domain: string;
   id: number;
-  history: any;
 }
 
-type CombinedProps = Props;
+type CombinedProps = RouteComponentProps<any> & Props;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   goToDomain = () => {
@@ -77,4 +76,4 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default LinodeActionMenu;
+export default withRouter(LinodeActionMenu);

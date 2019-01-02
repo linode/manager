@@ -1,16 +1,7 @@
 import { API_ROOT } from 'src/constants';
 import store from 'src/store';
-import { actions } from 'src/store/reducers/resources/domains';
-
-import Request,
-{
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter,
-} from '../index';
-
+import { addDomain, deleteDomain as _deleteDomain, updateDomain as _updateDomain } from 'src/store/domains/domains.actions';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 import { createDomainSchema, importZoneSchema, updateDomainSchema } from './domains.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -54,7 +45,7 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
   )
     .then(response => response.data)
     .then(domain => {
-      store.dispatch(actions.addDomain(domain));
+      store.dispatch(addDomain(domain));
       return domain;
     });
 
@@ -72,7 +63,7 @@ export const updateDomain = (domainId: number, data: Partial<Linode.Domain>) =>
   )
     .then(response => response.data)
     .then(domain => {
-      store.dispatch(actions.updateDomain(domain));
+      store.dispatch(_updateDomain(domain));
       return domain;
     })
 
@@ -88,7 +79,7 @@ export const deleteDomain = (domainID: number) =>
     setMethod('DELETE'),
   )
     .then(response => {
-      store.dispatch(actions.deleteDomain(domainID));
+      store.dispatch(_deleteDomain(domainID));
       return response.data;
     });
 
