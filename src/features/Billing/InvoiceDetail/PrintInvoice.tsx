@@ -15,7 +15,12 @@ import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { async } from 'src/store/reducers/resources/account';
 import InvoiceTable from './InvoiceTable';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'logoWrapper' | 'invoiceHeader' | 'logo';
+type ClassNames = 'root'
+  | 'backButton'
+  | 'titleWrapper'
+  | 'logoWrapper'
+  | 'invoiceHeader'
+  | 'logo';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -57,8 +62,6 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-
-
 type CombinedProps =
   & RouteComponentProps<{ invoiceId: number }>
   & StateProps
@@ -84,6 +87,9 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
         invoice,
         items,
       })
+      setTimeout(() => {
+        window.print();
+      }, 500);
     })
       .catch((error) => {
         this.setState({
@@ -124,8 +130,10 @@ class PrintInvoice extends React.Component<CombinedProps, State> {
             <Grid item xs={12} className={classes.logoWrapper}>
               <Logo className={classes.logo} data-qa-linode-logo/>
             </Grid>
+            <Grid item xs={12}>
+              <Typography variant='h2'>Invoice Date: {date}</Typography>
+            </Grid>
             <Grid item xs={6} data-qa-remit-to>
-              <Typography variant='body2'>Invoice Date: {date}</Typography>
               <Typography variant="subtitle1">Remit To:</Typography>
               <Typography variant='body2'>Linode, LLC</Typography>
               <Typography variant='body2'>249 Arch St.</Typography>

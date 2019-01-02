@@ -2,6 +2,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -67,6 +68,18 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
       });
   };
 
+  pressPrint = (e:any) => {
+    const { invoice } = this.state;
+    const evtobj = window.event? event : e;
+    if (evtobj.keyCode === 80 && (evtobj.ctrlKey || evtobj.metaKey)) {
+      e.preventDefault();
+      return (
+        invoice && window.open(`/account/billing/invoices/${invoice.id}/print`, "_blank")
+      )
+    }
+    return false;
+  };
+
   componentDidMount() {
     this.mounted = true;
     this.requestData();
@@ -80,18 +93,23 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { invoice, loading, errors, items } = this.state;
 
+    document.onkeydown = this.pressPrint;
+
     return (
       <Paper className={classes.root}>
         <Grid container>
           <Grid item xs={12}>
             <Grid container justify="space-between">
-              <Grid item className={classes.titleWrapper}>
+              <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
                 <Link to={`/account/billing`}>
                   <IconButton className={classes.backButton} data-qa-back-to-billing>
                     <KeyboardArrowLeft />
                   </IconButton>
                 </Link>
                 {invoice && <Typography role="header" variant="h2" data-qa-invoice-id>Invoice #{invoice.id}</Typography>}
+              </Grid>
+              <Grid item className={classes.titleWrapper} data-qa-printable-invoice>
+                {invoice && <Button type="primary" target="_blank" href={`/account/billing/invoices/${invoice.id}/print`}>Download / Print</Button>}
               </Grid>
               <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography role="header" variant="h2" data-qa-total={invoice.total}>Total ${Number(invoice.total).toFixed(2)}</Typography>}
@@ -102,10 +120,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             <InvoiceTable loading={loading} items={items} errors={errors} />
           </Grid>
           <Grid item xs={12}>
-            <Grid container justify="space-between">
-              <Grid item className={classes.titleWrapper} data-qa-printable-invoice>
-                {invoice && <a target="_blank" href={`/account/billing/invoices/${invoice.id}/print`}>Download / Print</a>}
-              </Grid>
+            <Grid container justify="flex-end">
               <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography role="header" variant="h2">Total ${Number(invoice.total).toFixed(2)}</Typography>}
               </Grid>
