@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: theme.spacing.unit / 4,
   },
   root: {
-    width: '75%',
+    width: '35%',
     '& h3': {
       transition: theme.transitions.create(['color']),
     },
@@ -47,6 +47,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   linodeDescription: {
     paddingTop: theme.spacing.unit / 2,
+    [theme.breakpoints.up('lg')]: {
+      whiteSpace: 'nowrap',
+    }
   },
 });
 
