@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import TableCell from 'src/components/TableCell';
@@ -101,12 +102,17 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
       </ LinodeRowLoading>}
       <TableRow
         key={linodeId}
-        className={`${classes.bodyRow}`}
+        className={classes.bodyRow}
         data-qa-loading
         data-qa-linode={linodeLabel}
         rowLink={`/linodes/${linodeId}`}
         arial-label={linodeLabel}
       >
+        <TableCell className={classes.iconTableCell}>
+          <div className={classes.iconGridCell}>
+            <LinodeIcon className={classes.icon} />
+          </div>
+        </TableCell>
         {!loading && headCell}
         <LinodeRowTagCell tags={linodeTags} />
         <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />

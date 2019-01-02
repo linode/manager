@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
@@ -11,7 +11,9 @@ type ClassNames = 'root'
  | 'link'
  | 'loadingStatus'
  | 'labelWrapper'
- | 'linodeDescription';
+ | 'linodeDescription'
+ | 'status'
+ | 'labelRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
@@ -22,22 +24,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: theme.spacing.unit / 4,
   },
   root: {
-    width: '35%',
+    width: '100%',
     '& h3': {
       transition: theme.transitions.create(['color']),
     },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+    [theme.breakpoints.up('xl')]: {
+      width: '35%'
     },
+  },
+  status: {
+    marginLeft: theme.spacing.unit / 2,
+    position: 'relative',
+    top: 0,
+    lineHeight: '0.8rem',
+  },
+  labelRow: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
   },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
   },
   linodeDescription: {
     paddingTop: theme.spacing.unit / 2,
-    [theme.breakpoints.up('lg')]: {
-      whiteSpace: 'nowrap'
-    }
   },
 });
 

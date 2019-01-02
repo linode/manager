@@ -13,6 +13,7 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
   return (
     <TableHead data-qa-table-head>
       <TableRow>
+        <TableCell />
         <TableSortCell
           label='label'
           direction={order}

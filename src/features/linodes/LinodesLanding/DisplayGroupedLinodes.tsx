@@ -139,7 +139,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     <React.Fragment>
                       <TableBody className={classes.groupContainer}>
                         <TableRow className={classes.tagHeaderRow}>
-                          <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
+                          <TableCell colSpan={12}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
                         </TableRow>
                         <Component {...finalProps} />
                       {count > 25 && <TableRow>
