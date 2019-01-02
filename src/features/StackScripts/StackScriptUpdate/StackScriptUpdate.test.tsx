@@ -20,7 +20,9 @@ describe('StackScriptUpdate', () => {
         createTitle: '',
       }}
       username="someguy"
-      images={{ response: images }}
+      imagesData={images}
+      imagesError={undefined}
+      imagesLoading={false}
     />
   )
 

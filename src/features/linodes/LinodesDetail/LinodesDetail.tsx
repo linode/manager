@@ -10,7 +10,6 @@ import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
@@ -19,20 +18,12 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { Requestable } from 'src/requestableContext';
-import { getImage } from 'src/services/images';
-import {
-  getLinode,
-  getLinodeConfigs,
-  getType,
-  startMutation,
-  updateLinode,
-} from 'src/services/linodes';
+import { getLinode, getLinodeConfigs, getType, startMutation, updateLinode } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-import { ConfigsProvider, ImageProvider, LinodeProvider } from './context';
+import { ConfigsProvider, LinodeProvider } from './context';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodesDetailHeader from './LinodesDetailHeader';
 import MutateDrawer from './MutateDrawer';
@@ -63,7 +54,6 @@ interface MutateDrawer {
 interface State {
   context: {
     configs: Requestable<Linode.Config[]>;
-    image: Requestable<Linode.Image>;
     linode: Requestable<Linode.Linode>;
   };
   configDrawer: ConfigDrawerState;
@@ -82,7 +72,6 @@ type CombinedProps = DispatchProps & RouteProps & InjectedNotistackProps;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
-const imageLens = lensPath(['context', 'image']);
 const linodeLens = lensPath(['context', 'linode']);
 
 const L = {
@@ -92,13 +81,6 @@ const L = {
     errors: compose(configsLens, lensPath(['errors'])) as Lens,
     lastUpdated: compose(configsLens, lensPath(['lastUpdated'])) as Lens,
     loading: compose(configsLens, lensPath(['loading'])) as Lens,
-  },
-  image: {
-    data: compose(imageLens, lensPath(['data'])) as Lens,
-    errors: compose(imageLens, lensPath(['errors'])) as Lens,
-    image: imageLens,
-    lastUpdated: compose(imageLens, lensPath(['lastUpdated'])) as Lens,
-    loading: compose(imageLens, lensPath(['loading'])) as Lens,
   },
   labelInput: {
     errorText: compose(labelInputLens, lensPath(['errorText'])) as Lens,
@@ -163,49 +145,6 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
           this.composeState(
             set(L.configs.data, updater(configs)),
-          );
-        },
-      },
-      image: {
-        lastUpdated: 0,
-        loading: true,
-        request: (image: string) => {
-
-          if (!image) {
-            const i: Partial<Linode.Image> = { id: 'unknown', label: 'Unknown Image', type: 'Unknown', vendor: 'unknown' };
-            this.composeState(
-              set(L.image.lastUpdated, Date.now()),
-              set(L.image.data, i),
-            );
-
-            return Promise.resolve();
-          }
-
-          this.setState(set(L.image.loading, true));
-
-          return getImage(image)
-            .then((data) => {
-              this.composeState(
-                set(L.image.loading, false),
-                set(L.image.data, data),
-                set(L.image.lastUpdated, Date.now()),
-              );
-              return data;
-            })
-            .catch((r) => {
-              this.composeState(
-                set(L.image.lastUpdated, Date.now()),
-                set(L.image.loading, false),
-                set(L.image.errors, r)
-              );
-            });
-        },
-        update: (updater) => {
-          const { data: image } = this.state.context.image;
-          if (!image) { return }
-
-          this.composeState(
-            set(L.image.data, updater(image)),
           );
         },
       },
@@ -334,7 +273,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    const { context: { configs, image, linode } } = this.state;
+    const { context: { configs, linode } } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
     const { actions, match: { params: { linodeId } } } = this.props;
 
@@ -352,11 +291,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         configs.request();
         actions.getLinodeDisks();
         actions.getLinodeVolumes();
-        linode.request(linodeEvent)
-          .then((l) => {
-            if (l) { image.request(l.image) }
-          })
-          .catch(console.error);
+        linode.request(linodeEvent);
       });
 
     /** Get events which are related to volumes and this Linode */
@@ -376,11 +311,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     configs.request();
     actions.getLinodeVolumes();
-    linode.request()
-      .then((l) => {
-        if (l) { image.request(l.image) }
-      })
-      .catch(console.error);
+    linode.request();
   }
 
   openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
@@ -561,7 +492,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ConfigsProvider value={this.state.context.configs}>
           <React.Fragment>
-            <ImageProvider value={this.state.context.image}>
+            <>
               <LinodeProvider value={this.state.context.linode}>
                 <React.Fragment>
                   <LinodesDetailHeader
@@ -614,7 +545,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   }
                 </React.Fragment>
               </LinodeProvider>
-            </ImageProvider>
+            </>
           </React.Fragment>
         </ConfigsProvider>
       </React.Fragment>

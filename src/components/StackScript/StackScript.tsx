@@ -1,13 +1,11 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
-import { getImages } from 'src/services/images';
-import { getAll } from 'src/utilities/getAll';
-
-const getAllImages = getAll<Linode.Image>(getImages);
+import withImages from 'src/containers/withImages.container';
 
 type CSSClasses = 'root' | 'deployments' | 'author' | 'description' | 'scriptHeading' | 'descriptionText';
 
@@ -43,7 +41,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
 };
 
 export interface Props {
- data: Linode.StackScript.Response;
+  data: Linode.StackScript.Response;
 }
 
 export interface State {
@@ -51,23 +49,9 @@ export interface State {
 }
 
 
-type PropsWithStyles = Props & WithStyles<CSSClasses>;
+type CombinedProps = Props & WithImagesProps & WithStyles<CSSClasses>;
 
-export class StackScript extends React.Component<PropsWithStyles, {}> {
-
-  state: State = {
-    imagesList: []
-  }
-
-  componentDidMount() {
-    const { data: { images } } = this.props;
-
-    getAllImages().then(({ data: allImages }) => {
-      const imagesList = allImages.filter((image: Linode.Image) => images.indexOf(image.id) !== -1)
-      this.setState({ imagesList });
-    });
-  }
-
+export class StackScript extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -80,29 +64,28 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
         label,
         updated,
       },
+      imagesData,
     } = this.props;
-
-    const { imagesList } = this.state;
 
     return (
       <div className={classes.root}>
         <Typography role="header" variant="h1" component="h2" data-qa-stack-title={label}>
-          { label }
+          {label}
         </Typography>
         <Typography variant="h3" className={classes.author} data-qa-stack-author={username}>
           by&nbsp;
-          <ExternalLink text={username} link={`https://www.linode.com/stackscripts/profile/${username}`} data-qa-community-stack-link/>
+          <ExternalLink text={username} link={`https://www.linode.com/stackscripts/profile/${username}`} data-qa-community-stack-link />
         </Typography>
         <Typography variant="body2" className={classes.deployments} data-qa-stack-deployments>
           {deployments_total} deployments &bull; {deployments_active} still active &bull; last rev. <DateTimeDisplay value={updated} humanizeCutoff={"never"} />
         </Typography>
         <div className={classes.description}>
           {description && <Typography variant="body2" className={classes.descriptionText} data-qa-stack-description>
-            { description }
+            {description}
           </Typography>}
-          {imagesList.length !== 0 && <Typography variant="body2" data-qa-compatible-distro>
+          {imagesData.length !== 0 && <Typography variant="body2" data-qa-compatible-distro>
             <strong>Compatible with: </strong>
-            { imagesList.map(image => image.label).join(', ' ) }
+            {imagesData.map(image => image.label).join(', ')}
           </Typography>}
         </div>
         <Typography variant="h3" className={classes.scriptHeading}>
@@ -116,4 +99,17 @@ export class StackScript extends React.Component<PropsWithStyles, {}> {
 
 const styled = withStyles(styles);
 
-export default styled(StackScript);
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+  imagesLoading: boolean;
+}
+
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withImages((ownProps, imagesData, imagesLoading) => ({
+    ...ownProps,
+    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesLoading,
+  }))
+);
+export default enhanced(StackScript);
