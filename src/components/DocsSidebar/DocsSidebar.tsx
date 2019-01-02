@@ -10,18 +10,19 @@ import Grid from 'src/components/Grid';
 import { BackupsCTA } from 'src/features/Backups';
 import DocComponent, { Doc } from './DocComponent';
 
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import Minimize from 'src/assets/icons/minimize.svg';
+import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
   | 'gridItem'
   | 'docsWrapper'
+  | 'docsFrame'
   | 'docsHeader'
   | 'docsHeaderInitial'
   | 'toggleSidebarButton'
   | 'toggleSidebarButtonExpanded'
   | 'toggleSidebarButtonIcon'
-  | 'toggleSidebarButtonText';
+  | 'helpIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -39,8 +40,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginRight: theme.spacing.unit,
     padding: theme.spacing.unit * 2
   },
-  docsHeader: {
+  docsFrame: {
     marginTop: 0,
+  },
+  docsHeader: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: `0 ${theme.spacing.unit * 2}px`
   },
   docsHeaderInitial: {
     justifyContent: 'flex-end',
@@ -48,24 +56,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginRight: theme.spacing.unit,
   },
   toggleSidebarButton: {
-    padding: `${theme.spacing.unit}px 0`,
+    padding: 0,
     backgroundColor: theme.color.white,
     borderBottom: `2px solid ${theme.palette.divider}`,
     justifyContent: 'flex-start',
+    borderRadius: '50%',
+    minWidth: 'auto',
+    margin: `-2px -8px 0 0`,
     '&:focus': {
       backgroundColor: theme.color.white,
     }
   },
   toggleSidebarButtonExpanded: {
     width: `calc(100% - ${theme.spacing.unit}px)`,
+    padding: `${theme.spacing.unit}px 0 !important`,
+    borderRadius: 0,
+    margin: 0,
   },
   toggleSidebarButtonIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing.unit * 2,
   },
-  toggleSidebarButtonText: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit * 2,
-  },
+  helpIcon: {
+    padding: 6,
+  }
 });
 
 interface Props {
@@ -97,7 +110,7 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   return (
     <Grid container item style={stickyStyles} className={classes.root}>
       <Grid item className={classes.gridItem}>
-        <Grid container className={classes.docsHeader} alignItems="center">
+        <Grid container className={classes.docsFrame} alignItems="center">
           <Grid item xs={12}
             className={classNames({
               [classes.docsHeaderInitial]: !isExpanded
@@ -111,18 +124,19 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
               })}>
               {isExpanded
                 ?
-                <KeyboardArrowRight className={classes.toggleSidebarButtonIcon} />
+                <div className={classes.docsHeader}>
+                  <Typography
+                    role="header"
+                    variant="h2"
+                    data-qa-sidebar-title
+                  >
+                    Help
+                  </Typography>
+                  <Minimize className={classes.toggleSidebarButtonIcon} />
+                </div>
                 :
-                <KeyboardArrowLeft className={classes.toggleSidebarButtonIcon} />
+                <HelpIcon className={classes.helpIcon} text="Linode Docs" />
               }
-              <Typography
-                role="header"
-                variant="h2"
-                data-qa-sidebar-title
-                className={classes.toggleSidebarButtonText}
-              >
-                Help
-              </Typography>
             </Button>
           </Grid>
         </Grid>

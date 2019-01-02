@@ -316,7 +316,7 @@ export class App extends React.Component<CombinedProps, State> {
                   <div className={classes.wrapper} id="main-content">
                     <StickyContainer>
                       <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
+                        <Grid item className={`${classes.switchWrapper} ${hasDoc && docsExpanded ? 'mlMain' : ''}`}>
                           <Switch>
                             <Route path="/linodes" component={LinodesRoutes} />
                             <Route path="/volumes" component={Volumes} />
@@ -339,7 +339,7 @@ export class App extends React.Component<CombinedProps, State> {
                           </Switch>
                         </Grid>
                         {hasDoc &&
-                          <Grid className='mlSidebar'>
+                          <Grid className={docsExpanded ? 'mlSidebar' : ''}>
                             <Sticky topOffset={-24} disableCompensation>
                               {(props: StickyProps) => (
                                 <DocsSidebar
