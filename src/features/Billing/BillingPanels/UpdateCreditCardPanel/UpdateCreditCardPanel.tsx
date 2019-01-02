@@ -177,7 +177,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     Exp Date:&nbsp;
                     {expiry}
                     {isCreditCardExpired(expiry) &&
-                      <span className={classes.expired}>Expired</span>
+                      <span className={classes.expired}>{` Expired`}</span>
                     }
                   </Typography>
                 </Grid>
