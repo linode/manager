@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { DEFAULT_STATE as defaultAccountState } from './account';
+import account, { DEFAULT_STATE as defaultAccountState } from './account';
 import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from './accountSettings';
 import domains, { defaultState as defaultDomainsState } from './domains';
 import linodes, { defaultState as defaultLinodesState } from './linodes';
@@ -15,4 +15,4 @@ export const defaultState = {
   types: defaultTypesState,
 }
 
-export default combineReducers({ accountSettings, profile, domains, linodes, types });
+export default combineReducers({ account, accountSettings, profile, domains, linodes, types });
