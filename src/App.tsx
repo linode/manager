@@ -159,6 +159,7 @@ interface State {
   welcomeBanner: boolean;
   regionsContext: WithRegionsContext;
   hasError: boolean;
+  docsExpanded: boolean;
 }
 
 type CombinedProps = Props
@@ -186,6 +187,7 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
+    docsExpanded: true,
     regionsContext: {
       lastUpdated: 0,
       loading: false,
@@ -272,13 +274,19 @@ export class App extends React.Component<CombinedProps, State> {
     });
   }
 
+  toggleSidebar = () => {
+    this.setState({
+      docsExpanded: !this.state.docsExpanded,
+    })
+  }
+
   closeWelcomeBanner = () => {
     this.setState({ welcomeBanner: false });
     notifications.welcome.set('closed');
   }
 
   render() {
-    const { menuOpen, hasError } = this.state;
+    const { menuOpen, hasError, docsExpanded } = this.state;
     const {
       classes,
       documentation,
@@ -333,7 +341,13 @@ export class App extends React.Component<CombinedProps, State> {
                         {hasDoc &&
                           <Grid className='mlSidebar'>
                             <Sticky topOffset={-24} disableCompensation>
-                              {(props: StickyProps) => (<DocsSidebar docs={documentation} {...props} />)}
+                              {(props: StickyProps) => (
+                                <DocsSidebar
+                                  docs={documentation}
+                                  toggleSidebar={this.toggleSidebar}
+                                  isExpanded={docsExpanded}
+                                  {...props} />
+                              )}
                             </Sticky>
                           </Grid>
                         }
