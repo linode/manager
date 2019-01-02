@@ -93,7 +93,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { invoice, loading, errors, items } = this.state;
 
-    document.onkeydown = this.pressPrint;
+    document.addEventListener('keydown', this.pressPrint);
 
     return (
       <Paper className={classes.root}>
