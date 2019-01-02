@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
