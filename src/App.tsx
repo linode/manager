@@ -1,10 +1,10 @@
+import * as classNames from 'classnames';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
-import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { compose } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -105,7 +105,9 @@ type ClassNames = 'appFrame'
   | 'content'
   | 'wrapper'
   | 'grid'
-  | 'switchWrapper';
+  | 'switchWrapper'
+  | 'switchWrapperDocsColl'
+  | 'absSidebar';
 
 const styles: StyleRulesCallback = (theme) => ({
   appFrame: {
@@ -147,6 +149,15 @@ const styles: StyleRulesCallback = (theme) => ({
       },
     },
   },
+  switchWrapperDocsColl: {
+    '& > div:first-child': {
+      paddingRight: 40,
+    }
+  },
+  absSidebar: {
+    position: 'absolute',
+    right: 30,
+  }
 });
 
 interface Props {
@@ -187,7 +198,7 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    docsExpanded: true,
+    docsExpanded: false,
     regionsContext: {
       lastUpdated: 0,
       loading: false,
@@ -314,45 +325,43 @@ export class App extends React.Component<CombinedProps, State> {
                 <main className={classes.content}>
                   <TopMenu openSideMenu={this.openMenu} />
                   <div className={classes.wrapper} id="main-content">
-                    <StickyContainer>
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc && docsExpanded ? 'mlMain' : ''}`}>
-                          <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
-                            <Route path="/nodebalancers" component={NodeBalancers} />
-                            <Route path="/domains" component={Domains} />
-                            <Route exact path="/managed" component={Managed} />
-                            <Route exact path="/longview" component={Longview} />
-                            <Route exact path="/images" component={Images} />
-                            <Route path="/stackscripts" component={StackScripts} />
-                            <Route path="/account" component={Account} />
-                            <Route exact path="/support/tickets" component={SupportTickets} />
-                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                            <Route path="/profile" component={Profile} />
-                            <Route exact path="/support" component={Help} />
-                            <Route exact path="/support/search/" component={SupportSearchLanding} />
-                            <Route path="/dashboard" component={Dashboard} />
-                            <Route path="/search" component={SearchLanding} />
-                            <Redirect exact from="/" to="/dashboard" />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </Grid>
-                        {hasDoc &&
-                          <Grid className={docsExpanded ? 'mlSidebar' : ''}>
-                            <Sticky topOffset={-24} disableCompensation>
-                              {(props: StickyProps) => (
-                                <DocsSidebar
-                                  docs={documentation}
-                                  toggleSidebar={this.toggleSidebar}
-                                  isExpanded={docsExpanded}
-                                  {...props} />
-                              )}
-                            </Sticky>
-                          </Grid>
-                        }
+                    <Grid container spacing={0} className={classes.grid}>
+                      <Grid item className={classNames({
+                        [classes.switchWrapper]: true,
+                        [classes.switchWrapperDocsColl]: hasDoc && !docsExpanded,
+                        'mlMain': hasDoc && docsExpanded,
+                      })}>
+                        <Switch>
+                          <Route path="/linodes" component={LinodesRoutes} />
+                          <Route path="/volumes" component={Volumes} />
+                          <Route path="/nodebalancers" component={NodeBalancers} />
+                          <Route path="/domains" component={Domains} />
+                          <Route exact path="/managed" component={Managed} />
+                          <Route exact path="/longview" component={Longview} />
+                          <Route exact path="/images" component={Images} />
+                          <Route path="/stackscripts" component={StackScripts} />
+                          <Route path="/account" component={Account} />
+                          <Route exact path="/support/tickets" component={SupportTickets} />
+                          <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                          <Route path="/profile" component={Profile} />
+                          <Route exact path="/support" component={Help} />
+                          <Route exact path="/support/search/" component={SupportSearchLanding} />
+                          <Route path="/dashboard" component={Dashboard} />
+                          <Route path="/search" component={SearchLanding} />
+                          <Redirect exact from="/" to="/dashboard" />
+                          <Route component={NotFound} />
+                        </Switch>
                       </Grid>
-                    </StickyContainer>
+                      {hasDoc &&
+                        <Grid className={docsExpanded ? 'mlSidebar' : classes.absSidebar}>
+                          <DocsSidebar
+                            docs={documentation}
+                            toggleSidebar={this.toggleSidebar}
+                            isExpanded={docsExpanded}
+                          />
+                        </Grid>
+                      }
+                    </Grid>
                   </div>
 
                 </main>

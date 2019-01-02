@@ -1,17 +1,18 @@
+import Description from '@material-ui/icons/Description';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StickyProps } from 'react-sticky';
 import Button from 'src/components/core/Button';
+import IconButton from 'src/components/core/IconButton';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { BackupsCTA } from 'src/features/Backups';
 import DocComponent, { Doc } from './DocComponent';
 
 import Minimize from 'src/assets/icons/minimize.svg';
-import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root'
   | 'gridItem'
@@ -22,17 +23,11 @@ type ClassNames = 'root'
   | 'toggleSidebarButton'
   | 'toggleSidebarButtonExpanded'
   | 'toggleSidebarButtonIcon'
-  | 'helpIcon';
+  | 'docsIconButton'
+  | 'docsIcon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-    [theme.breakpoints.down('md')]: {
-      position: 'relative !important',
-      left: `${theme.spacing.unit}px !important`,
-      width: '100%',
-      paddingTop: theme.spacing.unit * 3,
-    },
-  },
+  root: {},
   gridItem: {
     width: '100%',
   },
@@ -53,14 +48,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   docsHeaderInitial: {
     justifyContent: 'flex-end',
     display: 'flex',
-    marginRight: theme.spacing.unit,
+    paddingRight: '0 !important'
   },
   toggleSidebarButton: {
     padding: 0,
     backgroundColor: theme.color.white,
     borderBottom: `2px solid ${theme.palette.divider}`,
     justifyContent: 'flex-start',
-    borderRadius: '50%',
     minWidth: 'auto',
     margin: `-2px -8px 0 0`,
     '&:focus': {
@@ -69,15 +63,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   toggleSidebarButtonExpanded: {
     width: `calc(100% - ${theme.spacing.unit}px)`,
-    padding: `${theme.spacing.unit}px 0 !important`,
+    padding: `${theme.spacing.unit / 2}px 0 !important`,
     borderRadius: 0,
     margin: 0,
   },
   toggleSidebarButtonIcon: {
+    backgroundColor: theme.color.white,
     marginLeft: theme.spacing.unit * 2,
   },
-  helpIcon: {
+  docsIconButton: {
     padding: 6,
+    borderRadius: '50%',
+    backgroundColor: theme.color.white,
+    '&:hover': {
+      backgroundColor: theme.color.white,
+    }
+  },
+  docsIcon: {
+    width: 20,
+    height: 20,
   }
 });
 
@@ -88,33 +92,27 @@ interface Props {
   isExpanded?: boolean;
 }
 
-type CombinedProps = Props & BackupCTAProps & StickyProps & WithStyles<ClassNames>;
+type CombinedProps = Props & BackupCTAProps & WithStyles<ClassNames>;
 
 const styled = withStyles(styles);
 
 const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
-  const { backupsCTA, classes, docs, style, isSticky, isExpanded } = props;
+  const { backupsCTA, classes, docs, isExpanded } = props;
 
   if (docs.length === 0) {
     return null;
   }
 
-  let stickyStyles;
-  if (isSticky) {
-    stickyStyles = {
-      ...style,
-      paddingTop: 24,
-    };
-  }
-
   return (
-    <Grid container item style={stickyStyles} className={classes.root}>
+    <Grid container item className={classes.root}>
       <Grid item className={classes.gridItem}>
         <Grid container className={classes.docsFrame} alignItems="center">
           <Grid item xs={12}
             className={classNames({
               [classes.docsHeaderInitial]: !isExpanded
             })}>
+            {isExpanded
+            ?
             <Button
               type="secondary"
               onClick={props.toggleSidebar}
@@ -122,22 +120,24 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
                 [classes.toggleSidebarButton]: true,
                 [classes.toggleSidebarButtonExpanded]: isExpanded
               })}>
-              {isExpanded
-                ?
-                <div className={classes.docsHeader}>
-                  <Typography
-                    role="header"
-                    variant="h2"
-                    data-qa-sidebar-title
-                  >
-                    Help
-                  </Typography>
-                  <Minimize className={classes.toggleSidebarButtonIcon} />
-                </div>
-                :
-                <HelpIcon className={classes.helpIcon} text="Linode Docs" />
-              }
+              <div className={classes.docsHeader}>
+                <Typography
+                  role="header"
+                  variant="h2"
+                  data-qa-sidebar-title
+                >
+                  Help
+                </Typography>
+                <Minimize className={classes.toggleSidebarButtonIcon} />
+              </div>
             </Button>
+            :
+            <Tooltip title="Linode Docs">
+              <IconButton onClick={props.toggleSidebar} className={classes.docsIconButton}>
+                <Description className={classes.docsIcon} />
+              </IconButton>
+            </Tooltip>
+            }
           </Grid>
         </Grid>
         {isExpanded &&
