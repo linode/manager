@@ -14,7 +14,7 @@ import __resources, { defaultState as resourcesDefaultState } from './reducers/r
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from './reducers/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from './reducers/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from './reducers/volumeDrawer';
-import { defaultState as volumesDefaultState, reducer as volumes } from './volumes';
+import { defaultState as volumesDefaultState, events as volumeEvents, reducer as volumes  } from './volumes';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
@@ -54,6 +54,7 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       imageEvents,
+      volumeEvents,
     ),
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f,
