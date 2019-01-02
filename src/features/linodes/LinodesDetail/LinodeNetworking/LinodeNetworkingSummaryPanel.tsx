@@ -127,13 +127,13 @@ export default restyled(connected(LinodeNetworkingSummaryPanel)) as React.Compon
 
 const renderIPv4DNSResolvers = () => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
-    <IPAddress ips={ipv4DNSResolvers} copyRight />
+    <IPAddress ips={ipv4DNSResolvers} copyRight showMore />
   </div>
 )
 
 const renderIPv6DNSResolvers = () => () => (
   <div style={{ display: 'flex', alignItems: "center" }}>
-    <IPAddress ips={ipv6DNSResolvers} copyRight />
+    <IPAddress ips={ipv6DNSResolvers} copyRight showMore />
   </div>
 )
 

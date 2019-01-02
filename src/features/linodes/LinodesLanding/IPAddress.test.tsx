@@ -32,6 +32,7 @@ describe('IPAddress', () => {
       <LinodeThemeWrapper>
         <IPAddress
           ips={['8.8.8.8', '8.8.4.4']}
+          showMore
         />
       </LinodeThemeWrapper>,
     );

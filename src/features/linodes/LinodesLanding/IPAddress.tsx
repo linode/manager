@@ -69,7 +69,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
 
   },
   show: {
-    opacity: 0, // Hide until the component is hovered,
+    opacity: 0, // Hide until the component is hovered, when props.showCopyOnHover is true
     transition: theme.transitions.create(['opacity']),
   }
 });
@@ -77,6 +77,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
 interface Props {
   ips: string[];
   copyRight?: boolean;
+  showCopyOnHover?: boolean;
+  showMore?: boolean;
 }
 
 const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
@@ -106,10 +108,10 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 
   renderCopyIcon = (ip: string) => {
-    const { classes, copyRight } = this.props;
+    const { classes, copyRight, showCopyOnHover } = this.props;
 
     return (
-      <div className={`${classes.ipLink} ${classes.show}`} data-qa-copy-ip>
+      <div className={`${classes.ipLink} ${showCopyOnHover ? classes.show : ''}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
           className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
@@ -129,7 +131,7 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 
   render() {
-    const { classes, ips, copyRight } = this.props;
+    const { classes, ips, copyRight, showMore } = this.props;
 
     const formattedIPS = ips
       .map(ip => ip.replace('/64', ''))
@@ -138,15 +140,13 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     return (
       <div className={`dif ${classes.root}`}>
         { this.renderIP(formattedIPS[0], copyRight) }
-        <span className={classes.show}>
         {
-          formattedIPS.length > 1 && <ShowMore
+          formattedIPS.length > 1 && showMore && <ShowMore
             items={tail(formattedIPS)}
             render={(ipsAsArray: string[]) => {
               return ipsAsArray.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
             }} />
         }
-        </span>
       </div>
     );
   }
