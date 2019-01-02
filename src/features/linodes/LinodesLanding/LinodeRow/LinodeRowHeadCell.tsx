@@ -2,13 +2,12 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import Tags from 'src/components/Tags';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
 
-type ClassNames = 'root' | 'link' | 'tagWrapper' | 'loadingStatus' | 'labelWrapper';
+type ClassNames = 'root' | 'link' | 'tagWrapper' | 'loadingStatus' | 'labelWrapper' | 'status' | 'labelRow';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
@@ -27,9 +26,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       width: '100%'
     },
   },
+  status: {
+    marginLeft: theme.spacing.unit / 2,
+    position: 'relative',
+    top: 0,
+    lineHeight: '0.8rem',
+  },
+  labelRow: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+  },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
-    marginLeft: theme.spacing.unit * 4,
   },
   loadingStatus: {
     marginBottom: theme.spacing.unit / 2,
@@ -66,26 +75,24 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
       rowSpan={loading ? 2 : 1}
     >
       <Link to={`/linodes/${linodeId}`} className={classes.link}>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <LinodeStatusIndicator status={linodeStatus} />
-          </Grid>
-          <Grid item className="py0">
-            <div className={loading ? classes.labelWrapper : ''}>
-              {
-                linodeRecentEvent && linodeInTransition(linodeStatus, linodeRecentEvent) &&
-                <ProgressDisplay
-                  className={classes.loadingStatus}
-                  text={transitionText(linodeStatus, linodeRecentEvent)}
-                  progress={linodeRecentEvent.percent_complete}
-                />
-              }
-              <Typography role="header" variant="h3" data-qa-label>
-                {linodeLabel}
-              </Typography>
+        <div className={loading ? classes.labelWrapper : ''}>
+          {
+            linodeRecentEvent && linodeInTransition(linodeStatus, linodeRecentEvent) &&
+            <ProgressDisplay
+              className={classes.loadingStatus}
+              text={transitionText(linodeStatus, linodeRecentEvent)}
+              progress={linodeRecentEvent.percent_complete}
+            />
+          }
+          <div className={classes.labelRow}>
+            <Typography role="header" variant="h3" data-qa-label>
+              {linodeLabel}
+            </Typography>
+            <div className={classes.status} >
+              <LinodeStatusIndicator status={linodeStatus} />
             </div>
-          </Grid>
-        </Grid>
+          </div>
+        </div>
         <div className={classes.tagWrapper}>
           <Tags tags={linodeTags} />
         </div>
