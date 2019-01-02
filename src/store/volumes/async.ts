@@ -25,7 +25,7 @@ const requestVolumes = () => (dispatch: Dispatch<State>) => {
 
 type RequestLinodeForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
 const requestVolumeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, getState) => {
-  const { results } = getState().__resources.linodes;
+  const { results } = getState().volumes;
 
   getVolume(id)
     .then(volume => {

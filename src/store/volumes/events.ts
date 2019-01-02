@@ -15,6 +15,7 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
     /** Update Volume */
     case 'volume_attach':
     case 'volume_detach':
+    case 'volume_resize':
       return handleVolumeUpdate(dispatch, status, id);
 
     /** Remove Volume */
@@ -23,6 +24,7 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
 
     /** Create Volume */
     case 'volume_create':
+    case 'volume_clone':
       return handleVolumeCreation(dispatch, status, id);
 
     default:
