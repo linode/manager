@@ -14,7 +14,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
-    width: '15%',
+    width: '8%',
     height: '20px !important',
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
