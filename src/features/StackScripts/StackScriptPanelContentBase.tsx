@@ -10,7 +10,7 @@ import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import { sendEvent } from 'src/utilities/analytics';
 import StackScriptTableHead from './Partials/StackScriptTableHead';
-import { AcceptedFilters, generateCatchAllFilter, generateSpecificFilter  } from './stackScriptUtils'
+import { AcceptedFilters, generateCatchAllFilter, generateSpecificFilter, getErrorText  } from './stackScriptUtils'
 
 type ClassNames = 'root'
   | 'emptyState'
@@ -374,7 +374,7 @@ export class StackScriptPanelContentBase<P extends StackScriptPanelContentBasePr
       return (
         <div style={{ overflow: 'hidden' }}>
           <ErrorState
-            errorText="There was an error loading your StackScripts. Please try again later."
+            errorText={getErrorText(error)}
           />
         </div>
       )

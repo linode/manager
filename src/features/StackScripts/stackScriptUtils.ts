@@ -1,7 +1,8 @@
+import { pathOr } from 'ramda';
 import { getUsers } from 'src/services/account';
 import { getStackscripts } from 'src/services/stackscripts';
 
-export const emptyStackScriptsResult = {
+export const emptyResult = {
   data: [],
   page: 1,
   pages: 1,
@@ -17,7 +18,7 @@ export const getStackScriptsByUser = (username: string, params?: any, filter?: a
 export const getAccountStackScripts = (currentUser: string, params?: any, filter?: any) =>
   getUsers().then(response => {
     if (response.data.length === 1) {
-      return Promise.resolve(emptyStackScriptsResult); 
+      return Promise.resolve(emptyResult); 
     }
 
     return getStackscripts(params, {
@@ -30,7 +31,9 @@ export const getAccountStackScripts = (currentUser: string, params?: any, filter
   });
 
 export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
-  getUsers().then(response => getStackscripts(params, {
+  getUsers()
+    .catch((): Promise<Linode.ResourcePage<Linode.User>> => Promise.resolve(emptyResult))
+    .then(response => getStackscripts(params, {
     ...filter,
     '+and': response.data.reduce(
       (acc, user) => ([...acc, { username: { '+neq': user.username } }]),
@@ -98,4 +101,12 @@ export const generateCatchAllFilter = (searchTerm: string) => {
     ],
   };
 }
+` `
+export const getErrorText = (error: any) => {
+  const reason = pathOr('', ['data', 'errors', 0, 'reason'], error);
 
+  if (reason === 'Unauthorized') {
+    return 'You are not authorized to view StackScripts for this account. ';
+  }
+  return 'There was an error loading your StackScripts. Please try again later.';
+}
