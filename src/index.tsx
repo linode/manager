@@ -4,13 +4,13 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router-dom';
-
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
 import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
+import PrintInvoice from 'src/features/Billing/InvoiceDetail/PrintInvoice';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
@@ -19,7 +19,6 @@ import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import { theme } from 'src/utilities/storage';
-
 import App from './App';
 import './events';
 import './index.css';
@@ -95,6 +94,7 @@ const renderApp = (props: RouteProps) =>
 const renderAuthentication = () =>
   <AuthenticationWrapper>
     <Switch>
+      <Route path="/account/billing/invoices/:invoiceId/print" component={PrintInvoice} />
       <Route path="/linodes/:linodeId/lish" render={renderLish} />
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}

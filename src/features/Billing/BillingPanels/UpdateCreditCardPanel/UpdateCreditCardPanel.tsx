@@ -14,7 +14,7 @@ import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
 import { saveCreditCard } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 
 type ClassNames = 'root'
   | 'expired'
