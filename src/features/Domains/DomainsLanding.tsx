@@ -222,14 +222,21 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         <OrderBy data={domainsData} order={'desc'} orderBy={'domain'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) =>
             this.props.groupByTag
-              ? <ListGroupedDomains />
+              ? <ListGroupedDomains
+                orderBy={orderBy}
+                order={order}
+                handleOrderChange={handleOrderChange}
+                data={orderedData}
+                onClone={this.props.openForCloning}
+                onRemove={this.openRemoveDialog}
+              />
               : <ListDomains
-                  orderBy={orderBy}
-                  order={order}
-                  handleOrderChange={handleOrderChange}
-                  data={orderedData}
-                  onClone={this.props.openForCloning}
-                  onRemove={this.openRemoveDialog}
+                orderBy={orderBy}
+                order={order}
+                handleOrderChange={handleOrderChange}
+                data={orderedData}
+                onClone={this.props.openForCloning}
+                onRemove={this.openRemoveDialog}
               />
           }
         </OrderBy>

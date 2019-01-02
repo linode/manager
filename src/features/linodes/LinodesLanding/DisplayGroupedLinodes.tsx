@@ -11,8 +11,10 @@ import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { groupByTags, GroupedBy, NONE } from 'src/utilities/groupByTags';
+import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
+
+const DEFAULT_PAGE_SIZE = 25;
 
 type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell' | 'groupContainer';
 
@@ -73,7 +75,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
     ...rest
   } = props;
 
-  const orderedGroupedLinodes = compose(sortGroupedLinodes, groupByTags)(data);
+  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
   if (display === 'grid') {
@@ -89,7 +91,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                   </div>
                 </Grid>
               </Grid>
-              <Paginate data={linodes} pageSize={25}>
+              <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
                 {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
                   const finalProps = {
                     ...rest,
@@ -132,7 +134,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
             <React.Fragment key={tag}>
-              <Paginate data={linodes} pageSize={25}>
+              <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
                 {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
                   const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
                   return (
@@ -142,7 +144,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                           <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                      {count > 25 && <TableRow>
+                      {count > DEFAULT_PAGE_SIZE && <TableRow>
                         <TableCell colSpan={7} className={classes.paginationCell}>
                           <PaginationFooter
                             count={count}
@@ -172,31 +174,3 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
 const styled = withStyles(styles);
 
 export default styled(DisplayGroupedLinodes);
-
-/**
- * Moves the NONE to the top, and alphabetically sorts the remainder.
- */
-const sortGroupedLinodes = (groups: GroupedBy<Linode.Linode>) => {
-  let foundUntaggedIndex;
-  let idx = 0;
-  const len = groups.length;
-  for (; idx < len; idx++) {
-    const [tag] = groups[idx];
-    if (tag === NONE) {
-      foundUntaggedIndex = idx;
-      break;
-    }
-  }
-
-  if (typeof foundUntaggedIndex === 'undefined') {
-    return groups
-    .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1);
-  }
-
-  return [
-    groups[foundUntaggedIndex],
-    ...groups
-      .filter(([tag]) => tag !== NONE)
-      .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1),
-  ];
-}

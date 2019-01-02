@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -10,8 +9,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import Tags from 'src/components/Tags';
-import ActionMenu from './DomainActionMenu';
+import DomainTableRow from 'src/features/Domains/DomainTableRow';
 
 type ClassNames = 'root';
 
@@ -68,7 +66,6 @@ const ListDomains: React.StatelessComponent<CombinedProps> = (props) => {
                   data={paginatedData}
                   onClone={props.onClone}
                   onRemove={props.onRemove}
-                  classes={props.classes}
                 />
               </TableBody>
             </Table>
@@ -92,41 +89,24 @@ interface RenderDataProps {
   data: Linode.Domain[];
   onRemove: (domain: string, domainID: number) => void;
   onClone: (domain: string, cloneId: number) => void;
-  classes: any;
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = (props) => {
-  const { data, onClone, onRemove, classes } = props;
+  const { data, onClone, onRemove } = props;
 
   return (
     <>
       {
         data.map(domain =>
-          <TableRow
-            key={domain.id}
-            data-qa-domain-cell={domain.id}
-            className={`${classes.domainRow} ${'fade-in-table'}`}
-            rowLink={`/domains/${domain.id}`}
-          >
-            <TableCell parentColumn="Domain" data-qa-domain-label>
-              <Link to={`/domains/${domain.id}`}>
-                {domain.domain}
-                <div className={classes.tagWrapper}>
-                  <Tags tags={domain.tags} />
-                </div>
-              </Link>
-            </TableCell>
-            <TableCell parentColumn="Type" data-qa-domain-type>{domain.type}</TableCell>
-            <TableCell>
-              <ActionMenu
-                domain={domain.domain}
-                id={domain.id}
-                onRemove={onRemove}
-                onClone={onClone}
-              />
-            </TableCell>
-          </TableRow>,
-        )
+          <DomainTableRow
+            domain={domain.domain}
+            id={domain.id}
+            key={domain.domain}
+            onClone={onClone}
+            onRemove={onRemove}
+            tags={domain.tags}
+            type={domain.type}
+          />)
       }
     </>
   );
