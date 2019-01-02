@@ -19,9 +19,9 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Toggle from 'src/components/Toggle';
+import withImages from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { getImages } from 'src/services/images';
 import { sendEvent } from 'src/utilities/analytics';
 import { storage, views } from 'src/utilities/storage';
 import CardView from './CardView';
@@ -47,11 +47,6 @@ interface State {
   bootOption: Linode.BootAction;
   selectedLinodeId: number | null;
   selectedLinodeLabel: string;
-  images: {
-    loading: boolean;
-    data: Linode.Image[];
-    error?: Error;
-  },
   groupByTag: boolean;
 }
 
@@ -63,6 +58,7 @@ interface Params {
 type RouteProps = RouteComponentProps<Params>
 
 type CombinedProps =
+  & WithImagesProps
   & WithWidth
   & ToggleGroupByTagsProps
   & StateProps
@@ -74,8 +70,6 @@ type CombinedProps =
 export class ListLinodes extends React.Component<CombinedProps, State> {
   static eventCategory = 'linodes landing';
 
-  mounted: boolean = false;
-
   state: State = {
     configDrawer: {
       open: false,
@@ -83,10 +77,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       error: undefined,
       selected: undefined,
       action: (id: number) => null,
-    },
-    images: {
-      loading: true,
-      data: [],
     },
     powerAlertOpen: false,
     bootOption: null,
@@ -99,39 +89,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     LinodeGettingStarted,
     SecuringYourServer,
   ];
-
-  getImages = () => {
-    if (this.state.images.loading === false) {
-      this.setState({ images: { ...this.state.images, loading: true } });
-    }
-
-    getImages()
-      .then(response => this.setState({
-        images: {
-          ...this.state.images,
-          loading: false,
-          data: response.data,
-        }
-      }))
-      .catch(response => this.setState({
-        images: {
-          ...this.state.images,
-          loading: false,
-          error: new Error('Unable to load image data.'),
-        }
-      }))
-  }
-
-  componentDidMount() {
-
-    this.mounted = true;
-
-    this.getImages();
-  }
-
-  componentWillUnmount() {
-    this.mounted = false
-  }
 
   openConfigDrawer = (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => {
     this.setState({
@@ -223,6 +180,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      imagesError,
+      imagesLoading,
       linodesRequestError,
       linodesRequestLoading,
       linodesCount,
@@ -236,11 +195,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       configDrawer,
       bootOption,
       powerAlertOpen,
-      images: {
-        error: imagesError,
-        loading: imagesLoading,
-        data: imagesData,
-      },
     } = this.state;
 
     const params: Params = parse(this.props.location.search, { ignoreQueryPrefix: true });
@@ -252,7 +206,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     const component = display === 'grid' ? CardView : ListView;
 
     const componentProps = {
-      images: imagesData,
       openConfigDrawer: this.openConfigDrawer,
       toggleConfirmation: this.toggleDialog,
       display,
@@ -459,6 +412,11 @@ const getDisplayType = (width: string, linodesCount: number, userSelect?: 'grid'
   return linodesCount >= 3 ? 'list' : 'grid';
 };
 
+interface WithImagesProps {
+  imagesLoading: boolean;
+  imagesError?: Linode.ApiFieldError[];
+}
+
 export const enhanced = compose(
   withRouter,
   toggleGroupState,
@@ -467,6 +425,11 @@ export const enhanced = compose(
   withSnackbar,
   withWidth(),
   connected,
+  withImages((ownProps,imagesData,imagesLoading,imagesError) => ({
+    ...ownProps,
+    imagesLoading,
+    imagesError,
+  }))
 );
 
 export default enhanced(ListLinodes);
