@@ -5,6 +5,7 @@ import NodeBalancerDetail from '../../pageobjects/nodebalancer-detail/details.pa
 import {
     apiCreateLinode,
     removeNodeBalancers,
+    apiDeleteAllLinodes,
 } from '../../utils/common';
 
 describe('Nodebalancer - Create Suite', () => {
@@ -20,6 +21,7 @@ describe('Nodebalancer - Create Suite', () => {
     });
 
     afterAll(() => {
+        apiDeleteAllLinodes();
         removeNodeBalancers();
     });
 
@@ -57,7 +59,7 @@ describe('Nodebalancer - Create Suite', () => {
         NodeBalancers.backendIpAddress.addValue(linode.privateIp);
         NodeBalancers.backendIpPort.setValue('80');
         browser.jsClick('[data-qa-deploy-linode]');
-        
+
         NodeBalancerDetail.baseElemsDisplay();
         const detailPageUrl = browser.getUrl();
         expect(detailPageUrl).toContain('/summary');

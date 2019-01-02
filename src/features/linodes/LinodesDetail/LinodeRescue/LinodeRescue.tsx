@@ -206,7 +206,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             left
           />
           <ActionsPanel>
-            <Button onClick={this.onSubmit} type="primary">Submit</Button>
+            <Button onClick={this.onSubmit} type="primary" data-qa-submit>Submit</Button>
           </ActionsPanel>
         </Paper>
       </React.Fragment>

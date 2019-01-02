@@ -5,6 +5,7 @@ import NodeBalancers from '../../pageobjects/nodebalancers.page';
 import {
     apiCreateLinode,
     removeNodeBalancers,
+    apiDeleteAllLinodes,
 } from '../../utils/common';
 
 describe('NodeBalancer - Negative Tests Suite', () => {
@@ -20,6 +21,7 @@ describe('NodeBalancer - Negative Tests Suite', () => {
     });
 
     afterAll(() => {
+        apiDeleteAllLinodes();
         removeNodeBalancers();
     });
 

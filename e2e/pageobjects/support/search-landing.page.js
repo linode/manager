@@ -21,9 +21,10 @@ class SupportSearchLanding extends Page {
 
     search(query){
         this.searchInput.setValue(query);
+        browser.pause(1000);
         browser.waitUntil(() => {
             return this.searchResults.length > 0;
-        }, constants.wait.normal);
+        }, constants.wait.long);
     }
 
     viewMoreResults(resultType){

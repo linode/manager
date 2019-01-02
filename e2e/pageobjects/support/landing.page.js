@@ -32,8 +32,8 @@ export class SupportLanding extends Page {
     }
 
     search(query){
-      this.searchField.setValue('cloud');
-      browser.pause(750);
+      this.searchField.setValue(query);
+      browser.pause(2000);
     }
 }
 

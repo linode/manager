@@ -60,9 +60,9 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should display user-defined fields on selection of a stackscript containing UD fields', () => {
-        const wordPressStackScript = 'WordPress';
-        ConfigureLinode.stackScriptRowByTitle(wordPressStackScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(wordPressStackScript).click();
+        const lampStackScript = 'LAMP Stack';
+        ConfigureLinode.stackScriptRowByTitle(lampStackScript).waitForVisible(constants.wait.normal);
+        ConfigureLinode.stackScriptRowByTitle(lampStackScript).click();
         ConfigureLinode.userDefinedFieldsHeader.waitForVisible(constants.wait.normal);
     });
 

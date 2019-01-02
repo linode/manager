@@ -119,14 +119,14 @@ export class Profile extends Page {
     get tokenCreated() { return $('[data-qa-token-created]') }
     get tokenExpires() { return $('[data-qa-token-expiry]'); }
     get tokenActionMenu() { return $('[data-qa-action-menu]'); }
-    get tokenCreate() { return $('[data-qa-icon-text-link="Add a Personal Access Token"]'); }
+    get tokenCreate() { return this.addIcon('Add a Personal Access Token'); }
 
     get oauthLabel() { return $('[data-qa-oauth-label]'); }
     get oauthAccess() { return $('[data-qa-oauth-access]'); }
     get oauthId() { return $('[data-qa-oauth-id]'); }
     get oauthCallback() { return $('[data-qa-oauth-callback]'); }
     get oauthActionMenu() { return $('[data-qa-action-menu]'); }
-    get oauthCreate() { return $('[data-qa-icon-text-link="Create My App"]'); }
+    get oauthCreate() { return this.addIcon('Create My App'); }
 
     tokenBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);

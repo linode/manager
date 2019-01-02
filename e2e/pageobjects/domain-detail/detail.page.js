@@ -22,7 +22,7 @@ class DomainDetail extends Page {
     }
 
     addRecordButtonElementByLabel(label){
-        const button = label.includes('A/AAAA') ? $(`[data-qa-icon-text-link="Add an ${label}"]`) : $(`[data-qa-icon-text-link="Add a ${label}"]`);
+        const button = label.includes('A/AAAA') ? this.addIcon(`Add an ${label}`): this.addIcon(`Add a ${label}`);
         return button;
     }
 

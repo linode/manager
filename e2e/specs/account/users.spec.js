@@ -22,7 +22,7 @@ describe('Account - Users Suite', () => {
         const rootUserName = Users.getTableDetails(undefined,Users.username.selector,browser.options.testUser);
         const rootUserRestrictions = Users.getTableDetails(0,Users.userRestriction.selector);
         expect(rootUserName).toBeTruthy();
-        expect(rootUserRestrictions.getText()).toMatch(/unrestricted/ig);
+        expect(rootUserRestrictions.getText()).toMatch(/Full/ig);
     });
 
     it('should disable Delete action menu item for root user', () => {

@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 export class SshKeys extends Page {
-    get addKeyButton() { return $('[data-qa-icon-text-link="Add a SSH Key"]'); }
+    get addKeyButton() { return this.addIcon('Add a SSH Key'); }
 
     get drawerKeyLabel() { return $('[data-qa-label-field] input'); }
     get drawerPublicKey() { return $('[data-qa-ssh-key-field] textarea'); }

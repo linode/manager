@@ -3,7 +3,7 @@ const { constants } = require('../constants');
 import Page from './page.js';
 
 class ListNodeBalancers extends Page {
-    get listHeader() { return $('[data-qa-title]'); }
+    get listHeader() { return this.pageTitle; }
     get nodeBalancerElem() { return $('[data-qa-nodebalancer-cell]'); }
     get nodeBalancers() { return $$('[data-qa-nodebalancer-cell]'); };
     get label() { return $('[data-qa-nodebalancer-label]'); }
@@ -12,7 +12,7 @@ class ListNodeBalancers extends Page {
     get ports() { return $('[data-qa-ports]'); }
     get ips() { return $('[data-qa-nodebalancer-ips]'); }
     get region() { return $('[data-qa-region]'); }
-    get addNodeBalancer() { return $('[data-qa-icon-text-link="Add a NodeBalancer"]'); }
+    get addNodeBalancer() { return this.addIcon('Add a NodeBalancer'); }
     get confirm() { return $('[data-qa-confirm-cancel]'); }
     get cancel() { return $('[data-qa-cancel-cancel]'); }
 

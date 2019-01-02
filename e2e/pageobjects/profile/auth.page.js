@@ -4,7 +4,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 export class Auth extends Page {
-    get passwordHeader() { return $('[data-qa-title]'); }
+    get passwordHeader() { return this.pageTitle; }
     get toggleTfa() { return $('[data-qa-toggle-tfa]'); }
     get tfaDescription() { return $('[data-qa-copy]'); }
     get hideShowCode() { return $('[data-qa-hide-show-code]'); }

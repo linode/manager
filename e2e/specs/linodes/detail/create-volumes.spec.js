@@ -5,7 +5,7 @@ import LinodeSummary from '../../../pageobjects/linode-detail/linode-detail-summ
 import {
     timestamp,
     apiCreateLinode,
-    createUnattachedVolumes,
+    createVolumes,
     apiDeleteAllLinodes,
     apiDeleteAllVolumes,
     checkEnvironment,
@@ -66,9 +66,9 @@ describe('Linode Detail - Volumes Suite', () => {
     beforeAll(() => {
         const environment = process.env.REACT_APP_API_ROOT;
         if (environment.includes('dev') || environment.includes('testing')){
-            createUnattachedVolumes([volumeEast]);
+            createVolumes([volumeEast]);
         }else{
-          createUnattachedVolumes([volumeEast,volumeCentral]);
+          createVolumes([volumeEast,volumeCentral]);
         }
         apiCreateLinode(testLinode);
         ListLinodes.navigateToDetail(testLinode);

@@ -1,4 +1,3 @@
-import { clamp } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -123,7 +122,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       return this.props.onSizeChange('');
     }
 
-    this.props.onSizeChange(clamp(0, this.props.maximumSize, valueAsNumber));
+    this.props.onSizeChange(valueAsNumber);
   };
 
   onFilesystemChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -149,6 +148,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       onChange={this.onLabelChange}
       errorText={this.getErrors('label')}
       errorGroup="linode-disk-drawer"
+      data-qa-label
     />
   );
 
@@ -187,6 +187,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               MB
             </InputAdornment>,
         }}
+        data-qa-disk-size
       />
       <FormHelperText style={{ marginTop: 8 }}>
         Maximum Size: {this.props.maximumSize} MB

@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class LinodeDetail extends Page {
-    get title() { return $('[data-qa-title]'); }
+    get title() { return this.pageTitle; }
     get summaryTab() { return $('[data-qa-tab="Summary"]'); }
     get volumesTab() { return $('[data-qa-tab="Volumes"]'); }
     get networkingTab() { return $('[data-qa-tab="Networking"]'); }

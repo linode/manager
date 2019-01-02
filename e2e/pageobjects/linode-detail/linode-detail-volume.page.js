@@ -5,7 +5,7 @@ import Page from '../page';
 export class VolumeDetail extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get createButton() { return $('[data-qa-placeholder-button]'); }
-    get createIconLink() { return $('[data-qa-icon-text-link="Create a Volume"]'); }
+    get createIconLink() { return this.addIcon('Create a Volume'); }
     get label() { return $('[data-qa-volume-label]'); }
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }

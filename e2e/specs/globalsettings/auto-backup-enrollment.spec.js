@@ -121,7 +121,9 @@ describe('Backup Auto Enrollment Suite', () => {
     it('Confirming enable backups will enable backups for all existing linodes', () => {
         EnableAllBackupsDrawer.submitButton.click();
         ListLinodes.toastDisplays('1 Linode has been enrolled in automatic backups.');
-        expect(ListLinodes.enableAllBackups.isVisible()).toBe(false);
+        browser.waitUntil(() => {
+            return !ListLinodes.enableAllBackups.isVisible();
+        }, constants.wait.normal);
         ListLinodes.navigateToDetail();
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
         LinodeDetail.changeTab('Backups');

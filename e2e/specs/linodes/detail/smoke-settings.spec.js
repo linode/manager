@@ -1,20 +1,25 @@
 const crypto = require('crypto');
 const { constants } = require('../../../constants');
-import { apiCreateLinode, apiDeleteAllLinodes } from '../../../utils/common';
+import {
+    apiCreateLinode,
+    apiDeleteAllLinodes,
+    timestamp,
+} from '../../../utils/common';
 
 import ListLinodes from '../../../pageobjects/list-linodes';
 import LinodeDetail from '../../../pageobjects/linode-detail/linode-detail.page';
 import Settings from '../../../pageobjects/linode-detail/linode-detail-settings.page';
 
 describe('Linode Detail - Settings Suite', () =>{
+    const linode = `AutoLinode${timestamp()}`;
+
     beforeAll(() => {
-        apiCreateLinode();
+        apiCreateLinode(linode);
         ListLinodes.linodesDisplay();
         ListLinodes.navigateToDetail();
         LinodeDetail.landingElemsDisplay();
         LinodeDetail.changeTab('Settings');
         Settings.header.waitForVisible(constants.wait.normal);
-        Settings.expandPanels(6);
     });
 
     afterAll(() => {
@@ -22,6 +27,11 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Label Suite', () => {
+        beforeAll(() => {
+            Settings.expandPanel('Linode Label');
+            browser.pause(1000);
+        });
+
         it('should display label editable text field', () => {
             Settings.label.waitForVisible();
             Settings.labelSave.waitForVisible();
@@ -33,6 +43,11 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Reset Root Password Suite', () => {
+        beforeAll(() => {
+            Settings.expandPanel('Reset Root Password');
+            browser.pause(1000);
+        });
+
         it('should powerdown linode', () => {
             LinodeDetail.setPower('powerOff');
         });
@@ -50,6 +65,11 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Notification Thresholds Suite', () => {
+        beforeAll(() => {
+            Settings.expandPanel('Notification Thresholds');
+            browser.pause(1000);
+        });
+
         it('should display all the alert toggles and default to enabled', () => {
             Settings.allAlertsEnabled();
         });
@@ -72,6 +92,11 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Watchdog Suite', () => {
+        beforeAll(() => {
+            Settings.expandPanel('Shutdown Watchdog');
+            browser.pause(1000);
+        });
+
         it('should display watchdog enabled by default', () => {
             expect(Settings.watchdogPanel.isVisible()).toBe(true);
             expect(Settings.watchdogDesc.isVisible()).toBe(true);
@@ -89,6 +114,11 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Advanced Configurations Suite', () => {
+        beforeAll(() => {
+            Settings.expandPanel('Advanced Configurations');
+            browser.pause(1000);
+        });
+
         xit('should add a configuration', () => {
 
         });
@@ -100,8 +130,14 @@ describe('Linode Detail - Settings Suite', () =>{
     });
 
     describe('Delete Suite', () => {
+        beforeAll(() => {
+            Settings.expandPanel('Delete Linode');
+            browser.pause(1000);
+        });
+
         it('should remove the linode', () => {
             Settings.remove();
+            $(ListLinodes.getLinodeSelector(linode)).waitForVisible(constants.wait.normal,true);
         });
     });
 });

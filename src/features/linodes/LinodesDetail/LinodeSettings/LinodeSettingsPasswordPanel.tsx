@@ -196,6 +196,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           errorText={passwordError}
           errorGroup="linode-settings-password"
           error={Boolean(passwordError)}
+          data-qa-password-input
         />
       </ExpansionPanel>
     );

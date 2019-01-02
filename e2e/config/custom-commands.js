@@ -14,7 +14,7 @@ const {
     updateUserProfile,
     putGlobalSetting,
     getGlobalSettings,
-    createVolumeUnattached,
+    createVolume,
     getLinodeImage,
 } = require('../setup/setup');
 
@@ -213,8 +213,8 @@ exports.browserCommands = () => {
             .then(res => res);
     });
 
-    browser.addCommand('createVolumeUnattached', function async(token,label,region,size,tags) {
-        return createVolumeUnattached(token,label,region,size,tags)
+    browser.addCommand('createVolume', function async(token,label,region,size,tags,linode_id) {
+        return createVolume(token,label,region,size,tags,linode_id)
             .then(res => res);
     });
 

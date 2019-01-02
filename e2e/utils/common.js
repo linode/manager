@@ -183,12 +183,12 @@ export const checkEnvironment = () => {
     }
 }
 
-export const createUnattachedVolumes = (volumeObjArray) => {
+export const createVolumes = (volumeObjArray) => {
     let volumes = [];
     const token = readToken(browser.options.testUser);
 
     volumeObjArray.forEach((volumeObj) => {
-        const volume = browser.createVolumeUnattached(token,volumeObj.label,volumeObj.region,volumeObj.size,volumeObj.tags);
+        const volume = browser.createVolume(token,volumeObj.label,volumeObj.region,volumeObj.size,volumeObj.tags,volumeObj.linode_id);
     });
 
     browser.url(constants.routes.volumes);
@@ -219,4 +219,3 @@ export const getDistrobutionLabel = (distrobutionTags) => {
     });
     return distrobutionLabel;
 }
-
