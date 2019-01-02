@@ -85,7 +85,7 @@ const handleVolumeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, 
     case 'failed':
     case 'notification':
     case 'scheduled':
-      return dispatch(requestVolumes);
+      return dispatch(requestVolumes());
 
     // We are ignoring 'started' events here, since these are progress events and this can take a very long time
     default:
