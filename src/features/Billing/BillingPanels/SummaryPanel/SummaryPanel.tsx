@@ -6,7 +6,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { isCreditCardExpired } from 'src/utilities/isCreditCardExpired';
+import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
 type ClassNames = 'root'

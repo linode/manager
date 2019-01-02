@@ -1,10 +1,12 @@
-import { clone, compose, path, pathOr } from 'ramda';
+import { clone, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -14,10 +16,10 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PromiseLoader from 'src/components/PromiseLoader';
+import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
-import { getLinodeImages } from 'src/services/images';
 import { getStackScript, updateStackScript } from 'src/services/stackscripts';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -49,7 +51,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface PreloadedProps {
-  images: { response: Linode.Image[] }
   stackScript: { response: Linode.StackScript.Response }
 }
 
@@ -69,14 +70,13 @@ interface State {
 }
 
 type CombinedProps = StateProps
+  & WithImagesProps
   & SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
   & RouteComponentProps<{ stackScriptID?: number }>;
 
 const preloaded = PromiseLoader<CombinedProps>({
-  images: () => getLinodeImages()
-    .then(response => response.data || []),
   stackScript: ({ match: { params: { stackScriptID } } }) => {
     if (!stackScriptID) {
       return Promise.reject(new Error('stackScriptID param not set.'));
@@ -138,7 +138,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   /*
   * Filter out already selected images in the available images dropdown
   */
-  availableImages = this.props.images.response.filter(image => {
+  availableImages = this.props.imagesData.filter(image => {
     if (this.defaultStackScriptValues.selectedImages) {
       for (const compatibleImage of this.defaultStackScriptValues.selectedImages) {
         // if the stackscript already has the image attached to it
@@ -178,7 +178,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     * add the remvoed image back to the selection list
     */
     const availableImagesCopy = clone(this.state.availableImages);
-    const imageToBeReAdded = this.props.images.response.find(image =>
+    const imageToBeReAdded = this.props.imagesData.find(image =>
       image.id === removedImage[0]);
     availableImagesCopy.unshift(imageToBeReAdded!);
 
@@ -301,7 +301,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, username } = this.props;
+    const { classes, username, imagesLoading } = this.props;
     const { availableImages, selectedImages, script,
       labelText, descriptionText, revisionNote, errors,
       isSubmitting } = this.state;
@@ -311,6 +311,10 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
     if (!username) {
       return <ErrorState errorText="An error has occurred, please reload and try again." />
+    }
+
+    if (imagesLoading) {
+      return <CircleProgress />
     }
 
     return (
@@ -332,40 +336,44 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <ScriptForm
-          currentUser={username}
-          images={{
-            available: availableImages,
-            selected: selectedImages,
-            handleRemove: this.handleRemoveImage
-          }}
-          label={{
-            value: labelText,
-            handler: this.handleLabelChange
-          }}
-          description={{
-            value: descriptionText,
-            handler: this.handleDescriptionChange
-          }}
-          revision={{
-            value: revisionNote,
-            handler: this.handleChangeRevisionNote
-          }}
-          script={{
-            value: script,
-            handler: this.handleChangeScript
-          }}
-          selectImages={{
-            open: this.state.imageSelectOpen, // idk
-            onOpen: this.handleOpenSelect,
-            onClose: this.handleCloseSelect,
-            onChange: this.handleChooseImage
-          }}
-          errors={errors}
-          onSubmit={this.handleUpdateStackScript}
-          onCancel={this.handleOpenDialog}
-          isSubmitting={isSubmitting}
-        />
+        {
+          imagesLoading
+            ? <CircleProgress />
+            : <ScriptForm
+              currentUser={username}
+              images={{
+                available: availableImages,
+                selected: selectedImages,
+                handleRemove: this.handleRemoveImage
+              }}
+              label={{
+                value: labelText,
+                handler: this.handleLabelChange
+              }}
+              description={{
+                value: descriptionText,
+                handler: this.handleDescriptionChange
+              }}
+              revision={{
+                value: revisionNote,
+                handler: this.handleChangeRevisionNote
+              }}
+              script={{
+                value: script,
+                handler: this.handleChangeScript
+              }}
+              selectImages={{
+                open: this.state.imageSelectOpen, // idk
+                onOpen: this.handleOpenSelect,
+                onClose: this.handleCloseSelect,
+                onChange: this.handleChooseImage
+              }}
+              errors={errors}
+              onSubmit={this.handleUpdateStackScript}
+              onCancel={this.handleOpenDialog}
+              isSubmitting={isSubmitting}
+            />
+        }
         {this.renderCancelStackScriptDialog()}
       </React.Fragment>
     );
@@ -390,10 +398,23 @@ const reloaded = reloadableWithRouter<PreloadedProps, { stackScriptID?: number }
   },
 );
 
-export default compose(
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+  imagesLoading: boolean;
+  imagesError?: Linode.ApiFieldError[];
+}
+const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptUpdate.docs),
+  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
+    ...ownProps,
+    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesLoading,
+    imagesError
+  })),
   styled,
   connected,
   reloaded,
   preloaded,
-)(StackScriptUpdate)
+);
+
+export default enhanced(StackScriptUpdate)

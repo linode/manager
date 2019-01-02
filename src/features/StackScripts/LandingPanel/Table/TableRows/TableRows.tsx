@@ -131,8 +131,11 @@ export const determineCanEdit = (stackScriptUser: string, currentUser: string) =
   return false;
 }
 
-const createTag: (images: string) => JSX.Element =
-  v => <Tag label={stripImageName(v)} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />;
+const createTag: (images: string | null) => JSX.Element =
+  v => {
+    if (!v) { return <React.Fragment />; }
+    return <Tag label={stripImageName(v)} key={v} colorVariant="lightBlue" style={{ margin: '2px 2px' }} />
+  };
 
 const createTags: (images: string[]) => JSX.Element[] =
   map(createTag);

@@ -7,6 +7,8 @@ describe('StackScript', () => {
   it('should render script code', () => {
     const component = shallow(
       <StackScript
+        imagesData={[]}
+        imagesLoading={false}
         data={{
           id: 1,
           label: 'MySQL',

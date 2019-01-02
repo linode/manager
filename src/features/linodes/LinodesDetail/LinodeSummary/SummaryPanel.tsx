@@ -1,14 +1,13 @@
-import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import withImage from 'src/containers/withImage.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
-import { getImages } from 'src/services/images';
 import { formatRegion } from 'src/utilities';
-import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 
 type ClassNames = 'root'
   | 'title'
@@ -73,69 +72,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   linode: Linode.Linode;
-  image?: Linode.Image;
+  linodeImageId: null | string;
   volumes: Linode.Volume[];
   typesLongLabel: string;
 }
+type CombinedProps = Props & WithImage & WithStyles<ClassNames>;
 
-interface State {
-  images: {
-    loading: boolean;
-    data?: Linode.Image[];
-    error?: Error;
-  }
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class SummaryPanel extends React.Component<CombinedProps, State> {
-  state: State = {
-    images: {
-      loading: false,
-    }
-  }
-
-  componentDidMount() {
-    this.getImages();
-  }
-
-  getImages = () => {
-    if (this.state.images.loading === false) {
-      this.setState({ images: { ...this.state.images, loading: true } });
-    }
-
-    return getImages()
-      .then(response => this.setState({
-        images: {
-          ...this.state.images,
-          loading: false,
-          data: response.data,
-        }
-      }))
-      .catch(response => this.setState({
-        images: {
-          ...this.state.images,
-          loading: false,
-          error: new Error('Unable to load image data.'),
-        }
-      }))
-  }
+class SummaryPanel extends React.Component<CombinedProps> {
 
   renderImage = () => {
-    const { images } = this.state;
-    const { linode } = this.props;
+    const { image } = this.props;
 
-    if (images.loading) {
-      return <span>Loading image...</span>
-    }
-
-    if (images.error) {
-      return <span>Unknown Image</span>
-    }
-
-    return (!!images.data && !!linode)
-      ? <span>{safeGetImageLabel(images.data, linode.image)}</span>
-      : <span>Unknown Image</span>
+    return (
+      <span>{image ? image.label : image === null ? 'No Image' : 'Unknown Image'}</span>
+    )
   }
 
   render() {
@@ -202,4 +152,16 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose(styled)(SummaryPanel) as React.ComponentType<Props>;
+interface WithImage {
+  image?: Linode.Image;
+}
+
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withImage<Props & WithImage, Props>(
+    props => props.linodeImageId,
+    (ownProps, image) => ({ ...ownProps, image }),
+  ),
+);
+
+export default enhanced(SummaryPanel);
