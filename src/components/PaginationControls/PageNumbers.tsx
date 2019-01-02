@@ -47,7 +47,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
               >
                 1
             </PageNumber>
-              <span className={classes.ellipses}>...</span>
+              <div className={classes.ellipses}><span>...</span></div>
             </React.Fragment>
             : null
         }

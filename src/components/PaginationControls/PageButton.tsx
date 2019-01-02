@@ -48,7 +48,8 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   const { classes, children, ...rest } = props;
 
   return (
-    <Button className={classes.root} {...rest}>
+    <Button 
+    className={classes.root} {...rest}>
       {children}
     </Button>
   );
