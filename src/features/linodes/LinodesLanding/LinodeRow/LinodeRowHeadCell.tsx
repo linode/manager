@@ -99,10 +99,10 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
             <div className={classes.status} >
               <LinodeStatusIndicator status={linodeStatus} />
             </div>
-            <Typography className={classes.linodeDescription}>
+          </div>
+          <Typography className={classes.linodeDescription}>
                 {linodeDescription}
             </Typography>
-          </div>
         </div>
       </Link>
     </TableCell>
