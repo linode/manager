@@ -8,10 +8,14 @@ type ClassNames = 'ellipses';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   ellipses: {
-    margin: theme.spacing.unit * 2,
-    [theme.breakpoints.down('xs')]: {
-      margin: 5,
-    }
+    backgroundColor: theme.bg.offWhiteDT,
+    border: '1px solid ' + `${theme.color.borderPagination}`,
+    padding: theme.spacing.unit,
+    minWidth: 40,
+    height: 40,
+    // [theme.breakpoints.down('xs')]: {
+    //   margin: 5,
+    // }
   }
 });
 

@@ -11,7 +11,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     padding: theme.spacing.unit,
     minWidth: 40,
     height: 40,
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
     [theme.breakpoints.down('xs')]: {
       minWidth: 27,
       height: 30,
