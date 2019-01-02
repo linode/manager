@@ -31,6 +31,7 @@ import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
+import { async as volumesAsync } from 'src/store/volumes';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -218,6 +219,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    console.log('cDM');
     const { actions } = this.props;
 
     actions.requestDomains();
@@ -227,6 +229,7 @@ export class App extends React.Component<CombinedProps, State> {
     actions.requestProfile();
     actions.requestSettings();
     actions.requestTypes();
+    actions.requestVolumes();
 
     /*
      * We want to listen for migration events side-wide
@@ -380,6 +383,7 @@ interface DispatchProps {
     requestProfile: () => void;
     requestSettings: () => void;
     requestTypes: () => void;
+    requestVolumes: () => void;
   },
 }
 
@@ -393,6 +397,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
+      requestVolumes: () => dispatch(volumesAsync.requestVolumes()),
     }
   };
 };

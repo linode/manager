@@ -45,6 +45,7 @@ const requestVolumes = () => (dispatch: Dispatch<State>) => {
   return getAll<Linode.Volume>(getVolumes)()
     .then(response => response.data)
     .then((volumes) => {
+      console.log(volumes);
       dispatch(getVolumesSuccess(volumes));
       return volumes;
     })

@@ -80,7 +80,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     return {
       ...state,
-      entities: entities.filter((linode) => linode.id !== payload),
+      entities: entities.filter((volume) => volume.id !== payload),
       results: results.filter((id) => id !== payload),
     }
   }
