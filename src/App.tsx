@@ -34,6 +34,7 @@ import { async as typesAsync } from 'src/store/reducers/resources/types';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import withBackupCTA , { BackupCTAProps } from './containers/withBackupCTA.container';
 
 shim(); // allows for .finally() usage
 
@@ -197,6 +198,7 @@ interface State {
 type CombinedProps = Props
   & DispatchProps
   & StateProps
+  & BackupCTAProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
@@ -325,6 +327,7 @@ export class App extends React.Component<CombinedProps, State> {
       toggleTheme,
       profileLoading,
       profileError,
+      backupsCTA,
     } = this.props;
 
     const hasDoc = documentation.length > 0;
@@ -350,7 +353,7 @@ export class App extends React.Component<CombinedProps, State> {
                       <Grid item className={classNames({
                         [classes.switchWrapper]: true,
                         [classes.switchWrapperDocsColl]: hasDoc && !docsExpanded,
-                        'mlMain': hasDoc && docsExpanded,
+                        'mlMain': hasDoc && docsExpanded || backupsCTA,
                       })}>
                         <Switch>
                           <Route path="/linodes" component={LinodesRoutes} />
@@ -375,8 +378,8 @@ export class App extends React.Component<CombinedProps, State> {
                       </Grid>
                       {hasDoc &&
                         <Grid className={classNames({
-                          'mlSidebar': docsExpanded,
-                          [classes.absSidebar]: !docsExpanded,
+                          'mlSidebar': docsExpanded || backupsCTA,
+                          [classes.absSidebar]: !docsExpanded && !backupsCTA,
                           [classes.absSidebarMobile]: true,
                         })}>
                           <DocsSidebar
@@ -471,5 +474,6 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
-  withSnackbar
+  withSnackbar,
+  withBackupCTA
 )(App);

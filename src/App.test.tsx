@@ -44,6 +44,7 @@ it('renders without crashing', () => {
             }}
             documentation={[]}
             toggleTheme={jest.fn()}
+            backupsCTA
           />
         </StaticRouter>
       </Provider>

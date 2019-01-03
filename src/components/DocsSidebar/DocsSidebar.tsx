@@ -3,7 +3,6 @@ import MenuList from '@material-ui/core/MenuList';
 import Description from '@material-ui/icons/Description';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import Button from 'src/components/core/Button';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
@@ -13,6 +12,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import withBackupCTA, { BackupCTAProps } from 'src/containers/withBackupCTA.container';
 import { BackupsCTA } from 'src/features/Backups';
 import DocComponent, { Doc } from './DocComponent';
 
@@ -29,6 +29,8 @@ type ClassNames = 'root'
   | 'toggleSidebarButtonExpanded'
   | 'toggleSidebarButtonIcon'
   | 'docsIconButton'
+  | 'docsIconButtonCTA'
+  | 'withDocsCollapsed'
   | 'docsIcon'
   | 'mobileMenu'
   | 'menuPaper'
@@ -95,6 +97,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       backgroundColor: theme.color.white,
     }
   },
+  docsIconButtonCTA: {
+    position: 'absolute',
+    right: 'calc(21.2% - 28px)',
+  },
   docsIcon: {
     width: 20,
     height: 20,
@@ -113,6 +119,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   mobileMenu: {
     maxHeight: 300,
+  },
+  withDocsCollapsed: {
+    marginTop: -20
   }
 });
 
@@ -184,7 +193,10 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
                   </Button>
                   :
                   <Tooltip title="Linode Docs">
-                    <IconButton onClick={toggleSidebar} className={classes.docsIconButton}>
+                    <IconButton onClick={toggleSidebar} className={classNames({
+                      [classes.docsIconButton]: true,
+                      [classes.docsIconButtonCTA]: !isExpanded && backupsCTA
+                    })}>
                       <Description className={classes.docsIcon} />
                     </IconButton>
                   </Tooltip>
@@ -207,7 +219,10 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
               }
             </Grid>
             {backupsCTA &&
-              <Grid item className={classes.gridItem}>
+              <Grid item className={classNames({
+                [classes.gridItem]: true,
+                [classes.withDocsCollapsed]: !isExpanded && backupsCTA
+              })}>
                 <BackupsCTA />
               </Grid>
             }
@@ -243,12 +258,4 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
   }
 }
 
-interface BackupCTAProps {
-  backupsCTA: boolean;
-}
-
-const connected = connect((state: ApplicationState, ownProps) => ({
-  backupsCTA: state.__resources.linodes.entities.filter(l => !l.backups.enabled).length > 0
-}));
-
-export default connected(styled(DocsSidebar));
+export default withBackupCTA(styled(DocsSidebar));
