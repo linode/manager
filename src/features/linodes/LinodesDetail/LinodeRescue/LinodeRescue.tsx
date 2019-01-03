@@ -243,15 +243,18 @@ export default compose(
       volumesError,
       volumesData: volumesData.reduce((accumulator, volume) => {
         if (
-          (volume.id === ownProps.linodeId || volume.linode_id === null)
+          (volume.linode_id === ownProps.linodeId || volume.linode_id === null)
           && volume.region === ownProps.linodeRegion
         ) {
           /* Volume is attached to this Linode, or in the same region and unattached.
           * Include it in the list of Volumes to be shown as options to the user */
-         return {
-           ...volume,
-           _id: `volume-${volume.id}`,
-         }
+         return [
+           ...accumulator,
+           {
+            ...volume,
+            _id: `volume-${volume.id}`,
+           }
+          ]
         } else {
           return accumulator;
         }

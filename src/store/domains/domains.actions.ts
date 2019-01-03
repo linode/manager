@@ -40,15 +40,10 @@ export const requestDomains = () => (dispatch: Dispatch<any>) => {
 };
 
 type RequestDomainForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
-export const requestDomainForStore: RequestDomainForStoreThunk = (id) => (dispatch, getState) => {
-  const { results } = getState().__resources.domains;
-
+export const requestDomainForStore: RequestDomainForStoreThunk = (id) => (dispatch) => {
   getDomain(id)
     .then(response => response)
     .then(domain => {
-      if (results.includes(id)) {
-        return dispatch(upsertDomain(domain));
-      }
       return dispatch(upsertDomain(domain))
     })
 

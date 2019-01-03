@@ -15,9 +15,7 @@ const getVolumesSuccess = actionCreator<Linode.Volume[]>('success');
 
 const getVolumesFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
-const addVolume = actionCreator<Linode.Volume>('add');
-
-const updateVolume = actionCreator<Linode.Volume>('update');
+const upsertVolume = actionCreator<Linode.Volume>('upsert');
 
 const updateMultipleVolumes = actionCreator<Linode.Volume[]>('update_multiple')
 
@@ -40,22 +38,14 @@ const requestVolumes = () => (dispatch: Dispatch<State>) => {
 };
 
 type RequestLinodeForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
-const requestVolumeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, getState) => {
-  const { results } = getState().__resources.volumes;
-
-  return getVolume(id)
+const requestVolumeForStore: RequestLinodeForStoreThunk = (id) => (dispatch) =>
+  getVolume(id)
     .then(volume => {
-      if (results.includes(id)) {
-        return dispatch(updateVolume(volume));
-      }
-      return dispatch(addVolume(volume))
+      return dispatch(upsertVolume(volume))
     })
 
-};
-
 export default {
-  addVolume,
-  updateVolume,
+  upsertVolume,
   updateMultipleVolumes,
   deleteVolume,
   getVolumesRequest,
