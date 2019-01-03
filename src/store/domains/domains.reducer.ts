@@ -1,6 +1,7 @@
 import { Reducer } from 'redux';
+import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { addDomain, deleteDomain, getDomainsFailure, getDomainsRequest, getDomainsSuccess, updateDomain } from './domains.actions';
+import { deleteDomain, getDomainsFailure, getDomainsRequest, getDomainsSuccess, upsertDomain } from './domains.actions';
 import { entitiesFromPayload, resultsFromPayload } from './domains.helpers';
 
 /**
@@ -47,11 +48,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
-  if (isType(action, updateDomain)) {
+  if (isType(action, upsertDomain)) {
     const { payload } = action;
+    const updated = updateOrAdd(payload, state.entities);
+
     return {
       ...state,
-      entities: state.entities.map((domain) => domain.id === payload.id ? payload : domain),
+      entities: updated,
+      results: updated.map((domain) => domain.id),
     }
   }
 
@@ -63,16 +67,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: entities.filter((domain) => domain.id !== payload),
       results: results.filter((id) => id !== payload),
-    }
-  }
-
-  if (isType(action, addDomain)) {
-    const { payload } = action;
-    const { entities, results } = state;
-    return {
-      ...state,
-      entities: [...entities, payload],
-      results: [...results, payload.id],
     }
   }
 

@@ -1,6 +1,6 @@
 import { API_ROOT } from 'src/constants';
 import store from 'src/store';
-import { addDomain, deleteDomain as _deleteDomain, updateDomain as _updateDomain } from 'src/store/domains/domains.actions';
+import { deleteDomain as _deleteDomain, upsertDomain } from 'src/store/domains/domains.actions';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 import { createDomainSchema, importZoneSchema, updateDomainSchema } from './domains.schema';
 
@@ -45,7 +45,7 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
   )
     .then(response => response.data)
     .then(domain => {
-      store.dispatch(addDomain(domain));
+      store.dispatch(upsertDomain(domain));
       return domain;
     });
 
@@ -63,7 +63,7 @@ export const updateDomain = (domainId: number, data: Partial<Linode.Domain>) =>
   )
     .then(response => response.data)
     .then(domain => {
-      store.dispatch(_updateDomain(domain));
+      store.dispatch(upsertDomain(domain));
       return domain;
     })
 

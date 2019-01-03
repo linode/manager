@@ -16,9 +16,7 @@ export const getDomainsSuccess = actionCreator<Linode.Domain[]>('success');
 
 export const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
-export const addDomain = actionCreator<Linode.Domain>('add');
-
-export const updateDomain = actionCreator<Linode.Domain>('update');
+export const upsertDomain = actionCreator<Linode.Domain>('upset');
 
 export const deleteDomain = actionCreator<number>('delete');
 
@@ -49,9 +47,9 @@ export const requestDomainForStore: RequestDomainForStoreThunk = (id) => (dispat
     .then(response => response)
     .then(domain => {
       if (results.includes(id)) {
-        return dispatch(updateDomain(domain));
+        return dispatch(upsertDomain(domain));
       }
-      return dispatch(addDomain(domain))
+      return dispatch(upsertDomain(domain))
     })
 
 };
