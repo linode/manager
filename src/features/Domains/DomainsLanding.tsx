@@ -1,35 +1,32 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
-import PaginationFooter from 'src/components/PaginationFooter';
+import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import Tags from 'src/components/Tags';
+import Toggle from 'src/components/Toggle';
+import domainsContainer, { Props as WithDomainsProps } from 'src/containers/domains.container';
+import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
-import { deleteDomain, getDomains } from 'src/services/domains';
+import ListDomains from 'src/features/Domains/ListDomains';
+import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
+import { deleteDomain } from 'src/services/domains';
 import { openForCloning, openForCreating } from 'src/store/reducers/domainDrawer';
-import ActionMenu from './DomainActionMenu';
+import { sendEvent } from 'src/utilities/analytics';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames = 'root'
@@ -78,13 +75,16 @@ interface State {
   };
 }
 
-type CombinedProps = PaginationProps<Linode.Domain>
+type CombinedProps =
+  WithDomainsProps
+  & LocalStorageProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
   & DispatchProps
   & InjectedNotistackProps;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
+  static eventCategory = `domains landing`;
   state: State = {
     importDrawer: {
       open: false,
@@ -105,16 +105,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   cancelRequest: Function;
 
-  componentDidMount() {
-    this.props.request();
-  }
-
-  componentWillUnmount() {
-    if (typeof this.cancelRequest === 'function') {
-      this.cancelRequest();
-    }
-  }
-
   openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
 
   closeImportZoneDrawer = () => this.setState({
@@ -131,7 +121,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     if (domain.id) {
       return this.props.history.push(`/domains/${domain.id}`);
     }
-    this.props.request();
   }
 
   getActions = () => {
@@ -150,7 +139,6 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       deleteDomain(domainID)
         .then(() => {
           this.closeRemoveDialog();
-          this.props.onDelete();
         })
         .catch(() => {
           this.closeRemoveDialog();
@@ -182,28 +170,37 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { error, count, loading } = this.props;
+    const { domainsError, domainsData, domainsLoading } = this.props;
 
-    if (loading) {
-      return this.renderLoading();
+    if (domainsLoading) {
+      return <RenderLoading />
     }
 
-    if (error) {
-      return this.renderErrors();
+    if (domainsError) {
+      return <RenderError />
     }
 
-    if (count === 0) {
-      return this.renderEmpty();
+    if (domainsData.length === 0) {
+      return <RenderEmpty onClick={this.props.openForCreating} />
     }
 
     return (
       <React.Fragment>
+        <FormControlLabel
+          control={
+            <Toggle
+              className={(this.props.groupByTag ? ' checked' : ' unchecked')}
+              onChange={(e, checked) => this.props.toggleGroupByTag(checked)}
+              checked={this.props.groupByTag} />
+          }
+          label="Group by Tag:"
+        />
         <DocumentTitleSegment segment="Domains" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
           <Grid item>
             <Typography role="header" variant="h1" data-qa-title className={classes.title}>
               Domains
-            </Typography>
+                    </Typography>
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
@@ -222,28 +219,25 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <Paper>
-          <Table aria-label="List of your Domains">
-            <TableHead>
-              <TableRow>
-                <TableCell data-qa-domain-name-header className={classes.domain}>Domain</TableCell>
-                <TableCell data-qa-domain-type-header>Type</TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.renderContent()}
-            </TableBody>
-          </Table>
-        </Paper>
-        <PaginationFooter
-          count={this.props.count}
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="domains landing"
-        />
+        <Grid item xs={12}>
+        {/* Duplication starts here. How can we refactor this? */}
+          <OrderBy data={domainsData} order={'desc'} orderBy={'domain'}>
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              const props = {
+                orderBy,
+                order,
+                handleOrderChange,
+                data: orderedData,
+                onClone: this.props.openForCloning,
+                onRemove: this.openRemoveDialog,
+              };
+
+              return this.props.groupByTag
+                ? <ListGroupedDomains {...props} />
+                : <ListDomains {...props} />
+            }}
+          </OrderBy>
+        </Grid>
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
@@ -260,91 +254,38 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
-
-  renderContent = () => {
-    const { error, count, data: domains } = this.props;
-
-    if (error) {
-      return this.renderErrors();
-    }
-
-    if (count > 0) {
-      return this.renderData(domains!);
-    }
-
-    return null;
-  };
-
-  renderLoading = () => {
-    return (
-      <CircleProgress />
-    );
-  };
-
-  renderErrors = () => {
-    return (
-      <ErrorState
-        errorText="There was an error retrieving your domains. Please reload and try again."
-      />
-    );
-  }
-
-  renderEmpty = () => {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Domains" />
-        <Placeholder
-          title="Add a Domain"
-          copy="Adding a new domain is easy. Click below to add a domain."
-          icon={DomainIcon}
-          buttonProps={{
-            onClick: this.props.openForCreating,
-            children: 'Add a Domain',
-          }}
-        />
-      </React.Fragment>
-    );
-  }
-
-  renderData = (domains: Linode.Domain[]) => {
-    const { classes, history } = this.props;
-
-    return (
-      domains.map(domain =>
-        <TableRow
-          key={domain.id}
-          data-qa-domain-cell={domain.id}
-          className={`${classes.domainRow} ${'fade-in-table'}`}
-          rowLink={`/domains/${domain.id}`}
-        >
-          <TableCell parentColumn="Domain" data-qa-domain-label>
-            <Link to={`/domains/${domain.id}`}>
-              {domain.domain}
-              <div className={classes.tagWrapper}>
-                <Tags tags={domain.tags} />
-              </div>
-            </Link>
-          </TableCell>
-          <TableCell parentColumn="Type" data-qa-domain-type>{domain.type}</TableCell>
-          <TableCell>
-            <ActionMenu
-              domain={domain.domain}
-              id={domain.id}
-              history={history}
-              onRemove={this.openRemoveDialog}
-              onClone={this.props.openForCloning}
-            />
-          </TableCell>
-        </TableRow>,
-      )
-    );
-  }
 }
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getDomains(params, filters)
-  .then(response => response);
+const RenderLoading: React.StatelessComponent<{}> = () => {
+  return (
+    <CircleProgress />
+  );
+};
 
-const paginated = Pagey(updatedRequest);
+const RenderError: React.StatelessComponent<{}> = () => {
+  return (
+    <ErrorState
+      errorText="There was an error retrieving your domains. Please reload and try again."
+    />
+  );
+}
+
+const RenderEmpty: React.StatelessComponent<{ onClick: () => void }> = (props) => {
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Domains" />
+      <Placeholder
+        title="Add a Domain"
+        copy="Adding a new domain is easy. Click below to add a domain."
+        icon={DomainIcon}
+        buttonProps={{
+          onClick: props.onClick,
+          children: 'Add a Domain',
+        }}
+      />
+    </React.Fragment>
+  );
+}
 
 const styled = withStyles(styles);
 
@@ -353,18 +294,49 @@ interface DispatchProps {
   openForCreating: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForCreating, openForCloning },
-  dispatch,
+type LocalStorageProps = LocalStorageState & LocalStorageUpdater;
+
+interface LocalStorageState {
+  groupByTag: boolean;
+}
+
+interface LocalStorageUpdater {
+  toggleGroupByTag: (checked: boolean) => Partial<LocalStorageState>;
+  [key: string]: (...args: any[]) => Partial<LocalStorageState>;
+}
+
+const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUpdater, {}>(
+  (storage) => {
+    return {
+      groupByTag: storage.groupDomainsByTag.get(),
+    }
+  },
+  (storage) => ({
+    toggleGroupByTag: (state) => (checked: boolean) => {
+      storage.groupDomainsByTag.set(checked ? 'true' : 'false');
+
+      sendEvent({
+        category: DomainsLanding.eventCategory,
+        action: 'group by tag',
+        label: String(checked),
+      });
+
+      return {
+        ...state,
+        groupByTag: checked,
+      }
+    },
+  }),
 );
 
-export const connected = connect(undefined, mapDispatchToProps);
+export const connected = connect(undefined, { openForCreating, openForCloning });
 
 export default compose<CombinedProps, {}>(
   setDocs(DomainsLanding.docs),
+  domainsContainer,
   withRouter,
+  withLocalStorage,
   styled,
-  paginated,
   connected,
   withSnackbar
 )(DomainsLanding);

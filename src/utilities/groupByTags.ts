@@ -51,3 +51,30 @@ export const groupByGroup = <T extends Grouped>(arr: T[]): GroupedBy<T> => {
   return Object.entries(map);
 };
 
+/**
+ * Moves the NONE to the top, and alphabetically sorts the remainder.
+ */
+export const sortGroups = (groups: GroupedBy<any>) => {
+  let foundUntaggedIndex;
+  let idx = 0;
+  const len = groups.length;
+  for (; idx < len; idx++) {
+    const [tag] = groups[idx];
+    if (tag === NONE) {
+      foundUntaggedIndex = idx;
+      break;
+    }
+  }
+
+  if (typeof foundUntaggedIndex === 'undefined') {
+    return groups
+    .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1);
+  }
+
+  return [
+    groups[foundUntaggedIndex],
+    ...groups
+      .filter(([tag]) => tag !== NONE)
+      .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1),
+  ];
+};

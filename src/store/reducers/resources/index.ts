@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
+import domains, { defaultState as defaultDomainsState } from '../../domains/domains.reducer';
 import account, { DEFAULT_STATE as defaultAccountState } from './account';
 import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from './accountSettings';
-import domains, { defaultState as defaultDomainsState } from './domains';
 import images, { defaultState as defaultImagesState } from './images';
 import linodes, { defaultState as defaultLinodesState } from './linodes';
 import profile, { DEFAULT_STATE as defaultProfileState } from './profile';
