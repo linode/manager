@@ -31,7 +31,7 @@ import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
-import { async as volumesAsync } from 'src/store/volumes';
+import { actions as volumeActions } from 'src/store/volumes';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -219,7 +219,6 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    console.log('cDM');
     const { actions } = this.props;
 
     actions.requestDomains();
@@ -397,7 +396,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
-      requestVolumes: () => dispatch(volumesAsync.requestVolumes()),
+      requestVolumes: () => dispatch(volumeActions.requestVolumes()),
     }
   };
 };

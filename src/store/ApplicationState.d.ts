@@ -3,13 +3,6 @@ declare interface ExtendedEvent extends Linode.Event {
   _initial?: boolean;
 }
 declare interface ApplicationState {
-    volumes: {
-      results: number[];
-      entities: Linode.Volume[];
-      loading: boolean;
-      lastUpdated: number;
-      error?: Linode.ApiFieldError[];
-    },
   __resources: {
     profile: RequestableData<Linode.Profile>,
     accountSettings: RequestableData<Linode.AccountSettings>;
@@ -37,6 +30,13 @@ declare interface ApplicationState {
     domains: {
       results: number[];
       entities: Linode.Domain[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
+    volumes: {
+      results: number[];
+      entities: Linode.Volume[];
       loading: boolean;
       lastUpdated: number;
       error?: Linode.ApiFieldError[];

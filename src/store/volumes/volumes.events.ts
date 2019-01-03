@@ -1,10 +1,8 @@
 import { Dispatch } from 'redux';
 import { EventHandler } from '../middleware/combineEventsMiddleware';
-import { actions } from './actions';
-import { async } from './async';
+import actions from './volumes.actions';
 
-const { deleteVolume } = actions;
-const { requestVolumeForStore, requestVolumes } = async;
+const { deleteVolume, requestVolumeForStore, requestVolumes } = actions;
 
 const volumeEventsHandler: EventHandler = (event, dispatch) => {
   const { action, entity, status } = event;

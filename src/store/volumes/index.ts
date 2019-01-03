@@ -1,4 +1,3 @@
-export { actions } from './actions';
-export { async } from './async';
-export { default as reducer, defaultState } from './reducer';
-export { default as events } from './events';
+export { default as actions } from './volumes.actions';
+export { default as reducer, defaultState } from './volumes.reducer';
+export { default as events } from './volumes.events';

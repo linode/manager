@@ -14,7 +14,8 @@ import __resources, { defaultState as resourcesDefaultState } from './reducers/r
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from './reducers/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from './reducers/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from './reducers/volumeDrawer';
-import { defaultState as volumesDefaultState, events as volumeEvents, reducer as volumes  } from './volumes';
+import { events as volumeEvents } from './volumes';
+
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
@@ -30,7 +31,6 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
-  volumes,
 });
 
 const defaultState: ApplicationState = {
@@ -45,7 +45,6 @@ const defaultState: ApplicationState = {
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
-  volumes: volumesDefaultState,
 };
 
 const enhancers = compose(

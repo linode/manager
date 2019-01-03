@@ -2,9 +2,9 @@ import { Reducer } from "redux";
 import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
 import { isType } from 'typescript-fsa';
 
-import { actions } from './actions';
+import actions from './volumes.actions';
 
-type State = ApplicationState['volumes'];
+type State = ApplicationState['__resources']['volumes'];
 
 export const defaultState: State = {
   results: [],
