@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
 import domains, { defaultState as defaultDomainsState } from '../../domains/domains.reducer';
+import { defaultState as volumesDefaultState, reducer as volumes  } from '../../volumes';
 import account, { DEFAULT_STATE as defaultAccountState } from './account';
 import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from './accountSettings';
 import images, { defaultState as defaultImagesState } from './images';
@@ -15,6 +16,16 @@ export const defaultState = {
   profile: defaultProfileState,
   types: defaultTypesState,
   images: defaultImagesState,
+  volumes: volumesDefaultState,
 }
 
-export default combineReducers({ account, accountSettings, profile, domains, linodes, types, images });
+export default combineReducers({
+  account,
+  accountSettings,
+  profile,
+  domains,
+  linodes,
+  types,
+  images,
+  volumes
+});

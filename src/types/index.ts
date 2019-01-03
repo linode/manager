@@ -111,7 +111,9 @@ namespace Linode {
     'volume_create' |
     'volume_delete' |
     'volume_detach' |
-    'volume_attach';
+    'volume_attach' |
+    'volume_clone'  |
+    'volume_resize';
 
   export type EventStatus =
     'scheduled' |

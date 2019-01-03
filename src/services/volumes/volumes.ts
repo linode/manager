@@ -1,4 +1,6 @@
 import { API_ROOT } from 'src/constants';
+import store from 'src/store';
+import { actions } from 'src/store/volumes';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 import { CloneVolumeSchema, CreateVolumeSchema, ResizeVolumeSchema, UpdateVolumeSchema } from './volumes.schema';
 
@@ -136,7 +138,7 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
 /**
  * updateVolume
  *
- * Detaches a Volume on your account from a Linode on your account.
+ * Updates a Volume on your account.
  *
  * @param volumeId { number } The Volume to be updated.
  * @param data { { label: string; tags: string[] } } The updated label for this Volume.
@@ -147,7 +149,11 @@ export const updateVolume = (volumeId: number, data: { label: string, tags?: str
   setMethod('PUT'),
   setData(data, UpdateVolumeSchema),
 )
-.then(response => response.data);
+.then(response => response.data)
+.then(volume => {
+  store.dispatch(actions.updateVolume(volume))
+  return volume;
+});
 
 /**
  * createVolume

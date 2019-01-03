@@ -35,6 +35,13 @@ declare interface ApplicationState {
       error?: Linode.ApiFieldError[];
     },
     account: RequestableData<Linode.Account>
+    volumes: {
+      results: number[];
+      entities: Linode.Volume[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
   },
   authentication: AuthState;
   backups: BackupDrawerState;
