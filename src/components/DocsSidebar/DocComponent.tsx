@@ -1,4 +1,5 @@
 import * as React from 'react';
+import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import truncateText from 'src/utilities/truncateText';
@@ -16,7 +17,11 @@ type CSSClasses = 'root'
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
-    marginTop: theme.spacing.unit * 2,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
   },
   title: {},
   titleLink: {
@@ -45,14 +50,14 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
 
     return (
       <React.Fragment>
-        <div className={classes.root} data-qa-doc={title}>
+        <MenuItem className={classes.root} data-qa-doc={title} disableGutters button={false}>
           <Typography role="header" variant="h3" className={classes.title}>
             <a href={src} target="_blank" className={classes.titleLink}>{title}</a>
           </Typography>
           <Typography variant="body2" className={classes.body}>
             {this.body()}
           </Typography>
-        </div>
+        </MenuItem>
       </React.Fragment>
     );
   }

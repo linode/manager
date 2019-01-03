@@ -107,7 +107,8 @@ type ClassNames = 'appFrame'
   | 'grid'
   | 'switchWrapper'
   | 'switchWrapperDocsColl'
-  | 'absSidebar';
+  | 'absSidebar'
+  | 'absSidebarMobile';
 
 const styles: StyleRulesCallback = (theme) => ({
   appFrame: {
@@ -125,6 +126,16 @@ const styles: StyleRulesCallback = (theme) => ({
     [theme.breakpoints.up('xl')]: {
       marginLeft: 275,
     },
+    '& .headerWithDoc': {
+      [theme.breakpoints.down('md')]: {
+        paddingRight: 40,
+      }
+    },
+    '& .headerWithDocLG': {
+      [theme.breakpoints.down('md')]: {
+        paddingRight: 60,
+      }
+    }
   },
   wrapper: {
     padding: theme.spacing.unit * 3,
@@ -160,6 +171,13 @@ const styles: StyleRulesCallback = (theme) => ({
   absSidebar: {
     position: 'absolute',
     right: 30,
+  },
+  absSidebarMobile: {
+    [theme.breakpoints.down('md')]: {
+      position: 'absolute',
+      right: 30,
+      width: 'auto'
+    }
   }
 });
 
@@ -356,7 +374,11 @@ export class App extends React.Component<CombinedProps, State> {
                         </Switch>
                       </Grid>
                       {hasDoc &&
-                        <Grid className={docsExpanded ? 'mlSidebar' : classes.absSidebar}>
+                        <Grid className={classNames({
+                          'mlSidebar': docsExpanded,
+                          [classes.absSidebar]: !docsExpanded,
+                          [classes.absSidebarMobile]: true,
+                        })}>
                           <DocsSidebar
                             docs={documentation}
                             toggleSidebar={this.toggleSidebar}

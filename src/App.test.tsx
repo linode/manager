@@ -28,7 +28,8 @@ it('renders without crashing', () => {
               grid: '',
               switchWrapper: '',
               switchWrapperDocsColl: '',
-              absSidebar: ''
+              absSidebar: '',
+              absSidebarMobile: ''
             }}
             userId={123456}
             profileLoading={false}
