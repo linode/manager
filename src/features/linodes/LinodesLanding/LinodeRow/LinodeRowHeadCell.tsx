@@ -14,7 +14,11 @@ type ClassNames = 'root'
  | 'labelWrapper'
  | 'linodeDescription'
  | 'status'
- | 'labelRow';
+ | 'labelRow'
+ | 'icon'
+ | 'labelStatusWrapper'
+ | 'statusOuter'
+ | 'labelGridWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
@@ -50,6 +54,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   linodeDescription: {
     paddingTop: theme.spacing.unit / 2,
   },
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+  },
+  statusOuter: {
+    top: 0,
+    position: 'relative',
+    marginLeft: 4,
+    lineHeight: '0.8rem',
+  },
+  labelGridWrapper: {
+    padding: '0 4px !important',
+  }
 });
 
 interface Props {
@@ -84,12 +114,9 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
       <Link to={`/linodes/${linodeId}`} className={classes.link}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <LinodeIcon />
+            <LinodeIcon className={classes.icon}/>
           </Grid>
-          <Grid item className="py0">
-            <LinodeStatusIndicator status={linodeStatus} />
-          </Grid>
-          <Grid item className="py0">
+          <Grid item className={classes.labelGridWrapper}>
             <div className={loading ? classes.labelWrapper : ''}>
               {
                 linodeRecentEvent && linodeInTransition(linodeStatus, linodeRecentEvent) &&
@@ -99,12 +126,17 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
                   progress={linodeRecentEvent.percent_complete}
                 />
               }
-              <Typography role="header" variant="h3" data-qa-label>
+             <div className={classes.labelStatusWrapper}>
+               <Typography role="header" variant="h3" data-qa-label>
                 {linodeLabel}
               </Typography>
-              <Typography className={classes.linodeDescription}>
-                 {linodeDescription}
-               </Typography>
+              <div className={classes.statusOuter}>
+                <LinodeStatusIndicator status={linodeStatus} />
+              </div>
+            </div>
+            <Typography className={classes.linodeDescription}>
+              {linodeDescription}
+            </Typography>
             </div>
           </Grid>
         </Grid>
