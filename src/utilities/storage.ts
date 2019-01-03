@@ -27,21 +27,61 @@ const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
+const GROUP_DOMAINS = `GROUP_DOMAINS`;
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
 type LinodeView = 'grid' | 'list';
 
-export const storage = {
+export interface Storage {
   theme: {
-    get: (): Theme => getStorage(THEME, 'light'),
-    set: (whichTheme: Theme) => setStorage(THEME, whichTheme),
+    get: () => Theme;
+    set: (theme: Theme) => void;
+  };
+  notifications: {
+    welcome: {
+      get: () => Beta;
+      set: (open: Beta) => void;
+    };
+  };
+  views: {
+    linode: {
+      get: () => LinodeView;
+      set: (view: LinodeView) => void;
+    },
+    grouped: {
+      get: () => 'true' | 'false';
+      set: (v: 'true' | 'false') => void;
+    },
+  };
+  loginCloudManager: {
+    get: () => undefined | string;
+    set: (v: string | object, options?: Cookies.CookieAttributes) => void;
+  };
+  hideGroupImportCTA: {
+    get: () => 'true' | 'false';
+    set: () => void;
+  };
+  hasImportedGroups: {
+    get: () => 'true' | 'false';
+    set: () => void;
+  };
+  groupDomainsByTag: {
+    get: () => boolean;
+    set: (v: 'true' | 'false') => void;
+  };
+};
+
+export const storage: Storage = {
+  theme: {
+    get: () => getStorage(THEME, 'light'),
+    set: (v) => setStorage(THEME, v),
   },
   notifications: {
     welcome: {
       /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
-      get: (): Beta => getStorage(BETA_NOTIFICATION, 'open'),
-      set: (open: Beta) => setStorage(BETA_NOTIFICATION, open),
+      get: () => getStorage(BETA_NOTIFICATION, 'open'),
+      set: (open) => setStorage(BETA_NOTIFICATION, open),
     }
   },
   views: {
@@ -50,8 +90,8 @@ export const storage = {
       set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
     },
     grouped: {
-      get: (): 'true' | 'false' => getStorage(GROUP_LINODES),
-      set: (v: 'true' | 'false') => setStorage(GROUP_LINODES, v),
+      get: () => getStorage(GROUP_LINODES),
+      set: (v) => setStorage(GROUP_LINODES, v),
     },
   },
   loginCloudManager: {
@@ -63,13 +103,17 @@ export const storage = {
       Cookies.set('loginCloudManager', v, options),
   },
   hideGroupImportCTA: {
-    get: (): 'true' | 'false' =>  getStorage(HIDE_DISPLAY_GROUPS_CTA),
+    get: () => getStorage(HIDE_DISPLAY_GROUPS_CTA),
     set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, 'true')
   },
   hasImportedGroups: {
-    get: (): 'true' | 'false' =>  getStorage(HAS_IMPORTED_GROUPS),
+    get: () => getStorage(HAS_IMPORTED_GROUPS),
     set: () => setStorage(HAS_IMPORTED_GROUPS, 'true')
-  }
+  },
+  groupDomainsByTag: {
+    get: () => getStorage(GROUP_DOMAINS),
+    set: (v) => setStorage(GROUP_DOMAINS, v)
+  },
 }
 
 export const { theme, notifications, views } = storage;

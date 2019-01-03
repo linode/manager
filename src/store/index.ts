@@ -1,5 +1,6 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import domainEvents from 'src/store/domains/domains.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import linodeEvents from './middleware/linodeEvents';
@@ -51,6 +52,7 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       imageEvents,
+      domainEvents,
     ),
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f,

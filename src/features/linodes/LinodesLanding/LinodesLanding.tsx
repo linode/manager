@@ -268,11 +268,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 order,
                 orderBy,
               }
-              const render = groupByTags
-                ? <DisplayGroupedLinodes {...finalProps} />
-                : <DisplayLinodes {...finalProps} />;
 
-              return render;
+              return groupByTags
+                ? <DisplayGroupedLinodes {...finalProps} />
+                : <DisplayLinodes {...finalProps} />
             }}
           </OrderBy>
         </Grid>
@@ -379,6 +378,13 @@ const toggleGroupState = withStateHandlers(
   {
     toggleGroupByTag: (state, ownProps) => (e, checked) => {
       storage.views.grouped.set(checked ? 'true' : 'false')
+
+      sendEvent({
+        category: ListLinodes.eventCategory,
+        action: 'group by tag',
+        label: String(checked),
+      });
+
       return { ...state, groupByTags: checked };
     },
   },
@@ -425,7 +431,7 @@ export const enhanced = compose(
   withSnackbar,
   withWidth(),
   connected,
-  withImages((ownProps,imagesData,imagesLoading,imagesError) => ({
+  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesLoading,
     imagesError,
