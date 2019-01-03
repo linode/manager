@@ -268,11 +268,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 order,
                 orderBy,
               }
-              const render = groupByTags
-                ? <DisplayGroupedLinodes {...finalProps} />
-                : <DisplayLinodes {...finalProps} />;
 
-              return render;
+              return groupByTags
+                ? <DisplayGroupedLinodes {...finalProps} />
+                : <DisplayLinodes {...finalProps} />
             }}
           </OrderBy>
         </Grid>

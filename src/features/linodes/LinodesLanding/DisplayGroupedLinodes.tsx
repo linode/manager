@@ -141,21 +141,25 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     <React.Fragment>
                       <TableBody className={classes.groupContainer}>
                         <TableRow className={classes.tagHeaderRow}>
-                          <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
+                          <TableCell colSpan={7}>
+                            <Typography variant="h2" component="h3" className={classes.tagHeader}>
+                              {tag}
+                            </Typography>
+                          </TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                      {count > DEFAULT_PAGE_SIZE && <TableRow>
-                        <TableCell colSpan={7} className={classes.paginationCell}>
-                          <PaginationFooter
-                            count={count}
-                            handlePageChange={handlePageChange}
-                            handleSizeChange={handlePageSizeChange}
-                            pageSize={pageSize}
-                            page={page}
-                            eventCategory={'linodes landing'}
-                          />
-                        </TableCell>
-                      </TableRow>}
+                        {count > DEFAULT_PAGE_SIZE && <TableRow>
+                          <TableCell colSpan={7} className={classes.paginationCell}>
+                            <PaginationFooter
+                              count={count}
+                              handlePageChange={handlePageChange}
+                              handleSizeChange={handlePageSizeChange}
+                              pageSize={pageSize}
+                              page={page}
+                              eventCategory={'linodes landing'}
+                            />
+                          </TableCell>
+                        </TableRow>}
                       </TableBody>
                     </React.Fragment>
                   )

@@ -219,27 +219,25 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <OrderBy data={domainsData} order={'desc'} orderBy={'domain'}>
-          {({ data: orderedData, handleOrderChange, order, orderBy }) =>
-            this.props.groupByTag
-              ? <ListGroupedDomains
-                orderBy={orderBy}
-                order={order}
-                handleOrderChange={handleOrderChange}
-                data={orderedData}
-                onClone={this.props.openForCloning}
-                onRemove={this.openRemoveDialog}
-              />
-              : <ListDomains
-                orderBy={orderBy}
-                order={order}
-                handleOrderChange={handleOrderChange}
-                data={orderedData}
-                onClone={this.props.openForCloning}
-                onRemove={this.openRemoveDialog}
-              />
-          }
-        </OrderBy>
+        <Grid item xs={12}>
+        {/* Duplication starts here. How can we refactor this? */}
+          <OrderBy data={domainsData} order={'desc'} orderBy={'domain'}>
+            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+              const props = {
+                orderBy,
+                order,
+                handleOrderChange,
+                data: orderedData,
+                onClone: this.props.openForCloning,
+                onRemove: this.openRemoveDialog,
+              };
+
+              return this.props.groupByTag
+                ? <ListGroupedDomains {...props} />
+                : <ListDomains {...props} />
+            }}
+          </OrderBy>
+        </Grid>
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
