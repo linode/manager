@@ -1,6 +1,7 @@
 import { Reducer } from "redux";
-import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
 import { isType } from 'typescript-fsa';
+
+import updateOrAdd from 'src/utilities/updateOrAdd';
 
 import actions from './volumes.actions';
 
@@ -48,13 +49,16 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
-  if (isType(action, actions.updateVolume)) {
+  if (isType(action, actions.upsertVolume)) {
     const { payload } = action;
     const { entities } = state;
 
+    const updated = updateOrAdd(payload, entities);
+
     return {
       ...state,
-      entities: findAndReplaceOrAppend(entities, payload)
+      entities: updated,
+      results: updated.map((domain) => domain.id)
     }
   }
 
@@ -82,16 +86,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: entities.filter((volume) => volume.id !== payload),
       results: results.filter((id) => id !== payload),
-    }
-  }
-
-  if (isType(action, actions.addVolume)) {
-    const { payload } = action;
-    const { entities, results } = state;
-    return {
-      ...state,
-      entities: [...entities, payload],
-      results: [...results, payload.id],
     }
   }
 

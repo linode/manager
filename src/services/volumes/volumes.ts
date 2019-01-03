@@ -151,7 +151,7 @@ export const updateVolume = (volumeId: number, data: { label: string, tags?: str
 )
 .then(response => response.data)
 .then(volume => {
-  store.dispatch(actions.updateVolume(volume))
+  store.dispatch(actions.upsertVolume(volume))
   return volume;
 });
 
