@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'flex-start',
     minWidth: 'auto',
     margin: `-2px -8px 0 0`,
-    '&:focus': {
+    '&:hover, &:focus': {
       backgroundColor: theme.color.white,
     }
   },
@@ -109,7 +109,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: theme.spacing.unit * 2,
     padding: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit,
-    boxShadow: '0 0 5px #bbb',
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
   },
   mobileMenu: {
     maxHeight: 300,
