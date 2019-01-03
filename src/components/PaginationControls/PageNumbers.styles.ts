@@ -17,7 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'inline-block',
       textAlign: 'center',
-      backgroundColor: theme.bg.offWhiteDT,
+      backgroundColor: theme.bg.white,
       border: '1px solid ' + `${theme.color.borderPagination}`,
       minWidth: 40,
       height: 40,

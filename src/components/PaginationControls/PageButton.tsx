@@ -6,7 +6,7 @@ type CSSClasses = 'root';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
-    backgroundColor: theme.bg.offWhiteDT,
+    backgroundColor: theme.bg.white,
     border: '1px solid ' + `${theme.color.borderPagination}`,
     padding: theme.spacing.unit,
     minWidth: 40,
@@ -37,7 +37,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       color: '#fff',
     },
     '&:disabled': {
-      backgroundColor: `${theme.color.grey2} !important`,
+      backgroundColor: theme.bg.main,
       color: theme.color.black,
     }
   },
