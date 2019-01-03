@@ -69,10 +69,10 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <TableWrapper {...tableWrapperProps}>
-      {groupedDomains.map(([tag, linodes]) => {
+      {groupedDomains.map(([tag, domains]: [string, Linode.Domain[]]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate data={domains} pageSize={DEFAULT_PAGE_SIZE}>
               {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
 
                 return (
@@ -85,7 +85,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
                           </Typography>
                         </TableCell>
                       </TableRow>
-                      {paginatedData.map((domain) => <DomainTableRow key={domain.domain} domain={domain.domain} id={domain.id} onClone={onClone} onRemove={onRemove} tags={domain.tags} type={domain.types} />)}
+                      {paginatedData.map((domain) => <DomainTableRow key={domain.domain} domain={domain.domain} id={domain.id} onClone={onClone} onRemove={onRemove} tags={domain.tags} type={domain.type} />)}
                       {count > DEFAULT_PAGE_SIZE && <TableRow>
                         <TableCell colSpan={7} className={classes.paginationCell}>
                           <PaginationFooter
@@ -94,7 +94,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
                             handleSizeChange={handlePageSizeChange}
                             pageSize={pageSize}
                             page={page}
-                            eventCategory={'linodes landing'}
+                            eventCategory={'domains landing'}
                           />
                         </TableCell>
                       </TableRow>}
