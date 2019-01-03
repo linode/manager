@@ -1,6 +1,5 @@
 import Hidden from '@material-ui/core/Hidden';
 import MenuList from '@material-ui/core/MenuList';
-import Description from '@material-ui/icons/Description';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
@@ -16,6 +15,7 @@ import withBackupCTA, { BackupCTAProps } from 'src/containers/withBackupCTA.cont
 import { BackupsCTA } from 'src/features/Backups';
 import DocComponent, { Doc } from './DocComponent';
 
+import DocumentIcon from 'src/assets/icons/documentsm.svg';
 import Minimize from 'src/assets/icons/minimize.svg';
 
 type ClassNames = 'root'
@@ -95,7 +95,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: theme.color.white,
     '&:hover': {
       backgroundColor: theme.color.white,
-    }
+      '& .insidePath': {
+        stroke: theme.palette.text.primary,
+      },
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+      width: '100%',
+      height: '100%',
+    },
+    '& .insidePath': {
+      fill: 'none',
+      stroke: '#3683DC',
+      strokeWidth: 1.25,
+      strokeLinejoin: 'round',
+    },
   },
   docsIconButtonCTA: {
     position: 'absolute',
@@ -197,7 +211,7 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
                       [classes.docsIconButton]: true,
                       [classes.docsIconButtonCTA]: !isExpanded && backupsCTA
                     })}>
-                      <Description className={classes.docsIcon} />
+                      <DocumentIcon className={classes.docsIcon} />
                     </IconButton>
                   </Tooltip>
                   }
@@ -233,7 +247,7 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
             <Grid item className={classes.mobileContainer}>
               <Tooltip title="Linode Docs">
                 <IconButton onClick={this.handleClick} className={classes.docsIconButton}>
-                  <Description className={classes.docsIcon} />
+                  <DocumentIcon className={classes.docsIcon} />
                 </IconButton>
               </Tooltip>
               <Menu
