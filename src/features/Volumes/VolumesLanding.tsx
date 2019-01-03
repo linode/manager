@@ -1,8 +1,8 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
@@ -17,25 +17,23 @@ import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import LinearProgress from 'src/components/LinearProgress';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
-import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
-import { formatRegion } from 'src/utilities';
 import { generateInFilter } from 'src/utilities/requestFilters';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
-import VolumesActionMenu from './VolumesActionMenu';
 import WithEvents from './WithEvents';
+
+import VolumeTableRow from './VolumeTableRow';
 
 type ClassNames = 'root'
   | 'title'
@@ -45,8 +43,6 @@ type ClassNames = 'root'
   | 'pathCol'
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
-
-  type TagClassNames = 'tagWrapper';
 
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -87,15 +83,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   pathCol: {
     width: '25%',
     minWidth: 250,
-  },
-});
-
-const tagStyles: StyleRulesCallback<TagClassNames> = (theme) => ({
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer',
-    },
   },
 });
 
@@ -144,23 +131,7 @@ type CombinedProps =
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
-interface TagProps {
-  tags: string[];
-}
-type CombinedTagsProps = TagProps & WithStyles<TagClassNames>;
 
-class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
-  render() {
-    const { classes, tags } = this.props;
-    return (
-      <div className={classes.tagWrapper}>
-        <Tags tags={tags} />
-      </div>
-    )
-  }
-}
-
-const RenderTags = withStyles(tagStyles)(RenderTagsBase);
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -383,70 +354,22 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   renderData = (volumes: ExtendedVolume[]) => {
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
-
-    return volumes.map((volume) => {
-      const label = pathOr('', ['label'], volume);
-      const size = pathOr('', ['size'], volume);
-      const filesystemPath = pathOr(
-        /** @todo Remove path default when API releases filesystem_path. */
-        `/dev/disk/by-id/scsi-0Linode_Volume_${label}`,
-        ['filesystem_path'],
-        volume,
-      );
-      const regionID = pathOr('', ['region'], volume);
-      const region = formatRegion(regionID);
-
-      return isVolumeUpdating(volume.recentEvent)
-        ? (
-          <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
-            <TableCell data-qa-volume-cell-label={label}>
-              {label}
-              <RenderTags tags={volume.tags} />
-            </TableCell>
-            <TableCell colSpan={5}>
-              <LinearProgress value={progressFromEvent(volume.recentEvent)} />
-            </TableCell>
-          </TableRow>
-        )
-        : (
-          <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-            <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
-              {volume.label}
-              <RenderTags tags={volume.tags} />
-            </TableCell>
-            {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
-            <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
-            <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
-            {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
-              {volume.linodeLabel &&
-                <Link to={`/linodes/${volume.linode_id}`}>
-                  {volume.linodeLabel}
-                </Link>
-              }</TableCell>}
-            <TableCell>
-              <VolumesActionMenu
-                onShowConfig={this.props.openForConfig}
-                filesystemPath={filesystemPath}
-                linodeLabel={volume.linodeLabel}
-                regionID={regionID}
-                volumeID={volume.id}
-                volumeTags={volume.tags}
-                size={size}
-                label={label}
-                onEdit={this.props.openForEdit}
-                onResize={this.props.openForResize}
-                onClone={this.props.openForClone}
-                attached={Boolean(volume.linode_id)}
-                onAttach={this.handleAttach}
-                onDetach={this.handleDetach}
-                poweredOff={volume.linodeStatus === 'offline'}
-                onDelete={this.handleDelete}
-              />
-            </TableCell>
-          </TableRow>
-        );
-    });
-  };
+    return volumes.map((volume, idx: number) =>
+      <VolumeTableRow
+        key={`volume-table-row-${idx}`}
+        volume={volume}
+        isVolumesLanding={isVolumesLanding}
+        isUpdating={isVolumeUpdating(volume.recentEvent)}
+        handleAttach={this.handleAttach}
+        handleDelete={this.handleDelete}
+        handleDetach={this.handleDetach}
+        openForEdit={this.props.openForEdit}
+        openForClone={this.props.openForClone}
+        openForConfig={this.props.openForConfig}
+        openForResize={this.props.openForResize}
+      />
+    )
+  }
 
   closeDestructiveDialog = () => {
     this.setState({
@@ -502,20 +425,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 }
 
 const isVolumeUpdating = (e?: Linode.Event) => {
+  // Make Typescript happy, since this function can otherwise technically return undefined
+  if (!e) { return false; }
   return e
     && ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action)
     && ['scheduled', 'started'].includes(e.status);
 };
 
-const progressFromEvent = (e?: Linode.Event) => {
-  if (!e) { return undefined }
 
-  if (e.status === 'started' && e.percent_complete) {
-    return e.percent_complete;
-  }
-
-  return undefined;
-}
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { openForEdit, openForResize, openForClone, openForCreating, openForConfig },
