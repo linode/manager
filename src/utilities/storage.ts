@@ -28,6 +28,7 @@ const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const GROUP_DOMAINS = `GROUP_DOMAINS`;
+const DOCS_EXPANDED = 'docsExpanded';
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
@@ -114,6 +115,10 @@ export const storage: Storage = {
     get: () => getStorage(GROUP_DOMAINS),
     set: (v) => setStorage(GROUP_DOMAINS, v)
   },
+  docsSidebar: {
+    get: (): 'true' | 'false' =>  getStorage(DOCS_EXPANDED),
+    set: () => setStorage(DOCS_EXPANDED, 'false')
+  }
 }
 
 export const { theme, notifications, views } = storage;

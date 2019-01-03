@@ -353,7 +353,7 @@ export class App extends React.Component<CombinedProps, State> {
                       <Grid item className={classNames({
                         [classes.switchWrapper]: true,
                         [classes.switchWrapperDocsColl]: hasDoc && !docsExpanded,
-                        'mlMain': hasDoc && docsExpanded || backupsCTA,
+                        'mlMain': hasDoc && docsExpanded || hasDoc && backupsCTA,
                       })}>
                         <Switch>
                           <Route path="/linodes" component={LinodesRoutes} />
