@@ -16,7 +16,7 @@ export const getDomainsSuccess = actionCreator<Linode.Domain[]>('success');
 
 export const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
-export const upsertDomain = actionCreator<Linode.Domain>('upset');
+export const upsertDomain = actionCreator<Linode.Domain>('upsert');
 
 export const deleteDomain = actionCreator<number>('delete');
 
