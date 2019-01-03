@@ -47,7 +47,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
               >
                 1
             </PageNumber>
-              <div className={classes.ellipses}><span>...</span></div>
+              <div className={classes.ellipses}><span className={classes.ellipsesInner}>...</span></div>
             </React.Fragment>
             : null
         }
@@ -72,7 +72,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
            */
           (numOfPages > 5 && currentPage <= numOfPages - 4)
             ? <React.Fragment>
-              <span className={classes.ellipses}>...</span>
+              <div className={classes.ellipses}><span className={classes.ellipsesInner}>...</span></div>
               <PageNumber
                 number={numOfPages}
                 data-qa-page-to={numOfPages}

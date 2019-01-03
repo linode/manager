@@ -36,6 +36,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: '#fff',
     },
+    '&:disabled': {
+      backgroundColor: `${theme.color.grey2} !important`,
+      color: theme.color.black,
+    }
   },
 });
 

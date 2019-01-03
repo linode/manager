@@ -4,19 +4,31 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 
-type ClassNames = 'ellipses';
+type ClassNames = 'ellipses' | 'ellipsesInner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   ellipses: {
-    backgroundColor: theme.bg.offWhiteDT,
-    border: '1px solid ' + `${theme.color.borderPagination}`,
+    display: 'inline-flex',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
     padding: theme.spacing.unit,
-    minWidth: 40,
-    height: 40,
-    // [theme.breakpoints.down('xs')]: {
-    //   margin: 5,
-    // }
-  }
+    color: theme.color.black,
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline-block',
+      textAlign: 'center',
+      backgroundColor: theme.bg.offWhiteDT,
+      border: '1px solid ' + `${theme.color.borderPagination}`,
+      minWidth: 40,
+      height: 40,
+    },
+  },
+  ellipsesInner: {
+    fontSize: '1.2rem',
+    position: 'relative',
+    top: 0,
+    lineHeight: 0,
+  },
 });
 
 export type StyleProps = WithStyles<ClassNames>;
