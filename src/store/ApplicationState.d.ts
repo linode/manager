@@ -34,6 +34,7 @@ declare interface ApplicationState {
       lastUpdated: number;
       error?: Linode.ApiFieldError[];
     },
+    account: RequestableData<Linode.Account>
   },
   authentication: AuthState;
   backups: BackupDrawerState;

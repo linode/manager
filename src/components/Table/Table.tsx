@@ -81,10 +81,11 @@ class WrappedTable extends React.Component<CombinedProps> {
     return (
       <div
         className={classNames(
+          'tableWrapper',
           {
             [classes.root]: !noOverflow,
             [classes.responsive]: !(isResponsive === false), // must be explicity set to false
-            [classes.border]: border
+            [classes.border]: border,
           },
           className
         )}
