@@ -233,7 +233,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     }
 
     return data.map(disk => (
-      <TableRow key={disk.id}>
+      <TableRow key={disk.id} data-qa-disk={disk.label}>
         <TableCell>{disk.label}</TableCell>
         <TableCell>{disk.size} MB</TableCell>
         <TableCell>

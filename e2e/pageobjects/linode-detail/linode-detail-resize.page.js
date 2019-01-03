@@ -1,13 +1,13 @@
 import Page from '../page';
 
 class Resize extends Page {
-    get title() { return $('[data-qa-title]'); }
+    get title() { return this.pageTitle; }
     get description() { return $('[data-qa-description]'); }
     get currentHeader() { return $('[data-qa-current-header]'); }
     get currentSelection() { return $('[data-qa-current-container] [data-qa-selection-card]'); }
     get tierTabs() { return $$('[data-qa-tab]'); }
     get planCards() { return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]'); }
-    get submit() { return $(this.submitButton.selector); }
+    get submit() { return this.submitButton; }
 
     landingElemsDisplay() {
         const subHeader = 'Current Plan';

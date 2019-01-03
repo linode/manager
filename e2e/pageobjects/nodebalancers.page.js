@@ -4,7 +4,7 @@ import Page from './page.js';
 
 class NodeBalancers extends Page {
     get deploy() { return $('[data-qa-deploy-linode]'); }
-    get configTitle() { return $('[data-qa-title]'); }
+    get configTitle() { return this.pageTitle; }
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get placeholderButton() { return $('[data-qa-placeholder-button]'); }
     get createNodeBalancerMenu() { return $('[data-qa-add-new-menu="NodeBalancer"]'); }
@@ -16,10 +16,10 @@ class NodeBalancers extends Page {
     get regionSection() { return $('[data-qa-tp="Region"]'); }
     get regionTabs() { return $$('[data-qa-tab]'); }
     get regionCards() { return $$('[data-qa-tp="Region"] [data-qa-selection-card]'); }
-    
+
     get connectionThrottleSection() { return $('[data-qa-throttle-section]'); }
     get connectionThrottle() { return $('[data-qa-connection-throttle] input'); }
-    
+
     get settingsSection() { return $('[data-qa-nodebalancer-settings-section]'); }
     get port() { return $('[data-qa-port] input'); }
     get protocolSelect() { return $('[data-qa-protocol-select]'); }
@@ -31,16 +31,16 @@ class NodeBalancers extends Page {
 
     get sessionStickinessHeader() { return $('[data-qa-session-stickiness-header]'); }
     get sessionStickiness() { return $('[data-qa-session-stickiness-select]'); }
-    
+
     get activeChecksHeader() { return $('[data-qa-active-checks-header]'); }
     get activeCheckType() { return $('[data-qa-active-check-select]'); }
     get activeCheckInterval() { return $('[data-qa-active-check-interval] input'); }
     get activeCheckTimeout() { return $('[data-qa-active-check-timeout] input'); }
     get activeCheckAttempts() { return $('[data-qa-active-check-attempts] input'); }
-    
+
     get passiveChecksHeader() { return $('[data-qa-passive-checks-header]'); }
     get passiveChecksToggle() { return $('[data-qa-passive-checks-toggle]'); }
-    
+
     get backendIpsHeader() { return $('[data-qa-backend-ip-header]'); }
     get backendIps() { return $$('[data-qa-backend-ip]'); }
     get backendIpLabel() { return $('[data-qa-backend-ip-label] input'); }
@@ -53,7 +53,7 @@ class NodeBalancers extends Page {
     get deleteButton() { return $('[data-qa-delete-config]'); }
     get nodes() { return $$('[data-qa-node]'); }
     get removeNode() { return $('[data-qa-remove-node]'); }
-    get addNode() { return $('[data-qa-icon-text-link="Add a Node"]'); }
+    get addNode() { return this.addIcon('Add a Node'); }
     get addConfiguration() { return $('[data-qa-add-config]'); }
 
     baseElemsDisplay(initial) {
@@ -74,7 +74,7 @@ class NodeBalancers extends Page {
             expect(this.protocolSelect.isVisible()).toBe(true);
             expect(this.algorithmSelect.getText()).toContain('Round Robin');
             expect(this.sessionStickiness.getText()).toContain('Table');
-            
+
             expect(this.activeChecksHeader.isVisible()).toBe(true);
             expect(this.activeCheckType.isVisible()).toBe(true);
 
@@ -131,7 +131,7 @@ class NodeBalancers extends Page {
         expect(this.dialogContent.getText()).toBe(confirmMsg);
         expect(this.dialogConfirm.getText()).toBe('Delete');
         expect(this.dialogCancel.getText()).toBe('Cancel');
-        
+
         this.dialogConfirm.click();
         this.dialogTitle.waitForVisible(constants.wait.normal, true);
         this.configTitle.waitForVisible(constants.wait.normal);
@@ -157,7 +157,7 @@ class NodeBalancers extends Page {
             .filter(l => l.$('[data-qa-backend-ip-label] input').getValue() === nodeLabel);
 
         node[0].$(this.removeNode.selector).click();
-        
+
         browser.waitUntil(function() {
             const matchingNodes = $$('[data-qa-backend-ip-label] input')
                 .filter(l => l.getValue() === nodeLabel);
@@ -166,7 +166,7 @@ class NodeBalancers extends Page {
     }
 
     configSave() {
-        const successMsg = 'NodeBalancer Configuration updated successfully'; 
+        const successMsg = 'NodeBalancer Configuration updated successfully';
         this.saveButton.click();
         this.waitForNotice(successMsg);
     }

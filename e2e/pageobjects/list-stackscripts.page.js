@@ -5,8 +5,8 @@ import ConfigureLinode from './configure-linode';
 
 class ListStackScripts extends Page {
 
-    get header() { return $('[data-qa-title]'); }
-    get create() { return $('[data-qa-icon-text-link="Create New StackScript"]'); }
+    get header() { return this.pageTitle; }
+    get create() { return this.addIcon('Create New StackScript'); }
 
     get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
     get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
