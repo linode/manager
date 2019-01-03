@@ -8,17 +8,25 @@ type ClassNames = 'ellipses' | 'ellipsesInner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   ellipses: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
     padding: theme.spacing.unit,
     color: theme.color.black,
+    backgroundColor: theme.bg.white,
+    border: '1px solid ' + `${theme.color.borderPagination}`,
+    borderRight: 0,
+    [theme.breakpoints.only('xs')]: {
+      position: 'relative',
+      top: 3,
+      display: 'inline-flex',
+      alignItems: 'center',
+      alignContent: 'center',
+      justifyContent: 'center',
+      minWidth: 27,
+      height: 30,
+      minHeight: 30,
+    },
     [theme.breakpoints.up('sm')]: {
       display: 'inline-block',
       textAlign: 'center',
-      backgroundColor: theme.bg.white,
-      border: '1px solid ' + `${theme.color.borderPagination}`,
       minWidth: 40,
       height: 40,
     },
@@ -26,8 +34,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   ellipsesInner: {
     fontSize: '1.2rem',
     position: 'relative',
-    top: 0,
+    top: -5,
     lineHeight: 0,
+    [theme.breakpoints.up('sm')]: {
+      top: 0,
+    }
   },
 });
 
