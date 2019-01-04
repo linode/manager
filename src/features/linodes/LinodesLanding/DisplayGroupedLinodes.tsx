@@ -81,7 +81,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
       <>
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
-            <div key={tag} className={classes.tagGridRow}>
+            <div key={tag} className={classes.tagGridRow} data-qa-tag-header={tag}>
               <Grid container>
                 <Grid item xs={12}>
                   <div className={classes.tagHeaderOuter}>
@@ -137,7 +137,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                   const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
                   return (
                     <React.Fragment>
-                      <TableBody className={classes.groupContainer}>
+                      <TableBody className={classes.groupContainer} data-qa-tag-header={tag}>
                         <TableRow className={classes.tagHeaderRow}>
                           <TableCell colSpan={7}><Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography></TableCell>
                         </TableRow>

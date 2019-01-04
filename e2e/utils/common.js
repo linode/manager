@@ -55,10 +55,10 @@ export const createLinodeIfNone = () => {
     }
 }
 
-export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], type=undefined, region=undefined) => {
+export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], type, region, group) => {
     const token = readToken(browser.options.testUser);
     const newLinodePass = crypto.randomBytes(20).toString('hex');
-    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region);
+    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region, group);
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
@@ -76,7 +76,7 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
 
     arrayOfLinodeCreateObj.forEach((linodeObj) => {
         const newLinodePass = crypto.randomBytes(20).toString('hex');
-        const linode = browser.createLinode(token, newLinodePass, linodeObj.linodeLabel, linodeObj.tags, linodeObj.type, linodeObj.region);
+        const linode = browser.createLinode(token, newLinodePass, linodeObj.linodeLabel, linodeObj.tags, linodeObj.type, linodeObj.region,linodeObj.group);
         linodes.push(linode);
     });
 
@@ -218,4 +218,9 @@ export const getDistrobutionLabel = (distrobutionTags) => {
         distrobutionLabel.push(distroDetails.label);
     });
     return distrobutionLabel;
+}
+
+export const getLocalStorageValue = (key) => {
+    console.log(browser.localStorage('GET', key));
+    return browser.localStorage('GET', key).value;
 }

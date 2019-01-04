@@ -115,7 +115,7 @@ exports.removeAllLinodes = token => {
     });
 }
 
-exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
+exports.createLinode = (token, password, linodeLabel, tags, type, region, group) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
 
@@ -134,6 +134,10 @@ exports.createLinode = (token, password, linodeLabel, tags, type, region) => {
 
         if (!isEmpty(tags)) {
             linodeConfig['tags'] = tags;
+        }
+
+        if(group) {
+            linodeConfig['group'] = group;
         }
 
         return getAxiosInstance(token).post(linodesEndpoint, linodeConfig)
