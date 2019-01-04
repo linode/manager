@@ -17,6 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   domainRow: {
     height: 75,
+    backgroundColor: theme.bg.white,
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
