@@ -1,5 +1,7 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -13,7 +15,10 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getPayments } from 'src/services/account';
+import { async } from 'src/store/reducers/resources/account';
+
 
 type ClassNames = 'root';
 
@@ -23,13 +28,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props extends PaginationProps<Linode.Payment> { }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
 
   componentDidMount() {
     this.mounted = true;
+    if (!this.props.account.data) {
+      this.props.requestAccount();
+    }
   }
 
   componentWillUnmount() {
@@ -52,6 +60,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
               <TableCell>Date Created</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Amount</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,11 +98,16 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
   renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
 
   renderRow = (item: Linode.Payment) => {
+    const { account } = this.props;
+
     return (
       <TableRow key={`payment-${item.id}`}>
         <TableCell parentColumn="Date Created"><DateTimeDisplay value={item.date} /></TableCell>
         <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
         <TableCell parentColumn="Amount">${item.usd}</TableCell>
+        <TableCell>
+          {account.data && <Button type="primary" target="_blank" onClick={() => printPayment(account.data as Linode.Account, item)}>Download PDF</Button>}
+        </TableCell>
       </TableRow>
     );
   };
@@ -105,6 +119,19 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
   }
 }
 
+interface S {
+  account: ApplicationState['__resources']['account'];
+}
+
+interface StateProps extends S {
+  requestAccount: () => void;
+}
+
+const connected = connect(
+  (state: ApplicationState): S => ({account: state.__resources.account}),
+  (dispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(async.requestAccount()) }));
+
+
 const styled = withStyles(styles);
 
 const updatedRequest = (ownProps: any, params: any) => getPayments(params, { '+order_by': 'date', '+order': 'desc' })
@@ -113,6 +140,7 @@ const updatedRequest = (ownProps: any, params: any) => getPayments(params, { '+o
 const paginated = paginate(updatedRequest);
 
 const enhanced = compose(
+  connected,
   paginated,
   styled,
 );
