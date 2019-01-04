@@ -1,5 +1,6 @@
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -8,7 +9,9 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
+import { async } from 'src/store/reducers/resources/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import InvoiceTable from './InvoiceTable';
 
@@ -38,7 +41,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = RouteComponentProps<{ invoiceId: number }> & WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<{ invoiceId: number }>
+& StateProps
+& WithStyles<ClassNames>;
+
 
 class InvoiceDetail extends React.Component<CombinedProps, State> {
   state: State = {
@@ -83,6 +89,9 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.requestData();
+    if (!this.props.data) {
+      this.props.requestAccount();
+    }
   }
 
   componentWillUnmount() {
@@ -90,7 +99,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, data } = this.props;
     const { invoice, loading, errors, items } = this.state;
 
     document.addEventListener('keydown', this.pressPrint);
@@ -109,7 +118,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 {invoice && <Typography role="header" variant="h2" data-qa-invoice-id>Invoice #{invoice.id}</Typography>}
               </Grid>
               <Grid item className={classes.titleWrapper} data-qa-printable-invoice>
-                {invoice && <Button type="primary" target="_blank" href={`/account/billing/invoices/${invoice.id}/print`}>Download / Print</Button>}
+                {data && invoice && items && <Button type="primary" target="_blank" onClick={() => printInvoice(data, invoice, items)}>Download PDF</Button>}
               </Grid>
               <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography role="header" variant="h2" data-qa-total={invoice.total}>Total ${Number(invoice.total).toFixed(2)}</Typography>}
@@ -132,8 +141,19 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   }
 }
 
+type S = ApplicationState['__resources']['account'];
+
+interface StateProps extends S {
+  requestAccount: () => void;
+}
+
+const connected = connect(
+  (state: ApplicationState): S => state.__resources.account,
+  (dispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(async.requestAccount()) }));
+
+
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled, withRouter);
+const enhanced = compose<CombinedProps, {}>(connected, styled, withRouter);
 
 export default enhanced(InvoiceDetail);
