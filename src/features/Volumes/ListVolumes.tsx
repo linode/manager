@@ -8,13 +8,53 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableSortCell from 'src/components/TableSortCell';
+// import TableSortCell from 'src/components/TableSortCell';
 import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
 
-type ClassNames = 'root';
+type ClassNames = 'root'
+  | 'labelCol'
+  | 'attachmentCol'
+  | 'sizeCol'
+  | 'pathCol'
+  | 'volumesWrapper'
+  | 'linodeVolumesWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  // styles for /volumes table
+  volumesWrapper: {
+  },
+  // styles for linodes/id/volumes table
+  linodeVolumesWrapper: {
+    '& $labelCol': {
+      width: '20%',
+      minWidth: 200,
+    },
+    '& $sizeCol': {
+      width: '15%',
+      minWidth: 100,
+    },
+    '& $pathCol': {
+      width: '55%',
+      minWidth: 350,
+    },
+  },
+  labelCol: {
+    width: '15%',
+    minWidth: 150,
+  },
+  attachmentCol: {
+    width: '15%',
+    minWidth: 150,
+  },
+  sizeCol: {
+    width: '10%',
+    minWidth: 75,
+  },
+  pathCol: {
+    width: '25%',
+    minWidth: 250,
+  },
 });
 
 interface RenderDataProps {
@@ -40,8 +80,9 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
+  // Extra props needed later: orderBy, order, handleOrderChange,
   const {
-    classes, data, orderBy, order, handleOrderChange, renderProps,
+    classes, data,  renderProps,
   } = props;
   return (
     <Paginate data={data} pageSize={25}>
@@ -51,14 +92,22 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
             <Table aria-label="List of your Volumes" className={renderProps.isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper}>
               <TableHead>
                 <TableRow>
+                  <TableCell className={classes.labelCol}>Label</TableCell>
+                  {props.renderProps.isVolumesLanding && <TableCell>Region</TableCell>}
+                  <TableCell className={classes.sizeCol}>Size</TableCell>
+                  <TableCell className={classes.pathCol}>File System Path</TableCell>
+                  {props.renderProps.isVolumesLanding && <TableCell className={classes.attachmentCol}>Attached To</TableCell>}
+                  <TableCell />
+                </TableRow>
+                {/* <TableRow>
                   <TableSortCell
-                    active={orderBy === 'Volume'}
-                    label="Volume"
+                    active={orderBy === 'label'}
+                    label="Label"
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-Volume-name-header
+                    data-qa-volume-label-header
                   >
-                    Volume
+                    Label
                 </TableSortCell>
                   <TableSortCell
                     data-qa-Volume-type-header
@@ -70,7 +119,7 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
                     Type
                   </TableSortCell>
                   <TableCell />
-                </TableRow>
+                </TableRow> */}
               </TableHead>
               <TableBody>
                 <RenderData
