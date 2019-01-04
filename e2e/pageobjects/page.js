@@ -47,9 +47,7 @@ export default class Page {
     get enableAllBackups() { return $('[data-qa-backup-existing]'); }
     get basicSelect() { return '[data-qa-select]'; }
     get pageTitle() { return $('[data-qa-title]'); }
-
-
-    // Breadcrumb Component
+    get openImportDrawerButton() { return $('[data-qa-open-import-drawer-button]'); }
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
     get breadcrumbStaticText() { return $('[data-qa-label-title]'); }
     get breadcrumbBackLink() { return $('[data-qa-link]'); }
