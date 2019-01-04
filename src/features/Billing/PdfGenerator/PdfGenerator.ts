@@ -243,7 +243,6 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
     doc.setFontStyle('normal');
   };
 
-// Create a separate page for each set of invoice items
   doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
   addLeftHeader(doc, 1, 1, date);
   addRightHeader(doc, account);
