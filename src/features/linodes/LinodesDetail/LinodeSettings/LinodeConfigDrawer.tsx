@@ -268,7 +268,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleChangeLabel}
             errorText={errorFor('label')}
             errorGroup="linode-config-drawer"
-            updateFor={[label, errorFor('label')]}
           />
 
           <TextField
@@ -279,7 +278,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             rows={3}
             errorText={errorFor('comments')}
             errorGroup="linode-config-drawer"
-            updateFor={[comments, errorFor('comments')]}
           />
         </Grid>
 
@@ -328,7 +326,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
-              updateFor={[kernel, errorFor('kernel')]}
             >
               <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
               {
@@ -369,7 +366,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleMemoryLimitChange}
             helperText={`Max: ${maxMemory}`}
             errorText={errorFor('memory_limit')}
-            updateFor={[memory_limit, errorFor('memory_limit')]}
           />
         </Grid>
 
