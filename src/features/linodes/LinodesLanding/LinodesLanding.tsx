@@ -251,7 +251,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 <Toggle
                   className={(this.props.groupByTags ? ' checked' : ' unchecked')}
                   onChange={this.props.toggleGroupByTag}
-                  checked={this.props.groupByTags} />
+                  checked={this.props.groupByTags}
+                  data-qa-tags-toggle={this.props.groupByTags}
+                  />
               }
               label="Group by Tag:"
             />

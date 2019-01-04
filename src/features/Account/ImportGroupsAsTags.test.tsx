@@ -18,7 +18,7 @@ describe('Component', () => {
     expect(component).toBeDefined();
   });
   it('should open the tag import drawer on click', () => {
-    component.find('[data-qa-open-group-import-drawer]').simulate('click');
+    component.find('[data-qa-open-import-drawer-button]').simulate('click');
     expect(props.openDrawer).toHaveBeenCalled();
   });
 });

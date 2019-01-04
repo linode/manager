@@ -37,6 +37,8 @@ export class Dashboard extends Page {
     get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
     get backupExistingLinodes() { return $(this.enableAllBackups.selector); }
     get backupExistingMessage() { return $('[data-qa-linodes-message]'); }
+    get importGroupsAsTagsCta() { return $('[data-qa-group-cta-body]'); }
+    get dismissGroupCTA() { return $('[data-qa-dismiss-cta]'); }
 
     baseElemsDisplay() {
         this.header.waitForVisible(constants.wait.normal);
