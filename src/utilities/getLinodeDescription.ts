@@ -1,16 +1,15 @@
 import { typeLabelLong } from 'src/features/linodes/presentation';
+import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 
 export const linodeDescription = (
   typeLabel: string,
   memory: number,
   disk: number,
   vcpus: number,
-  imageId: string,
+  imageId: string | null,
   images: Linode.Image[]
 ) => {
-  const image = (images && images.find((img:Linode.Image) => img.id === imageId))
-    || { label: 'Unknown Image' };
-  const imageDesc = image.label;
+  const imageDesc = safeGetImageLabel(images, imageId);
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
   return `${imageDesc}, ${typeDesc}`;
 }
