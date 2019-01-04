@@ -32,7 +32,7 @@ import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
 import composeState from 'src/utilities/composeState';
-import { notifications, theme as themeStorage } from 'src/utilities/storage';
+import { notifications, storage, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import withBackupCTA , { BackupCTAProps } from './containers/withBackupCTA.container';
 
@@ -221,7 +221,7 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    docsExpanded: false,
+    docsExpanded: storage.docsExpanded.get() || false,
     regionsContext: {
       lastUpdated: 0,
       loading: false,
@@ -308,19 +308,18 @@ export class App extends React.Component<CombinedProps, State> {
     });
   }
 
-  toggleSidebar = () => {
-    this.setState({
-      docsExpanded: !this.state.docsExpanded,
-    })
-  }
-
   closeWelcomeBanner = () => {
     this.setState({ welcomeBanner: false });
     notifications.welcome.set('closed');
   }
 
+  toggleSidebar = () => {
+    storage.docsExpanded.set(!this.state.docsExpanded);
+    this.setState({ docsExpanded: !this.state.docsExpanded });
+  }
+
   render() {
-    const { menuOpen, hasError, docsExpanded } = this.state;
+    const { menuOpen, hasError } = this.state;
     const {
       classes,
       documentation,
@@ -331,6 +330,7 @@ export class App extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const hasDoc = documentation.length > 0;
+    const docsExpandedStored = storage.docsExpanded.get();
 
     if (profileError || hasError) {
       return <TheApplicationIsOnFire />;
@@ -352,8 +352,8 @@ export class App extends React.Component<CombinedProps, State> {
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classNames({
                         [classes.switchWrapper]: true,
-                        [classes.switchWrapperDocsColl]: hasDoc && !docsExpanded,
-                        'mlMain': hasDoc && docsExpanded || hasDoc && backupsCTA,
+                        [classes.switchWrapperDocsColl]: hasDoc && !docsExpandedStored,
+                        'mlMain': hasDoc && docsExpandedStored || hasDoc && backupsCTA,
                       })}>
                         <Switch>
                           <Route path="/linodes" component={LinodesRoutes} />
@@ -378,14 +378,14 @@ export class App extends React.Component<CombinedProps, State> {
                       </Grid>
                       {hasDoc &&
                         <Grid className={classNames({
-                          'mlSidebar': docsExpanded || backupsCTA,
-                          [classes.absSidebar]: !docsExpanded && !backupsCTA,
+                          'mlSidebar': docsExpandedStored || backupsCTA,
+                          [classes.absSidebar]: !docsExpandedStored && !backupsCTA,
                           [classes.absSidebarMobile]: true,
                         })}>
                           <DocsSidebar
                             docs={documentation}
                             toggleSidebar={this.toggleSidebar}
-                            isExpanded={docsExpanded}
+                            isExpanded={docsExpandedStored}
                           />
                         </Grid>
                       }

@@ -17,8 +17,8 @@ export const getStorage = (key: string, fallback?: any) => {
   }
 }
 
-export const setStorage = (key: string, value: string) => {
-  return window.localStorage.setItem(key, value);
+export const setStorage = (key: string, value: string | boolean) => {
+  return window.localStorage.setItem(key, String(value));
 }
 
 const THEME = 'themeChoice';
@@ -71,6 +71,10 @@ export interface Storage {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
   };
+  docsExpanded: {
+    get: () => boolean | undefined;
+    set: (v: boolean) => void;
+  }
 };
 
 export const storage: Storage = {
@@ -115,9 +119,9 @@ export const storage: Storage = {
     get: () => getStorage(GROUP_DOMAINS),
     set: (v) => setStorage(GROUP_DOMAINS, v)
   },
-  docsSidebar: {
-    get: (): 'true' | 'false' =>  getStorage(DOCS_EXPANDED),
-    set: () => setStorage(DOCS_EXPANDED, 'false')
+  docsExpanded: {
+    get: () => getStorage(DOCS_EXPANDED),
+    set: (v) => setStorage(DOCS_EXPANDED, v),
   }
 }
 

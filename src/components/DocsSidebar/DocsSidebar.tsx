@@ -114,6 +114,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   docsIconButtonCTA: {
     position: 'absolute',
     right: 'calc(21.2% - 28px)',
+    [theme.breakpoints.up('xl')]: {
+      right: 'calc(21.2% - 40px)',
+    },
   },
   docsIcon: {
     width: 20,
@@ -135,7 +138,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     maxHeight: 300,
   },
   withDocsCollapsed: {
-    marginTop: -20
+    marginTop: -theme.spacing.unit * 3
   }
 });
 
