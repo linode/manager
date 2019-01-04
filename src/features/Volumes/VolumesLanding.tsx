@@ -8,20 +8,15 @@ import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
+
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import OrderBy from 'src/components/OrderBy';
 import paginate, { PaginationProps } from 'src/components/Pagey';
-import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
 import TableRowError from 'src/components/TableRowError';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
@@ -33,56 +28,17 @@ import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import WithEvents from './WithEvents';
 
-import VolumeTableRow from './VolumeTableRow';
+import ListVolumes from './ListVolumes';
 
 type ClassNames = 'root'
   | 'title'
-  | 'labelCol'
-  | 'attachmentCol'
-  | 'sizeCol'
-  | 'pathCol'
-  | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
+
 
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit * 2,
-  },
-  // styles for /volumes table
-  volumesWrapper: {
-  },
-  // styles for linodes/id/volumes table
-  linodeVolumesWrapper: {
-    '& $labelCol': {
-      width: '20%',
-      minWidth: 200,
-    },
-    '& $sizeCol': {
-      width: '15%',
-      minWidth: 100,
-    },
-    '& $pathCol': {
-      width: '55%',
-      minWidth: 350,
-    },
-  },
-  labelCol: {
-    width: '15%',
-    minWidth: 150,
-  },
-  attachmentCol: {
-    width: '15%',
-    minWidth: 150,
-  },
-  sizeCol: {
-    width: '10%',
-    minWidth: 75,
-  },
-  pathCol: {
-    width: '25%',
-    minWidth: 250,
   },
 });
 
@@ -209,8 +165,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       classes,
       loading,
       count,
-      page,
-      pageSize,
+      // page,
+      // pageSize,
     } = this.props;
 
     if (loading) {
@@ -220,8 +176,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     if (count === 0) {
       return this.renderEmpty();
     }
-
-    const isVolumesLanding = this.props.match.params.linodeId === undefined;
 
     return (
       <React.Fragment>
@@ -243,31 +197,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <Paper>
-          <Table aria-label="List of Volumes" className={isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper}>
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.labelCol}>Label</TableCell>
-                {isVolumesLanding && <TableCell>Region</TableCell>}
-                <TableCell className={classes.sizeCol}>Size</TableCell>
-                <TableCell className={classes.pathCol}>File System Path</TableCell>
-                {isVolumesLanding && <TableCell className={classes.attachmentCol}>Attached To</TableCell>}
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.renderContent()}
-            </TableBody>
-          </Table>
-        </Paper>
-        <PaginationFooter
-          count={count}
-          page={page}
-          pageSize={pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="volumes landing"
-        />
+
+        {this.renderContent()}
+
         <VolumeAttachmentDrawer
           open={this.state.attachmentDrawer.open}
           volumeID={this.state.attachmentDrawer.volumeID || 0}
@@ -354,20 +286,32 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   renderData = (volumes: ExtendedVolume[]) => {
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
-    return volumes.map((volume, idx: number) =>
-      <VolumeTableRow
-        key={`volume-table-row-${idx}`}
-        volume={volume}
-        isVolumesLanding={isVolumesLanding}
-        isUpdating={isVolumeUpdating(volume.recentEvent)}
-        handleAttach={this.handleAttach}
-        handleDelete={this.handleDelete}
-        handleDetach={this.handleDetach}
-        openForEdit={this.props.openForEdit}
-        openForClone={this.props.openForClone}
-        openForConfig={this.props.openForConfig}
-        openForResize={this.props.openForResize}
-      />
+    const renderProps = {
+      isVolumesLanding,
+      handleAttach: this.handleAttach,
+      handleDelete: this.handleDelete,
+      handleDetach: this.handleDetach,
+      openForEdit: this.props.openForEdit,
+      openForClone: this.props.openForClone,
+      openForConfig: this.props.openForConfig,
+      openForResize: this.props.openForResize,
+    }
+
+    return (
+      <OrderBy data={volumes} order={'desc'} orderBy={'label'}>
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+          const orderProps = {
+            orderBy,
+            order,
+            handleOrderChange,
+            data: orderedData,
+          };
+
+          return false // this.props.groupByTag
+            ? <></> // ListGroupedDomains will live here
+            : <ListVolumes {...orderProps} renderProps={{...renderProps, data: orderedData}}  />
+        }}
+      </OrderBy>
     )
   }
 
@@ -423,16 +367,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       });
   }
 }
-
-const isVolumeUpdating = (e?: Linode.Event) => {
-  // Make Typescript happy, since this function can otherwise technically return undefined
-  if (!e) { return false; }
-  return e
-    && ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action)
-    && ['scheduled', 'started'].includes(e.status);
-};
-
-
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   { openForEdit, openForResize, openForClone, openForCreating, openForConfig },
