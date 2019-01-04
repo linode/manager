@@ -35,6 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     flexWrap: 'wrap',
     flexDirection: 'column',
     textAlign: 'center',
+    alignItems: 'center',
     [theme.breakpoints.up('sm')]: {
       flexWrap: 'nowrap',
       flexDirection: 'row',
@@ -49,11 +50,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       flexDirection: 'row',
       flexWrap: 'nowrap',
       textAlign: 'left',
+      alignItems: 'flex-start',
     },
   },
   poolUsageProgress: {
-    marginRight: theme.spacing.unit * 3,
+    margin: 0,
     height: 'auto',
+    [theme.breakpoints.up('lg')]: {
+      margin: '8px auto 20px',
+    }
   },
   circleChildren: {
     textAlign: 'center',
@@ -63,7 +68,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   used: {
     fontSize: '1.5rem',
     fontFamily: 'LatoWebBold',
-    color: theme.color.headline,
+    color: theme.color.green,
   },
   quota: {
     marginTop: theme.spacing.unit,
@@ -147,7 +152,6 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
             container
             direction="column"
             justify="center"
-            alignItems="center"
             wrap="nowrap"
             className={classes.grid}
             data-qa-card="Monthly Transfer"
