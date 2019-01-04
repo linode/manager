@@ -10,7 +10,6 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
 import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
-import PrintInvoice from 'src/features/Billing/InvoiceDetail/PrintInvoice';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
@@ -94,7 +93,6 @@ const renderApp = (props: RouteProps) =>
 const renderAuthentication = () =>
   <AuthenticationWrapper>
     <Switch>
-      <Route path="/account/billing/invoices/:invoiceId/print" component={PrintInvoice} />
       <Route path="/linodes/:linodeId/lish" render={renderLish} />
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}

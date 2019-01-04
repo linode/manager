@@ -74,18 +74,6 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
       });
   };
 
-  pressPrint = (e:any) => {
-    const { invoice } = this.state;
-    const evtobj = window.event? event : e;
-    if (evtobj.keyCode === 80 && (evtobj.ctrlKey || evtobj.metaKey)) {
-      e.preventDefault();
-      return (
-        invoice && window.open(`/account/billing/invoices/${invoice.id}/print`, "_blank")
-      )
-    }
-    return false;
-  };
-
   componentDidMount() {
     this.mounted = true;
     this.requestData();
@@ -101,8 +89,6 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   render() {
     const { classes, data } = this.props;
     const { invoice, loading, errors, items } = this.state;
-
-    document.addEventListener('keydown', this.pressPrint);
 
     return (
       <Paper className={classes.root}>
