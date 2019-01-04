@@ -18,15 +18,13 @@ type ClassNames = 'root'
   | 'initialLoader'
   | 'title'
   | 'divider'
-  | 'itemText';
+  | 'itemText'
+  | 'itemTextFirst';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginTop: 0,
-    padding: theme.spacing.unit * 4,
-    '& strong': {
-      fontSize: '1.2em'
-    },
+    padding: 24,
   },
   card: {
     [theme.breakpoints.down('sm')]: {
@@ -87,8 +85,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: theme.palette.divider,
   },
   itemText: {
-    marginBottom: theme.spacing.unit,
+    fontSize: '1rem',
   },
+  itemTextFirst: {
+    marginBottom: theme.spacing.unit,
+  }
 });
 
 interface State {
@@ -177,14 +178,14 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 <Divider className={classes.divider}/>
               </Grid>
               <Grid item>
-                <Typography className={classes.itemText}>Free: <strong>{quota - used}</strong> GB</Typography>
-                <Typography>Used: <strong>{used}</strong> GB</Typography>
+                <Typography className={classes.itemText + ' ' + classes.itemTextFirst}>Free: <strong>{quota - used}</strong> GB</Typography>
+                <Typography className={classes.itemText}>Used: <strong>{used}</strong> GB</Typography>
               </Grid>
               <Grid item>
                 <Divider className={classes.divider} />
               </Grid>
               <Grid item>
-                <Typography>Total: <strong>{quota}</strong> GB</Typography>
+                <Typography className={classes.itemText}>Total: <strong>{quota}</strong> GB</Typography>
               </Grid>
             </Grid>
           </Grid>
