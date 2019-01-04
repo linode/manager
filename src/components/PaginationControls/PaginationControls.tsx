@@ -11,12 +11,27 @@ import { sendEvent } from 'src/utilities/analytics';
 
 import PageNumbers from './PageNumbers';
 
+import { StyleRulesCallback, withStyles } from 'src/components/core/styles';
+
+type CSSClasses = 'root';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+});
+
+const styled = withStyles<CSSClasses>(styles);
+
 interface Props {
   count: number;
   page: number;
   pageSize: number;
   eventCategory?: string;
   onClickHandler: (page?: number) => void;
+  classes: any;
 }
 
 export class PaginationControls extends React.Component<Props, {}> {
@@ -73,13 +88,13 @@ export class PaginationControls extends React.Component<Props, {}> {
 
   render() {
     /** API paging starts at 1. Don't they know arrays starts at 0? */
-    const { count, page, pageSize, } = this.props;
+    const { count, page, pageSize, classes } = this.props;
     const numPages = calNumOfPages(count, pageSize);
     const disableHead = page === 1;
     const disableTail = page >= numPages;
 
     return (
-      <div>
+      <div className={classes.root}>
         <Hidden xsDown>
           <PageButton data-qa-page-first onClick={this.handleFirstPageClick} disabled={disableHead} aria-label="First Page" >
             <FirstPage />
@@ -103,13 +118,13 @@ export class PaginationControls extends React.Component<Props, {}> {
             <LastPage />
           </PageButton>
         </Hidden>
-      </div >
+      </div>
     );
   }
 
 };
 
-export default PaginationControls;
+export default styled(PaginationControls);
 
 /**
  * 
