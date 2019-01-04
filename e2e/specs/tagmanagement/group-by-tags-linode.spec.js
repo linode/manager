@@ -9,7 +9,7 @@ import ListLinodes from '../../pageobjects/list-linodes';
 
 describe('Group Linodes by Tags - Suite', () => {
 
-    const tags = [`a${timestamp()}`,`b${timestamp()}`,`c${timestamp()}`];
+    const tags = [`b${timestamp()}`,`a${timestamp()}`,`c${timestamp()}`];
     let linodes = [];
 
     const generateTagGroups = () => {

@@ -221,6 +221,5 @@ export const getDistrobutionLabel = (distrobutionTags) => {
 }
 
 export const getLocalStorageValue = (key) => {
-    console.log(browser.localStorage('GET', key));
     return browser.localStorage('GET', key).value;
 }

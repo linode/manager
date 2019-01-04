@@ -66,7 +66,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
         ImportGroupsAsTagsDrawer.submitButton.click();
         GlobalSettings.drawerBase.waitForVisible(constants.wait.long);
         GlobalSettings.toastDisplays('Your display groups have been imported successfully.');
-        expect(getLocalStorageValue('hasImportedGroups')).to('true');
+        expect(getLocalStorageValue('hasImportedGroups')).toBe('true');
     });
 
     it('Verify groups are imported as tags', () => {
