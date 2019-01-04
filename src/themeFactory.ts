@@ -1043,16 +1043,16 @@ const themeDefaults: ThemeOptions = {
         transition: 'color 225ms ease-in-out',
         '&:hover': {
           color: primaryColors.main,
+        },
+        '&:focus': {
+          outline: '1px dotted #999',
         }
       },
       active: {
         color: primaryColors.main,
-        '&:focus': {
-          outline: '1px dotted #999',
-          '&:hover': {
-            color: primaryColors.main,
-          }
-        },
+        '&:hover': {
+          color: primaryColors.main,
+        }
       },
       icon: {
         opacity: 1,

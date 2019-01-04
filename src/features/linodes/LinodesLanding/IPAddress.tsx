@@ -71,6 +71,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   hide: {
     opacity: 0, // Hide until the component is hovered, when props.showCopyOnHover is true
     transition: theme.transitions.create(['opacity']),
+    '&:focus': {
+      opacity: 1
+    }
   }
 });
 
@@ -111,10 +114,10 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes, copyRight, showCopyOnHover } = this.props;
 
     return (
-      <div className={`${classes.ipLink} ${showCopyOnHover ? classes.hide : ''}`} data-qa-copy-ip>
+      <div className={`${classes.ipLink}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
-          className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
+          className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''} ${copyRight ? classes.right : classes.left}`}
         />
       </div>
     );
