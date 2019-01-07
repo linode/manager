@@ -15,7 +15,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     borderRight: 0,
     [theme.breakpoints.only('xs')]: {
       position: 'relative',
-      top: 3,
       display: 'inline-flex',
       alignItems: 'center',
       alignContent: 'center',
