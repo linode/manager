@@ -129,7 +129,6 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.region}
-              helperText=""
             />
 
             <LinodeSelect
