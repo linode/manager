@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import domains, { defaultState as defaultDomainsState } from '../../domains/domains.reducer';
 import account, { DEFAULT_STATE as defaultAccountState } from './account';
 import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from './accountSettings';
@@ -15,6 +16,7 @@ export const defaultState = {
   profile: defaultProfileState,
   types: defaultTypesState,
   images: defaultImagesState,
+  regions: defaultRegionsState,
 }
 
-export default combineReducers({ account, accountSettings, profile, domains, linodes, types, images });
+export default combineReducers({ account, accountSettings, profile, domains, linodes, types, images, regions });
