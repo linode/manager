@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'flex-end',
   },
   bodyRow: {
-    height: 77,
+    height: 'auto',
     '&:hover .backupIcon': {
       fill: theme.palette.primary.main,
     },
