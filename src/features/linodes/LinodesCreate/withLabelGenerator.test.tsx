@@ -48,9 +48,9 @@ describe('pad', () => {
 
 describe('dedupe label', () => {
   it('adds an incrementor', () => {
-    expect(dedupeLabel('my-label', ['my-label'])).toBe('my-label001');
-    expect(dedupeLabel('my-label', ['my-label001'])).toBe('my-label');
-    expect(dedupeLabel('my-label', ['my-label', 'my-label-002'])).toBe('my-label001');
-    expect(dedupeLabel('my-label', ['my-label', 'my-label001', 'my-label003'])).toBe('my-label002');
+    expect(dedupeLabel('my-label', ['my-label'])).toBe('my-label-001');
+    expect(dedupeLabel('my-label', ['my-label-001'])).toBe('my-label');
+    expect(dedupeLabel('my-label', ['my-label', 'my-label-002'])).toBe('my-label-001');
+    expect(dedupeLabel('my-label', ['my-label', 'my-label-001', 'my-label003'])).toBe('my-label-002');
   });
 })

@@ -83,7 +83,7 @@ export const dedupeLabel = (label: string, existingLabels: string[]): string => 
   const matchingLabels = existingLabels.filter(l => l.startsWith(label));
 
   while (matchingLabels.find(l => l === dedupedLabel)) {
-    dedupedLabel = label + pad(i, ZERO_PAD_WIDTH);
+    dedupedLabel = label + '-' + i.toString().padStart(ZERO_PAD_WIDTH, '0');
     i++;
 
     // EDGE CASE: if a user has 999 iterations of the same name (arch-us-east-001, arch-us-east-002, ...)
