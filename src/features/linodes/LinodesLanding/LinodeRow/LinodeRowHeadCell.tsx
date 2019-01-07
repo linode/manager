@@ -78,7 +78,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     lineHeight: '0.8rem',
   },
   labelGridWrapper: {
-    padding: '0 4px !important',
+    paddingLeft: '4px !important',
+    paddingRight: '4px !important',
   }
 });
 
