@@ -102,7 +102,6 @@ export const getAllFromEntity: (getter: GetFromEntity) => (params?: any, filter?
 const getAllLinodes = getAll<Linode.Linode>(getLinodes);
 const getAllNodeBalancers = getAll<Linode.NodeBalancer>(getNodeBalancers);
 const getAllVolumes = getAll<Linode.Volume>(getVolumes);
-const getAllDomains = getAll<Linode.Domain>(getDomains);
 
 export type GetAllHandler = (
   linodes: Linode.Linode[],
@@ -125,7 +124,7 @@ export const getAllEntities = (cb: GetAllHandler) =>
     getAllLinodes(),
     getAllNodeBalancers(),
     getAllVolumes(),
-    getAllDomains(),
+    getAll<Linode.Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {
