@@ -112,8 +112,8 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
         <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
-            <IPAddress ips={linodeIpv4} copyRight />
-            <IPAddress ips={[linodeIpv6]} copyRight />
+            <IPAddress ips={linodeIpv4} copyRight showCopyOnHover />
+            <IPAddress ips={[linodeIpv6]} copyRight showCopyOnHover />
           </div>
         </TableCell>
         <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>

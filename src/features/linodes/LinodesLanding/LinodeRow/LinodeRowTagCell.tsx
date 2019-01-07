@@ -47,7 +47,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
             interactive={true}
           >
             <div className={classes.wrapper}>
-              <a className={classes.tagLink}>{tags.length}</a>
+              <a href="javascript:;" className={classes.tagLink}>{tags.length}</a>
             </div>
           </Tooltip>
         : <Typography>0</Typography>

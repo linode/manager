@@ -116,12 +116,12 @@ class SummaryPanel extends React.Component<CombinedProps> {
           </Grid>
           <Grid item xs={12} sm={6} lg={4}>
             <div className={classes.section}>
-              <IPAddress ips={linode.ipv4} copyRight />
+              <IPAddress ips={linode.ipv4} copyRight showMore />
             </div>
             {
               linode.ipv6 &&
               <div className={classes.section}>
-                <IPAddress ips={[linode.ipv6]} copyRight />
+                <IPAddress ips={[linode.ipv6]} copyRight showMore />
               </div>
             }
           </Grid>
