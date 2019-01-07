@@ -1,9 +1,8 @@
 import { pathOr } from 'ramda';
 import { Reducer } from "redux";
 import { ThunkAction } from "redux-thunk";
-import { getImages } from "src/services/images";
 import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
-import { getAll } from "src/utilities/getAll";
+import { getAllImages } from "src/utilities/getAllEntities";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 
@@ -112,7 +111,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
  * Async
  */
 const requestImages = (): ThunkAction<Promise<Linode.Image[]>, State, undefined> => (dispatch) => {
-  const getAllImages = getAll<Linode.Image>(getImages);
 
   return getAllImages()
     .then(({ data }) => {

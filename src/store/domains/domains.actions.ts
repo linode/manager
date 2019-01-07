@@ -1,8 +1,8 @@
 import { pathOr } from 'ramda';
 import { Dispatch } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import { getDomain, getDomains } from 'src/services/domains';
-import { getAll } from 'src/utilities/getAll';
+import { getDomain } from 'src/services/domains';
+import { getAllDomains } from 'src/utilities/getAllEntities';
 import actionCreatorFactory from 'typescript-fsa';
 
 /**
@@ -27,7 +27,7 @@ export const requestDomains = () => (dispatch: Dispatch<any>) => {
 
   dispatch(getDomainsRequest());
 
-  return getAll<Linode.Domain>(getDomains)()
+  return getAllDomains()
     .then((domains) => {
       dispatch(getDomainsSuccess(domains.data));
       return domains;

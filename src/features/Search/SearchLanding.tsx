@@ -10,7 +10,7 @@ import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import withImages from 'src/containers/withImages.container';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getAllEntities } from 'src/utilities/getAll';
+import getAllEntities from 'src/utilities/getAllEntities';
 import { getQueryParam } from 'src/utilities/queryParams';
 
 import ResultGroup from './ResultGroup';

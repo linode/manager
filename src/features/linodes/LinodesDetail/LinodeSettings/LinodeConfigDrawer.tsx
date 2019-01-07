@@ -20,11 +20,11 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { createLinodeConfig, getLinodeConfig, getLinodeDisks, getLinodeKernels, updateLinodeConfig } from 'src/services/linodes';
-import { getVolumes } from 'src/services/volumes';
+import { createLinodeConfig, getLinodeConfig, getLinodeDisks, updateLinodeConfig } from 'src/services/linodes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
-import { getAll, getAllFromEntity } from 'src/utilities/getAll';
+import { getAllKernels, getAllVolumes } from 'src/utilities/getAllEntities';
+import getAllFromEntity from 'src/utilities/getAllFromEntity';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root'
@@ -90,8 +90,6 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const getAllKernels = getAll<Linode.Kernel>(getLinodeKernels);
-const getAllVolumes = getAll<Linode.Volume>(getVolumes);
 const getAllLinodeDisks = getAllFromEntity(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
@@ -424,7 +422,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Grid item xs={12} className={classes.section}>
           <Typography role="header" variant="h3">Filesystem/Boot Helpers</Typography>
-          <FormControl
+        <FormControl
             updateFor={[
               helpers.distro,
               helpers.updatedb_disabled,

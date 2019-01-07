@@ -2,9 +2,9 @@ import * as Bluebird from 'bluebird';
 import { Dispatch, Reducer } from "redux";
 import { ThunkAction } from 'redux-thunk';
 import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
-import { getLinode, getLinodes } from "src/services/linodes";
+import { getLinode } from "src/services/linodes";
 import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
-import { getAll } from "src/utilities/getAll";
+import { getAllLinodes } from "src/utilities/getAllEntities";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 /**
@@ -140,7 +140,7 @@ export default reducer;
 const requestLinodes = () => (dispatch: Dispatch<State>) => {
   dispatch(getLinodesRequest());
 
-  return getAll<Linode.Linode>(getLinodes)()
+  return getAllLinodes()
     .then(getBackupsForLinodes)
     .then((linodes) => {
       dispatch(getLinodesSuccess(linodes));
