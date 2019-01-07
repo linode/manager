@@ -17,6 +17,8 @@ export const upsertLinode = actionCreator<Linode.Linode>(`upsert`);
 
 export const deleteLinode = actionCreator<number>('delete');
 
+export const updateLinode = actionCreator<{ id: number; update: (v: Linode.Linode) => Linode.Linode }>('update_status');
+
 export const linodesRequest = actionCreator.async<void, Linode.Linode[], Linode.ApiFieldError[]>('request');
 
 export const requestLinodes = () => (dispatch: Dispatch<ApplicationState>) => {

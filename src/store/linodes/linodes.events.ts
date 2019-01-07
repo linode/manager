@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
-import { deleteLinode, requestLinodeForStore } from './linodes.actions';
+import { deleteLinode, requestLinodeForStore, updateLinode } from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (event, dispatch) => {
   const { action, entity, status } = event;
@@ -25,8 +25,10 @@ const linodeEventsHandler: EventHandler = (event, dispatch) => {
 
     /** Create Linode */
     case 'linode_create':
-    case 'linode_clone':
       return handleLinodeCreation(dispatch, status, id);
+
+    case 'linode_clone':
+      return handleLinodeClone(dispatch, status, id);
 
     default:
       return;
@@ -34,6 +36,26 @@ const linodeEventsHandler: EventHandler = (event, dispatch) => {
 };
 
 export default linodeEventsHandler;
+
+const handleLinodeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number) => {
+  switch (status) {
+    case 'failed':
+    case 'finished':
+      return dispatch(requestLinodeForStore(id));
+
+    case 'scheduled':
+    case 'started':
+      const action = updateLinode({
+        id,
+        update: (existing) => ({ ...existing, status: 'cloning' }),
+      });
+
+      return dispatch(action);
+
+    default:
+      return;
+  }
+};
 
 const handleLinodeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number) => {
   switch (status) {
