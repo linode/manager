@@ -65,6 +65,10 @@ type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 export const AttachFileListItem: React.StatelessComponent<CombinedProps> = (props) => {
   const { classes, file, inlineDisplay, onClick } = props;
   if (file.uploaded) { return null; }
+  const err = (file.errors && file.errors.length)
+    ? file.errors[0].reason
+    : undefined;
+
   return (
     <React.Fragment>
       <Grid container className={classes.attachmentsContainer}>
@@ -72,7 +76,7 @@ export const AttachFileListItem: React.StatelessComponent<CombinedProps> = (prop
           <TextField
             className={classes.attachmentField}
             value={file.name}
-            errorText={file.errors && file.errors.length && file.errors[0].reason}
+            errorText={err}
             InputProps={{
               startAdornment:
               <InputAdornment position="end">
