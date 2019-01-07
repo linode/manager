@@ -139,15 +139,15 @@ const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
 
 const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
   events
-    .reduce((updatedLinodes, event) => {
+    .reduce((updatedDomains, event) => {
       if (isWantedEvent(event)) {
-        return updatedLinodes.map(domain => event.entity.id === domain.id
+        return updatedDomains.map(domain => event.entity.id === domain.id
           ? { ...domain, recentEvent: event }
           : domain
         )
       }
 
-      return updatedLinodes;
+      return updatedDomains;
     }, domains);
 
 const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
