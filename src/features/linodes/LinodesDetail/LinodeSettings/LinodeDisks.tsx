@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   diskSpaceWrapper: {
     backgroundColor: theme.color.grey2,
     padding: theme.spacing.unit * 2,
-    minHeight: '200px'
+    minHeight: '325px'
   }
 });
 
@@ -202,7 +202,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Grid container>
-          <Grid item xs={4} sm={4}>
+          <Grid item md={4} sm={12}>
             <Paper classes={{ root: classes.diskSpaceWrapper }}>
               <LinodeDiskSpace
                 disks={data}
@@ -212,7 +212,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               />
             </Paper>
           </Grid>
-          <Grid item xs={8} sm={8}>
+          <Grid item md={8} sm={12}>
             <Table isResponsive={false} aria-label="List of Disks">
               <TableHead>
                 <TableRow>
