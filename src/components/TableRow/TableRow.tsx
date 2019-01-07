@@ -53,14 +53,20 @@ class TableRow extends React.Component<CombinedProps> {
     const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
     const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
 
-    if (!isButton && !isAnchor) {
-      e.stopPropagation();
-      if (typeof(target) === 'string') {
-        this.props.history.push(target);
-        // return if a modal is open
-      } else if (body.getAttribute('style') !== null && body.getAttribute('style').indexOf('overflow: hidden') !== 0) { return; }
+    if (
+      body.getAttribute('style') === null ||
+      body.getAttribute('style').indexOf('overflow: hidden') !== 0 ||
+      body.getAttribute('style') === ''
+    ){
+      if (!isButton && !isAnchor) {
+        e.stopPropagation();
+        if (typeof(target) === 'string') {
+          this.props.history.push(target);
+          // return if a modal is open
+        }
+      }
+      if (typeof(target) === 'function') { target(e) };
     }
-    if (typeof(target) === 'function') { target(e) };
   }
 
 
