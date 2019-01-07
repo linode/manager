@@ -1,28 +1,34 @@
 import { compose, filter, join, map } from 'ramda';
 
-// Set this at 29, so we can leave room for zero-padding if needed
-const MAX_LABEL_LENGTH = 29;
+// Set this at 28, so we can leave room for a dash and zero-padding (width: 3) if needed
+const MAX_LABEL_LENGTH = 28;
+
+// Only alpha-numeric chars, dashes, and underscores allowed by the API
+const labelRegex = /[^a-zA-Z0-9-_]/g;
 
 export type LabelArgTypes = string | null | undefined;
 
 export const deriveDefaultLabel = (...args: LabelArgTypes[]): string => {
 
-  // Some params might be null or undefined, so filter those out
   const filtered = filter(Boolean)(args);
-
-  // Max string length of each param. If we have to cut down the string because it's over
-  // the API limit, we chop each param, rather than chopping the string as a whole
-  const maxLength = Math.floor(MAX_LABEL_LENGTH / filtered.length);
-
-  return compose(
-    ensureSingleDashesAndUnderscores,
-    join('-'),
-    map((s: string) => {
-      return s.replace(/[^a-zA-Z0-9-_]/g, '') // Only alpha-numeric chars, dashes, and underscores allowed by the API
-        .slice(0, maxLength)
-        .toLowerCase()
-    }),
+  const cleaned = map((s: string) =>
+    s.replace(labelRegex, '')
+    .toLowerCase()
   )(filtered);
+
+  const withDash = join('-');
+
+  if (withDash(cleaned).length <= MAX_LABEL_LENGTH) {
+    return compose(ensureSingleDashesAndUnderscores, withDash)(cleaned);
+  }
+
+  // If the length will be more than MAX_LABEL_LENGTH, we'll need to do some calculation and clamp each section
+  const numDashes = filtered.length-1;
+  const maxSectionLength = Math.floor((MAX_LABEL_LENGTH - numDashes) / filtered.length);
+
+  return compose(ensureSingleDashesAndUnderscores, withDash,
+    map((s: string) => s.slice(0, maxSectionLength))
+  )(cleaned);
 }
 
 export default deriveDefaultLabel;

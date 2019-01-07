@@ -12,13 +12,15 @@ describe('create label name', () => {
   });
 
   it('clamps length when necessary', () => {
-    expect(deriveDefaultLabel('really-long-linode-label', 'newark')).toBe('really-long-li-newark')
-    expect(deriveDefaultLabel('really-long-linode-label', 'us-east-another-region')).toBe('really-long-li-us-east-anothe')
+    expect(deriveDefaultLabel('really-long-linode-label', 'newark')).toBe('really-long-l-newark')
+    expect(deriveDefaultLabel('really-long-linode-label', 'us-east-another-region')).toBe('really-long-l-us-east-anoth')
+    expect(deriveDefaultLabel('123456789', '10', '11', '12131415')).toBe('123456789-10-11-12131415')
+    expect(deriveDefaultLabel('123456789', '10', '11', '12131415161718192021')).toBe('123456-10-11-121314')
   });
 
   it('ensures no double dashes or underscores are present', () => {
-    expect(deriveDefaultLabel('really-long-l-inode-label', 'us-east-another-region')).toBe('really-long-l-us-east-anothe')
-    expect(deriveDefaultLabel('this-is__impossible', 'us-west')).toBe('this-is_impos-us-west')
+    expect(deriveDefaultLabel('really-long-l-inode-label', 'us-east-another-region')).toBe('really-long-l-us-east-anoth')
+    expect(deriveDefaultLabel('this-is__impossible', 'us-west')).toBe('this-is_impossible-us-west')
   });
 });
 
