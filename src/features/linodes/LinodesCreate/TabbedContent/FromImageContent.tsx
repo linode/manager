@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { pathOr } from 'ramda';
+import { find, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
@@ -206,6 +206,10 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+
+    if (!find((image) => image.id === this.state.selectedImageID, this.props.images)) {
+      this.setState({ selectedImageID: null });
+    }
   }
 
   render() {
