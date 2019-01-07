@@ -5,7 +5,7 @@ import Page from '../page';
 class Backups extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get enableButton() { return $('[data-qa-placeholder-button]'); }
-    get heading() { return $('[data-qa-title]'); }
+    get heading() { return this.pageTitle; }
     get description() { return $('[data-qa-backup-description]'); }
     get manualSnapshotHeading() { return $('[data-qa-manual-heading]'); }
     get manualDescription() { return $('[data-qa-manual-desc]'); }
@@ -29,7 +29,7 @@ class Backups extends Page {
     get disks() { return $('[data-qa-backup-disks]'); }
     get spaceRequired() { return $('[data-qa-space-required]'); }
 
-    get restoreToLinodeSelect() { return $(`${this.drawerBase.selector} [data-qa-select]`); }
+    get restoreToLinodeSelect() { return $(`${this.drawerBase.selector} ${this.basicSelect}`); }
     get restoreToLinodesOptions() { return $$('[data-qa-restore-options]'); }
     get overwriteLinodeCheckbox() { return $(`${this.drawerBase.selector} [data-qa-checked]`); }
     get restoreSubmit() { return $('[data-qa-restore-submit]'); }

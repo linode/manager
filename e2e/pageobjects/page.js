@@ -45,9 +45,9 @@ export default class Page {
     get drawerPrice() { return $('[qa-data-price]'); }
     get drawerBillingInterval() { return $('[qa-data-billing-interval]'); }
     get enableAllBackups() { return $('[data-qa-backup-existing]'); }
-
-
-    // Breadcrumb Component
+    get basicSelect() { return '[data-qa-select]'; }
+    get pageTitle() { return $('[data-qa-title]'); }
+    get openImportDrawerButton() { return $('[data-qa-open-import-drawer-button]'); }
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
     get breadcrumbStaticText() { return $('[data-qa-label-title]'); }
     get breadcrumbBackLink() { return $('[data-qa-link]'); }
@@ -56,14 +56,7 @@ export default class Page {
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
     get enterKey() { return '\uE007'; }
-
-    constructor() {
-        this.pageTitle = 'Base page';
-    }
-
-    open(path) {
-
-    }
+    get upArrowKey() { return '\ue013'; }
 
     logout() {
         this.userMenu.waitForVisible(constants.wait.normal);
@@ -145,12 +138,19 @@ export default class Page {
         expect(sidebarTitle).toBe('Linode Docs');
     }
 
-    toastDisplays(expectedMessage, timeout=constants.wait.normal) {
+    toastDisplays(expectedMessage, timeout=constants.wait.normal, wait=true) {
         this.toast.waitForVisible(timeout);
-        browser.waitUntil(() => {
-            return $$(this.toast.selector).find(toast => toast.getText() === expectedMessage)
-        },timeout);
-        this.toast.waitForVisible(timeout, true);
+        let toastMessage;
+        if(wait){
+            browser.waitUntil(() => {
+                toastMessage = $$(this.toast.selector).find(toast => toast.getText() === expectedMessage);
+                return toastMessage;
+            },timeout);
+            toastMessage.waitForVisible(timeout, true);
+        }else{
+            this.toast.waitForVisible(timeout, true);
+        }
+
     }
 
     openActionMenu(actionMenuRow) {
@@ -245,5 +245,9 @@ export default class Page {
         expectedTags.forEach((tag) => {
             expect(appliedTags.includes(tag)).toBe(true);
         });
+    }
+
+    addIcon(iconText){
+        return $(`[data-qa-icon-text-link="${iconText}"]`);
     }
 }

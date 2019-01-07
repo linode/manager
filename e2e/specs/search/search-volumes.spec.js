@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 
 import {
     timestamp,
-    createUnattachedVolumes,
+    createVolumes,
     apiDeleteAllVolumes,
 } from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
@@ -25,7 +25,7 @@ describe('Header - Search - Volumes Suite', () => {
     }
 
     beforeAll(() => {
-        createUnattachedVolumes([testVolume]);
+        createVolumes([testVolume]);
     });
 
     afterAll(() => {

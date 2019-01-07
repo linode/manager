@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class Rebuild extends Page {
-    get title() { return $('[data-qa-title]'); }
+    get title() { return this.pageTitle; }
     get description() { return $('[data-qa-rebuild-desc]'); }
     get imageSelectSelector() { return '[data-qa-enhanced-select="Select an Image"]';}
     get imagesSelect() { return $(`${this.imageSelectSelector}>div>div`); }

@@ -1,7 +1,8 @@
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -13,10 +14,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import PromiseLoader from 'src/components/PromiseLoader';
+import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
-import { getLinodeImages } from 'src/services/images';
 import { createStackScript } from 'src/services/stackscripts';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -47,16 +47,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface PreloadedProps {
-  images: { response: Linode.Image[] }
-}
-
 interface State {
   labelText: string;
   descriptionText: string;
   imageSelectOpen: boolean;
   selectedImages: string[];
-  availableImages: Linode.Image[];
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
@@ -65,15 +60,10 @@ interface State {
 }
 
 type CombinedProps = StateProps
+  & WithImagesProps
   & SetDocsProps
   & WithStyles<ClassNames>
-  & PreloadedProps
   & RouteComponentProps<{}>;
-
-const preloaded = PromiseLoader({
-  images: () => getLinodeImages()
-    .then(response => response.data || [])
-})
 
 const errorResources = {
   label: 'A label',
@@ -88,7 +78,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     imageSelectOpen: false,
     selectedImages: [],
     /* available images to select from in the dropdown */
-    availableImages: this.props.images.response,
     script: '',
     revisionNote: '',
     isSubmitting: false,
@@ -125,35 +114,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ imageSelectOpen: false });
   }
 
-  handleRemoveImage = (indexToRemove: any) => {
-    /*
-    * remove selected image from the selected list
-    */
-    const selectedImagesCopy = this.state.selectedImages;
-    const removedImage = selectedImagesCopy.splice(indexToRemove, 1);
-
-    /*
-    * add the remvoed image back to the selection list
-    */
-    const availableImagesCopy = this.state.availableImages;
-    const imageToBeReAdded = this.props.images.response.find(image =>
-      image.id === removedImage[0]);
-    availableImagesCopy.unshift(imageToBeReAdded!);
-
+  handleRemoveImage = (id: string) => {
+    const { selectedImages } = this.state;
     this.setState({
-      selectedImages: selectedImagesCopy,
-      availableImages: availableImagesCopy,
+      selectedImages: selectedImages.filter((imageId) => imageId !== id),
     });
   }
 
   handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { availableImages } = this.state;
-    const filteredAvailableImages = availableImages.filter((image) => {
-      return image.id !== e.target.value;
-    })
     this.setState({
       selectedImages: [...this.state.selectedImages, e.target.value],
-      availableImages: filteredAvailableImages,
     })
     this.setState({ imageSelectOpen: true });
   }
@@ -262,12 +232,20 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, username } = this.props;
-    const { availableImages, selectedImages, script,
-      labelText, descriptionText, revisionNote, errors,
-      isSubmitting } = this.state;
-
+    const {
+      selectedImages,
+      script,
+      labelText,
+      descriptionText,
+      revisionNote,
+      errors,
+      isSubmitting,
+    } = this.state;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+
+    const availableImages = this.props.imagesData.filter((image) =>
+      !this.state.selectedImages.includes(image.id))
 
     if (!username) {
       return <ErrorState errorText="An error has occurred. Please try again." />
@@ -344,10 +322,23 @@ const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose(
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+  imagesLoading: boolean;
+  imagesError?: Linode.ApiFieldError[];
+}
+
+const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptCreate.docs),
+  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
+    ...ownProps,
+    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesLoading,
+    imagesError
+  })),
   styled,
   withRouter,
   connected,
-  preloaded,
-)(StackScriptCreate)
+);
+
+export default enhanced(StackScriptCreate)

@@ -18,6 +18,7 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
           direction={order}
           active={isActive('label')}
           handleClick={handleOrderChange}
+          data-qa-sort-label={order}
         >
           Linode
         </TableSortCell>
@@ -29,6 +30,7 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
           direction={order}
           active={isActive('region')}
           handleClick={handleOrderChange}
+          data-qa-sort-region={order}
         >
           Region
         </TableSortCell>

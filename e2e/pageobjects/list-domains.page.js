@@ -5,8 +5,8 @@ import Page from './page.js';
 class ListDomains extends Page {
     get placeholderText() { return $('[data-qa-placeholder-title]'); }
     get createButton() { return $('[data-qa-placeholder-button]'); }
-    get createIconLink() { return $('[data-qa-icon-text-link="Add a Domain"]'); }
-    get importZoneButton() { return $('[data-qa-icon-text-link="Import a Zone"]'); }
+    get createIconLink() { return this.addIcon('Add a Domain'); }
+    get importZoneButton() { return this.addIcon('Import a Zone'); }
     get actionMenu() { return $('[data-qa-action-menu]'); }
     get domainNameHeader() { return $('[data-qa-domain-name-header]'); }
     get domainTypeHeader() { return $('[data-qa-domain-type-header]'); }

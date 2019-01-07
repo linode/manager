@@ -5,11 +5,12 @@ import Page from './page';
 class SearchResults extends Page {
 
     headerSelector(entityType){
-        return `[data-qa-entity-header=${entityType}]`;
+        const entity = entityType.charAt(0).toUpperCase() + entityType.toLowerCase().slice(1);
+        return `[data-qa-entity-header="${entity}"]`;
     }
 
     headerElement(entityType){
-       return $(this.headerSelector(entityType));
+        return $(this.headerSelector(entityType));
     }
 
     resultSelector(entityName){
@@ -21,7 +22,7 @@ class SearchResults extends Page {
     }
 
     resultElement(entityName){
-       return $(this.resultSelector(entityName));
+        return $(this.resultSelector(entityName));
     }
 
     waitForSearchResult(entityType,entityName){
