@@ -314,7 +314,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
           return false // this.props.groupByTag
             ? <></> // ListGroupedVolumes will live here
-            : <ListVolumes {...orderProps} renderProps={{...renderProps, data: orderedData}}  />
+            : <ListVolumes data={orderedData} {...orderProps} renderProps={{...renderProps}}  />
         }}
       </OrderBy>
     )

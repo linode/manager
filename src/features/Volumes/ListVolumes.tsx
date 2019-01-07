@@ -58,7 +58,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface RenderDataProps {
-  data: Linode.Volume[];
   isVolumesLanding: boolean;
   openForEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
   openForResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
@@ -109,8 +108,8 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
               </TableHead>
               <TableBody>
                 <RenderData
-                  {...renderProps}
                   data={paginatedData}
+                  {...renderProps}
                 />
               </TableBody>
             </Table>
@@ -138,7 +137,7 @@ const isVolumeUpdating = (e?: Linode.Event) => {
     && ['scheduled', 'started'].includes(e.status);
 };
 
-const RenderData: React.StatelessComponent<RenderDataProps> = (props) => {
+const RenderData: React.StatelessComponent<{ data: Linode.Volume[] } & RenderDataProps> = (props) => {
   const {
     data,
     isVolumesLanding,
