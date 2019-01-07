@@ -28,7 +28,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   bodyRow: {
     height: 77,
-    backgroundColor: theme.bg.white,
     '&:hover .backupIcon': {
       fill: theme.palette.primary.main,
     },
