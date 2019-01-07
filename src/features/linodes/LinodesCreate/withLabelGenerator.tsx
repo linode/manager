@@ -92,9 +92,3 @@ export const dedupeLabel = (label: string, existingLabels: string[]): string => 
   }
   return dedupedLabel;
 }
-
-// Adds padding to the specified width. pad(7, 3) --> '007
-export const pad = (n: number, width: number, padChar = '0'): string => {
-  const s = n + '';
-  return s.length >= width ? s : new Array(width - s.length + 1).join(padChar) + s;
-}

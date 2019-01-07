@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import store from 'src/store';
-import { dedupeLabel, LabelProps, pad, withLabelGenerator } from './withLabelGenerator';
+import { dedupeLabel, LabelProps, withLabelGenerator } from './withLabelGenerator';
 
 const RawComponent = withLabelGenerator(() => <div/>);
 
@@ -34,16 +34,6 @@ describe('withLabelGenerator HOC', () => {
   it('returns custom label if not given args', () => {
     expect(nestedComponent.props().getLabel()).toBe('');
   });
-});
-
-describe('pad', () => {
-  it('pads with the specified character', () => {
-    expect(pad(9, 3)).toBe('009')
-    expect(pad(9, 3, '+')).toBe('++9')
-    expect(pad(9, 2)).toBe('09')
-    expect(pad(9, 1)).toBe('9')
-    expect(pad(19, 5)).toBe('00019')
-  })
 });
 
 describe('dedupe label', () => {
