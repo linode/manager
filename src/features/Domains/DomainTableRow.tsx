@@ -44,7 +44,7 @@ const DomainsTableRow: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow
       key={id}
-      data-qa-domain-cell={id}
+      data-qa-domain-cell={domain}
       className={`${classes.domainRow} ${'fade-in-table'}`}
       rowLink={`/domains/${id}`}
     >
