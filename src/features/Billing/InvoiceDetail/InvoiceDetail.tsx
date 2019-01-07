@@ -54,8 +54,12 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   requestData = () => {
-    const { match: { params: { invoiceId } } } = this.props;
+    const { match: { params: { invoiceId } }, data } = this.props;
     this.setState({ loading: true });
+
+    if (!data) {
+      this.props.requestAccount();
+    }
 
     Promise.all([
       getInvoice(invoiceId),
@@ -77,9 +81,6 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.requestData();
-    if (!this.props.data) {
-      this.props.requestAccount();
-    }
   }
 
   componentWillUnmount() {
