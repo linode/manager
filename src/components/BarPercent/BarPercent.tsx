@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class BarPercent extends React.PureComponent<CombinedProps, {}> {
+export class BarPercent extends React.PureComponent<CombinedProps, {}> {
   render() {
     const { classes, className, value, max, isFetchingValue, loadingText } = this.props;
     return (

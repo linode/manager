@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
+export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
   render() {
     const { loading, error, disks, totalDiskSpace, classes } = this.props;
 
@@ -84,7 +84,7 @@ class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
 /**
  * add all the used disk space together
  */
-const addUsedDiskSpace = (disks: Linode.Disk[]) => {
+export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
   return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0)
 }
 
