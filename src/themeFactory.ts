@@ -1007,6 +1007,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTableRow: {
       root: {
+        backgroundColor: primaryColors.white,
         backfaceVisibility: 'hidden',
         position: 'relative',
         zIndex: 1,
