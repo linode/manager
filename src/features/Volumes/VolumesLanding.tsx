@@ -1,5 +1,4 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { path } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -15,7 +14,6 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
-import paginate, { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import TableRowError from 'src/components/TableRowError';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
@@ -23,13 +21,11 @@ import withVolumes from 'src/containers/volumes.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
-import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
-import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
+import { deleteVolume, detachVolume } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
-import { generateInFilter } from 'src/utilities/requestFilters';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
-import WithEvents from './WithEvents';
 
 import ListVolumes from './ListVolumes';
 
@@ -51,6 +47,7 @@ interface ExtendedVolume extends Linode.Volume {
 interface WithVolumesProps {
   volumesData: ExtendedVolume[];
   volumesLoading: boolean;
+  volumesError?: Linode.ApiFieldError[];
 }
 
 interface WithLinodesProps {
@@ -96,13 +93,10 @@ type CombinedProps =
   & WithVolumesProps
   & WithLinodesProps
   & EventsProps
-  & PaginationProps<ExtendedVolume>
   & DispatchProps
   & RouteProps
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
-
-
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -128,8 +122,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-
-    this.props.request();
   }
 
   componentWillUnmount() {
@@ -178,17 +170,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      loading,
-      count,
-      // page,
-      // pageSize,
+      volumesData,
+      volumesLoading
     } = this.props;
 
-    if (loading) {
+    if (volumesLoading) {
       return this.renderLoading();
     }
 
-    if (count === 0) {
+    if (volumesData.length === 0) {
       return this.renderEmpty();
     }
 
@@ -234,15 +224,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   }
 
   renderContent = () => {
-    const { error, data: volumes } = this.props;
+    const { volumesError, volumesData } = this.props;
 
-    if (error) {
-      return this.renderErrors(error);
+    if (volumesError) {
+      return this.renderErrors(volumesError);
     }
 
-
-    if (volumes && this.props.count > 0) {
-      return this.renderData(volumes);
+    if (volumesData && volumesData.length > 0) {
+      return this.renderData(volumesData);
     }
 
     return null;
@@ -252,13 +241,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return <CircleProgress />;
   };
 
-  renderErrors = (errors: Error) => {
+  renderErrors = (errors: Linode.ApiFieldError[]) => {
+    const errorText = getErrorStringOrDefault(errors, "There was an error loading your volumes.");
     return (
-      <TableRowError colSpan={5} message="There was an error loading your volumes." />
+      <TableRowError colSpan={5} message={errorText} />
     );
   };
 
-  gotToSettings = () => {
+  goToSettings = () => {
     const { history, linodeId } = this.props;
     history.push(`/linodes/${linodeId}/settings`);
   };
@@ -275,7 +265,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             copy="This Linode has no configurations. Click below to create a configuration."
             icon={VolumesIcon}
             buttonProps={{
-              onClick: this.gotToSettings,
+              onClick: this.goToSettings,
               children: 'View Linode Configurations',
             }}
           />
@@ -313,7 +303,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <OrderBy data={this.props.volumesData} order={'desc'} orderBy={'label'}>
+      <OrderBy data={volumes} order={'desc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           const orderProps = {
             orderBy,
@@ -392,68 +382,6 @@ const connected = connect(undefined, mapDispatchToProps);
 
 const documented = setDocs(VolumesLanding.docs);
 
-const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
-  const linodeId = path<string>(['match', 'params', 'linodeId'], ownProps);
-
-  const req: (params: any, filter: any) => Promise<Linode.ResourcePage<Linode.Volume>>
-    = linodeId
-      ? getLinodeVolumes.bind(undefined, linodeId)
-      : getVolumes;
-
-  return req(params, filters)
-    .then((volumesResponse) => {
-
-      /** If we dont have a linodeId, we  */
-      if (linodeId) {
-        return Promise.resolve(volumesResponse);
-      }
-      /*
-       * Iterate over all the volumes data and find the ones that
-       * have a linodeId property that is not null and create an X-Filter
-       * that we can use in the getLinodes() request
-       */
-      const linodeIDs = volumesResponse.data.map(volume => volume.linode_id).filter(Boolean);
-      const xFilter = generateInFilter('id', linodeIDs);
-
-      return getLinodes(undefined, xFilter)
-        .then((linodesResponse) => {
-          const volumesWithLinodeData = volumesResponse.data.map(eachVolume => {
-            /*
-             * Iterate over all the linode data and find a match between
-             * the volumes linode ID and the Linode data id. If there's a match
-             * it means that the Linode is attached to the volume and the Linode
-             * status and label needs needs to be appended to the result data
-             */
-            for (const eachLinode of linodesResponse.data) {
-              if (eachLinode.id === eachVolume.linode_id) {
-                return {
-                  ...eachVolume,
-                  linodeLabel: eachLinode.label,
-                  linodeStatus: eachLinode.status
-                }
-              }
-            }
-            /*
-             * Otherwise, this volume is not attached to a Linode
-             */
-            return eachVolume;
-          });
-
-          return {
-            ...volumesResponse,
-            data: volumesWithLinodeData,
-          }
-        })
-        .catch((err) => {
-          /*
-           * If getting the Linode data fails, no problem.
-           * Just return the volumes
-           */
-          return volumesResponse;
-        });
-    });
-}
-
 const addAttachedLinodeInfotoVolume = (volume: Linode.Volume, linodes: Linode.Linode[]): ExtendedVolume => {
   if (!volume.linode_id) { return volume; }
   const attachedLinode = linodes.find((linode) => linode.id === volume.linode_id);
@@ -487,18 +415,12 @@ const filterVolumeEvents = (event: Linode.Event): boolean => {
   )
 }
 
-const paginated = paginate(updatedRequest);
-
-const withEvents = WithEvents();
-
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
   connected,
   documented,
-  paginated,
   styled,
-  withEvents,
   withSnackbar,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,

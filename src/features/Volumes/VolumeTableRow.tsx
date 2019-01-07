@@ -1,13 +1,9 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-
 import { Link } from 'react-router-dom';
 
-
-
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
-
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import Tags from 'src/components/Tags';
@@ -15,7 +11,6 @@ import { formatRegion } from 'src/utilities';
 import VolumesActionMenu from './VolumesActionMenu';
 
 type TagClassNames = 'tagWrapper';
-
 
 interface TagProps {
   tags: string[];

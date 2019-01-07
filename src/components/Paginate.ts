@@ -1,7 +1,7 @@
 import { clamp, slice } from 'ramda';
 import * as React from 'react';
 
-const createDiplayPage = <T extends any>(page: number, pageSize: number) => (list: T[]): T[] => {
+const createDisplayPage = <T extends any>(page: number, pageSize: number) => (list: T[]): T[] => {
   const count = list.length;
   if (count === 0) { return list; }
 
@@ -43,7 +43,7 @@ export default class Paginate extends React.Component<Props, State> {
   handlePageSizeChange = (pageSize: number) => this.setState({ pageSize });
 
   render() {
-    const view = createDiplayPage(this.state.page, this.state.pageSize);
+    const view = createDisplayPage(this.state.page, this.state.pageSize);
 
     const props = {
       ...this.props,

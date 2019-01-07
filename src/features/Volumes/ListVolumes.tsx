@@ -8,7 +8,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-// import TableSortCell from 'src/components/TableSortCell';
+import TableSortCell from 'src/components/TableSortCell';
 import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
 
 type ClassNames = 'root'
@@ -80,9 +80,8 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
-  // Extra props needed later: orderBy, order, handleOrderChange,
   const {
-    classes, data,  renderProps,
+    classes, orderBy, order, handleOrderChange, data, renderProps,
   } = props;
   return (
     <Paginate data={data} pageSize={25}>
@@ -92,39 +91,26 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
             <Table aria-label="List of your Volumes" className={renderProps.isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper}>
               <TableHead>
                 <TableRow>
-                  <TableCell className={classes.labelCol}>Label</TableCell>
+                  <TableSortCell
+                    className={classes.labelCol}
+                    active={orderBy === 'label'}
+                    label="Label"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Label
+                  </TableSortCell>
                   {props.renderProps.isVolumesLanding && <TableCell>Region</TableCell>}
                   <TableCell className={classes.sizeCol}>Size</TableCell>
                   <TableCell className={classes.pathCol}>File System Path</TableCell>
                   {props.renderProps.isVolumesLanding && <TableCell className={classes.attachmentCol}>Attached To</TableCell>}
                   <TableCell />
                 </TableRow>
-                {/* <TableRow>
-                  <TableSortCell
-                    active={orderBy === 'label'}
-                    label="Label"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    data-qa-volume-label-header
-                  >
-                    Label
-                </TableSortCell>
-                  <TableSortCell
-                    data-qa-Volume-type-header
-                    active={orderBy === 'type'}
-                    label="type"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                  >
-                    Type
-                  </TableSortCell>
-                  <TableCell />
-                </TableRow> */}
               </TableHead>
               <TableBody>
                 <RenderData
-                  data={paginatedData}
                   {...renderProps}
+                  data={paginatedData}
                 />
               </TableBody>
             </Table>
