@@ -18,6 +18,9 @@ import OrderBy from 'src/components/OrderBy';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import TableRowError from 'src/components/TableRowError';
+import _withEvents, { EventsProps } from 'src/containers/events.container';
+import withVolumes from 'src/containers/volumes.container';
+import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
@@ -33,8 +36,6 @@ import ListVolumes from './ListVolumes';
 type ClassNames = 'root'
   | 'title'
 
-
-
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   title: {
@@ -43,8 +44,19 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface ExtendedVolume extends Linode.Volume {
-  linodeLabel: string;
-  linodeStatus: string;
+  linodeLabel?: string;
+  linodeStatus?: string;
+}
+
+interface WithVolumesProps {
+  volumesData: ExtendedVolume[];
+  volumesLoading: boolean;
+}
+
+interface WithLinodesProps {
+  linodesData: Linode.Linode[]
+  linodesLoading: boolean;
+  linodesError?: Linode.ApiFieldError[];
 }
 
 interface Props {
@@ -81,6 +93,9 @@ type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
 type CombinedProps =
   & Props
+  & WithVolumesProps
+  & WithLinodesProps
+  & EventsProps
   & PaginationProps<ExtendedVolume>
   & DispatchProps
   & RouteProps
@@ -298,7 +313,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <OrderBy data={volumes} order={'desc'} orderBy={'label'}>
+      <OrderBy data={this.props.volumesData} order={'desc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           const orderProps = {
             orderBy,
@@ -308,7 +323,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           };
 
           return false // this.props.groupByTag
-            ? <></> // ListGroupedDomains will live here
+            ? <></> // ListGroupedVolumes will live here
             : <ListVolumes {...orderProps} renderProps={{...renderProps, data: orderedData}}  />
         }}
       </OrderBy>
@@ -439,6 +454,39 @@ const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
     });
 }
 
+const addAttachedLinodeInfotoVolume = (volume: Linode.Volume, linodes: Linode.Linode[]): ExtendedVolume => {
+  if (!volume.linode_id) { return volume; }
+  const attachedLinode = linodes.find((linode) => linode.id === volume.linode_id);
+  if (attachedLinode) {
+    return {
+      ...volume,
+      linodeLabel: attachedLinode.label,
+      linodeStatus: attachedLinode.status,
+    }
+  } else {
+    return volume;
+  }
+}
+
+const addRecentEventToVolume = (volume: Linode.Volume, events: Linode.Event[]) => {
+  // We're filtering out events without entities in the reducer, so we can assume these
+  // all have an entity attached.
+  const recentEvent = events.find(event => event.entity!.id === volume.id);
+  if (recentEvent) {
+    return {...volume, recentEvent}
+  } else {
+    return volume;
+  }
+}
+
+const filterVolumeEvents = (event: Linode.Event): boolean => {
+  return (
+    !event._initial
+    && Boolean(event.entity)
+    && event.entity!.type === 'volume'
+  )
+}
+
 const paginated = paginate(updatedRequest);
 
 const withEvents = WithEvents();
@@ -451,5 +499,23 @@ export default compose<CombinedProps, Props>(
   paginated,
   styled,
   withEvents,
-  withSnackbar
+  withSnackbar,
+  _withEvents((ownProps: CombinedProps, eventsData) => ({
+    ...ownProps,
+    eventsData: eventsData.filter(filterVolumeEvents)
+  })),
+  withLinodes((ownProps: CombinedProps, linodesData, linodesLoading, linodesError) => ({
+    ...ownProps,
+    linodesData,
+    linodesLoading,
+    linodesError,
+  })),
+  withVolumes((ownProps: CombinedProps, volumesData, volumesLoading) => ({
+    ...ownProps,
+    volumesData: volumesData.map((volume) => {
+      const volumeWithLinodeData = addAttachedLinodeInfotoVolume(volume, ownProps.linodesData);
+      return addRecentEventToVolume(volumeWithLinodeData, ownProps.eventsData);
+    }),
+    volumesLoading,
+  })),
 )(VolumesLanding);

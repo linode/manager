@@ -112,39 +112,39 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = (props) => {
       </TableRow>
     :
       <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
-      <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
-        {volume.label}
-        <RenderTags tags={volume.tags} />
-      </TableCell>
-      {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
-      <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
-      <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
-      {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
-        {volume.linodeLabel &&
-          <Link to={`/linodes/${volume.linode_id}`}>
-            {volume.linodeLabel}
-          </Link>
-        }</TableCell>}
-      <TableCell>
-        <VolumesActionMenu
-          onShowConfig={openForConfig}
-          filesystemPath={filesystemPath}
-          linodeLabel={volume.linodeLabel}
-          regionID={regionID}
-          volumeID={volume.id}
-          volumeTags={volume.tags}
-          size={size}
-          label={label}
-          onEdit={openForEdit}
-          onResize={openForResize}
-          onClone={openForClone}
-          attached={Boolean(volume.linode_id)}
-          onAttach={handleAttach}
-          onDetach={handleDetach}
-          poweredOff={volume.linodeStatus === 'offline'}
-          onDelete={handleDelete}
-        />
-      </TableCell>
+        <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
+          {volume.label}
+          <RenderTags tags={volume.tags} />
+        </TableCell>
+        {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
+        <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
+        <TableCell parentColumn="File System Path" data-qa-fs-path>{filesystemPath}</TableCell>
+        {isVolumesLanding && <TableCell parentColumn="Attached To" data-qa-volume-cell-attachment={volume.linodeLabel}>
+          {volume.linodeLabel &&
+            <Link to={`/linodes/${volume.linode_id}`}>
+              {volume.linodeLabel}
+            </Link>
+          }</TableCell>}
+        <TableCell>
+          <VolumesActionMenu
+            onShowConfig={openForConfig}
+            filesystemPath={filesystemPath}
+            linodeLabel={volume.linodeLabel}
+            regionID={regionID}
+            volumeID={volume.id}
+            volumeTags={volume.tags}
+            size={size}
+            label={label}
+            onEdit={openForEdit}
+            onResize={openForResize}
+            onClone={openForClone}
+            attached={Boolean(volume.linode_id)}
+            onAttach={handleAttach}
+            onDetach={handleDetach}
+            poweredOff={volume.linodeStatus === 'offline'}
+            onDelete={handleDelete}
+          />
+        </TableCell>
     </TableRow>
 
 };
