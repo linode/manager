@@ -1,7 +1,8 @@
 import { Reducer } from "redux";
+import updateById from 'src/utilities/updateById';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { deleteLinode, linodesRequest, updateMultipleLinodes, upsertLinode } from './linodes.actions';
+import { deleteLinode, linodesRequest, updateLinode, updateMultipleLinodes, upsertLinode } from './linodes.actions';
 
 /**
  * State
@@ -83,6 +84,19 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: entities.filter((linode) => linode.id !== payload),
       results: results.filter((id) => id !== payload),
+    }
+  }
+
+  if (isType(action, updateLinode)) {
+    const { id, update } = action.payload;
+    const { entities } = state;
+
+    const updated = updateById(update, id, entities);
+
+    return {
+      ...state,
+      entities: updated,
+      results: updated.map((l) => l.id),
     }
   }
 
