@@ -119,6 +119,9 @@ const createClickHandlerForNotification = (
           return (e: React.MouseEvent<HTMLElement>) => onClick(`/nodebalancers/${id}/summary`);
       }
 
+    case 'community_question':
+      return () => { window.open(entity!.url, '_blank') };
+
     case 'community_like':
       return () => { window.open(entity!.url, '_blank') };
 
