@@ -537,6 +537,7 @@ export const dark = createTheme({
     },
     MuiTableRow: {
       root: {
+        backgroundColor: '#32363C',
         '&:before': {
           borderLeftColor: '#32363C',
         },
