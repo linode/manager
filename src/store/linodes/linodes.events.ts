@@ -1,9 +1,6 @@
 import { Dispatch } from 'redux';
-import { actions, async } from '../reducers/resources/linodes';
-import { EventHandler } from './combineEventsMiddleware';
-
-const { deleteLinode } = actions;
-const { requestLinodeForStore } = async;
+import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
+import { deleteLinode, requestLinodeForStore } from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (event, dispatch) => {
   const { action, entity, status } = event;

@@ -1,9 +1,9 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import domainEvents from 'src/store/domains/domains.events';
+import linodeEvents from 'src/store/linodes/linodes.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
-import linodeEvents from './middleware/linodeEvents';
 import authentication, { defaultState as authenticationDefaultState } from './reducers/authentication';
 import backups, { defaultState as backupsDefaultState } from './reducers/backupDrawer';
 import documentation, { defaultState as documentationDefaultState } from './reducers/documentation';
