@@ -4,15 +4,31 @@ import formatDate from 'src/utilities/formatDate'
 import LinodeLogo from './LinodeLogo';
 
 const leftPadding = 15;
-const baseFont = 'Times New Roman';
+const baseFont = 'Times';
 const tableBodyStart = 155;
 const cellHeight = 25;
+const maxInstanceNameLength = 25;
 
 const renderDate = (v: null | string) => v ? formatDate(v, {format: `YYYY-MM-DD HH:mm:ss`}) : null;
 
 const renderUnitPrice = (v: null | number) => v ? `$${v}` : null;
 
 const renderQuantity = (v: null | number) => v ? v : null;
+
+const formatDescription = (desc: string) => {
+  const isBackup = /^Backup/.test(desc);
+  const descChunks = desc.split(' - ');
+  const nameIndex = isBackup ? 2 : 1;
+  descChunks[nameIndex] = descChunks[nameIndex].split(' (').map(s => s.substring(0, maxInstanceNameLength)).join(' (');
+
+  return descChunks.reduce((acc, chunk, i) => {
+    const delimiter = (i === nameIndex) ? ' - \n' : ' - '; // insert line break before long entity name
+    if (i === 0) {
+      return chunk; // avoid inserting delimeter for the first element
+    }
+    return acc + delimiter + chunk;
+  }, '');
+}
 
 const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | null) => {
   const addLine = (text: string, fontSize = 9) => {
@@ -85,7 +101,7 @@ const addFooter = (doc: jsPDF) => {
   // Second number argument - manual centering cos automatic doesn't work well
   addLine('249 Arch St. - Philadelphia, PA 19106', 210);
   addLine('USA', 220);
-  addLine('P:855-4-LINODE (855-454-6633) F:609-380-7200 W:http://www.linode.com', 190);
+  addLine('P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com', 190);
 };
 
 const addTitle = (doc: jsPDF, title: string) => {
@@ -113,22 +129,22 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
     doc.setFontSize(10);
 
     const header = [
-      {name: 'Description', prompt: 'Description', width: 250},
+      {name: 'Description', prompt: 'Description', width: 235},
       {name: 'From', prompt: 'From', width: 72},
       {name: 'To', prompt: 'To', width: 72},
       {name: 'Quantity', prompt: 'Quantity', width: 52},
-      {name: 'Units', prompt: 'Units', width: 52},
+      {name: 'Unit Price', prompt: 'Unit Price', width: 67},
       {name: 'Amount', prompt: 'Amount', width: 52}
     ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
     const itemRows = itemsChunk.map(item => {
       const { label, from, to, quantity, unit_price, amount } = item;
       return {
-        Description: label.replace(' - ', ' - \n'), // Automatic line breaks don't work well. Doing it manually
+        Description: formatDescription(label),
         From: renderDate(from),
         To: renderDate(to),
         Quantity: renderQuantity(quantity),
-        Units: renderUnitPrice(unit_price),
+        'Unit Price': renderUnitPrice(unit_price),
         Amount: '$' + amount
       }
     });
@@ -187,7 +203,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
   });
 
   addTotalAmount();
-  
+
   doc.save(`invoice-${date}.pdf`);  
 
 }
