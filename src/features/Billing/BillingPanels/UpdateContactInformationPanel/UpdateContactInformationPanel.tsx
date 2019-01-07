@@ -135,7 +135,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
         {generalError && <Grid item xs={12}><Notice error text={generalError} /></Grid>}
         {success && <Grid item xs={12}><Notice success text={success} /></Grid>}
 
-        <Grid item xs={12}>
+        <Grid item xs={12} updateFor={[fields.company, hasErrorFor('company')]}>
           <Grid container>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -149,7 +149,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.email, hasErrorFor('email')]}>
           <TextField
             label="Email"
             type="email"
@@ -160,7 +160,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.phone, hasErrorFor('phone')]}>
           <TextField
             label="Phone Number"
             type="tel"
@@ -171,7 +171,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.first_name, hasErrorFor('first_name')]}>
           <TextField
             label="First Name"
             value={defaultTo(account.first_name, fields.first_name)}
@@ -181,7 +181,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.last_name, hasErrorFor('last_name')]}>
           <TextField
             label="Last Name"
             value={defaultTo(account.last_name, fields.last_name)}
@@ -191,7 +191,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.address_1, hasErrorFor('address_1')]}>
           <TextField
             label="Address"
             value={defaultTo(account.address_1, fields.address_1)}
@@ -201,7 +201,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.address_2, hasErrorFor('address2')]}>
           <TextField
             label="Address 2"
             value={defaultTo(account.address_2, fields.address_2)}
@@ -211,7 +211,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.city, hasErrorFor('city')]}>
           <TextField
             label="City"
             value={defaultTo(account.city, fields.city)}
@@ -221,7 +221,16 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          updateFor={[
+            fields.state,
+            fields.zip,
+            hasErrorFor('state'),
+            hasErrorFor('zip')
+          ]}>
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
               <TextField
@@ -244,7 +253,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.country, hasErrorFor('country')]}>
           <TextField
             label="Country"
             value={defaultTo(account.country, fields.country)}
@@ -257,7 +266,7 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           </TextField>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} updateFor={[fields.tax_id, hasErrorFor('tax_id')]}>
           <TextField
             label="Tax ID"
             value={defaultTo(account.tax_id, fields.tax_id)}
@@ -626,10 +635,11 @@ class UpdateContactInformationPanel extends React.Component<CombinedProps, State
           * overwrite the previous values for expiration/last 4 digits
           * with null, so we need to manually set them here.
           */
-          return {...existingAccount,
-                  ...updatedAccount,
-                  credit_card: existingAccount.credit_card
-                 }
+          return {
+            ...existingAccount,
+            ...updatedAccount,
+            credit_card: existingAccount.credit_card
+          }
         });
 
         this.setState({

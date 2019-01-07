@@ -249,7 +249,17 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         {generalError && <Notice error errorGroup="linode-config-drawer" text={generalError} />}
-        <Grid item xs={12} className={classes.section}>
+        <Grid
+          item
+          xs={12}
+          className={classes.section}
+          updateFor={[
+            errorFor('label'),
+            errorFor('comments'),
+            label,
+            comments
+          ]}
+        >
           <Typography role="header" variant="h3">Label and Comments</Typography>
           <TextField
             label="Label"
@@ -273,7 +283,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Divider className={classes.divider} />
 
-        <Grid item xs={12} className={classes.section}>
+        <Grid item xs={12} className={classes.section} updateFor={[virt_mode]}>
           <Typography role="header" variant="h3">Virtual Machine</Typography>
           <FormControl component="fieldset">
             <FormLabel
@@ -296,7 +306,17 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Divider className={classes.divider} />
 
-        <Grid item xs={12} className={classes.section}>
+        <Grid
+          item xs={12}
+          className={classes.section}
+          updateFor={[
+            kernel,
+            errorFor('kernel'),
+            run_level,
+            memory_limit,
+            errorFor('memory_limit')
+          ]}
+        >
           <Typography role="header" variant="h3">Boot Settings</Typography>
           {kernels &&
             <TextField
@@ -320,7 +340,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               }
             </TextField>}
 
-          <FormControl fullWidth component="fieldset">
+          <FormControl updateFor={[run_level]} fullWidth component="fieldset">
             <FormLabel
               htmlFor="run_level"
               component="label"
@@ -404,7 +424,17 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Grid item xs={12} className={classes.section}>
           <Typography role="header" variant="h3">Filesystem/Boot Helpers</Typography>
-          <FormControl fullWidth component="fieldset">
+          <FormControl
+            updateFor={[
+              helpers.distro,
+              helpers.updatedb_disabled,
+              helpers.modules_dep,
+              helpers.devtmpfs_automount,
+              helpers.network
+            ]}
+            fullWidth
+            component="fieldset"
+          >
             <FormGroup>
               <FormControlLabel
                 label="Distro Helper"
