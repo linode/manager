@@ -144,7 +144,9 @@ exports.config = {
     // WebdriverCSS: https://github.com/webdriverio/webdrivercss
     // WebdriverRTC: https://github.com/webdriverio/webdriverrtc
     // Browserevent: https://github.com/webdriverio/browserevent
-    // plugins: {
+    plugins: {
+        'wdio-screenshot': {}
+    },
     //     webdrivercss: {
     //         screenshotRoot: 'my-shots',
     //         failedComparisonsRoot: 'diffs',
@@ -171,8 +173,14 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/reporters/dot.html
-    reporters: selectedReporters,
+    reporters: ['allure'],
     reporterOptions: {
+        allure: {
+           outputDir: './e2e/html-results',
+           disableWebdriverStepsReporting: false,
+           disableWebdriverScreenshotsReporting: false,
+           useCucumberStepReporter: false
+        },
         junit: {
             outputDir: './e2e/test-results'
         }
@@ -372,5 +380,5 @@ exports.config = {
         return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
             .then(res => resolve(res))
             .catch(error => console.error('Error:', error));
-    } 
+    }
 }
