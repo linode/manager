@@ -1,35 +1,29 @@
 import * as React from 'react';
-import { ChildrenProps, StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, styled } from '../StackScriptPanelContentBase';
+import {compose} from 'recompose';
+import StackScriptBase, { StateProps } from '../StackScriptBase/StackScriptBase';
 import SelectStackScriptsSection from './SelectStackScriptsSection';
 
 interface Props {
   onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   resetStackScriptSelection: () => void;
+  publicImages: Linode.Image[];
+  currentUser: string;
+  request: (username: string, params?: any, filter?: any) =>
+    Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  category: string;
 }
 
-type CombinedProps = StackScriptPanelContentBaseProps & Props;
+type CombinedProps = StateProps & Props;
 
 interface State {
   selected?: number;
 }
 
-type CombinedState = StackScriptPanelContentBaseState & State;
-
-class SelectStackScriptPanelContent extends StackScriptPanelContentBase<CombinedProps, CombinedState> {
-
-  getDefaultState(): CombinedState {
-    return {
-      ...super.getDefaultState(),
-      selected: undefined,
-    };
+class SelectStackScriptPanelContent extends React.Component<CombinedProps, State> {
+  state: State = {
+    selected: undefined
   }
-
-  isSelecting = true;
-
-  state: StackScriptPanelContentBaseState = this.getDefaultState();
-
-  mounted: boolean = false;
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
     this.props.onSelect(
@@ -39,23 +33,25 @@ class SelectStackScriptPanelContent extends StackScriptPanelContentBase<Combined
       stackscript.images,
       stackscript.user_defined_fields,
     );
-    this.setState({ selected: stackscript.id } as CombinedState);
+    this.setState({ selected: stackscript.id });
   }
 
 
-  renderChildren(baseProps: ChildrenProps) {
-    const state: CombinedState = this.state;
+  render() {
+    const { selected } = this.state;
+    const { listOfStackScripts } = this.props;
 
     return <SelectStackScriptsSection
-      selectedId={state.selected}
+      selectedId={selected}
       onSelect={this.handleSelectStackScript}
-      isSorting={baseProps.isSorting}
-      data={state.listOfStackScripts}
-      publicImages={baseProps.publicImages}
-      currentUser={baseProps.currentUser}
+      isSorting={this.props.isSorting}
+      data={listOfStackScripts}
+      publicImages={this.props.publicImages}
+      currentUser={this.props.currentUser}
     />
   }
-
 }
 
-export default styled(SelectStackScriptPanelContent);
+export default compose<CombinedProps, Props>(
+  StackScriptBase(true)
+)(SelectStackScriptPanelContent);
