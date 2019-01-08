@@ -52,7 +52,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   diskSpaceWrapper: {
     backgroundColor: theme.color.grey2,
     padding: theme.spacing.unit * 2,
-    minHeight: '325px'
+    minHeight: '250px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
   }
 });
 

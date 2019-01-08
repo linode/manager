@@ -61,7 +61,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
         />
         <Typography className={classes.item}>
           <strong>{usedPercentage}%</strong> of your {totalDiskSpace}MB is allocated towards
-          <strong> {disks.length}</strong> disk images.
+          <strong> {disks.length}</strong> disk {disks.length === 1 ? 'image' : 'images'}.
         </Typography>
         <Divider className={classes.item} />
         <Typography variant="subtitle2" className={classes.item}>Free: {freeDiskSpace} MB</Typography>
@@ -72,7 +72,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           <strong>Note: </strong> This section represents your plan's available storage that has
            been allocated to your disks; run
         </Typography>
-        <pre>df -h</pre>
+        <Typography className={classes.item}>df -h</Typography>
         <Typography>
           from within your Linode to see your actual filesystem usage.
         </Typography>

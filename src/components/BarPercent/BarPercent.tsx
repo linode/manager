@@ -19,7 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: theme.color.green
   },
   loadingText: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2,
     textAlign: 'center'
   }
 });
