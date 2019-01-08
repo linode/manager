@@ -101,7 +101,7 @@ export const generateCatchAllFilter = (searchTerm: string) => {
     ],
   };
 }
-` `
+
 export const getErrorText = (error: any) => {
   const reason = pathOr('', ['data', 'errors', 0, 'reason'], error);
 

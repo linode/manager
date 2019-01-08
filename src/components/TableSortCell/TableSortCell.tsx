@@ -23,8 +23,8 @@ interface Props extends TableCellProps {
   active: boolean;
   isLoading?: boolean;
   label: string;
-  direction?: 'asc' | 'desc';
-  handleClick?: (key: string, order?: 'asc' | 'desc') => void;
+  direction: 'asc' | 'desc';
+  handleClick: (key: string, order?: 'asc' | 'desc') => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

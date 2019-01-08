@@ -81,14 +81,9 @@ export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> 
     return (
       <React.Fragment>
         <TableRow data-qa-table-row={label} rowLink={() => onSelect && onSelect({}, !checked)}>
-          {onSelect &&
+          {(onSelect || disabledCheckedSelect) &&
             <TableCell>
-              <Radio checked={checked} onChange={onSelect} id={`${stackScriptID}`} />
-            </TableCell>
-          }
-          {disabledCheckedSelect &&
-            <TableCell>
-              <Radio checked disabled id={`${stackScriptID}`} />
+              <Radio checked={checked} disabled={disabledCheckedSelect} onChange={onSelect} id={`${stackScriptID}`} />
             </TableCell>
           }
           <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>

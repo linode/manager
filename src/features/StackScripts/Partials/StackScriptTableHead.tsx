@@ -68,6 +68,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
       sortOrder
     } = this.props;
 
+    const Cell = (handleClickTableHeader && sortOrder) ? TableSortCell : TableCell;
+
     return (
       <TableHead>
         <TableRow className={classes.tr}>
@@ -78,7 +80,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
                 [classes.stackscriptLabel]: true,
               })} />
           }
-          <TableSortCell
+          <Cell
             className={classNames({
               [classes.tableHead]: true,
               [classes.stackscriptTitles]: true,
@@ -90,8 +92,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             data-qa-stackscript-table-header
           >
             StackScript
-          </TableSortCell>
-          <TableSortCell
+          </Cell>
+          <Cell
             className={classNames({
               [classes.tableHead]: true,
               [classes.deploys]: true,
@@ -103,8 +105,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             data-qa-stackscript-active-deploy-header
           >
             Active Deploys
-          </TableSortCell>
-          <TableSortCell
+          </Cell>
+          <Cell
             className={classNames({
               [classes.tableHead]: true,
               [classes.revisions]: true,
@@ -116,7 +118,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             data-qa-stackscript-revision-header
           >
             Last Revision
-          </TableSortCell>
+          </Cell>
           <TableCell
             className={classes.tableHead}
             data-qa-stackscript-compatible-images
