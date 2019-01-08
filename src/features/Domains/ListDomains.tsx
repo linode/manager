@@ -45,12 +45,12 @@ const ListDomains: React.StatelessComponent<CombinedProps> = (props) => {
                     label="domain"
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-domain-name-header
+                    data-qa-domain-name-header={order}
                   >
                     Domain
                 </TableSortCell>
                   <TableSortCell
-                    data-qa-domain-type-header
+                    data-qa-domain-type-header={order}
                     active={orderBy === 'type'}
                     label="type"
                     direction={order}

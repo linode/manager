@@ -17,6 +17,7 @@ const mockProps = {
   accountBackups: false,
   enqueueSnackbar: jest.fn(),
   onPresentSnackbar: jest.fn(),
+  upsertLinode: jest.fn(),
 };
 
 describe('FromImageContent', () => {

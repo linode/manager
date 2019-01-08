@@ -24,9 +24,6 @@ export class ListLinodes extends Page {
     get gridToggle() { return $('[data-qa-view="grid"]'); }
     get status() { return $('[data-qa-status]') }
     get tableHead() { return $('[data-qa-table-head]'); }
-    get tagHeaderSelector() { return 'data-qa-tag-header'; }
-    get tagHeaders() { return $$(`[${this.tagHeaderSelector}]`); }
-    get groupByTagsToggle() { return $$('span').find(it => it.getText().includes('Group by Tag')).$('..'); }
     get linodeSortAttribute() { return 'data-qa-sort-label'; }
     get sortLinodesByLabel() { return $(`[${this.linodeSortAttribute}]`); }
 
@@ -63,10 +60,6 @@ export class ListLinodes extends Page {
     getLinodeTags(linode){
         return $(this.getLinodeSelector(linode)).$$(this.tag.selector)
             .map(tag => tag.getText());
-    }
-
-    tagHeader(tag){
-        return $(`[${this.tagHeaderSelector}=${tag}]`);
     }
 
     getLinodesInTagsGroup(tag){

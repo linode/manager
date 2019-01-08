@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { removeLinodeFromStore, updateLinodeInStore } from 'src/store/linodes/linodes.actions';
 import { requestGetOneLinode } from 'src/store/linodes/linodes.requests';
-import { EventHandler } from './combineEventsMiddleware';
+import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
 
 const linodeEventsHandler: EventHandler = (event, dispatch) => {
   const { action, entity, status } = event;
@@ -38,6 +38,9 @@ const linodeEventsHandler: EventHandler = (event, dispatch) => {
 
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id);
+
+    case 'linode_clone':
+      return handleLinodeClone(dispatch, status, id);
 
     default:
       return;

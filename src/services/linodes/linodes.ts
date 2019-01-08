@@ -1,11 +1,6 @@
 import { API_ROOT } from 'src/constants';
-
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
-
-import {
-  CreateLinodeSchema,
-  UpdateLinodeSchema,
-} from './linode.schema';
+import { CreateLinodeSchema, UpdateLinodeSchema } from './linode.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Linode = Linode.Linode;

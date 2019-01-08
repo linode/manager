@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { range } from 'ramda';
 import { getDomains } from 'src/services/domains';
+import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
 
@@ -13,7 +14,6 @@ import { getVolumes } from 'src/services/volumes';
  * @param cb Function that will be called after all requests have completed
  * with a 2d array of all the returned entities.
  */
-import store from 'src/store';
 import { sendEvent } from 'src/utilities/analytics';
 
 export interface APIResponsePage<T> {
@@ -107,10 +107,6 @@ export const getAllFromEntity: (getter: GetFromEntity) => (params?: any, filter?
             .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
         });
     }
-const getAllLinodes = () => Promise.resolve(store.getState().__resources.linodes.entities);
-const getAllNodeBalancers = getAll<Linode.NodeBalancer>(getNodeBalancers);
-const getAllVolumes = getAll<Linode.Volume>(getVolumes);
-const getAllDomains = getAll<Linode.Domain>(getDomains);
 
 export type GetAllHandler = (
   linodes: Linode.Linode[],
@@ -121,10 +117,10 @@ export type GetAllHandler = (
 
 export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
-    getAllLinodes(),
-    getAllNodeBalancers(),
-    getAllVolumes(),
-    getAllDomains(),
+    getAll<Linode.Linode>(getLinodes)(),
+    getAll<Linode.NodeBalancer>(getNodeBalancers)(),
+    getAll<Linode.Volume>(getVolumes)(),
+    getAll<Linode.Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {

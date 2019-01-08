@@ -85,6 +85,7 @@ const errorResources = {
 type CombinedProps =
   & LinodeRequests
   & Props
+  & WithUpsertLinode
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
@@ -166,7 +167,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
-
+        this.props.upsertLinode(linode);
         this.props.enqueueSnackbar(`Your Linode is being cloned.`, { variant: 'success' });
 
         resetEventsPolling();
@@ -330,6 +331,9 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+}
+interface WithUpsertLinode {
+  upsertLinode: (l: Linode.Linode) => void;
 }
 
 const styled = withStyles(styles);

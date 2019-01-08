@@ -6,6 +6,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { reportException } from 'src/exceptionReporting';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 export interface SearchResults {
   linodes: Item[];
@@ -59,7 +60,7 @@ export const searchLinodes = (
         value: linode.id,
         data: {
           tags: linode.tags,
-          description: linodeDescription(
+          description: getLinodeDescription(
             displayType(linode.type, typesData),
             linode.specs.memory,
             linode.specs.disk,
