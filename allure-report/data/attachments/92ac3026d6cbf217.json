@@ -1,8 +1,0 @@
-{
-    "script": "return (function virtualScroll(x, y, remove) {\n  var w = x === 0 ? 0 : -1 * x;\n  var h = y === 0 ? 0 : -1 * y;\n\n  var translate = remove ? 'none' : 'translate(' + w + 'px,' + h + 'px)';\n  var html = document.documentElement;\n\n  html.style.webkitTransform = translate;\n  html.style.mozTransform = translate;\n  html.style.msTransform = translate;\n  html.style.oTransform = translate;\n  html.style.transform = translate;\n}).apply(null, arguments)",
-    "args": [
-        0,
-        0,
-        true
-    ]
-}

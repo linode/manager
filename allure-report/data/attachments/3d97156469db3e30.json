@@ -1,6 +1,0 @@
-{
-    "script": "return (function pageHeight(height) {\n  document.body.style.height = height;\n}).apply(null, arguments)",
-    "args": [
-        ""
-    ]
-}
