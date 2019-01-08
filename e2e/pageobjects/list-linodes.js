@@ -4,7 +4,7 @@ import Page from './page';
 
 export class ListLinodes extends Page {
     // Grid/List Linode Card/Rows
-    get subheader() { return $('[data-qa-title]'); }
+    get subheader() { return this.pageTitle; }
     get confirmDialogTitle() { return $('[data-qa-dialog-title]'); }
     get confirmDialogSubmit() { return $('[data-qa-confirm-cancel]'); }
     get confirmDialogCancel() { return $('[data-qa-cancel-cancel]'); }
@@ -24,6 +24,8 @@ export class ListLinodes extends Page {
     get gridToggle() { return $('[data-qa-view="grid"]'); }
     get status() { return $('[data-qa-status]') }
     get tableHead() { return $('[data-qa-table-head]'); }
+    get linodeSortAttribute() { return 'data-qa-sort-label'; }
+    get sortLinodesByLabel() { return $(`[${this.linodeSortAttribute}]`); }
 
     // Action Menu Items
     get powerOffMenu() { return $('[data-qa-action-menu-item="Power Off"]'); }
@@ -53,6 +55,17 @@ export class ListLinodes extends Page {
 
     getLinodeSelector(linode){
         return `[data-qa-linode="${linode}"]`;
+    }
+
+    getLinodeTags(linode){
+        return $(this.getLinodeSelector(linode)).$$(this.tag.selector)
+            .map(tag => tag.getText());
+    }
+
+    getLinodesInTagsGroup(tag){
+        const attribute = this.linodeElem.selector.substr(1).slice(0, -1);
+        return this.tagHeader(tag).$$(this.linodeElem.selector)
+            .map(linode => linode.getAttribute(attribute));
     }
 
     navigateToDetail(linode) {

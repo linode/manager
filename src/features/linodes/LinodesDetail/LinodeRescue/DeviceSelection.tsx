@@ -50,38 +50,41 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = (props) => {
     <React.Fragment>
       {
         slots.map((slot, idx) => {
-          return counter < idx ? null : <FormControl key={slot} fullWidth>
-            <InputLabel
-              htmlFor={`rescueDevice_${slot}`}
-              disableAnimation
-              shrink={true}
-            >
-              /dev/{slot}
-            </InputLabel>
-            <Select
-              fullWidth
-              value={getSelected(slot) || 'none'}
-              onChange={e => onChange(slot, e.target.value)}
-              inputProps={{ name: `rescueDevice_${slot}`, id: `rescueDevice_${slot}` }}
-            >
-              <MenuItem value="none">None</MenuItem>
-              {
-                Object
-                  .entries(devices)
-                  .map(([type, items]) => [
-                    <MenuItem
-                      className="selectHeader"
-                      disabled
-                      key={type}
-                    >
-                      {titlecase(type)}
-                    </MenuItem>,
-                    ...(items as any[]).map(({ _id, label }) =>
-                      <MenuItem key={_id} value={_id}>{label}</MenuItem>),
-                  ])
-              }
-            </Select>
-          </FormControl>;
+          return counter < idx
+            ? null
+            : <FormControl updateFor={[getSelected(slot)]} key={slot} fullWidth>
+              <InputLabel
+                htmlFor={`rescueDevice_${slot}`}
+                disableAnimation
+                shrink={true}
+              >
+                /dev/{slot}
+              </InputLabel>
+              <Select
+                fullWidth
+                value={getSelected(slot) || 'none'}
+                onChange={e => onChange(slot, e.target.value)}
+                inputProps={{ name: `rescueDevice_${slot}`, id: `rescueDevice_${slot}` }}
+              >
+                <MenuItem value="none">None</MenuItem>
+                {
+                  Object
+                    .entries(devices)
+                    .map(([type, items]) => [
+                      <MenuItem
+                        className="selectHeader"
+                        disabled
+                        key={type}
+                        data-qa-type={titlecase(type)}
+                      >
+                        {titlecase(type)}
+                      </MenuItem>,
+                      ...(items as any[]).map(({ _id, label }) =>
+                        <MenuItem key={_id} value={_id} data-qa-option={label}>{label}</MenuItem>),
+                    ])
+                }
+              </Select>
+            </FormControl>;
         })
       }
       {rescue && <FormControl fullWidth>

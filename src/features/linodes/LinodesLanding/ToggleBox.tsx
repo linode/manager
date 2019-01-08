@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   button: {
     borderWidth: 1,
     borderStyle: 'solid',
-    borderColor: theme.color.border1,
+    borderColor: theme.color.boxShadow,
     borderRadius: 0,
     fontFamily: 'LatoWebBold',
     textTransform: 'inherit',

@@ -2,6 +2,7 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import { equals } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
@@ -110,7 +111,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
             disableUnderline: true,
             className: classNames('input', { [classes.expand]: expand, }, className),
             ...finalProps.InputProps,
-            }
+          }
           }
           SelectProps={{
             IconComponent: KeyboardArrowDown,
@@ -125,7 +126,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
           className={classNames({
             [classes.helpWrapperTextField]: Boolean(tooltipText),
           },
-          className,
+            className,
           )}
         >
           {this.props.children}
@@ -138,4 +139,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(LinodeTextField);
+export default compose<CombinedProps, Props>(
+  styled,
+)(LinodeTextField);

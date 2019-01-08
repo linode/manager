@@ -66,7 +66,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = (props) => {
               <strong>IP:</strong>
             </Typography>
             <div className={classes.IPgrouping} data-qa-ip>
-              <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
+              <IPAddress ips={[nodeBalancer.ipv4]} copyRight showMore />
               {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
             </div>
           </div>

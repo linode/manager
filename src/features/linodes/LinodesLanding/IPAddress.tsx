@@ -11,7 +11,8 @@ type CSSClasses =  'root'
 | 'icon'
 | 'row'
 | 'ip'
-| 'ipLink';
+| 'ipLink'
+| 'hide';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   '@keyframes popUp': {
@@ -32,6 +33,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     '&:last-child': {
       marginBottom: 0,
     },
+    '&:hover': {
+      '& $hide': {
+        opacity: 1
+      }
+    }
   },
   row: {
     display: 'flex',
@@ -60,12 +66,22 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     display: 'inline-block',
     width: 28,
     transition: theme.transitions.create(['color']),
+
   },
+  hide: {
+    opacity: 0, // Hide until the component is hovered, when props.showCopyOnHover is true
+    transition: theme.transitions.create(['opacity']),
+    '&:focus': {
+      opacity: 1
+    }
+  }
 });
 
 interface Props {
   ips: string[];
   copyRight?: boolean;
+  showCopyOnHover?: boolean;
+  showMore?: boolean;
 }
 
 const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
@@ -73,7 +89,7 @@ const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\
 export const sortIPAddress = (ip1: string, ip2: string) =>
   ((privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1));
 
-class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
+export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   state = {
     copied: false,
   };
@@ -95,13 +111,13 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   }
 
   renderCopyIcon = (ip: string) => {
-    const { classes, copyRight } = this.props;
+    const { classes, copyRight, showCopyOnHover } = this.props;
 
     return (
-      <div className={classes.ipLink} data-qa-copy-ip>
+      <div className={`${classes.ipLink}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
-          className={`${classes.icon} ${copyRight ? classes.right : classes.left}`}
+          className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''} ${copyRight ? classes.right : classes.left}`}
         />
       </div>
     );
@@ -111,14 +127,14 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-        <div className={`${classes.ip} ${'ip'}`}>{ip}</div>
+        <div className={`${classes.ip} ${'ip'}`} data-qa-ip-main>{ip}</div>
         {copyRight && this.renderCopyIcon(ip)}
       </div>
     );
   }
 
   render() {
-    const { classes, ips, copyRight } = this.props;
+    const { classes, ips, copyRight, showMore } = this.props;
 
     const formattedIPS = ips
       .map(ip => ip.replace('/64', ''))
@@ -128,11 +144,13 @@ class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
       <div className={`dif ${classes.root}`}>
         { this.renderIP(formattedIPS[0], copyRight) }
         {
-          formattedIPS.length > 1 && <ShowMore
+          formattedIPS.length > 1 && showMore && <ShowMore
             items={tail(formattedIPS)}
             render={(ipsAsArray: string[]) => {
               return ipsAsArray.map((ip, idx) => this.renderIP(ip.replace('/64', ''), copyRight, idx));
-            }} />
+            }}
+            data-qa-ip-more
+          />
         }
       </div>
     );

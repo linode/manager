@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   button: {
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 2,
   },
 });
 
@@ -88,6 +88,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             <div className={classes.titleWrapper}>
               <Breadcrumb
                 linkTo="/stackscripts"
+                linkText="StackScripts"
                 labelTitle={`${stackScript.username} / ${stackScript.label}`}
               />
             </div>
@@ -103,7 +104,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             </Button>
           </Grid>
         </Grid>
-        <StackScript data={stackScript} />
+        <div className="detailsWrapper"><StackScript data={stackScript} /></div>
       </React.Fragment>
     );
   }

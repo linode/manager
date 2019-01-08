@@ -3,9 +3,9 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 export class Lish extends Page {
-    get authModeSelect() { return $('[data-qa-select]'); }
+    get authModeSelect() { return $(this.basicSelect); }
     get sshKey() { return $('[data-qa-public-key] textarea' ); }
-    get addSshKey() { return $('[data-qa-icon-text-link="Add SSH Public Key"]'); }
+    get addSshKey() { return this.addIcon('Add SSH Public Key'); }
     get removeButton() { return $('[data-qa-remove]'); }
     get saveButton() { return $('[data-qa-save]'); }
     get passwordKeysOption() { return $('[data-value="password_keys"]'); }
@@ -14,7 +14,7 @@ export class Lish extends Page {
 
     baseElemsDisplay() {
         this.authModeSelect.waitForVisible(constants.wait.normal);
-        
+
         expect(this.sshKey.isVisible()).toBe(true);
         expect(this.removeButton.isVisible()).toBe(true);
         expect(this.saveButton.isVisible()).toBe(true);

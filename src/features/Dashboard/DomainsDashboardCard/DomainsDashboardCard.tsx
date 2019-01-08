@@ -1,7 +1,7 @@
-import { take } from 'ramda';
+import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Subscription } from 'rxjs/Subscription';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
@@ -13,8 +13,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { events$ } from 'src/events';
-import { getDomains } from 'src/services/domains';
+import { isEntityEvent, isInProgressEvent } from 'src/store/reducers/events';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -43,56 +42,9 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames> & WithUpdatingDomainsProps
 
 class DomainsDashboardCard extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: true,
-  };
-
-  mounted: boolean = false;
-
-  subscription: Subscription;
-
-  requestData = (initial: boolean = false) => {
-    if (!this.mounted) { return; }
-
-    if (initial) {
-      this.setState({ loading: true });
-    }
-
-    /** Cant sort on created, because domains dones't have created... */
-    // getDomains({ page_size: 25 }, { '+order_by': 'updated', '+order': 'desc' })
-    getDomains({ page_size: 25 }, { '+order_by': 'domain', '+order': 'asc' })
-      .then(({ data, results }) => {
-        if (!this.mounted) { return; }
-        this.setState({
-          loading: false,
-          data: take(5, data),
-          results,
-        })
-      })
-      .catch((error) => {
-        this.setState({ loading: false, errors: [{ reason: 'Unable to load domains.' }] })
-      })
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-
-    this.requestData(true);
-
-    this.subscription = events$
-      .filter(e => !e._initial)
-      .filter(e => Boolean(e.entity && e.entity.type === 'domain'))
-      .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
-      .subscribe(() => this.requestData(false));
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    this.subscription.unsubscribe();
-  }
 
   render() {
     return (
@@ -108,22 +60,22 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderAction = () => this.state.results && this.state.results > 5
+  renderAction = () => this.props.domains.length > 5
     ? <Link to={'/domains'}>View All</Link>
     : null;
 
   renderContent = () => {
-    const { loading, data, errors } = this.state;
+    const { loading, domains, error } = this.props;
     if (loading) {
       return this.renderLoading();
     }
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (error) {
+      return this.renderErrors(error);
     }
 
-    if (data && data.length > 0) {
-      return this.renderData(data);
+    if (domains.length > 0) {
+      return this.renderData(domains);
     }
 
     return this.renderEmpty();
@@ -167,8 +119,53 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 }
 
 const styled = withStyles(styles);
+interface WithUpdatingDomainsProps {
+  domains: Linode.Domain[]
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
+}
 
-const isFoundInData = (id: number, data: Linode.Domain[] = []): boolean =>
-  data.reduce((result, domain) => result || domain.id === id, false);
+const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
+  return {
+    domains: compose(
+      mergeEvents(state.events.events),
+      take(5),
+      sortBy(prop('domain')),
+    )(state.__resources.domains.entities),
+    loading: state.__resources.domains.loading,
+    error: state.__resources.domains.error,
+  };
+});
 
-export default styled(DomainsDashboardCard) as React.ComponentType<{}>;
+const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
+  events
+    .reduce((updatedDomains, event) => {
+      if (isWantedEvent(event)) {
+        return updatedDomains.map(domain => event.entity.id === domain.id
+          ? { ...domain, recentEvent: event }
+          : domain
+        )
+      }
+
+      return updatedDomains;
+    }, domains);
+
+const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
+
+  if(!isInProgressEvent(e)){
+    return false;
+  }
+
+  if (isEntityEvent(e)) {
+    return e.entity.type === 'domain';
+  }
+
+  return false;
+}
+
+const enhanced = compose(
+  styled,
+  withUpdatingDomains
+);
+
+export default enhanced(DomainsDashboardCard) as React.ComponentType<{}>;

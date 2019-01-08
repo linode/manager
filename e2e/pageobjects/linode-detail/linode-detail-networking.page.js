@@ -3,7 +3,7 @@ const { constants } = require('../../constants');
 import Page from '../page';
 
 class Networking extends Page {
-    get heading() { return $('[data-qa-title]'); }
+    get heading() { return this.pageTitle; }
     get ipv4Subheading() { return $('[data-qa-ipv4-subheading]'); }
     get ipv6Subheading() { return $('[data-qa-ipv6-subheading]'); }
 
@@ -18,8 +18,8 @@ class Networking extends Page {
     get swapWithIps() { return $$('[data-qa-swap-with]'); }
     get ipTransferSave() { return $('[data-qa-ip-transfer-save]'); }
     get ipTransferCancel() { return $('[data-qa-ip-transfer-cancel]'); }
-    get addPrivateIp() { return $('[data-qa-icon-text-link="Add Private IPv4"]'); }
-    get addPublicIp() { return $('[data-qa-icon-text-link="Add Public IPv4"]'); }
+    get addPrivateIp() { return this.addIcon('Add Private IPv4'); }
+    get addPublicIp() { return this.addIcon('Add Public IPv4'); }
 
     get drawerTitle() { return $('[data-qa-drawer-title]'); }
     get ips() { return $$('[data-qa-ip]'); }
@@ -89,7 +89,7 @@ class Networking extends Page {
     }
 
     ipDetailsDisplay(ipType) {
-        const ipv4Regex = 
+        const ipv4Regex =
             /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/g;
 
         const ipv6Regex =
@@ -120,12 +120,12 @@ class Networking extends Page {
 
     addIp(ipType) {
         if (ipType === 'ipv4') {
-            browser.click('[data-qa-icon-text-link="Add Public IPv4"]');
+            this.addIcon('Add Public IPv4').click();
             this.drawerTitle.waitForVisible();
         }
 
         if (ipType === 'ipv6') {
-            browser.click('[data-qa-icon-text-link="Add IPv6"]');
+            this.addIcon('Add IPv6').click();
             this.drawerTitle.waitForVisible();
         }
     }
@@ -146,7 +146,7 @@ class Networking extends Page {
 
     selectActionMenuItem(ip, item) {
         const menuItem = `[data-qa-action-menu-item="${item}"]`;
-        
+
         browser.click(`[data-qa-ip="${ip}"] [data-qa-action-menu]`);
         browser.waitForVisible(menuItem);
         browser.click(menuItem)

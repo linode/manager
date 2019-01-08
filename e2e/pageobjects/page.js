@@ -45,9 +45,9 @@ export default class Page {
     get drawerPrice() { return $('[qa-data-price]'); }
     get drawerBillingInterval() { return $('[qa-data-billing-interval]'); }
     get enableAllBackups() { return $('[data-qa-backup-existing]'); }
-
-
-    // Breadcrumb Component
+    get basicSelect() { return '[data-qa-select]'; }
+    get pageTitle() { return $('[data-qa-title]'); }
+    get openImportDrawerButton() { return $('[data-qa-open-import-drawer-button]'); }
     get breadcrumbEditableText() { return $('[data-qa-editable-text]'); }
     get breadcrumbStaticText() { return $('[data-qa-label-title]'); }
     get breadcrumbBackLink() { return $('[data-qa-link]'); }
@@ -55,15 +55,11 @@ export default class Page {
     get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
+    get groupByTagsToggle() { return $$('span').find(it => it.getText().includes('Group by Tag')).$('..'); }
+    get tagHeaderSelector() { return 'data-qa-tag-header'; }
+    get tagHeaders() { return $$(`[${this.tagHeaderSelector}]`); }
     get enterKey() { return '\uE007'; }
-
-    constructor() {
-        this.pageTitle = 'Base page';
-    }
-
-    open(path) {
-
-    }
+    get upArrowKey() { return '\ue013'; }
 
     logout() {
         this.userMenu.waitForVisible(constants.wait.normal);
@@ -145,12 +141,19 @@ export default class Page {
         expect(sidebarTitle).toBe('Linode Docs');
     }
 
-    toastDisplays(expectedMessage, timeout=constants.wait.normal) {
+    toastDisplays(expectedMessage, timeout=constants.wait.normal, wait=true) {
         this.toast.waitForVisible(timeout);
-        browser.waitUntil(() => {
-            return $$(this.toast.selector).find(toast => toast.getText() === expectedMessage)
-        },timeout);
-        this.toast.waitForVisible(timeout, true);
+        let toastMessage;
+        if(wait){
+            browser.waitUntil(() => {
+                toastMessage = $$(this.toast.selector).find(toast => toast.getText() === expectedMessage);
+                return toastMessage;
+            },timeout);
+            toastMessage.waitForVisible(timeout, true);
+        }else{
+            this.toast.waitForVisible(timeout, true);
+        }
+
     }
 
     openActionMenu(actionMenuRow) {
@@ -245,5 +248,26 @@ export default class Page {
         expectedTags.forEach((tag) => {
             expect(appliedTags.includes(tag)).toBe(true);
         });
+    }
+
+    addIcon(iconText){
+        return $(`[data-qa-icon-text-link="${iconText}"]`);
+    }
+
+    tagHeader(tag){
+        return $(`[${this.tagHeaderSelector}=${tag}]`);
+    }
+
+    groupByTags(group){
+        this.groupByTagsToggle.click();
+        browser.waitUntil(() => {
+          return group ? this.tagHeaders.length > 0 : this.tagHeaders.length === 0;
+        },constants.wait.normal);
+    }
+
+    tagGroupsInAlphabeticalOrder(tags){
+        const tagHeaders = this.tagHeaders
+            .map(header => header.getAttribute(this.tagHeaderSelector));
+        expect(tagHeaders).toEqual(tags.sort());
     }
 }

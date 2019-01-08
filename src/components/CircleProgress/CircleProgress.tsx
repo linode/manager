@@ -91,14 +91,12 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       stroke: theme.color.green,
     },
     '& $progress': {
-      [theme.breakpoints.down('xs')]: {
-        width: '128px !important',
-        height: '128px !important',
-      },
+      width: '93px !important',
+      height: '93px !important',
     },
     '& $top': {
-      width: 120,
-      height: 120,
+      width: 85,
+      height: 85,
     },
   },
 });

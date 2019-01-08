@@ -7,7 +7,7 @@ class NodeBalancerDetail extends Page {
     get summaryTab() { return $('[data-qa-tab="Summary"]'); }
     get configsTab() { return $('[data-qa-tab="Configurations"]'); }
     get settingsTab() { return $('[data-qa-tab="Settings"]'); }
-    get summaryHeading() { return $('[data-qa-title]'); }
+    get summaryHeading() { return this.pageTitle; }
     get hostName() { return $('[data-qa-hostname]'); }
     get nodeStatus() { return $('[data-qa-node-status]'); }
     get region() { return $('[data-qa-region]'); }
