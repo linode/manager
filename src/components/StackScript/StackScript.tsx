@@ -13,7 +13,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
   return ({
     root: {
       backgroundColor: theme.color.white,
-      padding: theme.spacing.unit * 4
+      '.detailsWrapper &': {
+        padding: theme.spacing.unit * 4
+      }
     },
     deployments: {
     },

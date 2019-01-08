@@ -36,10 +36,6 @@ const styles: StyleRulesCallback = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   drawerContent: {
-    // Content is shared between the stackscript details page & drawer, this styles content when in the drawer context.
-    '& div:first-child': {
-      padding: 0,
-    }
   },
   button: {
     minWidth: 'auto',
