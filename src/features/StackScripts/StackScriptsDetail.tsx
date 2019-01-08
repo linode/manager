@@ -104,7 +104,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             </Button>
           </Grid>
         </Grid>
-        <StackScript data={stackScript} />
+        <div className="detailsWrapper"><StackScript data={stackScript} /></div>
       </React.Fragment>
     );
   }
