@@ -99,9 +99,6 @@ export const getAllFromEntity: (getter: GetFromEntity) => (params?: any, filter?
             .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
         });
     }
-const getAllLinodes = getAll<Linode.Linode>(getLinodes);
-const getAllNodeBalancers = getAll<Linode.NodeBalancer>(getNodeBalancers);
-const getAllVolumes = getAll<Linode.Volume>(getVolumes);
 
 export type GetAllHandler = (
   linodes: Linode.Linode[],
@@ -121,9 +118,9 @@ export type GetAllHandler = (
  */
 export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
-    getAllLinodes(),
-    getAllNodeBalancers(),
-    getAllVolumes(),
+    getAll<Linode.Linode>(getLinodes)(),
+    getAll<Linode.NodeBalancer>(getNodeBalancers)(),
+    getAll<Linode.Volume>(getVolumes)(),
     getAll<Linode.Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
