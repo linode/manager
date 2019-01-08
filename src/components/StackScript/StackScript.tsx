@@ -16,7 +16,6 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       padding: theme.spacing.unit * 4
     },
     deployments: {
-      color: theme.color.grey1
     },
     author: {
       marginTop: theme.spacing.unit * 2,

@@ -36,7 +36,10 @@ const styles: StyleRulesCallback = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   drawerContent: {
-    marginBottom: theme.spacing.unit * 2,
+    // Content is shared between the stackscript details page & drawer, this styles content when in the drawer context.
+    '& div:first-child': {
+      padding: 0,
+    }
   },
   button: {
     minWidth: 'auto',
@@ -93,7 +96,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </Button>
         </Grid>
       </Grid>
-      {children}
+      <div className={classes.drawerContent}>{children}</div>
     </Drawer>
   );
 };
