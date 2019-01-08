@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { assoc, clamp, compose, map, path, pathOr, prop } from 'ramda';
+import { assoc, clamp, compose, map, path, pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -11,11 +11,12 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import withVolumes from 'src/containers/volumes.container';
 import { resetEventsPolling } from 'src/events';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { getLinodeDisks, rescueLinode } from 'src/services/linodes';
-import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import DeviceSelection, { ExtendedDisk, ExtendedVolume } from './DeviceSelection';
 
 type ClassNames = 'root'
@@ -45,9 +46,14 @@ interface ContextProps {
   linodeLabel: string;
 }
 
+interface WithVolumesProps {
+  volumesData: ExtendedVolume[];
+  volumesLoading: boolean;
+  volumesError?: Linode.ApiFieldError[];
+}
+
 interface PromiseLoaderProps {
   disks: PromiseLoaderResponse<ExtendedDisk[]>;
-  volumes: PromiseLoaderResponse<ExtendedVolume[]>;
 }
 
 interface State {
@@ -55,7 +61,6 @@ interface State {
   errors?: Linode.ApiFieldError[];
   devices: {
     disks: ExtendedDisk[];
-    volumes: ExtendedVolume[];
   };
   config?: Linode.Config;
   counter: number;
@@ -63,38 +68,26 @@ interface State {
 
 type CombinedProps = PromiseLoaderProps
   & ContextProps
+  & WithVolumesProps
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
 export class LinodeRescue extends React.Component<CombinedProps, State> {
-  constructor(props: CombinedProps) {
-    super(props);
-    const filteredVolumes = props.volumes.response.filter((volume) => {
-      // whether volume is not attached to any Linode
-      const volumeIsUnattached = volume.linode_id === null;
-      // whether volume is attached to the current Linode we're viewing
-      const volumeIsAttachedToCurrentLinode = volume.linode_id === props.linodeId;
-      // whether volume is in the same region as the current Linode we're viewing
-      const volumeAndLinodeRegionMatch = props.linodeRegion === volume.region;
-      return (volumeIsAttachedToCurrentLinode || volumeIsUnattached) && volumeAndLinodeRegionMatch;
-    });
-    this.state = {
-      devices: {
-        disks: props.disks.response || [],
-        volumes: filteredVolumes || [],
-      },
-      counter: 1,
-      rescueDevices: {
-        sda: undefined,
-        sdb: undefined,
-        sdc: undefined,
-        sdd: undefined,
-        sde: undefined,
-        sdf: undefined,
-        sdg: undefined,
-        sdh: undefined,
-      },
-    };
+  state: State = {
+    devices: {
+      disks: this.props.disks.response || [],
+    },
+    counter: 1,
+    rescueDevices: {
+      sda: undefined,
+      sdb: undefined,
+      sdc: undefined,
+      sdd: undefined,
+      sde: undefined,
+      sdf: undefined,
+      sdg: undefined,
+      sdh: undefined,
+    },
   }
 
   onSubmit = () => {
@@ -102,7 +95,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const { rescueDevices } = this.state;
 
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
-      .then((response) => {
+      .then((_) => {
         this.setState({
           counter: 1,
           rescueDevices: {
@@ -151,7 +144,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     const { devices } = this.state;
     const {
       disks: { error: disksError },
-      volumes: { error: volumesError },
+      volumesData,
+      volumesError,
       classes,
       linodeLabel,
     } = this.props;
@@ -166,10 +160,12 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
     }
 
     if (volumesError) {
+      const errorText = getErrorStringOrDefault(volumesError,
+        "There was an error retrieving volumes information.")
       return (
         <React.Fragment>
           <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
-          <ErrorState errorText="There was an error retrieving volumes information." />
+          <ErrorState errorText={errorText} />
         </React.Fragment>
       );
     }
@@ -193,7 +189,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
           </Typography>
           <DeviceSelection
             slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
-            devices={devices}
+            devices={{disks: devices.disks, volumes: volumesData}}
             onChange={this.onChange}
             getSelected={slot => pathOr('', ['rescueDevices', slot], this.state)}
             counter={this.state.counter}
@@ -225,20 +221,9 @@ export const preloaded = PromiseLoader({
         path(['data']),
       ),
   ),
-
-  /** @todo filter for available */
-  volumes: ({ linodeId, linodeRegion }): Promise<ExtendedVolume[]> => getVolumes()
-    .then(
-      compose<
-        Linode.ResourcePage<Linode.Volume>,
-        Linode.Volume[],
-        ExtendedVolume[]>(
-          map(volume => assoc('_id', `volume-${volume.id}`, volume)),
-          prop('data'),
-      ),
-  ),
 });
 
+// @todo remove context
 const linodeContext = withLinode((context) => ({
   linodeId: context.data!.id,
   linodeRegion: context.data!.region,
@@ -250,5 +235,27 @@ export default compose(
   preloaded,
   SectionErrorBoundary,
   styled,
-  withSnackbar
+  withSnackbar,
+  withVolumes((ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
+    return {
+      ...ownProps,
+      volumesLoading,
+      volumesError,
+      volumesData: volumesData.reduce((accumulator, volume) => {
+        if (
+          (volume.id === ownProps.linodeId || volume.linode_id === null)
+          && volume.region === ownProps.linodeRegion
+        ) {
+          /* Volume is attached to this Linode, or in the same region and unattached.
+          * Include it in the list of Volumes to be shown as options to the user */
+         return {
+           ...volume,
+           _id: `volume-${volume.id}`,
+         }
+        } else {
+          return accumulator;
+        }
+      }, []),
+    }
+  }),
 )(LinodeRescue);

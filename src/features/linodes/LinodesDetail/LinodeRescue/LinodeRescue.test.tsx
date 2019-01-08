@@ -24,7 +24,6 @@ describe('LinodeRescue', () => {
       }
     })
     const disksAsPromise = createPromiseLoaderResponse(extendedDisks);
-    const volumesAsPromise = createPromiseLoaderResponse(extendedVolumes);
 
     const component = shallow(
       <LinodeRescue
@@ -38,7 +37,8 @@ describe('LinodeRescue', () => {
         disks={disksAsPromise}
         linodeId={7843027}
         linodeRegion="us-east"
-        volumes={volumesAsPromise}
+        volumesData={extendedVolumes}
+        volumesLoading={false}
         linodeLabel=""
       />
     );
