@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { ChildrenProps, StackScriptPanelContentBase, StackScriptPanelContentBaseProps, StackScriptPanelContentBaseState, styled } from '../StackScriptPanelContentBase';
+import { compose } from 'recompose';
+import StackScriptBase, { StateProps } from '../StackScriptBase/StackScriptBase';
 import StackScriptsSection from './StackScriptsSection';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,36 +16,49 @@ interface DialogState {
   makePublic: DialogVariantProps,
   delete: DialogVariantProps,
   stackScriptID: number | undefined;
-  stackScriptLabel: string;  
+  stackScriptLabel: string;
 }
 
 interface State {
   dialog: DialogState;
+  successMessage: string;
+  fieldError?: { reason: string }
 };
 
-export type combinedState = StackScriptPanelContentBaseState & State;
+interface Props {
+  currentUser: string;
+  publicImages: Linode.Image[];
+  request: (username: string, params?: any, filter?: any) =>
+    Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  category: string;
+}
 
+type CombinedProps = Props & StateProps
 
-class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPanelContentBaseProps, combinedState> {
-
-
-  getDefaultState(): combinedState {
-    return {
-      ...super.getDefaultState(),
-      dialog: {
-        makePublic: {
-          open: false,
-        },
-        delete: {
-          open: false,
-        },
-        stackScriptID: undefined,
-        stackScriptLabel: '',
-      }
+class StackScriptPanelContent extends React.Component<CombinedProps, State> {
+  state: State = {
+    successMessage: '',
+    dialog: {
+      makePublic: {
+        open: false,
+      },
+      delete: {
+        open: false,
+      },
+      stackScriptID: undefined,
+      stackScriptLabel: '',
     }
   }
 
-  state: combinedState = this.getDefaultState();
+  mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   handleOpenDeleteDialog = (id: number, label: string) => {
     this.setState({
@@ -58,7 +72,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
         stackScriptID: id,
         stackScriptLabel: label,
       }
-    } as combinedState)
+    })
   }
 
   handleOpenMakePublicDialog = (id: number, label: string) => {
@@ -73,7 +87,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
         stackScriptID: id,
         stackScriptLabel: label,
       }
-    } as combinedState)
+    })
   }
 
   handleCloseDialog = () => {
@@ -87,12 +101,13 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
           open: false,
         },
       }
-    } as combinedState)
+    })
   }
 
   handleDeleteStackScript = () => {
     deleteStackScript(this.state.dialog.stackScriptID!)
       .then(response => {
+        if (!this.mounted) { return; }
         this.setState({
           dialog: {
             delete: {
@@ -104,10 +119,11 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
             stackScriptID: undefined,
             stackScriptLabel: '',
           }
-        } as combinedState);
-        this.getDataAtPage(1, this.state.currentFilter, true);
+        });
+        this.props.getDataAtPage(1, this.props.currentFilter, true);
       })
       .catch(e => {
+        if (!this.mounted) { return; }
         this.setState({
           dialog: {
             delete: {
@@ -122,12 +138,13 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
           fieldError: {
             reason: 'Unable to complete your request at this time'
           }
-        } as combinedState)
+        })
       });
   }
 
   handleMakePublic = () => {
-    const { dialog, currentFilter } = this.state;
+    const { dialog } = this.state;
+    const { currentFilter } = this.props;
 
     updateStackScript(dialog.stackScriptID!, { is_public: true })
       .then(response => {
@@ -144,10 +161,11 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
             stackScriptID: undefined,
             stackScriptLabel: '',
           }
-        } as combinedState);
-        this.getDataAtPage(1, currentFilter, true);
+        });
+        this.props.getDataAtPage(1, currentFilter, true);
       })
       .catch(e => {
+        if (!this.mounted) { return; }
         this.setState({
           dialog: {
             delete: {
@@ -162,7 +180,7 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
           fieldError: {
             reason: 'Unable to complete your request at this time'
           }
-        } as combinedState)
+        })
       });
   }
 
@@ -245,20 +263,23 @@ class StackScriptPanelContent extends StackScriptPanelContentBase<StackScriptPan
     )
   }
 
-  renderChildren(baseProps: ChildrenProps ) {
+  render() {
     return <React.Fragment>
       <StackScriptsSection
-        isSorting={baseProps.isSorting}
-        data={this.state.listOfStackScripts}
-        publicImages={baseProps.publicImages}
+        isSorting={this.props.isSorting}
+        data={this.props.listOfStackScripts}
+        publicImages={this.props.publicImages}
         triggerDelete={this.handleOpenDeleteDialog}
         triggerMakePublic={this.handleOpenMakePublicDialog}
-        currentUser={baseProps.currentUser}
+        currentUser={this.props.currentUser}
       />
       {this.renderDeleteStackScriptDialog()}
       {this.renderMakePublicDialog()}
     </React.Fragment>
-}
+  }
 };
 
-export default styled(StackScriptPanelContent);
+export default compose<CombinedProps, Props>(
+  StackScriptBase(false)
+)(StackScriptPanelContent);
+
