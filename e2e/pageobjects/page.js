@@ -55,6 +55,8 @@ export default class Page {
     get breadcrumbEditButton() { return $('[data-qa-edit-button]'); }
     get breadcrumbSaveEdit() { return $('[data-qa-save-edit]'); }
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
+    get globalTopMenu() { return $('[data-qa-top-menu]'); }
+    get navigationSideBar() { return $('[data-qa-navigation-side-bar]'); }
     get enterKey() { return '\uE007'; }
     get upArrowKey() { return '\ue013'; }
 

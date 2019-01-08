@@ -64,7 +64,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
     const { classes, openSideMenu } = this.props;
 
     return (
-      <AppBar className={classes.appBar}>
+      <AppBar className={classes.appBar} data-qa-top-menu>
         <Toolbar className={classes.toolbar}>
           <IconButton
             color="inherit"

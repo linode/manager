@@ -18,6 +18,7 @@ const { browserConf } = require('./browser-config');
 const { constants } = require('../constants');
 const { keysIn } = require('lodash');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
+const visualRegression = argv.visual;
 
 const specsToRun = () => {
     if (argv.file) {
@@ -35,12 +36,17 @@ const specsToRun = () => {
     if (argv.smoke) {
         return ['./e2e/specs/**/smoke-*spec.js'];
     }
+
+    if (visualRegression) {
+        return ['./e2e/visual-regression/specs/**.visual.spec.js'];
+    }
+
     return ['./e2e/specs/**/*.js'];
 }
 
 const specs = specsToRun();
 
-const selectedReporters = argv.log ? ['spec', 'junit'] : ['dot'];
+const selectedReporters = argv.log ? ['spec', 'junit', 'allure'] : ['dot'];
 
 const getRunnerCount = () => {
     const userCount = keysIn(process.env).filter(users => users.includes('MANAGER_USER')).length;
@@ -173,11 +179,11 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/reporters/dot.html
-    reporters: ['allure'],
+    reporters: selectedReporters,
     reporterOptions: {
         allure: {
            outputDir: './e2e/html-results',
-           disableWebdriverScreenshotsReporting: true,
+           disableWebdriverScreenshotsReporting: visualRegression,
         },
         junit: {
             outputDir: './e2e/test-results'
@@ -375,8 +381,10 @@ exports.config = {
         /* We wait an arbitrary amount of time here for linodes to be removed
            Otherwise, attempting to remove attached volumes will fail
         */
-        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
-            .then(res => resolve(res))
-            .catch(error => console.error('Error:', error));
+        if(!visualRegression) {
+            return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
+                .then(res => resolve(res))
+                .catch(error => console.error('Error:', error));
+        }
     }
 }

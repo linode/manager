@@ -76,7 +76,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
         }
       )}>
         <Backup className={classes.icon} />
-        <Typography className={classes.header} variant="h1">
+        <Typography className={classes.header} variant="h1" data-qa-backups-cta>
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>

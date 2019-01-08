@@ -1,0 +1,37 @@
+{
+  "uid" : "4b4757e66a1912dae1a509f688f20b0f",
+  "name" : "categories",
+  "children" : [ {
+    "name" : "Product defects",
+    "children" : [ {
+      "name" : "Expected false to be true.",
+      "children" : [ {
+        "name" : "Back Up Your Data Card",
+        "uid" : "6892e67055f59eaa",
+        "parentUid" : "9fadb135346cf8571bc1b84689d15149",
+        "status" : "failed",
+        "time" : {
+          "start" : 1546979053511,
+          "stop" : 1546979066100,
+          "duration" : 12589
+        },
+        "flaky" : true,
+        "parameters" : [ "chrome" ]
+      }, {
+        "name" : "Import Display Groups as Tags Card",
+        "uid" : "1ed5ffb27590a097",
+        "parentUid" : "9fadb135346cf8571bc1b84689d15149",
+        "status" : "failed",
+        "time" : {
+          "start" : 1546979066100,
+          "stop" : 1546979076626,
+          "duration" : 10526
+        },
+        "flaky" : true,
+        "parameters" : [ "chrome" ]
+      } ],
+      "uid" : "9fadb135346cf8571bc1b84689d15149"
+    } ],
+    "uid" : "8fb3a91ba5aaf9de24cc8a92edc82b5d"
+  } ]
+}

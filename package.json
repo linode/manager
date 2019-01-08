@@ -144,7 +144,8 @@
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
-    "release": "./scripts/release_changelog.sh"
+    "release": "./scripts/release_changelog.sh",
+    "e2e:html-report": "npx allure generate e2e/html-results --clean && npx allure open"
   },
   "husky": {
     "hooks": {
@@ -191,6 +192,7 @@
     "@types/xml2js": "^0.4.3",
     "@types/yup": "^0.24.9",
     "@types/zxcvbn": "^4.4.0",
+    "allure-commandline": "^2.8.1",
     "axe-core": "^3.1.1",
     "babel-core": "^6.26.0",
     "babel-preset-react-app": "^3.1.1",

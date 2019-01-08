@@ -310,6 +310,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           spacing={0}
           component="ul"
           role="menu"
+          data-qa-navigation-side-bar
         >
           <Grid item>
             <div className={classes.logoItem}>

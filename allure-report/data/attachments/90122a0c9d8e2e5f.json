@@ -1,0 +1,36 @@
+{
+    "sessionId": "493b16182100d1ac42211b936e40329e",
+    "status": 0,
+    "value": [
+        {
+            "bottom": 905,
+            "left": 1120,
+            "right": 1600,
+            "top": 0
+        },
+        {
+            "bottom": 70,
+            "left": 1530,
+            "right": 1576,
+            "top": 24
+        },
+        {
+            "bottom": 400,
+            "left": 1144,
+            "right": 1576,
+            "top": 78
+        },
+        {
+            "bottom": 270,
+            "left": 1144,
+            "right": 1576,
+            "top": 158
+        },
+        {
+            "bottom": 238,
+            "left": 1168,
+            "right": 1552,
+            "top": 222
+        }
+    ]
+}

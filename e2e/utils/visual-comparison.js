@@ -14,7 +14,7 @@ const compareToBaseLine = (imageName) => {
         errorColor: {
             red: 255,
             green: 0,
-            blue: 200
+            blue: 255
         },
         errorType: "movement",
         transparency: 0.1,
@@ -23,8 +23,9 @@ const compareToBaseLine = (imageName) => {
         outputDiff: true
     }).onComplete((compareData) => {
         if(compareData.rawMisMatchPercentage > 0){
-            const diffimage = `./e2e/visual-regression/imagediff/${imageName}.png`;
-            createAttachment(imageName, compareData.getBuffer(), 'image/png');
+            createAttachment(`Expected Image: ${imageName}`,baselineImg,'image/png');
+            createAttachment(`Actual Image: ${imageName}`,screenImg,'image/png');
+            createAttachment(`Diff Image: ${imageName}`,compareData.getBuffer(),'image/png');
             expect(false).toBe(true);
         }
     });

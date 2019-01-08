@@ -34,9 +34,11 @@ export class Dashboard extends Page {
     get postDescription() { return $('[data-qa-post-desc]'); }
 
     get readMore() { return $('[data-qa-read-more]'); }
+    get backupsCTAHeader() { return $('[data-qa-backups-cta]'); }
     get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
-    get backupExistingLinodes() { return $(this.enableAllBackups.selector); }
+    get backupExistingLinodes() { return this.enableAllBackups; }
     get backupExistingMessage() { return $('[data-qa-linodes-message]'); }
+    get importGroupsAsTagsHeader() { return $('[data-qa-group-cta-header]'); }
     get importGroupsAsTagsCta() { return $('[data-qa-group-cta-body]'); }
     get dismissGroupCTA() { return $('[data-qa-dismiss-cta]'); }
 
