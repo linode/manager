@@ -41,7 +41,7 @@ export const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props)
           <Typography
             key={`${entity}-group-item-${idx}`}
             className={classes.groupItem}
-            data-qa-display-group-item
+            data-qa-display-group-item={entity}
           >
             - {group}
           </Typography>

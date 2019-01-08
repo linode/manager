@@ -77,7 +77,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
 
                 return (
                   <React.Fragment>
-                    <TableBody className={classes.groupContainer}>
+                    <TableBody className={classes.groupContainer} data-qa-tag-header={tag}>
                       <TableRow className={classes.tagHeaderRow}>
                         <TableCell colSpan={7}>
                           <Typography variant="h2" component="h3" className={classes.tagHeader}>

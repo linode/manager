@@ -223,3 +223,14 @@ export const getDistrobutionLabel = (distrobutionTags) => {
 export const getLocalStorageValue = (key) => {
     return browser.localStorage('GET', key).value;
 }
+
+export const apiCreateDomains = (domainObjArray) => {
+    const token = readToken(browser.options.testUser);
+    let domains = []
+    domainObjArray.forEach((domain) => {
+        const newDomain = browser.createDomain(token, domain.type,domain.domain,domain.tags,domain.group);
+        domains.push(newDomain);
+    });
+    browser.url(constants.routes.domains);
+    domainObjArray.forEach((domain) => browser.waitForVisible(`[data-qa-domain-cell="${domain.domain}"]`,constants.wait.normal));
+}

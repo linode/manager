@@ -11,10 +11,10 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
   const isActive = (label: string) => label === orderBy;
 
   return (
-    <TableHead data-qa-table-head>
+    <TableHead data-qa-table-head={order}>
       <TableRow>
-        <TableSortCell label='domain' direction={order} active={isActive('domain')} handleClick={handleOrderChange}>Domain</TableSortCell>
-        <TableSortCell label='type' direction={order} active={isActive('type')} handleClick={handleOrderChange}>Type</TableSortCell>
+        <TableSortCell label='domain' direction={order} active={isActive('domain')} handleClick={handleOrderChange} data-qa-sort-domain={order}>Domain</TableSortCell>
+        <TableSortCell label='type' direction={order} active={isActive('type')} handleClick={handleOrderChange} data-qa-sort-type={order}>Type</TableSortCell>
         <TableCell />
       </TableRow>
     </TableHead>
