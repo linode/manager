@@ -1,5 +1,5 @@
 import { range } from 'ramda';
-import { createMeta } from 'src/store/request/request.helpers';
+import { requestActionCreatorFactory } from 'src/store/request/request.helpers';
 import { Action } from 'typescript-fsa';
 import { actionCreator } from './volumes.actions';
 
@@ -17,18 +17,15 @@ export interface GetPageRequest {
 
 export type GetPageResponse = Linode.ResourcePage<Entity>;
 
-export const getVolumePage = actionCreator.async<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(`get-page`);
-
-const getVolumesPageMeta = createMeta(getVolumePage, {
-  endpoint: () => `/volumes`,
-  method: 'GET',
-});
-
-export const requestGetVolumePage = actionCreator<GetPageRequest>(`request/get-page`, getVolumesPageMeta);
+export const getVolumePage = requestActionCreatorFactory<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(
+  `volume`,
+  `get-page`,
+  { endpoint: () => `/volumes`, method: 'GET' },
+);
 
 
 /**
- * Get all Linoes.
+ * Get all.
  */
 
 export const getAllVolumes = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
@@ -40,7 +37,7 @@ export const requestAllVolumes = (
   dispatch(getAllVolumes.started());
 
   try {
-    const requestAction = requestGetVolumePage({ page, page_size: 100 });
+    const requestAction = getVolumePage.request({ page, page_size: 100 });
     const { data, pages } = await dispatch(requestAction);
 
     const mergedData = [...prevData, ...data];
@@ -52,7 +49,7 @@ export const requestAllVolumes = (
 
     if (page < pages) {
       const r = range(page + 1, pages + 1);
-      const requests = r.map((nextPage) => dispatch(requestGetVolumePage({ page: nextPage, page_size: 100 })));
+      const requests = r.map((nextPage) => dispatch(getVolumePage.request({ page: nextPage, page_size: 100 })));
 
       const results = await Promise.all(requests);
 

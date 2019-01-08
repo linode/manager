@@ -24,12 +24,12 @@ import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks'
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { createSelector } from '../../../../node_modules/reselect';
 import { ConfigsProvider, LinodeProvider } from './context';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodesDetailHeader from './LinodesDetailHeader';
 import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
-import { createSelector } from '../../../../node_modules/reselect';
 
 interface ConfigDrawerState {
   open: boolean;

@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { removeLinodeFromStore, updateLinodeInStore } from 'src/store/linodes/linodes.actions';
-import { requestGetOneLinode } from 'src/store/linodes/linodes.requests';
+import { getLinode } from 'src/store/linodes/linodes.requests';
 import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
 
 const linodeEventsHandler: EventHandler = (event, dispatch) => {
@@ -62,7 +62,7 @@ const handleLinodeMigrate = (dispatch: Dispatch<any>, status: Linode.EventStatus
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(requestGetOneLinode({ id }));
+      dispatch(getLinode.request({ id }));
 
     case 'scheduled':
     case 'started':
@@ -77,7 +77,7 @@ const handleLinodeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, 
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(requestGetOneLinode({ id }));
+      dispatch(getLinode.request({ id }));
 
     case 'scheduled':
     case 'started':
@@ -92,7 +92,7 @@ const handleLinodeShutdown = (dispatch: Dispatch<any>, status: Linode.EventStatu
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(requestGetOneLinode({ id }));
+      dispatch(getLinode.request({ id }));
 
     case 'scheduled':
     case 'started':
@@ -107,7 +107,7 @@ const handleLinodeReboot = (dispatch: Dispatch<any>, status: Linode.EventStatus,
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(requestGetOneLinode({ id }));
+      dispatch(getLinode.request({ id }));
 
     case 'scheduled':
     case 'started':
@@ -122,7 +122,7 @@ const handleLinodeBoot = (dispatch: Dispatch<any>, status: Linode.EventStatus, i
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(requestGetOneLinode({ id }));
+      dispatch(getLinode.request({ id }));
 
     case 'scheduled':
     case 'started':
@@ -137,7 +137,7 @@ const handleLinodeResize = (dispatch: Dispatch<any>, status: Linode.EventStatus,
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(requestGetOneLinode({ id }));
+      dispatch(getLinode.request({ id }));
 
     case 'scheduled':
     case 'started':
@@ -155,7 +155,7 @@ const handleLinodeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     case 'notification':
     case 'scheduled':
     case 'started':
-      return dispatch(requestGetOneLinode({ id }));
+      return dispatch(getLinode.request({ id }));
 
     default:
       return;
@@ -183,7 +183,7 @@ const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
     case 'notification':
     case 'scheduled':
     case 'started':
-      return dispatch(requestGetOneLinode({ id }));
+      return dispatch(getLinode.request({ id }));
 
     default:
       return;

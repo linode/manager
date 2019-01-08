@@ -1,5 +1,5 @@
 import { range } from 'ramda';
-import { createMeta } from 'src/store/request/request.helpers';
+import { requestActionCreatorFactory } from 'src/store/request/request.helpers';
 import { Action } from 'typescript-fsa';
 import { actionCreator } from './nodeBalancers.actions';
 
@@ -17,15 +17,11 @@ export interface GetPageRequest {
 
 export type GetPageResponse = Linode.ResourcePage<Entity>;
 
-export const getNodeBalancerPage = actionCreator.async<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(`get-page`);
-
-const getNodeBalancerPageMeta = createMeta(getNodeBalancerPage, {
-  endpoint: () => `/nodebalancers`,
-  method: 'GET',
-});
-
-export const requestNodeBalancerPage = actionCreator<GetPageRequest>(`request/get-page`, getNodeBalancerPageMeta);
-
+export const getNodeBalancerPage = requestActionCreatorFactory<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(
+  `volume`,
+  `get-page`,
+  { endpoint: () => `/nodebalancers`, method: 'GET' },
+);
 
 /**
  * Get all Linoes.
@@ -40,7 +36,7 @@ export const requestAllNodeBalancers = (
   dispatch(getAllNodeBalancers.started());
 
   try {
-    const requestAction = requestNodeBalancerPage({ page, page_size: 100 });
+    const requestAction = getNodeBalancerPage.request({ page, page_size: 100 });
     const { data, pages } = await dispatch(requestAction);
 
     const mergedData = [...prevData, ...data];
@@ -52,7 +48,7 @@ export const requestAllNodeBalancers = (
 
     if (page < pages) {
       const r = range(page + 1, pages + 1);
-      const requests = r.map((nextPage) => dispatch(requestNodeBalancerPage({ page: nextPage, page_size: 100 })));
+      const requests = r.map((nextPage) => dispatch(getNodeBalancerPage.request({ page: nextPage, page_size: 100 })));
 
       const results = await Promise.all(requests);
 

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { CloneRequest, CloneResponse, CreateRequest, CreateResponse, DeleteRequest, DeleteResponse, GetOneRequest, GetOneResponse, GetPageRequest, GetPageResponse, requestCreateLinode, requestDeleteLinode, requestGetLinodesPage, requestGetOneLinode, requestUpdateLinode, UpdateRequest, UpdateResponse, requestAllLinodes } from 'src/store/linodes/linodes.requests';
+import { CloneRequest, CloneResponse, createLinode, CreateRequest, CreateResponse, deleteLinode, DeleteRequest, DeleteResponse, getLinode, getLinodesPage, GetOneRequest, GetOneResponse, GetPageRequest, GetPageResponse, requestAllLinodes, updateLinode, UpdateRequest, UpdateResponse } from 'src/store/linodes/linodes.requests';
 
 export interface LinodeRequests {
   createLinode: (p: CreateRequest) => Promise<CreateResponse>,
@@ -12,10 +12,10 @@ export interface LinodeRequests {
 }
 
 export default connect(undefined, {
-  createLinode: requestCreateLinode,
-  deleteLinode: requestDeleteLinode,
-  getLinodes: requestGetLinodesPage,
-  getLinode: requestGetOneLinode,
-  updateLinode: requestUpdateLinode,
+  createLinode: createLinode.request,
+  deleteLinode: deleteLinode.request,
+  getLinodes: getLinodesPage.request,
+  getLinode: getLinode.request,
+  updateLinode: updateLinode.request,
   getAllLinodes: requestAllLinodes,
 });

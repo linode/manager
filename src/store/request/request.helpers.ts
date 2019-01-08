@@ -1,5 +1,6 @@
 import { adjust } from 'ramda';
 import updateOrAdd from "src/utilities/updateOrAdd";
+import { actionCreatorFactory } from 'typescript-fsa';
 
 interface MetaConfig<Params> {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -57,8 +58,8 @@ export const onDeleteSuccess = <E extends { id: number }>(id: number, state: Sta
   }
 };
 
-export const onCreateSuccess = <E extends { id: number }>(e: E, state: State<E>): State<E> => {
-  const updated = [...state.entities, e];
+export const onCreateSuccess = <E extends { id: number }>(entity: E, state: State<E>): State<E> => {
+  const updated = [...state.entities, entity];
 
   return {
     ...state,
@@ -67,8 +68,8 @@ export const onCreateSuccess = <E extends { id: number }>(e: E, state: State<E>)
   };
 }
 
-export const onUpdateSuccess = <E extends { id: number }>(e: E, state: State<E>): State<E> => {
-  const updated = updateOrAdd(e, state.entities);
+export const onUpdateSuccess = <E extends { id: number }>(entity: E, state: State<E>): State<E> => {
+  const updated = updateOrAdd(entity, state.entities);
 
   return {
     ...state,
@@ -95,3 +96,20 @@ export const updateInPlace = <E extends { id: number }>(id: number, update: (v: 
     results: updated.map((e) => e.id),
   }
 };
+
+export const requestActionCreatorFactory = <Request, Response, Error>(
+  type: string,
+  action: string,
+  options: Omit<MetaConfig<Request>, 'actions'>
+) => {
+  const actionCreator = actionCreatorFactory(`@@manager/${type}`);
+  const actions = actionCreator.async<Request, Response, Error>(action);
+  const meta = createMeta<Request>(actions, options);
+
+  return {
+    failed: actions.failed,
+    done: actions.done,
+    started: actions.started,
+    request: actionCreator<Request>(`${action}`, meta),
+  }
+}

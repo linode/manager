@@ -54,7 +54,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onGetAllSuccess(result, state);
   }
 
-  if (isType(action, getAllLinodes.failed)) { }
+  if (isType(action, getAllLinodes.failed)) { console.error(action.payload.error) }
 
   /** Synchronous update in place. */
   if (isType(action, updateLinodeInStore)) {
