@@ -13995,6 +13995,14 @@ wbuf@^1.1.0, wbuf@^1.7.2:
   dependencies:
     minimalistic-assert "^1.0.0"
 
+wdio-allure-reporter@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/wdio-allure-reporter/-/wdio-allure-reporter-0.8.3.tgz#f1c90e625f63b114ccb64d0f5e75257132094b7c"
+  integrity sha512-rBvaQrzr+EiUEMF2Y5dZHNnkgrfbSUggqmzYQbdO/AzpCcNM70FF6K8dOD6ORC9od/JBLIbqwl+2b12CoV1vdQ==
+  dependencies:
+    allure-js-commons "^1.3.2"
+    babel-runtime "^6.26.0"
+
 wdio-browserstack-service@^0.1.16:
   version "0.1.16"
   resolved "https://registry.yarnpkg.com/wdio-browserstack-service/-/wdio-browserstack-service-0.1.16.tgz#2a5d216d1af7d95e752095aba3c11eff68b92d64"

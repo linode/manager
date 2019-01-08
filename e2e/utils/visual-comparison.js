@@ -1,5 +1,6 @@
-const { resemblejs } = require('resemblejs');
 const { readFileSync, writeFileSync } = require('fs');
+var resemble = require('resemblejs');
+const { createAttachment } = require('wdio-allure-reporter');
 
 const VISUAL_REGRESSION = process.env['VISUAL_REGRESSION'];
 const BASELINE = './e2e/visual-regression/baseline';
@@ -9,14 +10,24 @@ const SAVEPATH = VISUAL_REGRESSION ? SCREENSHOT : BASELINE;
 const compareToBaseLine = (imageName) => {
     const screenImg = readFileSync(`${BASELINE}/${imageName}.png`);
     const baselineImg = readFileSync(`${SCREENSHOT}/${imageName}.png`);
-    resemble(screenImg).compareTo(baselineImg)
-        .onComplete((compareData) => {
-            console.log(compareData);
-            if(compareData.rawMisMatchPercentage > 0){
-                writeFileSync(`./errorShots/${imageName}.png`, compareData.getBuffer());
-                expect(false).toBe(true);
-            }
-        });
+    resemble(screenImg).compareTo(baselineImg).outputSettings({
+        errorColor: {
+            red: 255,
+            green: 0,
+            blue: 200
+        },
+        errorType: "movement",
+        transparency: 0.1,
+        largeImageThreshold: 1200,
+        useCrossOrigin: false,
+        outputDiff: true
+    }).onComplete((compareData) => {
+        if(compareData.rawMisMatchPercentage > 0){
+            const diffimage = `./e2e/visual-regression/imagediff/${imageName}.png`;
+            createAttachment(imageName, compareData.getBuffer(), 'image/png');
+            expect(false).toBe(true);
+        }
+    });
 }
 
 const takeScreenshot = (element,selector) => {

@@ -210,6 +210,7 @@
     "tslint-config-prettier": "^1.13.0",
     "typescript": "^2.7.2",
     "utility-types": "^2.1.0",
+    "wdio-allure-reporter": "^0.8.3",
     "wdio-browserstack-service": "^0.1.16",
     "wdio-dot-reporter": "0.0.9",
     "wdio-jasmine-framework": "0.3.5",

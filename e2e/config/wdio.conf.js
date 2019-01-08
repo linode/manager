@@ -177,9 +177,7 @@ exports.config = {
     reporterOptions: {
         allure: {
            outputDir: './e2e/html-results',
-           disableWebdriverStepsReporting: false,
-           disableWebdriverScreenshotsReporting: false,
-           useCucumberStepReporter: false
+           disableWebdriverScreenshotsReporting: true,
         },
         junit: {
             outputDir: './e2e/test-results'

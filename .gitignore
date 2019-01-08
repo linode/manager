@@ -88,6 +88,8 @@ restart-manager.sh
 # E2E Test Temporary Files
 e2e/errorShots/*.png
 e2e/test-results/*.xml
+e2e/html-results/*.*
+e2e/visual-regression/screenshots/*.png
 localStorage.json
 e2e/drivers
 storybook-test-results/*.xml
