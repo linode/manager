@@ -139,7 +139,8 @@ namespace Linode {
     | 'rebooting'
     | 'provisioning'
     | 'deleting'
-    | 'migrating';
+    | 'migrating'
+    | 'cloning';
 
   export interface Config {
     id: number;
