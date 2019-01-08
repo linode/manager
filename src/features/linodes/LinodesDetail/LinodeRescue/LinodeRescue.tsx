@@ -230,6 +230,21 @@ const linodeContext = withLinode((context) => ({
   linodeLabel: context.data!.label,
 }));
 
+export const extendOrFilterVolume = (
+  linodeId: number,
+  linodeRegion: string,
+  volume: Linode.Volume): ExtendedVolume | null => {
+    /* We want to display as options Volumes that are either already attached to this
+    * Linode, or are in the same region and not attached to any other Linode. */
+    return (volume.linode_id === linodeId || volume.linode_id === null)
+    && volume.region === linodeRegion
+      ? {
+      ...volume,
+      _id: `volume-${volume.id}`,
+      }
+      : null
+  }
+
 export default compose(
   linodeContext,
   preloaded,
@@ -242,22 +257,11 @@ export default compose(
       volumesLoading,
       volumesError,
       volumesData: volumesData.reduce((accumulator, volume) => {
-        if (
-          (volume.linode_id === ownProps.linodeId || volume.linode_id === null)
-          && volume.region === ownProps.linodeRegion
-        ) {
-          /* Volume is attached to this Linode, or in the same region and unattached.
-          * Include it in the list of Volumes to be shown as options to the user */
-         return [
-           ...accumulator,
-           {
-            ...volume,
-            _id: `volume-${volume.id}`,
-           }
-          ]
-        } else {
-          return accumulator;
-        }
+        const extendedVolume = extendOrFilterVolume(
+          ownProps.linodeId,
+          ownProps.linodeRegion || '',
+          volume);
+        return extendedVolume ? [...accumulator, extendedVolume ] : accumulator;
       }, []),
     }
   }),
