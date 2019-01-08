@@ -1,4 +1,5 @@
 import { range } from 'ramda';
+import { CreateLinodeSchema } from 'src/services/linodes/linode.schema';
 import { requestActionCreatorFactory } from 'src/store/request/request.helpers';
 import { Action } from 'typescript-fsa';
 import { actionCreator } from './linodes.actions';
@@ -29,7 +30,7 @@ export type CreateResponse = Entity;
 export const createLinode = requestActionCreatorFactory<CreateRequest, CreateResponse, Linode.ApiFieldError[]>(
   `linode`,
   `create`,
-  { endpoint: () => `/linode/instances`, method: 'POST' },
+  { endpoint: () => `/linode/instances`, method: 'POST', validationSchema: CreateLinodeSchema },
 );
 
 /**

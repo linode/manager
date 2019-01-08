@@ -1,11 +1,13 @@
 import { adjust } from 'ramda';
 import updateOrAdd from "src/utilities/updateOrAdd";
 import { actionCreatorFactory } from 'typescript-fsa';
+import { ObjectSchema } from 'yup';
 
-interface MetaConfig<Params> {
+interface MetaConfig<Params, T = {}> {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE'
   actions: any[];
   endpoint: string | ((v: Params) => string);
+  validationSchema?: ObjectSchema<T>;
 }
 
 interface Meta<P> {
