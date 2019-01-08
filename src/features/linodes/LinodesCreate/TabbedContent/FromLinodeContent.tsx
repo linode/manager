@@ -1,7 +1,9 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
+import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -14,6 +16,7 @@ import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { cloneLinode } from 'src/services/linodes';
+import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -83,6 +86,7 @@ const errorResources = {
 
 type CombinedProps =
   & Props
+  & WithUpsertLinode
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
@@ -161,7 +165,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     })
       .then((linode) => {
         if (privateIP) { allocatePrivateIP(linode.id) };
-
+        this.props.upsertLinode(linode);
         this.props.enqueueSnackbar(`Your Linode is being cloned.`, { variant: 'success' });
 
         resetEventsPolling();
@@ -326,7 +330,18 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
     );
   }
 }
+interface WithUpsertLinode {
+  upsertLinode: (l: Linode.Linode) => void;
+}
+
+const WithUpsertLinode = connect(undefined, { upsertLinode });
 
 const styled = withStyles(styles);
 
-export default styled(withSnackbar(FromLinodeContent));
+const enhanced = compose<CombinedProps, Props>(
+  WithUpsertLinode,
+  styled,
+  withSnackbar,
+);
+
+export default enhanced(FromLinodeContent);
