@@ -6,18 +6,14 @@ import { compose } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
-
 import TagsPanel from 'src/components/TagsPanel';
-
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { lishLaunch } from 'src/features/Lish';
-
+import { scheduleOrQueueMigration } from 'src/services/linodes';
+import { requestNotifications } from 'src/store/reducers/notifications';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
-
-import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
-
-import { requestNotifications } from 'src/store/reducers/notifications';
 
 interface LabelInput {
   label: string;
@@ -48,7 +44,12 @@ interface State {
   hasScheduledMigration: boolean;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps & InjectedNotistackProps;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & StateProps
+  & DispatchProps
+  & InjectedNotistackProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
@@ -92,11 +93,8 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   handleUpdateTags = (tagsList: string[]) => {
-    const { linodeId, linodeUpdate } = this.props;
-    return updateLinode(
-      linodeId,
-      { tags: tagsList }
-    )
+    const { linodeId, linodeUpdate, updateLinode } = this.props;
+    return updateLinode({ id: linodeId, tags: tagsList })
       .then(() => {
         linodeUpdate();
       })
@@ -197,7 +195,10 @@ interface StateProps {
 
 export const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, Props>(
   connected,
-  withSnackbar
-)(LinodesDetailHeader);
+  withSnackbar,
+  linodeRequestsContainer,
+);
+
+export default enhanced(LinodesDetailHeader);

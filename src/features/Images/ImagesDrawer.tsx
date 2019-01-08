@@ -1,6 +1,7 @@
-import { compose, equals } from 'ramda';
+import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -8,11 +9,12 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { resetEventsPolling } from 'src/events';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { createImage, updateImage } from 'src/services/images';
-import { getLinodeDisks, getLinodes } from 'src/services/linodes';
+import { getLinodeDisks } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
@@ -55,7 +57,11 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & WithStyles<ClassNames>
+  & RouteComponentProps<{}>;
 
 export const modes = {
   CLOSED: 'closed',
@@ -199,6 +205,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   updateLinodes() {
+    const { getLinodes } = this.props;
+
     getLinodes({ page: 1 })
       .then((response) => {
         if(!this.mounted){ return; }
@@ -354,8 +362,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, any>(
   styled,
   withRouter,
   SectionErrorBoundary,
+  linodeRequestsContainer,
 )(ImageDrawer);

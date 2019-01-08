@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
-import { getLinode, getLinodeLishToken } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
+import { getLinodeLishToken } from 'src/services/linodes';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -36,7 +38,12 @@ interface State {
   token?: string;
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+interface RouteParams { linodeId?: number }
+
+type CombinedProps =
+  & LinodeRequests
+  & WithStyles<ClassNames>
+  & RouteComponentProps<RouteParams>;
 
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
@@ -47,7 +54,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    const { match: { params: { linodeId } } } = this.props;
+    const { match: { params: { linodeId } }, getLinode } = this.props;
 
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
     const xtermCss = import('' + '../../assets/weblish/xterm.css');
@@ -58,12 +65,11 @@ class Lish extends React.Component<CombinedProps, State> {
       return;
     }
 
-    getLinode(linodeId)
-      .then((response) => {
-        const { data: linode } = response;
+    getLinode({ id: linodeId })
+      .then((data) => {
         if (!this.mounted) { return; }
         this.setState({
-          linode,
+          linode: data,
           loading: false,
         });
       })
@@ -127,7 +133,7 @@ class Lish extends React.Component<CombinedProps, State> {
   renderGlish = () => {
     const { linode, token } = this.state;
     if (linode && token) {
-      return <Glish token={token} linode={linode} refreshToken={this.refreshToken}/>;
+      return <Glish token={token} linode={linode} refreshToken={this.refreshToken} />;
     }
     return null;
   }
@@ -158,11 +164,11 @@ class Lish extends React.Component<CombinedProps, State> {
             />)}
         </Tabs>
         {loading &&
-          <CircleProgress noInner className={classes.progress}/>
+          <CircleProgress noInner className={classes.progress} />
         }
         {/* Only show 404 component if we are missing _both_ linode and token */}
         {(!loading && !linode && !token) &&
-          <NotFound className={classes.notFound}/>
+          <NotFound className={classes.notFound} />
         }
         {(!loading && token && linode) &&
           <Switch>
@@ -178,4 +184,10 @@ class Lish extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(Lish));
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withRouter,
+  linodeRequestsContainer,
+);
+
+export default enhanced(Lish);

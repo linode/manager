@@ -25,12 +25,14 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getRegions } from 'src/services/misc';
 import { requestDomains } from 'src/store/domains/domains.actions';
+import { requestAllLinodes } from 'src/store/linodes/linodes.requests';
+import { requestAllNodeBalancers } from 'src/store/nodeBalancers/nodeBalancers.request';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { async as imagesAsync } from 'src/store/reducers/resources/images';
-import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
+import { requestAllVolumes } from 'src/store/volumes/volumes.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -220,6 +222,8 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { actions } = this.props;
 
+    actions.requestNodeBalancers();
+    actions.requestVolumes();
     actions.requestDomains();
     actions.requestImages();
     actions.requestLinodes();
@@ -373,6 +377,7 @@ const themeDataAttr = () => {
 
 interface DispatchProps {
   actions: {
+    requestNodeBalancers: () => void;
     requestDomains: () => void;
     requestImages: () => void;
     requestLinodes: () => void;
@@ -380,19 +385,22 @@ interface DispatchProps {
     requestProfile: () => void;
     requestSettings: () => void;
     requestTypes: () => void;
+    requestVolumes: () => void;
   },
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
   return {
     actions: {
+      requestNodeBalancers: () => dispatch(requestAllNodeBalancers()),
       requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(imagesAsync.requestImages()),
-      requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
+      requestLinodes: () => dispatch(requestAllLinodes()),
       requestNotifications: () => dispatch(requestNotifications()),
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
+      requestVolumes: () => dispatch(requestAllVolumes()),
     }
   };
 };

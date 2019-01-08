@@ -1,9 +1,10 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { getLinodes } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root';
@@ -27,7 +28,10 @@ interface State {
   selectedLinodeId?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & WithStyles<ClassNames>;
 
 class LinodeSelect extends React.Component<CombinedProps, State> {
 
@@ -114,12 +118,14 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 
   searchLinodes = (inputValue: string = '') => {
+    const { getLinodes } = this.props;
+
     if (this.mounted) {
       this.setState({ loading: true });
     }
 
     const filterLinodes = this.getLinodeFilter(inputValue);
-    getLinodes({}, filterLinodes)
+    getLinodes({ filter: filterLinodes })
       .then((response) => {
         const linodes = this.renderLinodeOptions(response.data);
         if (this.mounted) {
@@ -172,4 +178,9 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(LinodeSelect);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  linodeRequestsContainer,
+);
+
+export default enhanced(LinodeSelect);

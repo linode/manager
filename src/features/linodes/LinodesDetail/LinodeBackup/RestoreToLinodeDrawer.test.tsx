@@ -1,10 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import linodeRequestProps from 'src/__data__/linodeRequestProps';
 import { RestoreToLinodeDrawer } from './RestoreToLinodeDrawer';
 
 describe('RestoreToLinodeDrawer', () => {
   const props = {
+    ...linodeRequestProps,
     open: true,
     linodeID: 1234,
     linodeRegion: 'us-east',
@@ -15,6 +16,7 @@ describe('RestoreToLinodeDrawer', () => {
 
   const wrapper = shallow<RestoreToLinodeDrawer>(
     <RestoreToLinodeDrawer
+
       {...props}
       classes={{ root: '' }}
     />

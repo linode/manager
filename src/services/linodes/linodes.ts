@@ -1,6 +1,4 @@
 import { API_ROOT } from 'src/constants';
-import store from 'src/store';
-import {actions} from 'src/store/reducers/resources/linodes';
 
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
@@ -122,11 +120,7 @@ export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
     setMethod('PUT'),
     setData(values, UpdateLinodeSchema),
   )
-    .then(response => response.data)
-    .then(linode => {
-      store.dispatch(actions.updateLinode(linode))
-      return linode;
-    });
+    .then(response => response.data);
 
 /**
  * deleteLinode

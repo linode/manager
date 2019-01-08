@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
-import { compose as composeComponent } from 'recompose';
+import { compose as composeC } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -432,7 +432,7 @@ interface WithLinodesProps {
   linodesError?: Linode.ApiFieldError[];
 }
 
-export default composeComponent<CombinedProps, {}>(
+export default composeC<CombinedProps, {}>(
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesData,

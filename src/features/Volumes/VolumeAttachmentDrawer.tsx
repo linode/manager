@@ -1,5 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
@@ -9,9 +10,10 @@ import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+import { getLinodeConfigs } from 'src/services/linodes';
 import { attachVolume } from 'src/services/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -38,7 +40,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & WithStyles<ClassNames>;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -56,11 +61,12 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   }
 
   updateLinodes = (linodeRegion: string) => {
+    const { getLinodes } = this.props;
     /*
      * @todo: We're only getting page 1 here, what if the account has over 100
      * Linodes?
      */
-    getLinodes({ page: 1 }, { region: linodeRegion })
+    getLinodes({ page: 1, filter:{region: linodeRegion} })
       .then((response) => {
         const linodeChoices = response.data.map((linode) => {
           return [`${linode.id}`, linode.label];
@@ -216,4 +222,6 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(VolumeAttachmentDrawer);
+const enhanced = composeC<CombinedProps, Props>(styled, linodeRequestsContainer)
+
+export default enhanced(VolumeAttachmentDrawer);

@@ -132,14 +132,16 @@ namespace Linode {
   }
 
   export type LinodeStatus =
-    'offline'
     | 'booting'
-    | 'running'
-    | 'shutting_down'
-    | 'rebooting'
-    | 'provisioning'
+    | 'cloning'
     | 'deleting'
-    | 'migrating';
+    | 'migrating'
+    | 'offline'
+    | 'provisioning'
+    | 'rebooting'
+    | 'resizing'
+    | 'running'
+    | 'shutting_down';
 
   export interface Config {
     id: number;

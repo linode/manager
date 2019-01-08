@@ -1,5 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -12,7 +13,8 @@ import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
-import { getLinodes, restoreBackup } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
+import { restoreBackup } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -39,7 +41,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & WithStyles<ClassNames>;
 
 export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -60,8 +65,13 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
 
   componentDidMount() {
     this.mounted = true;
-    const { linodeRegion } = this.props;
-    getLinodes({ page: 1 }, { region: linodeRegion })
+    const { linodeRegion, getLinodes } = this.props;
+    getLinodes({
+      page: 1,
+      filter: {
+        region: linodeRegion,
+      },
+    })
       .then((response) => {
         if (!this.mounted) { return; }
         const linodeChoices = response.data.map((linode) => {
@@ -191,4 +201,9 @@ export class RestoreToLinodeDrawer extends React.Component<CombinedProps, State>
 
 const styled = withStyles(styles);
 
-export default styled(RestoreToLinodeDrawer);
+const enhanced = compose<CombinedProps, Props>(
+  linodeRequestsContainer,
+  styled,
+);
+
+export default enhanced(RestoreToLinodeDrawer);

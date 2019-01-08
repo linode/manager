@@ -1,11 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import linodeRequestProps from 'src/__data__/linodeRequestProps';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
-
 import { FromStackScriptContent } from './FromStackScriptContent';
 
 const mockProps = {
+  ...linodeRequestProps,
   images: [],
   regions: [],
   types: [],

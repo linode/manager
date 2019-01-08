@@ -34,6 +34,20 @@ declare interface ApplicationState {
       lastUpdated: number;
       error?: Linode.ApiFieldError[];
     },
+    volumes: {
+      results: number[];
+      entities: Linode.Volume[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
+    nodeBalancers: {
+      results: number[];
+      entities: Linode.NodeBalancer[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
     account: RequestableData<Linode.Account>
   },
   authentication: AuthState;

@@ -27,11 +27,10 @@ import TableRowError from 'src/components/TableRowError';
 import Tags from 'src/components/Tags';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
-import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
+import { getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
 import { formatRegion } from 'src/utilities';
-import { generateInFilter } from 'src/utilities/requestFilters';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import VolumesActionMenu from './VolumesActionMenu';
@@ -46,7 +45,7 @@ type ClassNames = 'root'
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
 
-  type TagClassNames = 'tagWrapper';
+type TagClassNames = 'tagWrapper';
 
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -522,11 +521,13 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
   dispatch,
 );
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect((state: ApplicationState, ownProps) => ({
+  linodes: state.__resources.linodes.entities,
+}), mapDispatchToProps);
 
 const documented = setDocs(VolumesLanding.docs);
 
-const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
+const updatedRequest = (ownProps: RouteProps & { linodes: Linode.Linode[] }, params: any, filters: any) => {
   const linodeId = path<string>(['match', 'params', 'linodeId'], ownProps);
 
   const req: (params: any, filter: any) => Promise<Linode.ResourcePage<Linode.Volume>>
@@ -541,50 +542,41 @@ const updatedRequest = (ownProps: RouteProps, params: any, filters: any) => {
       if (linodeId) {
         return Promise.resolve(volumesResponse);
       }
+
+      const { linodes } = ownProps;
+
       /*
        * Iterate over all the volumes data and find the ones that
        * have a linodeId property that is not null and create an X-Filter
        * that we can use in the getLinodes() request
        */
-      const linodeIDs = volumesResponse.data.map(volume => volume.linode_id).filter(Boolean);
-      const xFilter = generateInFilter('id', linodeIDs);
 
-      return getLinodes(undefined, xFilter)
-        .then((linodesResponse) => {
-          const volumesWithLinodeData = volumesResponse.data.map(eachVolume => {
-            /*
-             * Iterate over all the linode data and find a match between
-             * the volumes linode ID and the Linode data id. If there's a match
-             * it means that the Linode is attached to the volume and the Linode
-             * status and label needs needs to be appended to the result data
-             */
-            for (const eachLinode of linodesResponse.data) {
-              if (eachLinode.id === eachVolume.linode_id) {
-                return {
-                  ...eachVolume,
-                  linodeLabel: eachLinode.label,
-                  linodeStatus: eachLinode.status
-                }
-              }
+      const volumesWithLinodeData = volumesResponse.data.map(eachVolume => {
+        /*
+         * Iterate over all the linode data and find a match between
+         * the volumes linode ID and the Linode data id. If there's a match
+         * it means that the Linode is attached to the volume and the Linode
+         * status and label needs needs to be appended to the result data
+         */
+        for (const linode of linodes) {
+          if (linode.id === eachVolume.linode_id) {
+            return {
+              ...eachVolume,
+              linodeLabel: linode.label,
+              linodeStatus: linode.status
             }
-            /*
-             * Otherwise, this volume is not attached to a Linode
-             */
-            return eachVolume;
-          });
-
-          return {
-            ...volumesResponse,
-            data: volumesWithLinodeData,
           }
-        })
-        .catch((err) => {
-          /*
-           * If getting the Linode data fails, no problem.
-           * Just return the volumes
-           */
-          return volumesResponse;
-        });
+        }
+        /*
+         * Otherwise, this volume is not attached to a Linode
+         */
+        return eachVolume;
+      });
+
+      return {
+        ...volumesResponse,
+        data: volumesWithLinodeData,
+      }
     });
 }
 
@@ -594,11 +586,12 @@ const withEvents = WithEvents();
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, Props>(
   connected,
   documented,
   paginated,
   styled,
   withEvents,
-  withSnackbar
-)(VolumesLanding);
+  withSnackbar,
+)
+export default enhanced(VolumesLanding);

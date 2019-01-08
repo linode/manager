@@ -1,6 +1,7 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose as composeC } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -9,7 +10,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Toggle from 'src/components/Toggle';
-import { updateLinode } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 
@@ -33,7 +34,11 @@ interface State {
   errors?: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & RouteComponentProps<{}>
+  & WithStyles<ClassNames>;
 
 class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -43,9 +48,10 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   };
 
   toggleWatchdog = (e: React.ChangeEvent<HTMLElement>, value: boolean) => {
+    const {updateLinode} = this.props;
     this.setState(setSubmitting(true));
 
-    updateLinode(this.props.linodeId, { watchdog_enabled: value })
+    updateLinode({id: this.props.linodeId, watchdog_enabled: value })
       .then((response) => {
         this.setState(compose(
           setSubmitting(false),
@@ -126,8 +132,11 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
-export default compose(
+const enhanced =composeC<CombinedProps, Props>(
   errorBoundary,
   withRouter,
   styled,
-)(LinodeWatchdogPanel) as React.ComponentType<Props>;
+  linodeRequestsContainer
+);
+
+export default enhanced(LinodeWatchdogPanel);

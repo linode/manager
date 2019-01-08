@@ -2,10 +2,9 @@ import { clone } from 'ramda';
 import * as React from 'react';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
-
+import { PaginationProps } from 'src/components/Pagey';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { events$ } from 'src/events';
-
-import { getLinode } from 'src/services/linodes';
 import { getVolume } from 'src/services/volumes';
 
 export const updateVolumes$ = new Subject<boolean>();
@@ -15,7 +14,7 @@ interface State {
 }
 
 export default () => (WrappedComponent: React.ComponentType<any>) => {
-  return class extends React.Component<any, State> {
+  class Wrapper extends React.Component<PaginationProps<any> & LinodeRequests, State> {
     state: State = {
       volumes: undefined,
     }
@@ -104,10 +103,8 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
                * Linode info in the table row
                */
               if (!!volume.linode_id) {
-                return getLinode(volume.linode_id)
-                  .then((response) => {
-                    const linode = response.data;
-
+                return this.props.getLinode({ id: volume.linode_id })
+                  .then((linode) => {
                     /*
                      * Now add our new volume, include the newly attached
                      * Linode data to the master list
@@ -167,6 +164,8 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
       )
     }
   }
+
+  return linodeRequestsContainer(Wrapper as any);
 };
 
 const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {

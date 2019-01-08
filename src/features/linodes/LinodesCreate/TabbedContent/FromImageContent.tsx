@@ -11,10 +11,10 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc, { State as UserSSHKeyProps } from 'src/features/linodes/userSSHKeyHoc';
-import { createLinode } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -85,6 +85,7 @@ const errorResources = {
 
 type CombinedProps =
   & Props
+  & LinodeRequests
   & UserSSHKeyProps
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
@@ -145,7 +146,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   createNewLinode = () => {
-    const { history, userSSHKeys } = this.props;
+    const { history, userSSHKeys, createLinode } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -344,6 +345,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withSnackbar,
+  userSSHKeyHoc,
+  linodeRequestsContainer,
+);
 
 export default enhanced(FromImageContent);

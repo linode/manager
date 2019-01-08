@@ -1,13 +1,14 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { updateLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -31,7 +32,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames>;
+type CombinedProps =
+  & LinodeRequests
+  & ContextProps
+  & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -41,18 +45,14 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   };
 
   changeLabel = () => {
+    const { updateLinode } = this.props;
     this.setState(set(lensPath(['submitting']), true));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['errors']), undefined));
 
-    updateLinode(this.props.linodeId, { label: this.state.updatedValue })
+    updateLinode({ id: this.props.linodeId, label: this.state.updatedValue })
       .then(response => response)
       .then((linode) => {
-        this.props.updateLinode((existingLinode) => ({
-          ...existingLinode,
-          ...linode,
-        }));
-
         this.setState(compose(
           set(lensPath(['success']), `Linode label changed successfully.`),
           set(lensPath(['submitting']), false),
@@ -113,8 +113,11 @@ const linodeContext = withLinode((context) => ({
   updateLinode: context.update,
 }));
 
-export default compose(
+const enhanced = composeC<CombinedProps, {}>(
   errorBoundary,
   styled,
- linodeContext
-)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;
+ linodeContext,
+ linodeRequestsContainer,
+);
+
+export default enhanced(LinodeSettingsLabelPanel);

@@ -1,6 +1,5 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import * as moment from 'moment';
 import { compose, isEmpty } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -10,10 +9,10 @@ import _Option from 'react-select/lib/components/Option';
 import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import withImages from 'src/containers/withImages.container';
 import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
-import { getAllEntities } from 'src/utilities/getAll';
+import { debounce } from 'throttle-debounce';
 import SearchSuggestion from './SearchSuggestion';
+
 
 type ClassNames =
   'root'
@@ -24,7 +23,7 @@ type ClassNames =
   | 'input'
   | 'icon'
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     position: 'relative', /* for search results */
     height: 50,
@@ -129,11 +128,6 @@ type ClassNames =
 interface State {
   searchText: string;
   searchActive: boolean;
-  linodes: Linode.Linode[];
-  volumes: Linode.Volume[];
-  nodebalancers: Linode.NodeBalancer[];
-  domains: Linode.Domain[];
-  resultsLoading: boolean;
   [resource: string]: any;
   options: Item[];
   searchResults: SearchResults;
@@ -141,8 +135,8 @@ interface State {
 }
 
 type CombinedProps =
+  & WithSearch
   & WithTypesProps
-  & WithImagesProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
@@ -172,98 +166,37 @@ class SearchBar extends React.Component<CombinedProps, State> {
   selectRef = React.createRef<HTMLInputElement>();
   mounted: boolean = false;
   state: State = {
-    linodes: [],
-    volumes: [],
-    nodebalancers: [],
-    domains: [],
     searchText: '',
     searchActive: false,
-    resultsLoading: false,
     options: [],
     menuOpen: false,
-    searchResults: {...emptyResults}
+    searchResults: { ...emptyResults }
   };
 
-  lastFetch = moment.utc('1970-01-01T00:00:00');
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  dataAvailable() {
-    return (
-      this.state.linodes
-      || this.state.volumes
-      || this.state.nodebalancers
-      || this.state.domains
-    );
-  }
-
-  updateData = () => {
-    this.setState({ resultsLoading: true });
-    getAllEntities(this.setEntitiesToState);
-  }
-
-  setEntitiesToState = (
-    linodes: Linode.Linode[],
-    nodebalancers: Linode.NodeBalancer[],
-    volumes: Linode.Volume[],
-    domains: Linode.Domain[],
-  ) => {
-    if (!this.mounted) { return; }
-    this.setState({
-      linodes,
-      nodebalancers,
-      volumes,
-      domains,
-      resultsLoading: false,
-    }, this.getSearchSuggestions)
-  }
-
-  getSearchSuggestions = () => {
+  getSearchSuggestions = debounce(250, false, () => {
     const query = this.state.searchText;
-    const { imagesData, typesData } = this.props;
-    if (!this.dataAvailable() || !query) {
-      this.setState({ options: [], resultsLoading: false });
-      return;
-    };
-
-    const { linodes, volumes, domains, nodebalancers } = this.state;
+    const { typesData, images, linodes, volumes, domains, nodeBalancers } = this.props;
 
     const queryLower = query.toLowerCase();
-    const searchResults: SearchResults = searchAll(
-      linodes, volumes, nodebalancers, domains, imagesData, queryLower, typesData,
-    );
+    const results: SearchResults = searchAll(linodes, volumes, nodeBalancers, domains, images, queryLower, typesData);
 
-    /* Keep options (for the Select) and searchResults separate so that we can
-    * pass the results to the search landing page in a usable format if necessary. */
-    const options = [
-      ...searchResults.linodes,
-      ...searchResults.volumes,
-      ...searchResults.nodebalancers,
-      ...searchResults.domains,
-      ...searchResults.images
-    ];
-
-    this.setState({ searchResults, options, resultsLoading: false });
-  }
+    this.setState({
+      results,
+      options: [
+        ...results.linodes,
+        ...results.volumes,
+        ...results.nodebalancers,
+        ...results.domains,
+        ...results.images
+      ],
+    });
+  });
 
   handleSearchChange = (searchText: string): void => {
     this.setState({
       searchText,
-      resultsLoading: true,
     }, () => {
-      if (moment.utc().diff(this.lastFetch) > 60000) {
-        this.lastFetch = moment.utc();
-        // This will run getSearchSuggestions as a callback
-        this.updateData();
-      } else {
-        this.getSearchSuggestions();
-      }
+      this.getSearchSuggestions();
     });
   }
 
@@ -311,8 +244,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
-    const { searchActive, searchText, options, resultsLoading, menuOpen } = this.state;
+    const { classes, resultsLoading } = this.props;
+    const { searchActive, searchText, options, menuOpen } = this.state;
     const defaultOption = {
       label: `View search results page for "${searchText}"`,
       value: 'redirect',
@@ -391,18 +324,40 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities,
 }));
 
-interface WithImagesProps {
-  imagesData: Linode.Image[]
-  imagesLoading: boolean;
+interface WithSearch {
+  linodes: Linode.Linode[];
+  volumes: Linode.Volume[];
+  nodeBalancers: Linode.NodeBalancer[];
+  domains: Linode.Domain[];
+  images: Linode.Image[];
+  resultsLoading: boolean;
+  lastUpdated: number;
 }
 
 export default compose(
   styled,
   withTypes,
   withRouter,
-  withImages((ownProps, imagesData, imagesLoading) => ({
-    ...ownProps,
-    imagesData,
-    imagesLoading,
-  }))
+
+  connect((state: ApplicationState) => {
+    const { linodes, volumes, nodeBalancers, domains, images } = state.__resources;
+
+    return {
+      linodes: linodes.entities,
+      volumes: volumes.entities,
+      nodeBalancers: nodeBalancers.entities,
+      domains: domains.entities,
+      images: images.entities,
+      resultsLoading: linodes.loading || volumes.loading || nodeBalancers.loading || domains.loading || images.loading,
+
+      lastUpdated: [
+        linodes.lastUpdated,
+        volumes.lastUpdated,
+        nodeBalancers.lastUpdated,
+        domains.lastUpdated,
+        images.lastUpdated,
+      ].reduce((result, current) => result > current ? current : result),
+    };
+  }),
+
 )(SearchBar) as React.ComponentType<{}>;

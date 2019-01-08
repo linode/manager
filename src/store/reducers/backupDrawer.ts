@@ -4,8 +4,8 @@ import { Reducer } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
+import { updateLinodesInStore } from 'src/store/linodes/linodes.actions';
 import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
-import { updateMultipleLinodes } from 'src/store/reducers/resources/linodes';
 
 
 // HELPERS
@@ -217,7 +217,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
       }
       /** @todo */
       // dispatch(requestLinodesWithoutBackups());
-      dispatch(updateMultipleLinodes(response.success));
+      dispatch(updateLinodesInStore(response.success));
     })
     .catch(() => dispatch(
       handleEnableError([{ linodeId: 0, reason: "There was an error enabling backups." }])

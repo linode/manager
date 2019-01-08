@@ -31,6 +31,8 @@ it('renders without crashing', () => {
             userId={123456}
             profileLoading={false}
             actions={{
+              requestVolumes: jest.fn(),
+              requestNodeBalancers: jest.fn(),
               requestDomains: jest.fn(),
               requestImages: jest.fn(),
               requestLinodes: jest.fn(),

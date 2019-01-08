@@ -2,6 +2,7 @@ import { append, clone, compose, defaultTo, Lens, lensPath, map, over, pathOr, s
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -17,8 +18,8 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { withRegions } from 'src/context/regions';
-import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -48,7 +49,9 @@ interface RegionsContextProps {
   regionsLoading: boolean;
 }
 
-type CombinedProps = RegionsContextProps
+type CombinedProps =
+  & RegionsContextProps
+  & LinodeRequests
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
@@ -366,7 +369,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   )
 
   componentDidMount() {
-    getLinodes()
+    const { getLinodes } = this.props;
+
+    getLinodes({})
       .then(result => {
         const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
         const linodesWithPrivateIPs = result.data.filter((linode) => {
@@ -667,8 +672,11 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   );
 };
 
-export default compose(
+const enhanced = composeC<CombinedProps, {}>(
   regionsContext,
   styled,
   withRouter,
-)(NodeBalancerCreate);
+  linodeRequestsContainer,
+);
+
+export default enhanced(NodeBalancerCreate);

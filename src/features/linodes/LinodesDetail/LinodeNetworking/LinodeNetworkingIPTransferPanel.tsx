@@ -1,5 +1,6 @@
 import { both, compose, equals, isNil, lensPath, over, path, set, uniq, view, when } from 'ramda';
 import * as React from 'react';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -12,7 +13,7 @@ import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
-import { getLinodes } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { assignAddresses } from 'src/services/networking';
 
 type ClassNames =
@@ -106,7 +107,10 @@ interface Swap extends Move {
   selectedLinodesIPs: string[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & WithStyles<ClassNames>;
 
 class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -367,7 +371,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<CombinedProps, Sta
   }
 
   getLinodes = () => {
-    return getLinodes({}, { region: this.props.linodeRegion })
+    const {getLinodes} = this.props;
+    return getLinodes({ filter: { region: this.props.linodeRegion } })
       .then(response => ({
         ...response,
         data: response.data.filter(l => l.id !== this.props.linodeID),
@@ -531,4 +536,7 @@ const createRequestData = (state: IPRowState, region: string) => ({
 
 const styled = withStyles(styles);
 
-export default styled(LinodeNetworkingIPTransferPanel);
+const enhanced = composeC<CombinedProps, Props>(styled, linodeRequestsContainer);
+
+export default enhanced(LinodeNetworkingIPTransferPanel);
+

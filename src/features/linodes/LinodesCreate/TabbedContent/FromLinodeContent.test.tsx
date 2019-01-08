@@ -1,11 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import linodeRequestProps from 'src/__data__/linodeRequestProps';
 import { linodes } from 'src/__data__/linodes';
-
 import { FromLinodeContent } from './FromLinodeContent';
 
 const mockProps = {
+  ...linodeRequestProps,
   regions: [],
   types: [],
   getBackupsMonthlyPrice: jest.fn(),

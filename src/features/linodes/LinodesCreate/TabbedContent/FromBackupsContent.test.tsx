@@ -1,11 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import linodeRequestProps from 'src/__data__/linodeRequestProps';
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
-
 import { FromBackupsContent } from './FromBackupsContent';
 
 const mockProps = {
+  ...linodeRequestProps,
   linodes: [],
   types: [],
   accountBackups: false,
@@ -30,6 +30,7 @@ const mockProps = {
 };
 
 const mockPropsWithNotice = {
+  ...linodeRequestProps,
   notice: {
     text: 'example text',
     level: 'warning' as 'warning' | 'error',

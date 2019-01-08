@@ -1,9 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import linodeRequestProps from 'src/__data__/linodeRequestProps';
 import { FromImageContent } from './FromImageContent';
 
 const mockProps = {
+  ...linodeRequestProps,
   images: [],
   regions: [],
   types: [],

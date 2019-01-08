@@ -2,6 +2,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
+import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -11,9 +12,9 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import linodesRequestContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import { cloneLinode } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -82,6 +83,7 @@ const errorResources = {
 };
 
 type CombinedProps =
+  & LinodeRequests
   & Props
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
@@ -139,7 +141,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
   }
 
   cloneLinode = () => {
-    const { history } = this.props;
+    const { history, cloneLinode } = this.props;
     const {
       selectedRegionID,
       selectedTypeID,
@@ -152,7 +154,10 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
     this.setState({ isMakingRequest: true });
 
-    cloneLinode(selectedLinodeID!, {
+    if(!selectedLinodeID){ return; }
+
+    cloneLinode({
+      id: selectedLinodeID,
       region: selectedRegionID,
       type: selectedTypeID,
       label: label ? label : null,
@@ -329,4 +334,10 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(withSnackbar(FromLinodeContent));
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  linodesRequestContainer,
+  withSnackbar,
+);
+
+export default enhanced(FromLinodeContent);

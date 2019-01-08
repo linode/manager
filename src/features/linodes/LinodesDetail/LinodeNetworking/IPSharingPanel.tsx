@@ -1,5 +1,6 @@
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -13,7 +14,7 @@ import MenuItem from 'src/components/MenuItem';
 import RenderGuard from 'src/components/RenderGuard';
 import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
-import { getLinodes } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { shareAddresses } from 'src/services/networking';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -70,6 +71,7 @@ interface Props {
   linodeIPs: string[];
   linodeSharedIPs: string[];
   refreshIPs: () => Promise<void>;
+  updateFor: string[];
 }
 
 interface State {
@@ -84,7 +86,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+& Props
+& LinodeRequests
+& WithStyles<ClassNames>;
 
 class IPSharingPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -101,9 +106,10 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    const { linodeRegion, linodeID } = this.props;
+    const { linodeRegion, linodeID, getLinodes } = this.props;
     const choiceLabels = {}
-    getLinodes({}, { region: linodeRegion })
+
+    getLinodes({ filter: {region: linodeRegion} })
       .then(response => {
         const linodes = pathOr([], ['data'], response);
         const ipChoices = flatten<string>(
@@ -363,4 +369,10 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(IPSharingPanel));
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  RenderGuard,
+  linodeRequestsContainer,
+);
+
+export default enhanced(IPSharingPanel);

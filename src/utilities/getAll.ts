@@ -1,12 +1,20 @@
 import * as Bluebird from 'bluebird';
 import { range } from 'ramda';
-
-import { sendEvent } from 'src/utilities/analytics';
-
 import { getDomains } from 'src/services/domains';
-import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { getVolumes } from 'src/services/volumes';
+
+/**
+ * getAllEntities
+ *
+ * Uses getAll to request all instances of each type of entity and return
+ * a 2d array of the combined results.
+ *
+ * @param cb Function that will be called after all requests have completed
+ * with a 2d array of all the returned entities.
+ */
+import store from 'src/store';
+import { sendEvent } from 'src/utilities/analytics';
 
 export interface APIResponsePage<T> {
   page: number,
@@ -99,7 +107,7 @@ export const getAllFromEntity: (getter: GetFromEntity) => (params?: any, filter?
             .then(resultPages => resultPages.reduce((result, nextPage) => [...result, ...nextPage], firstPageData));
         });
     }
-const getAllLinodes = getAll<Linode.Linode>(getLinodes);
+const getAllLinodes = () => Promise.resolve(store.getState().__resources.linodes.entities);
 const getAllNodeBalancers = getAll<Linode.NodeBalancer>(getNodeBalancers);
 const getAllVolumes = getAll<Linode.Volume>(getVolumes);
 const getAllDomains = getAll<Linode.Domain>(getDomains);
@@ -111,15 +119,6 @@ export type GetAllHandler = (
   domains: Linode.Domain[],
 ) => any;
 
-/**
- * getAllEntities
- *
- * Uses getAll to request all instances of each type of entity and return
- * a 2d array of the combined results.
- *
- * @param cb Function that will be called after all requests have completed
- * with a 2d array of all the returned entities.
- */
 export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
     getAllLinodes(),

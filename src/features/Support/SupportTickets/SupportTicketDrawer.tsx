@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { compose, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -11,14 +12,13 @@ import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { getDomains } from 'src/services/domains';
-import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { reshapeFiles } from '../ticketUtils';
@@ -71,7 +71,10 @@ interface Ticket {
   summary: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeRequests
+  & WithStyles<ClassNames>;
 
 const L = {
   open: lensPath(['ticket','open']),
@@ -161,12 +164,13 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
   loadSelectedEntities = () => {
     this.setState({ loading: true });
+    const { getLinodes } = this.props;
     const entity = this.state.ticket.entity_type;
     // This is awkward but TypeScript does not like promises
     // that have different signatures.
     switch (entity) {
       case 'linode_id': {
-        getLinodes().then(this.handleThen).catch(this.handleCatch);
+        getLinodes({}).then(this.handleThen).catch(this.handleCatch);
         return;
       }
       case 'volume_id': {
@@ -478,7 +482,8 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default composeC<CombinedProps, Props>(
   styled,
   SectionErrorBoundary,
+  linodeRequestsContainer,
 )(SupportTicketDrawer);

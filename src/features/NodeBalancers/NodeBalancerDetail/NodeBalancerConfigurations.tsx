@@ -2,6 +2,7 @@ import * as Promise from 'bluebird';
 import { append, clone, compose, defaultTo, Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -11,7 +12,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
-import { getLinodes } from 'src/services/linodes';
+import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { createNodeBalancerConfig, createNodeBalancerConfigNode, deleteNodeBalancerConfig, deleteNodeBalancerConfigNode, getNodeBalancerConfigNodes, getNodeBalancerConfigs, updateNodeBalancerConfig, updateNodeBalancerConfigNode } from 'src/services/nodebalancers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
@@ -60,7 +61,8 @@ interface State {
 }
 
 type CombinedProps =
-  Props
+  & Props
+  & LinodeRequests
   & RouteProps
   & WithStyles<ClassNames>
   & PreloadedProps;
@@ -856,7 +858,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   )
 
   componentDidMount() {
-    getLinodes()
+    const { getLinodes } = this.props;
+    getLinodes({})
       .then(result => {
         const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
         const linodesWithPrivateIPs = result.data.filter((linode) => {
@@ -929,4 +932,10 @@ const preloaded = PromiseLoader<CombinedProps>({
   },
 });
 
-export default styled(withRouter(preloaded(NodeBalancerConfigurations))) as React.ComponentType<Props>;
+const enhanced = composeC<CombinedProps, Props>(
+  styled,
+  withRouter,
+  preloaded,
+  linodeRequestsContainer,
+);
+export default enhanced(NodeBalancerConfigurations);

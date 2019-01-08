@@ -15,6 +15,7 @@ import __resources, { defaultState as resourcesDefaultState } from './reducers/r
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from './reducers/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from './reducers/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from './reducers/volumeDrawer';
+import requestMiddleware from './request/request.middleware';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
@@ -49,6 +50,7 @@ const defaultState: ApplicationState = {
 const enhancers = compose(
   applyMiddleware(
     thunk,
+    requestMiddleware,
     combineEventsMiddleware(
       linodeEvents,
       imageEvents,

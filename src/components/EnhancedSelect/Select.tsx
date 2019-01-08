@@ -112,7 +112,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       borderRadius: 4,
       backgroundColor: theme.bg.lightBlue,
       alignItems: 'center',
-      
+
     },
     '& .react-select__multi-value__label': {
       color: theme.palette.text.primary,

@@ -3,6 +3,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
+import { compose as composeC } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
@@ -12,9 +13,10 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { Tag } from 'src/components/TagsInput';
+import linodesRequestContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import { createLinode, getLinodeBackups } from 'src/services/linodes';
+import { getLinodeBackups } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import getLinodeInfo from 'src/utilities/getLinodeInfo';
@@ -80,6 +82,7 @@ interface State {
 
 type CombinedProps =
   & Props
+  & LinodeRequests
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
@@ -208,7 +211,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   createLinode = () => {
-    const { history } = this.props;
+    const { history, createLinode } = this.props;
     const {
       selectedRegionID,
       selectedTypeID,
@@ -427,4 +430,10 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(withSnackbar(FromBackupsContent));
+const enhanced = composeC<CombinedProps, Props>(
+  styled,
+  withSnackbar,
+  linodesRequestContainer,
+);
+
+export default enhanced(FromBackupsContent);

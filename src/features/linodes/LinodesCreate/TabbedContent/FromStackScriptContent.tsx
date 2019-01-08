@@ -13,13 +13,13 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import linodesRequestsContainer, { LinodeRequests } from 'src/containers/linodeRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { createLinode } from 'src/services/linodes';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -75,10 +75,11 @@ interface Props {
   selectedTabFromQuery?: string;
   selectedStackScriptFromQuery?: number;
   accountBackups: boolean;
-
-  /** Comes from HOC */
-  userSSHKeys: UserSSHKeyObject[];
   handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
+}
+
+interface WithUserSSHKeys {
+  userSSHKeys: UserSSHKeyObject[];
 }
 
 interface State {
@@ -110,6 +111,8 @@ const errorResources = {
 
 type CombinedProps =
   & Props
+  & LinodeRequests
+  & WithUserSSHKeys
   & InjectedNotistackProps
   & WithStyles<ClassNames>;
 
@@ -242,7 +245,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 
   createLinode = () => {
-    const { history, userSSHKeys } = this.props;
+    const { history, userSSHKeys, createLinode } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -518,6 +521,11 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
+const enhanced = compose<CombinedProps, Props>(
+  linodesRequestsContainer,
+  styled,
+  withSnackbar,
+  userSSHKeyHoc,
+);
 
-export default enhanced(FromStackScriptContent) as any;
+export default enhanced(FromStackScriptContent);
