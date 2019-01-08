@@ -9,7 +9,7 @@ type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   bodyRow: {
-    height: 77,
+    height: 'auto',
   },
   bodyCell: {
     border: 0,
