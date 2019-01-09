@@ -1,9 +1,7 @@
 # Cloud Manager State Management
 
 # The Problem
-The API's current state requires that we have context of all entities for grouping by tags and
-searching efficiently. Additionally, due to the interdependent nature of these entities we often
-need the context of other entities for search, display, and other organizational efforts.
+The API's current state requires that we have context of all entities for grouping by tags and searching efficiently. Additionally, due to the interdependent nature of these entities we often need the context of other entities for search, display, and other organizational efforts.
 
 # The Plan
 - Create a centralized and serializable data store.
@@ -11,38 +9,30 @@ need the context of other entities for search, display, and other organizational
 - Create a pattern for making asynchronous requests to the API and updating the store with the results.
 
 ### Centralized Data Store
-Redux already exists in the project. If you're unfamiliar with it, or the Flux architecture, I recommend
-the following;
+Redux already exists in the project. If you're unfamiliar with it, or the Flux architecture, I recommend the following;
 
 #### Redux Primer
 [Flux | Application Architecture for Building User Interfaces](https://facebook.github.io/flux/)
 [Core Concepts · Redux](https://redux.js.org/introduction/core-concepts)
 
 [**Actions · Redux**](https://redux.js.org/basics/actions)
-> Actions are payloads of information that send data from your application to your store. They are
-the only source of information for the store. You send them to the store using store.dispatch().
+> Actions are payloads of information that send data from your application to your store. They are the only source of information for the store. You send them to the store using store.dispatch().
 
 [**Reducers** · Redux](https://redux.js.org/basics/reducers)
-> Reducers specify how the application's state changes in response to actions sent to the store.
-Remember that actions only describe what happened, but don't describe how the application's state changes.
+> Reducers specify how the application's state changes in response to actions sent to the store. Remember that actions only describe what happened, but don't describe how the application's state changes.
 
 [**Middleware · Redux**](https://redux.js.org/advanced/middleware)
-> It provides a third-party extension point between dispatching an action, and the moment it reaches
-the reducer. People use Redux middleware for logging, crash reporting, talking to an asynchronous API,
-routing, and more.
+> It provides a third-party extension point between dispatching an action, and the moment it reaches the reducer. People use Redux middleware for logging, crash reporting, talking to an asynchronous API, routing, and more.
 
 [**Action Creator · Redux**](https://redux.js.org/recipes/reducing-boilerplate#action-creators)
 > Action creators are functions which return a Redux action.
 
 ### Updating in response to [Events](https://developers.linode.com/api/v4#operation/getEvents)
-The Manager project is constantly injesting a stream of [events](https://developers.linode.com/api/v4#operation/getEvents)
-from the API. These events signal actions that have happened or are currently happening to an
-entity. Anytime the application receives an event from the API  we dispatch the `ADD_EVENTS` action
-with those events [\[source\]](events/events.reducer.ts#L226). The events middleware is
-comprised of entity specific functions which follow a reducer pattern. For example
-[linodes.events.ts](linodes/linodes.events.ts). This file reduces the API provided event
-to a Redux action which is dispatched. That dispatched action is what will impact the store, not the
-API event directly.
+The Manager project is constantly injesting a stream of [events](https://developers.linode.com/api/v4#operation/getEvents) from the API. These events signal actions that have happened or are currently happening to an entity.
+
+Anytime the application receives an event from the API  we dispatch the `ADD_EVENTS` action with those events [\[source\]](events/events.reducer.ts#L226). The events middleware is comprised of entity specific functions which follow a reducer pattern.
+
+For example [linodes.events.ts](linodes/linodes.events.ts). This file reduces the API provided event to a Redux action which is dispatched. That dispatched action is what will impact the store, not the API event directly.
 
 ### Pattern for Asynchronous Requests
 The pattern is for initiating and responding to asynchronous requests is straightforward;
@@ -54,20 +44,12 @@ The pattern is for initiating and responding to asynchronous requests is straigh
     4. On success dispatch the "done" action with the resulting data and the params used to make the request.
     5. On failure dispatch the "failed" action with the resulting error and the params used to make the request.
     6. The request cycle is complete and the "request action" is discarded (never dispatched).
-3. Reducers respond to the the "started", "done", and "failed" actions updating state as necessary. For
-example; The [linodes.reducer.ts](linodes/linodes.reducer.ts) is setup to respond to the
-"start", "done" and "failed".
+3. Reducers respond to the the "started", "done", and "failed" actions updating state as necessary. For example; The [linodes.reducer.ts](linodes/linodes.reducer.ts) is setup to respond to the "start", "done" and "failed".
 
 #### Actions and Action Creators
-You may have noticed in the preceeding section that we made mention of four actions per request-cycle.
-This is necesssay due to the sychronous nature of Reducers and asynchronous nature of Middleware. To
-alleviate some of this boilerplate we've created [requestActionCreatorFactory](request/request.helpers.ts#L102).
+You may have noticed in the preceeding section that we made mention of four actions per request-cycle. This is necesssay due to the sychronous nature of Reducers and asynchronous nature of Middleware. To alleviate some of this boilerplate we've created [requestActionCreatorFactory](request/request.helpers.ts#L102).
 
-The requestActionCreatorFactory will create type-safe action creators for started, done, failed and request.
-requestActionCreatorFactory is an abstraction of [actionCreatorFactory](https://github.com/aikoven/typescript-fsa/blob/master/src/index.ts#L154) and `createMeta`.
-These two functions combined produce the common shapes required to handle the entire request cycle.
-To generate the action creators, simply provide the type, action, and configuration object for the request.
-The results will be;
+The requestActionCreatorFactory will create type-safe action creators for started, done, failed and request. requestActionCreatorFactory is an abstraction of [actionCreatorFactory](https://github.com/aikoven/typescript-fsa/blob/master/src/index.ts#L154) and `createMeta`. These two functions combined produce the common shapes required to handle the entire request cycle. To generate the action creators, simply provide the type, action, and configuration object for the request.
 
 For example, to create a action creators to get a Linode;
 
@@ -126,39 +108,39 @@ if we were to write that out it would look like...
 
 
 # FAQ
-1. Why do reducers not include all start, done, and fail actions?
-> The current model is to update the data store when the request has completed. In the future, if
-needed, we could optimistically update the store using the start action, then update it with the
-done, or reset with the failed.
 
-2. How do I deal with loading state at the component level?
-> Each slice of entity state has a loading property and lastUpdated (default 0). Given a loading of
-true and a lastUpdated of 0 we know this is the first time we've loaded this data. Given a loading of
-true and a lastUpdated greater than 0, we know this is a refresh.
+
+**Why do reducers not include all start, done, and fail actions?**
+
+The current model is to update the data store when the request has completed. In the future, if needed, we could optimistically update the store using the start action, then update it with the done, or reset with the failed.
+
+
+**How do I deal with loading state at the component level?**
+
+Each slice of entity state has a loading property and lastUpdated (default 0). Given a loading of true and a lastUpdated of 0 we know this is the first time we've loaded this data. Given a loading of true and a lastUpdated greater than 0, we know this is a refresh.
+
 tldr: initialLoad = loading && lastUpdated == 0, refresh = loading && lastUpdated > 0
 
-In the event of an update, such as updating the Label of a Linode, we can await the dispatch of the
-request action.
-```ts
-// ...
-updateLabel = async () => {
-  const { linodeId } = this.props;
-  const { updatedLabel } = this.state;
+In the event of an update, such as updating the Label of a Linode, we can await the dispatch of the request action.
 
-  this.setState({ loading: true });
+  ```ts
+  // ...
+  updateLabel = async () => {
+    const { linodeId } = this.props;
+    const { updatedLabel } = this.state;
 
-try{
-    const result = await this.props.updateLinode({ id: linodeId, label: updatedLabel});
-    this.setState({ loading: false });
-  } catch(e) {
-    this.setState({ loading: false });
+    this.setState({ loading: true });
+
+  try{
+      const result = await this.props.updateLinode({ id: linodeId, label: updatedLabel});
+      this.setState({ loading: false });
+    } catch(e) {
+      this.setState({ loading: false });
+    }
   }
-}
-// ...
-```
-Note we **did not** reference the returned data in `result`. Although request.middleware.ts does supply it, it's
-best practice to reference the data from the store. It's entirely possible we just return an empty promise
-in the future to discourage mounting returned data to local state.
+  // ...
+  ```
+Note we **did not** reference the returned data in `result`. Although request.middleware.ts does supply it, it's best practice to reference the data from the store. It's entirely possible we just return an empty promise in the future to discourage mounting returned data to local state.
 
 ```ts
 /* Example only! Use reselect. */
@@ -168,6 +150,55 @@ const connected = connect(
 );
 ```
 
+
+**Why didn't you use Thunks to dispatch the services we already have?**
+
+Compare getLinode as a Thunk vs dispatchable actions.
+```ts
+import { getLinode as _getLinode } from 'src/services/linodes';
+
+export type RequestType = { id: number };
+export type ResponseType = Linode.Linode;
+export type ErrorType = Linode.ApiFieldError[];
+
+const actionCreator = actionCreatorFactory(`@@manager/linode`);
+
+export const getLinodeActions = actionCreator.sync<RequestType, ResponseType, ErrorType>(`get-one`);
+
+export const getLinode = (params: RequesType) => (dispatch, getState) => {
+  const { id } = params;
+  const { started, done, failed } = getLinodeActions;
+
+  dispatch(started({ id }));
+
+  try{
+    const result = await _getLinode(id);
+    const doneAction = done({ result, params });
+
+    dispatch(doneAction)
+    return linode;
+  } catch(error){
+    const failedAction = failed({ error, params });
+
+    dispatch(failedAction);
+    return error;
+  }
+};
+```
+
+vs
+
+```ts
+export interface GetOneRequest { id: number };
+
+export type GetOneResponse = Entity;
+
+export const getLinode = requestActionCreatorFactory<GetOneRequest, GetOneResponse, Linode.ApiFieldError[]>(
+  `linode`,
+  `get-one`,
+  { endpoint: ({ id }) => `/linode/instances/${id}`, method: 'GET' },
+);
+```
 * Actions are just messages.
 * Developers can send messages.
 * Middleware receive those message and decide to send other messages.
