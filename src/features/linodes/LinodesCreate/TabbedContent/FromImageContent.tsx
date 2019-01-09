@@ -21,6 +21,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -87,6 +88,7 @@ type CombinedProps =
   & Props
   & UserSSHKeyProps
   & InjectedNotistackProps
+  & LabelProps
   & WithStyles<ClassNames>;
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
@@ -117,10 +119,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     this.setState({ selectedTypeID: id });
   }
 
-  handleTypeLabel = (e: any) => {
-    this.setState({ label: e.target.value });
-  }
-
   handleChangeTags = (selected: Tag[]) => {
     this.setState({ tags: selected })
   }
@@ -144,13 +142,27 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     };
   }
 
+  label = () => {
+    const { selectedImageID, selectedRegionID } = this.state;;
+    const { getLabel, images } = this.props;
+
+    const selectedImage = images.find(img => img.id === selectedImageID);
+
+    // Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
+    const image = selectedImage && (selectedImage.is_public
+      ? selectedImage.vendor
+      : selectedImage.label);
+
+
+    return getLabel(image, selectedRegionID);
+  }
+
   createNewLinode = () => {
     const { history, userSSHKeys } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
       selectedTypeID,
-      label,
       password,
       backups,
       privateIP,
@@ -158,6 +170,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     } = this.state;
 
     this.setState({ isMakingRequest: true });
+
+    const label = this.label();
 
     createLinode({
       region: selectedRegionID,
@@ -204,12 +218,12 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { errors, backups, privateIP, label, selectedImageID, tags,
+    const { errors, backups, privateIP, selectedImageID, tags,
       selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
 
 
     const { accountBackups, classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo, userSSHKeys } = this.props;
+      getRegionInfo, getTypeInfo, updateCustomLabel, userSSHKeys } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -222,6 +236,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     const typeInfo = getTypeInfo(selectedTypeID);
 
     const hasBackups = backups || accountBackups;
+
+    const label = this.label();
 
     return (
       <React.Fragment>
@@ -263,7 +279,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
-              onChange: this.handleTypeLabel,
+              onChange: updateCustomLabel,
               errorText: hasErrorFor('label'),
             }}
             tagsInputProps={{
@@ -342,8 +358,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 }
 
+
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled, withSnackbar, userSSHKeyHoc);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withSnackbar,
+  userSSHKeyHoc,
+  withLabelGenerator
+);
 
 export default enhanced(FromImageContent);

@@ -27,6 +27,9 @@ const mockProps = {
   },
   enqueueSnackbar: jest.fn(),
   onPresentSnackbar: jest.fn(),
+  customLabel: '',
+  updateCustomLabel: jest.fn(),
+  getLabel: jest.fn()
 };
 
 const mockPropsWithNotice = {
@@ -55,6 +58,9 @@ const mockPropsWithNotice = {
   },
   enqueueSnackbar: jest.fn(),
   onPresentSnackbar: jest.fn(),
+  customLabel: '',
+  updateCustomLabel: jest.fn(),
+  getLabel: jest.fn()
 };
 
 describe('FromBackupsContent', () => {
