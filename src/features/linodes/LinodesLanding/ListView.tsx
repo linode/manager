@@ -14,9 +14,7 @@ interface Props {
 type CombinedProps =
   & Props
   & PaginationProps;
-
-console.log('hello worlfdsafdsfdasf')
-
+  
 export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
   const { data, openConfigDrawer, toggleConfirmation } = props;
   return (

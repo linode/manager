@@ -225,53 +225,6 @@ module.exports = {
           /**********************************************************
            * End Temporary Solution.
            **********************************************************/
-          // {
-          //   test: /\.css$/,
-          //   loader: ExtractTextPlugin.extract(
-          //     Object.assign(
-          //       {
-          //         fallback: {
-          //           loader: require.resolve('style-loader'),
-          //           options: {
-          //             hmr: false,
-          //           },
-          //         },
-          //         use: [
-          //           {
-          //             loader: require.resolve('css-loader'),
-          //             options: {
-          //               importLoaders: 1,
-          //               minimize: true,
-          //               sourceMap: shouldUseSourceMap,
-          //             },
-          //           },
-          //           {
-          //             loader: require.resolve('postcss-loader'),
-          //             options: {
-          //               // Necessary for external CSS imports to work
-          //               // https://github.com/facebookincubator/create-react-app/issues/2677
-          //               ident: 'postcss',
-          //               plugins: () => [
-          //                 require('postcss-flexbugs-fixes'),
-          //                 autoprefixer({
-          //                   browsers: [
-          //                     '>1%',
-          //                     'last 4 versions',
-          //                     'Firefox ESR',
-          //                     'not ie < 9', // React doesn't support IE8 anyway
-          //                   ],
-          //                   flexbox: 'no-2009',
-          //                 }),
-          //               ],
-          //             },
-          //           },
-          //         ],
-          //       },
-          //       extractTextPluginOptions
-          //     )
-          //   ),
-          //   // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
-          // },
           // "file" loader makes sure assets end up in the `build` folder.
           // When you `import` an asset, you get its filename.
           // This loader doesn't use a "test" so it will catch all modules
@@ -320,40 +273,6 @@ module.exports = {
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
       PUBLIC_URL: publicUrl,
     }),
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
-    // It is absolutely essential that NODE_ENV was set to production here.
-    // Otherwise React will be compiled in the very slow development mode.
-
-    // NB: commented out because this is default in webpack 4
-    // new webpack.DefinePlugin(env.stringified),
-
-    // NB: commented out because this is default in webpack 4
-    // Minify the code.
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     warnings: false,
-    //     // Disabled because of an issue with Uglify breaking seemingly valid code:
-    //     // https://github.com/facebookincubator/create-react-app/issues/2376
-    //     // Pending further investigation:
-    //     // https://github.com/mishoo/UglifyJS2/issues/2011
-    //     comparisons: false,
-    //   },
-    //   mangle: {
-    //     safari10: true,
-    //   },
-    //   output: {
-    //     comments: false,
-    //     // Turned on because emoji and regex is not minified properly using default
-    //     // https://github.com/facebookincubator/create-react-app/issues/2488
-    //     ascii_only: true,
-    //   },
-    //   sourceMap: shouldUseSourceMap,
-    // }),
-    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
-    // new ExtractTextPlugin({
-    //   filename: cssFilename,
-    // }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.

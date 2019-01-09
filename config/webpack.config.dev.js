@@ -234,11 +234,6 @@ module.exports = {
     new InterpolateHtmlPlugin(HtmlWebpackPlugin, {
       PUBLIC_URL: publicUrl,
     }),
-
-    // Add module names to factory functions so they appear in browser profiler.
-    // NB: commented out because this is default behavior in webpack 4
-    // new webpack.NamedModulesPlugin(),
-
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
     new webpack.DefinePlugin(env.stringified),
