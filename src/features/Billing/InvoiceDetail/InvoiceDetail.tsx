@@ -10,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
+import { reportException } from 'src/exceptionReporting';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { async } from 'src/store/reducers/resources/account';
@@ -91,12 +92,20 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   }
 
   printInvoice(account: Linode.Account, invoice: Linode.Invoice, items: Linode.InvoiceItem[]) {
-    const generatingResult = printInvoice(account, invoice, items);
-
     this.setState({
-      pdfGenerationError: generatingResult.status === 'failed'
+      pdfGenerationError: false
     });
-
+    try {
+      printInvoice(account, invoice, items);
+    } catch (e) {
+      reportException(
+        Error('Error while generating PDF.'),
+        e
+      );
+      this.setState({
+        pdfGenerationError: true
+      });
+    }
   }
 
   render() {

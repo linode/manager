@@ -16,6 +16,7 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { reportException } from 'src/exceptionReporting';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getPayments } from 'src/services/account';
 import { async } from 'src/store/reducers/resources/account';
@@ -113,13 +114,25 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
 
   printPayment(account: Linode.Account, item: Linode.Payment) {
-    const generatingResult = printPayment(account, item);
-
     this.setState({
       pdfGenerationError: {
-        itemId: generatingResult.status === 'failed' ? item.id : undefined
+        itemId: undefined
       }
-    })
+    });
+    try {
+      printPayment(account, item);
+    } catch (e) {
+      reportException(
+        Error('Error while generating PDF.'),
+        e
+      );
+      this.setState({
+        pdfGenerationError: {
+          itemId: item.id
+        }
+      });
+    }
+
   }
 
   renderRow = (item: Linode.Payment) => {
