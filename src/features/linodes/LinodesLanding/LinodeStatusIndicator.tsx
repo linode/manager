@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   transition: {
     position: 'relative',
-    top: 4,
+    top: 1,
     left: -1,
     '& svg': {
       animation: 'rotate 2s linear infinite',

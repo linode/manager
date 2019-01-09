@@ -11,7 +11,8 @@ type ClassNames =
   | 'noBackupText'
   | 'root'
   | 'wrapper'
-  | 'backupLink';
+  | 'backupLink'
+  | 'backupText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   icon: {
@@ -33,6 +34,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   backupLink: {
     display: 'flex'
+  },
+  backupText: {
+    whiteSpace: 'nowrap'
   }
 });
 
@@ -51,7 +55,7 @@ const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = (props) => 
       {
         mostRecentBackup ?
           (
-            <Typography variant="body1">
+            <Typography variant="body1" className={classes.backupText}>
               <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={"never"} />
             </Typography>
           )

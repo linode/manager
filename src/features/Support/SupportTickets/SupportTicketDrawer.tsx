@@ -400,7 +400,6 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           label="What is this regarding?"
           value={ticket.entity_type}
           onChange={this.handleEntityTypeChange}
-          errorText={false}
           data-qa-ticket-entity-type
         >
           <MenuItem key={'none'} value={'none'}>Choose a Product</MenuItem>

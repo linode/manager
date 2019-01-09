@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
+import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
+import domains, { defaultState as defaultDomainsState } from '../../domains/domains.reducer';
 import account, { DEFAULT_STATE as defaultAccountState } from './account';
 import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from './accountSettings';
-import domains, { defaultState as defaultDomainsState } from './domains';
 import images, { defaultState as defaultImagesState } from './images';
-import linodes, { defaultState as defaultLinodesState } from './linodes';
 import profile, { DEFAULT_STATE as defaultProfileState } from './profile';
 import types, { defaultState as defaultTypesState } from './types';
 

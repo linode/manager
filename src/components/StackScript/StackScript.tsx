@@ -13,10 +13,11 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
   return ({
     root: {
       backgroundColor: theme.color.white,
-      padding: theme.spacing.unit * 4
+      '.detailsWrapper &': {
+        padding: theme.spacing.unit * 4
+      }
     },
     deployments: {
-      color: theme.color.grey1
     },
     author: {
       marginTop: theme.spacing.unit * 2,

@@ -11,16 +11,18 @@ class ListDomains extends Page {
     get domainNameHeader() { return $('[data-qa-domain-name-header]'); }
     get domainTypeHeader() { return $('[data-qa-domain-type-header]'); }
     get domainDrawer() { return $('[data-qa-drawer]'); }
-    get domains() { return $$('[data-qa-domain-cell]'); }
-    get domainElem() { return $('[data-qa-domain-cell]'); }
+    get domainAttribute() { return 'data-qa-domain-cell'; }
+    get domains() { return $$(`[${this.domainAttribute}]`); }
+    get domainElem() { return $(`[${this.domainAttribute}]`); }
     get label() { return $('[data-qa-domain-label]'); }
     get type() { return $('[data-qa-domain-type]'); }
-
     get createSoaEmail() { return $('[data-qa-soa-email]'); }
     get createDomainName() { return $('[data-qa-domain-name]'); }
     get cloneDomainName() { return $('[data-qa-clone-name]'); }
-    get cancel() { return $(this.cancelButton.selector); }
-    get submit() { return $(this.submitButton.selector); }
+    get cancel() { return this.cancelButton; }
+    get submit() { return this.submitButton; }
+    get domainSortAtttribute() { return 'data-qa-sort-domain'; }
+    get typeSortAttribure() { return 'data-qa-sort-type'; }
 
     baseElemsDisplay(placeholder) {
         if (placeholder) {
@@ -136,6 +138,33 @@ class ListDomains extends Page {
         this.submit.click();
         this.dialogTitle.waitForVisible(constants.wait.normal, true);
         domain.waitForVisible(constants.wait.normal, true);
+    }
+
+    domainRow(domain){
+        const selector = this.domainElem.selector.replace(']','');
+        return $(`${selector}="${domain}"`);
+    }
+
+    getDomainTags(domain){
+        this.domainRow(domain).waitForVisible(constants.wait.normal);
+        return this.domainRow(domain).$$(this.tag.selector)
+            .map(tag => tag.getText());
+    }
+
+    getDomainsInTagGroup(tag){
+        return this.tagHeader(tag).$$(this.domainElem.selector)
+            .map(domain => domain.getAttribute(this.domainAttribute));
+    }
+
+    sortTableByHeader(header){
+        const selector = header.toLowerCase() === 'domain' ?  this.domainSortAtttribute : this.typeSortAttribure;
+        const start = $(`[${selector}]`).getAttribute(selector);
+        $(`[${selector}]`).$('svg').click();
+        browser.pause(1000);
+        browser.waitUntil(() => {
+            return $(`[${selector}]`).getAttribute(selector) !== start;
+        }, constants.wait.normal);
+        return $(`[${selector}]`).getAttribute(selector);
     }
 }
 
