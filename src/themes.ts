@@ -83,6 +83,7 @@ export const dark = createTheme({
     borderRow: 'rgba(0, 0, 0, 0.15)',
     tableHeaderText: '#fff',
     toggleActive: '#444',
+    diskSpaceBorder: '#222222',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,

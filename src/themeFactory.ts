@@ -164,6 +164,7 @@ const themeDefaults: ThemeOptions = {
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
     toggleActive: '#606469',
+    diskSpaceBorder: '#f4f4f4',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
