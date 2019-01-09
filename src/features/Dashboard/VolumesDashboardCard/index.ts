@@ -1,1 +1,2 @@
-export { default } from './VolumesDashboardCard';
+import VolumesDashboardCard from './VolumesDashboardCard';
+export default VolumesDashboardCard;

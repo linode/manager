@@ -2,7 +2,7 @@ import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Tag, { Props as TagProps } from 'src/components/Tag';
+import Tag, { TagProps } from 'src/components/Tag';
 
 type ClassNames = 'root';
 

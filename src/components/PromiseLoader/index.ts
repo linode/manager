@@ -1,3 +1,4 @@
 import PromiseLoader from './PromiseLoader';
-export { PromiseLoaderResponse } from './PromiseLoader';
+import { PromiseLoaderResponse as _PromiseLoaderResponse } from './PromiseLoader';
+export interface PromiseLoaderResponse<T> extends _PromiseLoaderResponse<T> { }
 export default PromiseLoader;

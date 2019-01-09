@@ -1,1 +1,2 @@
-export { default } from './BackupsDashboardCard';
+import BackupsDashboardCard from './BackupsDashboardCard';
+export default BackupsDashboardCard;

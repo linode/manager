@@ -1,1 +1,2 @@
-export { default } from './UpdateContactInformationPanel';
+import UpdateContactInformationPanel from './UpdateContactInformationPanel';
+export default UpdateContactInformationPanel;

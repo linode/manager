@@ -1,6 +1,6 @@
-export { domains } from './domains';
-export { linodes } from './linodes';
-export { images } from './images';
-export { types } from './types';
-export { LinodesWithBackups } from './LinodesWithBackups';
-export { ExtendedType } from './ExtendedType';
+export * from './domains';
+export * from './linodes';
+export * from './images';
+export * from './types';
+export * from './LinodesWithBackups';
+export * from './ExtendedType';
