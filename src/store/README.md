@@ -35,76 +35,75 @@ Anytime the application receives an event from the API  we dispatch the `ADD_EVE
 For example [linodes.events.ts](linodes/linodes.events.ts). This file reduces the API provided event to a Redux action which is dispatched. That dispatched action is what will impact the store, not the API event directly.
 
 ### Pattern for Asynchronous Requests
-The pattern is for initiating and responding to asynchronous requests is straightforward;
-1. A Redux "request" action is dispatched.
-2. The [request.middleware.ts](request/request.middleware.ts) intercepts the action.
-    1. The using the payload and meta data we create an AxiosRequestConfig.
-    2. Dispatch the "started" action associated with this request with the params used to make the request.
-    3. Make the network request.
-    4. On success dispatch the "done" action with the resulting data and the params used to make the request.
-    5. On failure dispatch the "failed" action with the resulting error and the params used to make the request.
-    6. The request cycle is complete and the "request action" is discarded (never dispatched).
-3. Reducers respond to the the "started", "done", and "failed" actions updating state as necessary. For example; The [linodes.reducer.ts](linodes/linodes.reducer.ts) is setup to respond to the "start", "done" and "failed".
+The pattern is to wrap our asynchronous requests in [Thunks>(https://github.com/reduxjs/redux-thunk). A Thunk is a dispatchable request that has the context to the data store and the ability to dispatch other actions. The request cycle looks something like this;
+    1. A component dispatches a Thunk action creator.
+    2. redux-thunk middleware intercepts the action and invokes the body of the function with dispatch and getStore arguments.
+    3. redux-thunk returns the value returned from the Thunk, which should be a Promise so the consumers can await its response.
 
-#### Actions and Action Creators
-You may have noticed in the preceeding section that we made mention of four actions per request-cycle. This is necesssay due to the sychronous nature of Reducers and asynchronous nature of Middleware. To alleviate some of this boilerplate we've created [requestActionCreatorFactory](request/request.helpers.ts#L102).
-
-The requestActionCreatorFactory will create type-safe action creators for started, done, failed and request. requestActionCreatorFactory is an abstraction of [actionCreatorFactory](https://github.com/aikoven/typescript-fsa/blob/master/src/index.ts#L154) and `createMeta`. These two functions combined produce the common shapes required to handle the entire request cycle. To generate the action creators, simply provide the type, action, and configuration object for the request.
-
-For example, to create a action creators to get a Linode;
+This system requires the asynchronous Thunk and synchronous actions. So we start by using `typescript-fsa` to generate our async action.
 
 ```ts
-  type RequestParams = { id: number };
-  type Response = Linode.Linode
-  type Error = Linode.ApiFieldError[];
+const actionCreator = actionCreatorFactory(`@@manager/linodes`);
 
-  export const getLinode = requestActionCreator(
-      `linode`,
-      `get-one`,
-      { method: 'GET', endpoint: (params: RequestParams) => `/linodes/${params.id}` },
-  );
+type Request = { page: number; page_size: number; filter?: any };
+
+type Response = Linode.ResourcePage<Linode.Linode[]>;
+
+type Error = Linode.ApiFieldError[];
+
+const getLinodesPageActions = actionCreator.async<Request, Response, Error>(`get-page`);
 ```
 
-if we were to write that out it would look like...
+When then create our Thunk and dispatch those actions at the appropriate times.
+
 ```ts
-  type RequestParams = { id: number };
-  type Response = Linode.Linode
-  type Error = Linode.ApiFieldError[];
-  type SuccessType = { result: Response; params: RequestParams };
-  type FailType = { error: Error; params: RequestParams };
+const getLinodesPage = (params: GetLinodesRequest) => async (dispatch, getStore) => {
+  const { started, done, failed }  = getLinodesPageActions;
 
-  const type: `@@manager/linode/get-one`;
+  try {
+    /** Await the request **/
+    const paginatedResponse = await _getLinodes(params);
 
-  const started: (payload: RequestParams) => ({
-    type: `${type}_STARTED`,
-    payload: { id: payload.id }
-  });
+    /** Dispatch the resulting data and the original params. **/
+    dispatch(done({ result: paginatedResponse, params }));
 
-  const done: (payload: SuccessType) => ({
-    type: `${type}_DONE`,
-    payload,
-  });
+    /** Return the resolution, allowing consumers to await. **/
+    return paginatedResponse;
+  } catch(error) {
+    /** Dispatch the error, including the original request params. **/
+    dispatch(failed({ error, params }));
 
-  const failed: (payload: FailType) => ({
-    type: `${type}_FAILED`,
-    isError: true,
-    payload,
-  });
-
-  const request: (payload: RequestParams) => ({
-    type: `${type}`,
-    payload,
-    meta: {
-      __request: {
-        method: 'GET',
-        endpoint: (params: RequestParams) => `/linodes/${params.id}`,
-        actions: [started, done, failed],
-      },
-    },
-  });
-
-  export const getLinode = { type, started, done, failed, request };
+    /** Return the resolution, allowing the consumers to awai. **/
+    return error;
+  }
+};
 ```
+
+This pattern is so common, we've created an abstraction for it called createRequestThunk. It requires the actions object created by `typescrip-fsa`, and function that maps the params to an asynchronous request.
+```ts
+export const getLinodesPage = createRequestThunk(
+  getLinodesPageActions,
+  ({ page, page_size, filter }) => _getLinodes({ page, page_size }, filter),
+);
+```
+
+Now, when we need to get a page of Linodes;
+```ts
+/* Example only! Use reselect. */
+import { connect } from 'react-redux';
+import {getLinodesPage} from 'src/store/linodes/linodes.request';
+
+const MyComponent = ({ getLinodesPage }) => {
+  const onClick = () => getLinodesPage({page: 1, page_size: 25, filter: { region: 'us-east' }});
+
+  return (<button onClick={onClick}>Get Linodes!</button>);
+};
+
+export default connect(undefined, { getLinodesPage })(MyComponent);
+
+```
+
+#### Thunks, Actions, and Boilerplate
 
 
 # FAQ
@@ -121,84 +120,65 @@ Each slice of entity state has a loading property and lastUpdated (default 0). G
 
 tldr: initialLoad = loading && lastUpdated == 0, refresh = loading && lastUpdated > 0
 
-In the event of an update, such as updating the Label of a Linode, we can await the dispatch of the request action.
+Contrived example assuming an initial Redux state of `{ linodes: [] }`  for your pleasure;
+```jsx
+/**
+ * The state shape is an example, not actual. Additionally we should be using reselect selectors to
+ * select the data we need efficiently.
+ */
 
-  ```ts
-  // ...
-  updateLabel = async () => {
-    const { linodeId } = this.props;
-    const { updatedLabel } = this.state;
+import { connect } from 'react-redux';
+import { updateLinode } from 'src/store/linodes/linodes.request';
 
-    this.setState({ loading: true });
-
-  try{
-      const result = await this.props.updateLinode({ id: linodeId, label: updatedLabel});
-      this.setState({ loading: false });
-    } catch(e) {
-      this.setState({ loading: false });
-    }
+class MyComponent extends Component {
+  state = {
+    loading: false,
+    error: undefined,
   }
-  // ...
-  ```
-Note we **did not** reference the returned data in `result`. Although request.middleware.ts does supply it, it's best practice to reference the data from the store. It's entirely possible we just return an empty promise in the future to discourage mounting returned data to local state.
 
-```ts
-/* Example only! Use reselect. */
-const connected = connect(
-  (state, ownProps) => state.__resources.linodes.find(id => ownProps.linodeId),
-  { updateLinode },
-);
-```
+  onClick = () => {
+    this.setState({ loading: true });
+    try {
+      await getLinodesPage({page: 1, page_size: 25, filter: { region: 'us-east' }});
+      this.setState({ loading: false });
+    } catch(error) {
+      this.setState({ error, loading: false });
+    }
+  };
 
-
-**Why didn't you use Thunks to dispatch the services we already have?**
-
-Compare getLinode as a Thunk vs dispatchable actions.
-```ts
-import { getLinode as _getLinode } from 'src/services/linodes';
-
-export type RequestType = { id: number };
-export type ResponseType = Linode.Linode;
-export type ErrorType = Linode.ApiFieldError[];
-
-const actionCreator = actionCreatorFactory(`@@manager/linode`);
-
-export const getLinodeActions = actionCreator.sync<RequestType, ResponseType, ErrorType>(`get-one`);
-
-export const getLinode = (params: RequesType) => (dispatch, getState) => {
-  const { id } = params;
-  const { started, done, failed } = getLinodeActions;
-
-  dispatch(started({ id }));
-
-  try{
-    const result = await _getLinode(id);
-    const doneAction = done({ result, params });
-
-    dispatch(doneAction)
-    return linode;
-  } catch(error){
-    const failedAction = failed({ error, params });
-
-    dispatch(failedAction);
-    return error;
+  render(){
+      return (
+      <div>
+        <button onClick={this.onClick}>Get Linodes!</button>
+        { error && <span>{error}</span>}
+        { loading && <LoadingBar />}
+        { !loading && (
+          <table>
+          {
+            linodes.map(linode => (
+              <tr>
+                <td>{linode.label}</td>
+              </tr>
+            ))
+          }
+        </table>
+        ) }
+      </div>
+    );
   }
 };
+
+const mapState = state => ({ linodes: state.linodes });
+
+const mapDispatch = { getLinodesPage }
+
+export default connect(mapState, mapDispatch)(MyComponent);
+
 ```
+Note we **did not** reference the returned data in `result`. Although `redux-thunk` does supply it, it's best practice to reference the data from the store. It's entirely possible we just return an empty promise in the future to discourage mounting returned data to local state.
 
-vs
+This example is not our actual state. Our actual state includes loading and error alongside the data. So this usecase is unrealistic. A realisic example would be an update event where you would display an indicator of progress await the update.
 
-```ts
-export interface GetOneRequest { id: number };
-
-export type GetOneResponse = Entity;
-
-export const getLinode = requestActionCreatorFactory<GetOneRequest, GetOneResponse, Linode.ApiFieldError[]>(
-  `linode`,
-  `get-one`,
-  { endpoint: ({ id }) => `/linode/instances/${id}`, method: 'GET' },
-);
-```
 * Actions are just messages.
 * Developers can send messages.
 * Middleware receive those message and decide to send other messages.
