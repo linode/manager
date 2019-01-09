@@ -1,9 +1,8 @@
 import { compose, equals, uniqWith } from 'ramda';
 import { Dispatch, Middleware } from 'redux';
 import { resetEventsPolling } from 'src/events';
-import { isEntityEvent, isInProgressEvent } from 'src/store/reducers/events';
+import { addEvents, isEntityEvent, isInProgressEvent } from 'src/store/events/events.reducer';
 import { isType } from 'typescript-fsa';
-import { addEvents } from '../reducers/events';
 
 
 export type EventHandler = (event: Linode.EntityEvent, dispatch: Dispatch<any>) => void;

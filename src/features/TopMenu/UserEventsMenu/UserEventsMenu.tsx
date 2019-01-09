@@ -3,7 +3,7 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import ListItem from 'src/components/core/ListItem';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import { async } from 'src/store/reducers/events';
+import { async } from 'src/store/events/events.reducer';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 

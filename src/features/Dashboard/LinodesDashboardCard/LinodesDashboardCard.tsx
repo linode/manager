@@ -17,7 +17,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { displayType } from 'src/features/linodes/presentation';
-import { isEntityEvent, isInProgressEvent } from 'src/store/reducers/events';
+import { isEntityEvent, isInProgressEvent } from 'src/store/events/events.reducer';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =

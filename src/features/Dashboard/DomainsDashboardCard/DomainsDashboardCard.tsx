@@ -13,7 +13,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { isEntityEvent, isInProgressEvent } from 'src/store/reducers/events';
+import { isEntityEvent, isInProgressEvent } from 'src/store/events/events.reducer';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =

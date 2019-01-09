@@ -9,7 +9,7 @@ import reducer, {
   mostRecentCreated,
   setDeletedEvents,
   updateInProgressEvents,
-} from './events';
+} from './events.reducer';
 
 describe('events', () => {
   describe('reducer', () => {
