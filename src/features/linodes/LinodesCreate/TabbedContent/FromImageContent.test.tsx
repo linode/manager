@@ -26,6 +26,9 @@ const mockProps = {
   },
   enqueueSnackbar: jest.fn(),
   onPresentSnackbar: jest.fn(),
+  updateCustomLabel: jest.fn(),
+  getLabel: jest.fn(),
+  customLabel: ''
 };
 
 describe('FromImageContent', () => {
