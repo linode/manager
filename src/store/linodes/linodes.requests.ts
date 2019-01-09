@@ -1,37 +1,24 @@
 import { range } from 'ramda';
-import { CreateLinodeSchema } from 'src/services/linodes/linode.schema';
-import { requestActionCreatorFactory } from 'src/store/request/request.helpers';
+import { cloneLinode as _cloneLinode, createLinode as _createLinode, CreateLinodeRequest, deleteLinode as _deleteLinode, getLinode as _getLinode, getLinodes as _getLinodes, LinodeCloneData, updateLinode as _updateLinode } from 'src/services/linodes';
+import { createRequestThunk } from 'src/store/request/request.helpers';
 import { Action } from 'typescript-fsa';
+import { ThunkAction } from '../../../node_modules/redux-thunk';
 import { actionCreator } from './linodes.actions';
 
 type Entity = Linode.Linode;
 
-/** Create */
-export interface CreateRequest {
-  type: string | null;
-  region: string | null;
-  stackscript_id?: number;
-  backup_id?: number;
-  swap_size?: number;
-  image?: string | null;
-  root_pass?: string | null;
-  authorized_keys?: string[];
-  backups_enabled?: boolean;
-  stackscript_data?: any;
-  booted?: boolean;
-  label: string | null;
-  tags?: string[];
-  private_ip?: boolean;
-  authorized_users?: string[];
-}
+/**
+ * Create
+ */
+export type CreateLinodeResponse = Entity;
 
-export type CreateResponse = Entity;
+export const createLinodeActions = actionCreator.async<CreateLinodeRequest, CreateLinodeResponse, Linode.ApiFieldError[]>(`create`);
 
-export const createLinode = requestActionCreatorFactory<CreateRequest, CreateResponse, Linode.ApiFieldError[]>(
-  `linode`,
-  `create`,
-  { endpoint: () => `/linode/instances`, method: 'POST', validationSchema: CreateLinodeSchema },
+export const createLinode = createRequestThunk(
+  createLinodeActions,
+  (data) => _createLinode(data),
 );
+
 
 /**
  * Get Linode
@@ -40,46 +27,35 @@ export interface GetOneRequest { id: number };
 
 export type GetOneResponse = Entity;
 
-export const getLinode = requestActionCreatorFactory<GetOneRequest, GetOneResponse, Linode.ApiFieldError[]>(
-  `linode`,
-  `get-one`,
-  { endpoint: ({ id }) => `/linode/instances/${id}`, method: 'GET' },
-);
+export const getLinodeActions = actionCreator.async<GetOneRequest, GetOneResponse, Linode.ApiFieldError[]>(`get-one`);
+
+export const getLinode = createRequestThunk(
+  getLinodeActions,
+  ({ id }) => _getLinode(id).then((response) => response.data),
+)
 
 /**
  * Update Linode
  */
-export interface UpdateRequest {
-  id: number;
-  label: string | null;
-  tags?: string[];
-  alerts: Linode.LinodeAlerts;
-  backups: {
-    schedule: Linode.LinodeBackupSchedule;
-  };
-  watchdog_enabled: boolean;
-}
+export type UpdateRequest = Partial<Entity> & { id: number };
 
 export type UpdateResponse = Entity;
 
-export const updateLinode = requestActionCreatorFactory<UpdateRequest, UpdateResponse, Linode.ApiFieldError[]>(
-  'linode',
-  'update',
-  { endpoint: ({ id }) => `/linode/instances/${id}`, method: 'PUT' },
-);
+export const updateLinodeActions = actionCreator.async<UpdateRequest, UpdateResponse, Linode.ApiFieldError[]>('update');
+
+export const updateLinode = createRequestThunk(
+  updateLinodeActions,
+  ({ id, ...rest }) => _updateLinode(id, rest)
+)
 
 /**
  * Delete Linode
  */
 export interface DeleteRequest { id: number };
 
-export type DeleteResponse = DeleteRequest;
+export const deleteLinodeActions = actionCreator.async<DeleteRequest, {}, Linode.ApiFieldError[]>(`delete`);
 
-export const deleteLinode = requestActionCreatorFactory<DeleteRequest, DeleteResponse, Linode.ApiFieldError[]>(
-  `linode`,
-  `delete`,
-  { endpoint: ({ id }) => `/linode/instances/${id}`, method: 'DELETE' },
-);
+export const deleteLinode = createRequestThunk(deleteLinodeActions, ({ id }) => _deleteLinode(id));
 
 /**
  * Get Linodes
@@ -92,62 +68,61 @@ export interface GetPageRequest {
 
 export type GetPageResponse = Linode.ResourcePage<Entity>;
 
-export const getLinodesPage = requestActionCreatorFactory<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(
-  `linode`,
-  `get-page`,
-  { endpoint: () => `/linode/instances`, method: 'GET' },
+export const getLinodesPageActions = actionCreator.async<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(`get-page`);
+
+
+export const getLinodesPage = createRequestThunk(
+  getLinodesPageActions,
+  ({ page, page_size, filter }) => _getLinodes({ page, page_size }, filter),
 );
 
 /**
  * Clone Linode
  */
-export interface CloneRequest {
+export interface CloneRequest extends LinodeCloneData {
   id: number;
-  linode_id?: string;
-  region?: string | null;
-  type?: string | null;
-  label?: string | null;
-  backups_enabled?: boolean | null;
-  tags?: string[] | null;
 }
 
 export type CloneResponse = Entity;
 
-export const cloneLinode = requestActionCreatorFactory<CloneRequest, CloneResponse, Linode.ApiFieldError[]>(
-  `linode`,
-  `clone`,
-  { endpoint: ({ id }) => `/linode/instances/${id}/clone`, method: 'POST' },
-);
+export const cloneLinodeActions = actionCreator.async<CloneRequest, CloneResponse, Linode.ApiFieldError[]>(`clone`);
+
+export const clondeLinode = createRequestThunk(
+  cloneLinodeActions,
+  ({ id, ...rest }) => _cloneLinode(id, rest)
+)
 
 /**
  * Get all Linoes.
  */
-export const getAllLinodes = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
+type ThunkResult<R> = ThunkAction<R, ApplicationState, undefined>;
+
+export const getAllLinodesActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
 export const requestAllLinodes = (
   page: number = 1,
   prevData: Entity[] = [],
-) => async (dispatch: (action: Action<any>) => Promise<Linode.ResourcePage<Entity>>) => {
-  dispatch(getAllLinodes.started());
+) => async (dispatch: (action: Action<any> | ThunkResult<Promise<Linode.Linode[]>>) => Promise<Linode.ResourcePage<Entity>>) => {
+  dispatch(getAllLinodesActions.started());
 
   try {
-    const requestAction = getLinodesPage.request({ page, page_size: 100 });
-    const { data, pages } = await dispatch(requestAction);
+    const { data, pages } = await dispatch(getLinodesPage({ page, page_size: 100 }));
 
     const mergedData = [...prevData, ...data];
 
     if (page === pages) {
-      const doneAction = getAllLinodes.done({ result: mergedData });
+      const doneAction = getAllLinodesActions.done({ result: mergedData });
       return dispatch(doneAction);
     }
 
     if (page < pages) {
       const r = range(page + 1, pages + 1);
-      const requests = r.map((nextPage) => dispatch(getLinodesPage.request({ page: nextPage, page_size: 100 })));
+
+      const requests = r.map((nextPage) => dispatch(getLinodesPage({ page: nextPage, page_size: 100 })));
 
       const results = await Promise.all(requests);
 
-      const doneAction = getAllLinodes.done({
+      const doneAction = getAllLinodesActions.done({
         result: results.reduce((result, response) => [...result, ...response.data], data),
       });
 
@@ -157,6 +132,6 @@ export const requestAllLinodes = (
     return;
 
   } catch (error) {
-    return dispatch(getAllLinodes.failed({ error }));
+    return dispatch(getAllLinodesActions.failed({ error }));
   }
 };

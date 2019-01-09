@@ -26,13 +26,13 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { getRegions } from 'src/services/misc';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestAllLinodes } from 'src/store/linodes/linodes.requests';
-import { requestAllNodeBalancers } from 'src/store/nodeBalancers/nodeBalancers.request';
+import { getAllNodeBalancers } from 'src/store/nodeBalancers/nodeBalancers.request';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
-import { requestAllVolumes } from 'src/store/volumes/volumes.requests';
+import { getAllVolumes } from 'src/store/volumes/volumes.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -392,7 +392,7 @@ interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
   return {
     actions: {
-      requestNodeBalancers: () => dispatch(requestAllNodeBalancers()),
+      requestNodeBalancers: () => dispatch(getAllNodeBalancers()),
       requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(imagesAsync.requestImages()),
       requestLinodes: () => dispatch(requestAllLinodes()),
@@ -400,7 +400,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
-      requestVolumes: () => dispatch(requestAllVolumes()),
+      requestVolumes: () => dispatch(getAllVolumes()),
     }
   };
 };

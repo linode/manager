@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { getAllNodeBalancers } from "src/store/nodeBalancers/nodeBalancers.request";
+import { getAllNodeBalancersActions } from "src/store/nodeBalancers/nodeBalancers.request";
 import { isType } from 'typescript-fsa';
 import { createDefaultState, onGetAllSuccess, onStart } from '../request/request.helpers';
 
@@ -14,16 +14,16 @@ export const defaultState: State = createDefaultState();
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  if(isType(action, getAllNodeBalancers.started)){
+  if(isType(action, getAllNodeBalancersActions.started)){
     return onStart(state);
   }
 
-  if(isType(action, getAllNodeBalancers.done)){
+  if(isType(action, getAllNodeBalancersActions.done)){
     const {result} = action.payload;
     return onGetAllSuccess(result, state);
   }
 
-  if(isType(action, getAllNodeBalancers.failed)){}
+  if(isType(action, getAllNodeBalancersActions.failed)){}
 
   return state;
 };

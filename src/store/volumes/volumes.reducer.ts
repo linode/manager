@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { getAllVolumes } from "src/store/volumes/volumes.requests";
+import { getAllVolumesActions } from "src/store/volumes/volumes.requests";
 import { isType } from 'typescript-fsa';
 import { createDefaultState, onGetAllSuccess, onStart } from '../request/request.helpers';
 
@@ -14,16 +14,16 @@ export const defaultState: State = createDefaultState();
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  if(isType(action, getAllVolumes.started)){
+  if(isType(action, getAllVolumesActions.started)){
     return onStart(state);
   }
 
-  if(isType(action, getAllVolumes.done)){
+  if(isType(action, getAllVolumesActions.done)){
     const {result} = action.payload;
     return onGetAllSuccess(result, state);
   }
 
-  if(isType(action, getAllVolumes.failed)){}
+  if(isType(action, getAllVolumesActions.failed)){}
 
   return state;
 };

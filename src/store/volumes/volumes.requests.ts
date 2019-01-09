@@ -1,13 +1,13 @@
 import { range } from 'ramda';
-import { requestActionCreatorFactory } from 'src/store/request/request.helpers';
+import { getVolumes as _getVolumes } from 'src/services/volumes';
+import { createRequestThunk } from 'src/store/request/request.helpers';
 import { Action } from 'typescript-fsa';
 import { actionCreator } from './volumes.actions';
-
 
 type Entity = Linode.Volume;
 
 /**
- * Get Volumes page
+ * Get page.
  */
 export interface GetPageRequest {
   page?: number;
@@ -17,10 +17,11 @@ export interface GetPageRequest {
 
 export type GetPageResponse = Linode.ResourcePage<Entity>;
 
-export const getVolumePage = requestActionCreatorFactory<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(
-  `volume`,
-  `get-page`,
-  { endpoint: () => `/volumes`, method: 'GET' },
+export const getVolumePageActions = actionCreator.async<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(`get-page`);
+
+export const getVolumePage = createRequestThunk(
+  getVolumePageActions,
+  ({ page, page_size, filter }) => _getVolumes({ page, page_size }, filter),
 );
 
 
@@ -28,32 +29,32 @@ export const getVolumePage = requestActionCreatorFactory<GetPageRequest, GetPage
  * Get all.
  */
 
-export const getAllVolumes = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
+export const getAllVolumesActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const requestAllVolumes = (
+export const getAllVolumes = (
   page: number = 1,
   prevData: Entity[] = [],
 ) => async (dispatch: (action: Action<any>) => Promise<Linode.ResourcePage<Entity>>) => {
-  dispatch(getAllVolumes.started());
+  dispatch(getAllVolumesActions.started());
 
   try {
-    const requestAction = getVolumePage.request({ page, page_size: 100 });
+    const requestAction = getVolumePage({ page, page_size: 100 });
     const { data, pages } = await dispatch(requestAction);
 
     const mergedData = [...prevData, ...data];
 
     if (page === pages) {
-      const doneAction = getAllVolumes.done({ result: mergedData });
+      const doneAction = getAllVolumesActions.done({ result: mergedData });
       return dispatch(doneAction);
     }
 
     if (page < pages) {
       const r = range(page + 1, pages + 1);
-      const requests = r.map((nextPage) => dispatch(getVolumePage.request({ page: nextPage, page_size: 100 })));
+      const requests = r.map((nextPage) => dispatch(getVolumePage({ page: nextPage, page_size: 100 })));
 
       const results = await Promise.all(requests);
 
-      const doneAction = getAllVolumes.done({
+      const doneAction = getAllVolumesActions.done({
         result: results.reduce((result, response) => [...result, ...response.data], data),
       });
 
@@ -63,6 +64,6 @@ export const requestAllVolumes = (
     return;
 
   } catch (error) {
-    return dispatch(getAllVolumes.failed({ error }));
+    return dispatch(getAllVolumesActions.failed({ error }));
   }
 };

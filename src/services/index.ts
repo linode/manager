@@ -77,7 +77,7 @@ export const setData = <T>(
  * Attempt to convert a Yup error to our pattern. The only magic here is the recursive call
  * to itself since we have nested structures (think NodeBalacners).
  */
-export const convertYupToLinodeErrors = (validationError: ValidationError): Linode.ApiFieldError[] => {
+const convertYupToLinodeErrors = (validationError: ValidationError): Linode.ApiFieldError[] => {
   const { inner } = validationError;
 
   /** If aggregate errors */

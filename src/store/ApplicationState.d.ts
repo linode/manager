@@ -2,6 +2,7 @@ declare interface ExtendedEvent extends Linode.Event {
   _deleted?: string;
   _initial?: boolean;
 }
+
 declare interface ApplicationState {
   __resources: {
     profile: RequestableData<Linode.Profile>,

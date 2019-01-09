@@ -62,7 +62,7 @@ const handleLinodeMigrate = (dispatch: Dispatch<any>, status: Linode.EventStatus
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(getLinode.request({ id }));
+      dispatch(getLinode({ id }));
 
     case 'scheduled':
     case 'started':
@@ -77,7 +77,7 @@ const handleLinodeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, 
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(getLinode.request({ id }));
+      dispatch(getLinode({ id }));
 
     case 'scheduled':
     case 'started':
@@ -92,7 +92,7 @@ const handleLinodeShutdown = (dispatch: Dispatch<any>, status: Linode.EventStatu
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(getLinode.request({ id }));
+      dispatch(getLinode({ id }));
 
     case 'scheduled':
     case 'started':
@@ -107,7 +107,7 @@ const handleLinodeReboot = (dispatch: Dispatch<any>, status: Linode.EventStatus,
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(getLinode.request({ id }));
+      dispatch(getLinode({ id }));
 
     case 'scheduled':
     case 'started':
@@ -122,7 +122,7 @@ const handleLinodeBoot = (dispatch: Dispatch<any>, status: Linode.EventStatus, i
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(getLinode.request({ id }));
+      dispatch(getLinode({ id }));
 
     case 'scheduled':
     case 'started':
@@ -137,7 +137,7 @@ const handleLinodeResize = (dispatch: Dispatch<any>, status: Linode.EventStatus,
   switch (status) {
     case 'failed':
     case 'finished':
-      dispatch(getLinode.request({ id }));
+      dispatch(getLinode({ id }));
 
     case 'scheduled':
     case 'started':
@@ -155,7 +155,7 @@ const handleLinodeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     case 'notification':
     case 'scheduled':
     case 'started':
-      return dispatch(getLinode.request({ id }));
+      return dispatch(getLinode({ id }));
 
     default:
       return;
@@ -183,7 +183,7 @@ const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
     case 'notification':
     case 'scheduled':
     case 'started':
-      return dispatch(getLinode.request({ id }));
+      return dispatch(getLinode({ id }));
 
     default:
       return;

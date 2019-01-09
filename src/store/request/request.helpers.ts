@@ -1,18 +1,8 @@
 import { adjust } from 'ramda';
+import { ActionCreator, Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import updateOrAdd from "src/utilities/updateOrAdd";
-import { actionCreatorFactory } from 'typescript-fsa';
-import { ObjectSchema } from 'yup';
-
-interface MetaConfig<Params, T = {}> {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE'
-  actions: any[];
-  endpoint: string | ((v: Params) => string);
-  validationSchema?: ObjectSchema<T>;
-}
-
-interface Meta<P> {
-  __request: MetaConfig<P>;
-}
+import { AsyncActionCreators } from 'typescript-fsa';
 
 interface State<T extends { id: number }> {
   entities: T[];
@@ -21,13 +11,6 @@ interface State<T extends { id: number }> {
   loading: boolean;
   results: number[];
 }
-
-export const createMeta = <P>(actions: { started: any; done: any; failed: any }, obj: Omit<MetaConfig<P>, 'actions'>): Meta<P> => ({
-  __request: {
-    ...obj,
-    actions: [actions.started, actions.done, actions.failed],
-  }
-});
 
 export const onStart = <S>(state: S) => Object.assign({}, state, { loading: true });
 
@@ -98,40 +81,27 @@ export const updateInPlace = <E extends { id: number }>(id: number, update: (v: 
     results: updated.map((e) => e.id),
   }
 };
-import { ActionCreator, AsyncActionCreators } from 'typescript-fsa';
 
-interface RequestActionCreators<Req, Res, Err> extends AsyncActionCreators<Req, Res, Err> {
-  request: ActionCreator<Req>;
-}
+type ThunkResult<R> = ThunkAction<R, ApplicationState, undefined>;
 
-export const requestActionCreatorFactory = <Req, Res, Err>(
+export const createRequestThunk = <Req, Res, Err>(
+  actions: AsyncActionCreators<Req, Res, Err>,
+  request: (params: Req) => Promise<Res>,
+): ActionCreator<ThunkResult<any>> => (params: Req) => async (dispatch, getState) => {
+  const { started, done, failed } = actions;
 
-  /**
-   * The entity serves no special purpose other than generating the action types.
-   */
-  entity: string,
+  started(params);
 
-  /**
-   * The action serves no special purpose other than generating the request action type.
-   */
-  action: string,
+  try {
+    const result = await request(params);
+    const doneAction = done({ result, params });
 
-  /**
-   * The options, in combination with the payload from the dispatched request action, are used to
-   * generate the config AxiosRequestConfig object.
-   */
-  options: Omit<MetaConfig<Req>, 'actions'>
-): RequestActionCreators<Req, Res, Err> => {
-  const type = `@@manager/${entity}`;
-  const actionCreator = actionCreatorFactory(type);
-  const actions = actionCreator.async<Req, Res, Err>(action);
-  const meta = createMeta<Req>(actions, options);
+    dispatch(doneAction);
+    return result;
+  } catch (error) {
+    const failAction = failed({ error, params });
 
-  return {
-    type,
-    failed: actions.failed,
-    done: actions.done,
-    started: actions.started,
-    request: actionCreator<Req>(`${action}`, meta),
+    dispatch(failAction);
+    return error;
   }
-}
+};
