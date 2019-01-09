@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { pathOr, sort } from 'ramda';
+import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { Order } from 'src/components/Pagey';
 import { isArray } from 'util';
@@ -32,24 +32,35 @@ export const sortData = (orderBy: string, order: Order) =>
     */
 
     // Get target column for each object, and then sort based on data type
-    const aValue = pathOr(0, [orderBy], a);
-    const bValue = pathOr(0, [orderBy], b);
+
+    /** 
+     * special case for sorting by ipv4 
+     * if the orderBy property contains an array index, include it in
+     * the pathOr below. See "label="ipv4[0]" in SortableTableHead.tsx
+     */
+    let orderByProp;
+    if (orderBy.includes('[')) {
+      orderByProp = splitAt(orderBy.indexOf('['), orderBy) // will end up like ['ipv4', '[0]']
+        .map(eachValue => (eachValue.includes('['))
+          /** if the element has square brackets, remove them and convert to a number */
+          ? +eachValue.replace(/[\[\]']+/g, '')
+          : eachValue)
+    }
+    /** basically, if orderByProp exists, do a pathOr with that insteead */
+    const aValue = pathOr(0, (!!orderByProp) ? orderByProp : [orderBy], a);
+    const bValue = pathOr(0, (!!orderByProp) ? orderByProp : [orderBy], b);
 
     if (isArray(aValue) && isArray(bValue)) {
-      console.log('by array length')
       return sortByArrayLength(aValue, bValue, order)
     }
 
     if (isValidDate(aValue) && isValidDate(bValue)) {
-      console.log('by date');
       return sortByUTFDate(aValue, bValue, order)
     }
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      console.log('by string');
       return sortByString(aValue, bValue, order)
     }
-    console.log('by number')
     return sortByNumber(aValue, bValue, order)
   })
 
