@@ -98,20 +98,40 @@ export const updateInPlace = <E extends { id: number }>(id: number, update: (v: 
     results: updated.map((e) => e.id),
   }
 };
+import { ActionCreator, AsyncActionCreators } from 'typescript-fsa';
 
-export const requestActionCreatorFactory = <Request, Response, Error>(
-  type: string,
+interface RequestActionCreators<Req, Res, Err> extends AsyncActionCreators<Req, Res, Err> {
+  request: ActionCreator<Req>;
+}
+
+export const requestActionCreatorFactory = <Req, Res, Err>(
+
+  /**
+   * The entity serves no special purpose other than generating the action types.
+   */
+  entity: string,
+
+  /**
+   * The action serves no special purpose other than generating the request action type.
+   */
   action: string,
-  options: Omit<MetaConfig<Request>, 'actions'>
-) => {
-  const actionCreator = actionCreatorFactory(`@@manager/${type}`);
-  const actions = actionCreator.async<Request, Response, Error>(action);
-  const meta = createMeta<Request>(actions, options);
+
+  /**
+   * The options, in combination with the payload from the dispatched request action, are used to
+   * generate the config AxiosRequestConfig object.
+   */
+  options: Omit<MetaConfig<Req>, 'actions'>
+): RequestActionCreators<Req, Res, Err> => {
+  const type = `@@manager/${entity}`;
+  const actionCreator = actionCreatorFactory(type);
+  const actions = actionCreator.async<Req, Res, Err>(action);
+  const meta = createMeta<Req>(actions, options);
 
   return {
+    type,
     failed: actions.failed,
     done: actions.done,
     started: actions.started,
-    request: actionCreator<Request>(`${action}`, meta),
+    request: actionCreator<Req>(`${action}`, meta),
   }
 }
