@@ -27,7 +27,7 @@ const formatLinode = (linode: Linode.Linode, types: Linode.LinodeType[], images:
       ),
       icon: 'LinodeIcon',
       path: `/linodes/${linode.id}`,
-      searchText: '',
+      searchText: '', // @todo update this, either here or in the consumer. Probably in the consumer.
       created: linode.created,
       region: linode.region,
       status: linode.status,
