@@ -5,30 +5,13 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import PaginationControls from './PaginationControls';
 
-const getFirstPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-first]`);
 const getPreviousPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-previous]`);
 const getNextPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-next]`);
-const getLastPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-last]`);
 const getNumberPageButton = (page: string, wrapper: ReactWrapper) =>
   wrapper.find(`WithStyles(PageButton)[data-qa-page-to=${page}]`);
 
 
 describe('PaginationControls', () => {
-  it('should have a first page button.', () => {
-    const wrapper = mount(
-      <LinodeThemeWrapper>
-        <PaginationControls
-          onClickHandler={jest.fn()}
-          count={100}
-          page={1}
-          pageSize={25}
-        />
-      </LinodeThemeWrapper>,
-    );
-    const first = getFirstPageButton(wrapper);
-    expect(first).toHaveLength(1);
-  });
-
   it('should have a previous page button.', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
@@ -59,7 +42,7 @@ describe('PaginationControls', () => {
     expect(next).toHaveLength(1);
   });
 
-  it('should have a last page button.', () => {
+  it('previous page button should be disabled when on first page', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
@@ -70,30 +53,11 @@ describe('PaginationControls', () => {
         />
       </LinodeThemeWrapper>,
     );
-    const last = getLastPageButton(wrapper);
-    expect(last).toHaveLength(1);
-  });
-
-  it('first page and previous page button should be disabled when on first page', () => {
-    const wrapper = mount(
-      <LinodeThemeWrapper>
-        <PaginationControls
-          onClickHandler={jest.fn()}
-          count={100}
-          page={1}
-          pageSize={25}
-        />
-      </LinodeThemeWrapper>,
-    );
-
-    const first = getFirstPageButton(wrapper);
     const previous = getPreviousPageButton(wrapper);
-
-    expect(first.prop('disabled')).toBeTruthy();
     expect(previous.prop('disabled')).toBeTruthy();
   });
 
-  it('next page and last page button should be disabled when on last page', () => {
+  it('next page button should be disabled when on last page', () => {
     const wrapper = mount(
       <LinodeThemeWrapper>
         <PaginationControls
@@ -105,10 +69,7 @@ describe('PaginationControls', () => {
       </LinodeThemeWrapper>,
     );
 
-    const last = getLastPageButton(wrapper);
     const next = getNextPageButton(wrapper);
-
-    expect(last.prop('disabled')).toBeTruthy();
     expect(next.prop('disabled')).toBeTruthy();
   });
 

@@ -1,15 +1,26 @@
 import * as React from 'react';
 
-import FirstPage from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPage from '@material-ui/icons/LastPage';
 
-import Hidden from 'src/components/core/Hidden';
 import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendEvent } from 'src/utilities/analytics';
 
 import PageNumbers from './PageNumbers';
+
+import { StyleRulesCallback, withStyles } from 'src/components/core/styles';
+
+type CSSClasses = 'root';
+
+const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+});
+
+const styled = withStyles<CSSClasses>(styles);
 
 interface Props {
   count: number;
@@ -17,6 +28,7 @@ interface Props {
   pageSize: number;
   eventCategory?: string;
   onClickHandler: (page?: number) => void;
+  classes: any;
 }
 
 export class PaginationControls extends React.Component<Props, {}> {
@@ -73,19 +85,13 @@ export class PaginationControls extends React.Component<Props, {}> {
 
   render() {
     /** API paging starts at 1. Don't they know arrays starts at 0? */
-    const { count, page, pageSize, } = this.props;
+    const { count, page, pageSize, classes } = this.props;
     const numPages = calNumOfPages(count, pageSize);
     const disableHead = page === 1;
     const disableTail = page >= numPages;
 
     return (
-      <div>
-        <Hidden xsDown>
-          <PageButton data-qa-page-first onClick={this.handleFirstPageClick} disabled={disableHead} aria-label="First Page" >
-            <FirstPage />
-          </PageButton>
-        </Hidden>
-
+      <div className={classes.root}>
         <PageButton data-qa-page-previous onClick={this.handlePreviousPageClick} disabled={disableHead} aria-label="Previous Page" >
           <KeyboardArrowLeft />
         </PageButton>
@@ -97,19 +103,13 @@ export class PaginationControls extends React.Component<Props, {}> {
         <PageButton data-qa-page-next onClick={this.handleNextPageClick} disabled={disableTail} aria-label="Next Page" >
           <KeyboardArrowRight />
         </PageButton>
-
-        <Hidden xsDown>
-          <PageButton data-qa-page-last onClick={this.handleLastPageClick} disabled={disableTail} aria-label="Last Page" >
-            <LastPage />
-          </PageButton>
-        </Hidden>
-      </div >
+      </div>
     );
   }
 
 };
 
-export default PaginationControls;
+export default styled(PaginationControls);
 
 /**
  * 

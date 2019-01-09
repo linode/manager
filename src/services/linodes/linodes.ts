@@ -1,13 +1,8 @@
 import { API_ROOT } from 'src/constants';
 import store from 'src/store';
-import {actions} from 'src/store/reducers/resources/linodes';
-
+import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
-
-import {
-  CreateLinodeSchema,
-  UpdateLinodeSchema,
-} from './linode.schema';
+import { CreateLinodeSchema, UpdateLinodeSchema } from './linode.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Linode = Linode.Linode;
@@ -124,7 +119,7 @@ export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
   )
     .then(response => response.data)
     .then(linode => {
-      store.dispatch(actions.updateLinode(linode))
+      store.dispatch(upsertLinode(linode))
       return linode;
     });
 

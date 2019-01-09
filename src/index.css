@@ -82,6 +82,7 @@ body {
     padding: 5px !important;
     border-bottom: 1px solid #f4f4f4 !important;
     color: #000 !important;
+    background-color: #fff !important;
   }
   
   td > span:last-child {

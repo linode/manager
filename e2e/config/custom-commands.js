@@ -16,6 +16,7 @@ const {
     getGlobalSettings,
     createVolume,
     getLinodeImage,
+    createDomain,
 } = require('../setup/setup');
 
 const {
@@ -75,8 +76,8 @@ exports.browserCommands = () => {
         return token;
     });
 
-    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[], type=undefined, region=undefined) {
-        return createLinode(token, password, linodeLabel, tags, type, region)
+    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[], type, region, group) {
+        return createLinode(token, password, linodeLabel, tags, type, region, group)
             .then(res => res)
             .catch(err => err);
     });
@@ -220,6 +221,11 @@ exports.browserCommands = () => {
 
     browser.addCommand('getLinodeImage', function async(token,imageId) {
         return getLinodeImage(token,imageId)
+            .then(res => res);
+    });
+
+    browser.addCommand('createDomain', function async(token,type,domain,tags,group) {
+        return createDomain(token,type,domain,tags,group)
             .then(res => res);
     });
 }
