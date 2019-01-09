@@ -1,0 +1,58 @@
+version: '3.1'
+services:
+  selenium:
+    image: selenium/hub:3.13.0-argon
+  chrome:
+    image: selenium/node-chrome:3.13.0-argon
+    volumes:
+      - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium
+      - HUB_PORT_4444_TCP_PORT=4444
+      - SCREEN_HEIGHT=1080
+      - SCREEN_WIDTH=1600
+    depends_on:
+      - selenium
+  imposter:
+    build:
+      context: .
+      dockerfile: Dockerfile-visual-regression-data
+    depends_on:
+      - chrome
+  manager-local:
+    environment:
+      - HTTPS=true
+      - REACT_APP_APP_ROOT=https://manager-local:3000
+      - REACT_APP_LOGIN_ROOT=https://login.linode.com
+      - REACT_APP_CLIENT_ID=8e117503496dd81bdc47
+      - REACT_APP_API_ROOT=http://imposter:8088/v4
+      - REACT_APP_ALGOLIA_APPLICATION_ID=KGUN8FAIPF
+      - REACT_APP_ALGOLIA_SEARCH_KEY=d4847002cd30392fe0fbd00a1da933ed
+      - REACT_APP_TEST_ENVIRONMENT=true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ['/src/scripts/start_manager.sh']
+    depends_on:
+      - imposter
+  manager-e2e:
+    environment:
+      - DOCKER=true
+      - REACT_APP_APP_ROOT=https://manager-local:3000
+      - REACT_APP_API_ROOT=http://imposter:8088/v4
+      - MANAGER_USER=prod-test-010
+      - MANAGER_PASS=S83oz1kawzR03LGe81nbcziHFFXxuJV6
+      - MANAGER_USER_2=prod-test-012
+      - MANAGER_PASS_2=S83oz1kawzR03LGe81nbcziHFFXxuJV6
+      - MANAGER_OAUTH=c34fb621bbbc21cc4dc5d4b308debda5380303c7a058192123b2c2030eb9600a
+      - MANAGER_OAUTH_2=fa3e363f8473a5dfb8525733a3353134a59340d24f8abd3761a4051dc8d8c2e2
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./e2e/test-results:/src/e2e/test-results
+      - ./e2e/html-results:/src/e2e/html-results
+      - ./e2e/visual-regression/baseline:/src/e2e/visual-regression/baseline
+    entrypoint: [./scripts/visual-regression-entrypoint.sh]
+    depends_on:
+      - manager-local

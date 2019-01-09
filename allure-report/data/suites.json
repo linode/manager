@@ -1,0 +1,141 @@
+{
+  "uid" : "98d3104e051c652961429bf95fa0b5d6",
+  "name" : "suites",
+  "children" : [ {
+    "name" : "Dashboard Visual Regression",
+    "children" : [ {
+      "name" : "Top Menu - Create Button, Search, Profile Avatar, Notification",
+      "uid" : "40387e7392c8f4be",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052284430,
+        "stop" : 1547052284815,
+        "duration" : 385
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Side Bar Navigation",
+      "uid" : "a8b03b1fcf7d2c2e",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052284821,
+        "stop" : 1547052285145,
+        "duration" : 324
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Dashboard Header",
+      "uid" : "90e340b614b231e3",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052285146,
+        "stop" : 1547052285475,
+        "duration" : 329
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Linodes Card",
+      "uid" : "992b7765a91981b9",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052285477,
+        "stop" : 1547052285812,
+        "duration" : 335
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Volumes Card",
+      "uid" : "a0ae20009c62b90c",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052285812,
+        "stop" : 1547052286182,
+        "duration" : 370
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Domains Card",
+      "uid" : "ed85d4aea34f47c1",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052286183,
+        "stop" : 1547052286501,
+        "duration" : 318
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "NodeBalancers Card",
+      "uid" : "bd5a355107bbd99b",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052286502,
+        "stop" : 1547052286827,
+        "duration" : 325
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Monthly Transer Card",
+      "uid" : "274e24c299a5a345",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052286828,
+        "stop" : 1547052287143,
+        "duration" : 315
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Back Up Your Data Card",
+      "uid" : "62400ca85fe32f0d",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052287143,
+        "stop" : 1547052287471,
+        "duration" : 328
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Import Display Groups as Tags Card",
+      "uid" : "34792a9892e74250",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052287471,
+        "stop" : 1547052287792,
+        "duration" : 321
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    }, {
+      "name" : "Blog Card",
+      "uid" : "87b2b254eb573dfd",
+      "parentUid" : "bc96225c3c2a88aa2bee9b714c46950e",
+      "status" : "failed",
+      "time" : {
+        "start" : 1547052287792,
+        "stop" : 1547052288113,
+        "duration" : 321
+      },
+      "flaky" : true,
+      "parameters" : [ "chrome" ]
+    } ],
+    "uid" : "bc96225c3c2a88aa2bee9b714c46950e"
+  } ]
+}

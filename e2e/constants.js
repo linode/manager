@@ -12,7 +12,7 @@ exports.constants = {
 	},
 	routes: {
 		storybook: '/',
-		dashboard: '/',
+		dashboard: '/dashboard',
 		create: {
 			linode: '/linodes/create',
 			nodebalancer: '/nodebalancers/create',

@@ -29,6 +29,10 @@ yargs
           }).option('d', {
             alias: ['delete', 'rm'],
             describe: 'Remove all mocks from Mountebank',
+          }).option('h', {
+            alias: ['host'],
+            describe: 'Mountebank host if not localhost',
+            default: 'localhost',
           }).option('base', {
             describe: 'API Base Url',
             default: 'https://api.linode.com/v4',
@@ -44,25 +48,25 @@ yargs
         }
 
         if (argv.r) {
-            return loadProxyImposter(proxyConfig);
+            return loadProxyImposter(proxyConfig,argv.h);
         }
 
         if (argv.s) {
-            getImposters(false, `src/__data__/mocks/${argv.save}`);
-            return promptAndSanitize(`src/__data__/mocks/${argv.save}`);
+            getImposters(false, `src/__data__/mocks/${argv.save}`,argv.h);
+            return promptAndSanitize(`src/__data__/mocks/${argv.save}`,argv.h);
         }
 
         if (argv.l) {
+            console.log(argv.h);
             const configFile = readFileSync(`src/__data__/mocks/${argv.config}`);
-            return loadImposter(JSON.parse(configFile));
+            return loadImposter(JSON.parse(configFile),argv.h);
         }
 
         if (argv.d) {
-            return deleteImposters();
+            return deleteImposters(argv.h);
         }
 
     }
   )
   .help()
   .argv
-

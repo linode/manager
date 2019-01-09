@@ -1,0 +1,7 @@
+[ {
+  "values" : [ "{\"browserName\":\"chrome\",\"maxInstances\":5,\"acceptSslCerts\":true,\"acceptInsecureCerts\":true,\"chromeOptions\":{\"args\":[\"--no-sandbox\",\"--disable-dev-shm-usage\",\"--window-size=1600,1080\",\"--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36 WebdriverIO\"]},\"os\":\"Windows\",\"os_version\":\"10\",\"browser\":\"Chrome\",\"browser_version\":\"68.0\",\"resolution\":\"1440x900\"}" ],
+  "name" : "capabilities"
+}, {
+  "values" : [ "[\"/src/e2e/visual-regression/specs/dashboard.visual.spec.js\"]" ],
+  "name" : "spec files"
+} ]

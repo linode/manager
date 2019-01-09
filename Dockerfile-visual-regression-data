@@ -1,0 +1,11 @@
+FROM node:8.11.2-stretch
+
+COPY src/__data__/mocks/. /data
+
+RUN apt-get update
+RUN npm install -g mountebank
+
+EXPOSE 8088
+EXPOSE 2525
+
+CMD mb --configfile data/visual-regression.json

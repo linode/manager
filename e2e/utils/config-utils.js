@@ -44,13 +44,13 @@ exports.readToken = (username) => {
 */
 exports.login = (username, password, credFilePath) => {
     let loginButton,letsGoButton;
+    browser.url(constants.routes.dashboard);
 
-    browser.url(constants.routes.linodes);
     try {
         browser.waitForVisible('#username', constants.wait.long);
     } catch (err) {
+        console.log(err);
         console.log(browser.getSource());
-
     }
 
     browser.waitForVisible('#password', constants.wait.long);
@@ -65,6 +65,8 @@ exports.login = (username, password, credFilePath) => {
             return browser.isExisting('[data-qa-add-new-menu-button]') || browser.getUrl().includes('oauth/authorize');
         }, constants.wait.normal);
     } catch (err) {
+        console.log('taking screenshot!');
+        browser.saveViewportScreenshot('./e2e/visual-regression/baseline/failed-login.png');
         console.log('failed to login!');
         if (browser.getText('.alert').includes('This field is required.')) {
             browser.trySetValue('#password', password);
@@ -76,6 +78,7 @@ exports.login = (username, password, credFilePath) => {
         browser.click('.btn.btn-primary');
     }
 
+    browser.saveViewportScreenshot('./e2e/visual-regression/baseline/after-login.png');
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
 
     if (browser.waitForVisible('[role="dialog"]')) {

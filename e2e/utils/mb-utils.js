@@ -2,6 +2,8 @@ const { writeFileSync, readFileSync } = require('fs');
 const axios = require('axios');
 const inquirer = require('inquirer');
 
+let host;
+
 const proxyImposter = config => {
     const imposter = {
         "port": config.imposterPort,
@@ -17,7 +19,7 @@ const proxyImposter = config => {
                     "mode": "proxyAlways",
                     "predicateGenerators": [{
                         "matches": {
-                            "method": true, 
+                            "method": true,
                             "path": true,
                             "query": true,
                             "body": true
@@ -36,9 +38,9 @@ const proxyImposter = config => {
         imposter["key"] = config.key;
         imposter["cert"] = config.cert;
     }
-    
-    /*  If mutual auth is true, the server will request a client certificate. 
-    *   Since the goal is simply to virtualize a server requiring mutual auth, 
+
+    /*  If mutual auth is true, the server will request a client certificate.
+    *   Since the goal is simply to virtualize a server requiring mutual auth,
     *   invalid certificates will not be rejected.
     */
     if (config.hasOwnProperty('mutualAuth')) {
@@ -48,11 +50,13 @@ const proxyImposter = config => {
     return imposter;
 }
 
-const instance = axios.create({
-    baseURL: 'http://localhost:2525',
-    timeout: 5000,
-    headers: {'Content-Type': 'application/json'}
-});
+const instance = (host) => {
+    return axios.create({
+        baseURL: `http://${host}:2525`,
+        timeout: 5000,
+        headers: {'Content-Type': 'application/json'}
+    });
+};
 
 const mountebankEndpoint = '/imposters?replayable=true';
 
@@ -61,11 +65,11 @@ const mountebankEndpoint = '/imposters?replayable=true';
 * @param { Object } imposter Imposter object
 * @returns { Promise } Resolves with response data
 */
-exports.loadProxyImposter = (proxyConfig) => {
+exports.loadProxyImposter = (proxyConfig,host) => {
     return new Promise((resolve, reject) => {
         const imposterObject = proxyImposter(proxyConfig);
 
-        instance.post(mountebankEndpoint, imposterObject)
+        instance(host).post(mountebankEndpoint, imposterObject)
             .then(response => resolve(response.data))
             .catch(error => reject(console.error(error)));
     });
@@ -76,9 +80,9 @@ exports.loadProxyImposter = (proxyConfig) => {
 * @param { Object } imposter Imposter object
 * @returns { Promise } Resolves with response data
 */
-exports.loadImposter = (imposter) => {
+exports.loadImposter = (imposter,host) => {
     return new Promise((resolve, reject) => {
-        instance.put(mountebankEndpoint, imposter)
+        instance(host).put(mountebankEndpoint, imposter)
             .then(response => resolve(response.data))
             .catch(error => reject(console.error(error)));
     });
@@ -90,14 +94,14 @@ exports.loadImposter = (imposter) => {
 * @param { String } file filepath and filename to save imposters.
 * @returns { Promise } Resolves writing response data to file
 */
-exports.getImposters = (removeProxies, file) => {
+exports.getImposters = (removeProxies, file, host) => {
     return new Promise((resolve, reject) => {
         const removeProxyParam = '&removeProxies=true';
 
-        instance.get(removeProxies ? mountebankEndpoint + removeProxyParam : mountebankEndpoint)
+        instance(host).get(removeProxies ? mountebankEndpoint + removeProxyParam : mountebankEndpoint)
             .then(response => {
                 if (!removeProxies) {
-                    // Move proxies to the last array 
+                    // Move proxies to the last array
                     const stubsArray = response.data.imposters[0].stubs;
                     stubsArray.push(stubsArray.shift());
                 }
@@ -112,10 +116,10 @@ exports.getImposters = (removeProxies, file) => {
 * Sends a DELETE request to remove all imposters from mountebank
 * @returns { Promise } Resolves with response data
 */
-exports.deleteImposters = () => {
+exports.deleteImposters = (host) => {
     return new Promise((resolve, reject) => {
         const impostersEndPoint = '/imposters';
-        instance.delete(impostersEndPoint)
+        instance(host).delete(impostersEndPoint)
             .then(response => resolve(response.data))
             .catch(error => reject(console.error(error)));
     });
