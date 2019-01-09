@@ -9,6 +9,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import Notice from 'src/components/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { async } from 'src/store/reducers/resources/account';
@@ -39,6 +40,7 @@ interface State {
   items?: Linode.InvoiceItem[];
   loading: boolean;
   errors?: Linode.ApiFieldError[];
+  pdfGenerationError: boolean
 }
 
 type CombinedProps = RouteComponentProps<{ invoiceId: number }>
@@ -49,6 +51,7 @@ type CombinedProps = RouteComponentProps<{ invoiceId: number }>
 class InvoiceDetail extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
+    pdfGenerationError: false
   };
 
   mounted: boolean = false;
@@ -87,9 +90,18 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
+  printInvoice(account: Linode.Account, invoice: Linode.Invoice, items: Linode.InvoiceItem[]) {
+    const generatingResult = printInvoice(account, invoice, items);
+
+    this.setState({
+      pdfGenerationError: generatingResult.status === 'failed'
+    });
+
+  }
+
   render() {
     const { classes, data } = this.props;
-    const { invoice, loading, errors, items } = this.state;
+    const { invoice, loading, errors, items, pdfGenerationError } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -105,7 +117,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 {invoice && <Typography role="header" variant="h2" data-qa-invoice-id>Invoice #{invoice.id}</Typography>}
               </Grid>
               <Grid item className={classes.titleWrapper} data-qa-printable-invoice>
-                {data && invoice && items && <Button type="primary" target="_blank" onClick={() => printInvoice(data, invoice, items)}>Download PDF</Button>}
+                {data && invoice && items && <Button type="primary" target="_blank" onClick={() => this.printInvoice(data, invoice, items)}>Download PDF</Button>}
               </Grid>
               <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography role="header" variant="h2" data-qa-total={invoice.total}>Total ${Number(invoice.total).toFixed(2)}</Typography>}
@@ -113,6 +125,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           <Grid item xs={12}>
+            {pdfGenerationError && <Notice error={true} text="Failed generating PDF." />}
             <InvoiceTable loading={loading} items={items} errors={errors} />
           </Grid>
           <Grid item xs={12}>

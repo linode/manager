@@ -1,5 +1,6 @@
 import * as jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
+import { reportException } from 'src/exceptionReporting';
 import formatDate from 'src/utilities/formatDate'
 import LinodeLogo from './LinodeLogo';
 
@@ -204,9 +205,20 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
   
     addTotalAmount();
   
-    doc.save(`invoice-${date}.pdf`);    
+    doc.save(`invoice-${date}.pdf`);  
+    
+    return {
+      status: 'success'
+    }
   } catch (e) {
-    console.error(e);
+    reportException(
+      Error('Error while generating PDF.'),
+      e
+    );
+    return {
+      status: 'failed',
+      error: e
+    }
   }
 }
 
@@ -271,9 +283,18 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
     addTotalAmount();
     
     doc.save(`payment-${date}.pdf`);    
+    return {
+      status: 'success'
+    }
   } catch (e) {
-    console.error(e);
+    reportException(
+      Error('Error while generating PDF.'),
+      e
+    );
+    return {
+      status: 'failed',
+      error: e
+    }
   }
-
 }
 
