@@ -36,7 +36,6 @@ const styles: StyleRulesCallback = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   drawerContent: {
-    marginBottom: theme.spacing.unit * 2,
   },
   button: {
     minWidth: 'auto',
@@ -93,7 +92,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
           </Button>
         </Grid>
       </Grid>
-      {children}
+      <div className={classes.drawerContent}>{children}</div>
     </Drawer>
   );
 };

@@ -23,10 +23,10 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { requestDomains } from 'src/store/domains/domains.actions';
+import { requestLinodes } from 'src/store/linodes/linodes.actions';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { async as imagesAsync } from 'src/store/reducers/resources/images';
-import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
 import { requestRegions } from 'src/store/regions/regions.actions';
@@ -351,7 +351,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
     actions: {
       requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(imagesAsync.requestImages()),
-      requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
+      requestLinodes: () => dispatch(requestLinodes()),
       requestNotifications: () => dispatch(requestNotifications()),
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),

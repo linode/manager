@@ -6,12 +6,13 @@ type CSSClasses = 'root';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
-    backgroundColor: theme.bg.offWhiteDT,
+    backgroundColor: theme.bg.white,
     border: '1px solid ' + `${theme.color.borderPagination}`,
+    borderRight: 0,
     padding: theme.spacing.unit,
     minWidth: 40,
     height: 40,
-    color: theme.palette.text.primary,
+    color: theme.palette.primary.main,
     [theme.breakpoints.down('xs')]: {
       minWidth: 27,
       height: 30,
@@ -36,6 +37,10 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       backgroundColor: theme.palette.primary.main,
       color: '#fff',
     },
+    '&:disabled': {
+      backgroundColor: theme.bg.main,
+      color: theme.color.black,
+    }
   },
 });
 
@@ -48,7 +53,8 @@ const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((p
   const { classes, children, ...rest } = props;
 
   return (
-    <Button className={classes.root} {...rest}>
+    <Button 
+    className={classes.root} {...rest}>
       {children}
     </Button>
   );

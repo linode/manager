@@ -2,8 +2,8 @@ import { pathOr } from 'ramda';
 import { Reducer } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { getImages } from "src/services/images";
-import { findAndReplaceOrAppend } from 'src/utilities/findAndReplace';
 import { getAll } from "src/utilities/getAll";
+import updateOrAdd from 'src/utilities/updateOrAdd';
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 
@@ -95,7 +95,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, addOrUpdateImage)) {
     const { payload } = action;
-    const updated = findAndReplaceOrAppend(state.entities, payload);
+    const updated = updateOrAdd(payload, state.entities);
     return {
       ...state,
       entities: updated,

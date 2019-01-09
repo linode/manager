@@ -6,19 +6,22 @@ import { OrderByProps } from 'src/components/OrderBy';
 import Table from 'src/components/Table';
 import SortableTableHead from './SortableTableHead';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'paperWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  paperWrapper: {
+    backgroundColor: 'transparent',
+  }
 });
 
 type CombinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
 const DomainsTableWrapper: React.StatelessComponent<CombinedProps> = (props) => {
-  const { order, orderBy, handleOrderChange } = props;
+  const { order, orderBy, handleOrderChange, classes } = props;
 
   return (
-    <Paper>
+    <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
           <Table arial-label="List of Linodes">

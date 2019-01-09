@@ -4,20 +4,26 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'label';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  label: {
+    '& span': {
+      fontSize: '1rem',
+    },
+  }
 });
 
 interface Props {
   mode: string;
-  onChange: () => void
+  onChange: () => void;
+  classes: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ mode, onChange }) => {
+const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ mode, onChange, classes }) => {
 
   return (
     <RadioGroup
@@ -27,8 +33,8 @@ const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ mode, on
       onChange={onChange}
       data-qa-mode-radio-group
     >
-      <FormControlLabel value="creating_for_linode" label="Create and Attach Volume" control={<Radio />} data-qa-radio="Create and Attach Volume"/>
-      <FormControlLabel value="attaching" label="Attach Existing Volume" control={<Radio />} data-qa-radio="Attach Existing Volume"/>
+      <FormControlLabel className={classes.label} value="creating_for_linode" label="Create and Attach Volume" control={<Radio />} data-qa-radio="Create and Attach Volume"/>
+      <FormControlLabel className={classes.label} value="attaching" label="Attach Existing Volume" control={<Radio />} data-qa-radio="Attach Existing Volume"/>
     </RadioGroup>
   );
 };

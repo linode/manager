@@ -30,13 +30,18 @@ import { sendEvent } from 'src/utilities/analytics';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames = 'root'
+  | 'titleWrapper'
   | 'title'
   | 'domain'
   | 'tagWrapper'
-  | 'domainRow';
+  | 'domainRow'
+  | 'tagGroup';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  titleWrapper: {
+    flex: 1,
+  },
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
@@ -52,6 +57,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       cursor: 'pointer',
     },
   },
+  tagGroup: {
+    flexDirection: 'row-reverse',
+    marginBottom: theme.spacing.unit -2,
+  }
 });
 
 interface State {
@@ -186,21 +195,24 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <FormControlLabel
-          control={
-            <Toggle
-              className={(this.props.groupByTag ? ' checked' : ' unchecked')}
-              onChange={(e, checked) => this.props.toggleGroupByTag(checked)}
-              checked={this.props.groupByTag} />
-          }
-          label="Group by Tag:"
-        />
         <DocumentTitleSegment segment="Domains" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
-          <Grid item>
+          <Grid item className={classes.titleWrapper}>
             <Typography role="header" variant="h1" data-qa-title className={classes.title}>
               Domains
-                    </Typography>
+            </Typography>
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              className={classes.tagGroup}
+              control={
+                <Toggle
+                  className={(this.props.groupByTag ? ' checked' : ' unchecked')}
+                  onChange={(e, checked) => this.props.toggleGroupByTag(checked)}
+                  checked={this.props.groupByTag} />
+                  }
+                  label="Group by Tag:"
+              />
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end" style={{ width: 'auto' }}>

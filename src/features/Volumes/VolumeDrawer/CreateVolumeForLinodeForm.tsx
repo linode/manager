@@ -98,7 +98,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <ModeSelection mode={modes.CREATING_FOR_LINODE} onChange={() => { actions.switchToAttaching() }} />
 
-            <Typography variant="body1" className={props.classes.textWrapper} data-qa-volume-attach-help>
+            <Typography variant="body1" className={props.classes.textWrapper} data-qa-volume-attach-help style={{ marginTop: 24 }}>
               {`This volume will be immediately scheduled for attachment to ${linodeLabel} and available to other Linodes in the ${linodeRegion} data-center.`}
             </Typography>
 
