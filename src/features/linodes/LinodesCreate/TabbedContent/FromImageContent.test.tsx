@@ -52,6 +52,34 @@ describe('FromImageContent', () => {
     />,
   );
 
+  const componentWithImages = shallow(
+    <FromImageContent
+      handleDisablePasswordField={jest.fn()}
+      classes={{ root: '', main: '', sidebar: '' }}
+      {...mockProps}
+      images={[{
+        id: 'linode/ubuntu18.10',
+        label: '',
+        description: null,
+        created: '',
+        type: '',
+        is_public: true,
+        size: 1,
+        created_by: null,
+        vendor: null,
+        deprecated: false }
+      ]}
+    />,
+  );
+
+  it('should default to Ubuntu 18.10 as the selected image', () => {
+    expect(componentWithImages.state().selectedImageID).toBe('linode/ubuntu18.10');
+  });
+
+  it('should set selectedImageID to null when initial state (from history or default) is not in images', () => {
+    expect(component.state().selectedImageID).toBe(null);
+  });
+
   it('should render a notice when passed a Notice prop', () => {
     expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
   });
