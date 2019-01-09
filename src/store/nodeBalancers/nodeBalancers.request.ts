@@ -18,7 +18,7 @@ export interface GetPageRequest {
 export type GetPageResponse = Linode.ResourcePage<Entity>;
 
 export const getNodeBalancerPage = requestActionCreatorFactory<GetPageRequest, GetPageResponse, Linode.ApiFieldError[]>(
-  `volume`,
+  `nodeBalancer`,
   `get-page`,
   { endpoint: () => `/nodebalancers`, method: 'GET' },
 );
