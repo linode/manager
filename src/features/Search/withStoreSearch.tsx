@@ -44,7 +44,7 @@ export default () => (Component: React.ComponentType<any>) => {
   const connected = connect(
     (state: ApplicationState) => {
       return {
-        entities: getSearchEntities(state),
+        entities: getSearchEntities(state.__resources),
       }
     }
   );

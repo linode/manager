@@ -11,6 +11,8 @@ export interface SearchResults {
   images: Item[];
 }
 
+type State = ApplicationState['__resources'];
+
 const formatLinode = (linode: Linode.Linode, types: Linode.LinodeType[], images: Linode.Image[]): Item =>
   ({
     label: linode.label,
@@ -91,15 +93,15 @@ const nodeBalToItem = (nodebal: Linode.NodeBalancer) => ({
   }
 });
 
-const linodeSelector = (state: ApplicationState) => state.__resources.linodes.entities;
-const volumeSelector = (state: ApplicationState) => [] // state.__resources.volumes.entities;
-const nodebalSelector = (state: ApplicationState) => [] // state.__resources.nodebalancers;
-const imageSelector = (state: ApplicationState) => state.__resources.images.entities;
-const domainSelector = (state: ApplicationState) => state.__resources.domains.entities;
-const typesSelector = (state: ApplicationState) => state.__resources.types.entities;
+const linodeSelector = (state: State) => state.linodes.entities;
+const volumeSelector = (state: State) => [] // state.volumes.entities;
+const nodebalSelector = (state: State) => [] // state.nodebalancers;
+const imageSelector = (state: State) => state.images.entities;
+const domainSelector = (state: State) => state.domains.entities;
+const typesSelector = (state: State) => state.types.entities;
 
 export default createSelector
-  <ApplicationState,
+  <State,
   Linode.Linode[],
   Linode.Volume[],
   Linode.Image[],
