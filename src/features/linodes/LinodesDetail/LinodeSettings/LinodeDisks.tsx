@@ -50,7 +50,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'center',
   },
   diskSpaceWrapper: {
-    backgroundColor: theme.color.grey2,
+    backgroundColor: theme.bg.tableHeader,
+    border: `1px solid ${theme.color.diskSpaceBorder}`,
     padding: theme.spacing.unit * 2,
     minHeight: '250px',
     display: 'flex',

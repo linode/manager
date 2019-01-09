@@ -13,7 +13,7 @@ type ClassNames = 'root' | 'primaryColor' | 'loadingText';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     padding: '20px',
-    backgroundColor: theme.color.grey1
+    backgroundColor: theme.color.grey2
   },
   primaryColor: {
     backgroundColor: theme.color.green

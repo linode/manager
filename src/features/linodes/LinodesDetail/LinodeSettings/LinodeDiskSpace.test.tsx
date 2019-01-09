@@ -8,7 +8,12 @@ const component = shallow(
   <LinodeDiskSpace
     classes={{
       root: '',
-      item: ''
+      header: '',
+      bar: '',
+      text: '',
+      divider: '',
+      textOuter: '',
+      code: ''
     }}
     loading={true}
     error={new Error('hello world')}

@@ -10,12 +10,30 @@ import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 
-type ClassNames = 'root' | 'item';
+type ClassNames = 'root' | 'header' | 'bar' | 'text' | 'divider' | 'textOuter' | 'code';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
-  item: {
-    marginBottom: theme.spacing.unit
+  header: {
+    marginBottom: 15,
+    textAlign: 'center'
+  },
+  bar: {
+    marginBottom: theme.spacing.unit,
+  },
+  text: {
+    margin: '10px 0',
+    paddingRight: 40
+  },
+  divider: {
+    backgroundColor: theme.color.grey2,
+  },
+  textOuter: {
+    margin: '10px 0'
+  },
+  code: {
+    color: theme.color.black,
+    margin: '0 0 10px',
   }
 });
 
@@ -51,28 +69,30 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Typography className={classes.item} style={{ textAlign: 'center' }} variant="h3">
+        <Typography className={classes.header} variant="h2">
           Disk Storage
         </Typography>
         <BarPercent
-          className={classes.item}
+          className={classes.bar}
           max={totalDiskSpace}
           value={usedDiskSpace}
         />
-        <Typography className={classes.item}>
+        <Typography className={classes.text}>
           <strong>{usedPercentage}%</strong> of your {totalDiskSpace}MB is allocated towards
           <strong> {disks.length}</strong> disk {disks.length === 1 ? 'image' : 'images'}.
         </Typography>
-        <Divider className={classes.item} />
-        <Typography variant="subtitle2" className={classes.item}>Free: {freeDiskSpace} MB</Typography>
-        <Typography variant="subtitle2" className={classes.item}>Used: {usedDiskSpace} MB</Typography>
-        <Divider className={classes.item} />
-        <Typography variant="subtitle2" className={classes.item}>Total: {totalDiskSpace} MB</Typography>
-        <Typography className={classes.item}>
+        <Divider className={classes.divider} />
+        <div className={classes.textOuter}>
+          <Typography variant="subtitle2">Free: <strong>{freeDiskSpace} MB</strong></Typography>
+          <Typography variant="subtitle2">Used: <strong>{usedDiskSpace} MB</strong></Typography>
+        </div>
+        <Divider className={classes.divider} />
+        <Typography variant="subtitle2" className={classes.text}>Total: <strong>{totalDiskSpace} MB</strong></Typography>
+        <Typography className={classes.text}>
           <strong>Note: </strong> This section represents your plan's available storage that has
            been allocated to your disks; run
         </Typography>
-        <Typography className={classes.item}>df -h</Typography>
+        <pre className={classes.code}>df -h</pre>
         <Typography>
           from within your Linode to see your actual filesystem usage.
         </Typography>
