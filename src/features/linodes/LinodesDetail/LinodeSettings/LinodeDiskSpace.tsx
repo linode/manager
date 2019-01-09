@@ -65,7 +65,10 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
 
     const freeDiskSpace = totalDiskSpace - usedDiskSpace;
 
-    const usedPercentage = Math.floor((usedDiskSpace / totalDiskSpace) * 100);
+    const usedPercentage = (usedDiskSpace / totalDiskSpace) * 100;
+    const formattedPercentage = (usedPercentage < 1)
+      ? '< 1'
+      : Math.floor(usedPercentage);
 
     return (
       <React.Fragment>
@@ -78,7 +81,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           value={usedDiskSpace}
         />
         <Typography className={classes.text}>
-          <strong>{usedPercentage}%</strong> of your {totalDiskSpace}MB is allocated towards
+          <strong>{formattedPercentage}%</strong> of your {totalDiskSpace}MB is allocated towards
           <strong> {disks.length}</strong> disk {disks.length === 1 ? 'image' : 'images'}.
         </Typography>
         <Divider className={classes.divider} />
