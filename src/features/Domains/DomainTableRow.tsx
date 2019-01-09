@@ -17,6 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   domainRow: {
     height: 75,
+    backgroundColor: theme.bg.white,
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
@@ -44,7 +45,7 @@ const DomainsTableRow: React.StatelessComponent<CombinedProps> = (props) => {
   return (
     <TableRow
       key={id}
-      data-qa-domain-cell={id}
+      data-qa-domain-cell={domain}
       className={`${classes.domainRow} ${'fade-in-table'}`}
       rowLink={`/domains/${id}`}
     >

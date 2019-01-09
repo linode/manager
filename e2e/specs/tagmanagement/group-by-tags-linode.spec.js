@@ -67,10 +67,7 @@ describe('Group Linodes by Tags - Suite', () => {
     });
 
     it('Group linodes by tags', () => {
-        ListLinodes.groupByTagsToggle.click();
-        browser.waitUntil(() => {
-            return ListLinodes.tagHeaders.length > 0;
-        },constants.wait.normal);
+        ListLinodes.groupByTags(true);
     });
 
     describe('Grouped Linodes - List View', () => {
@@ -80,7 +77,7 @@ describe('Group Linodes by Tags - Suite', () => {
         });
 
         it('Tag groups are displayed in alphabetical order', () => {
-            tagGroupsInAlphabeticalOrder();
+            ListLinodes.tagGroupsInAlphabeticalOrder(tags);
         });
 
         it('Linodes are sortable within tag groups', () => {
@@ -108,16 +105,13 @@ describe('Group Linodes by Tags - Suite', () => {
         });
 
         it('Tag groups are displayed in alphabetical order', () => {
-            tagGroupsInAlphabeticalOrder();
+            ListLinodes.tagGroupsInAlphabeticalOrder(tags);
         });
 
     });
 
     it('Ungroup Linodes', () => {
-        ListLinodes.groupByTagsToggle.click();
-        browser.waitUntil(() => {
-          return ListLinodes.tagHeaders.length === 0;
-        },constants.wait.normal);
+        ListLinodes.groupByTags(false);
         ListLinodes.switchView('list');
         browser.waitUntil(() => {
             return browser.getUrl().includes('?view=list')

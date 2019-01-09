@@ -25,7 +25,11 @@ const mockProps = {
       createTag: jest.fn(),
       getLinodeTagList: jest.fn(),
     }
-  }
+  },
+  updateCustomLabel: jest.fn(),
+  getLabel: jest.fn(),
+  linodes: [],
+  customLabel: ''
 };
 
 describe('FromImageContent', () => {

@@ -13,6 +13,9 @@ describe('LinodeRow', () => {
     ipCellWrapper: '',
     planCell: '',
     regionCell: '',
+    iconTableCell: '',
+    icon: '',
+    iconGridCell: ''
   };
 
   const mockProps: CombinedProps = {
@@ -36,6 +39,14 @@ describe('LinodeRow', () => {
       enabled: false,
       schedule: { day: 'Friday', window: 'W0' },
     },
+    linodeImage: null,
+     linodeSpecs: {
+       memory: 0,
+       vcpus: 0,
+       disk: 0,
+       transfer: 0
+     },
+     imagesData: [],
     displayType: 'Some Fancy Name'
   };
 

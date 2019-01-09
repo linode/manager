@@ -1,18 +1,8 @@
-import { compose, prop, reverse, sortBy, toLower, when } from 'ramda';
+import { curry, pathOr, sort,  } from 'ramda';
 import * as React from 'react';
 import { Order } from 'src/components/Pagey';
+import { isArray } from 'util';
 
-const orderList: <T>(order: Order, orderBy: keyof T) => (list: T[]) => T[] = (order, orderBy) => (list) => {
-  return compose<any, any, any>(
-    when(() => order === 'desc', reverse),
-    sortBy(
-      compose(
-        when(v => typeof v === 'string', toLower),
-        prop(orderBy as string),
-      ),
-    ), /** I spent a long, long time trying to type this. */
-  )(list);
-};
 
 export interface OrderByProps extends State {
   handleOrderChange: (orderBy: string, order: Order) => void;
@@ -31,6 +21,30 @@ interface Props {
   orderBy?: string;
 }
 
+export const sortData = curry((orderBy: string, order: Order, obj1: any, obj2: any) => {
+  /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
+  *  we want to sort by the length of the array. Otherwise, do a simple comparison.
+  */
+
+  // Get target column for each object, and length if this is an array
+  let a = pathOr(0, [orderBy], obj1);
+  let b = pathOr(0, [orderBy], obj2);
+  if (isArray(a) && isArray(b)) {
+    a = a.length;
+    b = b.length;
+  }
+
+  // Sort
+  let result: number;
+  if (a > b) { result = 1; }
+  else if (a < b) { result = -1; }
+  else { result = 0; }
+
+  // Ascending or descending
+  // nb: thought this would be more efficient than sorting then conditionally reversing as a separate step
+  return order === 'asc' ? result : -result;
+});
+
 export default class OrderBy extends React.Component<Props, State> {
   state: State = {
     order: this.props.order || 'asc',
@@ -40,13 +54,14 @@ export default class OrderBy extends React.Component<Props, State> {
   handleOrderChange = (orderBy: string, order: Order) => this.setState({ orderBy, order });
 
   render() {
-    const order = orderList(this.state.order, this.state.orderBy);
+    const order = sortData(this.state.orderBy, this.state.order);
+    const sortedData = sort(order, this.props.data);
 
     const props = {
       ...this.props,
       ...this.state,
       handleOrderChange: this.handleOrderChange,
-      data: order(this.props.data),
+      data: sortedData,
       count: this.props.data.length,
     };
 

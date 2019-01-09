@@ -65,7 +65,7 @@ class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses> > {
         >
           {ips.map(ip =>
             <div key={ip}>
-              <IPAddress  ips={[ip]}/>
+              <IPAddress ips={[ip]}/>
             </div>,
           )}
         </Popover>

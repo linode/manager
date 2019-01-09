@@ -358,8 +358,8 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           </TableCell>
           <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
             <div className={classes.ipsWrapper}>
-              <IPAddress ips={[nodeBalancer.ipv4]} copyRight />
-              {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight />}
+              <IPAddress ips={[nodeBalancer.ipv4]} copyRight showMore />
+              {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight showMore />}
             </div>
           </TableCell>
           <TableCell parentColumn="Region" data-qa-region>
