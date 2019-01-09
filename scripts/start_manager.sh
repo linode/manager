@@ -1,3 +1,2 @@
 #!/bin/bash
-yarn build
-yarn serve
+yarn build && yarn serve

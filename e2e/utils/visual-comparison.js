@@ -8,8 +8,8 @@ const SCREENSHOT = './e2e/visual-regression/screenshots';
 const SAVEPATH = VISUAL_REGRESSION ? SCREENSHOT : BASELINE;
 
 const compareToBaseLine = (imageName) => {
-    const screenImg = readFileSync(`${BASELINE}/${imageName}.png`);
-    const baselineImg = readFileSync(`${SCREENSHOT}/${imageName}.png`);
+    const baselineImg = readFileSync(`${BASELINE}/${imageName}.png`);
+    const screenImg = readFileSync(`${SCREENSHOT}/${imageName}.png`);
     resemble(screenImg).compareTo(baselineImg).outputSettings({
         errorColor: {
             red: 255,

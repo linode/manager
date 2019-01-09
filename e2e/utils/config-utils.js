@@ -49,8 +49,11 @@ exports.login = (username, password, credFilePath) => {
     try {
         browser.waitForVisible('#username', constants.wait.long);
     } catch (err) {
+        console.log(`${browser.options.baseUrl}${constants.routes.dashboard}`);
+        console.log(browser.getUrl());
         console.log(err);
-        console.log(browser.getSource());
+        browser.saveViewportScreenshot('./e2e/visual-regression/baseline/login-page-failed.png');
+        console.log('Login page failed to load!');
     }
 
     browser.waitForVisible('#password', constants.wait.long);

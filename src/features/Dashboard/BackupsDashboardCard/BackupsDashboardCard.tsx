@@ -89,7 +89,7 @@ export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (pr
             }
             )}
           >
-            <Typography variant="h1" className={classes.itemTitle} >
+            <Typography variant="h3" className={classes.itemTitle} >
               Linode Backup Auto-Enrollment
             </Typography>
             <Typography variant="body1" >

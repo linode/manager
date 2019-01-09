@@ -15,4 +15,5 @@ RUN yarn
 
 COPY . .
 
+
 ENTRYPOINT ["yarn"]
