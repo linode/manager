@@ -38,16 +38,16 @@ routing, and more.
 The Manager project is constantly injesting a stream of [events](https://developers.linode.com/api/v4#operation/getEvents)
 from the API. These events signal actions that have happened or are currently happening to an
 entity. Anytime the application receives an event from the API  we dispatch the `ADD_EVENTS` action
-with those events [\[source\]](src/store/events/events.reducer.ts#L226). The events middleware is
+with those events [\[source\]](events/events.reducer.ts#L226). The events middleware is
 comprised of entity specific functions which follow a reducer pattern. For example
-[linodes.events.ts](src/store/linodes/linodes.events.ts). This file reduces the API provided event
+[linodes.events.ts](linodes/linodes.events.ts). This file reduces the API provided event
 to a Redux action which is dispatched. That dispatched action is what will impact the store, not the
 API event directly.
 
 ### Pattern for Asynchronous Requests
 The pattern is for initiating and responding to asynchronous requests is straightforward;
 1. A Redux "request" action is dispatched.
-2. The [request.middleware.ts](src/store/request/request.middleware.ts) intercepts the action.
+2. The [request.middleware.ts](request/request.middleware.ts) intercepts the action.
     1. The using the payload and meta data we create an AxiosRequestConfig.
     2. Dispatch the "started" action associated with this request with the params used to make the request.
     3. Make the network request.
@@ -55,13 +55,13 @@ The pattern is for initiating and responding to asynchronous requests is straigh
     5. On failure dispatch the "failed" action with the resulting error and the params used to make the request.
     6. The request cycle is complete and the "request action" is discarded (never dispatched).
 3. Reducers respond to the the "started", "done", and "failed" actions updating state as necessary. For
-example; The [linodes.reducer.ts](src/store/linodes/linodes.reducer.ts) is setup to respond to the
+example; The [linodes.reducer.ts](linodes/linodes.reducer.ts) is setup to respond to the
 "start", "done" and "failed".
 
 #### Actions and Action Creators
 You may have noticed in the preceeding section that we made mention of four actions per request-cycle.
 This is necesssay due to the sychronous nature of Reducers and asynchronous nature of Middleware. To
-alleviate some of this boilerplate we've created [requestActionCreatorFactory](src/store/request/request.helpers.ts#L102).
+alleviate some of this boilerplate we've created [requestActionCreatorFactory](request/request.helpers.ts#L102).
 
 The requestActionCreatorFactory will create type-safe action creators for started, done, failed and request.
 requestActionCreatorFactory is an abstraction of [actionCreatorFactory](https://github.com/aikoven/typescript-fsa/blob/master/src/index.ts#L154) and `createMeta`.
