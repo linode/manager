@@ -8,6 +8,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import Notice from 'src/components/Notice';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -30,8 +31,22 @@ interface Props extends PaginationProps<Linode.Payment> { }
 
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
-class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
+interface PdfGenerationError {
+  itemId: number | undefined
+}
+
+interface State {
+  pdfGenerationError: PdfGenerationError
+}
+
+class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
+
+  state: State = {
+    pdfGenerationError: {
+      itemId: undefined
+    }
+  }
 
   componentDidMount() {
     this.mounted = true;
@@ -97,8 +112,19 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
 
   renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
 
+  printPayment(account: Linode.Account, item: Linode.Payment) {
+    const generatingResult = printPayment(account, item);
+
+    this.setState({
+      pdfGenerationError: {
+        itemId: generatingResult.status === 'failed' ? item.id : undefined
+      }
+    })
+  }
+
   renderRow = (item: Linode.Payment) => {
     const { account } = this.props;
+    const { pdfGenerationError } = this.state;
 
     return (
       <TableRow key={`payment-${item.id}`}>
@@ -106,7 +132,8 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, {}> {
         <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
         <TableCell parentColumn="Amount">${item.usd}</TableCell>
         <TableCell>
-          {account.data && <Button type="primary" target="_blank" onClick={() => printPayment(account.data as Linode.Account, item)}>Download PDF</Button>}
+          {account.data && <Button type="primary" target="_blank" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</Button>}
+          {pdfGenerationError.itemId === item.id && <Notice error={true} text="Failed generating PDF." />}
         </TableCell>
       </TableRow>
     );
