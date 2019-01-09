@@ -3,7 +3,7 @@
 # The Problem
 The API's current state requires that we have context of all entities for grouping by tags and
 searching efficiently. Additionally, due to the interdependent nature of these entities we often
-need the context of other entities for search, display, and other organizational efforst.
+need the context of other entities for search, display, and other organizational efforts.
 
 # The Plan
 - Create a centralized and serializable data store.
@@ -169,5 +169,6 @@ const connected = connect(
 ```
 
 * Actions are just messages.
-* Middleware sends messages.
+* Developers can send messages.
+* Middleware receive those message and decide to send other messages.
 * Reducers receive messaged.
