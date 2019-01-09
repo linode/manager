@@ -60,7 +60,7 @@ interface Props {
   onSelect: (id: number, label: string, username: string, images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
   publicImages: Linode.Image[];
-  resetSelectedStackScript?: () => void;
+  resetSelectedStackScript: () => void;
 }
 
 type CombinedProps = Props &  StateProps & WithStyles<ClassNames>;
@@ -85,9 +85,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       this.setState({stackScriptLoading: true});
       getStackScript(this.props.selectedId).then(stackScript => {
         this.setState({stackScript, stackScriptLoading: false});
-        if (this.props.onSelect) {
-          this.props.onSelect(stackScript.id, stackScript.label, stackScript.username, stackScript.images, stackScript.user_defined_fields);
-        }
+        this.props.onSelect(stackScript.id, stackScript.label, stackScript.username, stackScript.images, stackScript.user_defined_fields);
       }).catch(e => {
         this.setState({stackScriptLoading: false, stackScriptError: true});
       })
@@ -103,7 +101,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     title: tab.title,
     render: () => <SelectStackScriptPanelContent
       onSelect={this.props.onSelect}
-      resetStackScriptSelection={this.maybeResetStackScript}
+      resetStackScriptSelection={this.props.resetSelectedStackScript}
       publicImages={this.props.publicImages}
       currentUser={this.props.username}
       request={tab.request}
@@ -112,21 +110,13 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     />
   }));
 
-  maybeResetStackScript = () => {
-    const { resetSelectedStackScript } = this.props;
-    if (resetSelectedStackScript) {
-      resetSelectedStackScript();
-    }
-    return;
-  }
-
   handleTabChange = () => {
     /*
     * if we're coming from a query string, the stackscript will be preselected
     * however, we don't want the user to have their stackscript still preselected
     * when they change StackScript tabs
     */
-    this.maybeResetStackScript();
+    this.props.resetSelectedStackScript();
   }
 
   resetStackScript = () => {
@@ -158,7 +148,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   key={stackScript.id}
                   label={stackScript.label}
                   stackScriptUsername={stackScript.username}
-                  disabledCheckedSelect={true}
+                  disabledCheckedSelect
+                  onSelect={() => {}}
                   description={truncateText(stackScript.description, 100)}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}

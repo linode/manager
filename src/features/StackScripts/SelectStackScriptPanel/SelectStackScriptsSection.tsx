@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 export interface Props {
-  onSelect?: (s: Linode.StackScript.Response) => void;
+  onSelect: (s: Linode.StackScript.Response) => void;
   selectedId?: number;
   data: Linode.StackScript.Response[];
   isSorting: boolean;
@@ -48,7 +48,7 @@ const SelectStackScriptsSection: React.StatelessComponent<CombinedProps> = (prop
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
-      onSelect={() => onSelect!(s)}
+      onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}

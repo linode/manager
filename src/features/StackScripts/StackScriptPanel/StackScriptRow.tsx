@@ -18,8 +18,8 @@ export interface Props {
   updated: string;
   stackScriptID: number;
   stackScriptUsername: string;
-  triggerDelete?: (id: number, label: string) => void;
-  triggerMakePublic?: (id: number, label: string) => void;
+  triggerDelete: (id: number, label: string) => void;
+  triggerMakePublic: (id: number, label: string) => void;
   canDelete: boolean;
   canEdit: boolean;
   isPublic: boolean;
@@ -97,8 +97,8 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
               stackScriptID={stackScriptID}
               stackScriptUsername={stackScriptUsername}
               stackScriptLabel={label}
-              triggerDelete={triggerDelete!}
-              triggerMakePublic={triggerMakePublic!}
+              triggerDelete={triggerDelete}
+              triggerMakePublic={triggerMakePublic}
               canDelete={canDelete}
               canEdit={canEdit}
               isPublic={isPublic}

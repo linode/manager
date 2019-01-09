@@ -37,9 +37,7 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
       ? 'desc'
       : 'asc';
 
-    if (handleClick) {
-      return handleClick(label.toLowerCase(), nextOrder);
-    }
+    return handleClick(label.toLowerCase(), nextOrder);
   }
 
   render() {

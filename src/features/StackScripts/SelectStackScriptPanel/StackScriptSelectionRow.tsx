@@ -19,7 +19,7 @@ export interface Props {
   deploymentsActive: number;
   updated: string;
   disabledCheckedSelect?: boolean;
-  onSelect?: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
+  onSelect: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   stackScriptID: number;
   stackScriptUsername: string;
@@ -80,12 +80,10 @@ export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> 
 
     return (
       <React.Fragment>
-        <TableRow data-qa-table-row={label} rowLink={() => onSelect && onSelect({}, !checked)}>
-          {(onSelect || disabledCheckedSelect) &&
-            <TableCell>
-              <Radio checked={checked} disabled={disabledCheckedSelect} onChange={onSelect} id={`${stackScriptID}`} />
-            </TableCell>
-          }
+        <TableRow data-qa-table-row={label} rowLink={() => onSelect({}, !checked)}>
+          <TableCell>
+            <Radio checked={checked} disabled={disabledCheckedSelect} onChange={onSelect} id={`${stackScriptID}`} />
+          </TableCell>
           <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
             {renderLabel()}
           </TableCell>

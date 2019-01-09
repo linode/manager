@@ -68,7 +68,13 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
       sortOrder
     } = this.props;
 
-    const Cell = (handleClickTableHeader && sortOrder) ? TableSortCell : TableCell;
+    const Cell = (!!handleClickTableHeader && sortOrder) ? TableSortCell : TableCell;
+    const maybeAddSortingProps = (orderBy: string) => (!!handleClickTableHeader && sortOrder) ? {
+      direction: sortOrder,
+      active: currentFilterType === orderBy,
+      label: orderBy,
+      handleClick: handleClickTableHeader
+    } : {};
 
     return (
       <TableHead>
@@ -85,11 +91,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
               [classes.tableHead]: true,
               [classes.stackscriptTitles]: true,
             })}
-            direction={sortOrder}
-            active={currentFilterType === 'label'}
-            label="label"
-            handleClick={handleClickTableHeader}
             data-qa-stackscript-table-header
+            {...maybeAddSortingProps('label')}
           >
             StackScript
           </Cell>
@@ -98,11 +101,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
               [classes.tableHead]: true,
               [classes.deploys]: true,
             })}
-            direction={sortOrder}
-            active={currentFilterType === 'deploys'}
-            label="deploys"
-            handleClick={handleClickTableHeader}
             data-qa-stackscript-active-deploy-header
+            {...maybeAddSortingProps('deploys')}
           >
             Active Deploys
           </Cell>
@@ -111,11 +111,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
               [classes.tableHead]: true,
               [classes.revisions]: true,
             })}
-            direction={sortOrder}
-            active={currentFilterType === 'revision'}
-            label="revision"
-            handleClick={handleClickTableHeader}
             data-qa-stackscript-revision-header
+            {...maybeAddSortingProps('revision')}
           >
             Last Revision
           </Cell>
