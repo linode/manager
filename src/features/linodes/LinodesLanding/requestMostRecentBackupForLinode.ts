@@ -4,7 +4,10 @@ import { mostRecentFromResponse } from 'src/utilities/backups';
 const requestMostRecentBackupForLinode: (linode: Linode.Linode) => Promise<Linode.Linode> =
   (linode: Linode.Linode) =>
     linode.backups.enabled === false
-      ? Promise.resolve(linode)
+      ? Promise.resolve({
+        ...linode,
+        mostRecentBackup: null,
+      })
       : getLinodeBackups(linode.id)
         .then(backupsResponse => ({
           ...linode,

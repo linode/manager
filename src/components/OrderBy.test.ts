@@ -1,4 +1,3 @@
-import { sort } from 'ramda';
 import { sortData } from './OrderBy';
 
 const a =
@@ -38,22 +37,21 @@ const e =
 
 describe("OrderBy", () => {
   describe("sortData function", () => {
-    const data = [a, b, c, d, e];
     it("should sort by string", () => {
       const order = sortData('name', 'asc');
-      expect(sort(order, data)).toEqual([a, e, d, c, b]);
+      expect(order).toEqual([a, e, d, c, b]);
     });
     it("should handle the selected order (asc or desc)", () => {
       const order = sortData('name', 'desc');
-      expect(sort(order, data)).toEqual([b, c, d, e, a]);
+      expect(order).toEqual([b, c, d, e, a]);
     });
     it("should sort by number", () => {
       const order = sortData('age', 'asc');
-      expect(sort(order, data)).toEqual([b, a, c, d, e]);
+      expect(order).toEqual([b, a, c, d, e]);
     });
     it("should sort by array length", () => {
       const order = sortData('hobbies', 'asc');
-      expect(sort(order, data)).toEqual([b, c, e, a, d]);
+      expect(order).toEqual([b, c, e, a, d]);
     });
   });
 })
