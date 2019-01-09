@@ -4,9 +4,10 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import SelectionRow from 'src/components/SelectionRow';
 import { formatDate } from 'src/utilities/format-date-iso8601';
+import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
+import StackScriptRow from './StackScriptRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
@@ -19,8 +20,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 export interface Props {
-  onSelect?: (s: Linode.StackScript.Response) => void;
-  selectedId?: number;
   data: Linode.StackScript.Response[];
   isSorting: boolean;
   publicImages: Linode.Image[];
@@ -33,8 +32,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    onSelect,
-    selectedId,
     data,
     isSorting,
     classes,
@@ -43,14 +40,8 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     triggerMakePublic
   } = props;
 
-  const renderStackScriptTable = () => {
-    return (!!onSelect)
-    ? selectStackScript()
-    : listStackScript()
-  }
-
-  const selectStackScript = () => (s: Linode.StackScript.Response) => (
-    <SelectionRow
+const listStackScript = (s: Linode.StackScript.Response) => (
+    <StackScriptRow
       key={s.id}
       label={s.label}
       stackScriptUsername={s.username}
@@ -59,26 +50,6 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
       images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, false)}
-      onSelect={() => onSelect!(s)}
-      checked={selectedId === s.id}
-      updateFor={[selectedId === s.id]}
-      stackScriptID={s.id}
-      canDelete={false}
-      canEdit={false}
-    />
-  )
-
-const listStackScript = () => (s: Linode.StackScript.Response) => (
-    <SelectionRow
-      key={s.id}
-      label={s.label}
-      stackScriptUsername={s.username}
-      description={truncateText(s.description, 100)}
-      isPublic={s.is_public}
-      images={stripImageName(s.images)}
-      deploymentsActive={s.deployments_active}
-      updated={formatDate(s.updated, false)}
-      showDeployLink={true}
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}
@@ -113,7 +84,7 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
     <TableBody>
       {!isSorting
         ? data && data
-          .map(renderStackScriptTable())
+          .map(listStackScript)
         : <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
             <CircleProgress noTopMargin/>
@@ -122,17 +93,6 @@ const listStackScript = () => (s: Linode.StackScript.Response) => (
       }
     </TableBody>
   );
-};
-
-/*
-* @TODO Deprecate once we have a reliable way of mapping
-* the slug to the display name
-*/
-const stripImageName = (images: string[]) => {
-  return images
-    /** fixes freak edge-case where the API is returning null in the array of images */
-    .filter((eachImage: string | null) => !!eachImage)
-    .map((filteredImage: string) => filteredImage.replace('linode/', ''))
 };
 
 const styled = withStyles(styles);

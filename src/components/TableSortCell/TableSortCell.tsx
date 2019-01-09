@@ -36,6 +36,7 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
     const nextOrder = (direction === 'asc')
       ? 'desc'
       : 'asc';
+
     return handleClick(label.toLowerCase(), nextOrder);
   }
 

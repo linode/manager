@@ -11,7 +11,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withImagesContainer from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
-import SelectStackScriptPanel from './SelectStackScriptPanel';
+import StackScriptPanel from './StackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
@@ -69,7 +69,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           {
             imagesLoading
               ? <CircleProgress />
-              : <SelectStackScriptPanel
+              : <StackScriptPanel
                 publicImages={imagesData}
                 noHeader={true}
               />

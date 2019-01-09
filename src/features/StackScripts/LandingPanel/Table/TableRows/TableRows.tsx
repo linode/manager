@@ -15,7 +15,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import Tag from 'src/components/Tag';
 
 import StackScriptActionMenu
-  from 'src/features/StackScripts/SelectStackScriptPanel/StackScriptActionMenu';
+  from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import LabelCell from '../LabelCell';
 
 type ClassNames = 'root';
