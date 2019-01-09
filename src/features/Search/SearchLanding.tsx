@@ -1,4 +1,4 @@
-import { equals, pathOr } from 'ramda';
+import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,13 +8,12 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
-import withImages from 'src/containers/withImages.container';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getAllEntities } from 'src/utilities/getAll';
 import { getQueryParam } from 'src/utilities/queryParams';
 
 import ResultGroup from './ResultGroup';
-import { emptyResults, searchAll, SearchResults } from './utils';
+import { emptyResults } from './utils';
+import withStoreSearch, { SearchProps } from './withStoreSearch';
 
 type ClassNames = 'root'
 | 'headline';
@@ -36,97 +35,46 @@ const displayMap = {
 
 interface State {
   query: string;
-  results: SearchResults;
-  linodes: Linode.Linode[];
-  volumes: Linode.Volume[];
-  nodebalancers: Linode.NodeBalancer[];
-  domains: Linode.Domain[];
-  images: Linode.Image[];
   loading: boolean;
   error: boolean;
 }
 
 type CombinedProps =
-  & WithTypesProps
-  & WithImagesProps
+  & SearchProps
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
-  getInitialResults = () => {
-    return pathOr(
-      emptyResults,
-      ['history', 'location', 'state', 'searchResults'],
-      this.props
-    )
-  }
-
   state: State = {
     query: getQueryParam(this.props.location.search, 'query'),
-    results: this.getInitialResults(),
     error: false,
     loading: false,
-    linodes: [],
-    volumes: [],
-    nodebalancers: [],
-    domains: [],
-    images: [],
   };
 
   componentDidMount() {
+    const { query } = this.state;
     this.mounted = true;
-    const { results } = this.state;
-    if (equals(results, emptyResults)) {
-      this.updateData();
-    }
+    this.props.search(query);
   }
 
   componentWillUnmount() {
     this.mounted = false;
   }
 
-  updateData = () => {
-    this.setState({ loading: true });
-    getAllEntities(this.setEntitiesToState)
-      .catch((error) => {
-        this.setState({ error: true });
-      });
+  componentDidUpdate(prevProps: CombinedProps) {
+    const { query } = this.state;
+    if (!equals(prevProps.entities, this.props.entities)) {
+      this.props.search(query);
+    }
   }
-
-  setEntitiesToState = (
-    linodes: Linode.Linode[],
-    nodebalancers: Linode.NodeBalancer[],
-    volumes: Linode.Volume[],
-    domains: Linode.Domain[],
-  ) => {
-    if (!this.mounted) { return; }
-    this.setState({
-      linodes,
-      nodebalancers,
-      volumes,
-      domains,
-    }, this.search)
-  }
-
-  search = () => {
-    const { linodes, volumes, domains, nodebalancers, query } = this.state;
-    const { imagesData, typesData } = this.props;
-
-    const queryLower = query.toLowerCase();
-    const searchResults: SearchResults = searchAll(
-      linodes, volumes, nodebalancers, domains, imagesData, queryLower, typesData,
-    );
-    this.setState({ results: searchResults, loading: false });
-  }
-
 
   render() {
-    const { classes } = this.props;
-    const { query, error, loading, results } = this.state;
+    const { classes, searchResults } = this.props;
+    const { query, error, loading } = this.state;
 
-    const resultsEmpty = equals(results, emptyResults);
+    const resultsEmpty = equals(searchResults, emptyResults);
     return (
       <Grid container direction="column">
         <Grid item>
@@ -149,11 +97,11 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
           </Grid>
         }
         <Grid item>
-          {Object.keys(results).map((entityType, idx: number) =>
+          {Object.keys(searchResults).map((entityType, idx: number) =>
             <ResultGroup
               key={idx}
               entity={displayMap[entityType]}
-              results={results[entityType]}
+              results={searchResults[entityType]}
               loading={loading}
               groupSize={100}
             />
@@ -166,15 +114,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-import { connect } from 'react-redux';
-interface WithTypesProps {
-  typesData: Linode.LinodeType[];
-}
-
-const withTypes = connect((state: ApplicationState, ownProps) => ({
-  typesData: state.__resources.types.entities,
-}));
-
 const reloaded = reloadableWithRouter(
   (routePropsOld, routePropsNew) => {
     // reload if we're on the search landing
@@ -183,20 +122,10 @@ const reloaded = reloadableWithRouter(
   },
 );
 
-interface WithImagesProps {
-  imagesData: Linode.Image[]
-  imagesLoading: boolean;
-}
-
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withTypes,
   reloaded,
-  withImages((ownProps, imagesData, imagesLoading) => ({
-    ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
-    imagesLoading,
-  }))
+  withStoreSearch(),
 )(SearchLanding);
 
 export default enhanced;
