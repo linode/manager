@@ -4,10 +4,10 @@
     "uid" : "bc96225c3c2a88aa2bee9b714c46950e",
     "name" : "Dashboard Visual Regression",
     "statistic" : {
-      "failed" : 11,
+      "failed" : 1,
       "broken" : 0,
       "skipped" : 0,
-      "passed" : 0,
+      "passed" : 10,
       "unknown" : 0,
       "total" : 11
     }

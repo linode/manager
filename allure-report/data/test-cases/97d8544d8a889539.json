@@ -1,0 +1,231 @@
+{
+  "uid" : "97d8544d8a889539",
+  "name" : "Side Bar Navigation",
+  "fullName" : "Dashboard Visual Regression.Side Bar Navigation",
+  "historyId" : "f059a4ce5c90e5143e9e30bfbe86ec82",
+  "time" : {
+    "start" : 1547053581024,
+    "stop" : 1547053581347,
+    "duration" : 323
+  },
+  "description" : "",
+  "descriptionHtml" : "",
+  "status" : "failed",
+  "statusMessage" : "Failed: unknown error: NoSuchElement",
+  "statusTrace" : "error properties: Object({ details: undefined, type: 'RuntimeError', seleniumStack: Object({ type: 'UnknownError', message: 'An unknown server-side error occurred while processing the command.', orgStatusMessage: 'unknown error: NoSuchElement\n                  (Session info: chrome=67.0.3396.99)\n                  (Driver info: chromedriver=2.40.565383 (76257d1ab79276b2d53ee976b2c3e3b9f335cde7),platform=Linux 4.9.125-linuxkit x86_64)' }) })\n                Error: An unknown server-side error occurred while processing the command.\n                    at execute(<Function>) - selectorExecute.js:58:65\n                    at execute(\"return !!document.evaluate;\") - ensureClientSideSelectorSupport.js:23:17",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "testStage" : {
+    "status" : "failed",
+    "statusMessage" : "Failed: unknown error: NoSuchElement",
+    "statusTrace" : "error properties: Object({ details: undefined, type: 'RuntimeError', seleniumStack: Object({ type: 'UnknownError', message: 'An unknown server-side error occurred while processing the command.', orgStatusMessage: 'unknown error: NoSuchElement\n                  (Session info: chrome=67.0.3396.99)\n                  (Driver info: chromedriver=2.40.565383 (76257d1ab79276b2d53ee976b2c3e3b9f335cde7),platform=Linux 4.9.125-linuxkit x86_64)' }) })\n                Error: An unknown server-side error occurred while processing the command.\n                    at execute(<Function>) - selectorExecute.js:58:65\n                    at execute(\"return !!document.evaluate;\") - ensureClientSideSelectorSupport.js:23:17",
+    "steps" : [ {
+      "name" : "POST /wd/hub/session/0e7150a7192e942b2b0e90cda9af59fc/element",
+      "time" : {
+        "start" : 1547053581024,
+        "stop" : 1547053581058,
+        "duration" : 34
+      },
+      "status" : "passed",
+      "steps" : [ ],
+      "attachments" : [ {
+        "uid" : "c1cb7fc11925c53c",
+        "name" : "Request",
+        "source" : "c1cb7fc11925c53c.json",
+        "type" : "application/json",
+        "size" : 77
+      }, {
+        "uid" : "3331b9fa02d020e4",
+        "name" : "Response",
+        "source" : "3331b9fa02d020e4.json",
+        "type" : "application/json",
+        "size" : 646
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 0,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    }, {
+      "name" : "POST /wd/hub/session/0e7150a7192e942b2b0e90cda9af59fc/execute",
+      "time" : {
+        "start" : 1547053581059,
+        "stop" : 1547053581075,
+        "duration" : 16
+      },
+      "status" : "passed",
+      "steps" : [ ],
+      "attachments" : [ {
+        "uid" : "9d0cffcc33a5bf8e",
+        "name" : "Request",
+        "source" : "9d0cffcc33a5bf8e.json",
+        "type" : "application/json",
+        "size" : 263
+      }, {
+        "uid" : "7088c48347ce309b",
+        "name" : "Response",
+        "source" : "7088c48347ce309b.json",
+        "type" : "application/json",
+        "size" : 91
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 0,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    }, {
+      "name" : "POST /wd/hub/session/0e7150a7192e942b2b0e90cda9af59fc/execute",
+      "time" : {
+        "start" : 1547053581075,
+        "stop" : 1547053581090,
+        "duration" : 15
+      },
+      "status" : "passed",
+      "steps" : [ ],
+      "attachments" : [ {
+        "uid" : "74cceff24fc69f02",
+        "name" : "Request",
+        "source" : "74cceff24fc69f02.json",
+        "type" : "application/json",
+        "size" : 235
+      }, {
+        "uid" : "499361212405ba8e",
+        "name" : "Response",
+        "source" : "499361212405ba8e.json",
+        "type" : "application/json",
+        "size" : 91
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 0,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    }, {
+      "name" : "POST /wd/hub/session/0e7150a7192e942b2b0e90cda9af59fc/execute",
+      "time" : {
+        "start" : 1547053581090,
+        "stop" : 1547053581106,
+        "duration" : 16
+      },
+      "status" : "passed",
+      "steps" : [ ],
+      "attachments" : [ {
+        "uid" : "29771287d0219d71",
+        "name" : "Request",
+        "source" : "29771287d0219d71.json",
+        "type" : "application/json",
+        "size" : 146
+      }, {
+        "uid" : "33bfaddaf7e7941f",
+        "name" : "Response",
+        "source" : "33bfaddaf7e7941f.json",
+        "type" : "application/json",
+        "size" : 91
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 0,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    }, {
+      "name" : "POST /wd/hub/session/0e7150a7192e942b2b0e90cda9af59fc/execute",
+      "time" : {
+        "start" : 1547053581307,
+        "stop" : 1547053581324,
+        "duration" : 17
+      },
+      "status" : "passed",
+      "steps" : [ ],
+      "attachments" : [ {
+        "uid" : "af850a2fb54b8ac7",
+        "name" : "Request",
+        "source" : "af850a2fb54b8ac7.json",
+        "type" : "application/json",
+        "size" : 63
+      }, {
+        "uid" : "7f0c24ebe6d905c0",
+        "name" : "Response",
+        "source" : "7f0c24ebe6d905c0.json",
+        "type" : "application/json",
+        "size" : 91
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 0,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    }, {
+      "name" : "POST /wd/hub/session/0e7150a7192e942b2b0e90cda9af59fc/execute",
+      "time" : {
+        "start" : 1547053581324,
+        "stop" : 1547053581346,
+        "duration" : 22
+      },
+      "status" : "passed",
+      "steps" : [ ],
+      "attachments" : [ {
+        "uid" : "ead189281d5c0082",
+        "name" : "Request",
+        "source" : "ead189281d5c0082.json",
+        "type" : "application/json",
+        "size" : 2318
+      }, {
+        "uid" : "387d2344ae950060",
+        "name" : "Response",
+        "source" : "387d2344ae950060.json",
+        "type" : "application/json",
+        "size" : 452
+      } ],
+      "parameters" : [ ],
+      "stepsCount" : 0,
+      "attachmentsCount" : 2,
+      "shouldDisplayMessage" : false,
+      "hasContent" : true
+    } ],
+    "attachments" : [ ],
+    "parameters" : [ ],
+    "stepsCount" : 6,
+    "attachmentsCount" : 12,
+    "shouldDisplayMessage" : true,
+    "hasContent" : true
+  },
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "framework",
+    "value" : "wdio"
+  }, {
+    "name" : "language",
+    "value" : "javascript"
+  }, {
+    "name" : "thread",
+    "value" : "0-0"
+  }, {
+    "name" : "suite",
+    "value" : "Dashboard Visual Regression"
+  }, {
+    "name" : "testClass",
+    "value" : "Dashboard Visual Regression"
+  }, {
+    "name" : "testMethod",
+    "value" : "Side Bar Navigation"
+  }, {
+    "name" : "package",
+    "value" : "Dashboard Visual Regression"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure1"
+  } ],
+  "parameters" : [ {
+    "name" : "browser",
+    "value" : "chrome"
+  } ],
+  "links" : [ ],
+  "hidden" : true,
+  "retry" : true,
+  "extra" : {
+    "categories" : [ ],
+    "tags" : [ ]
+  },
+  "source" : "97d8544d8a889539.json",
+  "parameterValues" : [ "chrome" ]
+}
