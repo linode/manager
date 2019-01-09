@@ -8,9 +8,10 @@ import Grid from 'src/components/Grid';
 interface Props {
   errorText: string;
   compact?: boolean;
+  cozy?: boolean;
 }
 
-type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact';
+type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   root: {
@@ -18,6 +19,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
   compact: {
     padding: theme.spacing.unit * 5,
+  },
+  cozy: {
+    padding: theme.spacing.unit
   },
   iconContainer: {
     textAlign: 'center',
@@ -37,15 +41,16 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
       className={classNames({
         [props.classes.root]: true,
         [props.classes.compact]: props.compact,
+        [props.classes.cozy]: !!props.cozy
       })}
       justify="center"
       alignItems="center"
     >
       <Grid item>
         <div className={props.classes.iconContainer}>
-          <ErrorOutline className={props.classes.icon} data-qa-error-icon/>
+          <ErrorOutline className={props.classes.icon} data-qa-error-icon />
         </div>
-        <Typography role="header" variant="h3" data-qa-error-msg>
+        <Typography style={{ textAlign: 'center' }} role="header" variant="h3" data-qa-error-msg>
           {props.errorText}
         </Typography>
       </Grid>
