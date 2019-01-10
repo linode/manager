@@ -53,10 +53,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, upsertLinode)) {
     const { payload } = action;
     const { entities } = state;
+    // @todo check for unnecessary state rendering
+    const newEntities = updateOrAdd(payload, entities);
 
     return {
       ...state,
-      entities: updateOrAdd(payload, entities)
+      entities: newEntities,
+      results: newEntities.map(linode => linode.id)
     }
   }
 
