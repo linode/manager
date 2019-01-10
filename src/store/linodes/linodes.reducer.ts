@@ -59,7 +59,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       entities: newEntities,
-      results: newEntities.map(linode => linode.id)
+      results: resultsFromPayload(newEntities)
     }
   }
 
