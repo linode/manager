@@ -1,7 +1,7 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
-import { Link } from 'react-router-dom';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -48,7 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   link: {
     display: 'block',
     textAlign: 'right',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: 24,
     marginTop: theme.spacing.unit,
   }
 });
@@ -161,12 +161,13 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               </tbody>
             </Table>
             <div className={classes.link}>
-              <Link
-                to="/linodes/create?type=fromStackScript"
+              <Button
+                href="/linodes/create?type=fromStackScript"
                 onClick={this.resetStackScript}
+                type="primary"
                 >
                 Choose another StackScript
-              </Link>
+              </Button>
             </div>
           </React.Fragment>
         )
