@@ -2,15 +2,32 @@ import { createSelector } from 'reselect';
 
 type State = ApplicationState['__resources'];
 
-export const linodesLoadingSelector = (state: State) => state.linodes.loading
-export const volumesLoadingSelector = (state: State) => false // state.volumes.loading
-export const nodeBalsLoadingSelector = (state: State) => false // state.nodebalancers.loading
-export const domainsLoadingSelector = (state: State) => state.domains.loading
-export const imagesLoadingSelector = (state: State) => state.images.loading
-export const typesLoadingSelector = (state: State) => state.types.loading
+export const linodesSelector = (state: State) => state.linodes
+export const volumesSelector = (state: State) => ({loading: false, lastUpdated: 0}) // state.volumes.loading
+export const nodeBalsSelector = (state: State) => ({loading: false, lastUpdated: 0}) // state.nodebalancers.loading
+export const domainsSelector = (state: State) => state.domains
+export const imagesSelector = (state: State) => state.images
+export const typesSelector = (state: State) => state.types
 
-export default createSelector<State, boolean, boolean, boolean, boolean, boolean, boolean, boolean>(
-  linodesLoadingSelector, volumesLoadingSelector, nodeBalsLoadingSelector, domainsLoadingSelector, imagesLoadingSelector, typesLoadingSelector,
-  (linodes, volumes, nodebalancers, domains, images, types) =>
-    (linodes || volumes || nodebalancers || domains || images || types)
+const isInitialLoad = (e: RequestableData<any>) => e.loading && e.lastUpdated === 0;
+
+export default createSelector
+  <State,
+  RequestableData<Linode.Linode[]>,
+  RequestableData<Linode.Volume[]>,
+  RequestableData<Linode.NodeBalancer[][]>,
+  RequestableData<Linode.Domain[]>,
+  RequestableData<Linode.Image[]>,
+  RequestableData<Linode.LinodeType[]>,
+  boolean>
+  (
+    linodesSelector, volumesSelector, nodeBalsSelector, domainsSelector, imagesSelector, typesSelector,
+    (linodes, volumes, nodebalancers, domains, images, types) => {
+      const entities = [linodes, volumes, nodebalancers, domains, images, types];
+      const l = entities.length;
+      for (let i = 0; i < l; i++) {
+        if (isInitialLoad(entities[l])) { return true; }
+      }
+      return false;
+    }
 )
