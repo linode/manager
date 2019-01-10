@@ -1,6 +1,6 @@
 import { range } from 'ramda';
 
-import {RequestThunk} from 'src/store/types';
+import { RequestThunk } from 'src/store/types';
 
 import { getVolumes as _getVolumes } from 'src/services/volumes';
 import { createRequestThunk } from 'src/store/request/request.helpers';
@@ -33,7 +33,7 @@ export const getVolumePage = createRequestThunk(
 
 export const getAllVolumesActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const getAllVolumes: RequestThunk<Linode.ResourcePage<Entity>> = (
+export const getAllVolumes: RequestThunk<Entity[]> = (
   page: number = 1,
   prevData: Entity[] = [],
 ) => async (dispatch) => {
@@ -46,26 +46,25 @@ export const getAllVolumes: RequestThunk<Linode.ResourcePage<Entity>> = (
     const mergedData = [...prevData, ...data];
 
     if (page === pages) {
-      const doneAction = getAllVolumesActions.done({ result: mergedData });
-      dispatch(doneAction);
+      const finalPageDone = getAllVolumesActions.done({ result: mergedData });
+      dispatch(finalPageDone);
       return mergedData;
     }
 
-    if (page < pages) {
-      const r = range(page + 1, pages + 1);
-      const requests = r.map((nextPage) => dispatch(getVolumePage({ page: nextPage, page_size: 100 })));
+    const r = range(page + 1, pages + 1);
+    const requests = r.map((nextPage) => dispatch(getVolumePage({ page: nextPage, page_size: 100 })));
 
-      const results = await Promise.all(requests);
+    const results = await Promise.all(requests);
 
-      const doneAction = getAllVolumesActions.done({
-        result: results.reduce((result, response) => [...result, ...response.data], data),
-      });
+    const doneAction = getAllVolumesActions.done({
+      result: results.reduce((result, response) => [...result, ...response.data], data),
+    });
 
-      dispatch(doneAction);
-      return mergedData;
-    }
+    dispatch(doneAction);
+    return mergedData;
   } catch (error) {
     dispatch(getAllVolumesActions.failed({ error }));
-    return error;
+
+    throw error;
   }
 };

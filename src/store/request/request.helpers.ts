@@ -102,6 +102,6 @@ export const createRequestThunk = <Req, Res, Err>(
     const failAction = failed({ error, params });
 
     dispatch(failAction);
-    return error;
+    throw error;
   }
 };

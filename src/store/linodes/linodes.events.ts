@@ -177,6 +177,11 @@ const handleLinodeDelete = (dispatch: Dispatch<any>, status: Linode.EventStatus,
 }
 
 const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number) => {
+  /**
+   * @todo
+   * We could/should update this to only send a request on the first scheduled/started
+   * event, the on the final failed/finished.
+   */
   switch (status) {
     case 'failed':
     case 'finished':

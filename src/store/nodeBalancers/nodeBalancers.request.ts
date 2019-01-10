@@ -29,7 +29,7 @@ export const getNodeBalancerPage = createRequestThunk(
  */
 export const getAllNodeBalancersActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const getAllNodeBalancers: RequestThunk<Linode.ResourcePage<Entity>> = (
+export const getAllNodeBalancers: RequestThunk<Entity[]> = (
   page: number = 1,
   prevData: Entity[] = [],
 ) => async (dispatch) => {
@@ -42,27 +42,26 @@ export const getAllNodeBalancers: RequestThunk<Linode.ResourcePage<Entity>> = (
     const mergedData = [...prevData, ...data];
 
     if (page === pages) {
-      const doneAction = getAllNodeBalancersActions.done({ result: mergedData });
-      dispatch(doneAction);
+      const finalPageAction = getAllNodeBalancersActions.done({ result: mergedData });
+      dispatch(finalPageAction);
       return mergedData;
     }
 
-    if (page < pages) {
-      const r = range(page + 1, pages + 1);
-      const requests = r.map((nextPage) => dispatch(getNodeBalancerPage({ page: nextPage, page_size: 100 })));
+    const r = range(page + 1, pages + 1);
+    const requests = r.map((nextPage) => dispatch(getNodeBalancerPage({ page: nextPage, page_size: 100 })));
 
-      const results = await Promise.all(requests);
+    const results = await Promise.all(requests);
 
-      const doneAction = getAllNodeBalancersActions.done({
-        result: results.reduce((result, response) => [...result, ...response.data], data),
-      });
+    const doneAction = getAllNodeBalancersActions.done({
+      result: results.reduce((result, response) => [...result, ...response.data], data),
+    });
 
-      dispatch(doneAction);
-      return mergedData;
-    }
+    dispatch(doneAction);
+
+    return mergedData;
 
   } catch (error) {
     dispatch(getAllNodeBalancersActions.failed({ error }));
-    return error;
+    throw error;
   }
 };

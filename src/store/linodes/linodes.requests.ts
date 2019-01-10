@@ -97,7 +97,7 @@ export const clondeLinode = createRequestThunk(
  */
 export const getAllLinodesActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const requestAllLinodes: RequestThunk<Linode.ResourcePage<Entity>> = (
+export const requestAllLinodes: RequestThunk<Entity[]> = (
   page: number = 1,
   prevData: Entity[] = [],
 ) => async (dispatch) => {
@@ -109,30 +109,28 @@ export const requestAllLinodes: RequestThunk<Linode.ResourcePage<Entity>> = (
     const mergedData = [...prevData, ...data];
 
     if (page === pages) {
-      const doneAction = getAllLinodesActions.done({ result: mergedData });
-      dispatch(doneAction);
+      const finalPageAction = getAllLinodesActions.done({ result: mergedData });
+      dispatch(finalPageAction);
       return mergedData;
     }
 
-    if (page < pages) {
-      const r = range(page + 1, pages + 1);
 
-      const requests = r.map((nextPage) => dispatch(getLinodesPage({ page: nextPage, page_size: 100 })));
+    const r = range(page + 1, pages + 1);
 
-      const results = await Promise.all(requests);
+    const requests = r.map((nextPage) => dispatch(getLinodesPage({ page: nextPage, page_size: 100 })));
 
-      const doneAction = getAllLinodesActions.done({
-        result: results.reduce((result, response) => [...result, ...response.data], data),
-      });
+    const results = await Promise.all(requests);
 
-      dispatch(doneAction);
-      return mergedData;
-    }
+    const doneAction = getAllLinodesActions.done({
+      result: results.reduce((result, response) => [...result, ...response.data], data),
+    });
 
-    return;
+    dispatch(doneAction);
+
+    return mergedData;
 
   } catch (error) {
     dispatch(getAllLinodesActions.failed({ error }));
-    return error;
+    throw error;
   }
 };
