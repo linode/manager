@@ -149,7 +149,7 @@ const styles: StyleRulesCallback = (theme) => ({
         maxWidth: '78.8%',
       },
     },
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
       maxWidth: 'calc(100% - 52px)',
     }
   },
@@ -160,8 +160,13 @@ const styles: StyleRulesCallback = (theme) => ({
   absSidebarMobile: {
     [theme.breakpoints.down('md')]: {
       position: 'fixed',
-      right: -28,
-      width: 'auto',
+      overflow: 'hidden',
+      width: '100%',
+      right: 0,
+      left: 0,
+      bottom: 0,
+      zIndex: 2000,
+      textAlign: 'center'
     }
   }
 });

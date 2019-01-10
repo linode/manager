@@ -5,12 +5,10 @@ import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
-import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import withBackupCTA, { BackupCTAProps } from 'src/containers/withBackupCTA.container';
@@ -42,8 +40,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     top: theme.spacing.unit,
     right: -theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      right: -theme.spacing.unit * 2
+    [theme.breakpoints.down('md')]: {
+      width: '100vw',
+      top: 0,
+      right: 0
     }
   },
   docsWrapper: {
@@ -56,8 +56,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     backgroundColor: theme.color.white,
     transform: 'rotate(-90deg) translate(-66px, 32px)',
-    zIndex: 2,
-    borderBottom: 0,
     '&:hover, &:focus': {
       backgroundColor: theme.color.white,
     },
@@ -65,6 +63,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       '& $buttonLabel': {
         color: theme.palette.primary.main
       }
+    },
+    [theme.breakpoints.down('md')]: {
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      transform: 'none',
+      left: 0,
+      right: 0
     }
   },
   docsIconButtonExpanded: {
@@ -99,10 +103,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   menuPaper: {
     maxWidth: 380,
     position: 'absolute',
-    marginTop: theme.spacing.unit * 2,
     padding: theme.spacing.unit * 2,
     paddingTop: theme.spacing.unit,
     boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    marginTop: -30,
+    overflow: 'auto'
   },
   mobileMenu: {
     maxHeight: 300,
@@ -133,7 +138,16 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    this.setState({ anchorEl: event.currentTarget });
+    if (this.state.anchorEl === undefined) {
+      this.setState({
+        anchorEl: event.currentTarget
+      });
+    }
+    else {
+      this.setState({
+        anchorEl: undefined
+      });
+    }
   }
 
   handleClose = () => {
@@ -142,7 +156,7 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
 
   render() {
     const { backupsCTA, classes, docs, isExpanded, toggleSidebar } = this.props;
-    const { anchorEl } = this.state
+    const { anchorEl } = this.state;
 
     if (docs.length === 0) {
       return null;
@@ -150,7 +164,7 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
 
     return (
       <React.Fragment>
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid container item className={classes.root}>
             <Grid item className={classes.gridItem}>
               <Button onClick={toggleSidebar} className={classNames({
@@ -190,14 +204,19 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
             }
           </Grid>
         </Hidden>
-        <Hidden mdUp>
+        <Hidden lgUp>
           <Grid container item className={classes.root}>
             <Grid item className={classes.mobileContainer}>
-              <Tooltip title="Linode Docs">
-                <IconButton onClick={this.handleClick} className={classes.docsIconButton}>
-                  {/* <DocumentIcon className={classes.docsIcon} /> */}
-                </IconButton>
-              </Tooltip>
+              <Button onClick={this.handleClick} className={classNames({
+                [classes.docsIconButton]: true,
+              })}>
+                <HelpOutline className={classes.docsIcon} />
+                <Typography className={classes.buttonLabel}>View Help</Typography>
+                <KeyboardArrowUp className={classNames({
+                  [classes.arrow]: true,
+                  [classes.arrowExpanded]: isExpanded
+                })} />
+              </Button>
               <Menu
                 id="linode-docs"
                 anchorEl={anchorEl}
@@ -205,8 +224,8 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
                 onClose={this.handleClose}
                 getContentAnchorEl={undefined}
                 PaperProps={{ square: true, className: classes.menuPaper }}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                 className={classes.mobileMenu}
               >
                 <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
