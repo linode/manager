@@ -1,6 +1,0 @@
-{
-    "script": "return (function scrollbars(enabled) {\n  if (enabled) {\n    document.documentElement.style.overflow = '';\n  } else {\n    document.documentElement.style.overflow = 'hidden';\n  }\n}).apply(null, arguments)",
-    "args": [
-        false
-    ]
-}

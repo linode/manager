@@ -1,4 +1,0 @@
-{
-    "script": "return !!document.evaluate;",
-    "args": []
-}

@@ -1,4 +1,0 @@
-{
-    "script": "return (function triggerResize() {\n  var evt = window.document.createEvent('UIEvents');\n  evt.initUIEvent('resize', true, false, window, 0);\n  window.dispatchEvent(evt);\n}).apply(null, arguments)",
-    "args": []
-}
