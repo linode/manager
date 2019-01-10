@@ -1,5 +1,6 @@
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -8,7 +9,11 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import Notice from 'src/components/Notice';
+import { reportException } from 'src/exceptionReporting';
+import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
+import {requestAccount} from 'src/store/reducers/resources/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import InvoiceTable from './InvoiceTable';
 
@@ -36,20 +41,29 @@ interface State {
   items?: Linode.InvoiceItem[];
   loading: boolean;
   errors?: Linode.ApiFieldError[];
+  pdfGenerationError: boolean
 }
 
-type CombinedProps = RouteComponentProps<{ invoiceId: number }> & WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<{ invoiceId: number }>
+& StateProps
+& WithStyles<ClassNames>;
+
 
 class InvoiceDetail extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
+    pdfGenerationError: false
   };
 
   mounted: boolean = false;
 
   requestData = () => {
-    const { match: { params: { invoiceId } } } = this.props;
+    const { match: { params: { invoiceId } }, data } = this.props;
     this.setState({ loading: true });
+
+    if (!data) {
+      this.props.requestAccount();
+    }
 
     Promise.all([
       getInvoice(invoiceId),
@@ -68,18 +82,6 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
       });
   };
 
-  pressPrint = (e:any) => {
-    const { invoice } = this.state;
-    const evtobj = window.event? event : e;
-    if (evtobj.keyCode === 80 && (evtobj.ctrlKey || evtobj.metaKey)) {
-      e.preventDefault();
-      return (
-        invoice && window.open(`/account/billing/invoices/${invoice.id}/print`, "_blank")
-      )
-    }
-    return false;
-  };
-
   componentDidMount() {
     this.mounted = true;
     this.requestData();
@@ -89,11 +91,26 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  render() {
-    const { classes } = this.props;
-    const { invoice, loading, errors, items } = this.state;
+  printInvoice(account: Linode.Account, invoice: Linode.Invoice, items: Linode.InvoiceItem[]) {
+    this.setState({
+      pdfGenerationError: false
+    });
+    try {
+      printInvoice(account, invoice, items);
+    } catch (e) {
+      reportException(
+        Error('Error while generating PDF.'),
+        e
+      );
+      this.setState({
+        pdfGenerationError: true
+      });
+    }
+  }
 
-    document.addEventListener('keydown', this.pressPrint);
+  render() {
+    const { classes, data } = this.props;
+    const { invoice, loading, errors, items, pdfGenerationError } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -109,7 +126,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 {invoice && <Typography role="header" variant="h2" data-qa-invoice-id>Invoice #{invoice.id}</Typography>}
               </Grid>
               <Grid item className={classes.titleWrapper} data-qa-printable-invoice>
-                {invoice && <Button type="primary" target="_blank" href={`/account/billing/invoices/${invoice.id}/print`}>Download / Print</Button>}
+                {data && invoice && items && <Button type="primary" target="_blank" onClick={() => this.printInvoice(data, invoice, items)}>Download PDF</Button>}
               </Grid>
               <Grid item className={classes.titleWrapper}>
                 {invoice && <Typography role="header" variant="h2" data-qa-total={invoice.total}>Total ${Number(invoice.total).toFixed(2)}</Typography>}
@@ -117,6 +134,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           <Grid item xs={12}>
+            {pdfGenerationError && <Notice error={true} text="Failed generating PDF." />}
             <InvoiceTable loading={loading} items={items} errors={errors} />
           </Grid>
           <Grid item xs={12}>
@@ -132,8 +150,20 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
   }
 }
 
+type S = ApplicationState['__resources']['account'];
+
+interface StateProps extends S {
+  requestAccount: () => void;
+}
+
+const connected = connect(
+  (state: ApplicationState): S => state.__resources.account,
+  { requestAccount }
+);
+
+
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled, withRouter);
+const enhanced = compose<CombinedProps, {}>(connected, styled, withRouter);
 
 export default enhanced(InvoiceDetail);

@@ -1,6 +1,6 @@
 import * as Promise from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose, pathOr } from 'ramda';
+import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose as composeC } from 'recompose';
@@ -21,10 +21,12 @@ import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import getLinodeInfo from 'src/utilities/getLinodeInfo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { aggregateBackups } from '../../LinodesDetail/LinodeBackup';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -84,6 +86,7 @@ type CombinedProps =
   & Props
   & LinodeRequests
   & InjectedNotistackProps
+  & LabelProps
   & WithStyles<ClassNames>;
 
 interface Notice {
@@ -215,7 +218,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const {
       selectedRegionID,
       selectedTypeID,
-      label,
       backups,
       privateIP,
       selectedBackupID,
@@ -223,6 +225,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     } = this.state;
 
     this.setState({ isMakingRequest: true });
+
+    const label = this.label();
 
     createLinode({
       region: selectedRegionID,
@@ -278,12 +282,34 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     }
   }
 
+  // Generate a default label name with a selected Linode and/or Backup name IF they are selected
+  label = () => {
+    const { linodesWithBackups, selectedBackupID, selectedLinodeID } = this.state;
+    const { getLabel } = this.props;
+
+    const selectedLinode = linodesWithBackups && linodesWithBackups.find(l => l.id === selectedLinodeID);
+
+    if (!selectedLinode) { return getLabel(); }
+
+    const selectedBackup = aggregateBackups(selectedLinode.currentBackups).find(b => b.id === selectedBackupID);
+
+    if (!selectedBackup) {
+      return getLabel(selectedLinode.label, 'backup');
+    }
+
+    const backup = selectedBackup.type !== 'auto'
+      ? selectedBackup.label
+      : 'auto'; // automatic backups have a label of 'null', so use a custom string for these
+
+    return getLabel(selectedLinode.label, backup, 'backup');
+  }
+
   render() {
     const { errors, selectedBackupID, selectedDiskSize, selectedLinodeID, tags,
-      selectedTypeID, selectedRegionID, label, backups, linodesWithBackups, privateIP,
+      selectedTypeID, selectedRegionID, backups, linodesWithBackups, privateIP,
     selectedBackupInfo, isMakingRequest } = this.state;
     const { accountBackups, extendLinodes, getBackupsMonthlyPrice, classes,
-       notice, types, getRegionInfo, getTypeInfo } = this.props;
+       notice, types, getRegionInfo, getTypeInfo, updateCustomLabel } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
@@ -294,6 +320,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const typeInfo = getTypeInfo(selectedTypeID);
 
     const hasBackups = backups || accountBackups;
+
+    const label = this.label();
 
     return (
       <React.Fragment>
@@ -321,7 +349,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         }
         <SelectLinodePanel
           error={hasErrorFor('linode_id')}
-          linodes={compose(
+          linodes={ramdaCompose(
             (linodes: Linode.LinodeWithBackups[]) => extendLinodes(linodes),
             filterLinodesWithBackups,
           )(linodesWithBackups!)}
@@ -353,7 +381,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           labelFieldProps={{
             label: 'Linode Label',
             value: label || '',
-            onChange: this.handleSelectLabel,
+            onChange: updateCustomLabel,
             errorText: hasErrorFor('label'),
           }}
           tagsInputProps={{
@@ -430,10 +458,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
+
 const enhanced = composeC<CombinedProps, Props>(
   styled,
   withSnackbar,
   linodesRequestContainer,
+  withLabelGenerator
 );
 
 export default enhanced(FromBackupsContent);

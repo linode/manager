@@ -67,7 +67,7 @@ interface State {
   currentNetworkOut: number | null;
 }
 
-interface MatchProps { linodeId?: number };
+interface MatchProps { linodeId?: string };
 
 type RouteProps = RouteComponentProps<MatchProps>;
 
@@ -130,7 +130,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         request: () => {
           this.setState(set(L.configs.loading, true));
 
-          return getLinodeConfigs(this.props.match.params.linodeId!)
+          return getLinodeConfigs(Number(this.props.match.params.linodeId))
             .then(({ data }) => {
               this.composeState(
                 set(L.configs.loading, false),
@@ -586,7 +586,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (dispa
         ? () => dispatch(_getLinodeVolumes(linodeId))
         : () => null,
       getLinodeDisks: typeof linodeId === 'string'
-        ? () => dispatch(_getLinodeDisks(linodeId))
+        ? () => dispatch(_getLinodeDisks(Number(linodeId)))
         : () => null,
     },
   };

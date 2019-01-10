@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 import reducer, {
   addEvents,
   addToEvents,
@@ -60,7 +62,7 @@ describe('events', () => {
         });
 
         it('should update the mostRecentEventTime', () => {
-          expect(state).toHaveProperty('mostRecentEventTime', new Date('2018-12-03T22:34:09').getTime())
+          expect(state).toHaveProperty('mostRecentEventTime', moment.utc('2018-12-03T22:34:09').valueOf())
         });
 
         it('should update the countUnseenEvents', () => {
@@ -145,11 +147,12 @@ describe('events', () => {
       it('should return the most recent event time', () => {
         expect(
           mostRecentCreated(new Date(`1970-01-01T00:00:00`).getTime(), { created: `2018-12-03T22:37:20` })
-        ).toBe(new Date(`2018-12-03T22:37:20`).getTime());
+        ).toBe(moment.utc(`2018-12-03T22:37:20`).valueOf());
 
+        const recentTime = moment.utc(`2018-12-03T23:37:20`).valueOf();
         expect(
-          mostRecentCreated(new Date(`2018-12-03T23:37:20`).getTime(), { created: `2018-12-03T22:37:20` })
-        ).toBe(new Date(`2018-12-03T23:37:20`).getTime());
+          mostRecentCreated(recentTime, { created: `2018-12-03T22:37:20` })
+        ).toBe(recentTime);
 
       });
     });

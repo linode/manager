@@ -51,8 +51,8 @@ type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 interface Props {
   isSelecting?: boolean;
-  handleClickTableHeader: (value: string) => void;
-  sortOrder: SortOrder;
+  handleClickTableHeader?: (value: string) => void;
+  sortOrder?: SortOrder;
   currentFilterType: CurrentFilter | null;
 }
 
@@ -68,6 +68,14 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
       sortOrder
     } = this.props;
 
+    const Cell: React.ComponentType<any> = (!!handleClickTableHeader && sortOrder) ? TableSortCell : TableCell;
+    const maybeAddSortingProps = (orderBy: string) => (!!handleClickTableHeader && sortOrder) ? {
+      direction: sortOrder,
+      active: currentFilterType === orderBy,
+      label: orderBy,
+      handleClick: handleClickTableHeader
+    } : {};
+
     return (
       <TableHead>
         <TableRow className={classes.tr}>
@@ -78,51 +86,42 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
                 [classes.stackscriptLabel]: true,
               })} />
           }
-          <TableSortCell
+          <Cell
             className={classNames({
               [classes.tableHead]: true,
               [classes.stackscriptTitles]: true,
             })}
-            direction={sortOrder}
-            active={currentFilterType === 'label'}
-            label="label"
-            handleClick={handleClickTableHeader}
             data-qa-stackscript-table-header
+            {...maybeAddSortingProps('label')}
           >
             StackScript
-          </TableSortCell>
-          <TableSortCell
+          </Cell>
+          <Cell
             className={classNames({
               [classes.tableHead]: true,
               [classes.deploys]: true,
             })}
-            direction={sortOrder}
-            active={currentFilterType === 'deploys'}
-            label="deploys"
-            handleClick={handleClickTableHeader}
             data-qa-stackscript-active-deploy-header
+            {...maybeAddSortingProps('deploys')}
           >
             Active Deploys
-          </TableSortCell>
-          <TableSortCell
+          </Cell>
+          <Cell
             className={classNames({
               [classes.tableHead]: true,
               [classes.revisions]: true,
             })}
-            direction={sortOrder}
-            active={currentFilterType === 'revision'}
-            label="revision"
-            handleClick={handleClickTableHeader}
             data-qa-stackscript-revision-header
+            {...maybeAddSortingProps('revision')}
           >
             Last Revision
-          </TableSortCell>
+          </Cell>
           <TableCell
             className={classes.tableHead}
             data-qa-stackscript-compatible-images
           >
             Compatible Images
-    </TableCell>
+          </TableCell>
           {!isSelecting &&
             <TableCell
               className={classNames({

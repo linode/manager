@@ -8,6 +8,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -32,7 +33,10 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 
-type ClassNames = 'root' | 'headline' | 'loadingContainer';
+import LinodeDiskSpace from './LinodeDiskSpace';
+
+
+type ClassNames = 'root' | 'headline' | 'loadingContainer' | 'diskSpaceWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -44,6 +48,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  diskSpaceWrapper: {
+    backgroundColor: theme.bg.tableHeader,
+    border: `1px solid ${theme.color.diskSpaceBorder}`,
+    padding: theme.spacing.unit * 2,
+    minHeight: '250px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
   }
 });
 
@@ -179,6 +192,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       error,
       loading,
       linodeStatus,
+      linodeTotalDisk
     } = this.props;
 
     return (
@@ -191,19 +205,33 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink onClick={this.openDrawerForCreation} label="Add a Disk" />
           </Grid>
         </Grid>
-        <Table isResponsive={false} aria-label="List of Disks">
-          <TableHead>
-            <TableRow>
-              <TableCell>Label</TableCell>
-              <TableCell>Size</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
+        <Grid container>
+          <Grid item md={4} sm={12}>
+            <Paper classes={{ root: classes.diskSpaceWrapper }}>
+              <LinodeDiskSpace
+                disks={data}
+                error={error}
+                loading={loading}
+                totalDiskSpace={linodeTotalDisk}
+              />
+            </Paper>
+          </Grid>
+          <Grid item md={8} sm={12}>
+            <Table isResponsive={false} aria-label="List of Disks">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Label</TableCell>
+                  <TableCell>Size</TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
 
-          <TableBody>
-            {this.renderTableContent(loading, linodeStatus, error, data)}
-          </TableBody>
-        </Table>
+              <TableBody>
+                {this.renderTableContent(loading, linodeStatus, error, data)}
+              </TableBody>
+            </Table>
+          </Grid>
+        </Grid>
         <PaginationFooter
           page={this.props.page}
           pageSize={this.props.pageSize}
@@ -430,17 +458,17 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   onImageChange = (image: string | undefined) => {
     const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, image }})
+    this.setDrawer({ fields: { ...fields, image } })
   }
 
   onPasswordChange = (password: string) => {
     const { fields } = this.state.drawer;
-    this.setDrawer({ fields: { ...fields, password }});
+    this.setDrawer({ fields: { ...fields, password } });
   }
 
   onResetImageMode = () => {
     const { fields } = this.state.drawer;
-    this.setDrawer({ fields: {...fields, image: undefined, password: undefined }});
+    this.setDrawer({ fields: { ...fields, image: undefined, password: undefined } });
   }
 
   onDrawerSubmit = () => {

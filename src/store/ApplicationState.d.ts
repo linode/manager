@@ -49,6 +49,13 @@ declare interface ApplicationState {
       lastUpdated: number;
       error?: Linode.ApiFieldError[];
     },
+    regions: {
+      results: string[];
+      entities: Linode.Region[];
+      loading: boolean;
+      lastUpdated: number;
+      error?: Linode.ApiFieldError[];
+    },
     account: RequestableData<Linode.Account>
   },
   authentication: AuthState;

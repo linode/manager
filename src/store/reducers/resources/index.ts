@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
 import nodeBalancers, { defaultState as defaultNodeBalancersState } from 'src/store/nodeBalancers/nodeBalancers.reducer';
+import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import volumes, { defaultState as defaultVolumesState } from 'src/store/volumes/volumes.reducer';
 import domains, { defaultState as defaultDomainsState } from '../../domains/domains.reducer';
 import account, { defaultState as defaultAccountState } from './account';
@@ -17,6 +18,7 @@ export const defaultState = {
   linodes: defaultLinodesState,
   nodeBalancers: defaultNodeBalancersState,
   profile: defaultProfileState,
+  regions: defaultRegionsState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
 }
@@ -29,6 +31,7 @@ export default combineReducers({
   linodes,
   nodeBalancers,
   profile,
+  regions,
   types,
   volumes,
 });

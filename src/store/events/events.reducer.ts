@@ -142,7 +142,7 @@ export const updateEvents = compose(
  *
  */
 export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'created'>) => {
-  const time = new Date(current.created).getTime();
+  const time: number = moment.utc(current.created).valueOf(); // Unix time (milliseconds)
   return latestTime > time ? latestTime : time;
 };
 
@@ -207,7 +207,7 @@ export const getEvents: RequestThunk<Linode.Event[]>
     const { mostRecentEventTime, inProgressEvents } = getState().events;
 
     const filters = generatePollingFilter(
-      moment(mostRecentEventTime).format(dateFormat),
+      moment.utc(mostRecentEventTime).format(dateFormat),
       Object.keys(inProgressEvents),
     );
 
