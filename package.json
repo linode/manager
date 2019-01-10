@@ -54,7 +54,7 @@
     "he": "^1.2.0",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "invariant": "^2.2.4",
-    "jest": "^22.4.0",
+    "jest": "^23.6.0",
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
     "md5": "^2.2.1",
@@ -153,7 +153,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
     "@babel/preset-typescript": "^7.1.0",
+    "@babel/register": "^7.0.0",
     "@storybook/addon-actions": "^4.1.6",
     "@storybook/addon-knobs": "^4.1.6",
     "@storybook/addon-links": "^4.1.6",
@@ -193,6 +195,8 @@
     "@types/yup": "^0.24.9",
     "@types/zxcvbn": "^4.4.0",
     "axe-core": "^3.1.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.5",
     "babel-preset-react-app": "^7.0.0",
     "csstype": "^2.5.5",
@@ -213,7 +217,7 @@
     "utility-types": "^2.1.0",
     "wdio-browserstack-service": "^0.1.16",
     "wdio-dot-reporter": "0.0.9",
-    "wdio-jasmine-framework": "0.3.5",
+    "wdio-jasmine-framework": "^0.3.8",
     "wdio-junit-reporter": "^0.4.2",
     "wdio-selenium-standalone-service": "^0.0.10",
     "wdio-spec-reporter": "^0.1.5",
@@ -273,6 +277,7 @@
   },
   "babel": {
     "presets": [
+      "@babel/preset-env",
       "@babel/preset-typescript"
     ]
   },
