@@ -1,7 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Button from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -145,7 +144,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
         <TableCell parentColumn="Amount">${item.usd}</TableCell>
         <TableCell>
-          {account.data && <Button type="primary" target="_blank" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</Button>}
+          {account.data && <a href="#" target="_blank" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</a>}
           {pdfGenerationError.itemId === item.id && <Notice error={true} text="Failed generating PDF." />}
         </TableCell>
       </TableRow>
