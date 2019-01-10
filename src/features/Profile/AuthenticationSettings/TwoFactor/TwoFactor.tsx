@@ -1,10 +1,9 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
-import { compose, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import ActionsPanel from 'src/components/ActionsPanel';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -12,11 +11,16 @@ import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { disableTwoFactor, getTFAToken } from 'src/services/profile';
+import ToggleState from 'src/components/ToggleState';
+import { getTFAToken } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
+
+import ScratchDialog from './ScratchCodeDialog';
+
+import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 
 type ClassNames = 'root'
   | 'container'
@@ -25,36 +29,39 @@ type ClassNames = 'root'
   | 'showHideText';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-    root: {
-      padding: theme.spacing.unit * 3,
-      paddingBottom: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
-    },
-    container: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-      justifyContent: 'left',
-      marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
-    },
-    title: {
-      marginBottom: theme.spacing.unit,
-    },
-    visibility: {
-      color: theme.palette.primary.main,
-      padding: 0,
-      border: 0,
-    },
-    showHideText: {
-      fontSize: '1rem',
-      marginLeft: theme.spacing.unit * 2,
-      color: theme.palette.text.primary,
-    },
-  });
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  },
+  container: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'left',
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+  },
+  title: {
+    marginBottom: theme.spacing.unit,
+  },
+  visibility: {
+    color: theme.palette.primary.main,
+    padding: 0,
+    border: 0,
+  },
+  showHideText: {
+    fontSize: '1rem',
+    marginLeft: theme.spacing.unit * 2,
+    color: theme.palette.text.primary,
+  },
+});
 
 interface Props {
   clearState: () => void;
+  twoFactor?: boolean;
+  username?: string;
+  updateProfile: (profile: Partial<Linode.Profile>) => void;
 }
 
 interface ConfirmDisable {
@@ -72,6 +79,7 @@ interface State {
   success?: string;
   twoFactorEnabled?: boolean;
   twoFactorConfirmed?: boolean;
+  scratchCode: string;
 }
 
 type CombinedProps = Props & StateProps & DispatchProps & WithStyles<ClassNames>;
@@ -90,7 +98,8 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       open: false,
       error: undefined,
       submitting: false,
-    }
+    },
+    scratchCode: ''
   }
 
   /*
@@ -118,11 +127,11 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
         error: undefined,
         open: false,
         submitting: false,
-  }
+      }
     });
   }
 
-  confirmToken = () => {
+  confirmToken = (scratchCode: string) => {
     this.props.actions.updateProfile({
       ...this.props.profile,
       two_factor_auth: true,
@@ -132,111 +141,60 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       showQRCode: false,
       twoFactorEnabled: true,
       twoFactorConfirmed: true,
+      scratchCode
     })
   }
 
-  disableTFA = () => {
-    disableTwoFactor()
-    .then((response) => {
-      this.props.actions.updateProfile({
-          ...this.props.profile,
-        two_factor_auth: false,
-      });
-      this.setState({
-        success: "Two-factor authentication has been disabled.",
-        twoFactorEnabled: false,
-        twoFactorConfirmed: false,
-        disableDialog: {
-          error: undefined,
-          open: false,
-          success: undefined,
-          submitting: false,
-        }
-      });
+  disableTFASuccess = () => {
+    this.props.actions.updateProfile({
+      ...this.props.profile,
+      two_factor_auth: false,
     })
-    .catch((error) => {
-      const fallbackError = [{ reason: 'There was an error disabling TFA.' }];
-      const disableError = pathOr(fallbackError, ['response', 'data', 'errors'], error);
-      this.setState({
-        twoFactorEnabled: true,
-        disableDialog: {
-          error: disableError[0].reason,
-          submitting: false,
-          open: true,
-          success: undefined,
-        }
-      });
+    this.setState({
+      success: 'Two-factor authentication has been disabled.',
+      twoFactorEnabled: false,
+      twoFactorConfirmed: false,
     })
-  }
-
-  getActions = () => {
-    return (
-      <ActionsPanel>
-        <Button
-          onClick={this.closeDisableDialog}
-          type="cancel"
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          type="secondary"
-          destructive
-          loading={this.state.disableDialog.submitting}
-          onClick={this.disableTFA}
-          data-qa-submit
-        >
-          Disable Two-factor Authenitcation
-        </Button>
-      </ActionsPanel>
-    )
   }
 
   getToken = () => {
     this.setState({ loading: true });
-    getTFAToken()
+    return getTFAToken()
       .then((response) => {
-        this.setState({ secret: response.data.secret, loading: false })
+        this.setState({ secret: response.data.secret, loading: false, errors: undefined })
       })
       .catch((error) => {
         const fallbackError = [{ reason: 'There was an error retrieving your secret key. Please try again.' }];
         this.setState({
-            errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-            loading: false,
-            twoFactorEnabled: false,
-          }, () => {
+          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          loading: false,
+        }, () => {
           scrollErrorIntoView();
         });
+        return Promise.reject('Error');
       });
   }
 
   toggleHidden = () => {
     const { showQRCode } = this.state;
     if (!showQRCode) {
-      this.getToken();
+      return this.getToken()
+      .then(response => this.setState({showQRCode: !showQRCode}))
+      .catch(err => err)
     }
-    this.setState({ showQRCode: !this.state.showQRCode });
+    return this.setState({ showQRCode: !this.state.showQRCode });
   }
 
-  toggleTwoFactorEnabled = () => {
+  toggleTwoFactorEnabled = (toggleEnabled: boolean) => {
     this.setState({ errors: undefined, success: undefined });
-    const { twoFactorEnabled, twoFactorConfirmed } = this.state;
-    const toggle = !twoFactorEnabled;
-    if (toggle) {
-      // Enable TFA. Ask the API for a TFA secret.
-      this.setState({ twoFactorEnabled: true, loading: true, showQRCode: true, });
+    /** if we're turning TFA on, ask the API for a TFA secret */
+    if (toggleEnabled) {
       this.getToken();
-    } else {
-      // If TFA isn't active on the account,
-      // there's nothing to do here; just flip the toggle.
-      if (!twoFactorConfirmed) {
-        this.setState({ twoFactorEnabled: false })
-        return;
-      }
-      // Deactivate TFA.
-      // This is destructive (sort of), so
-      // open a confirmation dialog.
-      this.openDisableDialog();
+      return this.setState({
+        twoFactorEnabled: true,
+        loading: true,
+        showQRCode: true,
+      });
     }
   }
 
@@ -247,85 +205,89 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <React.Fragment>
-        <Paper className={classes.root}>
-          {success && <Notice success text={success} />}
-          {generalError && <Notice error text={generalError} />}
-          <Typography
-            role="header"
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
-              Two-Factor Authentication (TFA)
-          </Typography>
-          <FormControl fullWidth>
-            <FormControlLabel
-              label={twoFactorEnabled ? "Enabled" : "Disabled"}
-              control={
-              <Toggle
-                checked={twoFactorEnabled}
-                onChange={this.toggleTwoFactorEnabled}
-                data-qa-toggle-tfa={twoFactorEnabled}
-              />
-              }
-            />
-          </FormControl>
-          <Typography
-              variant="body1"
-              data-qa-copy
-          >
-            Two-factor authentication increases the security of your Linode account by requiring two different
-            forms of authentication to log in: your account password and a security token. You can set up a
-            third party app such as Authy or Google Authenticator to generate these tokens for you.
-          </Typography>
-          {twoFactorEnabled &&
-            <div className={classes.container}>
-              {showQRCode
-                ? <Button
-                    type="secondary"
-                    className={classes.visibility}
-                    onClick={this.toggleHidden}
-                    destructive
-                    data-qa-hide-show-code
+      <ToggleState>
+        {({ open: disable2FAOpen, toggle: toggleDisable2FA }) => (
+          <ToggleState>
+            {({ open: scratchDialogOpen, toggle: toggleScratchDialog }) => (
+              <React.Fragment>
+                <Paper className={classes.root}>
+                  {success && <Notice success text={success} />}
+                  {generalError && <Notice error text={generalError} />}
+                  <Typography
+                    role="header"
+                    variant="h2"
+                    className={classes.title}
+                    data-qa-title
                   >
-                    <SettingsBackupRestore />
-                    <span className={classes.showHideText}>Hide QR Code</span>
-                  </Button>
-                : <Button
-                    type="secondary"
-                    className={classes.visibility}
-                    onClick={this.toggleHidden}
-                    data-qa-hide-show-code
+                    Two-Factor Authentication (TFA)
+                  </Typography>
+                  {typeof twoFactorConfirmed !== 'undefined' &&
+                    <TwoFactorToggle
+                      twoFactorEnabled={twoFactorEnabled || false}
+                      onChange={this.toggleTwoFactorEnabled}
+                      toggleDisableDialog={toggleDisable2FA}
+                      twoFactorConfirmed={twoFactorConfirmed}
+                    />
+                  }
+                  <Typography
+                    variant="body1"
+                    data-qa-copy
                   >
-                    <SettingsBackupRestore />
-                    <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
-                  </Button>
-              }
-            </div>
-          }
-          {twoFactorEnabled && showQRCode && username && twoFactorConfirmed !== undefined &&
-            <EnableTwoFactorForm
-              secret={secret}
-              username={username}
-              loading={loading}
-              onSuccess={this.confirmToken}
-              twoFactorConfirmed={twoFactorConfirmed}
-            />
-          }
-        </Paper>
-        <ConfirmationDialog
-          open={this.state.disableDialog.open}
-          title="Disable Two-Factor Authentication"
-          onClose={this.closeDisableDialog}
-          actions={this.getActions}
-        >
-          {this.state.disableDialog.error &&
-          <Notice error text={this.state.disableDialog.error} />
-        }
-        <Typography>Are you sure you want to disable two-factor authentication?</Typography>
-      </ConfirmationDialog>
-    </React.Fragment>
+                    Two-factor authentication increases the security of your Linode account by requiring two different
+                    forms of authentication to log in: your account password and a security token. You can set up a
+                    third party app such as Authy or Google Authenticator to generate these tokens for you.
+                  </Typography>
+                  {twoFactorEnabled &&
+                    <div className={classes.container}>
+                      {showQRCode
+                        ? <Button
+                          type="secondary"
+                          className={classes.visibility}
+                          onClick={this.toggleHidden}
+                          destructive
+                          data-qa-hide-show-code
+                        >
+                          <SettingsBackupRestore />
+                          <span className={classes.showHideText}>Hide QR Code</span>
+                        </Button>
+                        : <Button
+                          type="secondary"
+                          className={classes.visibility}
+                          onClick={this.toggleHidden}
+                          data-qa-hide-show-code
+                        >
+                          <SettingsBackupRestore />
+                          <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
+                        </Button>
+                      }
+                    </div>
+                  }
+                  {twoFactorEnabled && showQRCode && username && twoFactorConfirmed !== undefined &&
+                    <EnableTwoFactorForm
+                      secret={secret}
+                      username={username}
+                      loading={loading}
+                      onSuccess={this.confirmToken}
+                      twoFactorConfirmed={twoFactorConfirmed}
+                      toggleDialog={toggleScratchDialog}
+                    />
+                  }
+                </Paper>
+                <ScratchDialog
+                  open={scratchDialogOpen}
+                  closeDialog={toggleScratchDialog}
+                  scratchCode={this.state.scratchCode}
+                />
+                <DisableTwoFactorDialog
+                  onSuccess={this.disableTFASuccess}
+                  open={disable2FAOpen}
+                  closeDialog={toggleDisable2FA}
+                />
+              </React.Fragment>
+            )}
+          </ToggleState>
+        )}
+      </ToggleState>
     )
   }
 }
@@ -358,6 +320,47 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<any, any, any>(styled, connected);
+export default compose<CombinedProps, Props>(
+  styled,
+  connected
+)(TwoFactor);
 
-export default enhanced(TwoFactor);
+interface ToggleProps {
+  toggleDisableDialog: () => void;
+  onChange: (value: boolean) => void;
+  twoFactorEnabled: boolean;
+  twoFactorConfirmed: boolean;
+}
+
+class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { twoFactorConfirmed, onChange } = this.props;
+    const enabled = e.currentTarget.checked;
+    onChange(enabled);
+    /** 
+     * only open the disable dialog if 2FA has been turned on and we're flipping the toggle off 
+     */
+    if (!enabled && twoFactorConfirmed) {
+      this.props.toggleDisableDialog();
+    }
+  }
+
+  render() {
+    const { twoFactorEnabled } = this.props;
+
+    return (
+      <FormControl fullWidth>
+        <FormControlLabel
+          label={twoFactorEnabled ? "Enabled" : "Disabled"}
+          control={
+            <Toggle
+              checked={twoFactorEnabled}
+              onChange={this.handleChange}
+              data-qa-toggle-tfa={twoFactorEnabled}
+            />
+          }
+        />
+      </FormControl>
+    )
+  }
+}

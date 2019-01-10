@@ -13,7 +13,7 @@ describe('formatDate utility', () => {
     });
   });
 
-  describe('Humanized dates', () => {
+  describe('Humanized Dates', () => {
     it('should output humanized strings if the date is earlier than the cutoff', () => {
       const fiveMinutesAgo = moment().subtract(5, 'minutes').format();
       const formattedDate = formatDate(fiveMinutesAgo, { timezone, humanizeCutoff: 'day' })
@@ -32,5 +32,17 @@ describe('formatDate utility', () => {
         const formattedDate = formatDate(aLongTimeAgo, { timezone, humanizeCutoff: 'never' });
         expect(formattedDate).toBe('10 years ago');
     })
+    describe('Humanize Future Dates', () => {
+      it('should return "in a month" for dates 29 days in the future', () => {
+        const daysInTheFuture = moment().add(29, 'days').format();
+        const formattedDate = formatDate(daysInTheFuture, { timezone, humanizeCutoff: 'month' })
+        expect(formattedDate).toBe('in a month');
+      });
+      it('should return amount of days for dates 23 days in the future', () => {
+        const daysInTheFuture = moment().add(23, 'days').format();
+        const formattedDate = formatDate(daysInTheFuture, { timezone, humanizeCutoff: 'month' });
+        expect(formattedDate).toBe('in 23 days');
+      });
+    });
   })
 });

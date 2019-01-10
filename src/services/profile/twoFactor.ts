@@ -1,6 +1,7 @@
 import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setURL } from '..';
+import { enableTwoFactorSchema } from './twofactor.schema';
 
 type Secret = Linode.Secret;
 
@@ -50,8 +51,9 @@ export const disableTwoFactor = () =>
  * being locked out of your Account.
  */
 export const confirmTwoFactor = (tfa_code: string) =>
-  Request<string>(
+  Request<{ scratch: string }>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tfa-enable-confirm`),
-    setData({ tfa_code })
+    setData({ tfa_code }, enableTwoFactorSchema)
   )
+    .then(response => response.data)

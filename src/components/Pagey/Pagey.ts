@@ -73,6 +73,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
 
     private onDelete = () => {
       const { page, data } = this.state;
+
       /*
        * Basically, if we're on page 2 and the user deletes the last entity
        * on the page, send the user back to the previous page, AKA the max number
@@ -114,6 +115,7 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
             loading: false,
             error: undefined,
             isSorting: false,
+            searching: false,
           });
         })
         .catch((response) => {
@@ -132,15 +134,12 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       this.setState({ page }, () => { this.request() })
     };
 
-    public handleOrderChange = (orderBy: string, order: Order = 'asc', isSorting: boolean) => {
-      this.setState({ orderBy, order, page: 1, isSorting: true }, () => this.request());
+    public handleOrderChange = (orderBy: string, order: Order = 'asc', page: number = 1) => {
+      this.setState({ orderBy, order, page, isSorting: true }, () => this.request());
     };
 
     public handleSearch = (filter: any) => {
-      this.setState({ filter, page: 1, searching: true }, () => {
-        return this.request()
-          .then(() => this.setState({ searching: false }))
-      });
+      this.setState({ filter, page: 1, searching: true }, () => this.request());
     }
 
     public render() {
