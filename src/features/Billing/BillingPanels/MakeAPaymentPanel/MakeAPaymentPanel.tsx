@@ -70,7 +70,7 @@ interface State {
   successMessage?: string;
   errors?: Linode.ApiFieldError[];
   usd: string;
-  CVV?: string;
+  cvv?: string;
   paymentID: string;
   payerID: string;
   isExecutingPaypalPayment: boolean;
@@ -118,7 +118,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     type: 'CREDIT_CARD',
     submitting: false,
     usd: '',
-    CVV: '',
+    cvv: '',
     dialogOpen: false,
     paymentID: '',
     payerID: '',
@@ -166,10 +166,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   }
 
   handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ CVV: e.target.value || '' });
+    this.setState({ cvv: e.target.value || '' });
 
   submitForm = () => {
-    const { usd, CVV } = this.state;
+    const { usd, cvv } = this.state;
 
     this.setState({
       submitting: true,
@@ -179,7 +179,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     makePayment({
       usd: (+usd).toFixed(2),
-      CVV,
+      cvv,
     })
       .then((response) => {
         this.setState({
@@ -199,7 +199,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     errors: undefined,
     success: undefined,
     usd: '',
-    CVV: '',
+    cvv: '',
     paypalSubmitEnabled: false,
   });
 
@@ -347,7 +347,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorFor({
       usd: 'amount',
-      CVV: 'CVV',
+      cvv: 'cvv',
     }, errors);
 
     const type = (this.state.type === 'PAYPAL')
@@ -419,10 +419,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               />
               {this.state.type === 'CREDIT_CARD' &&
                 <TextField
-                  errorText={hasErrorFor('CVV')}
+                  errorText={hasErrorFor('cvv')}
                   label="CVV"
                   onChange={this.handleCVVChange}
-                  value={this.state.CVV}
+                  value={this.state.cvv}
                   type="text"
                   placeholder={`000`}
                 />
