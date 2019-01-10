@@ -17,6 +17,7 @@ const classes = {
 const props = {
   classes,
   entities: emptyResults,
+  entitiesLoading: false,
   searchResults: emptyResults,
   search: jest.fn(),
   ...reactRouterProps,
@@ -35,15 +36,15 @@ describe('Component', () => {
     shallow(<SearchLanding {...newProps} />);
     expect(props.search).toHaveBeenCalledWith('search');
   });
+  it("should show a loading state", () => {
+    component.setProps({ entitiesLoading: true });
+    expect(component.find('[data-qa-search-loading]')).toHaveLength(1);
+    component.setProps({ entitiesLoading: false });
+  });
   it("should search when the entity list (from Redux) changes", () => {
     jest.resetAllMocks();
     component.setProps({ entities: {...emptyResults, linodes: [searchbarResult1] }});
     expect(props.search).toHaveBeenCalledTimes(1);
-  });
-  it("should show an error state", () => {
-    expect(component.find('[data-qa-error-state]')).toHaveLength(0);
-    component.setState({ error: true });
-    expect(component.find('[data-qa-error-state]')).toHaveLength(1);
   });
   it("should show an empty state", () => {
     component.setState({ error: false, results: emptyResults, loading: false });

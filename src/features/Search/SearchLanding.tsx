@@ -3,9 +3,9 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
@@ -35,8 +35,6 @@ const displayMap = {
 
 interface State {
   query: string;
-  loading: boolean;
-  error: boolean;
 }
 
 type CombinedProps =
@@ -49,8 +47,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
   state: State = {
     query: getQueryParam(this.props.location.search, 'query'),
-    error: false,
-    loading: false,
   };
 
   componentDidMount() {
@@ -71,8 +67,8 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, searchResults } = this.props;
-    const { query, error, loading } = this.state;
+    const { classes, entitiesLoading, searchResults } = this.props;
+    const { query } = this.state;
 
     const resultsEmpty = equals(searchResults, emptyResults);
     return (
@@ -82,13 +78,13 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
             Search Results { query && `for "${query}"` }
           </Typography>
         </Grid>
-        {error &&
-          <Grid item data-qa-error-state>
-            <ErrorState errorText={"There was an error retrieving your search results."} />
+        {entitiesLoading &&
+          <Grid item data-qa-search-loading>
+            <CircleProgress />
           </Grid>
         }
         {
-          !loading && resultsEmpty &&
+          resultsEmpty &&
           <Grid item data-qa-empty-state>
             <Placeholder
               title="No results"
@@ -96,17 +92,19 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
             />
           </Grid>
         }
-        <Grid item>
+        {!entitiesLoading &&
+          <Grid item>
           {Object.keys(searchResults).map((entityType, idx: number) =>
             <ResultGroup
               key={idx}
               entity={displayMap[entityType]}
               results={searchResults[entityType]}
-              loading={loading}
               groupSize={100}
             />
           )}
         </Grid>
+        }
+
       </Grid>
     );
   }
