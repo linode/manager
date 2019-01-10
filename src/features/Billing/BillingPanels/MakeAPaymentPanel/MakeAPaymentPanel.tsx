@@ -420,7 +420,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               {this.state.type === 'CREDIT_CARD' &&
                 <TextField
                   errorText={hasErrorFor('cvv')}
-                  label="cvv"
+                  label="CVV"
                   onChange={this.handleCVVChange}
                   value={this.state.cvv}
                   type="text"
