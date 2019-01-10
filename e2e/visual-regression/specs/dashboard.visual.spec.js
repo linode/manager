@@ -35,7 +35,7 @@ describe('Dashboard Visual Regression', function() {
     });
 
     it('NodeBalancers Card', () => {
-        compareTest('node-balancers-card', Dashboard.monthlyTransferCard.selector);
+        compareTest('node-balancers-card', Dashboard.nodebalancerCard.selector);
     });
 
     it('Monthly Transer Card', () => {

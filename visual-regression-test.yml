@@ -22,10 +22,11 @@ services:
       - chrome
   manager-local:
     environment:
+      - HTTPS=true
       - REACT_APP_APP_ROOT=https://manager-local:3000
       - REACT_APP_LOGIN_ROOT=https://login.linode.com
       - REACT_APP_CLIENT_ID=8e117503496dd81bdc47
-      - REACT_APP_API_ROOT=http://imposter:8088/v4
+      - REACT_APP_API_ROOT=https://imposter:8088/v4
       - REACT_APP_ALGOLIA_APPLICATION_ID=KGUN8FAIPF
       - REACT_APP_ALGOLIA_SEARCH_KEY=d4847002cd30392fe0fbd00a1da933ed
       - REACT_APP_TEST_ENVIRONMENT=true
@@ -38,14 +39,15 @@ services:
   manager-e2e:
     environment:
       - REACT_APP_APP_ROOT=https://manager-local:3000
-      - REACT_APP_API_ROOT=http://imposter:8088/v4
+      - REACT_APP_API_ROOT=https://imposter:8088/v4
+      - VISUAL_REGRESSION=true
       - DOCKER=true
-      - MANAGER_USER=prod-test-010
-      - MANAGER_PASS=${password-in-1pass}
-      - MANAGER_USER_2=prod-test-012
-      - MANAGER_PASS_2=${password-in-1pass}
-      - MANAGER_OAUTH=${token-in-1pass}
-      - MANAGER_OAUTH_2=${token-in-1pass}
+      - MANAGER_USER=${MANAGER_USER}
+      - MANAGER_PASS=${MANAGER_PASS}
+      - MANAGER_USER_2=${MANAGER_USER_2}
+      - MANAGER_PASS_2=${MANAGER_PASS_2}
+      - MANAGER_OAUTH=${MANAGER_OAUTH}
+      - MANAGER_OAUTH_2=${MANAGER_OAUTH_2}
     volumes:
       - ./e2e/test-results:/src/e2e/test-results
       - ./e2e/html-results:/src/e2e/html-results

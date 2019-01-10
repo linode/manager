@@ -86,7 +86,7 @@ typings/
 restart-manager.sh
 
 # E2E Test Temporary Files
-allure-report/*.*
+allure-report/**
 e2e/errorShots/*.png
 e2e/test-results/*.xml
 e2e/html-results/*.*

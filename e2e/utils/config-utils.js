@@ -49,10 +49,8 @@ exports.login = (username, password, credFilePath) => {
     try {
         browser.waitForVisible('#username', constants.wait.long);
     } catch (err) {
-        console.log(`${browser.options.baseUrl}${constants.routes.dashboard}`);
         console.log(browser.getUrl());
         console.log(err);
-        browser.saveViewportScreenshot('./e2e/visual-regression/baseline/login-page-failed.png');
         console.log('Login page failed to load!');
     }
 
@@ -68,8 +66,7 @@ exports.login = (username, password, credFilePath) => {
             return browser.isExisting('[data-qa-add-new-menu-button]') || browser.getUrl().includes('oauth/authorize');
         }, constants.wait.normal);
     } catch (err) {
-        console.log('taking screenshot!');
-        browser.saveViewportScreenshot('./e2e/visual-regression/baseline/failed-login.png');
+        console.log(err);
         console.log('failed to login!');
         if (browser.getText('.alert').includes('This field is required.')) {
             browser.trySetValue('#password', password);
@@ -81,7 +78,6 @@ exports.login = (username, password, credFilePath) => {
         browser.click('.btn.btn-primary');
     }
 
-    browser.saveViewportScreenshot('./e2e/visual-regression/baseline/after-login.png');
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
 
     if (browser.waitForVisible('[role="dialog"]')) {
