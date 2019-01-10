@@ -54,7 +54,7 @@ export const getPayments = (params?: any, filter?: any) =>
  *
  * @param data { object }
  * @param data.usd { string } the dollar amount of the payment
- * @param data.CVV { string } the 3-digit code on the back of the
+ * @param data.cvv { string } the 3-digit code on the back of the
  * credit card.
  *
  */
