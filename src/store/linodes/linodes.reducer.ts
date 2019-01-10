@@ -61,6 +61,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, updateMultipleLinodes)) {
     const { payload } = action; /** list of successfully updated Linodes */
+    if (payload && payload.length === 0) { return state; }
     return {
       ...state,
       entities: [
