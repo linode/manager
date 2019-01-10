@@ -14,9 +14,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
+import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
-import { withRegions } from 'src/context/regions';
 import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { ExtendedLinode } from './SelectLinodePanel';
@@ -46,16 +46,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-interface RegionsContextProps {
-  regionsData: ExtendedRegion[];
-  regionsLoading: boolean;
-}
 
 type CombinedProps =
   & WithImagesProps
   & WithLinodesProps
   & WithTypesProps
-  & RegionsContextProps
+  & WithRegions
   & WithStyles<ClassNames>
   & StateProps
   & RouteComponentProps<{}>;
@@ -328,9 +324,10 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
 
     const { classes, regionsLoading, imagesLoading } = this.props;
 
-    const tabRender = this.tabs[selectedTab].render;
 
     if (regionsLoading || imagesLoading) { return <CircleProgress />; }
+
+    const tabRender = this.tabs[selectedTab].render;
 
     return (
       <StickyContainer>
@@ -394,20 +391,6 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   )(state.__resources.types.entities),
 }));
 
-
-const regionsContext = withRegions(({
-  data: regionsData,
-  loading: regionsLoading,
-}) => ({
-  regionsLoading,
-  regionsData: compose(
-    map((region: Linode.Region) => ({
-      ...region,
-      display: dcDisplayNames[region.id],
-    })),
-  )(regionsData || [])
-}))
-
 interface StateProps {
   accountBackups: boolean;
 }
@@ -432,6 +415,18 @@ interface WithLinodesProps {
   linodesError?: Linode.ApiFieldError[];
 }
 
+interface WithRegions {
+  regionsData: ExtendedRegion[];
+  regionsLoading: boolean;
+  regionsError: Linode.ApiFieldError[],
+}
+
+const withRegions = regionsContainer(({ data, loading, error }) => ({
+  regionsData: data.map((r) => ({...r, display: dcDisplayNames[r.id ]})),
+  regionsLoading: loading,
+  regionsError: error,
+}));
+
 export default composeComponent<CombinedProps, {}>(
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
@@ -445,7 +440,7 @@ export default composeComponent<CombinedProps, {}>(
     linodesLoading,
     linodesError,
   })),
-  regionsContext,
+  withRegions,
   withTypes,
   styled,
   withRouter,
