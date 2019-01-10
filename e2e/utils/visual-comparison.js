@@ -27,7 +27,7 @@ const compareToBaseLine = (imageName) => {
             createAttachment(`Actual Image: ${imageName}`,screenImg,'image/png');
             createAttachment(`Diff Image: ${imageName}`,compareData.getBuffer(),'image/png');
             expect(false).toBe(true);
-        }else {
+        } else {
             createAttachment(`Expected Image: ${imageName}`,baselineImg,'image/png');
         }
     });
