@@ -32,7 +32,14 @@ type ClassNames = 'root'
   | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    position: 'sticky',
+    top: 0,
+    [theme.breakpoints.down('md')]: {
+      position: 'relative',
+      top: 'initial'
+    }
+  },
   gridItem: {
     width: '100%',
   },
