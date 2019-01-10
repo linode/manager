@@ -4,7 +4,7 @@ import * as React from 'react';
 import { APITokenDrawer } from './APITokenDrawer';
 
 describe('API Token Drawer', () => {
-  const component = shallow(
+  const component = shallow<APITokenDrawer>(
     <APITokenDrawer
       classes={{
         permsTable: '',

@@ -45,7 +45,7 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
         {...restOfProps}
         deleteIcon={this.renderIcon()}
         onDelete={this.handleDelete}
-        component="button"
+        component={"button" as "div"}
         colorVariant="lightBlue"
       />
     );

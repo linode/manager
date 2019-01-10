@@ -130,7 +130,7 @@ export class SupportTicketsLanding extends React.Component<CombinedProps, State>
             indicatorColor="primary"
             textColor="primary"
             className={classes.root}
-            scrollable
+            variant="scrollable"
             scrollButtons="on"
           >
             <Tab data-qa-tab="Open Tickets" key={0} label="Open Tickets"/>

@@ -16,8 +16,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@material-ui/core": "^3.5.1",
-    "@material-ui/icons": "^3.0.1",
+    "@material-ui/core": "^3.8.3",
+    "@material-ui/icons": "^3.0.2",
     "@types/algoliasearch": "^3.27.5",
     "@types/he": "^1.1.0",
     "@types/jspdf": "^1.2.2",
@@ -72,7 +72,7 @@
     "raf": "3.4.0",
     "ramda": "^0.25.0",
     "raven-js": "^3.22.3",
-    "react": "^16.4.1",
+    "react": "^16.7.0",
     "react-async-script-loader": "^0.3.0",
     "react-chartjs-2": "^2.7.0",
     "react-dev-utils": "^7.0.1",
@@ -153,6 +153,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/preset-typescript": "^7.1.0",
     "@storybook/addon-actions": "^4.1.6",
     "@storybook/addon-knobs": "^4.1.6",
     "@storybook/addon-links": "^4.1.6",
@@ -175,7 +176,7 @@
     "@types/promise.prototype.finally": "^2.0.2",
     "@types/qs": "^6.5.1",
     "@types/ramda": "^0.25.18",
-    "@types/react": "^16.4.0",
+    "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.6",
     "@types/react-loadable": "^5.3.3",
     "@types/react-redux": "^5.0.15",
@@ -272,7 +273,7 @@
   },
   "babel": {
     "presets": [
-      "react-app"
+      "@babel/preset-typescript"
     ]
   },
   "eslintConfig": {

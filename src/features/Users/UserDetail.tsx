@@ -288,7 +288,7 @@ class UserDetail extends React.Component<CombinedProps> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
-            scrollable
+            variant="scrollable"
             scrollButtons="on"
           >
             {this.tabs
