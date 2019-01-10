@@ -1,4 +1,4 @@
-import { append, clone, compose, defaultTo, Lens, lensPath, map, over, pathOr, set, view } from 'ramda';
+import { append, clone, compose, defaultTo, Lens, lensPath, over, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
@@ -17,7 +17,7 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
-import { withRegions } from 'src/context/regions';
+import regionsContainer from 'src/containers/regions.container';
 import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancer } from 'src/services/nodebalancers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -43,12 +43,8 @@ type ClassNames =
   },
 });
 
-interface RegionsContextProps {
-  regionsData: ExtendedRegion[];
-  regionsLoading: boolean;
-}
-
-type CombinedProps = RegionsContextProps
+type CombinedProps =
+  & WithRegions
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
@@ -583,19 +579,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 }
 
-const regionsContext = withRegions(({
-  data: regionsData,
-  loading: regionsLoading,
-}) => ({
-  regionsData: compose(
-    map((region: Linode.Region) => ({
-      ...region,
-      display: dcDisplayNames[region.id],
-    })),
-  )(regionsData || []),
-  regionsLoading,
-}))
-
 const styled = withStyles(styles);
 
 /* @todo: move to own file */
@@ -667,8 +650,20 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
   );
 };
 
+interface WithRegions {
+  regionsData: ExtendedRegion[];
+  regionsLoading: boolean;
+  regionsError: Linode.ApiFieldError[],
+}
+
+const withRegions = regionsContainer(({ data, loading, error }) => ({
+  regionsData: data.map((r) => ({...r, display: dcDisplayNames[r.id ]})),
+  regionsLoading: loading,
+  regionsError: error,
+}));
+
 export default compose(
-  regionsContext,
+  withRegions,
   styled,
   withRouter,
 )(NodeBalancerCreate);
