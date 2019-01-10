@@ -21,7 +21,6 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-
   if (isType(action, linodesRequest.started)) {
     return {
       ...state,
@@ -65,12 +64,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, updateMultipleLinodes)) {
     const { payload } = action; /** list of successfully updated Linodes */
+    if (payload && payload.length === 0) { return state; }
     return {
       ...state,
       entities: [
         ...state.entities
           .filter(eachEntity => {
-            return payload.some(eachLinode => {
+            return !payload.some(eachLinode => {
               return eachLinode.id === eachEntity.id
             })
           }),

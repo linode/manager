@@ -78,8 +78,8 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = (props) => {
                   />
                 }
                 label={backups_enabled
-                  ? "Enabled (Auto Enroll All New Linodes in Backups)"
-                  : "Disabled (Don't Enroll New Linodes in Backups Automatically)"
+                  ? "Enabled (Auto enroll all new Linodes in Backups)"
+                  : "Disabled (Don't enroll new Linodes in Backups automatically)"
                 }
               />
             </Grid>
