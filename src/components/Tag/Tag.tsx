@@ -137,7 +137,7 @@ class Tag extends React.Component<CombinedProps, {}> {
       classes={{ label: classes.label, deletable: classes[colorVariant!]}}
       onClick={this.handleClick}
       data-qa-tag={this.props.label}
-      component="button"
+      component={"button" as "div"}
       clickable
     />;
   }
