@@ -27,7 +27,6 @@ it('renders without crashing', () => {
               wrapper: '',
               grid: '',
               switchWrapper: '',
-              switchWrapperDocsColl: '',
               absSidebar: '',
               absSidebarMobile: ''
             }}

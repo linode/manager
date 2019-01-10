@@ -1,5 +1,7 @@
 import Hidden from '@material-ui/core/Hidden';
 import MenuList from '@material-ui/core/MenuList';
+import HelpOutline from '@material-ui/icons/HelpOutline';
+import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
@@ -15,25 +17,20 @@ import withBackupCTA, { BackupCTAProps } from 'src/containers/withBackupCTA.cont
 import { BackupsCTA } from 'src/features/Backups';
 import DocComponent, { Doc } from './DocComponent';
 
-import DocumentIcon from 'src/assets/icons/documentsm.svg';
-import Minimize from 'src/assets/icons/minimize.svg';
-
 type ClassNames = 'root'
   | 'gridItem'
   | 'mobileContainer'
   | 'docsWrapper'
-  | 'docsFrame'
-  | 'docsHeader'
-  | 'docsHeaderInitial'
-  | 'toggleSidebarButton'
-  | 'toggleSidebarButtonExpanded'
-  | 'toggleSidebarButtonIcon'
   | 'docsIconButton'
+  | 'buttonLabel'
+  | 'docsIconButtonExpanded'
   | 'docsIconButtonCTA'
   | 'withDocsCollapsed'
   | 'docsIcon'
   | 'mobileMenu'
   | 'menuPaper'
+  | 'arrow'
+  | 'arrowExpanded'
   | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -51,65 +48,27 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   docsWrapper: {
     marginRight: theme.spacing.unit,
-    padding: theme.spacing.unit * 2
-  },
-  docsFrame: {
-    marginTop: 0,
-  },
-  docsHeader: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: `0 ${theme.spacing.unit * 2}px`
-  },
-  docsHeaderInitial: {
-    justifyContent: 'flex-end',
-    display: 'flex',
-    paddingRight: '0 !important'
-  },
-  toggleSidebarButton: {
-    padding: 0,
-    backgroundColor: theme.color.white,
-    borderBottom: `2px solid ${theme.palette.divider}`,
-    justifyContent: 'flex-start',
-    minWidth: 'auto',
-    margin: `-2px -8px 0 0`,
-    '&:hover, &:focus': {
-      backgroundColor: theme.color.white,
-    }
-  },
-  toggleSidebarButtonExpanded: {
-    width: `calc(100% - ${theme.spacing.unit}px)`,
-    padding: `${theme.spacing.unit / 2}px 0 !important`,
-    borderRadius: 0,
-    margin: 0,
-  },
-  toggleSidebarButtonIcon: {
-    backgroundColor: theme.color.white,
-    marginLeft: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2,
+    transform: `translateY(-${theme.spacing.unit * 4}px)`,
+    marginLeft: 41
   },
   docsIconButton: {
-    padding: 6,
-    borderRadius: '50%',
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
     backgroundColor: theme.color.white,
-    '&:hover': {
+    transform: 'rotate(-90deg) translate(-66px, 32px)',
+    zIndex: 2,
+    borderBottom: 0,
+    '&:hover, &:focus': {
       backgroundColor: theme.color.white,
-      '& .insidePath': {
-        stroke: theme.palette.text.primary,
-      },
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main,
-      width: '100%',
-      height: '100%',
-    },
-    '& .insidePath': {
-      fill: 'none',
-      stroke: '#3683DC',
-      strokeWidth: 1.25,
-      strokeLinejoin: 'round',
-    },
+    '&:hover': {
+      '& $buttonLabel': {
+        color: theme.palette.primary.main
+      }
+    }
+  },
+  docsIconButtonExpanded: {
+    left: -91
   },
   docsIconButtonCTA: {
     position: 'absolute',
@@ -118,9 +77,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       right: 'calc(21.2% - 40px)',
     },
   },
+  buttonLabel: {
+    color: theme.palette.text.primary,
+  },
   docsIcon: {
     width: 20,
     height: 20,
+    marginRight: theme.spacing.unit
+  },
+  arrow: {
+    marginLeft: theme.spacing.unit,
+    transition: theme.transitions.create('transform')
+  },
+  arrowExpanded: {
+    transform: 'rotate(180deg)'
   },
   hidden: {
     height: 0,
@@ -180,46 +150,21 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
 
     return (
       <React.Fragment>
-        <Hidden mdDown>
+        <Hidden smDown>
           <Grid container item className={classes.root}>
             <Grid item className={classes.gridItem}>
-              <Grid container className={classes.docsFrame} alignItems="center">
-                <Grid item xs={12}
-                  className={classNames({
-                    [classes.docsHeaderInitial]: !isExpanded
-                  })}>
-                  {isExpanded
-                  ?
-                  <Button
-                    type="secondary"
-                    onClick={toggleSidebar}
-                    className={classNames({
-                      [classes.toggleSidebarButton]: true,
-                      [classes.toggleSidebarButtonExpanded]: isExpanded
-                    })}>
-                    <div className={classes.docsHeader}>
-                      <Typography
-                        role="header"
-                        variant="h2"
-                        data-qa-sidebar-title
-                      >
-                        Help
-                      </Typography>
-                      <Minimize className={classes.toggleSidebarButtonIcon} />
-                    </div>
-                  </Button>
-                  :
-                  <Tooltip title="Linode Docs">
-                    <IconButton onClick={toggleSidebar} className={classNames({
-                      [classes.docsIconButton]: true,
-                      [classes.docsIconButtonCTA]: !isExpanded && backupsCTA
-                    })}>
-                      <DocumentIcon className={classes.docsIcon} />
-                    </IconButton>
-                  </Tooltip>
-                  }
-                </Grid>
-              </Grid>
+              <Button onClick={toggleSidebar} className={classNames({
+                [classes.docsIconButton]: true,
+                [classes.docsIconButtonExpanded]: isExpanded,
+                [classes.docsIconButtonCTA]: !isExpanded && backupsCTA
+              })}>
+                <HelpOutline className={classes.docsIcon} />
+                <Typography className={classes.buttonLabel}>View Help</Typography>
+                <KeyboardArrowUp className={classNames({
+                  [classes.arrow]: true,
+                  [classes.arrowExpanded]: isExpanded
+                })} />
+              </Button>
               {isExpanded &&
                 <Paper className={classes.docsWrapper}>
                   <Typography
@@ -245,12 +190,12 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
             }
           </Grid>
         </Hidden>
-        <Hidden lgUp>
+        <Hidden mdUp>
           <Grid container item className={classes.root}>
             <Grid item className={classes.mobileContainer}>
               <Tooltip title="Linode Docs">
                 <IconButton onClick={this.handleClick} className={classes.docsIconButton}>
-                  <DocumentIcon className={classes.docsIcon} />
+                  {/* <DocumentIcon className={classes.docsIcon} /> */}
                 </IconButton>
               </Tooltip>
               <Menu

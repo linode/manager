@@ -194,7 +194,7 @@ a.black:not(.nu):active {
 
 /* Reusable Classes */
 .mlMain {
-  width: 100%;
+  width: calc(100%);
   flex-basis: 100%;
 }
 .mlSidebar {
@@ -209,7 +209,7 @@ a.black:not(.nu):active {
   .mlSidebar {
     max-width: 21.2%;
     max-width: 21.2%;
-    padding-left: 24px !important;
+    padding-left: 18px !important;
   }
 }
 .p0 {

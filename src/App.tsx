@@ -107,7 +107,6 @@ type ClassNames = 'appFrame'
   | 'wrapper'
   | 'grid'
   | 'switchWrapper'
-  | 'switchWrapperDocsColl'
   | 'absSidebar'
   | 'absSidebarMobile';
 
@@ -127,16 +126,6 @@ const styles: StyleRulesCallback = (theme) => ({
     [theme.breakpoints.up('xl')]: {
       marginLeft: 275,
     },
-    '& .headerWithDoc': {
-      [theme.breakpoints.down('md')]: {
-        paddingRight: 40,
-      }
-    },
-    '& .headerWithDocLG': {
-      [theme.breakpoints.down('md')]: {
-        paddingRight: 60,
-      }
-    }
   },
   wrapper: {
     padding: theme.spacing.unit * 3,
@@ -160,24 +149,19 @@ const styles: StyleRulesCallback = (theme) => ({
         maxWidth: '78.8%',
       },
     },
-  },
-  switchWrapperDocsColl: {
-    '& .headerWithDoc': {
-      paddingRight: 40,
-    },
-    '& .headerWithDocLG': {
-      paddingRight: 60,
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 'calc(100% - 52px)',
     }
   },
   absSidebar: {
-    position: 'absolute',
-    right: 30,
+    position: 'fixed',
+    right: -28,
   },
   absSidebarMobile: {
     [theme.breakpoints.down('md')]: {
-      position: 'absolute',
-      right: 30,
-      width: 'auto'
+      position: 'fixed',
+      right: -28,
+      width: 'auto',
     }
   }
 });
@@ -352,7 +336,6 @@ export class App extends React.Component<CombinedProps, State> {
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classNames({
                         [classes.switchWrapper]: true,
-                        [classes.switchWrapperDocsColl]: hasDoc && !docsExpandedStored,
                         'mlMain': hasDoc && docsExpandedStored || hasDoc && backupsCTA,
                       })}>
                         <Switch>
