@@ -190,6 +190,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           data-qa-select-linode
         />
         <PasswordInput
+          autoComplete="new-password"
           label="Password"
           value={this.state.value}
           onChange={this.handlePasswordChange}
