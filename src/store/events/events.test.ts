@@ -1,5 +1,5 @@
 import reducer, {
-  actions,
+  addEvents,
   addToEvents,
   defaultState,
   findInEvents,
@@ -17,7 +17,7 @@ describe('events', () => {
       describe('with no events', () => {
 
         it('should return the initial state', () => {
-          const action = actions.addEvents([]);
+          const action = addEvents([]);
           const state = reducer(defaultState, action)
           expect(state).toEqual(defaultState);
         });
@@ -52,7 +52,7 @@ describe('events', () => {
             status: "started"
           },
         ];
-        const action = actions.addEvents(events);
+        const action = addEvents(events);
         const state = reducer(defaultState, action)
 
         it('should add the events to the store.', () => {

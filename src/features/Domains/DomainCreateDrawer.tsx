@@ -1,10 +1,9 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
 import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -18,11 +17,7 @@ import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { cloneDomain, createDomain } from 'src/services/domains';
-import {
-  CLONING,
-  CREATING,
-  resetDrawer
-} from 'src/store/reducers/domainDrawer';
+import { CLONING, CREATING, resetDrawer } from 'src/store/reducers/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -336,10 +331,7 @@ interface DispatchProps {
   resetDrawer: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { resetDrawer },
-  dispatch,
-);
+const mapDispatchToProps = { resetDrawer };
 
 interface StateProps {
   mode: typeof CLONING | typeof CREATING;

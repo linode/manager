@@ -1,5 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { getLinodeDisks } from 'src/services/linodes';
+import { AnyAction } from 'typescript-fsa';
 
 // ACTIONS
 const actionTypeGenerator = (s: string) => `@manager/features/linodeDetail/disks/${s}`;
@@ -48,7 +49,7 @@ export default (state = defaultState, action: any) => {
 };
 
 // ASYNC
-export const _getLinodeDisks = (linodeId: number): ThunkAction<void, State, void> => (dispatch, getState) => {
+export const _getLinodeDisks = (linodeId: number): ThunkAction<void, ApplicationState, void, AnyAction> => (dispatch) => {
   dispatch(load());
 
   getLinodeDisks(linodeId)

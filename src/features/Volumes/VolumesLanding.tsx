@@ -1,10 +1,9 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
@@ -516,10 +515,7 @@ const progressFromEvent = (e?: Linode.Event) => {
   return undefined;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openForEdit, openForResize, openForClone, openForCreating, openForConfig },
-  dispatch,
-);
+const mapDispatchToProps = { openForEdit, openForResize, openForClone, openForCreating, openForConfig };
 
 const connected = connect((state: ApplicationState, ownProps) => ({
   linodes: state.__resources.linodes.entities,

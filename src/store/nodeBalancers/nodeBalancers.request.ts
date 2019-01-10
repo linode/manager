@@ -1,7 +1,7 @@
 import { range } from 'ramda';
 import { getNodeBalancers as _getNodeBalancers } from 'src/services/nodebalancers';
 import { createRequestThunk } from 'src/store/request/request.helpers';
-import { Action } from 'typescript-fsa';
+import { RequestThunk } from 'src/store/types';
 import { actionCreator } from './nodeBalancers.actions';
 
 type Entity = Linode.NodeBalancer;
@@ -21,7 +21,7 @@ export const getNodeBalancerPageActions = actionCreator.async<GetPageRequest, Ge
 
 export const getNodeBalancerPage = createRequestThunk(
   getNodeBalancerPageActions,
-  ({ page, page_size, filter}) => _getNodeBalancers({page, page_size}, filter)
+  ({ page, page_size, filter }) => _getNodeBalancers({ page, page_size }, filter)
 );
 
 /**
@@ -29,10 +29,10 @@ export const getNodeBalancerPage = createRequestThunk(
  */
 export const getAllNodeBalancersActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const getAllNodeBalancers = (
+export const getAllNodeBalancers: RequestThunk<Linode.ResourcePage<Entity>> = (
   page: number = 1,
   prevData: Entity[] = [],
-) => async (dispatch: (action: Action<any>) => Promise<Linode.ResourcePage<Entity>>) => {
+) => async (dispatch) => {
   dispatch(getAllNodeBalancersActions.started());
 
   try {
@@ -43,7 +43,8 @@ export const getAllNodeBalancers = (
 
     if (page === pages) {
       const doneAction = getAllNodeBalancersActions.done({ result: mergedData });
-      return dispatch(doneAction);
+      dispatch(doneAction);
+      return mergedData;
     }
 
     if (page < pages) {
@@ -56,12 +57,12 @@ export const getAllNodeBalancers = (
         result: results.reduce((result, response) => [...result, ...response.data], data),
       });
 
-      return dispatch(doneAction);
+      dispatch(doneAction);
+      return mergedData;
     }
 
-    return;
-
   } catch (error) {
-    return dispatch(getAllNodeBalancersActions.failed({ error }));
+    dispatch(getAllNodeBalancersActions.failed({ error }));
+    return error;
   }
 };

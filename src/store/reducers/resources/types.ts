@@ -1,6 +1,6 @@
 import { Reducer } from "redux";
-import { ThunkAction } from "redux-thunk";
 import { getDeprecatedLinodeTypes, getLinodeTypes } from "src/services/linodes";
+import { RequestThunk } from "src/store/types";
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory, { isType } from 'typescript-fsa';
 
@@ -78,8 +78,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 /**
  * Async
  */
-type RequesTypesThunk = () => ThunkAction<Promise<Linode.LinodeType[]>, State, undefined>;
-const requestTypes: RequesTypesThunk = () => (dispatch) => {
+
+const requestTypes: RequestThunk<Linode.LinodeType[]> = () => (dispatch) => {
   return Promise.all([
     getAll<Linode.LinodeType>(getLinodeTypes)(),
     getAll<Linode.LinodeType>(getDeprecatedLinodeTypes)(),

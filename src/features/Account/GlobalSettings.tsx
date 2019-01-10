@@ -11,6 +11,7 @@ import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { ThunkDispatch } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
@@ -123,7 +124,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
       : emptyGroupedEntities),
 });
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch) => {
   return {
     actions: {
       updateAccount: (data: Partial<Linode.AccountSettings>) => dispatch(updateAccountSettings(data)),

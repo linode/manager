@@ -3,7 +3,8 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import ListItem from 'src/components/core/ListItem';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import { async } from 'src/store/events/events.reducer';
+import { markAllSeen } from 'src/store/events/events.reducer';
+import { ThunkDispatch } from 'src/store/types';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
@@ -101,9 +102,9 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch) => ({
   actions: {
-    markAllSeen: () => dispatch(async.markAllSeen()),
+    markAllSeen: () => dispatch(markAllSeen()),
   },
 });
 

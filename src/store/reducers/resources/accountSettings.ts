@@ -32,7 +32,7 @@ export const handleUpdateError: ActionCreator = (error: Error) => ({ type: UPDAT
 
 
 // DEFAULT STATE
-export const DEFAULT_STATE: AccountSettingsState = {
+export const defaultState: AccountSettingsState = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
@@ -41,7 +41,7 @@ export const DEFAULT_STATE: AccountSettingsState = {
 };
 
 // REDUCER
-export default (state: AccountSettingsState = DEFAULT_STATE, action: Action) => {
+export default (state: AccountSettingsState = defaultState, action: Action) => {
   switch (action.type) {
     case LOAD:
       return { ...state, loading: true };
@@ -63,14 +63,14 @@ export default (state: AccountSettingsState = DEFAULT_STATE, action: Action) => 
   }
 };
 
-export const requestAccountSettings = () => (dispatch: Dispatch<AccountSettingsState>) => {
+export const requestAccountSettings = () => (dispatch: Dispatch<any>) => {
   dispatch(startRequest());
   getAccountSettings()
     .then(compose(dispatch, handleSuccess))
     .catch(compose(dispatch, handleError));
 };
 
-export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) => (dispatch: Dispatch<AccountSettingsState>) => {
+export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) => (dispatch: Dispatch<any>) => {
   _update(data)
     .then(compose(dispatch, handleUpdate))
     .catch(compose(dispatch, handleUpdateError));

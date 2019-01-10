@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import { isEmpty, pathOr } from 'ramda';
-import { Reducer } from 'redux';
+import { AnyAction, Reducer } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
@@ -199,7 +199,7 @@ export const gatherResponsesAndErrors = (accumulator: Accumulator, linode: Linod
 *  When complete, it will dispatch appropriate actions to handle the result, depending
 *  on whether or not any errors occurred.
 */
-type EnableAllBackupsThunk = () => ThunkAction<void, ApplicationState, undefined>;
+type EnableAllBackupsThunk = () => ThunkAction<void, ApplicationState, undefined, AnyAction>;
 export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState) => {
   const { entities } = getState().__resources.linodes;
 
@@ -228,7 +228,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
 *  When complete, it will dispatch appropriate actions to handle the result, including
 * updating state.__resources.accountSettings.data.backups_enabled.
 */
-type EnableAutoEnrollThunk = () => ThunkAction<void, ApplicationState, undefined>;
+type EnableAutoEnrollThunk = () => ThunkAction<void, ApplicationState, undefined, AnyAction>;
 export const enableAutoEnroll: EnableAutoEnrollThunk = () => (dispatch, getState) => {
   const { backups } = getState();
   const backups_enabled = Boolean(backups.autoEnroll);

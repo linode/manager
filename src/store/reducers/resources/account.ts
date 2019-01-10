@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { getAccountInfo } from 'src/services/account';
+import { RequestThunk } from 'src/store/types';
 import { actionCreatorFactory, isType } from 'typescript-fsa';
 
 
@@ -9,7 +9,7 @@ import { actionCreatorFactory, isType } from 'typescript-fsa';
  */
 type State = ApplicationState['__resources']['account'];
 
-export const DEFAULT_STATE: State = {
+export const defaultState: State = {
   loading: false,
   error: undefined,
   lastUpdated: 0,
@@ -33,7 +33,7 @@ export const actions = { profileRequest, profileRequestSuccess, profileRequestFa
 /**
  * Reducer
  */
-const reducer: Reducer<State> = (state: State = DEFAULT_STATE, action) => {
+const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, profileRequest)) {
     return { ...state, loading: true }
   }
@@ -59,7 +59,7 @@ export default reducer;
 /**
  * Async
  */
-const requestAccount = (): ThunkAction<Promise<Linode.Account>, State, undefined> => (dispatch, getStore) => {
+export const requestAccount: RequestThunk<Linode.Account> = () => (dispatch) => {
   dispatch(profileRequest());
   return getAccountInfo()
     .then((response) => {
@@ -71,5 +71,3 @@ const requestAccount = (): ThunkAction<Promise<Linode.Account>, State, undefined
       return err;
     });
 };
-
-export const async = { requestAccount };

@@ -22,6 +22,7 @@ import { Requestable } from 'src/requestableContext';
 import { getLinodeConfigs, getType, startMutation } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
+import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { createSelector } from '../../../../node_modules/reselect';
@@ -576,7 +577,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (dispatch: ThunkDispatch, ownProps) => {
   const { match: { params: { linodeId } } } = ownProps;
 
   return {

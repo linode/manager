@@ -8,12 +8,12 @@ const updatedSettings = {backups_enabled: false, ...accountSettings};
 
 describe("Redux duck for Account settings", () => {
   it("should handle LOAD", () => {
-    const newState = account(A.DEFAULT_STATE, A.startRequest());
+    const newState = account(A.defaultState, A.startRequest());
     expect(newState).toHaveProperty('loading', true);
   });
   it("should handle ERROR", () => {
     const newState = account(
-      { ...A.DEFAULT_STATE, loading: true },
+      { ...A.defaultState, loading: true },
       A.handleError(error)
     );
     expect(newState).toHaveProperty('loading', false);
@@ -21,7 +21,7 @@ describe("Redux duck for Account settings", () => {
   });
   it("should handle SUCCESS", () => {
     const newState = account(
-      { ...A.DEFAULT_STATE, loading: true, error, updateError: error },
+      { ...A.defaultState, loading: true, error, updateError: error },
       A.handleSuccess(accountSettings)
     );
     expect(newState).toHaveProperty('data', accountSettings);
@@ -31,7 +31,7 @@ describe("Redux duck for Account settings", () => {
   });
   it("should handle UPDATE", () => {
     const newState = account(
-      { ...A.DEFAULT_STATE, data: accountSettings, error, updateError: error },
+      { ...A.defaultState, data: accountSettings, error, updateError: error },
       A.handleUpdate(accountSettings)
     );
     expect(newState).toHaveProperty('data', updatedSettings);
@@ -41,7 +41,7 @@ describe("Redux duck for Account settings", () => {
   });
   it("should handle UPDATE_ERROR", () => {
     const newState = account(
-      {...A.DEFAULT_STATE, data: accountSettings, updateError: undefined },
+      {...A.defaultState, data: accountSettings, updateError: undefined },
       A.handleUpdateError(error)
     );
     expect(newState).toHaveProperty('data', accountSettings);

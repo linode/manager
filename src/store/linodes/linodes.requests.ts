@@ -1,8 +1,7 @@
 import { range } from 'ramda';
-import { cloneLinode as _cloneLinode, createLinode as _createLinode, CreateLinodeRequest, deleteLinode as _deleteLinode, getLinode as _getLinode, getLinodes as _getLinodes, LinodeCloneData, updateLinode as _updateLinode } from 'src/services/linodes';
+import { cloneLinode as _cloneLinode, createLinode as _createLinode, CreateLinodeRequest as _CreateLinodeRequest, deleteLinode as _deleteLinode, getLinode as _getLinode, getLinodes as _getLinodes, LinodeCloneData, updateLinode as _updateLinode } from 'src/services/linodes';
 import { createRequestThunk } from 'src/store/request/request.helpers';
-import { Action } from 'typescript-fsa';
-import { ThunkAction } from '../../../node_modules/redux-thunk';
+import { RequestThunk } from 'src/store/types';
 import { actionCreator } from './linodes.actions';
 
 type Entity = Linode.Linode;
@@ -10,6 +9,7 @@ type Entity = Linode.Linode;
 /**
  * Create
  */
+export type CreateLinodeRequest = _CreateLinodeRequest;
 export type CreateLinodeResponse = Entity;
 
 export const createLinodeActions = actionCreator.async<CreateLinodeRequest, CreateLinodeResponse, Linode.ApiFieldError[]>(`create`);
@@ -95,14 +95,12 @@ export const clondeLinode = createRequestThunk(
 /**
  * Get all Linoes.
  */
-type ThunkResult<R> = ThunkAction<R, ApplicationState, undefined>;
-
 export const getAllLinodesActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const requestAllLinodes = (
+export const requestAllLinodes: RequestThunk<Linode.ResourcePage<Entity>> = (
   page: number = 1,
   prevData: Entity[] = [],
-) => async (dispatch: (action: Action<any> | ThunkResult<Promise<Linode.Linode[]>>) => Promise<Linode.ResourcePage<Entity>>) => {
+) => async (dispatch) => {
   dispatch(getAllLinodesActions.started());
 
   try {
@@ -112,7 +110,8 @@ export const requestAllLinodes = (
 
     if (page === pages) {
       const doneAction = getAllLinodesActions.done({ result: mergedData });
-      return dispatch(doneAction);
+      dispatch(doneAction);
+      return mergedData;
     }
 
     if (page < pages) {
@@ -126,12 +125,14 @@ export const requestAllLinodes = (
         result: results.reduce((result, response) => [...result, ...response.data], data),
       });
 
-      return dispatch(doneAction);
+      dispatch(doneAction);
+      return mergedData;
     }
 
     return;
 
   } catch (error) {
-    return dispatch(getAllLinodesActions.failed({ error }));
+    dispatch(getAllLinodesActions.failed({ error }));
+    return error;
   }
 };

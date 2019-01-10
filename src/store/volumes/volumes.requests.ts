@@ -1,7 +1,9 @@
 import { range } from 'ramda';
+
+import {RequestThunk} from 'src/store/types';
+
 import { getVolumes as _getVolumes } from 'src/services/volumes';
 import { createRequestThunk } from 'src/store/request/request.helpers';
-import { Action } from 'typescript-fsa';
 import { actionCreator } from './volumes.actions';
 
 type Entity = Linode.Volume;
@@ -31,10 +33,10 @@ export const getVolumePage = createRequestThunk(
 
 export const getAllVolumesActions = actionCreator.async<void, Entity[], Linode.ApiFieldError[]>(`get-all`);
 
-export const getAllVolumes = (
+export const getAllVolumes: RequestThunk<Linode.ResourcePage<Entity>> = (
   page: number = 1,
   prevData: Entity[] = [],
-) => async (dispatch: (action: Action<any>) => Promise<Linode.ResourcePage<Entity>>) => {
+) => async (dispatch) => {
   dispatch(getAllVolumesActions.started());
 
   try {
@@ -45,7 +47,8 @@ export const getAllVolumes = (
 
     if (page === pages) {
       const doneAction = getAllVolumesActions.done({ result: mergedData });
-      return dispatch(doneAction);
+      dispatch(doneAction);
+      return mergedData;
     }
 
     if (page < pages) {
@@ -58,12 +61,11 @@ export const getAllVolumes = (
         result: results.reduce((result, response) => [...result, ...response.data], data),
       });
 
-      return dispatch(doneAction);
+      dispatch(doneAction);
+      return mergedData;
     }
-
-    return;
-
   } catch (error) {
-    return dispatch(getAllVolumesActions.failed({ error }));
+    dispatch(getAllVolumesActions.failed({ error }));
+    return error;
   }
 };

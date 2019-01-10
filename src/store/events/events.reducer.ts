@@ -1,8 +1,8 @@
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
 import { getEvents as _getEvents, markEventSeen } from 'src/services/account/events';
+import { RequestThunk } from 'src/store/types';
 import { dateFormat } from 'src/time';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import updateRight from 'src/utilities/updateRight';
@@ -36,7 +36,6 @@ export const addEvents = actionCreator<Event[]>(ADD_EVENTS);
 
 export const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
 
-export const actions = { addEvents, updateEventsAsSeen };
 
 
 
@@ -203,7 +202,7 @@ export const getNumUnseenEvents = (events: Pick<Event, 'seen'>[]) =>
  * Will send a filtered request for events which have been created after the most recent existing
  * event or the epoch if there are no stored events.
  */
-const getEvents: () => ThunkAction<Promise<Event[]>, ApplicationState, undefined>
+export const getEvents: RequestThunk<Linode.Event[]>
   = () => (dispatch, getState) => {
     const { mostRecentEventTime, inProgressEvents } = getState().events;
 
@@ -233,15 +232,16 @@ const getEvents: () => ThunkAction<Promise<Event[]>, ApplicationState, undefined
  * Send a request to mark all currently stored events as seen, then call updateEventsAsSeen
  * which iterates the evnts and marks them seen.
  */
-const markAllSeen: () => ThunkAction<Promise<any>, ApplicationState, undefined>
+export const markAllSeen: RequestThunk<void>
   = () => (dispatch, getState) => {
     const { events: { events } } = getState();
     /** */
     const latestId = events.reduce((result, { id }) => id > result ? id : result, 0);
 
     return markEventSeen(latestId)
-      .then(() => dispatch(updateEventsAsSeen()))
-      .catch(() => null)
+      .then((response) => {
+        dispatch(updateEventsAsSeen());
+        return;
+      });
   };
 
-export const async = { getEvents, markAllSeen };

@@ -1,5 +1,5 @@
 import { adjust } from 'ramda';
-import { ActionCreator, Dispatch } from 'redux';
+import { ActionCreator, AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import updateOrAdd from "src/utilities/updateOrAdd";
 import { AsyncActionCreators } from 'typescript-fsa';
@@ -82,12 +82,12 @@ export const updateInPlace = <E extends { id: number }>(id: number, update: (v: 
   }
 };
 
-type ThunkResult<R> = ThunkAction<R, ApplicationState, undefined>;
+type ThunkResult<R> = ThunkAction<R, ApplicationState, undefined, AnyAction>;
 
 export const createRequestThunk = <Req, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>,
-): ActionCreator<ThunkResult<any>> => (params: Req) => async (dispatch, getState) => {
+): ActionCreator<ThunkResult<any>> => (params: Req) => async (dispatch) => {
   const { started, done, failed } = actions;
 
   started(params);

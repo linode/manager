@@ -1,9 +1,9 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as React from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux';
+import { compose } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -181,10 +181,7 @@ interface DispatchProps {
   openVolumeDrawerForCreating: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openDomainDrawerForCreating, openVolumeDrawerForCreating },
-  dispatch,
-);
+const mapDispatchToProps = { openDomainDrawerForCreating, openVolumeDrawerForCreating };
 
 const connected = connect(undefined, mapDispatchToProps);
 

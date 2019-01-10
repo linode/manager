@@ -12,8 +12,9 @@
  */
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 import store from 'src/store';
-import { async } from 'src/store/events/events.reducer';
+import { getEvents } from 'src/store/events/events.reducer';
 
 export const events$ = new Subject<Linode.Event>();
 
@@ -37,22 +38,27 @@ export const resetEventsPolling = () => {
   pollIteration = 1;
 }
 
-export const requestEvents = () => {
+export const requestEvents = async () => {
   inProgress = true;
-  return store.dispatch(async.getEvents())
-    .then((events) => {
-      const reversed = events.reverse();
 
-      /**
-       * This feeds the stream for consumers of events$. We're simply pushing the events from the
-       * request response onto the stream one at a time.
-       */
-      reversed
-        .forEach((linodeEvent: Linode.Event) => {
-          events$.next(linodeEvent);
-        });
-      inProgress = false;
-    });
+  try {
+    const events = await store.dispatch(getEvents() as any);
+
+    const reversed = events.reverse();
+
+    /**
+     * This feeds the stream for consumers of events$. We're simply pushing the events from the
+     * request response onto the stream one at a time.
+     */
+    reversed
+      .forEach((linodeEvent: Linode.Event) => {
+        events$.next(linodeEvent);
+      });
+  } catch (error) {
+    reportException(error);
+  }
+
+  inProgress = false;
 }
 
 setInterval(

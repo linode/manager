@@ -12,7 +12,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay/DateTimeDisplay'
 import Grid from 'src/components/Grid';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
-import { async } from 'src/store/reducers/resources/account';
+import { requestAccount } from 'src/store/reducers/resources/account';
 import InvoiceTable from './InvoiceTable';
 
 type ClassNames = 'root'
@@ -173,9 +173,7 @@ interface StateProps extends S {
   requestAccount: () => void;
 }
 
-const connected = connect(
-  (state: ApplicationState): S => state.__resources.account,
-  (dispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(async.requestAccount()) }));
+const connected = connect( (state: ApplicationState): S => state.__resources.account, { requestAccount });
 
 const styled = withStyles(styles);
 

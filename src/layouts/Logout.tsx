@@ -1,12 +1,12 @@
 import { Component } from 'react';
-import { connect, Dispatch } from 'react-redux';
-
+import { connect } from 'react-redux';
 import { LOGIN_ROOT } from 'src/constants';
 import * as session from 'src/session';
 import { logout } from 'src/store/reducers/authentication';
+import { ThunkDispatch } from 'src/store/types';
 
 interface Props {
-  dispatch: Dispatch<ApplicationState>;
+  dispatch: ThunkDispatch;
 }
 
 export class Logout extends Component<Props> {
@@ -27,4 +27,4 @@ export class Logout extends Component<Props> {
   }
 }
 
-export default connect()<Props>(Logout);
+export default connect()(Logout);

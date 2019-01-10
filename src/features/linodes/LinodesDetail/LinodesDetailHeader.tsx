@@ -11,6 +11,7 @@ import linodeRequestsContainer, { LinodeRequests } from 'src/containers/linodeRe
 import { lishLaunch } from 'src/features/Lish';
 import { scheduleOrQueueMigration } from 'src/services/linodes';
 import { requestNotifications } from 'src/store/reducers/notifications';
+import { ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
@@ -166,7 +167,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch) => {
   return {
     actions: {
       getNotifications: () => dispatch(requestNotifications()),

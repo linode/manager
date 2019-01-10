@@ -1,14 +1,13 @@
 import * as Bluebird from 'bluebird';
 import { curry, isEmpty, pathOr } from 'ramda';
-import { Action, Dispatch } from 'redux';
+import { Action, ActionCreator } from 'redux';
 import { ThunkAction } from 'redux-thunk';
-import actionCreatorFactory from 'typescript-fsa';
-
 import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
-import getEntitiesWithGroupsToImport,
-{ GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import getEntitiesWithGroupsToImport, { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { ThunkDispatch } from 'src/store/types';
 import { storage } from 'src/utilities/storage';
+import actionCreatorFactory from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
@@ -184,7 +183,7 @@ const linodeAccumulator = curriedAccumulator(updateLinode);
 const handleAccumulatedResponsesAndErrors = (
   linodeResponses: Accumulator<Linode.Linode>,
   domainResponses: Accumulator<Linode.Domain>,
-  dispatch: Dispatch<State>
+  dispatch: ThunkDispatch
   ) => {
     const totalErrors = [...linodeResponses.errors, ...domainResponses.errors]
     if (!isEmpty(totalErrors)) {
@@ -198,8 +197,7 @@ const handleAccumulatedResponsesAndErrors = (
     // in services
 }
 
-type ImportGroupsAsTagsThunk = () => ThunkAction<void, ApplicationState, undefined>;
-export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch: Dispatch<State>, getState) => {
+export const addTagsToEntities: ActionCreator<ThunkAction<void, ApplicationState, undefined, Action>>  = () => (dispatch, getState) => {
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
   Bluebird.join(

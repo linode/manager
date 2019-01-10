@@ -7,9 +7,8 @@ import { clearDocs, setDocs } from 'src/store/reducers/documentation';
 export type SetDocsProps = DispatchProps;
 
 const setDocsHOC = (docs: Linode.Doc[]) =>
-<OriginalProps extends {}>(Component: React.ComponentType<OriginalProps>) => {
-  class SetDocumentation extends React.Component<OriginalProps & DispatchProps> {
-
+(Component: React.ComponentType<{}>) => {
+  class SetDocumentation extends React.Component<DispatchProps> {
     componentDidMount() {
       this.props.setDocs(docs);
     }

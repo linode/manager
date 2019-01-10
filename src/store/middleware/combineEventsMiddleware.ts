@@ -2,12 +2,13 @@ import { compose, equals, uniqWith } from 'ramda';
 import { Dispatch, Middleware } from 'redux';
 import { resetEventsPolling } from 'src/events';
 import { addEvents, isEntityEvent, isInProgressEvent } from 'src/store/events/events.reducer';
+import { ThunkDispatch } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 
 
 export type EventHandler = (event: Linode.EntityEvent, dispatch: Dispatch<any>) => void;
 
-const eventsMiddlewareFactory = (...eventHandlers: EventHandler[]): Middleware => ({ dispatch }) => (next: Dispatch<any>) => (action: any) => {
+const eventsMiddlewareFactory = (...eventHandlers: EventHandler[]): Middleware => ({ dispatch }) => (next: ThunkDispatch) => (action: any) => {
   if (isType(action, addEvents)) {
     const { payload } = action;
     /**

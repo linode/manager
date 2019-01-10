@@ -32,6 +32,7 @@ import { requestAccountSettings } from 'src/store/reducers/resources/accountSett
 import { async as imagesAsync } from 'src/store/reducers/resources/images';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
+import { ThunkDispatch } from 'src/store/types';
 import { getAllVolumes } from 'src/store/volumes/volumes.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
@@ -389,7 +390,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch) => {
   return {
     actions: {
       requestNodeBalancers: () => dispatch(getAllNodeBalancers()),

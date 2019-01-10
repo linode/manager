@@ -1,7 +1,6 @@
-import { prop } from 'ramda';
-import { compose, Dispatch } from 'redux';
-
 import { getNotifications } from 'src/services/account';
+import { RequestThunk } from 'src/store/types';
+
 
 // TYPES
 type State = RequestableData<Linode.Notification[]>;
@@ -58,10 +57,16 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
 };
 
 
-export const requestNotifications = () => (dispatch: Dispatch<State>) => {
+export const requestNotifications: RequestThunk<Linode.Notification> = () => (dispatch) => {
 
   dispatch(startRequest());
-  getNotifications()
-    .then(compose(dispatch, handleSuccess, prop('data')))
-    .catch(compose(dispatch, handleError));
+  return getNotifications()
+    .then((response) => {
+      dispatch(handleSuccess(response.data));
+      return response;
+    })
+    .catch((error) => {
+      dispatch(handleError(error));
+      return error;
+    });
 };

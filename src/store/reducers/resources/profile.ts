@@ -1,7 +1,6 @@
-import { compose, Dispatch } from 'redux';
-
+import { compose } from 'redux';
 import { getMyGrants, getProfile } from 'src/services/profile';
-
+import { RequestThunk } from 'src/store/types';
 
 // TYPES
 type State = RequestableData<Linode.Profile>;
@@ -30,7 +29,7 @@ export const handleSuccess: ActionCreator = (data: Linode.Profile) => ({ type: S
 export const handleUpdate: ActionCreator = (data: Linode.Profile) => ({ type: UPDATE, data });
 
 // DEFAULT STATE
-export const DEFAULT_STATE: State = {
+export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
@@ -38,7 +37,7 @@ export const DEFAULT_STATE: State = {
 };
 
 // REDUCER
-export default (state: State = DEFAULT_STATE, action: Action) => {
+export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case LOAD:
       return { ...state, loading: true };
@@ -67,12 +66,18 @@ const maybeRequestGrants: (response: Linode.Profile) => Promise<Linode.Profile>
       .then(grants => ({ ...profile, grants }));
   };
 
-export const requestProfile = () => (dispatch: Dispatch<State>) => {
+export const requestProfile: RequestThunk<Linode.Profile> = () => (dispatch) => {
 
   dispatch(startRequest());
-  getProfile()
+  return getProfile()
     .then(response => response.data)
     .then(maybeRequestGrants)
-    .then(compose(dispatch, handleSuccess))
-    .catch(compose(dispatch, handleError));
+    .then(response => {
+      compose(dispatch, handleSuccess)(response);
+      return response;
+    })
+    .catch((err) => {
+      compose(dispatch, handleError)(err);
+      return err;
+    });
 };
