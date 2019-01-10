@@ -50,7 +50,7 @@ class TableRow extends React.Component<CombinedProps> {
   rowClick = (e: any, target: string | onClickFn ) =>  {
     const body = document.body as any;
     // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
-    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
+    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button') || document.querySelector('[role="button"]');
     const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
 
     if (
