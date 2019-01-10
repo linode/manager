@@ -23,7 +23,6 @@ type ClassNames = 'root'
   | 'buttonLabel'
   | 'docsIconButtonExpanded'
   | 'docsIconButtonCTA'
-  | 'withDocsCollapsed'
   | 'docsIcon'
   | 'mobileMenu'
   | 'menuPaper'
@@ -82,11 +81,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     left: -91
   },
   docsIconButtonCTA: {
-    position: 'absolute',
-    right: 'calc(21.2% - 28px)',
-    [theme.breakpoints.up('xl')]: {
-      right: 'calc(21.2% - 40px)',
-    },
+    right: 0,
+    transform: 'none',
+    width: 'calc(100% - 8px)'
   },
   buttonLabel: {
     color: theme.palette.text.primary,
@@ -119,9 +116,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   mobileMenu: {
     maxHeight: 300,
   },
-  withDocsCollapsed: {
-    marginTop: -theme.spacing.unit * 3
-  }
 });
 
 interface Props {
@@ -173,6 +167,13 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
       <React.Fragment>
         <Hidden mdDown>
           <Grid container item className={classes.root}>
+            {backupsCTA &&
+              <Grid item className={classNames({
+                [classes.gridItem]: true,
+              })}>
+                <BackupsCTA />
+              </Grid>
+            }
             <Grid item className={classes.gridItem}>
               <Button onClick={toggleSidebar} className={classNames({
                 [classes.docsIconButton]: true,
@@ -201,14 +202,6 @@ class DocsSidebar extends React.Component<CombinedProps, State>  {
                 </Paper>
               }
             </Grid>
-            {backupsCTA &&
-              <Grid item className={classNames({
-                [classes.gridItem]: true,
-                [classes.withDocsCollapsed]: !isExpanded && backupsCTA
-              })}>
-                <BackupsCTA />
-              </Grid>
-            }
           </Grid>
         </Hidden>
         <Hidden lgUp>
