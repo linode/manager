@@ -37,20 +37,21 @@ const e =
 
 describe("OrderBy", () => {
   describe("sortData function", () => {
+    const data = [a, b, c, d, e];
     it("should sort by string", () => {
-      const order = sortData('name', 'asc');
+      const order = sortData('name', 'asc')(data);
       expect(order).toEqual([a, e, d, c, b]);
     });
     it("should handle the selected order (asc or desc)", () => {
-      const order = sortData('name', 'desc');
+      const order = sortData('name', 'desc')(data);
       expect(order).toEqual([b, c, d, e, a]);
     });
     it("should sort by number", () => {
-      const order = sortData('age', 'asc');
-      expect(order).toEqual([b, a, c, d, e]);
+      const order = sortData('age', 'asc')(data);
+      expect(order).toEqual([b, a, e, d, c]);
     });
     it("should sort by array length", () => {
-      const order = sortData('hobbies', 'asc');
+      const order = sortData('hobbies', 'asc')(data);
       expect(order).toEqual([b, c, e, a, d]);
     });
   });

@@ -7,7 +7,7 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
   if (a.toLowerCase() < b.toLowerCase()) {
     result = -1; // otherwise result is -1
   }
-  if (order === 'desc') {
+  if (order === 'asc') {
     return result; // descending order
   }
   return -result; // ascending order
@@ -19,10 +19,10 @@ export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
   const result = moment
     .utc(moment.utc(formattedDateA))
     .diff(moment.utc(formattedDateB));
-  if (order === 'desc') {
-    return -result; // descending order
+  if (order === 'asc') {
+    return result; // descending order
   }
-  return result; // ascending order
+  return -result; // ascending order
 };
 
 export const sortByNumber = (a: number, b: number, order: SortOrder) => {
@@ -30,7 +30,7 @@ export const sortByNumber = (a: number, b: number, order: SortOrder) => {
   if (a < b) {
     result = -1; // otherwise result is -1
   }
-  if (order === 'desc') {
+  if (order === 'asc') {
     return result; // descending order
   }
   return -result; // ascending order
@@ -42,7 +42,7 @@ export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {
   else if (a.length < b.length) { result = -1; }
   else { result = 0; }
 
-  return (order === 'desc') ? -result : result
+  return (order === 'asc') ? result : -result
 }
 
 // Sort function for Array.sort comparator functions
