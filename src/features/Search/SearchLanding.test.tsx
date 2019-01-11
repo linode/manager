@@ -20,6 +20,13 @@ const props = {
   entitiesLoading: false,
   searchResults: emptyResults,
   search: jest.fn(),
+  errors: {
+    hasErrors: false,
+    linodes: false,
+    domains: false,
+    nodebalancers: false,
+    images: false,
+  },
   ...reactRouterProps,
 }
 
