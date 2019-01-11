@@ -38,6 +38,9 @@ const getStandard = (types: ExtendedType[]) =>
 const getHighMem = (types: ExtendedType[]) =>
   types.filter(t => /highmem/.test(t.class));
 
+const getDedicated = (types: ExtendedType[]) =>
+  types.filter(t => /dedicated/.test(t.class));
+
 export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
@@ -48,11 +51,11 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     const planTooSmall = selectedDiskSize > type.disk
     const isSamePlan = type.heading === currentPlanHeading;
 
-    if(planTooSmall){
+    if (planTooSmall) {
       tooltip = `This plan is too small for the selected image.`;
     }
 
-    if(isSamePlan){
+    if (isSamePlan) {
       tooltip = `This is your current plan. Please select another to resize.`;
     }
 
@@ -73,6 +76,7 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
+    const dedicated = getDedicated(types);
 
     if (!isEmpty(nanodes)) {
       tabs.push({
@@ -98,6 +102,19 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
           );
         },
         title: 'Standard',
+      });
+    }
+
+    if (!isEmpty(dedicated)) {
+      tabs.push({
+        render: () => {
+          return (
+            <Grid container spacing={16}>
+              {dedicated.map(this.renderCard)}
+            </Grid>
+          );
+        },
+        title: 'Dedicated CPU',
       });
     }
 
