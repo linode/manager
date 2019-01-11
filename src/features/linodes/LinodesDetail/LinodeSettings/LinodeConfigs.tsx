@@ -289,14 +289,14 @@ interface LinodeContext {
   linodeStatus: string;
 };
 
-const linodeContext = withLinode<LinodeContext>((context) => ({
-  linodeHypervisor: context.data!.hypervisor,
-  linodeId: context.data!.id,
-  linodeLabel: context.data!.label,
-  linodeMemory: context.data!.specs.memory,
-  linodeTotalDisk: context.data!.specs.disk,
-  linodeRegion: context.data!.region,
-  linodeStatus: context.data!.status,
+const linodeContext = withLinode<LinodeContext>((linode) => ({
+  linodeHypervisor: linode.hypervisor,
+  linodeId: linode.id,
+  linodeLabel: linode.label,
+  linodeMemory: linode.specs.memory,
+  linodeTotalDisk: linode.specs.disk,
+  linodeRegion: linode.region,
+  linodeStatus: linode.status,
 }));
 
 const paginated = Pagey((ownProps: LinodeContext, params, filters) => {

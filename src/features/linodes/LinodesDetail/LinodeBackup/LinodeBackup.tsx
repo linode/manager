@@ -696,14 +696,14 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
 
 const connected = connect(mapStateToProps);
 
-const linodeContext = withLinode((context) => ({
-  backupsEnabled: context.data!.backups.enabled,
-  backupsSchedule: context.data!.backups.schedule,
-  linodeID: context.data!.id,
-  linodeInTransition: isLinodeInTransition(context.data!.status),
-  linodeLabel: context.data!.label,
-  linodeRegion: context.data!.region,
-  linodeType: context.data!.type,
+const linodeContext = withLinode(({ backups, id, status, label, region, type }) => ({
+  backupsEnabled: backups.enabled,
+  backupsSchedule: backups.schedule,
+  linodeID: id,
+  linodeInTransition: isLinodeInTransition(status),
+  linodeLabel: label,
+  linodeRegion: region,
+  linodeType: type,
 }));
 
 export default compose<CombinedProps, {}>(

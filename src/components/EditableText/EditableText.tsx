@@ -155,6 +155,14 @@ export class EditableText extends React.Component<FinalProps, State> {
     text: this.props.text,
   };
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    const { text: prevText } = prevProps;
+    const { text } = this.props;
+    if (text !== prevText) {
+      this.setState({ text });
+    }
+  }
+
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ text: e.target.value });
   }

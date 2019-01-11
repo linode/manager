@@ -212,11 +212,11 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 
 }));
 
-const linodeContext = withLinode((context) => ({
-  linodeId: pathOr(undefined, ['data', 'id'], context),
-  linodeType: pathOr(undefined, ['data', 'type'], context),
-  linodeStatus: pathOr(undefined, ['data', 'status'], context),
-  linodeLabel: pathOr(undefined, ['data', 'label'], context),
+const linodeContext = withLinode(({ id, type, status, label}) => ({
+  linodeId: id,
+  linodeType: type,
+  linodeStatus: status,
+  linodeLabel: label,
 }));
 
 export default compose<CombinedProps, {}>(

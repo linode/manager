@@ -21,7 +21,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 interface ContextProps {
   linodeLabel: string;
   linodeId: number;
-  updateLinode: (f: (t: Linode.Linode) => Linode.Linode) => void;
 }
 
 interface State {
@@ -107,10 +106,9 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
-const linodeContext = withLinode((context) => ({
-  linodeId: context.data!.id,
-  linodeLabel: context.data!.label,
-  updateLinode: context.update,
+const linodeContext = withLinode((linode) => ({
+  linodeId: linode.id,
+  linodeLabel: linode.label,
 }));
 
 const enhanced = composeC<CombinedProps, {}>(

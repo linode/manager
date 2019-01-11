@@ -152,7 +152,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return getLinodeIPs(this.props.linodeID)
       .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
       .catch((errorResponse) => {
-        const defaultError = [{'reason': 'There was an error retrieving your network information.'}];
+        const defaultError = [{ 'reason': 'There was an error retrieving your network information.' }];
         const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
         this.setState({ IPRequestError: errors[0].reason, initialLoading: false });
       });
@@ -280,10 +280,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
     /* Loading state */
-    if (initialLoading) { return this.renderLoadingState();}
+    if (initialLoading) { return this.renderLoadingState(); }
 
     /* Error state */
-    if  (IPRequestError) { return this.renderErrorState(); }
+    if (IPRequestError) { return this.renderErrorState(); }
 
     /* Empty state */
     if (!linodeIPs || isEmpty(linodeIPs)) { return null; }
@@ -463,8 +463,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { linodeIPs } = this.state;
 
     const publicIPs = pathOr([], ['ipv4', 'public'], linodeIPs).map((i: Linode.IPAddress) => i.address);
-    const privateIPs = pathOr([], ['ipv4','private'], linodeIPs).map((i: Linode.IPAddress) => i.address);
-    const sharedIPs = pathOr([], ['ipv4','shared'], linodeIPs).map((i: Linode.IPAddress) => i.address);
+    const privateIPs = pathOr([], ['ipv4', 'private'], linodeIPs).map((i: Linode.IPAddress) => i.address);
+    const sharedIPs = pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: Linode.IPAddress) => i.address);
 
     return (
       <Grid container>
@@ -492,7 +492,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linodeSharedIPs={sharedIPs}
             linodeRegion={linodeRegion}
             refreshIPs={this.refreshIPs}
-            updateFor={[publicIPs,sharedIPs,linodeID,linodeRegion]}
+            updateFor={[publicIPs, sharedIPs, linodeID, linodeRegion]}
           />
         </Grid>
       </Grid>
@@ -508,10 +508,10 @@ const getFirstPublicIPv4FromResponse = compose(
   pathOr([], ['ipv4', 'public']),
 );
 
-const linodeContext = withLinode((context) => ({
-  linodeID: context.data!.id,
-  linodeLabel: context.data!.label,
-  linodeRegion: context.data!.region,
+const linodeContext = withLinode(({ id, label, region }) => ({
+  linodeID: id,
+  linodeLabel: label,
+  linodeRegion: region,
 }));
 
 const enhanced = compose<any, any, any>(

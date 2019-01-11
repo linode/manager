@@ -9,7 +9,7 @@ const accountContext = React.createContext<Requestable<Linode.Account>>({
   update: () => null,
 });
 
-export const withAccount = createHOCForConsumer<Linode.Account>(accountContext.Consumer, 'WithConfigs');
+export const withAccount = createHOCForConsumer<Requestable<Linode.Account>>(accountContext.Consumer, 'WithConfigs');
 
 export const AccountProvider = accountContext.Provider;
 

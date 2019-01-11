@@ -26,18 +26,15 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <LinodeConsumer>
-      {(linodeContext) => {
+      {(linode: Linode.Linode) => {
         return (
           <ConfigsConsumer>
             {(configsContext) => {
-              const { data: linode } = linodeContext;
               const { data: configs } = configsContext;
-
-              if (!linode) { return null; }
               if (!configs) { return null; }
               return (
                 <React.Fragment>
-                  <DocumentTitleSegment segment={`${linodeContext.data!.label} - Settings`} />
+                  <DocumentTitleSegment segment={`${linode.label} - Settings`} />
                   <Typography
                     role="header"
                     variant="h2"
