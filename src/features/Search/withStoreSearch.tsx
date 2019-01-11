@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 
+import { Item } from 'src/components/EnhancedSelect/Select';
 import { emptyResults, filterMatched } from 'src/features/Search/utils';
 import entitiesErrors, { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
@@ -12,6 +13,7 @@ interface HandlerProps {
   search: (query: string) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
+  combinedResults: Item[];
   entities: SearchResults;
   entitiesLoading: boolean;
   searchResults: SearchResults;
@@ -59,7 +61,19 @@ export default () => (Component: React.ComponentType<any>) => {
     connected,
     withStateHandlers<any, any, any>({ searchResults: emptyResults },
       {
-        search: (_, props: SearchProps) => (query: string) => ({ searchResults: search(props.entities, query)  })
+        search: (_, props: SearchProps) => (query: string) => {
+          const searchResults = search(props.entities, query);
+          return { searchResults, combinedResults: combineResults(searchResults, query)  }
+        }
       })
   )(WrappedComponent);
+}
+
+/** Flatten results into a single array, and include the query string in each
+ * result object. This is the format needed for the search bar, which does not
+ * separate results by entity type, and highlights the search match.
+ */
+const combineResults = (results: SearchResults, query: string): Item[] => {
+  return Object.values(results).reduce((accumulator, entityResultList: Item[]) =>
+    [...accumulator, ...entityResultList.map(entity => ({...entity, data: {...entity.data, searchText: query }}))], [])
 }
