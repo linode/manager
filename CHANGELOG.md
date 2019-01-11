@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Added a column for tags.
 - Account tab for StackScripts, lists all scripts created on the account the user has permissions to read/write.
   - If an account user does not have access to StackScripts, then a message indicating the user does not have the proper permissions will display.
+- Trusted Device table in My Profile> Password & Authentication> New section titled Trusted Devices.
+  - Lists devices that have been active on the account for the past 30 days, device name and browser used.
+  - Ability to untrust/delete a trusted device.
 
 ### Changed:
 - Explicitly check for errors before setting local storage.
@@ -54,6 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Hide radio buttons on edit disk drawer.
 - Display notice on successful deletion of a user.
 - Submission of the enable back ups for all Linodes drawer caused duplicate listings of Linodes.
+- Display Scratch Code when enabling TFA
 
 ## [0.44.1] - 2019.01.10
 ### Fixed:
