@@ -2,7 +2,9 @@ export {
   getProfile,
   listGrants,
   updateProfile,
-  getMyGrants
+  getMyGrants,
+  getTrustedDevices,
+  deleteTrustedDevice
 } from './profile';
 
 export {

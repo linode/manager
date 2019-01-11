@@ -57,6 +57,9 @@ export default class Page {
     get breadcrumbCancelEdit() { return $('[data-qa-cancel-edit]'); }
     get globalTopMenu() { return $('[data-qa-top-menu]'); }
     get navigationSideBar() { return $('[data-qa-navigation-side-bar]'); }
+    get groupByTagsToggle() { return $$('span').find(it => it.getText().includes('Group by Tag')).$('..'); }
+    get tagHeaderSelector() { return 'data-qa-tag-header'; }
+    get tagHeaders() { return $$(`[${this.tagHeaderSelector}]`); }
     get enterKey() { return '\uE007'; }
     get upArrowKey() { return '\ue013'; }
 
@@ -251,5 +254,22 @@ export default class Page {
 
     addIcon(iconText){
         return $(`[data-qa-icon-text-link="${iconText}"]`);
+    }
+
+    tagHeader(tag){
+        return $(`[${this.tagHeaderSelector}=${tag}]`);
+    }
+
+    groupByTags(group){
+        this.groupByTagsToggle.click();
+        browser.waitUntil(() => {
+          return group ? this.tagHeaders.length > 0 : this.tagHeaders.length === 0;
+        },constants.wait.normal);
+    }
+
+    tagGroupsInAlphabeticalOrder(tags){
+        const tagHeaders = this.tagHeaders
+            .map(header => header.getAttribute(this.tagHeaderSelector));
+        expect(tagHeaders).toEqual(tags.sort());
     }
 }

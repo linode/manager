@@ -164,6 +164,7 @@ const themeDefaults: ThemeOptions = {
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
     toggleActive: '#606469',
+    diskSpaceBorder: '#f4f4f4',
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -1044,16 +1045,16 @@ const themeDefaults: ThemeOptions = {
         transition: 'color 225ms ease-in-out',
         '&:hover': {
           color: primaryColors.main,
+        },
+        '&:focus': {
+          outline: '1px dotted #999',
         }
       },
       active: {
         color: primaryColors.main,
-        '&:focus': {
-          outline: '1px dotted #999',
-          '&:hover': {
-            color: primaryColors.main,
-          }
-        },
+        '&:hover': {
+          color: primaryColors.main,
+        }
       },
       icon: {
         opacity: 1,

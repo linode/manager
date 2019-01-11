@@ -19,7 +19,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
         linodeLabel: `AutoLinode1${timestamp()}`,
         group: `group1${timestamp()}`
     }
-    const importMessage = 'You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. Your existing tags will not be affected.';
+    const importMessage = 'You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Linodes and Domains. This will give you the ability to organize and view your Linodes and Domains by tags. Your existing tags will not be affected.';
 
     beforeAll(() => {
         apiCreateMultipleLinodes([linode,linode1]);
@@ -64,7 +64,7 @@ describe('Import Display Groups as Tags - Linodes Suite', () => {
         GlobalSettings.openImportDrawerButton.click();
         ImportGroupsAsTagsDrawer.drawerDisplays();
         ImportGroupsAsTagsDrawer.submitButton.click();
-        GlobalSettings.drawerBase.waitForVisible(constants.wait.long);
+        GlobalSettings.drawerBase.waitForVisible(constants.wait.long,true);
         GlobalSettings.toastDisplays('Your display groups have been imported successfully.');
         expect(getLocalStorageValue('hasImportedGroups')).toBe('true');
     });

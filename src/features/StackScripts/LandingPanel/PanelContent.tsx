@@ -18,7 +18,7 @@ import { deleteStackScript, updateStackScript } from 'src/services/stackscripts'
 import {
   getCommunityStackscripts,
   getStackScriptsByUser
-} from '../SelectStackScriptPanel/stackScriptUtils';
+} from '../stackScriptUtils';
 
 import { sendEvent } from 'src/utilities/analytics';
 

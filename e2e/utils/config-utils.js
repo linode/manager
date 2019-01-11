@@ -31,7 +31,6 @@ exports.storeToken = (credFilePath, username) => {
 exports.readToken = (username) => {
     const credCollection = JSON.parse(readFileSync('./e2e/creds.js'));
     const currentUserCreds = credCollection.find(cred => cred.username === username);
-
     return currentUserCreds['token'];
 }
 

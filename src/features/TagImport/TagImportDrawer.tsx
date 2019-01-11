@@ -86,7 +86,7 @@ export const TagImportDrawer: React.StatelessComponent<CombinedProps> = (props) 
         <Grid container direction={'column'} >
           <Grid item>
             <Typography variant="body1" data-qa-group-body>
-              You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Domains and Linodes. This will give you the ability to organize and view your Linodes by tags. <strong>Your existing tags will not be affected.</strong>
+              You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Linodes and Domains. This will give you the ability to organize and view your Linodes and Domains by tags. <strong>Your existing tags will not be affected.</strong>
             </Typography>
           </Grid>
           {!isEmpty(errors) && errors.map((error, idx: number) =>

@@ -4,8 +4,8 @@ import { Reducer } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
+import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
-import { updateMultipleLinodes } from 'src/store/reducers/resources/linodes';
 
 
 // HELPERS
@@ -182,7 +182,8 @@ export default reducer;
 export const gatherResponsesAndErrors = (accumulator: Accumulator, linode: Linode.Linode) => {
   return enableBackups(linode.id).then(() => ({
     ...accumulator,
-    success: [...accumulator.success, linode]
+    // This is accurate, since a 200 from the API means that backups were enabled.
+    success: [...accumulator.success, {...linode, backups: { ...linode.backups, enabled: true }}]
   }))
     .catch((error) => {
       const reason = pathOr('Backups could not be enabled for this Linode.',
@@ -215,8 +216,6 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
       else {
         dispatch(handleEnableSuccess(response.success));
       }
-      /** @todo */
-      // dispatch(requestLinodesWithoutBackups());
       dispatch(updateMultipleLinodes(response.success));
     })
     .catch(() => dispatch(
@@ -230,11 +229,19 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState
 */
 type EnableAutoEnrollThunk = () => ThunkAction<void, ApplicationState, undefined>;
 export const enableAutoEnroll: EnableAutoEnrollThunk = () => (dispatch, getState) => {
-  const { backups } = getState();
-  const backups_enabled = Boolean(backups.autoEnroll);
+  const state = getState();
+  const { backups } = state;
+  const hasBackupsEnabled = pathOr(false,
+    ['__resources', 'accountSettings', 'data', 'backups_enabled'], state);
+  const shouldEnableBackups = Boolean(backups.autoEnroll);
+
+  /** If the selected toggle setting matches the setting already on the user's account,
+   * don't bother the API.
+   */
+  if (hasBackupsEnabled === shouldEnableBackups) { dispatch(enableAllBackups()); return; }
 
   dispatch(handleAutoEnroll());
-  updateAccountSettings({ backups_enabled })
+  updateAccountSettings({ backups_enabled: shouldEnableBackups })
     .then((response) => {
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());

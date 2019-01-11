@@ -17,9 +17,16 @@ export const shouldHumanize = (time: moment.Moment, cutoff?: TimeInterval): bool
   // If cutoff is not provided, use the default ISO output.
   if (!cutoff) { return false; }
   const duration = durationMap[cutoff]();
-  const diff =  moment.duration(moment().diff(time));
-  // Humanize the date if it is earlier than the cutoff:
-  return diff <= duration;
+  /**
+   * difference between now and the time provided 
+   * without Math.abs(), diff will return a negative number if passed a future date 
+   */
+  const diff = Math.abs(+moment.duration(moment().diff(time)));
+  /**
+   * Humanize the date if th difference between the current date and provided date
+   * is lower than the cutoff
+   */
+  return diff <= +duration;
 }
 
 interface FormatDateOptions {

@@ -1,6 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
-import { lensPath, path, set } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -14,7 +14,6 @@ import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import { RegionsProvider, WithRegionsContext } from 'src/context/regions';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
@@ -23,14 +22,14 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { getRegions } from 'src/services/misc';
 import { requestDomains } from 'src/store/domains/domains.actions';
+import { requestLinodes } from 'src/store/linodes/linodes.actions';
 import { requestNotifications } from 'src/store/reducers/notifications';
 import { requestAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { async as imagesAsync } from 'src/store/reducers/resources/images';
-import { async as linodesAsync } from 'src/store/reducers/resources/linodes';
 import { requestProfile } from 'src/store/reducers/resources/profile';
 import { async as typesAsync } from 'src/store/reducers/resources/types';
+import { requestRegions } from 'src/store/regions/regions.actions';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -157,7 +156,6 @@ interface Props {
 interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
-  regionsContext: WithRegionsContext;
   hasError: boolean;
 }
 
@@ -167,17 +165,6 @@ type CombinedProps = Props
   & WithStyles<ClassNames>
   & InjectedNotistackProps;
 
-const regionsContext = (pathCollection: string[]) => lensPath(['regionsContext', ...pathCollection]);
-
-const L = {
-  regionsContext: {
-    data: regionsContext(['data']),
-    errors: regionsContext(['errors']),
-    lastUpdated: regionsContext(['lastUpdated']),
-    loading: regionsContext(['loading']),
-  },
-};
-
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
@@ -186,30 +173,6 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    regionsContext: {
-      lastUpdated: 0,
-      loading: false,
-      request: () => {
-        this.composeState([set(L.regionsContext.loading, true)]);
-
-        return getRegions()
-          .then((regions) => {
-            this.composeState([
-              set(L.regionsContext.loading, false),
-              set(L.regionsContext.lastUpdated, Date.now()),
-              set(L.regionsContext.data, regions.data),
-            ])
-          })
-          .catch((error) => {
-            this.composeState([
-              set(L.regionsContext.loading, false),
-              set(L.regionsContext.lastUpdated, Date.now()),
-              set(L.regionsContext.errors, error),
-            ]);
-          });
-      },
-      update: () => null, /** @todo */
-    },
     hasError: false,
   };
 
@@ -227,6 +190,7 @@ export class App extends React.Component<CombinedProps, State> {
     actions.requestProfile();
     actions.requestSettings();
     actions.requestTypes();
+    actions.requestRegions();
 
     /*
      * We want to listen for migration events side-wide
@@ -259,8 +223,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (notifications.welcome.get() === 'open') {
       this.setState({ welcomeBanner: true });
     }
-
-    this.state.regionsContext.request();
   }
 
   closeMenu = () => { this.setState({ menuOpen: false }); }
@@ -300,7 +262,7 @@ export class App extends React.Component<CombinedProps, State> {
 
         {profileLoading === false &&
           <React.Fragment>
-            <RegionsProvider value={this.state.regionsContext}>
+            <>
               <div {...themeDataAttr()} className={classes.appFrame}>
                 <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
                 <main className={classes.content}>
@@ -352,7 +314,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <VolumeDrawer />
                 <BackupDrawer />
               </div>
-            </RegionsProvider>
+            </>
           </React.Fragment>
         }
       </React.Fragment>
@@ -380,6 +342,7 @@ interface DispatchProps {
     requestProfile: () => void;
     requestSettings: () => void;
     requestTypes: () => void;
+    requestRegions: () => void;
   },
 }
 
@@ -388,11 +351,12 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
     actions: {
       requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(imagesAsync.requestImages()),
-      requestLinodes: () => dispatch(linodesAsync.requestLinodes()),
+      requestLinodes: () => dispatch(requestLinodes()),
       requestNotifications: () => dispatch(requestNotifications()),
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(typesAsync.requestTypes()),
+      requestRegions: () => dispatch(requestRegions()),
     }
   };
 };

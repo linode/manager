@@ -22,7 +22,14 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
         >
           Linode
         </TableSortCell>
-        <TableCell>Plan</TableCell>
+        <TableSortCell
+          label='tags'
+          direction={order}
+          active={isActive('tags')}
+          handleClick={handleOrderChange}
+        >
+          Tags
+        </TableSortCell>
         <TableCell noWrap>Last Backup</TableCell>
         <TableCell>IP Addresses</TableCell>
         <TableSortCell

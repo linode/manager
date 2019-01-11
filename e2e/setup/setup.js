@@ -249,6 +249,32 @@ exports.removeAllVolumes = token => {
     });
 }
 
+exports.createDomain = (token,type,domain,tags,group) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = '/domains';
+        const domainConfig = {
+            type: type ? type : 'master',
+            domain: domain,
+            soa_email: 'fake@gmail.com'
+        }
+
+        if(group){
+            domainConfig['group'] = group;
+        }
+
+        if(tags){
+            domainConfig['tags'] = tags;
+        }
+
+        return getAxiosInstance(token).post(endpoint,domainConfig)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
 exports.getDomains = token => {
     return new Promise((resolve, reject) => {
         const endpoint = '/domains';
