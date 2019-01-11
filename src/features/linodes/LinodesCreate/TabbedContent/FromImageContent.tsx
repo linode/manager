@@ -24,7 +24,7 @@ import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
-const DEFAULT_IMAGE = 'linode/ubuntu18.10';
+const DEFAULT_IMAGE = 'linode/debian9';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 

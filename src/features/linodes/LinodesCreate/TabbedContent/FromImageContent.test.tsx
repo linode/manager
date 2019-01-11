@@ -58,7 +58,7 @@ describe('FromImageContent', () => {
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       images={[{
-        id: 'linode/ubuntu18.10',
+        id: 'linode/debian9',
         label: '',
         description: null,
         created: '',
@@ -72,8 +72,8 @@ describe('FromImageContent', () => {
     />,
   );
 
-  it('should default to Ubuntu 18.10 as the selected image', () => {
-    expect(componentWithImages.state().selectedImageID).toBe('linode/ubuntu18.10');
+  it('should default to Debian 9 as the selected image', () => {
+    expect(componentWithImages.state().selectedImageID).toBe('linode/debian9');
   });
 
   it('should set selectedImageID to null when initial state (from history or default) is not in images', () => {
