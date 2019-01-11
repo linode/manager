@@ -164,7 +164,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               <Button
                 href="/linodes/create?type=fromStackScript"
                 onClick={this.resetStackScript}
-                type="primary"
+                type="secondary"
                 >
                 Choose another StackScript
               </Button>
