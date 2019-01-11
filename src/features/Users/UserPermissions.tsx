@@ -737,12 +737,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         <Grid container alignItems="center" style={{ width: 'auto' }}>
           <Grid item>
             <Typography role="header" variant="h2" data-qa-restrict-access={restricted}>
-              Limit Account Access:
+              Full Account Access:
               </Typography>
           </Grid>
           <Grid item>
             <Typography role="header" variant="h2">
-              {restricted
+              {!restricted
                 ? 'On'
                 : 'Off'
               }
@@ -754,7 +754,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                 ? 'You cannot restrict the current active user.'
                 : ''}
               disabled={username === currentUser}
-              checked={restricted}
+              checked={!restricted}
               onChange={this.onChangeRestricted}
               className={classes.toggle}
             />
