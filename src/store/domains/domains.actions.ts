@@ -1,6 +1,6 @@
-import { pathOr } from 'ramda';
 import { Dispatch } from 'redux';
 import { getDomain, getDomains } from 'src/services/domains';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 import { ThunkActionCreator } from '../types';
@@ -33,8 +33,7 @@ export const requestDomains = () => (dispatch: Dispatch<any>) => {
       return domains;
     })
     .catch((err) => {
-      const defaultError = [{ reason: 'An unexpected error has occurred.' }];
-      const errors = pathOr(defaultError, ['response', 'data', 'errors'], err);
+      const errors = getAPIErrorOrDefault(err, 'There was an error retrieving your Domains.');
       dispatch(getDomainsFailure(errors));
     });
 };

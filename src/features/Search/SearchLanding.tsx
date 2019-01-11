@@ -7,8 +7,10 @@ import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
 
 import ResultGroup from './ResultGroup';
@@ -42,6 +44,17 @@ type CombinedProps =
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
 
+const getErrorMessage = (errors: ErrorObject): string => {
+  const errorString: string[] = [];
+  if (errors.linodes) { errorString.push('Linodes'); }
+  if (errors.domains) { errorString.push('Domains'); }
+  if (errors.volumes) { errorString.push('Volumes'); }
+  if (errors.nodebalancers) { errorString.push('NodeBalancers'); }
+  if (errors.images) { errorString.push('Images'); }
+  const joined = errorString.join(', ');
+  return `Could not retrieve search results for: ${joined}`;
+}
+
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
@@ -67,7 +80,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, entitiesLoading, searchResults } = this.props;
+    const { classes, entitiesLoading, errors, searchResults } = this.props;
     const { query } = this.state;
 
     const resultsEmpty = equals(searchResults, emptyResults);
@@ -78,6 +91,11 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
             Search Results { query && `for "${query}"` }
           </Typography>
         </Grid>
+        {errors.hasErrors &&
+          <Grid item>
+            <Notice error text={getErrorMessage(errors)} />
+          </Grid>
+        }
         {entitiesLoading &&
           <Grid item data-qa-search-loading>
             <CircleProgress />

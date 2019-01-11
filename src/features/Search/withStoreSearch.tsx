@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 
 import { emptyResults, filterMatched } from 'src/features/Search/utils';
+import entitiesErrors, { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, { SearchResults } from 'src/store/selectors/getSearchEntities';
 
@@ -14,6 +15,7 @@ export interface SearchProps extends HandlerProps {
   entities: SearchResults;
   entitiesLoading: boolean;
   searchResults: SearchResults;
+  errors: ErrorObject;
 }
 
 export const search = (entities: SearchResults, inputValue:string ): SearchResults => {
@@ -47,7 +49,8 @@ export default () => (Component: React.ComponentType<any>) => {
     (state: ApplicationState) => {
       return {
         entities: getSearchEntities(state.__resources),
-        entitiesLoading: entitiesLoading(state.__resources)
+        entitiesLoading: entitiesLoading(state.__resources),
+        errors: entitiesErrors(state.__resources)
       }
     }
   );
