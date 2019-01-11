@@ -102,7 +102,7 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
           </Grid>
         }
         {
-          resultsEmpty &&
+          resultsEmpty && !entitiesLoading &&
           <Grid item data-qa-empty-state>
             <Placeholder
               title="No results"
