@@ -4,6 +4,57 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.45.0] - 2019.01.14
+
+### Added:
+- Disk storage information modal in Linode > Settings > Advanced
+- Grouping of Domains by tags on Domain listing page.
+- Add payment PDF generation
+- Add invoice PDF generation
+- Display loading until images are available.
+  - Source images data from Redux.
+  - Add images to Redux on load.
+- Improved linode listing page table.
+  - Remove + icon to display all ip addresses on linode row.
+  - Hide copy icon for ip addresses until hover.
+  - The icon for a Linode was added to the Linode row.
+  - Plan column removed, linode plan and details now listed under the label in the Linodes columns.
+  - Added a column for tags.
+- Account tab for StackScripts, lists all scripts created on the account the user has permissions to read/write.
+  - If an account user does not have access to StackScripts, then a message indicating the user does not have the proper permissions will display.
+
+### Changed:
+- Explicitly check for errors before setting local storage.
+- Move image toast logic to ToastNotifications.tsx
+- Allow submitting empty array for IP sharing
+- Explicitly declaring background color on table cells for printer compatibility.
+- Update documentation. Update casing on label.
+- Set default image in Create from Image flow.
+- Default label name during Linode creation.
+- Update react-dev-utils and webpack-dev-server
+- Update Radio Input Label text size on Create Volume drawer
+- Update pagination styling
+- Update source Linode on linode_clone schedule/start
+- Refactor domains dashboard card to use Redux state
+- Update community events, make all clickable.
+- Update dashboard transfer card to new design
+- Add Render Guard to Contact Info/Config Forms
+- Change Pagination Controls to handle many pages
+- Add reduxed images to LinodeRebuild
+- Improved error handling.
+- Respond to community_like events, display in menu
+- Update Copy Around Restricted Users
+- Update search results size limit to 100
+- Capitalize linode progress bar text
+
+### Fixed:
+- Credit card payment request ccv field.
+- Safari autofill on root password reset.
+- Parse timestamps in UTC for notifications.
+- Hide radio buttons on edit disk drawer.
+- Display notice on successful deletion of a user.
+- Submission of the enable back ups for all Linodes drawer caused duplicate listings of Linodes.
+
 ## [0.44.1] - 2019.01.10
 ### Fixed:
 - Credit card payment request ccv field.
