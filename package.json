@@ -146,7 +146,8 @@
     "mb": "npx mb",
     "release": "./scripts/release_changelog.sh",
     "e2e:html-report": "npx allure generate e2e/html-results --clean && npx allure open",
-    "e2e:wait-for-manger-local": "./scripts/wait-for-it.sh manager-local:3000 -t 500 -s"
+    "e2e:wait-for-manger-local": "./scripts/wait-for-it.sh manager-local:3000 -t 500 -s",
+    "docker:e2e:visual-regression": "./scripts/run-visual-regression.sh"
   },
   "husky": {
     "hooks": {

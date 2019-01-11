@@ -5,7 +5,7 @@ const { createAttachment } = require('wdio-allure-reporter');
 const VISUAL_REGRESSION = process.env['VISUAL_REGRESSION'];
 const BASELINE = './e2e/visual-regression/baseline';
 const SCREENSHOT = './e2e/visual-regression/screenshots';
-const SAVEPATH = VISUAL_REGRESSION ? SCREENSHOT : BASELINE;
+const SAVEPATH = VISUAL_REGRESSION === 'true' ? SCREENSHOT : BASELINE;
 
 const compareToBaseLine = (imageName) => {
     const baselineImg = readFileSync(`${BASELINE}/${imageName}.png`);
@@ -40,7 +40,7 @@ const takeScreenshot = (element,selector) => {
 
 export const compareTest = (imageName,selector) => {
     takeScreenshot(imageName,selector);
-    if(VISUAL_REGRESSION){
+    if(VISUAL_REGRESSION === 'true'){
         compareToBaseLine(imageName);
     }
 }

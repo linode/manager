@@ -152,3 +152,31 @@ The axe-core accessibility testing script has been integrated into the webdriver
      yarn axe
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
+
+##### Visual Regression
+
+##### Dependencies
+
+* Same as Run Suite in Docker Local Dev Environment
+
+The visual regression has been integrated into the webdriverIO-based testing framework to enable visual diff testing. Using webdriverIO screenshots to take snap shots of specific portions of the DOM (i.e. taking snapshots of individual components not entire page), and ResemmbleJS to compare screenshots to our baseline expected images, and Mountebank to mock api data. Results are published using Allure html reporter, if there are discrepancies between the screenshots and baseline the test is marked as failed and the report will display the expected image, the actual image, and a heat map of the difference between the images.
+
+The suite requires an additional argument in the dot .env file:
+
+     VISUAL_REGRESSION
+
+If set to true, then comparison between snap shots and baseline take place, if set to false then just the baseline images are updated.
+
+To run the suite, ensure these values are set in your .env file:
+
+     VISUAL_REGRESSION
+     MANAGER_USER
+     MANAGER_PASS
+     MANAGER_USER_2
+     MANAGER_PASS_2
+
+Once the values are set run the command:
+
+     yarn docker:e2e:visual-regression
+
+After the suite is complete, and html report will display displaying the results.

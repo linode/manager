@@ -40,14 +40,12 @@ services:
     environment:
       - REACT_APP_APP_ROOT=https://manager-local:3000
       - REACT_APP_API_ROOT=https://imposter:8088/v4
-      - VISUAL_REGRESSION=true
       - DOCKER=true
+      - VISUAL_REGRESSION=${VISUAL_REGRESSION}
       - MANAGER_USER=${MANAGER_USER}
       - MANAGER_PASS=${MANAGER_PASS}
       - MANAGER_USER_2=${MANAGER_USER_2}
       - MANAGER_PASS_2=${MANAGER_PASS_2}
-      - MANAGER_OAUTH=${MANAGER_OAUTH}
-      - MANAGER_OAUTH_2=${MANAGER_OAUTH_2}
     volumes:
       - ./e2e/test-results:/src/e2e/test-results
       - ./e2e/html-results:/src/e2e/html-results
