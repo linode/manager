@@ -1,30 +1,18 @@
-import { compose as _compose, isNil, map, reject, sort, uniq } from 'ramda';
-import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { isEmpty, pathOr } from 'ramda';
+import { compose as _compose, isEmpty, isNil, map, pathOr, reject, sort, uniq } from 'ramda';
+import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose, lifecycle } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import {
-  addTagsToEntities,
-  closeGroupDrawer as _close,
-  handleReset,
-} from 'src/store/reducers/tagImportDrawer'
-import getEntitiesWithGroupsToImport,
-  {
-    emptyGroupedEntities,
-    GroupedEntitiesForImport,
-    GroupImportProps,
-  } from 'src/store/selectors/getEntitiesWithGroupsToImport';
-
-
+import { addTagsToEntities, closeGroupDrawer as _close, handleReset } from 'src/store/reducers/tagImportDrawer';
+import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport, GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { ThunkDispatch } from 'src/store/types';
 import { sortAlphabetically } from 'src/utilities/sort-by';
 import { storage } from 'src/utilities/storage';
 import DisplayGroupList from './DisplayGroupList';
@@ -143,7 +131,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   });
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch, ownProps) => {
   return {
     actions: {
       close: () => dispatch(_close()),

@@ -1,9 +1,9 @@
 import { pathOr } from 'ramda';
 import { Dispatch } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { getDomain, getDomains } from 'src/services/domains';
 import { getAll } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
+import { ThunkActionCreator } from '../types';
 
 /**
  * Actions
@@ -39,7 +39,7 @@ export const requestDomains = () => (dispatch: Dispatch<any>) => {
     });
 };
 
-type RequestDomainForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
+type RequestDomainForStoreThunk = ThunkActionCreator<void>;
 export const requestDomainForStore: RequestDomainForStoreThunk = (id) => (dispatch, getState) => {
   const { results } = getState().__resources.domains;
 
