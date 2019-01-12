@@ -1,4 +1,4 @@
-import tagDrawer, * as T from './tagImportDrawer';
+import tagDrawer, * as T from './index';
 
 describe("tagImportDrawer Redux duck", () => {
   describe("reducer", () => {

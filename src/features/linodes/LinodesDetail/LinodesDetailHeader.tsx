@@ -9,7 +9,7 @@ import 'rxjs/add/operator/filter';
 import TagsPanel from 'src/components/TagsPanel';
 import { lishLaunch } from 'src/features/Lish';
 import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
-import { requestNotifications } from 'src/store/reducers/notifications';
+import { requestNotifications } from 'src/store/notifications';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
@@ -178,10 +178,10 @@ const filterNotifications = (linodeId: number, notifications: Linode.Notificatio
     )
 }
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
-  notificationsLoading: state.notifications.loading,
-  notificationsError: state.notifications.error,
+  notificationsLoading: state.__resources.notifications.loading,
+  notificationsError: state.__resources.notifications.error,
   // Only use notifications for this Linode.
-  notifications: filterNotifications(ownProps.linodeId, state.notifications.data),
+  notifications: filterNotifications(ownProps.linodeId, state.__resources.notifications.data),
 });
 
 interface StateProps {

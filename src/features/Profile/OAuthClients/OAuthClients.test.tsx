@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { pageyProps } from 'src/__data__/pageyProps';
 
-import { clearDocs, setDocs } from 'src/store/reducers/documentation';
+import { clearDocs, setDocs } from 'src/store/documentation';
 
 import { OAuthClients } from './OAuthClients';
 

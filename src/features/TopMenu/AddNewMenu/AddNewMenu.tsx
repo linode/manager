@@ -12,8 +12,8 @@ import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
-import { openForCreating as openDomainDrawerForCreating } from 'src/store/reducers/domainDrawer';
-import { openForCreating as openVolumeDrawerForCreating } from 'src/store/reducers/volumeDrawer';
+import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
+import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
 type CSSClasses = 'wrapper'

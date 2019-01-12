@@ -1,4 +1,4 @@
-import { actions, async } from 'src/store/reducers/resources/images';
+import { actions, async } from 'src/store/images';
 import { EventHandler } from './combineEventsMiddleware';
 
 const imageEventsHandler: EventHandler = (event, dispatch) => {

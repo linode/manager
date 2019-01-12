@@ -19,8 +19,8 @@ import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawe
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { Requestable } from 'src/requestableContext';
 import { getLinode, getLinodeConfigs, getType, startMutation, updateLinode } from 'src/services/linodes';
-import { _getLinodeDisks } from 'src/store/reducers/features/linodeDetail/disks';
-import { _getLinodeVolumes } from 'src/store/reducers/features/linodeDetail/volumes';
+import { _getLinodeDisks } from 'src/store/linodeDetail/disks';
+import { _getLinodeVolumes } from 'src/store/linodeDetail/volumes';
 import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

@@ -13,7 +13,7 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { getTFAToken } from 'src/services/profile';
-import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { handleUpdate } from 'src/store/profile';
 import { MapState } from 'src/store/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
