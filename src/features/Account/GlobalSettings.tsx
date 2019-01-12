@@ -1,8 +1,10 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
@@ -109,8 +111,8 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     )
   }
 }
-
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+import {MapStateToProps} from 'react-redux';
+const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
   loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   error: path(['__resources', 'accountSettings', 'error'], state),
@@ -122,8 +124,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
       ? getEntitiesWithGroupsToImport(state)
       : emptyGroupedEntities),
 });
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch<ApplicationState,undefined,AnyAction>) => {
   return {
     actions: {
       updateAccount: (data: Partial<Linode.AccountSettings>) => dispatch(updateAccountSettings(data)),

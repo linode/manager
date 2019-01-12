@@ -1,10 +1,9 @@
 import * as Bluebird from 'bluebird';
-import { Dispatch } from "redux";
-import { ThunkAction } from 'redux-thunk';
 import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getLinode, getLinodes } from "src/services/linodes";
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory from 'typescript-fsa';
+import { ThunkActionCreator } from '../types';
 
 /**
  * Actions
@@ -21,7 +20,7 @@ export const updateLinode = actionCreator<{ id: number; update: (v: Linode.Linod
 
 export const linodesRequest = actionCreator.async<void, Linode.Linode[], Linode.ApiFieldError[]>('request');
 
-export const requestLinodes = () => (dispatch: Dispatch<ApplicationState>) => {
+export const requestLinodes: ThunkActionCreator<Promise<Linode.Linode[]>> = () => (dispatch) => {
   dispatch(linodesRequest.started);
 
   return getAll<Linode.Linode>(getLinodes)()
@@ -32,12 +31,13 @@ export const requestLinodes = () => (dispatch: Dispatch<ApplicationState>) => {
     })
     .catch((err) => {
       dispatch(linodesRequest.failed(err));
+      return err;
     });
 };
 
 const getBackupsForLinodes = ({ data }: { data: Linode.Linode[] }) => Bluebird.map(data, requestMostRecentBackupForLinode);
 
-type RequestLinodeForStoreThunk = (id: number) => ThunkAction<void, ApplicationState, undefined>;
+type RequestLinodeForStoreThunk = ThunkActionCreator<void>;
 export const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispatch, getState) => {
 
   getLinode(id)

@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { getAccountInfo } from 'src/services/account';
+import { ThunkActionCreator } from 'src/store/types';
 import { actionCreatorFactory, isType } from 'typescript-fsa';
 
 
@@ -59,7 +59,7 @@ export default reducer;
 /**
  * Async
  */
-const requestAccount = (): ThunkAction<Promise<Linode.Account>, State, undefined> => (dispatch, getStore) => {
+const requestAccount: ThunkActionCreator<Promise<Linode.Account>> = () => (dispatch, getStore) => {
   dispatch(profileRequest());
   return getAccountInfo()
     .then((response) => {

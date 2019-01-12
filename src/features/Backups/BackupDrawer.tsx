@@ -12,6 +12,7 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess } from 'src/store/reducers/backupDrawer';
+import { ThunkDispatch } from 'src/store/types';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
@@ -190,7 +191,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
   }
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch, ownProps) => {
   return {
     actions: {
       enable: () => dispatch(enableAllBackups()),

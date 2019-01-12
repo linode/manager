@@ -6,18 +6,14 @@ import { compose } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
-
 import TagsPanel from 'src/components/TagsPanel';
-
 import { lishLaunch } from 'src/features/Lish';
-
+import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
+import { requestNotifications } from 'src/store/reducers/notifications';
+import { ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
-
-import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
-
-import { requestNotifications } from 'src/store/reducers/notifications';
 
 interface LabelInput {
   label: string;
@@ -168,7 +164,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch) => {
   return {
     actions: {
       getNotifications: () => dispatch(requestNotifications()),

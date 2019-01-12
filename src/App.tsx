@@ -5,7 +5,8 @@ import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
-import { compose } from 'redux';
+import { Action, compose } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -346,7 +347,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>) => {
   return {
     actions: {
       requestDomains: () => dispatch(requestDomains()),

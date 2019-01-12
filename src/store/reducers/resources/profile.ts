@@ -1,7 +1,6 @@
-import { compose, Dispatch } from 'redux';
-
+import { compose } from 'redux';
 import { getMyGrants, getProfile } from 'src/services/profile';
-
+import { ThunkActionCreator } from 'src/store/types';
 
 // TYPES
 type State = RequestableData<Linode.Profile>;
@@ -67,7 +66,7 @@ const maybeRequestGrants: (response: Linode.Profile) => Promise<Linode.Profile>
       .then(grants => ({ ...profile, grants }));
   };
 
-export const requestProfile = () => (dispatch: Dispatch<State>) => {
+export const requestProfile: ThunkActionCreator<void> = () => (dispatch) => {
 
   dispatch(startRequest());
   getProfile()

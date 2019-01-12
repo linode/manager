@@ -39,8 +39,8 @@ export const resetEventsPolling = () => {
 
 export const requestEvents = () => {
   inProgress = true;
-  return store.dispatch(async.getEvents())
-    .then((events) => {
+  return store.dispatch(async.getEvents() as any)
+    .then((events: Linode.Event[]) => {
       const reversed = events.reverse();
 
       /**
