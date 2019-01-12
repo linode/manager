@@ -1,6 +1,6 @@
 import { compose, dec, lensPath, path, pathOr, remove, set } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -19,6 +19,7 @@ import TextField from 'src/components/TextField';
 import { LISH } from 'src/documentation';
 import { updateProfile } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { MapState } from 'src/store/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -259,7 +260,7 @@ interface StateProps {
   loading: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
   return {
     loading: profile.loading,

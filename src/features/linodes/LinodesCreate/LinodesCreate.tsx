@@ -1,6 +1,6 @@
 import { compose, filter, find, lensPath, map, pathOr, prop, propEq, set } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose as composeComponent } from 'recompose';
@@ -18,6 +18,7 @@ import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
+import { MapState } from 'src/store/types';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { ExtendedLinode } from './SelectLinodePanel';
 import { ExtendedType } from './SelectPlanPanel';
@@ -395,7 +396,7 @@ interface StateProps {
   accountBackups: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, CombinedProps, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
   accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
 });
 

@@ -1,26 +1,20 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-} from '@material-ui/core/styles';
+import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr, split } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-
+import { connect } from 'react-redux';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
-
+import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
+import { MapState } from 'src/store/types';
+import { sendEvent } from 'src/utilities/analytics';
+import { getCommunityStackscripts, getStackScriptsByUser } from '../stackScriptUtils';
 import DeleteDialog from './Dialogs/DeleteDialog';
 import MakePublicDialog from './Dialogs/MakePublicDialog';
 import StackScriptTable from './Table/StackScriptTable';
 
-import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
-import {
-  getCommunityStackscripts,
-  getStackScriptsByUser
-} from '../stackScriptUtils';
 
-import { sendEvent } from 'src/utilities/analytics';
+
+
 
 type ClassNames = 'root'
   | 'searchWrapper'
@@ -346,7 +340,7 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile),
 });
 

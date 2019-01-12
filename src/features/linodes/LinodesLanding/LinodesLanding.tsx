@@ -3,7 +3,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { parse, stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose, withStateHandlers } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -22,6 +22,7 @@ import Toggle from 'src/components/Toggle';
 import withImages from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
+import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
 import { storage, views } from 'src/utilities/storage';
 import CardView from './CardView';
@@ -351,7 +352,7 @@ interface StateProps {
   linodesRequestLoading: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   return {
     managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),
     linodesCount: state.__resources.linodes.results.length,

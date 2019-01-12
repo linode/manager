@@ -1,7 +1,7 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
@@ -14,13 +14,14 @@ import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { getTFAToken } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { MapState } from 'src/store/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
-
 import ScratchDialog from './ScratchCodeDialog';
 
-import DisableTwoFactorDialog from './DisableTwoFactorDialog';
+
 
 type ClassNames = 'root'
   | 'container'
@@ -300,7 +301,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   profile: path(['data'], state.__resources.profile),
   twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
   username: path(['data', 'username'], state.__resources.profile),
@@ -337,8 +338,8 @@ class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
     const { twoFactorConfirmed, onChange } = this.props;
     const enabled = e.currentTarget.checked;
     onChange(enabled);
-    /** 
-     * only open the disable dialog if 2FA has been turned on and we're flipping the toggle off 
+    /**
+     * only open the disable dialog if 2FA has been turned on and we're flipping the toggle off
      */
     if (!enabled && twoFactorConfirmed) {
       this.props.toggleDisableDialog();

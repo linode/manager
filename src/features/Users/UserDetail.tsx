@@ -1,6 +1,6 @@
 import { clone, compose, path as pathRamda, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { matchPath, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -14,6 +14,7 @@ import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { MapState } from 'src/store/types';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
@@ -312,7 +313,7 @@ interface StateProps {
   profileUsername?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   profileUsername: pathRamda(['data', 'username'], state.__resources.profile),
 });
 

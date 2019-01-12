@@ -1,11 +1,12 @@
 import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
 
@@ -79,7 +80,7 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
   return {
     loading: profile.loading,

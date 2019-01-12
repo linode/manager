@@ -1,12 +1,13 @@
 import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
+import { MapState } from 'src/store/types';
 
 type ClassNames = 'root'
   | 'button';
@@ -66,7 +67,7 @@ interface DispatchProps {
   }
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources','accountSettings','data','managed'], state)
 })
