@@ -1,4 +1,4 @@
-import account, * as A from './accountSettings';
+import account, * as A from './index';
 
 import { accountSettings } from 'src/__data__/account';
 import { mockAPIFieldErrors } from 'src/services';

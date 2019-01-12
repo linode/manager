@@ -5,7 +5,7 @@ import reducer, {
   defaultState,
   openForCloning,
   openForCreating,
-} from './domainDrawer';
+} from './index';
 
 describe('domainDrawer reducer', () => {
   it('should be OPEN when opening for creating', () => {

@@ -29,7 +29,7 @@ import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import { getLinodes, getLinodeVolumes } from 'src/services/linodes';
 import { deleteVolume, detachVolume, getVolumes } from 'src/services/volumes';
-import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/reducers/volumeDrawer';
+import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/volumeDrawer';
 import { formatRegion } from 'src/utilities';
 import { generateInFilter } from 'src/utilities/requestFilters';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';

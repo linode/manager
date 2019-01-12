@@ -1,6 +1,6 @@
 
 import store from 'src/store';
-import { setToken } from 'src/store/reducers/authentication';
+import { setToken } from 'src/store/authentication';
 
 import { AUTH_EXPIRE_DATETIME, AUTH_SCOPES, AUTH_TOKEN, expire, refresh, start } from './session';
 

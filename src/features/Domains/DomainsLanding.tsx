@@ -25,7 +25,7 @@ import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
 import { deleteDomain } from 'src/services/domains';
-import { openForCloning, openForCreating } from 'src/store/reducers/domainDrawer';
+import { openForCloning, openForCreating } from 'src/store/domainDrawer';
 import { sendEvent } from 'src/utilities/analytics';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 

@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
-import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { handleUpdate } from 'src/store/profile';
 import { MapState } from 'src/store/types';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import { clearDocs, setDocs } from 'src/store/reducers/documentation';
+import { clearDocs, setDocs } from 'src/store/documentation';
 
 export type SetDocsProps = DispatchProps;
 

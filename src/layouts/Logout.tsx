@@ -1,9 +1,8 @@
 import { Component } from 'react';
 import { connect, Dispatch } from 'react-redux';
-
 import { LOGIN_ROOT } from 'src/constants';
 import * as session from 'src/session';
-import { logout } from 'src/store/reducers/authentication';
+import { logout } from 'src/store/authentication';
 
 interface Props {
   dispatch: Dispatch<ApplicationState>;

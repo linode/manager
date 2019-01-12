@@ -6,7 +6,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
-import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { handleUpdate } from 'src/store/profile';
 import { MapState } from 'src/store/types';
 import SecuritySettings from './SecuritySettings';
 import TrustedDevices from './TrustedDevices';

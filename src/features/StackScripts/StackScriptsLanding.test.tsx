@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { clearDocs, setDocs } from 'src/store/reducers/documentation';
+import { clearDocs, setDocs } from 'src/store/documentation';
 
 import { images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';

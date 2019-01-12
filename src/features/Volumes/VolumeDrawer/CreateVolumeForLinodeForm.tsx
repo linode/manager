@@ -11,7 +11,7 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 import { resetEventsPolling } from 'src/events';
 import { createVolume } from 'src/services/volumes';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
-import { openForAttaching } from 'src/store/reducers/volumeDrawer';
+import { openForAttaching } from 'src/store/volumeDrawer';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import ModeSelection from './ModeSelection';

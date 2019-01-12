@@ -2,14 +2,14 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { expire } from 'src/session';
-import { logout } from 'src/store/reducers/authentication';
+import { logout } from 'src/store/authentication';
 
 import { Logout } from './Logout';
 
 jest.mock('src/session', () => ({
   expire: jest.fn(),
 }));
-jest.mock('src/store/reducers/authentication');
+jest.mock('src/store/authentication');
 
 describe('layouts/Logout', () => {
   const dispatch = jest.fn();

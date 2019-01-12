@@ -183,7 +183,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  notifications: (state.notifications.data || [])
+  notifications: (state.__resources.notifications.data || [])
     .reduce((result: Linode.Notification[], notification) => {
       /** Filter out any notifications that do not meet our expectations. */
       if (

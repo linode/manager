@@ -18,7 +18,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { reportException } from 'src/exceptionReporting';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getPayments } from 'src/services/account';
-import { async } from 'src/store/reducers/resources/account';
+import { async } from 'src/store/account';
 import { ThunkDispatch } from 'src/store/types';
 
 type ClassNames = 'root';
