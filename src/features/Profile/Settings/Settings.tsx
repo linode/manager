@@ -1,6 +1,6 @@
 import { compose, path } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -10,6 +10,7 @@ import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { MapState } from 'src/store/types';
 
 type ClassNames = 'root'
   | 'title'
@@ -96,7 +97,7 @@ interface StateProps {
   status?: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   status: path(['data', 'email_notifications'], state.__resources.profile),
 });
 

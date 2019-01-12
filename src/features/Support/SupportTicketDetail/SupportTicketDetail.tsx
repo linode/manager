@@ -2,33 +2,34 @@ import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
 import { compose, concat, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-
-import Chip from 'src/components/core/Chip';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
+import Chip from 'src/components/core/Chip';
+import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getTicket, getTicketReplies } from 'src/services/support';
+import { MapState } from 'src/store/types';
 import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
-
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import TicketReply from './TicketReply';
+
+
+
+
 
 type ClassNames = 'root'
   | 'title'
@@ -398,8 +399,7 @@ interface StateProps {
   timezone: string;
   profileUsername?: string;
 }
-
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
   profileUsername: path(['data', 'username'], state.__resources.profile)
 });

@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { compose, map, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import FormControl from 'src/components/core/FormControl';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
@@ -14,6 +14,7 @@ import Select from 'src/components/Select';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
+import { MapState } from 'src/store/types';
 import { setUpCharts } from 'src/utilities/charts';
 import { formatBitsPerSecond, formatBytes, formatNumber, formatPercentage, getMetrics, getTotalTraffic } from 'src/utilities/statMetrics';
 import MetricsDisplay from './MetricsDisplay';
@@ -651,7 +652,7 @@ interface StateProps {
   volumesData?: Linode.Volume[]
 }
 
-const withVolumesData: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+const withVolumesData: MapState<StateProps, {}> = (state, ownProps) => ({
   volumesData: state.features.linodeDetail.volumes.data,
 });
 

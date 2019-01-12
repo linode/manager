@@ -1,14 +1,13 @@
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
 import StackScript from 'src/components/StackScript';
-
 import { getStackScript } from 'src/services/stackscripts';
-import {
-  closeStackScriptDrawer,
-} from 'src/store/reducers/stackScriptDrawer';
+import { closeStackScriptDrawer } from 'src/store/reducers/stackScriptDrawer';
+import { MapState } from 'src/store/types';
+
 
 interface State {
   stackScript?: Linode.StackScript.Response,
@@ -76,7 +75,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, own
   };
 };
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state: ApplicationState) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state: ApplicationState) => ({
   open: pathOr(false, ['stackScriptDrawer', 'open'], state),
   stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state),
 });

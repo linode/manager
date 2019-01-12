@@ -1,6 +1,6 @@
 import { clone, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -21,6 +21,7 @@ import { StackScripts } from 'src/documentation';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getStackScript, updateStackScript } from 'src/services/stackscripts';
+import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -384,7 +385,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   username: path(['data', 'username'], state.__resources.profile),
 });
 

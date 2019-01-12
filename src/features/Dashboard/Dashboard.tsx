@@ -1,7 +1,7 @@
 
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -11,6 +11,7 @@ import TagImportDrawer from 'src/features/TagImport';
 import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { MapState } from 'src/store/types';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
@@ -92,7 +93,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = (props) => {
   );
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
   accountBackups: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   linodesWithoutBackups: state.__resources.linodes.entities.filter(l => !l.backups.enabled),
   managed: pathOr(false, ['__resources', 'accountSettings', 'data', 'managed'], state),

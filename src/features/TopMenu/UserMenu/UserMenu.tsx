@@ -1,6 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import UserIcon from 'src/assets/icons/user.svg';
@@ -9,6 +9,7 @@ import Hidden from 'src/components/core/Hidden';
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { MapState } from 'src/store/types';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
@@ -232,7 +233,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
   userEmail: path(['data', 'email'], state.__resources.profile),
   username: path(['data', 'username'], state.__resources.profile),
 });

@@ -13,6 +13,7 @@ import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { MapState } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
@@ -111,8 +112,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     )
   }
 }
-import {MapStateToProps} from 'react-redux';
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   error: path(['__resources', 'accountSettings', 'error'], state),
