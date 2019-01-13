@@ -68,7 +68,10 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
       sortOrder
     } = this.props;
 
-    const Cell = (!!handleClickTableHeader && sortOrder) ? TableSortCell : TableCell;
+    const Cell: React.ComponentType<any> = (!!handleClickTableHeader && sortOrder)
+      ? TableSortCell
+      : TableCell;
+
     const maybeAddSortingProps = (orderBy: string) => (!!handleClickTableHeader && sortOrder) ? {
       direction: sortOrder,
       active: currentFilterType === orderBy,
