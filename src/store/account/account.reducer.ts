@@ -7,7 +7,7 @@ import { profileRequest, profileRequestFail, profileRequestSuccess } from './acc
  */
 type State = ApplicationState['__resources']['account'];
 
-export const DEFAULT_STATE: State = {
+export const defaultState: State = {
   loading: false,
   error: undefined,
   lastUpdated: 0,
@@ -17,7 +17,7 @@ export const DEFAULT_STATE: State = {
 /**
  * Reducer
  */
-const reducer: Reducer<State> = (state: State = DEFAULT_STATE, action) => {
+const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, profileRequest)) {
     return { ...state, loading: true }
   }
