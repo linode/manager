@@ -1,1 +1,2 @@
-export { default } from './LinodeRow';
+import LinodeRow from './LinodeRow';
+export default LinodeRow 

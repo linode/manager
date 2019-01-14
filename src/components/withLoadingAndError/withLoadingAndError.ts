@@ -70,5 +70,7 @@ const withStateAndHandlers = withStateHandlers<
   }
 );
 
-export const withLoadingAndError = (Component: any) =>
+const withLoadingAndError = (Component: any) =>
   withStateAndHandlers(Component);
+
+export default withLoadingAndError;

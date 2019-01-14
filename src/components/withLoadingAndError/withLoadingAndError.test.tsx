@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { withLoadingAndError } from './withLoadingAndError';
+import withLoadingAndError from './withLoadingAndError';
 
 const MyComponent: React.SFC<{}> = (props) => {
   return (

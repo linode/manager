@@ -1,17 +1,3 @@
-export {
-  getDomains,
-  getDomain,
-  createDomain,
-  updateDomain,
-  deleteDomain,
-  cloneDomain,
-  importZone,
-} from './domains';
+export * from './domains';
 
-export {
-  getDomainRecords,
-  getDomainRecord,
-  createDomainRecord,
-  updateDomainRecord,
-  deleteDomainRecord,
-} from './records';
+export * from './records';

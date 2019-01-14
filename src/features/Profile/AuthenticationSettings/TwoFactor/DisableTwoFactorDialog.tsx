@@ -13,7 +13,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { Props as LoadingAndErrorProps, withLoadingAndError }
+import withLoadingAndError, { Props as LoadingAndErrorProps }
   from 'src/components/withLoadingAndError';
 
 type ClassNames = 'root';

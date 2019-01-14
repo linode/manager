@@ -238,7 +238,7 @@ exports.config = {
      */
     before: function (capabilities, specs) {
         // Load up our custom commands
-        require('babel-register');
+        require('@babel/register');
 
         browserCommands();
 

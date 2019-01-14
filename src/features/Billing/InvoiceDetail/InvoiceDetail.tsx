@@ -44,9 +44,9 @@ interface State {
   pdfGenerationError: boolean
 }
 
-type CombinedProps = RouteComponentProps<{ invoiceId: number }>
-& StateProps
-& WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<{ invoiceId: string }>
+  & StateProps
+  & WithStyles<ClassNames>;
 
 
 class InvoiceDetail extends React.Component<CombinedProps, State> {
@@ -66,8 +66,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     }
 
     Promise.all([
-      getInvoice(invoiceId),
-      getInvoiceItems(invoiceId),
+      getInvoice(+invoiceId),
+      getInvoiceItems(+invoiceId),
     ]).then(([invoice, { data: items }]) => {
       this.setState({
         loading: false,

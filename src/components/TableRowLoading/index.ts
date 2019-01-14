@@ -1,1 +1,4 @@
-export { default, Props as TableRowProps } from './TableRowLoading';
+import TableRowLoading, { Props as _TableRowLoadingProps } from './TableRowLoading';
+/* tslint:disable */
+export interface TableRowLoadingProps extends _TableRowLoadingProps { }
+export default TableRowLoading;

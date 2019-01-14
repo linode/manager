@@ -20,7 +20,7 @@ const L = {
   validationErrors: lensPath(['validationErrors']),
 };
 
-const isNotEmpty = compose(not, v => isEmpty(v) || isNil(v));
+const isNotEmpty = compose(not, (v: any) => isEmpty(v) || isNil(v));
 
 /** URL */
 export const setURL = (url: string) => set(L.url, url);

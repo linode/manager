@@ -44,7 +44,7 @@ describe('FromImageContent', () => {
     />,
   );
 
-  const component = shallow(
+  const component = shallow<FromImageContent>(
     <FromImageContent
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}
@@ -52,7 +52,7 @@ describe('FromImageContent', () => {
     />,
   );
 
-  const componentWithImages = shallow(
+  const componentWithImages = shallow<FromImageContent>(
     <FromImageContent
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}

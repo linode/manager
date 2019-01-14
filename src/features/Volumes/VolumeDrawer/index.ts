@@ -1,1 +1,3 @@
-export { default, modes } from './VolumeDrawer';
+import VolumeDrawer, { modes as _modes } from './VolumeDrawer';
+export const modes = _modes;
+export default VolumeDrawer; 

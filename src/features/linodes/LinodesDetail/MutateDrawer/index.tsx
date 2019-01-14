@@ -1,1 +1,2 @@
-export { default } from './MutateDrawer';
+import MutateDrawer from './MutateDrawer';
+export default MutateDrawer;

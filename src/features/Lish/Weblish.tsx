@@ -38,7 +38,7 @@ interface State {
   error: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: string }>;
 
 const maxRetryAttempts: number = 3;
 
