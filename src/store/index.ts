@@ -21,7 +21,7 @@ import volumeDrawer, { defaultState as volumeDrawerDefaultState } from 'src/stor
 import events, { defaultState as eventsDefaultState } from './events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
-import notifications, { DEFAULT_STATE as notificationsDefaultState } from './notifications';
+import notifications, { defaultState as notificationsDefaultState } from './notification/notification.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
