@@ -161,10 +161,12 @@ const themeDefaults: ThemeOptions = {
     focusBorder: '#999',
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
+    blueDTBlack: '#3683DC',
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
     toggleActive: '#606469',
     diskSpaceBorder: '#f4f4f4',
+    drawerBackdrop: 'rgba(255, 255, 255, 0.5)'
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -883,8 +885,7 @@ const themeDefaults: ThemeOptions = {
           },
           '& + $bar': {
             opacity: 1,
-            backgroundColor: `${primaryColors.main} !important`,
-            borderColor: '#2967B1',
+            backgroundColor: '#f4f4f4',
           },
         },
         '& .icon': {
@@ -919,6 +920,7 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: '#F4F4F4',
         border: '1px solid #999',
         boxSizing: 'content-box',
+        transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
       },
       switchBase: {
         color: primaryColors.main,

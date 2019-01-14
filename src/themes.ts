@@ -80,10 +80,12 @@ export const dark = createTheme({
     focusBorder: '#999',
     absWhite: '#000',
     blueDTwhite: '#fff',
+    blueDTBlack: '#222',
     borderRow: 'rgba(0, 0, 0, 0.15)',
     tableHeaderText: '#fff',
     toggleActive: '#444',
     diskSpaceBorder: '#222222',
+    drawerBackdrop: 'rgba(0, 0, 0, 0.5)'
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -376,30 +378,14 @@ export const dark = createTheme({
     MuiMenu: {
       paper: {
         '&.selectMenuDropdown': {
-          boxShadow: 'none',
-          position: 'absolute',
-          boxSizing: 'content-box',
-          border: `1px solid ${primaryColors.main}`,
-          margin: '0 0 0 -1px',
-          outline: 0,
-          borderRadius: 0,
+          border: `1px solid #222`,
         },
         '& .selectMenuList': {
-          maxHeight: 250,
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          boxSizing: 'content-box',
-          padding: 4,
           '& li': {
             color: primaryColors.text,
-            paddingLeft: 12,
-            paddingRight: 12,
             '&:hover, &:focus': {
               color: 'white',
             },
-          },
-          [breakpoints.down('xs')]: {
-            minWidth: 200,
           },
         },
       },
@@ -434,7 +420,6 @@ export const dark = createTheme({
     },
     MuiSelect: {
       selectMenu: {
-        padding: '6px 32px 5px 16px',
         color: primaryColors.text,
         backgroundColor: '#444',
         '&:focus': {
@@ -452,56 +437,19 @@ export const dark = createTheme({
     MuiSwitch: {
       root: {
         '& $checked': {
-          transform: 'translateX(20px)',
           color: `#abadaf !important`,
-          '& input': {
-            left: -20,
-          },
           '& .square': {
             fill: 'white !important',
-          },
-          '& + $bar': {
-            opacity: 1,
-            backgroundColor: `${primaryColors.main} !important`,
-            borderColor: '#2967B1',
-          },
-        },
-        '& .icon': {
-          transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          position: 'relative',
-          left: 0,
-          width: 16,
-          height: 16,
-          borderRadius: 0,
-        },
-        '& .square': {
-          transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-        },
-        '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
-          '& $bar, & + $bar': {
-            borderColor: '#606469',
-          },
-          '& .square': {
-            fill: '#aaa',
           },
         },
       },
       checked: {},
-      bar: {
-        top: 12,
-        left: 12,
-        marginLeft: 0,
-        marginTop: 0,
-        width: 42,
-        height: 22,
-        borderRadius: 0,
-        backgroundColor: '#F4F4F4',
-        border: '1px solid #999',
-        boxSizing: 'content-box',
-      },
       switchBase: {
         color: '#abadaf !important',
       },
+      bar: {
+        border: '1px solid #222',
+      }
     },
     MuiTab: {
       root: {
@@ -596,7 +544,6 @@ export const dark = createTheme({
         },
         '& a.black:hover': {
           color: primaryColors.text,
-          textDecoration: 'underline',
         },
       },
     },

@@ -66,7 +66,7 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
       <span
         className={classNames({
           [classes.switchText]: true,
-          darkTheme: themeName === 'darkTheme',
+          active: themeName === 'darkTheme',
         })}
         style={{ marginLeft: 4 }}
       >
