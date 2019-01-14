@@ -1,7 +1,8 @@
 import { prop } from 'ramda';
-import { compose, Dispatch } from 'redux';
-
+import { compose } from 'redux';
 import { getNotifications } from 'src/services/account';
+import { ThunkActionCreator } from '../types';
+
 
 // TYPES
 type State = RequestableData<Linode.Notification[]>;
@@ -58,7 +59,7 @@ export default (state: State = DEFAULT_STATE, action: Action) => {
 };
 
 
-export const requestNotifications = () => (dispatch: Dispatch<State>) => {
+export const requestNotifications: ThunkActionCreator<void> = () => (dispatch) => {
 
   dispatch(startRequest());
   getNotifications()

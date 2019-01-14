@@ -1,6 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Divider from 'src/components/core/Divider';
@@ -9,6 +9,7 @@ import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import ThemeToggle from './ThemeToggle';
 
@@ -407,7 +408,7 @@ const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
 
 // const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   const account = state.__resources.accountSettings.data;
   const profile = state.__resources.profile.data;
 

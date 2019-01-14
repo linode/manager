@@ -1,23 +1,19 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
-
 import TagsPanel from 'src/components/TagsPanel';
-
 import { lishLaunch } from 'src/features/Lish';
-
+import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
+import { requestNotifications } from 'src/store/reducers/notifications';
+import { MapState, ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
-
-import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
-
-import { requestNotifications } from 'src/store/reducers/notifications';
 
 interface LabelInput {
   label: string;
@@ -168,7 +164,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch) => {
   return {
     actions: {
       getNotifications: () => dispatch(requestNotifications()),
@@ -181,8 +177,7 @@ const filterNotifications = (linodeId: number, notifications: Linode.Notificatio
       pathOr(0, ['entity','id'], notification) === linodeId
     )
 }
-
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   notificationsLoading: state.notifications.loading,
   notificationsError: state.notifications.error,
   // Only use notifications for this Linode.

@@ -1,12 +1,13 @@
 import { compose, lensPath, path, set } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { handleUpdate } from 'src/store/reducers/resources/profile';
+import { MapState } from 'src/store/types';
 import SecuritySettings from './SecuritySettings';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
@@ -96,7 +97,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const { profile } = state.__resources;
 
   return {

@@ -1,12 +1,12 @@
 import { getRegions } from 'src/services/misc';
 import { actionCreatorFactory } from 'typescript-fsa';
-import { ThunkAction } from '../../../node_modules/redux-thunk';
+import { ThunkActionCreator } from '../types';
 
 const actionCreator = actionCreatorFactory(`@@manager/regions`);
 
 export const regionsRequestActions = actionCreator.async<void, Linode.Region[], Linode.ApiFieldError[]>(`request`);
 
-export const requestRegions = (): ThunkAction<Promise<Linode.Region[]>, ApplicationState, undefined> => (dispatch) => {
+export const requestRegions: ThunkActionCreator<Promise<Linode.Region[]>> = () => (dispatch) => {
   dispatch(regionsRequestActions.started());
 
   return getRegions()

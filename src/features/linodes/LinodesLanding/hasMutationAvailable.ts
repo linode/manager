@@ -1,4 +1,5 @@
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
+import { MapState } from 'src/store/types';
 import getLinodeType from 'src/utilities/getLinodeType';
 
 export interface HasMutationAvailable {
@@ -13,7 +14,7 @@ const hasMutation = (type?: null | Linode.LinodeType) => {
   return !!type.successor;
 }
 
-const mapStateToProps: MapStateToProps<HasMutationAvailable, { linodeType: string }, ApplicationState> = (state, ownProps) => {
+const mapStateToProps: MapState<HasMutationAvailable, { linodeType: string }> = (state, ownProps) => {
   const { linodeType } = ownProps;
   const { entities, results } = state.__resources.types;
   const type = getLinodeType(entities, results, linodeType);

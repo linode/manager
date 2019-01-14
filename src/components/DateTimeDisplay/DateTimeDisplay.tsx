@@ -1,8 +1,9 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
+import { MapState } from 'src/store/types';
+import formatDate, { TimeInterval } from 'src/utilities/formatDate';
 
-import formatDate, { TimeInterval } from 'src/utilities/formatDate'
 
 export interface Props {
   value: string;
@@ -25,7 +26,7 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
 });
 

@@ -2,7 +2,7 @@ import * as moment from 'moment-timezone';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
@@ -32,6 +32,7 @@ import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot } from 'src/services/linodes';
+import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -678,7 +679,7 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
 });
 

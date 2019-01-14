@@ -1,12 +1,13 @@
 import browser from 'browser-detect';
 import { compose } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
+import { MapState } from 'src/store/types';
 import UserAgentNotification from 'src/UserAgentNotification';
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
@@ -181,7 +182,7 @@ interface StateProps {
   notifications: Linode.Notification[];
 }
 
-const mapStateToProps: MapStateToProps<StateProps, never, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   notifications: (state.notifications.data || [])
     .reduce((result: Linode.Notification[], notification) => {
       /** Filter out any notifications that do not meet our expectations. */

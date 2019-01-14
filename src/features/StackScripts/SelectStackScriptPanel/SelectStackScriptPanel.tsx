@@ -1,6 +1,6 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -9,14 +9,15 @@ import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import Table from 'src/components/Table';
 import { getStackScript } from 'src/services/stackscripts';
+import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
-import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
-
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import { StackScriptTabs } from '../stackScriptUtils';
+import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
+
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -197,7 +198,7 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile),
 });
 

@@ -1,4 +1,5 @@
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
+import { MapState } from 'src/store/types';
 
 export interface WithNotifications {
   linodeNotifications: Linode.Notification[];
@@ -9,7 +10,7 @@ const notificationsForLinode = (id: number) => (notifications: Linode.Notificati
     .filter(({ entity }) => entity && entity.type === 'linode' && entity.id === id)
 }
 
-const mapStateToProps: MapStateToProps<WithNotifications, { linodeId: number }, ApplicationState>
+const mapStateToProps: MapState<WithNotifications, { linodeId: number }>
   = (state, props) => ({
     linodeNotifications: notificationsForLinode(props.linodeId)(state.notifications.data || [])
   });

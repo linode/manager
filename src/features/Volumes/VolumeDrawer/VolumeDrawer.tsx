@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
 import { close, openForConfig, viewResizeInstructions } from 'src/store/reducers/volumeDrawer';
+import { MapState } from 'src/store/types';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
@@ -174,7 +175,7 @@ interface StateProps {
   message?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   const {
     linodeId,
     linodeLabel,
