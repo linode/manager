@@ -1,4 +1,4 @@
-import backups, * as B from './backupDrawer';
+import backups, * as B from './index';
 
 import { linode1 } from 'src/__data__/linodes';
 import { mockAPIFieldErrors } from 'src/services/';

@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
-import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/reducers/stackScriptDrawer';
+import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
 import { ClassNames, displayTagsAndShowMore, styles } from '../StackScriptRowHelpers'
 
 export interface Props {

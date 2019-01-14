@@ -1,11 +1,9 @@
 import { stringify } from 'querystring';
-import { v4 } from 'uuid';
-
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from 'src/constants';
 import store from 'src/store';
-import { setToken } from 'src/store/reducers/authentication';
+import { setToken } from 'src/store/authentication';
 import { getStorage, setStorage } from 'src/utilities/storage';
-
+import { v4 } from 'uuid';
 
 export const AUTH_TOKEN = 'authentication/oauth-token';
 export const AUTH_SCOPES = 'authentication/scopes';

@@ -18,11 +18,7 @@ import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { cloneDomain, createDomain } from 'src/services/domains';
-import {
-  CLONING,
-  CREATING,
-  resetDrawer
-} from 'src/store/reducers/domainDrawer';
+import { CLONING, CREATING, resetDrawer } from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

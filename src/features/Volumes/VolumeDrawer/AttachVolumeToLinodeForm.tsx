@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { resetEventsPolling } from 'src/events';
 import { attachVolume } from 'src/services/volumes';
-import { openForCreating } from 'src/store/reducers/volumeDrawer';
+import { openForCreating } from 'src/store/volumeDrawer';
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import ModeSelection from './ModeSelection';
