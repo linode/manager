@@ -285,7 +285,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Grid item xs={12} className={classes.section} updateFor={[virt_mode]}>
           <Typography role="header" variant="h3">Virtual Machine</Typography>
-          <FormControl component="fieldset">
+          <FormControl component={"fieldset" as "div"}>
             <FormLabel
               htmlFor="virt_mode"
               component="label"
@@ -340,7 +340,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               }
             </TextField>}
 
-          <FormControl updateFor={[run_level]} fullWidth component="fieldset">
+          <FormControl updateFor={[run_level]} fullWidth component={"fieldset" as "div"}>
             <FormLabel
               htmlFor="run_level"
               component="label"
@@ -433,7 +433,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               helpers.network
             ]}
             fullWidth
-            component="fieldset"
+            component={"fieldset" as "div"}
           >
             <FormGroup>
               <FormControlLabel

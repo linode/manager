@@ -1,5 +1,5 @@
-import ExpansionPanel, { Props as ExpansionPanelProps } from './ExpansionPanel';
-
-export { ExpansionPanelProps };
+import ExpansionPanel, { Props as _ExpansionPanelProps } from './ExpansionPanel';
+/* tslint:disable */
+export interface ExpansionPanelProps extends _ExpansionPanelProps { }
 
 export default ExpansionPanel;

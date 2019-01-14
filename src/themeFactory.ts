@@ -497,6 +497,9 @@ const themeDefaults: ThemeOptions = {
     },
     MuiExpansionPanelSummary: {
       root: {
+        '& $focused': {
+          backgroundColor: '#fbfbfb',
+        },
         padding: '0 18px',
         backgroundColor: '#fbfbfb',
         justifyContent: 'flex-start',
@@ -555,9 +558,7 @@ const themeDefaults: ThemeOptions = {
           transform: 'none',
         },
       },
-      focused: {
-        backgroundColor: '#fbfbfb',
-      },
+      focused: {},
     },
     MuiFormControl: {
       root: {
@@ -611,11 +612,12 @@ const themeDefaults: ThemeOptions = {
     },
     MuiRadio: {
       root: {
+        '& $checked': {
+          color: primaryColors.main,
+        },
         color: primaryColors.main,
       },
-      checked: {
-        color: primaryColors.main,
-      },
+      checked: {},
       colorSecondary: {
         color: primaryColors.main,
         '&$checked': {
@@ -625,6 +627,15 @@ const themeDefaults: ThemeOptions = {
     },
     MuiInput: {
       root: {
+        '& $disabled': {
+          borderColor: '#ccc',
+          color: '#606469',
+          opacity: .5,
+        },
+        '& $focused': {
+          borderColor: primaryColors.main,
+          boxShadow: '0 0 2px 1px #e1edfa',
+        },
         maxWidth: 415,
         border: '1px solid #ccc',
         alignItems: 'center',
@@ -654,18 +665,11 @@ const themeDefaults: ThemeOptions = {
         padding: '5px 12px',
         lineHeight: 1.4,
       },
-      focused: {
-        borderColor: primaryColors.main,
-        boxShadow: '0 0 2px 1px #e1edfa',
-      },
+      focused: {},
       error: {
         borderColor: '#CA0813',
       },
-      disabled: {
-        borderColor: '#ccc',
-        color: '#606469',
-        opacity: .5,
-      },
+      disabled: {},
       input: {
         padding: '12px 12px 13px',
         fontSize: '.9rem',
@@ -722,6 +726,9 @@ const themeDefaults: ThemeOptions = {
     },
     MuiListItem: {
       root: {
+        '& $disabled': {
+          opacity: .5,
+        },
         color: primaryColors.text,
         '&.selectHeader': {
           opacity: 1,
@@ -730,9 +737,7 @@ const themeDefaults: ThemeOptions = {
           color: primaryColors.text,
         },
       },
-      disabled: {
-        opacity: .5,
-      },
+      disabled: {},
     },
     MuiListItemText: {
       secondary: {
@@ -773,6 +778,11 @@ const themeDefaults: ThemeOptions = {
     },
     MuiMenuItem: {
       root: {
+        '& $selected': {
+          backgroundColor: 'white !important',
+          color: `${primaryColors.main} !important`,
+          opacity: 1,
+        },
         height: 'auto',
         fontFamily: 'LatoWeb',
         fontSize: '.9rem',
@@ -789,11 +799,7 @@ const themeDefaults: ThemeOptions = {
           fontStyle: 'normal !important',
         },
       },
-      selected: {
-        backgroundColor: 'white !important',
-        color: `${primaryColors.main} !important`,
-        opacity: 1,
-      },
+      selected: {},
     },
     MuiPaper: {
       rounded: {
@@ -812,6 +818,11 @@ const themeDefaults: ThemeOptions = {
     },
     MuiSelect: {
       selectMenu: {
+        '& $disabled': {
+          '&+ input + $icon': {
+            opacity: '.5',
+          },
+        },
         padding: '6px 32px 5px 16px',
         color: primaryColors.text,
         backgroundColor: '#fff',
@@ -841,11 +852,7 @@ const themeDefaults: ThemeOptions = {
         color: '#aaa !important',
         opacity: .5,
       },
-      disabled: {
-        '&+ input + $icon': {
-          opacity: '.5',
-        },
-      },
+      disabled: {},
     },
     MuiSnackbar: {
       root: { 
@@ -865,6 +872,21 @@ const themeDefaults: ThemeOptions = {
     },
     MuiSwitch: {
       root: {
+        '& $checked': {
+          transform: 'translateX(20px)',
+          color: `${primaryColors.main} !important`,
+          '& input': {
+            left: -20,
+          },
+          '& .square': {
+            fill: 'white !important',
+          },
+          '& + $bar': {
+            opacity: 1,
+            backgroundColor: `${primaryColors.main} !important`,
+            borderColor: '#2967B1',
+          },
+        },
         '& .icon': {
           transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           position: 'relative',
@@ -885,21 +907,7 @@ const themeDefaults: ThemeOptions = {
           },
         },
       },
-      checked: {
-        transform: 'translateX(20px)',
-        color: `${primaryColors.main} !important`,
-        '& input': {
-          left: -20,
-        },
-        '& .square': {
-          fill: 'white !important',
-        },
-        '& + $bar': {
-          opacity: 1,
-          backgroundColor: `${primaryColors.main} !important`,
-          borderColor: '#2967B1',
-        },
-      },
+      checked: {},
       bar: {
         top: 12,
         left: 12,

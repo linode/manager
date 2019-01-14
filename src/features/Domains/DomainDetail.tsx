@@ -21,7 +21,7 @@ interface State {
   records: Linode.DomainRecord[];
 }
 
-type RouteProps = RouteComponentProps<{ domainId?: number }>;
+type RouteProps = RouteComponentProps<{ domainId?: string }>;
 
 interface PreloadedProps {
   domain: PromiseLoaderResponse<Linode.Domain>;
@@ -56,7 +56,7 @@ const preloaded = PromiseLoader<CombinedProps>({
       return Promise.reject(new Error('domainId param not set.'));
     }
 
-    return getDomain(domainId);
+    return getDomain(+domainId);
   },
 
   records: ({ match: { params: { domainId } } }) => {
@@ -64,7 +64,7 @@ const preloaded = PromiseLoader<CombinedProps>({
       return Promise.reject(new Error('domainId param not set.'));
     }
 
-    return getDomainRecords(domainId);
+    return getDomainRecords(+domainId);
   },
 });
 
@@ -103,7 +103,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     const { match: { params: { domainId } } } = this.props;
     if (!domainId) { return; }
 
-    getDomainRecords(domainId)
+    getDomainRecords(+domainId)
       .then((data) => {
         this.setState({ records: data.data });
       })
@@ -114,7 +114,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     const { match: { params: { domainId } } } = this.props;
     if (!domainId) { return; }
 
-    getDomain(domainId)
+    getDomain(+domainId)
       .then((data: Linode.Domain) => {
         this.setState({ domain: data });
       })
@@ -197,7 +197,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
-            scrollable
+            variant="scrollable"
             scrollButtons="on"
           >
             {

@@ -14,7 +14,7 @@ import { StackScripts as StackScriptsDocs } from 'src/documentation';
 
 import { getStackScript } from 'src/services/stackscripts';
 
-interface MatchProps { stackScriptId: number };
+interface MatchProps { stackScriptId: string };
 type RouteProps = RouteComponentProps<MatchProps>;
 interface State {
   loading: boolean;
@@ -55,7 +55,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   componentDidMount() {
     const { stackScriptId } = this.props.match.params;
 
-    getStackScript(stackScriptId)
+    getStackScript(+stackScriptId)
       .then(stackScript => {
         this.setState({ stackScript, loading: false })
       })

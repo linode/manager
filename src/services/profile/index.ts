@@ -1,36 +1,9 @@
-export {
-  getProfile,
-  listGrants,
-  updateProfile,
-  getMyGrants,
-  getTrustedDevices,
-  deleteTrustedDevice
-} from './profile';
+export * from './profile';
 
-export {
-  createPersonalAccessToken,
-  deletePersonalAccessToken,
-  getPersonalAccessToken,
-  getPersonalAccessTokens,
-  updatePersonalAccessToken,
-} from './accessTokens';
+export * from './accessTokens';
 
-export {
-  deleteAppToken,
-  getAppToken,
-  getAppTokens,
-} from './appTokens';
+export * from './appTokens';
 
-export {
-  getSSHKeys,
-  getSSHKey,
-  createSSHKey,
-  updateSSHKey,
-  deleteSSHKey
-} from './sshkeys';
+export * from './sshkeys';
 
-export {
-  confirmTwoFactor,
-  disableTwoFactor,
-  getTFAToken,
-} from './twoFactor';
+export * from './twoFactor';

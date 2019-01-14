@@ -1,1 +1,3 @@
-export { default } from './TableSortCell';
+import TableSortCell from './TableSortCell';
+export default TableSortCell;
+
