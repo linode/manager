@@ -9,7 +9,7 @@ import domainDrawer, { defaultState as domainDrawerDefaultState } from 'src/stor
 import domainEvents from 'src/store/domains/domains.events';
 import domains, { defaultState as defaultDomainsState } from 'src/store/domains/domains.reducer';
 import events, { defaultState as eventsDefaultState } from 'src/store/events/event.reducer';
-import images, { defaultState as defaultImagesState } from 'src/store/images';
+import images, { defaultState as defaultImagesState } from 'src/store/image/image.reducer';
 import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
