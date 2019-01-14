@@ -161,7 +161,7 @@ const themeDefaults: ThemeOptions = {
     focusBorder: '#999',
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
-    blueDTBlack: '#3683DC',
+    selectDropDowns: '#ccc',
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
     toggleActive: '#606469',
@@ -728,10 +728,15 @@ const themeDefaults: ThemeOptions = {
     },
     MuiListItem: {
       root: {
+        color: primaryColors.text,
         '& $disabled': {
           opacity: .5,
         },
-        color: primaryColors.text,
+        '&$selected, &$selected:hover': {
+          backgroundColor: 'transparent',
+          color: primaryColors.main
+        },
+        
         '&.selectHeader': {
           opacity: 1,
           fontFamily: 'LatoWebBold',
@@ -740,6 +745,7 @@ const themeDefaults: ThemeOptions = {
         },
       },
       disabled: {},
+      selected: {}
     },
     MuiListItemText: {
       secondary: {
@@ -753,7 +759,7 @@ const themeDefaults: ThemeOptions = {
           boxShadow: 'none',
           position: 'absolute',
           boxSizing: 'content-box',
-          border: `1px solid ${primaryColors.main}`,
+          border: '1px solid #ccc',
           margin: '0 0 0 -1px',
           outline: 0,
           borderRadius: 0,
@@ -765,12 +771,8 @@ const themeDefaults: ThemeOptions = {
           boxSizing: 'content-box',
           padding: 4,
           '& li': {
-            color: primaryColors.text,
             paddingLeft: 12,
             paddingRight: 12,
-            '&:hover': {
-              color: 'white',
-            },
           },
           [breakpoints.down('xs')]: {
             minWidth: 200,
@@ -780,19 +782,19 @@ const themeDefaults: ThemeOptions = {
     },
     MuiMenuItem: {
       root: {
-        '& $selected': {
-          backgroundColor: 'white !important',
-          color: `${primaryColors.main} !important`,
-          opacity: 1,
-        },
         height: 'auto',
         fontFamily: 'LatoWeb',
         fontSize: '.9rem',
         whiteSpace: 'initial',
         textOverflow: 'initial',
-        color: primaryColors.main,
+        color: primaryColors.text,
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+        '&$selected, &$selected:hover': {
+          backgroundColor: 'transparent',
+          color: primaryColors.main,
+          opacity: 1,
+        },
         '&:hover': {
           backgroundColor: primaryColors.main,
           color: 'white',

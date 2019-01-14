@@ -72,7 +72,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       margin: '-1px 0 0 0',
       borderRadius: 0,
       boxShadow: 'none',
-      border: `1px solid ${theme.color.blueDTBlack}`,
+      border: `1px solid ${theme.color.selectDropDowns}`,
       maxWidth: 415,
     },
     '& .react-select__group-heading': {
