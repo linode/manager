@@ -27,7 +27,7 @@ import { requestAccountSettings } from 'src/store/accountSettings/accountSetting
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { async as imagesAsync } from 'src/store/images';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
-import { async as typesAsync } from 'src/store/linodeTypes';
+import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile';
 import { requestRegions } from 'src/store/regions/regions.actions';
@@ -357,7 +357,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
       requestNotifications: () => dispatch(requestNotifications()),
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
-      requestTypes: () => dispatch(typesAsync.requestTypes()),
+      requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
     }
   };

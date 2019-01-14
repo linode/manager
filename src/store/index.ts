@@ -13,7 +13,7 @@ import images, { defaultState as defaultImagesState } from 'src/store/images';
 import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
-import types, { defaultState as defaultTypesState } from 'src/store/linodeTypes';
+import types, { defaultState as defaultTypesState } from 'src/store/linodeType/linodeType.reducer';
 import profile, { DEFAULT_STATE as defaultProfileState } from 'src/store/profile';
 import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
