@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-
 import { redirectToLogin } from 'src/session';
+import { MapState } from 'src/store/types';
+
 
 interface Props {
   location: {
@@ -66,7 +67,7 @@ interface StateProps {
   isAuthenticated: boolean;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   isAuthenticated: Boolean(state.authentication.token),
 });
 

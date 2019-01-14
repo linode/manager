@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import ListItem from 'src/components/core/ListItem';
 import Menu from 'src/components/core/Menu';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { async } from 'src/store/reducers/events';
+import { MapState, ThunkDispatch } from 'src/store/types';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
@@ -101,7 +102,7 @@ interface DispatchProps {
   },
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch) => ({
   actions: {
     markAllSeen: () => dispatch(async.markAllSeen()),
   },
@@ -111,8 +112,7 @@ interface StateProps {
   events: Linode.Event[];
   unseenCount: number;
 }
-
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = (state) => {
   return {
     events: state.events.events,
     unseenCount: state.events.countUnseenEvents,

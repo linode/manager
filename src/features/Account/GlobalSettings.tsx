@@ -1,8 +1,10 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
@@ -11,6 +13,7 @@ import { handleOpen } from 'src/store/reducers/backupDrawer';
 import { updateAccountSettings } from 'src/store/reducers/resources/accountSettings';
 import { openGroupDrawer } from 'src/store/reducers/tagImportDrawer';
 import getEntitiesWithGroupsToImport, { emptyGroupedEntities, GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { MapState } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
@@ -109,8 +112,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     )
   }
 }
-
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
   backups_enabled: pathOr(false, ['__resources', 'accountSettings', 'data', 'backups_enabled'], state),
   error: path(['__resources', 'accountSettings', 'error'], state),
@@ -122,8 +124,7 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (stat
       ? getEntitiesWithGroupsToImport(state)
       : emptyGroupedEntities),
 });
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch<ApplicationState,undefined,AnyAction>) => {
   return {
     actions: {
       updateAccount: (data: Partial<Linode.AccountSettings>) => dispatch(updateAccountSettings(data)),

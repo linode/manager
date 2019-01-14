@@ -1,9 +1,10 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { getUsers } from 'src/services/account';
 import { getSSHKeys } from 'src/services/profile';
+import { MapState } from 'src/store/types';
 import { getEmailHash } from 'src/utilities/gravatar';
 
 export interface State {
@@ -99,7 +100,7 @@ interface StateProps {
   userEmailAddress?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   username: path<string>(['data', 'username'], state.__resources.profile),
   userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
 });

@@ -1,6 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -18,6 +18,7 @@ import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { createStackScript } from 'src/services/stackscripts';
+import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -313,8 +314,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 interface StateProps {
   username?: string;
 }
-
-const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = (state) => ({
   username: path(['data', 'username'], state.__resources.profile),
 });
 

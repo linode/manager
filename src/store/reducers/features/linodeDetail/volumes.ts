@@ -1,5 +1,5 @@
-import { ThunkAction } from 'redux-thunk';
 import { getLinodeVolumes } from 'src/services/linodes';
+import { ThunkActionCreator } from 'src/store/types';
 
 // ACTIONS
 const actionTypeGenerator = (s: string) => `@manager/features/linodeDetail/volumes/${s}`;
@@ -48,7 +48,7 @@ export default (state = defaultState, action: any) => {
 };
 
 // ASYNC
-export const _getLinodeVolumes = (linodeId: number): ThunkAction<void, State, void> => (dispatch, getState) => {
+export const _getLinodeVolumes: ThunkActionCreator<void> = (linodeId: number) => (dispatch, getState) => {
   dispatch(load());
 
   getLinodeVolumes(linodeId)

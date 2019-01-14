@@ -1,12 +1,13 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { MapState } from 'src/store/types';
 
 type ClassNames = 'root'
   | 'title'
@@ -117,7 +118,7 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: path(['data', 'username'], state.__resources.profile),
 });
 

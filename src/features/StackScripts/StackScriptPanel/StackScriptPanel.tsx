@@ -1,12 +1,13 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
+import { MapState } from 'src/store/types';
+import { StackScriptTabs } from '../stackScriptUtils';
 import StackScriptPanelContent from './StackScriptPanelContent';
 
-import { StackScriptTabs } from '../stackScriptUtils';
 
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
@@ -95,7 +96,7 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile),
 });
 

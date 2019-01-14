@@ -1,9 +1,10 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import { MapState } from 'src/store/types';
+
 
 interface Props {
   username: string;
@@ -67,7 +68,7 @@ interface StateProps {
   profileUsername?: string;
 }
 
-const mapStateToProps: MapStateToProps<StateProps, Props, ApplicationState> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   profileUsername: path(['data', 'username'], state.__resources.profile),
 });
 
