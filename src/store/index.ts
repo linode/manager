@@ -8,6 +8,7 @@ import documentation, { defaultState as documentationDefaultState } from 'src/st
 import domainDrawer, { defaultState as domainDrawerDefaultState } from 'src/store/domainDrawer';
 import domainEvents from 'src/store/domains/domains.events';
 import domains, { defaultState as defaultDomainsState } from 'src/store/domains/domains.reducer';
+import events, { defaultState as eventsDefaultState } from 'src/store/events/event.reducer';
 import images, { defaultState as defaultImagesState } from 'src/store/images';
 import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
@@ -18,7 +19,6 @@ import regions, { defaultState as defaultRegionsState } from 'src/store/regions/
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from 'src/store/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from 'src/store/volumeDrawer';
-import events, { defaultState as eventsDefaultState } from './events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import notifications, { defaultState as notificationsDefaultState } from './notification/notification.reducer';
