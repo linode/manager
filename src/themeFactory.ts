@@ -264,7 +264,7 @@ const themeDefaults: ThemeOptions = {
         fontSize: '1rem',
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
-        padding: '12px 28px 14px',
+        padding: '9px 28px 11px',
         '&:hover': {
           backgroundColor: '#fff',
         },
@@ -883,7 +883,7 @@ const themeDefaults: ThemeOptions = {
             left: -20,
           },
           '& .square': {
-            fill: 'white !important',
+            fill: 'white',
           },
           '& + $bar': {
             opacity: 1,
@@ -901,13 +901,18 @@ const themeDefaults: ThemeOptions = {
         '& .square': {
           transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
         },
-        '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
+        '&:hover, &:focus': {
           '& $bar, & + $bar': {
             borderColor: '#606469',
           },
           '& .square': {
             fill: '#aaa',
           },
+          '& $checked': {
+            '& .square': {
+              fill: '#eee',
+            },
+          }
         },
       },
       checked: {},
