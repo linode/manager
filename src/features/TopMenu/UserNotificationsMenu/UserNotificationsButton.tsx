@@ -36,6 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    lineHeight: 1.1,
     '&:hover': {
       backgroundColor: theme.palette.text.primary,
     },
