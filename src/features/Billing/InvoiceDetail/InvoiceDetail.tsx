@@ -13,7 +13,7 @@ import Notice from 'src/components/Notice';
 import { reportException } from 'src/exceptionReporting';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
-import { async } from 'src/store/account/account.requests';
+import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import InvoiceTable from './InvoiceTable';
@@ -159,7 +159,7 @@ interface StateProps extends S {
 
 const connected = connect(
   (state: ApplicationState): S => state.__resources.account,
-  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(async.requestAccount()) }));
+  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(requestAccount()) }));
 
 
 const styled = withStyles(styles);

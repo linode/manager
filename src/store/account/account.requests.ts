@@ -17,5 +17,3 @@ export const requestAccount: ThunkActionCreator<Promise<Linode.Account>> = () =>
       return err;
     });
 };
-
-export const async = { requestAccount };

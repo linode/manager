@@ -18,7 +18,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { reportException } from 'src/exceptionReporting';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getPayments } from 'src/services/account';
-import { async } from 'src/store/account/account.requests';
+import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
 type ClassNames = 'root';
@@ -168,7 +168,7 @@ interface StateProps extends S {
 
 const connected = connect(
   (state: ApplicationState): S => ({account: state.__resources.account}),
-  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(async.requestAccount()) }));
+  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(requestAccount()) }));
 
 
 const styled = withStyles(styles);
