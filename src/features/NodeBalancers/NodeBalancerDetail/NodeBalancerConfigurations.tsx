@@ -32,7 +32,7 @@ interface Props {
   nodeBalancerLabel: string;
 }
 
-interface MatchProps { nodeBalancerId?: number };
+interface MatchProps { nodeBalancerId?: string };
 type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
@@ -217,7 +217,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   ) => {
     /* Update a config and its nodes simultaneously */
     const { match: { params: { nodeBalancerId } } } = this.props;
-    const nodeBalUpdate = updateNodeBalancerConfig(nodeBalancerId!, config.id!, configPayload)
+    const nodeBalUpdate = updateNodeBalancerConfig(+nodeBalancerId!, config.id!, configPayload)
       .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
@@ -316,7 +316,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     */
 
     const { match: { params: { nodeBalancerId } } } = this.props;
-    createNodeBalancerConfig(nodeBalancerId!, configPayload)
+    createNodeBalancerConfig(+nodeBalancerId!, configPayload)
       .then((nodeBalancerConfig) => {
         // update config data
         const newConfigs = clone(this.state.configs);
@@ -455,7 +455,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const { match: { params: { nodeBalancerId } } } = this.props;
 
     // actually delete a real config
-    deleteNodeBalancerConfig(nodeBalancerId!, (config!.id!))
+    deleteNodeBalancerConfig(+nodeBalancerId!, (config!.id!))
       .then((response) => {
         // update config data
         const newConfigs = clone(this.state.configs);
@@ -521,7 +521,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const config = this.state.configs[configIdx];
     const node = this.state.configs[configIdx].nodes[nodeIdx];
 
-    return deleteNodeBalancerConfigNode(nodeBalancerId!, config.id!, node.id!)
+    return deleteNodeBalancerConfigNode(+nodeBalancerId!, config.id!, node.id!)
       .then(() => {
         this.setState(
           over(
@@ -560,7 +560,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     const nodeData = nodeForRequest(node);
 
-    return createNodeBalancerConfigNode(nodeBalancerId!, config.id!, nodeData)
+    return createNodeBalancerConfigNode(+nodeBalancerId!, config.id!, nodeData)
       .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
@@ -610,7 +610,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const nodeData = nodeForRequest(node);
 
     return (
-      updateNodeBalancerConfigNode(nodeBalancerId!, config.id!, node!.id!, nodeData)
+      updateNodeBalancerConfigNode(+nodeBalancerId!, config.id!, node!.id!, nodeData)
       .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
@@ -925,7 +925,7 @@ const styled = withStyles(styles);
 const preloaded = PromiseLoader<CombinedProps>({
   configs: (props) => {
     const { match: { params: { nodeBalancerId } } } = props;
-    return getConfigsWithNodes(nodeBalancerId!);
+    return getConfigsWithNodes(+nodeBalancerId!);
   },
 });
 

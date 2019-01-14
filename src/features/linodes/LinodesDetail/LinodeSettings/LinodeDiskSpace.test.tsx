@@ -48,4 +48,23 @@ describe('LinodeDiskSpace', () => {
       component.setProps({ totalDiskSpace: undefined })
       expect(component.children().length).toBeFalsy()
     });
+
+  describe('percentages', () => {
+    it('should return 0% if no disk space is used', () => {
+      component.setProps({ disks: [], totalDiskSpace: 27000 })
+      expect(component.find('[data-qa-disk-used-percentage]').text()).toBe('0%')
+    });
+    
+    it('should return < 1% if used percentage is between 0 and 1', () => {
+      component.setProps({ disks, totalDiskSpace: 10000000 })
+      expect(component.find('[data-qa-disk-used-percentage]').text()).toBe('< 1%')
+    });
+    
+    it('should return percentage if usedPercentage is above 1', () => {
+      component.setProps({ disks, totalDiskSpace: 25600 })
+      expect(component.find('[data-qa-disk-used-percentage]').text()).toBe('100%')
+      component.setProps({ disks, totalDiskSpace: 27000 })      
+      expect(component.find('[data-qa-disk-used-percentage]').text()).toBe('94%')
+    });
+  });
 });

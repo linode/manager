@@ -1,1 +1,2 @@
-export { default } from './SupportTicketDetail';
+import SupportTicketDetail from './SupportTicketDetail';
+export default SupportTicketDetail;

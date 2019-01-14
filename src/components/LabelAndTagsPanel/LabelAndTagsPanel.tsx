@@ -3,7 +3,7 @@ import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
-import TagsInput, { TagInputProps } from 'src/components/TagsInput';
+import TagsInput, { TagsInputProps } from 'src/components/TagsInput';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root'
@@ -31,7 +31,7 @@ const styled = withStyles(styles);
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
-  tagsInputProps?: TagInputProps;
+  tagsInputProps?: TagsInputProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

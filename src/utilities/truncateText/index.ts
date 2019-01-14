@@ -1,1 +1,2 @@
-export { default } from './truncateText';
+import truncateText from './truncateText';
+export default truncateText;

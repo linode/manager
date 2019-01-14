@@ -1,2 +1,1 @@
-export { DocumentTitleSegment, withDocumentTitleProvider }
-  from './DocumentTitle';
+export * from './DocumentTitle';

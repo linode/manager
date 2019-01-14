@@ -1,4 +1,1 @@
-export {
-  getRegions,
-  getRegion,
-} from './misc';
+export * from './misc';

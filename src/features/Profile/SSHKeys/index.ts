@@ -1,1 +1,2 @@
-export { default } from './SSHKeys';
+import SSHKeys from './SSHKeys';
+export default SSHKeys;

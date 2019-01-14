@@ -1,1 +1,2 @@
-export { default } from './UsersLanding';
+import UsersLanding from './UsersLanding';
+export default UsersLanding;

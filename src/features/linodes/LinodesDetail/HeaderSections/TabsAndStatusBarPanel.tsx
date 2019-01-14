@@ -65,7 +65,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
           onChange={handleTabChange}
           indicatorColor="primary"
           textColor="primary"
-          scrollable
+          variant="scrollable"
           scrollButtons="on"
         >
           {tabs.map(tab =>

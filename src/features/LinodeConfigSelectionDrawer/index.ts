@@ -1,9 +1,7 @@
 import LinodeConfigSelectionDrawer, {
-  LinodeConfigSelectionDrawerCallback,
+  LinodeConfigSelectionDrawerCallback as _LinodeConfigSelectionDrawerCallback,
 } from './LinodeConfigSelectionDrawer';
 
-export {
-  LinodeConfigSelectionDrawerCallback,
-};
+export type LinodeConfigSelectionDrawerCallback = _LinodeConfigSelectionDrawerCallback;
 
 export default LinodeConfigSelectionDrawer;

@@ -3,7 +3,6 @@ import * as moment from 'moment';
 import * as React from 'react';
 
 import { pageyProps } from 'src/__data__/pageyProps';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import { APITokenTable } from './APITokenTable';
 
@@ -20,23 +19,21 @@ describe('APITokens', () => {
       },
     ];
 
-    const component = shallow(
-      <LinodeThemeWrapper>
-        <APITokenTable
-          {...pageyProps}
-          count={4}
-          classes={{
-            headline: '',
-            paper: '',
-            labelCell: '',
-            typeCell: '',
-            createdCell: '',
-          }}
-          title="Personal Access Tokens"
-          type="Personal Access Token"
-          data={pats}
-        />
-      </LinodeThemeWrapper>
+    const component = shallow<APITokenTable>(
+      <APITokenTable
+        {...pageyProps}
+        count={4}
+        classes={{
+          headline: '',
+          paper: '',
+          labelCell: '',
+          typeCell: '',
+          createdCell: '',
+        }}
+        title="Personal Access Tokens"
+        type="Personal Access Token"
+        data={pats}
+      />
     );
 
     /* Skipping until we can figure out how to call instance methods on nested component */
