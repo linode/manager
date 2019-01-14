@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { StaticRouter, withRouter } from 'react-router-dom';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { clearDocs, setDocs } from 'src/store/reducers/documentation';
+import { clearDocs, setDocs } from 'src/store/documentation';
 import { ListLinodes } from './LinodesLanding';
 
 const RoutedListLinodes = withRouter(ListLinodes);

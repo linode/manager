@@ -11,7 +11,7 @@ import reducer, {
   mostRecentCreated,
   setDeletedEvents,
   updateInProgressEvents,
-} from './events';
+} from './index';
 
 describe('events', () => {
   describe('reducer', () => {

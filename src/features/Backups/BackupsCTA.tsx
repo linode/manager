@@ -6,7 +6,7 @@ import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { handleOpen } from 'src/store/reducers/backupDrawer';
+import { handleOpen } from 'src/store/backupDrawer';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root'

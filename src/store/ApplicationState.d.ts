@@ -1,64 +1,65 @@
+interface HasStringID {
+  id: string;
+}
+
+interface HasNumericID {
+  id: number;
+}
+
+type Entity = HasStringID | HasNumericID;
+
+type TypeOfID<T> = T extends HasNumericID ? number : string;
+
+/** New state shape. Coming soon! */
+// interface EntityState<T extends Entity> {
+//   items: TypeOfID<T>[];
+//   itemById: Record<TypeOfID<T>, T>;
+// }
+
+interface EntityState<T extends Entity> {
+  results: TypeOfID<T>[];
+  entities: T[];
+  loading: boolean;
+  lastUpdated: number;
+  error?: Linode.ApiFieldError[];
+}
+
+
 declare interface ExtendedEvent extends Linode.Event {
   _deleted?: string;
   _initial?: boolean;
 }
+
+interface EventsState {
+  events: ExtendedEvent[];
+  mostRecentEventTime: number;
+  countUnseenEvents: number,
+  inProgressEvents: Record<number, boolean>;
+}
+
+interface ResourcesState {
+  account: RequestableData<Linode.Account>;
+  accountSettings: RequestableData<Linode.AccountSettings>;
+  domains: EntityState<Linode.Domain>;
+  images: EntityState<Linode.Image>;
+  linodes: EntityState<Linode.Linode>;
+  notifications: RequestableData<Linode.Notification[]>;
+  profile: RequestableData<Linode.Profile>;
+  regions: EntityState<Linode.Region>;
+  types: EntityState<Linode.LinodeType>;
+}
+
 declare interface ApplicationState {
-  __resources: {
-    profile: RequestableData<Linode.Profile>,
-    accountSettings: RequestableData<Linode.AccountSettings>;
-    types: {
-      results: string[];
-      entities: Linode.LinodeType[];
-      loading: boolean;
-      lastUpdated: number;
-      error?: Linode.ApiFieldError[];
-    },
-    images: {
-      results: string[];
-      entities: Linode.Image[];
-      loading: boolean;
-      lastUpdated: number;
-      error?: Linode.ApiFieldError[];
-    },
-    linodes: {
-      results: number[];
-      entities: Linode.Linode[];
-      loading: boolean;
-      lastUpdated: number;
-      error?: Linode.ApiFieldError[];
-    },
-    domains: {
-      results: number[];
-      entities: Linode.Domain[];
-      loading: boolean;
-      lastUpdated: number;
-      error?: Linode.ApiFieldError[];
-    },
-    regions: {
-      results: string[];
-      entities: Linode.Region[];
-      loading: boolean;
-      lastUpdated: number;
-      error?: Linode.ApiFieldError[];
-    },
-    account: RequestableData<Linode.Account>
-  },
+  __resources: ResourcesState,
   authentication: AuthState;
   backups: BackupDrawerState;
   documentation: DocumentationState;
-  features: FeaturesState;
-  volumeDrawer: VolumeDrawerState;
-  tagImportDrawer: TagImportDrawerState;
-  notifications: RequestableData<Linode.Notification[]>;
   domainDrawer: DomainDrawerState;
+  events: EventsState;
+  features: FeaturesState;
   stackScriptDrawer: StackScriptDrawerState;
-  /** @todo extract */
-  events: {
-    events: ExtendedEvent[];
-    mostRecentEventTime: number;
-    countUnseenEvents: number,
-    inProgressEvents: Record<number, boolean>,
-  }
+  tagImportDrawer: TagImportDrawerState;
+  volumeDrawer: VolumeDrawerState;
 }
 
 declare interface AuthState {

@@ -13,7 +13,7 @@
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE } from 'src/constants';
 import store from 'src/store';
-import { async } from 'src/store/reducers/events';
+import { async } from 'src/store/events';
 
 export const events$ = new Subject<Linode.Event>();
 

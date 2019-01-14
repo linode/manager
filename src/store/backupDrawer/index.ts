@@ -3,8 +3,8 @@ import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
+import { handleUpdate } from 'src/store/accountSettings';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
-import { handleUpdate } from 'src/store/reducers/resources/accountSettings';
 import { ThunkActionCreator } from '../types';
 
 
