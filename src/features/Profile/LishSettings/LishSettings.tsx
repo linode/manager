@@ -18,7 +18,7 @@ import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { LISH } from 'src/documentation';
 import { updateProfile } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile';
+import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

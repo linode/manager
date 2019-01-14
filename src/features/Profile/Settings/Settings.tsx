@@ -9,7 +9,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile';
+import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root'
