@@ -80,7 +80,7 @@ export const dark = createTheme({
     focusBorder: '#999',
     absWhite: '#000',
     blueDTwhite: '#fff',
-    blueDTBlack: '#222',
+    selectDropDowns: '#222',
     borderRow: 'rgba(0, 0, 0, 0.15)',
     tableHeaderText: '#fff',
     toggleActive: '#444',
@@ -378,32 +378,17 @@ export const dark = createTheme({
     MuiMenu: {
       paper: {
         '&.selectMenuDropdown': {
-          border: `1px solid #222`,
-        },
-        '& .selectMenuList': {
-          '& li': {
-            color: primaryColors.text,
-            '&:hover, &:focus': {
-              color: 'white',
-            },
-          },
+          border: '1px solid #222',
         },
       },
     },
     MuiMenuItem: {
       root: {
-        '& $selected': {
-          backgroundColor: '#444 !important',
-          color: `${primaryColors.text} !important`,
+        color: primaryColors.text,
+        '&$selected, &$selected:hover': {
+          backgroundColor: 'transparent',
+          color: primaryColors.main,
           opacity: 1,
-          '&:focus': {
-            backgroundColor: '#444 !important',
-          },
-        },
-        color: primaryColors.main,
-        '&:hover, &:focus': {
-          backgroundColor: '#444',
-          color: '#fff',
         },
       },
       selected: {},
