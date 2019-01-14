@@ -34,7 +34,7 @@ export class Tags extends React.Component<CombinedProps, {}> {
           label={eachTag}
           key={eachTag}
           clickable={clickable}
-          component="button"
+          component={"button" as "div"}
           colorVariant="lightBlue"
         />
       )

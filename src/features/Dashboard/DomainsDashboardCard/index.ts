@@ -1,1 +1,2 @@
-export { default } from './DomainsDashboardCard';
+import DomainsDashboardCard from './DomainsDashboardCard';
+export default DomainsDashboardCard;

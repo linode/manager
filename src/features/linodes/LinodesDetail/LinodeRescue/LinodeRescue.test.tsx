@@ -26,7 +26,7 @@ describe('LinodeRescue', () => {
     const disksAsPromise = createPromiseLoaderResponse(extendedDisks);
     const volumesAsPromise = createPromiseLoaderResponse(extendedVolumes);
 
-    const component = shallow(
+    const component = shallow<LinodeRescue>(
       <LinodeRescue
         onPresentSnackbar={jest.fn()}
         enqueueSnackbar={jest.fn()}

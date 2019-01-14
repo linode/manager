@@ -134,7 +134,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     return (
       <NumberFormat
         {...other}
-        ref={inputRef}
+        getInputRef={inputRef}
         onValueChange={values => {
           onChange({
             target: {

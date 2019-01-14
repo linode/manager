@@ -344,7 +344,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                 onChange={this.handleTabChange}
                 indicatorColor="primary"
                 textColor="primary"
-                scrollable
+                variant="scrollable"
                 scrollButtons="on"
               >
                 {

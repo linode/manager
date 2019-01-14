@@ -1,1 +1,2 @@
-export { default } from './LinodesDashboardCard';
+import LinodesDashboardCard from './LinodesDashboardCard';
+export default LinodesDashboardCard

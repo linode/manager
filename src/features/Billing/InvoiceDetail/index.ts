@@ -1,1 +1,2 @@
-export { default } from './InvoiceDetail';
+import InvoiceDetail from './InvoiceDetail';
+export default InvoiceDetail;

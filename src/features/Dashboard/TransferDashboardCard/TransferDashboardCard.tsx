@@ -176,7 +176,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item container direction="column">
               <Grid item>
-                <Typography>You have used {renderPercentageString(poolUsagePct)} of your available network bandwidth during the current billing cycle.</Typography>
+                <Typography>You have used {renderPercentageString(poolUsagePct)} of your available network transfer during the current billing cycle.</Typography>
               </Grid>
               <Grid item>
                 <Divider className={classes.divider}/>

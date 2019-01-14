@@ -1,1 +1,2 @@
-export { default } from './RecentPaymentsPanel';
+import RecentPaymentsPanel from './RecentPaymentsPanel';
+export default RecentPaymentsPanel;

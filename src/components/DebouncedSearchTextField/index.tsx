@@ -1,1 +1,2 @@
-export { default } from './DebouncedSearchTextField';
+import DebouncedSearchTextField from './DebouncedSearchTextField';
+export default DebouncedSearchTextField;

@@ -1,1 +1,2 @@
-export { default } from './GroupImportCard';
+import GroupImportCard from './GroupImportCard';
+export default GroupImportCard;
