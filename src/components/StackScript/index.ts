@@ -1,3 +1,4 @@
-import StackScript, { Props } from './StackScript';
+import StackScript, { Props as _Props } from './StackScript';
 export default StackScript;
-export { Props };
+/* tslint:disable */
+export interface Props extends _Props { };

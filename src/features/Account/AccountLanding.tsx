@@ -43,7 +43,7 @@ class AccountLanding extends React.Component<Props> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
-            scrollable
+            variant="scrollable"
             scrollButtons="on"
           >
             {this.tabs

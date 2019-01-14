@@ -1,1 +1,2 @@
-export { default } from './NodeBalancersDashboardCard';
+import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
+export default NodeBalancersDashboardCard;

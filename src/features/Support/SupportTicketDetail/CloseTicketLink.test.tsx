@@ -14,7 +14,7 @@ jest.mock('axios', () => ({
   default: (config:AxiosRequestConfig) => mockFn(config),
 }));
 
-const component = shallow(
+const component = shallow<CloseTicketLink>(
   <CloseTicketLink
     ticketId={ticketId}
     closeTicketSuccess={success}

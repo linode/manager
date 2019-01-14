@@ -1,1 +1,2 @@
-export { default } from './SupportTicketsLanding';
+import SupportTicketsLanding from './SupportTicketsLanding';
+export default SupportTicketsLanding;

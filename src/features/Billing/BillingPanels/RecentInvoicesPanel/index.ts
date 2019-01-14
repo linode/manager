@@ -1,1 +1,2 @@
-export { default } from './RecentInvoicesPanel';
+import RecentInvoicesPanel from './RecentInvoicesPanel';
+export default RecentInvoicesPanel;

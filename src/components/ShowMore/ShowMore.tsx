@@ -90,7 +90,7 @@ export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasse
           onClick={this.handleClick}
           {...chipProps}
           data-qa-show-more-chip
-          component="button"
+          component={"button" as "div"}
           clickable
         />
 

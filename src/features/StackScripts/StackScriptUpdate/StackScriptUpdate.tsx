@@ -75,14 +75,14 @@ type CombinedProps = StateProps
   & SetDocsProps
   & WithStyles<ClassNames>
   & PreloadedProps
-  & RouteComponentProps<{ stackScriptID?: number }>;
+  & RouteComponentProps<{ stackScriptID?: string }>;
 
 const preloaded = PromiseLoader<CombinedProps>({
   stackScript: ({ match: { params: { stackScriptID } } }) => {
     if (!stackScriptID) {
       return Promise.reject(new Error('stackScriptID param not set.'));
     }
-    return getStackScript(stackScriptID)
+    return getStackScript(+stackScriptID)
       .then(response => response || [])
   }
 })

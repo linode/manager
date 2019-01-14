@@ -1,1 +1,2 @@
-export { default } from './TagImportDrawer';
+import TagImportDrawer from './TagImportDrawer';
+export default TagImportDrawer;

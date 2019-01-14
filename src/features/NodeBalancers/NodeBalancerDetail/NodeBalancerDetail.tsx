@@ -43,7 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 const defaultError = [{ reason: 'An unknown error occured while updating NodeBalancer.' }];
 
-type RouteProps = RouteComponentProps<{ nodeBalancerId?: number }>;
+type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
 interface PreloadedProps {
   nodeBalancer: PromiseLoaderResponse<Linode.ExtendedNodeBalancer>;
@@ -68,7 +68,7 @@ const preloaded = PromiseLoader<CombinedProps>({
       return Promise.reject(new Error('nodeBalancerId param not set.'));
     }
 
-    return getNodeBalancer(nodeBalancerId).then((nodeBalancer) => {
+    return getNodeBalancer(+nodeBalancerId).then((nodeBalancer) => {
       return getNodeBalancerConfigs(nodeBalancer.id)
         .then(({ data: configs }) => {
           return {
@@ -212,7 +212,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
-            scrollable
+            variant="scrollable"
             scrollButtons="on"
           >
             {
