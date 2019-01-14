@@ -6,7 +6,7 @@ import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/accountSettings';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { ThunkActionCreator } from '../types';
-``
+
 
 // HELPERS
 
