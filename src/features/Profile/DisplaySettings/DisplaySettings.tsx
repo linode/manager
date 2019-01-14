@@ -5,7 +5,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
-import { handleUpdate } from 'src/store/profile';
+import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';

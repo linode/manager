@@ -23,13 +23,13 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { requestAccountSettings } from 'src/store/accountSettings';
+import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
-import { async as imagesAsync } from 'src/store/images';
+import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
-import { async as typesAsync } from 'src/store/linodeTypes';
-import { requestNotifications } from 'src/store/notifications';
-import { requestProfile } from 'src/store/profile';
+import { requestTypes } from 'src/store/linodeType/linodeType.requests';
+import { requestNotifications } from 'src/store/notification/notification.requests';
+import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
@@ -352,12 +352,12 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
   return {
     actions: {
       requestDomains: () => dispatch(requestDomains()),
-      requestImages: () => dispatch(imagesAsync.requestImages()),
+      requestImages: () => dispatch(requestImages()),
       requestLinodes: () => dispatch(requestLinodes()),
       requestNotifications: () => dispatch(requestNotifications()),
       requestProfile: () => dispatch(requestProfile()),
       requestSettings: () => dispatch(requestAccountSettings()),
-      requestTypes: () => dispatch(typesAsync.requestTypes()),
+      requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
     }
   };

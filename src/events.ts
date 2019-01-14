@@ -13,7 +13,7 @@
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE } from 'src/constants';
 import store from 'src/store';
-import { async } from 'src/store/events';
+import { getEvents } from 'src/store/events/event.request';
 
 export const events$ = new Subject<Linode.Event>();
 
@@ -39,7 +39,7 @@ export const resetEventsPolling = () => {
 
 export const requestEvents = () => {
   inProgress = true;
-  return store.dispatch(async.getEvents() as any)
+  return store.dispatch(getEvents() as any)
     .then((events: Linode.Event[]) => {
       const reversed = events.reverse();
 
