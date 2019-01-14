@@ -1,11 +1,7 @@
-import { pathOr } from 'ramda';
 import { Reducer } from "redux";
-import { getImages } from "src/services/images";
-import { ThunkActionCreator } from 'src/store/types';
-import { getAll } from "src/utilities/getAll";
 import updateOrAdd from 'src/utilities/updateOrAdd';
-import actionCreatorFactory, { isType } from 'typescript-fsa';
-
+import { isType } from 'typescript-fsa';
+import { addOrUpdateImage, getImagesFailure, getImagesRequest, getImagesSuccess, removeImage } from './image.actions';
 
 
 /**
@@ -20,27 +16,6 @@ export const defaultState: State = {
   loading: true,
   lastUpdated: 0,
 };
-
-
-
-/**
- * Actions
- */
-const actionCreator = actionCreatorFactory(`@@manager/images`);
-
-const getImagesRequest = actionCreator(`request`)
-
-const getImagesSuccess = actionCreator<Linode.Image[]>(`success`)
-
-const getImagesFailure = actionCreator<Linode.ApiFieldError[]>(`fail`)
-
-const removeImage = actionCreator<number | string>(`remove`);
-
-const addOrUpdateImage = actionCreator<Linode.Image>('add_or_update');
-
-export const actions = { removeImage, addOrUpdateImage };
-
-
 
 /**
  * Reducer
@@ -105,31 +80,5 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   return state;
 };
-
-
-
-/**
- * Async
- */
-const requestImages: ThunkActionCreator<Promise<Linode.Image[]>> = () => (dispatch) => {
-  const getAllImages = getAll<Linode.Image>(getImages);
-
-  return getAllImages()
-    .then(({ data }) => {
-      dispatch(getImagesSuccess(data))
-      return data;
-    })
-    .catch((err) => {
-      const ApiError = pathOr(
-        [{ reason: "There was an error retrieving your Images." }],
-        ['response', 'data', 'errors'],
-        err
-      )
-      dispatch(getImagesFailure(ApiError))
-      return err;
-    })
-};
-
-export const async = { requestImages };
 
 export default reducer;

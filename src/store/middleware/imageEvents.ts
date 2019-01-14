@@ -1,4 +1,5 @@
-import { actions, async } from 'src/store/images';
+import { removeImage } from 'src/store/image/image.actions';
+import { requestImages } from 'src/store/image/image.requests';
 import { EventHandler } from './combineEventsMiddleware';
 
 const imageEventsHandler: EventHandler = (event, dispatch) => {
@@ -6,7 +7,7 @@ const imageEventsHandler: EventHandler = (event, dispatch) => {
 
   switch (action) {
     case 'image_delete':
-    return dispatch(actions.removeImage(event.entity.id));
+    return dispatch(removeImage(event.entity.id));
 
     /**
      * I don't love this, but we dont have a choice. disk_imagize entity is the Linode
@@ -14,7 +15,7 @@ const imageEventsHandler: EventHandler = (event, dispatch) => {
      */
     case 'disk_imagize':
       if (['finished', 'notification'].includes(event.status)) {
-        return dispatch(async.requestImages());
+        return dispatch(requestImages());
       }
 
     default:
