@@ -1,7 +1,7 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import account, { defaultState as defaultAccountState } from 'src/store/account/account.reducer';
-import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from 'src/store/accountSettings';
+import accountSettings, { defaultState as defaultAccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
 import authentication, { defaultState as authenticationDefaultState } from 'src/store/authentication';
 import backups, { defaultState as backupsDefaultState } from 'src/store/backupDrawer';
 import documentation, { defaultState as documentationDefaultState } from 'src/store/documentation';

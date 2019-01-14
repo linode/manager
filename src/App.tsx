@@ -23,7 +23,7 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { requestAccountSettings } from 'src/store/accountSettings';
+import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { async as imagesAsync } from 'src/store/images';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
