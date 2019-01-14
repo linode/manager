@@ -36,7 +36,7 @@ interface State {
   token?: string;
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: number }>;
+type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: string }>;
 
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
@@ -58,7 +58,7 @@ class Lish extends React.Component<CombinedProps, State> {
       return;
     }
 
-    getLinode(linodeId)
+    getLinode(+linodeId)
       .then((response) => {
         const { data: linode } = response;
         if (!this.mounted) { return; }
@@ -87,7 +87,7 @@ class Lish extends React.Component<CombinedProps, State> {
       return;
     }
 
-    return getLinodeLishToken(linodeId)
+    return getLinodeLishToken(+linodeId)
       .then((response) => {
         const { data: { lish_token: token } } = response;
         if (!this.mounted) { return; }
@@ -144,7 +144,7 @@ class Lish extends React.Component<CombinedProps, State> {
           className={classes.tabs}
           indicatorColor="primary"
           textColor="primary"
-          scrollable
+          variant="scrollable"
           scrollButtons="on"
         >
           {this.tabs.map(tab =>

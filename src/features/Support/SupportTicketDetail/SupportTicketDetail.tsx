@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { compose, concat, isEmpty, path, pathOr } from 'ramda';
+import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -94,7 +94,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-type RouteProps = RouteComponentProps<{ ticketId?: number }>;
+type RouteProps = RouteComponentProps<{ ticketId?: string }>;
 
 export interface AttachmentError {
   file: string;
@@ -147,13 +147,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
   loadTicket = () : any => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
-    return getTicket(ticketId);
+    return getTicket(+ticketId);
   }
 
   loadReplies = () : any => {
     const ticketId = this.props.match.params.ticketId;
     if (!ticketId) { return null; }
-    return getTicketReplies(ticketId)
+    return getTicketReplies(+ticketId)
       // This is a paginated method but here we only need the list of replies
       .then(response => response.data);
   }
@@ -207,7 +207,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps,State> {
     getGravatarUrlFromHash(newReply.gravatar_id)
       .then((url) => {
         newReply.gravatarUrl = url;
-        const updatedReplies = concat(replies, [newReply]);
+        const updatedReplies = [
+          ...replies,
+          ...[newReply]
+        ];
         this.setState({
           replies: updatedReplies,
           ticketCloseSuccess: false,

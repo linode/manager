@@ -1,1 +1,2 @@
-export { default } from './createStringsFromDevices';
+import createStringsFromDevices from './createStringsFromDevices';
+export default createStringsFromDevices

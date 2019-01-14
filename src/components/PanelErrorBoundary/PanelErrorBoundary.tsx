@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
 
@@ -8,18 +7,12 @@ export interface Props extends ExpansionPanelProps { }
 
 export default (expansionPanelProps: Props) =>
   <P extends {}>(Component: React.ComponentType<P>) => {
-    type ClassNames = 'root';
-
-    const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-      root: {},
-    });
-
     interface State {
       error?: Error;
       info?: any;
     }
 
-    type CombinedProps = P & WithStyles<ClassNames>;
+    type CombinedProps = P;
 
     class PanelErrorBoundary extends React.Component<CombinedProps, State> {
       state: State = {};
@@ -42,7 +35,5 @@ export default (expansionPanelProps: Props) =>
       }
     }
 
-    const styled = withStyles(styles);
-
-    return styled<any>(PanelErrorBoundary);
+    return PanelErrorBoundary;
   };

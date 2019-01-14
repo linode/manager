@@ -1,9 +1,3 @@
-export {
-  getImages,
-  getImage,
-  createImage,
-  updateImage,
-  deleteImage,
-} from './images';
+export * from './images';
 
-export { getLinodeImages } from './imagesUtils';
+export * from './imagesUtils';

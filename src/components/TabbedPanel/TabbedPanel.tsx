@@ -84,7 +84,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
               indicatorColor="primary"
               textColor="primary"
               className={`${classes.tabs}`}
-              scrollable
+              variant="scrollable"
               scrollButtons="on"
             >
               {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}

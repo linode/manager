@@ -26,7 +26,7 @@ export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   toggle: {
     '& > span:last-child': {
       backgroundColor: '#f4f4f4 !important',
-      opacity: 0.38,
+      opacity: `0.38 !important`,
     },
     '&.darkTheme .square': {
       fill: '#444 !important',

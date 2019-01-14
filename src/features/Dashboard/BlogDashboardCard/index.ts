@@ -1,1 +1,2 @@
-export { default } from './BlogDashboardCard';
+import BlogDashboardCard from './BlogDashboardCard';
+export default BlogDashboardCard;

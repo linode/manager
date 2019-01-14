@@ -44,7 +44,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         label={tag}
         clickable
         colorVariant={selected ? 'blue' : 'lightBlue'}
-        component="button"
+        component={"button" as "div"}
         asSuggestion={true}
         className="tag"
         closeMenu={this.props.selectProps.onMenuClose}

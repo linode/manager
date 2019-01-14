@@ -1,1 +1,2 @@
-export { default } from './SearchLanding';
+import SearchLanding from './SearchLanding';
+export default SearchLanding;

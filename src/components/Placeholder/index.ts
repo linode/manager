@@ -1,7 +1,5 @@
-import Placeholder, { Props as PlaceholderProps } from './Placeholder';
-
-export {
-  PlaceholderProps,
-};
+import Placeholder, { Props as _PlaceholderProps } from './Placeholder';
+/* tslint:disable */
+export interface PlaceholderProps extends _PlaceholderProps { }
 
 export default Placeholder;

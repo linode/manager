@@ -1,1 +1,2 @@
-export { default } from './MakeAPaymentPanel';
+import MakeAPaymentPanel from './MakeAPaymentPanel';
+export default MakeAPaymentPanel; 

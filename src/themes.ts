@@ -267,6 +267,9 @@ export const dark = createTheme({
     },
     MuiExpansionPanelSummary: {
       root: {
+        '& $focused': {
+          backgroundColor: '#111111',
+        },
         backgroundColor: '#32363C',
         '&:hover': {
           '& h3': {
@@ -288,9 +291,7 @@ export const dark = createTheme({
           stroke: `${primaryColors.light} !important`,
         },
       },
-      focused: {
-        backgroundColor: '#111111',
-      },
+      focused: {},
     },
     MuiFormControl: {
       root: {
@@ -300,9 +301,12 @@ export const dark = createTheme({
       },
     },
     MuiFormControlLabel: {
-      disabled: {
-        color: '#aaa !important',
+      root: {
+        '& $disabled': {
+          color: '#aaa !important'
+        }
       },
+      disabled: {},
     },
     MuiFormLabel: {
       root: {
@@ -336,6 +340,13 @@ export const dark = createTheme({
     },
     MuiInput: {
       root: {
+        '& $disabled': {
+          borderColor: '#606469',
+          color: '#eee !important',
+        },
+        '& $focused': {
+          borderColor: primaryColors.main,
+        },
         border: '1px solid #222',
         color: primaryColors.text,
         backgroundColor: '#444',
@@ -343,13 +354,8 @@ export const dark = createTheme({
           color: primaryColors.main,
         },
       },
-      focused: {
-        borderColor: primaryColors.main,
-      },
-      disabled: {
-        borderColor: '#606469',
-        color: '#eee !important',
-      },
+      focused: {},
+      disabled: {},
     },
     MuiInputAdornment: {
       root: {
@@ -400,20 +406,21 @@ export const dark = createTheme({
     },
     MuiMenuItem: {
       root: {
+        '& $selected': {
+          backgroundColor: '#444 !important',
+          color: `${primaryColors.text} !important`,
+          opacity: 1,
+          '&:focus': {
+            backgroundColor: '#444 !important',
+          },
+        },
         color: primaryColors.main,
         '&:hover, &:focus': {
           backgroundColor: '#444',
           color: '#fff',
         },
       },
-      selected: {
-        backgroundColor: '#444 !important',
-        color: `${primaryColors.text} !important`,
-        opacity: 1,
-        '&:focus': {
-          backgroundColor: '#444 !important',
-        },
-      },
+      selected: {},
     },
     MuiPaper: {
       root: {
@@ -444,6 +451,21 @@ export const dark = createTheme({
     },
     MuiSwitch: {
       root: {
+        '& $checked': {
+          transform: 'translateX(20px)',
+          color: `#abadaf !important`,
+          '& input': {
+            left: -20,
+          },
+          '& .square': {
+            fill: 'white !important',
+          },
+          '& + $bar': {
+            opacity: 1,
+            backgroundColor: `${primaryColors.main} !important`,
+            borderColor: '#2967B1',
+          },
+        },
         '& .icon': {
           transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
           position: 'relative',
@@ -464,21 +486,7 @@ export const dark = createTheme({
           },
         },
       },
-      checked: {
-        transform: 'translateX(20px)',
-        color: `#abadaf !important`,
-        '& input': {
-          left: -20,
-        },
-        '& .square': {
-          fill: 'white !important',
-        },
-        '& + $bar': {
-          opacity: 1,
-          backgroundColor: `${primaryColors.main} !important`,
-          borderColor: '#2967B1',
-        },
-      },
+      checked: {},
       bar: {
         top: 12,
         left: 12,

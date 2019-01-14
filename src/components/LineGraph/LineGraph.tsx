@@ -1,6 +1,6 @@
 import { clone } from 'ramda';
 import * as React from 'react';
-import { Line } from 'react-chartjs-2';
+import { ChartData, Line } from 'react-chartjs-2';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import { setUpCharts } from 'src/utilities/charts';
 
@@ -87,7 +87,7 @@ const chartOptions: any = {
   },
 };
 
-const lineOptions = {
+const lineOptions: ChartData<any> = {
   backgroundColor: 'rgba(0, 0, 0, 0)',
   borderWidth: 1,
   borderJoinStyle: 'miter',
