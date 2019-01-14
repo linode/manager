@@ -9,7 +9,7 @@ import 'rxjs/add/operator/filter';
 import TagsPanel from 'src/components/TagsPanel';
 import { lishLaunch } from 'src/features/Lish';
 import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
-import { requestNotifications } from 'src/store/notifications';
+import { requestNotifications } from 'src/store/notification/notification.requests';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';

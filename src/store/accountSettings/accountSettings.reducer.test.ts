@@ -1,28 +1,28 @@
-import account, * as A from './index';
-
 import { accountSettings } from 'src/__data__/account';
 import { mockAPIFieldErrors } from 'src/services';
+import { handleError, handleSuccess, handleUpdate, handleUpdateError, startRequest } from './accountSettings.actions';
+import reducer, { defaultState } from './accountSettings.reducer';
 
 const error = mockAPIFieldErrors([]);
 const updatedSettings = {backups_enabled: false, ...accountSettings};
 
 describe("Redux duck for Account settings", () => {
   it("should handle LOAD", () => {
-    const newState = account(A.DEFAULT_STATE, A.startRequest());
+    const newState = reducer(defaultState, startRequest());
     expect(newState).toHaveProperty('loading', true);
   });
   it("should handle ERROR", () => {
-    const newState = account(
-      { ...A.DEFAULT_STATE, loading: true },
-      A.handleError(error)
+    const newState = reducer(
+      { ...defaultState, loading: true },
+      handleError(error)
     );
     expect(newState).toHaveProperty('loading', false);
     expect(newState).toHaveProperty('error', error);
   });
   it("should handle SUCCESS", () => {
-    const newState = account(
-      { ...A.DEFAULT_STATE, loading: true, error, updateError: error },
-      A.handleSuccess(accountSettings)
+    const newState = reducer(
+      { ...defaultState, loading: true, error, updateError: error },
+      handleSuccess(accountSettings)
     );
     expect(newState).toHaveProperty('data', accountSettings);
     expect(newState).toHaveProperty('error', undefined);
@@ -30,9 +30,9 @@ describe("Redux duck for Account settings", () => {
     expect(newState).toHaveProperty('loading', false);
   });
   it("should handle UPDATE", () => {
-    const newState = account(
-      { ...A.DEFAULT_STATE, data: accountSettings, error, updateError: error },
-      A.handleUpdate(accountSettings)
+    const newState = reducer(
+      { ...defaultState, data: accountSettings, error, updateError: error },
+      handleUpdate(accountSettings)
     );
     expect(newState).toHaveProperty('data', updatedSettings);
     expect(newState).toHaveProperty('error', undefined);
@@ -40,9 +40,9 @@ describe("Redux duck for Account settings", () => {
     expect(newState).toHaveProperty('loading', false);
   });
   it("should handle UPDATE_ERROR", () => {
-    const newState = account(
-      {...A.DEFAULT_STATE, data: accountSettings, updateError: undefined },
-      A.handleUpdateError(error)
+    const newState = reducer(
+      {...defaultState, data: accountSettings, updateError: undefined },
+      handleUpdateError(error)
     );
     expect(newState).toHaveProperty('data', accountSettings);
     expect(newState).toHaveProperty('error', undefined);
