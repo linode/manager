@@ -41,7 +41,7 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
         </TableSortCell>
         <TableSortCell
           label="ipv4[0]" // we want to sort by the first ipv4
-          active={isActive('ipv4')}
+          active={isActive('ipv4[0]')}
           handleClick={handleOrderChange}
           direction={order}
         >

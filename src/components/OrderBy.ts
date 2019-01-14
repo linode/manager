@@ -53,11 +53,11 @@ export const sortData = (orderBy: string, order: Order) =>
     if (isArray(aValue) && isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order)
     }
-
+    
     if (isValidDate(aValue) && isValidDate(bValue)) {
       return sortByUTFDate(aValue, bValue, order)
     }
-
+    
     if (typeof aValue === 'string' && typeof bValue === 'string') {
       return sortByString(aValue, bValue, order)
     }
