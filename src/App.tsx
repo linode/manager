@@ -29,7 +29,7 @@ import { async as imagesAsync } from 'src/store/images';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
-import { requestProfile } from 'src/store/profile';
+import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';

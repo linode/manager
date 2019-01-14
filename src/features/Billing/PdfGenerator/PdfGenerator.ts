@@ -53,7 +53,7 @@ const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | n
   addLine(`Linode, LLC`);
   addLine('249 Arch St.');
   addLine('Philadelphia, PA 19106');
-  addLine('USA');  
+  addLine('USA');
 };
 
 const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
@@ -119,15 +119,15 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
     const invoiceId = invoice.id;
     const itemsChunks = items ? splitEvery(itemsPerPage, items) : [[]];
     const tableEnd = tableBodyStart + cellHeight * itemsChunks[itemsChunks.length - 1].length
-  
-  
+
+
     const doc = new jsPDF({
       unit: 'px'
     });
-  
+
     const addTable = (itemsChunk: Linode.InvoiceItem[]) => {
       doc.setFontSize(10);
-  
+
       const header = [
         {name: 'Description', prompt: 'Description', width: 235},
         {name: 'From', prompt: 'From', width: 72},
@@ -136,7 +136,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
         {name: 'Unit Price', prompt: 'Unit Price', width: 67},
         {name: 'Amount', prompt: 'Amount', width: 52}
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
-  
+
       const itemRows = itemsChunk.map(item => {
         const { label, from, to, quantity, unit_price, amount } = item;
         return {
@@ -148,7 +148,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
           Amount: '$' + amount
         }
       });
-  
+
       // Place table header
       doc.table(leftPadding, 140, [], header, {
         fontSize: 10,
@@ -161,7 +161,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
           bottom: 0
         }
       });
-  
+
       // Place table body
       doc.table(leftPadding, tableBodyStart, itemRows, header, {
         fontSize: 9,
@@ -175,7 +175,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
         }
       });
     };
-  
+
     const addTotalAmount = () => {
       doc.setFontSize(13);
       doc.setFontStyle('bold');
@@ -188,7 +188,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
       // reset text format
       doc.setFontStyle('normal');
     };
-  
+
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
@@ -201,17 +201,17 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
         doc.addPage();
       }
     });
-  
+
     addTotalAmount();
-  
-    doc.save(`invoice-${date}.pdf`);    
+
+    doc.save(`invoice-${date}.pdf`);
   } catch (e) {
     console.error(e);
   }
 }
 
 export const printPayment = (account: Linode.Account, payment: Linode.Payment) => {
-  
+
   try {
     const date = formatDate(payment.date, {format: 'YYYY-MM-DD'});
     const paymentId = payment.id;
@@ -220,22 +220,22 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
     const doc = new jsPDF({
       unit: 'px'
     });
-  
+
     const addTable = () => {
       doc.setFontSize(10);
-  
+
       const header = [
         {name: 'Description', prompt: 'Description', width: 292},
         {name: 'Date', prompt: 'Date', width: 128},
         {name: 'Amount', prompt: 'Amount', width: 128}
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
-  
+
       const itemRows = [{
         Description: 'Payment. Thank you.', // Automatic line breaks don't work well. Doing it manually
         Date: renderDate(date),
         Amount: '$' + amount
       }]
-  
+
       doc.table(leftPadding, 140, itemRows, header, {
         fontSize: 12,
         printHeaders: true,
@@ -248,7 +248,7 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
         }
       });
     };
-  
+
     const addTotalAmount = () => {
       doc.setFontSize(13);
       doc.setFontStyle('bold');
@@ -261,7 +261,7 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
       // reset text format
       doc.setFontStyle('normal');
     };
-  
+
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
     addLeftHeader(doc, 1, 1, date);
     addRightHeader(doc, account);
@@ -269,8 +269,8 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
     addTable();
     addFooter(doc);
     addTotalAmount();
-    
-    doc.save(`payment-${date}.pdf`);    
+
+    doc.save(`payment-${date}.pdf`);
   } catch (e) {
     console.error(e);
   }

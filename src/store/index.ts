@@ -14,7 +14,7 @@ import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/stor
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
 import types, { defaultState as defaultTypesState } from 'src/store/linodeType/linodeType.reducer';
-import profile, { DEFAULT_STATE as defaultProfileState } from 'src/store/profile';
+import profile, { defaultState as defaultProfileState } from 'src/store/profile/profile.reducer';
 import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from 'src/store/tagImportDrawer';
