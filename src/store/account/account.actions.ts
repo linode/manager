@@ -10,5 +10,3 @@ export const profileRequest = actionCreator('request');
 export const profileRequestSuccess = actionCreator<Linode.Account>('success');
 
 export const profileRequestFail = actionCreator<Linode.ApiFieldError[]>('fail');
-
-export const actions = { profileRequest, profileRequestSuccess, profileRequestFail };
