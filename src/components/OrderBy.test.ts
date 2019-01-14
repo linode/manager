@@ -48,7 +48,7 @@ describe("OrderBy", () => {
     });
     it("should sort by number", () => {
       const order = sortData('age', 'asc')(data);
-      expect(order).toEqual([b, a, e, d, c]);
+      expect(order).toEqual([b, a, c, d, e]);
     });
     it("should sort by array length", () => {
       const order = sortData('hobbies', 'asc')(data);
