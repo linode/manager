@@ -413,6 +413,9 @@ const themeDefaults: ThemeOptions = {
         marginLeft: 4,
         marginRight: 2,
         color: primaryColors.text,
+        borderRadius: '50%',
+        width: 18,
+        height: 18,
         '& svg': {
           width: 12,
           height: 12,

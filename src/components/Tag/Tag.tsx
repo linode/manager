@@ -1,4 +1,3 @@
-import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -133,7 +132,7 @@ class Tag extends React.Component<CombinedProps, {}> {
         [classes[colorVariant!]]: true,
         [classes.root]: true,
       })}
-      deleteIcon={<IconButton data-qa-delete-tag className="deleteButton"><Close /></IconButton>}
+      deleteIcon={<a data-qa-delete-tag className="deleteButton"><Close /></a>}
       classes={{ label: classes.label, deletable: classes[colorVariant!]}}
       onClick={this.handleClick}
       data-qa-tag={this.props.label}
