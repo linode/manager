@@ -22,21 +22,10 @@ export const ListView: React.StatelessComponent<CombinedProps> = (props) => {
       {
         data.map((linode, idx: number) =>
           <LinodeRow
+            linode={linode}
             key={`linode-row-${idx}`}
-            linodeId={linode.id}
-            linodeImage={linode.image}
-            linodeStatus={linode.status}
-            linodeIpv4={linode.ipv4}
-            linodeIpv6={linode.ipv6}
-            linodeRegion={linode.region}
-            linodeLabel={linode.label}
-            linodeBackups={linode.backups}
-            linodeSpecs={linode.specs}
-            linodeTags={linode.tags}
             openConfigDrawer={openConfigDrawer}
             toggleConfirmation={toggleConfirmation}
-            mostRecentBackup={linode.mostRecentBackup}
-            linodeType={linode.type}
           />,
         )
       }
