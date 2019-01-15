@@ -32,6 +32,7 @@ import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.request
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
+import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -356,6 +357,7 @@ interface DispatchProps {
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
     requestNodeBalancers: () => Promise<Linode.NodeBalancerWithConfigs[]>;
+    requestVolumes: () => void;
   },
 }
 
@@ -371,6 +373,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
       requestNodeBalancers: () => dispatch(getAllNodeBalancers()),
+      requestVolumes: () => dispatch(getAllVolumes())
     }
   };
 };
