@@ -1,27 +1,27 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import account, { DEFAULT_STATE as defaultAccountState } from 'src/store/account';
-import accountSettings, { DEFAULT_STATE as defaultAccountSettingsState } from 'src/store/accountSettings';
+import account, { defaultState as defaultAccountState } from 'src/store/account/account.reducer';
+import accountSettings, { defaultState as defaultAccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
 import authentication, { defaultState as authenticationDefaultState } from 'src/store/authentication';
 import backups, { defaultState as backupsDefaultState } from 'src/store/backupDrawer';
 import documentation, { defaultState as documentationDefaultState } from 'src/store/documentation';
 import domainDrawer, { defaultState as domainDrawerDefaultState } from 'src/store/domainDrawer';
 import domainEvents from 'src/store/domains/domains.events';
 import domains, { defaultState as defaultDomainsState } from 'src/store/domains/domains.reducer';
-import images, { defaultState as defaultImagesState } from 'src/store/images';
+import events, { defaultState as eventsDefaultState } from 'src/store/events/event.reducer';
+import images, { defaultState as defaultImagesState } from 'src/store/image/image.reducer';
 import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
-import types, { defaultState as defaultTypesState } from 'src/store/linodeTypes';
-import profile, { DEFAULT_STATE as defaultProfileState } from 'src/store/profile';
+import types, { defaultState as defaultTypesState } from 'src/store/linodeType/linodeType.reducer';
+import profile, { defaultState as defaultProfileState } from 'src/store/profile/profile.reducer';
 import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from 'src/store/tagImportDrawer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from 'src/store/volumeDrawer';
-import events, { defaultState as eventsDefaultState } from './events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
-import notifications, { DEFAULT_STATE as notificationsDefaultState } from './notifications';
+import notifications, { defaultState as notificationsDefaultState } from './notification/notification.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { isInProgressEvent } from 'src/store/events';
+import { isInProgressEvent } from 'src/store/events/event.helpers';
 
 export default (linodeId: number) => createSelector<ApplicationState, Linode.Event[], undefined | Linode.Event>(
   (state) => state.events.events,

@@ -14,7 +14,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import LinodeRowHeadCell from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRowHeadCell';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import { isEntityEvent, isInProgressEvent } from 'src/store/events';
+import { isEntityEvent, isInProgressEvent } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
