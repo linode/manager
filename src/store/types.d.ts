@@ -10,3 +10,14 @@ export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>
 
 export type MapState<S, O> = _MapStateToProps<S, O, ApplicationState>;
 
+export interface Entity { id: string }
+
+type EntityMap<T> = Record<string, T>;
+
+export interface EntityState<T extends Entity> {
+  error?: Error;
+  items: string[];
+  itemsById: EntityMap<T>;
+  lastUpdated: number;
+  loading: boolean;
+}
