@@ -25,7 +25,7 @@ describe('LinodeRow', () => {
     recentEvent: undefined,
     openConfigDrawer: jest.fn(),
     mutationAvailable: false,
-    mostRecentBackup: undefined,
+    mostRecentBackup: null,
     linodeType: 'whatever',
     linodeTags: [],
     linodeStatus: 'running',

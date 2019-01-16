@@ -33,7 +33,7 @@ interface Props {
   linodeStatus: Linode.LinodeStatus;
   linodeType: null | string;
   linodeTags: string[];
-  mostRecentBackup?: string;
+  mostRecentBackup: string | null;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
 }
@@ -109,7 +109,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
       >
       {!loading && headCell}
         <LinodeRowTagCell tags={linodeTags} />
-        <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
+        <LinodeRowBackupCell linodeId={linodeId} mostRecentBackup={mostRecentBackup || ''} />
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={linodeIpv4} copyRight showCopyOnHover />

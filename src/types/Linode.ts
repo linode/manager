@@ -22,7 +22,7 @@ namespace Linode {
     recentEvent?: Linode.Event;
     notifications?: Linode.Notification[];
     notification?: string;
-    mostRecentBackup?: string;
+    mostRecentBackup: string | null;
   }
 
   export interface LinodeAlerts {
