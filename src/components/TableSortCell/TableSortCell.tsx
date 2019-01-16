@@ -8,7 +8,8 @@ import Sort from 'src/assets/icons/sort.svg';
 import SortUp from 'src/assets/icons/sortUp.svg';
 
 type ClassNames = 'root'
-  | 'intialIcon';
+  | 'intialIcon'
+  | 'noWrap';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
@@ -16,7 +17,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   intialIcon: {
     margin: '2px 0 0 4px'
-  }
+  },
+  noWrap: {
+    whiteSpace: 'nowrap',
+  },
 });
 
 interface Props extends TableCellProps {
@@ -25,6 +29,7 @@ interface Props extends TableCellProps {
   label: string;
   direction: 'asc' | 'desc';
   handleClick: (key: string, order?: 'asc' | 'desc') => void;
+  noWrap?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -36,15 +41,24 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
     const nextOrder = (direction === 'asc')
       ? 'desc'
       : 'asc';
-
-    return handleClick(label.toLowerCase(), nextOrder);
+    return handleClick(label, nextOrder);
   }
 
   render() {
-    const { classes, children, direction, label, active, handleClick, isLoading, ...rest } = this.props;
+    const {
+      classes,
+      children,
+      direction,
+      label,
+      active,
+      handleClick,
+      noWrap,
+      isLoading,
+      ...rest
+    } = this.props;
 
     return (
-      <TableCell {...rest}>
+      <TableCell className={noWrap ? `${classes.noWrap}` : ''} {...rest}>
         <TableSortLabel
           active={active}
           direction={direction}

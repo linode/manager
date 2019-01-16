@@ -1,7 +1,11 @@
-import { curry, pathOr, sort,  } from 'ramda';
+import * as moment from 'moment';
+import { pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { Order } from 'src/components/Pagey';
 import { isArray } from 'util';
+
+import { sortByArrayLength, sortByNumber, sortByString, sortByUTFDate }
+  from 'src/utilities/sort-by';
 
 
 export interface OrderByProps extends State {
@@ -21,29 +25,44 @@ interface Props {
   orderBy?: string;
 }
 
-export const sortData = curry((orderBy: string, order: Order, obj1: any, obj2: any) => {
-  /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
-  *  we want to sort by the length of the array. Otherwise, do a simple comparison.
-  */
+export const sortData = (orderBy: string, order: Order) =>
+  sort((a, b) => {
+    /* If the column we're sorting on is an array (e.g. 'tags', which is string[]),
+    *  we want to sort by the length of the array. Otherwise, do a simple comparison.
+    */
 
-  // Get target column for each object, and length if this is an array
-  let a = pathOr(0, [orderBy], obj1);
-  let b = pathOr(0, [orderBy], obj2);
-  if (isArray(a) && isArray(b)) {
-    a = a.length;
-    b = b.length;
-  }
+    // Get target column for each object, and then sort based on data type
 
-  // Sort
-  let result: number;
-  if (a > b) { result = 1; }
-  else if (a < b) { result = -1; }
-  else { result = 0; }
+    /** 
+     * special case for sorting by ipv4 
+     * if the orderBy property contains an array index, include it in
+     * the pathOr below. See "label="ipv4[0]" in SortableTableHead.tsx
+     */
+    let orderByProp;
+    if (orderBy.includes('[')) {
+      orderByProp = splitAt(orderBy.indexOf('['), orderBy) // will end up like ['ipv4', '[0]']
+        .map(eachValue => (eachValue.includes('['))
+          /** if the element has square brackets, remove them and convert to a number */
+          ? +eachValue.replace(/[\[\]']+/g, '')
+          : eachValue)
+    }
+    /** basically, if orderByProp exists, do a pathOr with that insteead */
+    const aValue = pathOr(0, (!!orderByProp) ? orderByProp : [orderBy], a);
+    const bValue = pathOr(0, (!!orderByProp) ? orderByProp : [orderBy], b);
 
-  // Ascending or descending
-  // nb: thought this would be more efficient than sorting then conditionally reversing as a separate step
-  return order === 'asc' ? result : -result;
-});
+    if (isArray(aValue) && isArray(bValue)) {
+      return sortByArrayLength(aValue, bValue, order)
+    }
+    
+    if (isValidDate(aValue) && isValidDate(bValue)) {
+      return sortByUTFDate(aValue, bValue, order)
+    }
+    
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortByString(aValue, bValue, order)
+    }
+    return sortByNumber(aValue, bValue, order)
+  })
 
 export default class OrderBy extends React.Component<Props, State> {
   state: State = {
@@ -54,8 +73,7 @@ export default class OrderBy extends React.Component<Props, State> {
   handleOrderChange = (orderBy: string, order: Order) => this.setState({ orderBy, order });
 
   render() {
-    const order = sortData(this.state.orderBy, this.state.order);
-    const sortedData = sort(order, this.props.data);
+    const sortedData = sortData(this.state.orderBy, this.state.order)(this.props.data);
 
     const props = {
       ...this.props,
@@ -67,4 +85,8 @@ export default class OrderBy extends React.Component<Props, State> {
 
     return this.props.children(props);
   }
+}
+
+const isValidDate = (date: any) => {
+  return moment(date, moment.ISO_8601, true).isValid();
 }
