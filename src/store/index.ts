@@ -23,7 +23,10 @@ import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import notifications, { defaultState as notificationsDefaultState } from './notification/notification.reducer';
 
+import { initReselectDevtools } from './selectors';
+
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+initReselectDevtools();
 
 /**
  * Default State
