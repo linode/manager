@@ -502,7 +502,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiExpansionPanelSummary: {
       root: {
-        '& $focused': {
+        '&$focused': {
           backgroundColor: '#fbfbfb',
         },
         padding: '0 18px',
@@ -632,12 +632,12 @@ const themeDefaults: ThemeOptions = {
     },
     MuiInput: {
       root: {
-        '& $disabled': {
+        '&$disabled': {
           borderColor: '#ccc',
           color: '#606469',
           opacity: .5,
         },
-        '& $focused': {
+        '&$focused': {
           borderColor: primaryColors.main,
           boxShadow: '0 0 2px 1px #e1edfa',
         },
@@ -732,7 +732,7 @@ const themeDefaults: ThemeOptions = {
     MuiListItem: {
       root: {
         color: primaryColors.text,
-        '& $disabled': {
+        '&$disabled': {
           opacity: .5,
         },
         '&$selected, &$selected:hover': {
@@ -825,7 +825,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiSelect: {
       selectMenu: {
-        '& $disabled': {
+        '&$disabled': {
           '&+ input + $icon': {
             opacity: '.5',
           },
