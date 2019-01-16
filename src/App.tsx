@@ -4,13 +4,11 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
-import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import { Action, compose } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
-import DocsSidebar from 'src/components/DocsSidebar';
 import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
@@ -245,13 +243,10 @@ export class App extends React.Component<CombinedProps, State> {
     const { menuOpen, hasError } = this.state;
     const {
       classes,
-      documentation,
       toggleTheme,
       profileLoading,
-      profileError,
+      profileError
     } = this.props;
-
-    const hasDoc = documentation.length > 0;
 
     if (profileError || hasError) {
       return <TheApplicationIsOnFire />;
@@ -270,39 +265,30 @@ export class App extends React.Component<CombinedProps, State> {
                 <main className={classes.content}>
                   <TopMenu openSideMenu={this.openMenu} />
                   <div className={classes.wrapper} id="main-content">
-                    <StickyContainer>
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} ${hasDoc ? 'mlMain' : ''}`}>
-                          <Switch>
-                            <Route path="/linodes" component={LinodesRoutes} />
-                            <Route path="/volumes" component={Volumes} />
-                            <Route path="/nodebalancers" component={NodeBalancers} />
-                            <Route path="/domains" component={Domains} />
-                            <Route exact path="/managed" component={Managed} />
-                            <Route exact path="/longview" component={Longview} />
-                            <Route exact path="/images" component={Images} />
-                            <Route path="/stackscripts" component={StackScripts} />
-                            <Route path="/account" component={Account} />
-                            <Route exact path="/support/tickets" component={SupportTickets} />
-                            <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
-                            <Route path="/profile" component={Profile} />
-                            <Route exact path="/support" component={Help} />
-                            <Route exact path="/support/search/" component={SupportSearchLanding} />
-                            <Route path="/dashboard" component={Dashboard} />
-                            <Route path="/search" component={SearchLanding} />
-                            <Redirect exact from="/" to="/dashboard" />
-                            <Route component={NotFound} />
-                          </Switch>
-                        </Grid>
-                        {hasDoc &&
-                          <Grid className='mlSidebar'>
-                            <Sticky topOffset={-24} disableCompensation>
-                              {(props: StickyProps) => (<DocsSidebar docs={documentation} {...props} />)}
-                            </Sticky>
-                          </Grid>
-                        }
+                    <Grid container spacing={0} className={classes.grid}>
+                      <Grid item className={classes.switchWrapper}>
+                        <Switch>
+                          <Route path="/linodes" component={LinodesRoutes} />
+                          <Route path="/volumes" component={Volumes} />
+                          <Route path="/nodebalancers" component={NodeBalancers} />
+                          <Route path="/domains" component={Domains} />
+                          <Route exact path="/managed" component={Managed} />
+                          <Route exact path="/longview" component={Longview} />
+                          <Route exact path="/images" component={Images} />
+                          <Route path="/stackscripts" component={StackScripts} />
+                          <Route path="/account" component={Account} />
+                          <Route exact path="/support/tickets" component={SupportTickets} />
+                          <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                          <Route path="/profile" component={Profile} />
+                          <Route exact path="/support" component={Help} />
+                          <Route exact path="/support/search/" component={SupportSearchLanding} />
+                          <Route path="/dashboard" component={Dashboard} />
+                          <Route path="/search" component={SearchLanding} />
+                          <Redirect exact from="/" to="/dashboard" />
+                          <Route component={NotFound} />
+                        </Switch>
                       </Grid>
-                    </StickyContainer>
+                    </Grid>
                   </div>
 
                 </main>
@@ -389,5 +375,5 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
-  withSnackbar
+  withSnackbar,
 )(App);
