@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { StickyProps } from 'react-sticky';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { BackupsCTA } from 'src/features/Backups';
 import DocComponent, { Doc } from './DocComponent';
 
 type ClassNames = 'root'
@@ -36,12 +34,12 @@ interface Props {
   isSticky?: boolean;
 }
 
-type CombinedProps = Props & BackupCTAProps & StickyProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
 const styled = withStyles(styles);
 
 const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
-  const { backupsCTA, classes, docs, style, isSticky } = props;
+  const { classes, docs, style, isSticky } = props;
 
   if (docs.length === 0) {
     return null;
@@ -57,11 +55,6 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
 
   return (
     <Grid container item style={stickyStyles} className={classes.root}>
-      {backupsCTA &&
-        <Grid item className={classes.gridItem}>
-          <BackupsCTA />
-        </Grid>
-      }
       <Grid item className={classes.gridItem}>
       <Typography
         role="header"
@@ -79,12 +72,4 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   );
 }
 
-interface BackupCTAProps {
-  backupsCTA: boolean;
-}
-
-const connected = connect((state: ApplicationState, ownProps) => ({
-  backupsCTA: state.__resources.linodes.entities.filter(l => !l.backups.enabled).length > 0
-}));
-
-export default connected(styled(DocsSidebar));
+export default styled(DocsSidebar);
