@@ -4,7 +4,6 @@ import * as React from 'react';
 import { searchbarResult1, searchbarResult2 } from 'src/__data__/searchResults';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
-import TableRowLoading from 'src/components/TableRowLoading';
 
 import { ResultGroup } from './ResultGroup';
 
@@ -31,7 +30,6 @@ const emptyProps = {
   entity: 'linodes',
   classes,
   results: [],
-  loading: false,
   groupSize: 5,
   showMore: false,
   toggle: jest.fn(),
@@ -57,12 +55,6 @@ describe("ResultGroup component", () => {
   });
   it("should render its children", () => {
     expect(component.find('[data-qa-result-row-component]')).toHaveLength(5);
-  });
-  it("should render a loading spinner", () => {
-    component.setProps({ loading: true });
-    expect(component.containsMatchingElement(
-      <TableRowLoading colSpan={12} />
-    )).toBeTruthy();
   });
   describe("Hidden results", () => {
     it("should have a Show All button", () => {
