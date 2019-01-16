@@ -10,7 +10,7 @@ export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>
 
 export type MapState<S, O> = _MapStateToProps<S, O, ApplicationState>;
 
-export interface Entity { id: string }
+export interface Entity { id: number | string }
 
 type EntityMap<T> = Record<string, T>;
 
