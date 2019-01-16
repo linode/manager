@@ -28,6 +28,7 @@ import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
+import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
@@ -185,6 +186,7 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const { actions } = this.props;
 
+    actions.requestNodeBalancers();
     actions.requestDomains();
     actions.requestImages();
     actions.requestLinodes();
@@ -345,6 +347,7 @@ interface DispatchProps {
     requestSettings: () => void;
     requestTypes: () => void;
     requestRegions: () => void;
+    requestNodeBalancers: () => void;
   },
 }
 
@@ -359,6 +362,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
+      requestNodeBalancers: () => dispatch(getAllNodeBalancers()),
     }
   };
 };

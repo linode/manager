@@ -10,11 +10,15 @@ type Entity = HasStringID | HasNumericID;
 
 type TypeOfID<T> = T extends HasNumericID ? number : string;
 
-/** New state shape. Coming soon! */
-// interface EntityState<T extends Entity> {
-//   items: TypeOfID<T>[];
-//   itemById: Record<TypeOfID<T>, T>;
-// }
+type EntityMap<T> = Record<string, T>;
+
+interface MappedEntityState<T extends Entity> {
+  error?: Error;
+  items: string[];
+  itemsById: EntityMap<T>;
+  lastUpdated: number;
+  loading: boolean;
+}
 
 interface EntityState<T extends Entity> {
   results: TypeOfID<T>[];
@@ -43,6 +47,14 @@ interface ResourcesState {
   domains: EntityState<Linode.Domain>;
   images: EntityState<Linode.Image>;
   linodes: EntityState<Linode.Linode>;
+  nodeBalancers: {
+    error?: Error;
+    items: string[];
+    lastUpdated: number;
+    loading: boolean;
+    nodeBalancerConfigs: EntityMap<Linode.NodeBalancerConfig>;
+    nodeBalancers: EntityMap<Linode.NodeBalancerWithConfigIDs>;
+  };
   notifications: RequestableData<Linode.Notification[]>;
   profile: RequestableData<Linode.Profile>;
   regions: EntityState<Linode.Region>;

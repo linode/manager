@@ -8,12 +8,16 @@ const keys = Object.keys;
 
 export const onStart = <S>(state: S) => Object.assign({}, state, { loading: true });
 
-export const onGetAllSuccess = <E extends Entity, S>(items: E[], state: S): EntityState<E> =>
+export const onGetAllSuccess = <E extends Entity, S>(
+  items: E[],
+  state: S,
+  update: (e: E) => E = i => i,
+): EntityState<E> =>
   Object.assign({}, state, {
     loading: false,
     lastUpdated: Date.now(),
     items: items.map(mapIDs),
-    itemsById: {},
+    itemsById: items.reduce((itemsById, item) => ({ ...itemsById, [item.id]: update(item) }), {}),
   });
 
 export const onError = <S = {}>(error: Linode.ApiFieldError[], state: S) => Object.assign({}, state, { error });
