@@ -2,6 +2,7 @@ import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
@@ -18,12 +19,34 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames =
   'root'
+  | 'icon'
+  | 'labelGridWrapper'
+  | 'description'
   | 'labelCol'
   | 'actionsCol'
   | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
+  },
+  labelGridWrapper: {
+    paddingLeft: '4px !important',
+    paddingRight: '4px !important',
+  },
+  description: {
+    paddingTop: theme.spacing.unit / 2,
+  },
   labelCol: {
     width: '90%',
   },
@@ -97,20 +120,21 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
       <TableRow key={domain} rowLink={`/domains/${id}/records`}>
         <TableCell className={classes.labelCol}>
           <Link to={`/domains/${id}/records`} className={'black nu block'}>
-            <Grid container direction="column" spacing={8}>
-              <Grid item style={{ paddingBottom: 0 }}>
-                <Typography className={classes.wrapHeader} variant="h3" data-qa-domain-name>
+            <Grid container wrap="nowrap" alignItems="center">
+              <Grid item className="py0">
+                <DomainIcon className={classes.icon}/>
+              </Grid>
+              <Grid item className={classes.labelGridWrapper}>
+                <Typography role="header" variant="h3" data-qa-label>
                   {domain}
                 </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="body1" data-qa-domain-status>
-                  {status}, {type}
+                <Typography className={classes.description}>
+                  {type}
                 </Typography>
               </Grid>
             </Grid>
-            </Link>
-          </TableCell>
+          </Link>        
+        </TableCell>
         <TableCell className={classes.actionsCol} />
       </TableRow>
     ));
