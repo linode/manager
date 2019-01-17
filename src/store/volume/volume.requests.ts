@@ -1,25 +1,14 @@
 import { getVolumes } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
-import { ThunkActionCreator } from '../types';
+import { createRequestThunk } from '../store.helpers';
 import { getAllVolumesActions } from './volume.actions';
 
 const _getAll = getAll<Linode.Volume>(getVolumes);
 
-export const getAllVolumes: ThunkActionCreator<Promise<Linode.Volume[]>> = () => (dispatch) => {
-  const { started, done, failed } = getAllVolumesActions;
+const getAllVolumesRequest = () => _getAll()
+  .then(({ data }) => data);
 
-  dispatch(started());
-
-  return _getAll()
-    .then(({ data }) => {
-      dispatch(done({ result: data }));
-      return data;
-    })
-    .catch((error) => {
-      dispatch(failed({ error }));
-      return error;
-    });
-}
-
-
-
+export const getAllVolumes = createRequestThunk(
+  getAllVolumesActions,
+  getAllVolumesRequest
+);
