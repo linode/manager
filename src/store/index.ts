@@ -14,6 +14,7 @@ import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/stor
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
 import types, { defaultState as defaultTypesState } from 'src/store/linodeType/linodeType.reducer';
+import nodeBalancers, { defaultState as defaultNodeBalancerState } from 'src/store/nodeBalancer/nodeBalancer.reducer';
 import profile, { defaultState as defaultProfileState } from 'src/store/profile/profile.reducer';
 import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
@@ -34,6 +35,7 @@ const __resourcesDefaultState = {
   domains: defaultDomainsState,
   images: defaultImagesState,
   linodes: defaultLinodesState,
+  nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   profile: defaultProfileState,
   regions: defaultRegionsState,
@@ -66,6 +68,7 @@ const __resources = combineReducers({
   domains,
   images,
   linodes,
+  nodeBalancers,
   notifications,
   profile,
   regions,
