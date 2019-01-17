@@ -23,7 +23,7 @@ export const deleteDomain = actionCreator<number>('delete');
 /**
  * Async
  */
-export const requestDomains = () => (dispatch: Dispatch<any>) => {
+export const requestDomains: ThunkActionCreator<Promise<Linode.Domain[]>> = () => (dispatch: Dispatch<any>) => {
 
   dispatch(getDomainsRequest());
 
@@ -36,6 +36,7 @@ export const requestDomains = () => (dispatch: Dispatch<any>) => {
       const defaultError = [{ reason: 'An unexpected error has occurred.' }];
       const errors = pathOr(defaultError, ['response', 'data', 'errors'], err);
       dispatch(getDomainsFailure(errors));
+      return err;
     });
 };
 
