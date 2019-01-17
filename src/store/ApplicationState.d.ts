@@ -59,6 +59,7 @@ interface ResourcesState {
   profile: RequestableData<Linode.Profile>;
   regions: EntityState<Linode.Region>;
   types: EntityState<Linode.LinodeType>;
+  volumes: MappedEntityState<Linode.Volume>;
 }
 
 declare interface ApplicationState {
