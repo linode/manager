@@ -37,6 +37,7 @@ type ClassNames = 'root'
   | 'title'
   | 'nodeStatus'
   | 'nameCell'
+  | 'icon'
   | 'nodeStatus'
   | 'transferred'
   | 'ports'
@@ -50,8 +51,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   nameCell: {
-    width: '15%',
+    width: '20%',
     minWidth: 150,
+    paddingLeft: 65,
+  },
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
   nodeStatus: {
     width: '10%',
@@ -339,10 +353,17 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         >
           <TableCell parentColumn="Name" data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
-              {nodeBalancer.label}
-              <div className={classes.tagWrapper}>
-                <Tags tags={nodeBalancer.tags} />
-              </div>
+              <Grid container wrap="nowrap" alignItems="center">
+                <Grid item className="py0">
+                  <NodeBalancer className={classes.icon}/>
+                </Grid>
+                <Grid item>
+                  {nodeBalancer.label}
+                  <div className={classes.tagWrapper}>
+                    <Tags tags={nodeBalancer.tags} />
+                  </div>
+                </Grid>
+              </Grid>
             </Link>
           </TableCell>
           <TableCell parentColumn="Node Status" data-qa-node-status>

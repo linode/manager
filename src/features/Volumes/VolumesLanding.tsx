@@ -40,6 +40,7 @@ import WithEvents from './WithEvents';
 type ClassNames = 'root'
   | 'title'
   | 'labelCol'
+  | 'icon'
   | 'attachmentCol'
   | 'sizeCol'
   | 'pathCol'
@@ -47,7 +48,6 @@ type ClassNames = 'root'
   | 'linodeVolumesWrapper';
 
   type TagClassNames = 'tagWrapper';
-
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
@@ -73,8 +73,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   labelCol: {
-    width: '15%',
+    width: '25%',
     minWidth: 150,
+    paddingLeft: 65,
+  },
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
   attachmentCol: {
     width: '15%',
@@ -382,6 +395,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderData = (volumes: ExtendedVolume[]) => {
+    const { classes } = this.props;
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
 
     return volumes.map((volume) => {
@@ -400,8 +414,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         ? (
           <TableRow key={volume.id} data-qa-volume-loading className="fade-in-table">
             <TableCell data-qa-volume-cell-label={label}>
-              {label}
-              <RenderTags tags={volume.tags} />
+              <Grid container wrap="nowrap" alignItems="center">
+                <Grid item className="py0">
+                  <VolumesIcon className={classes.icon}/>
+                </Grid>
+                <Grid item>
+                  {label}
+                  <RenderTags tags={volume.tags} />
+                </Grid>
+              </Grid>
             </TableCell>
             <TableCell colSpan={5}>
               <LinearProgress value={progressFromEvent(volume.recentEvent)} />
@@ -411,8 +432,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         : (
           <TableRow key={volume.id} data-qa-volume-cell={volume.id} className="fade-in-table">
             <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
-              {volume.label}
-              <RenderTags tags={volume.tags} />
+              <Grid container wrap="nowrap" alignItems="center">
+                <Grid item className="py0">
+                  <VolumesIcon className={classes.icon} />
+                </Grid>
+                <Grid item>
+                  {volume.label}
+                  <RenderTags tags={volume.tags} />
+                </Grid>
+              </Grid>
             </TableCell>
             {isVolumesLanding && <TableCell parentColumn="Region" data-qa-volume-region>{region}</TableCell>}
             <TableCell parentColumn="Size" data-qa-volume-size>{size} GiB</TableCell>
