@@ -19,6 +19,7 @@ import profile, { defaultState as defaultProfileState } from 'src/store/profile/
 import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState } from 'src/store/tagImportDrawer';
+import volumes, { defaultState as defaultVolumesState } from 'src/store/volume/volume.reducer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState } from 'src/store/volumeDrawer';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
@@ -40,6 +41,7 @@ const __resourcesDefaultState = {
   profile: defaultProfileState,
   regions: defaultRegionsState,
   types: defaultTypesState,
+  volumes: defaultVolumesState,
 };
 
 const featuresDefaultState = {
@@ -73,6 +75,7 @@ const __resources = combineReducers({
   profile,
   regions,
   types,
+  volumes
 });
 
 const features = combineReducers({ linodeDetail });
