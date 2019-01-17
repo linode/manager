@@ -18,6 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     height: '20px !important',
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
+    textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     },
@@ -25,7 +26,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   tagLink: {
     color: `${theme.color.blueDTwhite} !important`,
   },
-  wrapper: {},
+  wrapper: {
+    paddingRight: theme.spacing.unit * 2,
+  },
 });
 
 interface Props {
@@ -42,7 +45,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
       {tags.length > 0
         ? <Tooltip
             title={<LinodeRowTags tags={tags} />}
-            placement="bottom-start"
+            placement="bottom"
             leaveDelay={50}
             interactive={true}
           >
@@ -50,7 +53,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = (props) => {
               <a href="javascript:;" className={classes.tagLink}>{tags.length}</a>
             </div>
           </Tooltip>
-        : <Typography>0</Typography>
+        : <Typography className={classes.wrapper}>0</Typography>
       }
     </TableCell>
   )
