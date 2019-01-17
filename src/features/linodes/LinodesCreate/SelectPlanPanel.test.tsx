@@ -9,7 +9,7 @@ describe('Select Plan Panel', () => {
 
   const component = shallow(
     <SelectPlanPanel
-      classes={{ root: '' }}
+      classes={{ root: '', copy: '' }}
       types={ExtendedType}
       currentPlanHeading='Linode 2GB'
       selectedID='test'
