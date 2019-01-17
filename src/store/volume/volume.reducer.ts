@@ -9,12 +9,22 @@ export const defaultState: State = createDefaultState<Linode.Volume>();
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
 
-  // Create
+  /*
+  * Create Volume
+  **/
   if (isType(action, createVolumeActions.done)) {
     const { result: volume } = action.payload;
     return onCreateOrUpdate<Linode.Volume>(volume, state)
   }
 
+  if (isType(action, createVolumeActions.failed)) {
+    const { error } = action.payload;
+    return onError(error, state)
+  }
+
+  /*
+  * Get All Volumes
+  **/
   if (isType(action, getAllVolumesActions.started)) {
     return onStart(state);
   }
