@@ -187,15 +187,19 @@ export class App extends React.Component<CombinedProps, State> {
     const { actions } = this.props;
 
     try {
-      await actions.requestNodeBalancers()
-      await actions.requestDomains();
-      await actions.requestImages();
-      await actions.requestLinodes();
-      await actions.requestNotifications();
-      await actions.requestProfile();
-      await actions.requestSettings();
-      await actions.requestTypes();
-      await actions.requestRegions();
+      await Promise.all(
+        [
+          actions.requestProfile(),
+          actions.requestNodeBalancers(),
+          actions.requestDomains(),
+          actions.requestImages(),
+          actions.requestLinodes(),
+          actions.requestNotifications(),
+          actions.requestSettings(),
+          actions.requestTypes(),
+          actions.requestRegions(),
+        ]
+      );
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
