@@ -13,10 +13,10 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import TableRowError from 'src/components/TableRowError';
 import Toggle from 'src/components/Toggle';
 import localStorageContainer from 'src/containers/localStorage.container';
 import { NodeBalancerGettingStarted, NodeBalancerReference } from 'src/documentation';
@@ -345,8 +345,7 @@ const LoadingState = () => {
 }
 
 const RenderError = () => {
-  return <TableRowError
-    message="There was an error loading your NodeBalancers. Please try again later."
-    colSpan={7}
+  return <ErrorState
+    errorText="There was an error loading your NodeBalancers. Please try again later."
   />
 }

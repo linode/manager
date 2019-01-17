@@ -4,11 +4,17 @@ import { getAccountSettings, updateAccountSettings as _update } from 'src/servic
 import { ThunkActionCreator } from '../types';
 import { handleError, handleSuccess, handleUpdate, handleUpdateError, startRequest } from './accountSettings.actions';
 
-export const requestAccountSettings: ThunkActionCreator<void> = () => (dispatch) => {
+export const requestAccountSettings: ThunkActionCreator<Promise<Linode.AccountSettings>> = () => (dispatch) => {
   dispatch(startRequest());
-  getAccountSettings()
-    .then(compose(dispatch, handleSuccess))
-    .catch(compose(dispatch, handleError));
+  return getAccountSettings()
+    .then((response) => {
+      compose(dispatch, handleSuccess)(response);
+      return response;
+    })
+    .catch((error) => {
+      compose(dispatch, handleError)(error);
+      return error;
+    });
 };
 
 export const updateAccountSettings: ThunkActionCreator<void> = (data: Partial<Linode.AccountSettings>) => (dispatch) => {

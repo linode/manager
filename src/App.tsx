@@ -183,18 +183,22 @@ export class App extends React.Component<CombinedProps, State> {
     this.setState({ hasError: true });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { actions } = this.props;
 
-    actions.requestNodeBalancers();
-    actions.requestDomains();
-    actions.requestImages();
-    actions.requestLinodes();
-    actions.requestNotifications();
-    actions.requestProfile();
-    actions.requestSettings();
-    actions.requestTypes();
-    actions.requestRegions();
+    try {
+      await actions.requestNodeBalancers()
+      await actions.requestDomains();
+      await actions.requestImages();
+      await actions.requestLinodes();
+      await actions.requestNotifications();
+      await actions.requestProfile();
+      await actions.requestSettings();
+      await actions.requestTypes();
+      await actions.requestRegions();
+    } catch (error) {
+      /** We choose to do nothing, relying on the Redux error state. */
+    }
 
     /*
      * We want to listen for migration events side-wide
@@ -339,15 +343,15 @@ const themeDataAttr = () => {
 
 interface DispatchProps {
   actions: {
-    requestDomains: () => void;
-    requestImages: () => void;
-    requestLinodes: () => void;
-    requestNotifications: () => void;
-    requestProfile: () => void;
-    requestSettings: () => void;
-    requestTypes: () => void;
-    requestRegions: () => void;
-    requestNodeBalancers: () => void;
+    requestDomains: () => Promise<Linode.Domain[]>;
+    requestImages: () => Promise<Linode.Image[]>;
+    requestLinodes: () => Promise<Linode.Linode[]>;
+    requestNotifications: () => Promise<Linode.Notification[]>;
+    requestProfile: () => Promise<Linode.Profile>;
+    requestSettings: () => Promise<Linode.AccountSettings>;
+    requestTypes: () => Promise<Linode.LinodeType[]>;
+    requestRegions: () => Promise<Linode.Region[]>;
+    requestNodeBalancers: () => Promise<Linode.NodeBalancerWithConfigs[]>;
   },
 }
 
