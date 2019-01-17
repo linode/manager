@@ -55,9 +55,8 @@ exports.login = (username, password, credFilePath) => {
     browser.waitForVisible('#password', constants.wait.long);
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
-    loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
     letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
-    browser.click(loginButton);
+    browser.click('.btn#submit');
 
     try {
         browser.waitUntil(function() {
@@ -71,8 +70,8 @@ exports.login = (username, password, credFilePath) => {
         }
     }
 
-    if(browser.isExisting('.Modal') && browser.getUrl().includes('login')){
-        browser.click('.btn.btn-primary');
+    if($('.oauthauthorize-page').isExisting() && browser.getUrl().includes('login')){
+        $('.form-actions>.btn').click();
     }
 
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
