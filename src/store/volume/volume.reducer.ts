@@ -1,14 +1,20 @@
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
-import { createDefaultState, onError, onGetAllSuccess, onStart } from "../store.helpers";
-import { getAllVolumesActions } from './volume.actions';
-
+import { createDefaultState, onCreateOrUpdate, onError, onGetAllSuccess, onStart } from "../store.helpers";
+import { createVolumeActions, getAllVolumesActions } from './volume.actions';
 
 type State = ApplicationState['__resources']['volumes'];
 
 export const defaultState: State = createDefaultState<Linode.Volume>();
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
+
+  // Create
+  if (isType(action, createVolumeActions.done)) {
+    const { result: volume } = action.payload;
+    return onCreateOrUpdate<Linode.Volume>(volume, state)
+  }
+
   if (isType(action, getAllVolumesActions.started)) {
     return onStart(state);
   }

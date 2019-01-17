@@ -1,8 +1,24 @@
-import { getVolumes } from 'src/services/volumes';
+import { createVolume as _createVolume, getVolumes, VolumeRequestPayload as _VolumeRequestPayload } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { getAllVolumesActions } from './volume.actions';
+import { createVolumeActions, getAllVolumesActions } from './volume.actions';
 
+/*
+* Create Volume
+*/
+
+// Export these types to be used where needed (e.g. volumesRequests container)
+export type CreateVolumeRequest = _VolumeRequestPayload;
+export type CreateVolumeResponse = Linode.Volume;
+
+export const createVolume = createRequestThunk(
+  createVolumeActions,
+  (data) => _createVolume(data)
+);
+
+/*
+* Get All Volumes
+*/
 const _getAll = getAll<Linode.Volume>(getVolumes);
 
 const getAllVolumesRequest = () => _getAll()
