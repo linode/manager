@@ -51,7 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginBottom: theme.spacing.unit * 2,
   },
   nameCell: {
-    width: '15%',
+    width: '20%',
     minWidth: 150,
     paddingLeft: 65,
   },

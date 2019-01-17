@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   labelCol: {
-    width: '15%',
+    width: '25%',
     minWidth: 150,
     paddingLeft: 65,
   },
