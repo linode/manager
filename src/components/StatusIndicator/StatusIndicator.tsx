@@ -46,7 +46,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   },
 });
 
-const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
+const StatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   const { classes, status } = props;
   return (
     <span
@@ -63,4 +63,4 @@ const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
 
 const styled = withStyles(styles);
 
-export default styled(LinodeStatusIndicator);
+export default styled(StatusIndicator);
