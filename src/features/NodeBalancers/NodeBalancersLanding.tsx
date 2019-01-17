@@ -214,7 +214,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               NodeBalancers
@@ -222,7 +222,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
-              <Grid item>
+              <Grid item className="pt0">
                 <AddNewLink
                   onClick={() => history.push('/nodebalancers/create')}
                   label="Add a NodeBalancer"

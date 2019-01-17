@@ -200,7 +200,8 @@ a.black:not(.nu):active {
 }
 .mlSidebar {
   width: 100%;
-  flex-basis: 100%
+  flex-basis: 100%;
+  margin-top: 24px !important;
 }
 @media (min-width: 1280px) {
   .mlMain {
@@ -210,7 +211,8 @@ a.black:not(.nu):active {
   .mlSidebar {
     max-width: 21.2%;
     max-width: 21.2%;
-    padding-left: 24px !important;
+    padding-left: 16px !important;
+    margin-top: 0 !important;
   }
 }
 .p0 {
@@ -226,6 +228,9 @@ a.black:not(.nu):active {
 .py0 {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+.pt0 {
+  padding-top: 0 !important;
 }
 .mx0 {
   margin-left: 0 !important;
