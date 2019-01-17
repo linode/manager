@@ -4,7 +4,7 @@ import { apiCreateLinode, apiDeleteAllLinodes } from '../../utils/common';
 import SearchBar from '../../pageobjects/search.page';
 
 describe('Search - Tags Suite', () => {
-    const tags = ['foo', 'bar'];
+    const tags = [`foo${new Date().getTime()}`, `bar${new Date().getTime()}`];
     const linodeLabel = `L${new Date().getTime()}`;
     let linodeConfig;
 
@@ -21,11 +21,12 @@ describe('Search - Tags Suite', () => {
         tags.forEach(t => {
             SearchBar.executeSearch(t);
             SearchBar.assertSuggestions();
-            
-            const suggestionTitle = SearchBar.suggestionTitle.getText();
-            const tagTitle = SearchBar.tag.getText();
 
-            expect(tagTitle).toContain(t);
+            const suggestionTitle = SearchBar.suggestionTitle.getText();
+            const tagTitle = SearchBar.tags.map(tag => tag.getText());
+            console.log(tagTitle);
+
+            expect(tagTitle.includes(t)).toBe(true);
             expect(suggestionTitle).toBe(linodeLabel);
         });
     });

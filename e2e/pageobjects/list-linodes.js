@@ -57,6 +57,10 @@ export class ListLinodes extends Page {
         return `[data-qa-linode="${linode}"]`;
     }
 
+    hoverLinodeTags(linode){
+        $(`${this.getLinodeSelector(linode)}>td:nth-child(2)`).moveToObject();
+    }
+
     getLinodeTags(linode){
         return $(this.getLinodeSelector(linode)).$$(this.tag.selector)
             .map(tag => tag.getText());

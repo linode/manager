@@ -159,7 +159,7 @@ class ListDomains extends Page {
     sortTableByHeader(header){
         const selector = header.toLowerCase() === 'domain' ?  this.domainSortAtttribute : this.typeSortAttribure;
         const start = $(`[${selector}]`).getAttribute(selector);
-        $(`[${selector}]`).$('svg').click();
+        $(`[${selector}]>span`).click();
         browser.pause(1000);
         browser.waitUntil(() => {
             return $(`[${selector}]`).getAttribute(selector) !== start;
