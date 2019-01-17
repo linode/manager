@@ -48,8 +48,13 @@ class Users extends Page {
         this.createDrawerUsername.setValue(userConfig.username);
 
         if (userConfig.restricted) {
+            console.log('here');
             this.createDrawerRestricted.click();
-            browser.waitForExist(`${this.createDrawerRestricted.selector} input:checked`, constants.wait.normal);
+            const selector = this.toggleOption.selector;
+            const attribute = selector.substring(1,(selector.length-1));
+            browser.waitUntil(() => {
+                return this.createDrawerRestricted.getAttribute(attribute) === 'false'
+            }, constants.wait.normal);
         }
 
         this.createDrawerSubmit.click();
