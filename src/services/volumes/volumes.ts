@@ -133,6 +133,11 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
 )
 .then(response => response.data);
 
+export interface UpdateVolumeRequest {
+  label: string;
+  tags?: string[];
+}
+
 /**
  * updateVolume
  *
@@ -142,7 +147,7 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
  * @param data { { label: string; tags: string[] } } The updated label for this Volume.
  *
  */
-export const updateVolume = (volumeId: number, data: { label: string, tags?: string[] }) => Request<Volume>(
+export const updateVolume = (volumeId: number, data: UpdateVolumeRequest) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
   setData(data, UpdateVolumeSchema),
