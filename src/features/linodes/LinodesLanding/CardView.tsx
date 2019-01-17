@@ -27,7 +27,22 @@ const CardView: React.StatelessComponent<CombinedProps> = (props) => {
       {data.map((linode, idx: number) =>
         <LinodeCard
           key={`linode-card-${idx}`}
-          linode={linode}
+
+          backups={linode.backups}
+          id={linode.id}
+          ipv4={linode.ipv4}
+          ipv6={linode.ipv6}
+          label={linode.label}
+          region={linode.region}
+          status={linode.status}
+          tags={linode.tags}
+          mostRecentBackup={linode.mostRecentBackup}
+          disk={linode.specs.disk}
+          vcpus={linode.specs.vcpus}  
+          memory={linode.specs.memory}
+          type={linode.type}
+          image={linode.image}
+
           imageLabel={safeGetImageLabel(imagesData, linode.image)}
           openConfigDrawer={openConfigDrawer}
           toggleConfirmation={toggleConfirmation}

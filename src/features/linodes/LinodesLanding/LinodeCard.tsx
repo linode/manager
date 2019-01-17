@@ -30,7 +30,21 @@ import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
 interface Props {
-  linode: Linode.Linode;
+  backups: Linode.LinodeBackups;
+  id: number;
+  image: string | null;
+  ipv4: string[];
+  ipv6: string;
+  label: string;
+  region: string;
+  disk: number;
+  memory: number;
+  vcpus: number;
+  status: Linode.LinodeStatus;
+  type: null | string;
+  tags: string[];
+  mostRecentBackup: string | null;
+
   imageLabel: string;
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction,
@@ -52,7 +66,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       category: 'Linode Action Menu Item',
       action: 'Launch Console',
     })
-    const { id } = this.props.linode;
+    const { id } = this.props;
     lishLaunch(id);
   }
 
@@ -61,14 +75,24 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       category: 'Linode Action Menu Item',
       action: 'Reboot Linode',
     })
-    const { linode, toggleConfirmation } = this.props;
-    const { id, label } = linode;
+    const { id, label, toggleConfirmation } = this.props;
     toggleConfirmation('reboot', id, label);
   }
 
   render() {
     const {
-      linode,
+      id,
+      label,
+      status,
+      backups,
+      memory,
+      disk,
+      vcpus,
+      region,
+      ipv4,
+      ipv6,
+      tags,
+
       classes,
       openConfigDrawer,
       toggleConfirmation,
@@ -77,21 +101,6 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       linodeNotifications,
       recentEvent,
       imageLabel } = this.props;
-    const {
-      id,
-      label,
-      status,
-      backups,
-      specs: {
-        memory,
-        disk,
-        vcpus
-      },
-      region,
-      ipv4,
-      ipv6,
-      tags
-    } = linode;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={label}>
