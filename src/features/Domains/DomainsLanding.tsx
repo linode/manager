@@ -59,7 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit -2,
+    marginBottom: theme.spacing.unit + 2,
   }
 });
 
@@ -196,13 +196,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Domains" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+        <Grid container justify="space-between" alignItems="flex-end" >
           <Grid item className={classes.titleWrapper}>
             <Typography role="header" variant="h1" data-qa-title className={classes.title}>
               Domains
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="p0">
             <FormControlLabel
               className={classes.tagGroup}
               control={
@@ -216,13 +216,13 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
-              <Grid item>
+              <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.openImportZoneDrawer}
                   label="Import a Zone"
                 />
               </Grid>
-              <Grid item>
+              <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.props.openForCreating}
                   label="Add a Domain"

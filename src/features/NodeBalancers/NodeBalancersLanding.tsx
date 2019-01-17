@@ -201,12 +201,12 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
         <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item className="pt0">
+          <Grid item>
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               NodeBalancers
             </Typography>
           </Grid>
-          <Grid item className="pt0">
+          <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item className="pt0">
                 <AddNewLink
