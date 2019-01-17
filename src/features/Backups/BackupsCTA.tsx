@@ -10,16 +10,22 @@ import { handleOpen } from 'src/store/backupDrawer';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root'
+  | 'container'
   | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit * 2,
-    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit * 3}px 0`,
+    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 3}px 0`,
     [theme.breakpoints.down('md')]: {
       marginTop: -theme.spacing.unit,
       width: '100%',
     },
+  },
+  container: {
+    [theme.breakpoints.down('md')]: {
+      alignItems: 'center'
+    }
   },
   button: {
     marginTop: theme.spacing.unit,
@@ -36,7 +42,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Paper className={classes.root} >
-      <Grid container direction="column">
+      <Grid container direction="column" className={classes.container}>
         <Grid item>
           <Typography variant="h2">
             Back Up Your Data

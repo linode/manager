@@ -47,7 +47,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         {!!history.location.state && !!history.location.state.successMessage &&
           <Notice success text={history.location.state.successMessage} />
         }
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               StackScripts
@@ -55,7 +55,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
-              <Grid item>
+              <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.goToCreateStackScript}
                   label="Create New StackScript"
