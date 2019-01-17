@@ -12,6 +12,7 @@ import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import StatusIndicator from 'src/components/StatusIndicator';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -25,6 +26,8 @@ type ClassNames =
   | 'icon'
   | 'labelGridWrapper'
   | 'description'
+  | 'labelStatusWrapper'
+  | 'statusOuter'
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol'
@@ -51,6 +54,17 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   description: {
     paddingTop: theme.spacing.unit / 2,
   },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+  },
+  statusOuter: {
+    top: 0,
+    position: 'relative',
+    marginLeft: 4,
+    lineHeight: '0.8rem',
+  },
   labelCol: {
     width: '60%',
   },
@@ -73,6 +87,20 @@ interface State {
 }
 
 type CombinedProps = WithStyles<ClassNames>;
+
+const getStatus = (status: string) => {
+  switch (status) {
+    case 'creating':
+    case 'resizing':
+      return 'loading';
+    case 'active':
+      return 'active';
+    case 'contact_support':
+      return 'error';
+    default:
+      return 'inactive';
+  }
+}
 
 class VolumesDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -176,9 +204,14 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
               <VolumeIcon className={classes.icon}/>
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
-              <Typography role="header" variant="h3" data-qa-label>
+              <div className={classes.labelStatusWrapper}>
+                <Typography role="header" variant="h3" data-qa-label>
                 {label}
-              </Typography>
+                </Typography>
+                <div className={classes.statusOuter}>
+                  <StatusIndicator status={getStatus(status)} />
+                </div>
+              </div>
               <Typography className={classes.description}>
                 {size} GiB
               </Typography>
