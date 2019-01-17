@@ -88,8 +88,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
+  backups: Linode.LinodeBackups;
+  id: number;
+  image: string | null;
+  ipv4: string[];
+  ipv6: string;
+  label: string;
+  region: string;
+  disk: number;
+  memory: number;
+  vcpus: number;
+  status: Linode.LinodeStatus;
+  type: null | string;
+  tags: string[];
+  mostRecentBackup: string | null;
+
   loading: boolean;
-  linode: Linode.Linode;
   recentEvent?: Linode.Event;
 }
 
@@ -104,25 +118,21 @@ type CombinedProps = Props
 
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    linode,
+    // linode props
+    id,
+    label,
+    status,
+    memory,
+    disk,
+    vcpus,  
+    image,
+    // other props
     classes,
     loading,
     recentEvent,
     displayType,
     imagesData,
   } = props;
-
-  const {
-    id,
-    label,
-    status,
-    specs: {
-      memory,
-      disk,
-      vcpus,  
-    },
-    image,
-  } = linode;
 
   const description = getLinodeDescription(
     displayType,

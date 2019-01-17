@@ -15,7 +15,6 @@ import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
-import TableRowLoading from 'src/components/TableRowLoading';
 import capitalize from 'src/utilities/capitalize';
 
 import ResultRow from './ResultRow';
@@ -50,7 +49,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   entity: string;
-  loading: boolean;
   results: Item[];
   groupSize: number;
 }
@@ -62,7 +60,7 @@ interface HandlerProps {
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
 export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
-  const { entity, classes, groupSize, loading, results, toggle, showMore } = props;
+  const { entity, classes, groupSize, results, toggle, showMore } = props;
 
   if (isEmpty(results)) { return null; }
 
@@ -87,7 +85,6 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading && <TableRowLoading  colSpan={12} />}
             {initial.map((result, idx: number) =>
               <ResultRow key={idx} result={result} data-qa-result-row-component/>)
             }

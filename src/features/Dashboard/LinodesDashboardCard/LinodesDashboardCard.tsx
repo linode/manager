@@ -112,8 +112,21 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
       return <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
         <LinodeRowHeadCell
           loading={false}
-          linode={linode}
-        />
+          backups={linode.backups}
+          id={linode.id}
+          ipv4={linode.ipv4}
+          ipv6={linode.ipv6}
+          label={linode.label}
+          region={linode.region}
+          status={linode.status}
+          tags={linode.tags}
+          mostRecentBackup={linode.mostRecentBackup}
+          disk={linode.specs.disk}
+          vcpus={linode.specs.vcpus}  
+          memory={linode.specs.memory}
+          type={linode.type}
+          image={linode.image}
+      />
         <Hidden xsDown>
           <TableCell className={classes.moreCol} data-qa-linode-region>
             <RegionIndicator region={region} />

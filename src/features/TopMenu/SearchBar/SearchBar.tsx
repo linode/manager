@@ -1,7 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import * as moment from 'moment';
-import { compose, isEmpty } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -11,9 +10,9 @@ import IconButton from 'src/components/core/IconButton';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import withImages from 'src/containers/withImages.container';
-import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
-import { getAllEntities } from 'src/utilities/getAll';
+import withStoreSearch, { SearchProps } from 'src/features/Search/withStoreSearch';
 import SearchSuggestion from './SearchSuggestion';
+
 
 type ClassNames =
   'root'
@@ -129,20 +128,14 @@ type ClassNames =
 interface State {
   searchText: string;
   searchActive: boolean;
-  linodes: Linode.Linode[];
-  volumes: Linode.Volume[];
-  nodebalancers: Linode.NodeBalancer[];
-  domains: Linode.Domain[];
-  resultsLoading: boolean;
   [resource: string]: any;
-  options: Item[];
-  searchResults: SearchResults;
   menuOpen: boolean;
 }
 
 type CombinedProps =
   & WithTypesProps
   & WithImagesProps
+  & SearchProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>;
 
@@ -172,19 +165,10 @@ class SearchBar extends React.Component<CombinedProps, State> {
   selectRef = React.createRef<HTMLInputElement>();
   mounted: boolean = false;
   state: State = {
-    linodes: [],
-    volumes: [],
-    nodebalancers: [],
-    domains: [],
     searchText: '',
     searchActive: false,
-    resultsLoading: false,
-    options: [],
     menuOpen: false,
-    searchResults: {...emptyResults}
   };
-
-  lastFetch = moment.utc('1970-01-01T00:00:00');
 
   componentDidMount() {
     this.mounted = true;
@@ -203,68 +187,9 @@ class SearchBar extends React.Component<CombinedProps, State> {
     );
   }
 
-  updateData = () => {
-    this.setState({ resultsLoading: true });
-    getAllEntities(this.setEntitiesToState);
-  }
-
-  setEntitiesToState = (
-    linodes: Linode.Linode[],
-    nodebalancers: Linode.NodeBalancer[],
-    volumes: Linode.Volume[],
-    domains: Linode.Domain[],
-  ) => {
-    if (!this.mounted) { return; }
-    this.setState({
-      linodes,
-      nodebalancers,
-      volumes,
-      domains,
-      resultsLoading: false,
-    }, this.getSearchSuggestions)
-  }
-
-  getSearchSuggestions = () => {
-    const query = this.state.searchText;
-    const { imagesData, typesData } = this.props;
-    if (!this.dataAvailable() || !query) {
-      this.setState({ options: [], resultsLoading: false });
-      return;
-    };
-
-    const { linodes, volumes, domains, nodebalancers } = this.state;
-
-    const queryLower = query.toLowerCase();
-    const searchResults: SearchResults = searchAll(
-      linodes, volumes, nodebalancers, domains, imagesData, queryLower, typesData,
-    );
-
-    /* Keep options (for the Select) and searchResults separate so that we can
-    * pass the results to the search landing page in a usable format if necessary. */
-    const options = [
-      ...searchResults.linodes,
-      ...searchResults.volumes,
-      ...searchResults.nodebalancers,
-      ...searchResults.domains,
-      ...searchResults.images
-    ];
-
-    this.setState({ searchResults, options, resultsLoading: false });
-  }
-
   handleSearchChange = (searchText: string): void => {
-    this.setState({
-      searchText,
-      resultsLoading: true,
-    }, () => {
-      if (moment.utc().diff(this.lastFetch) > 60000) {
-        this.lastFetch = moment.utc();
-        // This will run getSearchSuggestions as a callback
-        this.updateData();
-      } else {
-        this.getSearchSuggestions();
-      }
-    });
+    this.setState({ searchText });
+    this.props.search(searchText);
   }
 
   toggleSearch = () => {
@@ -289,7 +214,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   onSelect = (item: Item) => {
-    if (!item || isEmpty(item)) { return; }
+    if (!item || item.label === '') { return; }
     const { history } = this.props;
     const { searchText } = item.data;
     if (item.value === 'redirect') {
@@ -311,8 +236,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
-    const { searchActive, searchText, options, resultsLoading, menuOpen } = this.state;
+    const { classes, combinedResults, entitiesLoading } = this.props;
+    const { searchActive, searchText, menuOpen } = this.state;
     const defaultOption = {
       label: `View search results page for "${searchText}"`,
       value: 'redirect',
@@ -321,7 +246,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
       }
     }
 
-    const finalOptions = isEmpty(options) ? [] : [defaultOption, ...options];
+    const finalOptions = (!combinedResults || combinedResults.length === 0) ? [] : [defaultOption, ...combinedResults];
 
     return (
       <React.Fragment>
@@ -360,7 +285,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             openMenuOnFocus={false}
             openMenuOnClick={false}
             filterOption={this.filterResults}
-            isLoading={resultsLoading}
+            isLoading={entitiesLoading}
             isClearable={false}
             isMulti={false}
             onMenuClose={this.onClose}
@@ -404,5 +329,6 @@ export default compose(
     ...ownProps,
     imagesData,
     imagesLoading,
-  }))
+  })),
+  withStoreSearch(),
 )(SearchBar) as React.ComponentType<{}>;

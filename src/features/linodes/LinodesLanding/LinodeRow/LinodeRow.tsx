@@ -19,7 +19,21 @@ import LinodeRowLoading from './LinodeRowLoading';
 import LinodeRowTagCell from './LinodeRowTagCell';
 
 interface Props {
-  linode: Linode.Linode;
+  backups: Linode.LinodeBackups;
+  id: number;
+  image: string | null;
+  ipv4: string[];
+  ipv6: string;
+  label: string;
+  region: string;
+  disk: number;
+  memory: number;
+  vcpus: number;
+  status: Linode.LinodeStatus;
+  type: null | string;
+  tags: string[];
+  mostRecentBackup: string | null;
+
   openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
   toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
 }
@@ -33,17 +47,7 @@ export type CombinedProps =
 
 export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    linode,
-    classes,
-    linodeNotifications,
-    openConfigDrawer,
-    toggleConfirmation,
-    // displayType, @todo use for M3-2059
-    recentEvent,
-    mutationAvailable,
-  } = props;
-
-  const {
+    // linode props
     backups,
     id,
     ipv4,
@@ -53,13 +57,41 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
     status,
     tags,
     mostRecentBackup,
-  } = linode;
+    disk,
+    vcpus,  
+    memory,
+    type,
+    image,
+    // other props
+    classes,
+    linodeNotifications,
+    openConfigDrawer,
+    toggleConfirmation,
+    // displayType, @todo use for M3-2059
+    recentEvent,
+    mutationAvailable,
+  } = props;
+
   const loading = linodeInTransition(status, recentEvent);
 
   const headCell = <LinodeRowHeadCell
     loading={loading}
-    linode={linode}
     recentEvent={recentEvent}
+    backups={backups}
+    id={id}
+    type={type}
+    ipv4={ipv4}
+    ipv6={ipv6}
+    label={label}
+    region={region}
+    status={status}
+    tags={tags}
+    mostRecentBackup={mostRecentBackup}
+    disk={disk}
+    vcpus={vcpus}  
+    memory={memory}
+    image={image}
+
   />
 
   return (
@@ -77,7 +109,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
       >
       {!loading && headCell}
         <LinodeRowTagCell tags={tags} />
-        <LinodeRowBackupCell linodeId={id} mostRecentBackup={mostRecentBackup} />
+        <LinodeRowBackupCell linodeId={id} mostRecentBackup={mostRecentBackup || ''} />
         <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={ipv4} copyRight showCopyOnHover />

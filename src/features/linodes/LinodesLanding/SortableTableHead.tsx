@@ -8,7 +8,7 @@ import TableSortCell from 'src/components/TableSortCell';
 const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = (props) => {
   const { order, orderBy, handleOrderChange } = props;
 
-  const isActive = (label: string) => label === orderBy;
+  const isActive = (label: string) => label.toLowerCase() === orderBy.toLowerCase();
 
   return (
     <TableHead data-qa-table-head>
@@ -30,8 +30,23 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
         >
           Tags
         </TableSortCell>
-        <TableCell noWrap>Last Backup</TableCell>
-        <TableCell>IP Addresses</TableCell>
+        <TableSortCell
+          noWrap
+          label='mostRecentBackup'
+          direction={order}
+          active={isActive('mostRecentBackup')}
+          handleClick={handleOrderChange}
+        >
+          Last Backup
+        </TableSortCell>
+        <TableSortCell
+          label="ipv4[0]" // we want to sort by the first ipv4
+          active={isActive('ipv4[0]')}
+          handleClick={handleOrderChange}
+          direction={order}
+        >
+          IP Addresses
+        </TableSortCell>
         <TableSortCell
           label='region'
           direction={order}

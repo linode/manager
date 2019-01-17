@@ -68,7 +68,7 @@ describe('LinodeRow', () => {
         disk: 0,
         transfer: 0
       },
-      mostRecentBackup: undefined,
+      mostRecentBackup: null,
     },
     linodeNotifications: [],
     displayType: 'Some Fancy Name',

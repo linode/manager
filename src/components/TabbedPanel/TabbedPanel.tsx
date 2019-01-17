@@ -90,10 +90,10 @@ class TabbedPanel extends React.Component<CombinedProps> {
               {tabs.map((tab, idx) => <Tab key={idx} label={tab.title} data-qa-tab={tab.title} />)}
             </Tabs>
           </AppBar>
-          <Typography component="div" className={`${classes.panelBody} ${shrinkTabContent}`}
+          <div className={`${classes.panelBody} ${shrinkTabContent}`}
             data-qa-tab-body>
             {render(rest)}
-          </Typography>
+          </div>
         </div>
       </Paper>
     );
