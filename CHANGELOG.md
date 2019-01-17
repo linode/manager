@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.46.0] - 2019.01.18
+
+### Added:
+- Dedicated CPU in plan selection in Create Linode workflow.
+
 ## [0.45.0] - 2019.01.14
 
 ### Added:
