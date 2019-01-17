@@ -235,7 +235,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}
         >
-          <Typography>Are you sure you want to delete your NodeBalancer</Typography>
+          <Typography>Are you sure you want to delete your NodeBalancer?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
