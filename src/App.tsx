@@ -199,6 +199,7 @@ export class App extends React.Component<CombinedProps, State> {
           actions.requestSettings(),
           actions.requestTypes(),
           actions.requestRegions(),
+          actions.requestVolumes()
         ]
       );
     } catch (error) {
@@ -357,7 +358,7 @@ interface DispatchProps {
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
     requestNodeBalancers: () => Promise<Linode.NodeBalancerWithConfigs[]>;
-    requestVolumes: () => void;
+    requestVolumes: () => Promise<Linode.Volume[]>;
   },
 }
 
