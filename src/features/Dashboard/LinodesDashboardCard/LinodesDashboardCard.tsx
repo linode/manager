@@ -77,7 +77,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     );
   }
 
-  renderAction = () => this.props.linodes.length > 5
+  renderAction = () => this.props.linodeCount > 5
     ? <Link to={'/linodes'}>View All</Link>
     : null;
 
@@ -157,7 +157,8 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 interface WithUpdatingLinodesProps {
-  linodes: Linode.Linode[]
+  linodes: Linode.Linode[];
+  linodeCount: number;
   loading: boolean;
   error?: Linode.ApiFieldError[];
 }
@@ -169,6 +170,7 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
       take(5),
       sortBy(prop('label')),
     )(state.__resources.linodes.entities),
+    linodeCount: state.__resources.linodes.entities.length,
     loading: state.__resources.linodes.loading,
     error: state.__resources.linodes.error,
   };
