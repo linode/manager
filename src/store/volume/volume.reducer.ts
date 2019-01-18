@@ -1,9 +1,10 @@
 import { Reducer } from 'redux';
+import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from "../store.helpers";
 import { createVolumeActions, deleteVolumeActions, getAllVolumesActions, updateVolumeActions } from './volume.actions';
 
-type State = ApplicationState['__resources']['volumes'];
+export type State = MappedEntityState<Linode.Volume>;
 
 export const defaultState: State = createDefaultState<Linode.Volume>();
 

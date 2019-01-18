@@ -1,5 +1,12 @@
+import { Reducer } from "redux";
+
 const SET_TOKEN = '@@manager/authentication/SET_TOKEN';
 const LOGOUT = '@@manager/authentication/LOGOUT';
+
+export interface State {
+  token: null | string;
+  scopes: null | string;
+}
 
 export interface SetToken {
   type: typeof SET_TOKEN,
@@ -25,7 +32,7 @@ export const defaultState = {
   scopes: null,
 };
 
-const authentication = (state = defaultState, action: SetToken) => {
+const authentication: Reducer<State> = (state = defaultState, action: SetToken) => {
   switch (action.type) {
     case SET_TOKEN:
 

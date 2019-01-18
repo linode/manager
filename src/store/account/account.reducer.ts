@@ -1,11 +1,12 @@
 import { Reducer } from 'redux';
+import { RequestableData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { profileRequest, profileRequestFail, profileRequestSuccess } from './account.actions';
 
 /**
  * State
  */
-type State = ApplicationState['__resources']['account'];
+export type State = RequestableData<Linode.Account>;
 
 export const defaultState: State = {
   loading: false,

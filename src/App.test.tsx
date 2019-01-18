@@ -2,8 +2,8 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
-
 import store from 'src/store';
+import { mockNodeBalancerActions } from './__data__/nodeBalancerActions';
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
@@ -13,6 +13,7 @@ it('renders without crashing', () => {
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
           <App
+            {...mockNodeBalancerActions}
             onPresentSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
             location={{
@@ -31,7 +32,6 @@ it('renders without crashing', () => {
             userId={123456}
             profileLoading={false}
             actions={{
-              requestNodeBalancers: jest.fn(),
               requestDomains: jest.fn(),
               requestImages: jest.fn(),
               requestLinodes: jest.fn(),

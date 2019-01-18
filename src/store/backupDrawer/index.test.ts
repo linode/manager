@@ -3,7 +3,7 @@ import backups, * as B from './index';
 import { linode1 } from 'src/__data__/linodes';
 import { mockAPIFieldErrors } from 'src/services/';
 
-const error: BackupError = { linodeId: 123456, reason: 'Error'};
+const error: B.BackupError = { linodeId: 123456, reason: 'Error'};
 const apiError = mockAPIFieldErrors([]);
 
 describe("Redux backups", () => {

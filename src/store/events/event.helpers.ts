@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
+import { ExtendedEvent } from './event.reducer';
 
 type Event = ExtendedEvent;
 

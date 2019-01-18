@@ -1,10 +1,12 @@
 import { Reducer } from 'redux';
+import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { regionsRequestActions } from './regions.actions';
+
 /**
  * State
  */
-type State = ApplicationState['__resources']['regions'];
+export type State = EntityState<Linode.Region> ;
 
 export const defaultState: State = {
   results: [],
