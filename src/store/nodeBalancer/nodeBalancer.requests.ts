@@ -2,6 +2,7 @@ import { createNodeBalancer as _createNodeBalancer, deleteNodeBalancer as _delet
 import { getAll } from 'src/utilities/getAll';
 import { deleteNodeBalancerConfigActions } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
+import { deleteNodeBalancerConfigNodesActions } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.actions';
 import { getAllNodeBalancerConfigNodes } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.requests';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -53,19 +54,30 @@ export const deleteNodeBalancer: ThunkActionCreator<Promise<{}>> = ({ nodeBalanc
   const {
     __resources: {
       nodeBalancerConfigs: { itemsById: nodeBalancerConfigs },
+      nodeBalancerConfigNodes: { itemsById: nodeBalancerConfigNodes },
     },
   } = getStore();
 
   return _deleteNodeBalancer(nodeBalancerId)
     .then((response) => {
 
-      /** Delete nodeBalancerConfigs beloning to this nodeBalancer */
+      /** Delete nodeBalancerConfigs belonging to this nodeBalancer */
       Object
         .values(nodeBalancerConfigs)
         .filter(({ nodebalancer_id }) => nodebalancer_id === nodeBalancerId)
         .map(({ id }) => id)
         .forEach((nodeBalancerConfigId) => {
           dispatch(deleteNodeBalancerConfigActions.done({ params: { nodeBalancerId, nodeBalancerConfigId }, result: {} }))
+
+          /** Delete nodeBalancerConfigNodes belonging to this nodeBalancerConfig. */
+          Object
+            .values(nodeBalancerConfigNodes)
+            .filter(({ config_id, nodebalancer_id }) => config_id === nodeBalancerConfigId && nodebalancer_id === nodeBalancerId)
+            .map(({ id }) => id)
+            .forEach((nodeBalancerConfigNodeId) => {
+              dispatch(deleteNodeBalancerConfigNodesActions.done({ result: {}, params: { nodeBalancerConfigId, nodeBalancerConfigNodeId, nodeBalancerId } }))
+            });
+
         });
 
       dispatch(done({ result: response, params: { nodeBalancerId } }));
