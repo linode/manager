@@ -1,9 +1,9 @@
-import IconButton from '@material-ui/core/IconButton';
 import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import Button from 'src/components/core/Button';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 
@@ -19,12 +19,15 @@ type Variants =
   | 'yellow'
   | 'lightYellow';
 
-type CSSClasses = 'label' | 'root' | Variants;
+type CSSClasses = 'label' | 'root' | 'deleteButton' | Variants;
 
 const styles: StyleRulesCallback<CSSClasses> = (theme) => {
   return ({
     label: {},
     root: {},
+    deleteButton: {
+      minWidth: 'auto'
+    },
     white: {
       backgroundColor: theme.color.white,
       '&:hover': {
@@ -133,12 +136,13 @@ class Tag extends React.Component<CombinedProps, {}> {
         [classes[colorVariant!]]: true,
         [classes.root]: true,
       })}
-      deleteIcon={<IconButton data-qa-delete-tag className="deleteButton"><Close /></IconButton>}
+      deleteIcon={<Button data-qa-delete-tag className={classes.deleteButton}><Close /></Button>}
       classes={{ label: classes.label, deletable: classes[colorVariant!]}}
       onClick={this.handleClick}
       data-qa-tag={this.props.label}
-      component={"button" as "div"}
+      component="div"
       clickable
+      role="button"
     />;
   }
 };

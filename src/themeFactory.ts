@@ -161,10 +161,12 @@ const themeDefaults: ThemeOptions = {
     focusBorder: '#999',
     absWhite: '#fff',
     blueDTwhite: '#3683DC',
+    selectDropDowns: '#ccc',
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
     toggleActive: '#606469',
     diskSpaceBorder: '#f4f4f4',
+    drawerBackdrop: 'rgba(255, 255, 255, 0.5)'
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -262,7 +264,7 @@ const themeDefaults: ThemeOptions = {
         fontSize: '1rem',
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
-        padding: '12px 28px 14px',
+        padding: '9px 28px 11px',
         '&:hover': {
           backgroundColor: '#fff',
         },
@@ -411,6 +413,9 @@ const themeDefaults: ThemeOptions = {
         marginLeft: 4,
         marginRight: 2,
         color: primaryColors.text,
+        borderRadius: '50%',
+        width: 18,
+        height: 18,
         '& svg': {
           width: 12,
           height: 12,
@@ -497,7 +502,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiExpansionPanelSummary: {
       root: {
-        '& $focused': {
+        '&$focused': {
           backgroundColor: '#fbfbfb',
         },
         padding: '0 18px',
@@ -627,12 +632,12 @@ const themeDefaults: ThemeOptions = {
     },
     MuiInput: {
       root: {
-        '& $disabled': {
+        '&$disabled': {
           borderColor: '#ccc',
           color: '#606469',
           opacity: .5,
         },
-        '& $focused': {
+        '&$focused': {
           borderColor: primaryColors.main,
           boxShadow: '0 0 2px 1px #e1edfa',
         },
@@ -726,10 +731,15 @@ const themeDefaults: ThemeOptions = {
     },
     MuiListItem: {
       root: {
-        '& $disabled': {
+        color: primaryColors.text,
+        '&$disabled': {
           opacity: .5,
         },
-        color: primaryColors.text,
+        '&$selected, &$selected:hover': {
+          backgroundColor: 'transparent',
+          color: primaryColors.main
+        },
+        
         '&.selectHeader': {
           opacity: 1,
           fontFamily: 'LatoWebBold',
@@ -738,6 +748,7 @@ const themeDefaults: ThemeOptions = {
         },
       },
       disabled: {},
+      selected: {}
     },
     MuiListItemText: {
       secondary: {
@@ -751,7 +762,7 @@ const themeDefaults: ThemeOptions = {
           boxShadow: 'none',
           position: 'absolute',
           boxSizing: 'content-box',
-          border: `1px solid ${primaryColors.main}`,
+          border: '1px solid #ccc',
           margin: '0 0 0 -1px',
           outline: 0,
           borderRadius: 0,
@@ -763,12 +774,8 @@ const themeDefaults: ThemeOptions = {
           boxSizing: 'content-box',
           padding: 4,
           '& li': {
-            color: primaryColors.text,
             paddingLeft: 12,
             paddingRight: 12,
-            '&:hover': {
-              color: 'white',
-            },
           },
           [breakpoints.down('xs')]: {
             minWidth: 200,
@@ -778,19 +785,19 @@ const themeDefaults: ThemeOptions = {
     },
     MuiMenuItem: {
       root: {
-        '& $selected': {
-          backgroundColor: 'white !important',
-          color: `${primaryColors.main} !important`,
-          opacity: 1,
-        },
         height: 'auto',
         fontFamily: 'LatoWeb',
         fontSize: '.9rem',
         whiteSpace: 'initial',
         textOverflow: 'initial',
-        color: primaryColors.main,
+        color: primaryColors.text,
         transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
+        '&$selected, &$selected:hover': {
+          backgroundColor: 'transparent',
+          color: primaryColors.main,
+          opacity: 1,
+        },
         '&:hover': {
           backgroundColor: primaryColors.main,
           color: 'white',
@@ -818,7 +825,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiSelect: {
       selectMenu: {
-        '& $disabled': {
+        '&$disabled': {
           '&+ input + $icon': {
             opacity: '.5',
           },
@@ -879,12 +886,11 @@ const themeDefaults: ThemeOptions = {
             left: -20,
           },
           '& .square': {
-            fill: 'white !important',
+            fill: 'white',
           },
           '& + $bar': {
             opacity: 1,
-            backgroundColor: `${primaryColors.main} !important`,
-            borderColor: '#2967B1',
+            backgroundColor: '#f4f4f4',
           },
         },
         '& .icon': {
@@ -898,13 +904,18 @@ const themeDefaults: ThemeOptions = {
         '& .square': {
           transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
         },
-        '&:hover, &:focus, & [class*="MuiButtonBase-keyboardFocused"]': {
+        '&:hover, &:focus': {
           '& $bar, & + $bar': {
             borderColor: '#606469',
           },
           '& .square': {
             fill: '#aaa',
           },
+          '& $checked': {
+            '& .square': {
+              fill: '#eee',
+            },
+          }
         },
       },
       checked: {},
@@ -919,6 +930,7 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: '#F4F4F4',
         border: '1px solid #999',
         boxSizing: 'content-box',
+        transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
       },
       switchBase: {
         color: primaryColors.main,
