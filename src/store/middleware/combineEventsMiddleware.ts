@@ -4,6 +4,7 @@ import { resetEventsPolling } from 'src/events';
 import { isEntityEvent, isInProgressEvent } from 'src/store/events/event.helpers';
 import { isType } from 'typescript-fsa';
 import { addEvents } from '../events/event.actions';
+import { ExtendedEvent } from '../events/event.reducer';
 
 
 export type EventHandler = (event: Linode.EntityEvent, dispatch: Dispatch<any>) => void;

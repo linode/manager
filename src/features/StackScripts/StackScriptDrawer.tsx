@@ -5,6 +5,7 @@ import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
 import StackScript from 'src/components/StackScript';
 import { getStackScript } from 'src/services/stackscripts';
+import { ApplicationState } from 'src/store';
 import { closeStackScriptDrawer } from 'src/store/stackScriptDrawer';
 import { MapState } from 'src/store/types';
 

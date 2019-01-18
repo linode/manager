@@ -16,6 +16,7 @@ import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
 
 type ClassNames = 'root'
   | 'title'

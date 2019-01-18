@@ -1,28 +1,30 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import account, { defaultState as defaultAccountState } from 'src/store/account/account.reducer';
-import accountSettings, { defaultState as defaultAccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
-import authentication, { defaultState as authenticationDefaultState } from 'src/store/authentication';
-import backups, { defaultState as backupsDefaultState } from 'src/store/backupDrawer';
-import documentation, { defaultState as documentationDefaultState } from 'src/store/documentation';
-import domainDrawer, { defaultState as domainDrawerDefaultState } from 'src/store/domainDrawer';
+import account, { defaultState as defaultAccountState, State as AccountState } from 'src/store/account/account.reducer';
+import accountSettings, { defaultState as defaultAccountSettingsState, State as AccountSettingsState } from 'src/store/accountSettings/accountSettings.reducer';
+import authentication, { defaultState as authenticationDefaultState, State as AuthState } from 'src/store/authentication';
+import backups, { defaultState as backupsDefaultState, State as BackupDrawerState } from 'src/store/backupDrawer';
+import documentation, { defaultState as documentationDefaultState, State as DocumentationState } from 'src/store/documentation';
+import domainDrawer, { defaultState as domainDrawerDefaultState, State as DomainDrawerState } from 'src/store/domainDrawer';
 import domainEvents from 'src/store/domains/domains.events';
-import domains, { defaultState as defaultDomainsState } from 'src/store/domains/domains.reducer';
-import events, { defaultState as eventsDefaultState } from 'src/store/events/event.reducer';
-import images, { defaultState as defaultImagesState } from 'src/store/image/image.reducer';
-import linodeDetail, { defaultState as linodeDetailDefaultState } from 'src/store/linodeDetail';
+import domains, { defaultState as defaultDomainsState, State as DomainsState } from 'src/store/domains/domains.reducer';
+import events, { defaultState as eventsDefaultState, State as EventsState } from 'src/store/events/event.reducer';
+import images, { defaultState as defaultImagesState, State as ImagesStata } from 'src/store/image/image.reducer';
+import linodeDetail, { defaultState as linodeDetailDefaultState, State as LinodeDetailState } from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
-import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
-import types, { defaultState as defaultTypesState } from 'src/store/linodeType/linodeType.reducer';
-import nodeBalancers, { defaultState as defaultNodeBalancerState } from 'src/store/nodeBalancer/nodeBalancer.reducer';
-import profile, { defaultState as defaultProfileState } from 'src/store/profile/profile.reducer';
-import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
-import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
-import tagImportDrawer, { defaultState as tagDrawerDefaultState } from 'src/store/tagImportDrawer';
-import volumeDrawer, { defaultState as volumeDrawerDefaultState } from 'src/store/volumeDrawer';
+import linodes, { defaultState as defaultLinodesState, State as LinodesState } from 'src/store/linodes/linodes.reducer';
+import types, { defaultState as defaultTypesState, State as TypesState } from 'src/store/linodeType/linodeType.reducer';
+import nodeBalancers, { defaultState as defaultNodeBalancerState, State as NodeBalancersState } from 'src/store/nodeBalancer/nodeBalancer.reducer';
+import nodeBalancerConfigs, { defaultState as defaultNodeBalancerConfigState, State as NodeBalancerConfigsState } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
+import nodeBalancerConfigNodes, { defaultState as defaultNodeBalancerConfigNodeState, State as NodeBalancerConfigNodesState } from 'src/store/nodeBalancerConfigNode/nodeBalancerConfigNode.reducer';
+import profile, { defaultState as defaultProfileState, State as ProfileState } from 'src/store/profile/profile.reducer';
+import regions, { defaultState as defaultRegionsState, State as RegionsState } from 'src/store/regions/regions.reducer';
+import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState, State as StackScriptDrawerState } from 'src/store/stackScriptDrawer';
+import tagImportDrawer, { defaultState as tagDrawerDefaultState, State as TagImportDrawerState } from 'src/store/tagImportDrawer';
+import volumeDrawer, { defaultState as volumeDrawerDefaultState, State as VolumeDrawerState } from 'src/store/volumeDrawer';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
-import notifications, { defaultState as notificationsDefaultState } from './notification/notification.reducer';
+import notifications, { defaultState as notificationsDefaultState, State as NotificationsState } from './notification/notification.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 
@@ -36,6 +38,8 @@ const __resourcesDefaultState = {
   images: defaultImagesState,
   linodes: defaultLinodesState,
   nodeBalancers: defaultNodeBalancerState,
+  nodeBalancerConfigs: defaultNodeBalancerConfigState,
+  nodeBalancerConfigNodes: defaultNodeBalancerConfigNodeState,
   notifications: notificationsDefaultState,
   profile: defaultProfileState,
   regions: defaultRegionsState,
@@ -44,6 +48,38 @@ const __resourcesDefaultState = {
 
 const featuresDefaultState = {
   linodeDetail: linodeDetailDefaultState,
+}
+
+export interface FeaturesState {
+  linodeDetail: LinodeDetailState;
+}
+
+export interface ResourcesState {
+  account: AccountState;
+  accountSettings: AccountSettingsState;
+  domains: DomainsState;
+  images: ImagesStata;
+  linodes: LinodesState;
+  nodeBalancers: NodeBalancersState;
+  nodeBalancerConfigs: NodeBalancerConfigsState;
+  nodeBalancerConfigNodes: NodeBalancerConfigNodesState;
+  notifications: NotificationsState;
+  profile: ProfileState;
+  regions: RegionsState;
+  types: TypesState;
+}
+
+export interface ApplicationState {
+  __resources: ResourcesState,
+  authentication: AuthState;
+  backups: BackupDrawerState;
+  documentation: DocumentationState;
+  domainDrawer: DomainDrawerState;
+  events: EventsState;
+  features: FeaturesState;
+  stackScriptDrawer: StackScriptDrawerState;
+  tagImportDrawer: TagImportDrawerState;
+  volumeDrawer: VolumeDrawerState;
 }
 
 const defaultState: ApplicationState = {
@@ -69,6 +105,8 @@ const __resources = combineReducers({
   images,
   linodes,
   nodeBalancers,
+  nodeBalancerConfigs,
+  nodeBalancerConfigNodes,
   notifications,
   profile,
   regions,

@@ -1,3 +1,4 @@
+import * as Bluebird from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path } from 'ramda';
@@ -23,18 +24,19 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
-import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import { withNodeBalancerActions, WithNodeBalancerActions } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
 
 shim(); // allows for .finally() usage
@@ -162,7 +164,9 @@ interface State {
   hasError: boolean;
 }
 
-type CombinedProps = Props
+type CombinedProps =
+  & Props
+  & WithNodeBalancerActions
   & DispatchProps
   & StateProps
   & WithStyles<ClassNames>
@@ -184,13 +188,17 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   async componentDidMount() {
-    const { actions } = this.props;
+    const {
+      actions,
+      getAllNodeBalancers,
+      getAllNodeBalancerConfigs,
+      getAllNodeBalancerConfigNodes,
+    } = this.props;
 
     try {
-      await Promise.all(
+      const [, , , , , , , , nodeBalancers] = await Promise.all(
         [
           actions.requestProfile(),
-          actions.requestNodeBalancers(),
           actions.requestDomains(),
           actions.requestImages(),
           actions.requestLinodes(),
@@ -198,11 +206,20 @@ export class App extends React.Component<CombinedProps, State> {
           actions.requestSettings(),
           actions.requestTypes(),
           actions.requestRegions(),
+          getAllNodeBalancers(),
         ]
       );
-    } catch (error) {
-      /** We choose to do nothing, relying on the Redux error state. */
-    }
+
+      /** Get all NodeBalancer configs for each NodeBalancer */
+      const nodeBalancerConfigs = await Bluebird.map(nodeBalancers, ({ id }) => getAllNodeBalancerConfigs({ nodeBalancerId: id }));
+
+      /** nodeBalancerConfig is NodeBalancerConfig[][] so we need to flatten it first. */
+      const flattenedNodeBalancerConfigs = nodeBalancerConfigs.reduce((result, each) => [...result, ...each], [])
+
+      /** Get all NodeBalancer config nodes for each NodeBalancer config. */
+      await Bluebird.map(flattenedNodeBalancerConfigs, ({ id, nodebalancer_id }) => getAllNodeBalancerConfigNodes({ nodeBalancerConfigId: id, nodeBalancerId: nodebalancer_id }));
+
+    } catch (error) { /** We choose to do nothing, relying on the Redux error state. */ }
 
     /*
      * We want to listen for migration events side-wide
@@ -355,7 +372,6 @@ interface DispatchProps {
     requestSettings: () => Promise<Linode.AccountSettings>;
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
-    requestNodeBalancers: () => Promise<Linode.NodeBalancerWithConfigs[]>;
   },
 }
 
@@ -370,7 +386,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
-      requestNodeBalancers: () => dispatch(getAllNodeBalancers()),
     }
   };
 };
@@ -401,5 +416,6 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
-  withSnackbar
+  withSnackbar,
+  withNodeBalancerActions,
 )(App);

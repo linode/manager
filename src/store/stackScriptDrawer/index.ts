@@ -4,7 +4,10 @@ import { Action } from 'redux';
 export const OPEN = '@manager/stackScript/OPEN'
 export const CLOSE = '@manager/stackScript/CLOSE'
 
-type State = StackScriptDrawerState;
+export interface State {
+  open: boolean;
+  stackScriptId?: number;
+}
 
 interface Open extends Action {
   type: typeof OPEN;

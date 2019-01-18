@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { ApplicationState } from 'src/store';
 
 const isEmpty = (error?: Linode.ApiFieldError[]) => {
   return error && error.length > 0;

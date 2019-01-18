@@ -30,6 +30,7 @@ import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import { Images } from 'src/documentation';
 import { deleteImage } from 'src/services/images';
+import { ApplicationState } from 'src/store';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';

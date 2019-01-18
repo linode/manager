@@ -11,7 +11,8 @@ import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess } from 'src/store/backupDrawer';
+import { ApplicationState } from 'src/store';
+import { BackupError, enableAllBackups, enableAutoEnroll, handleAutoEnrollToggle, handleClose, handleResetError, handleResetSuccess } from 'src/store/backupDrawer';
 import { ThunkDispatch } from 'src/store/types';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
@@ -22,6 +23,7 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
 });
+
 export interface ExtendedLinode extends LinodeWithTypeInfo {
   linodeError?: BackupError;
 }
@@ -233,6 +235,7 @@ export const enhanceLinodes = (linodes: Linode.Linode[], errors: BackupError[], 
 }
 
 const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
+
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = state.__resources.linodes.entities.filter((l) => !l.backups.enabled);
   return ({
