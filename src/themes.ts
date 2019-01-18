@@ -80,7 +80,7 @@ export const dark = createTheme({
     focusBorder: '#999',
     absWhite: '#000',
     blueDTwhite: '#fff',
-    selectDropDowns: '#222',
+    selectDropDowns: primaryColors.main,
     borderRow: 'rgba(0, 0, 0, 0.15)',
     tableHeaderText: '#fff',
     toggleActive: '#444',
@@ -342,12 +342,13 @@ export const dark = createTheme({
     },
     MuiInput: {
       root: {
-        '& $disabled': {
+        '&$disabled': {
           borderColor: '#606469',
           color: '#eee !important',
         },
-        '& $focused': {
+        '&$focused': {
           borderColor: primaryColors.main,
+          boxShadow: '0 0 2px 1px #222',
         },
         border: '1px solid #222',
         color: primaryColors.text,
@@ -372,13 +373,6 @@ export const dark = createTheme({
         color: primaryColors.text,
         '&.selectHeader': {
           color: primaryColors.text,
-        },
-      },
-    },
-    MuiMenu: {
-      paper: {
-        '&.selectMenuDropdown': {
-          border: '1px solid #222',
         },
       },
     },
@@ -534,5 +528,3 @@ export const dark = createTheme({
     },
   },
 });
-
-
