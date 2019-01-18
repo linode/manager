@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props {
   open: boolean;
-  volumeID: number;
+  volumeId: number;
   volumeLabel: string;
   linodeRegion: string;
   onClose: () => void;
@@ -114,7 +114,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   }
 
   attachToLinode = () => {
-    const { volumeID } = this.props;
+    const { volumeId } = this.props;
     const { selectedLinode, selectedConfig } = this.state;
     if (!selectedLinode || selectedLinode === 'none') {
       this.setState({ errors: [
@@ -126,7 +126,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    attachVolume(Number(volumeID), {
+    attachVolume(Number(volumeId), {
       linode_id: Number(selectedLinode),
       config_id: Number(selectedConfig) || undefined
     })

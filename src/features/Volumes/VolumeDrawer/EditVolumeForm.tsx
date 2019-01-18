@@ -1,9 +1,10 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { compose } from 'recompose';
 import TagsInput, { Tag } from 'src/components/TagsInput';
+import withVolumesRequest, { VolumesRequests } from 'src/containers/volumesRequests.container';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
-import { updateVolume } from 'src/services/volumes';
 import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -23,7 +24,10 @@ interface Props {
   volumeId: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & WithStyles<ClassNames>
+  & VolumesRequests;
 
 /** Single field posts like rename/resize dont have validation schemas in services */
 const validationSchema = UpdateVolumeSchema;
@@ -33,7 +37,7 @@ interface FormState {
 }
 
 const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { volumeId, volumeLabel, volumeTags, onClose } = props;
+  const { volumeId, volumeLabel, volumeTags, onClose, updateVolume } = props;
   const initialValues: FormState = { label: volumeLabel, tags: volumeTags };
 
   return (
@@ -44,7 +48,8 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
         setSubmitting(true);
 
-        updateVolume(volumeId, {
+        updateVolume({
+          volumeId,
           label,
           tags: tags.map(v => v.value),
         })
@@ -112,4 +117,9 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(RenameVolumeForm);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withVolumesRequest,
+)(RenameVolumeForm);
+
+export default enhanced;
