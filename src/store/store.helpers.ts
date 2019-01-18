@@ -59,7 +59,7 @@ export const createRequestThunk = <Req, Res, Err>(
 ): ThunkActionCreator<any> => (params: Req) => async (dispatch) => {
   const { started, done, failed } = actions;
 
-  started(params);
+  dispatch(started(params));
 
   try {
     const result = await request(params);

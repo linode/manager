@@ -133,7 +133,7 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = (props) => {
             filesystemPath={filesystemPath}
             linodeLabel={volume.linodeLabel}
             regionID={regionID}
-            volumeID={volume.id}
+            volumeId={volume.id}
             volumeTags={volume.tags}
             size={size}
             label={label}
