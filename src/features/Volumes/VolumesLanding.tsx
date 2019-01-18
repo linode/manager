@@ -351,7 +351,7 @@ type CombinedProps =
   }
 
   detachVolume = () => {
-    const { destructiveDialog: { volumeId: volumeId } } = this.state;
+    const { destructiveDialog: { volumeId } } = this.state;
     if (!volumeId) { return; }
 
     detachVolume(volumeId)
@@ -369,7 +369,7 @@ type CombinedProps =
   }
 
   deleteVolume = () => {
-    const { destructiveDialog: { volumeId: volumeId } } = this.state;
+    const { destructiveDialog: { volumeId } } = this.state;
     const { deleteVolume } = this.props;
 
     if (!volumeId) { return; }

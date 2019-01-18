@@ -4,9 +4,9 @@ import { createVolume, CreateVolumeRequest, deleteVolume, updateVolume } from 's
 
 
  export interface VolumesRequests {
-  createVolume: (p: CreateVolumeRequest) => Promise<Linode.Volume>,
-  updateVolume: (p: UpdateVolumeParams) => Promise<Linode.Volume>,
-  deleteVolume: (p: VolumeId) => Promise<Linode.Volume>
+  createVolume: (request: CreateVolumeRequest) => Promise<Linode.Volume>,
+  updateVolume: (params: UpdateVolumeParams) => Promise<Linode.Volume>,
+  deleteVolume: (volumeId: VolumeId) => Promise<Linode.Volume>
 }
 
  export default connect(undefined, {
