@@ -1,10 +1,11 @@
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { compose } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { createVolume } from 'src/services/volumes';
+import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequests.container';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
@@ -31,10 +32,11 @@ interface Props {
 
 type CombinedProps =
   & Props
+  & VolumesRequests
   & WithStyles<ClassNames>;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, onSuccess, classes } = props;
+  const { onClose, onSuccess, classes, createVolume } = props;
   return (
     <Formik
       initialValues={initialValues}
@@ -189,4 +191,9 @@ const initialValues: FormState = {
 
 const styled = withStyles(styles);
 
-export default styled(CreateVolumeForm);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withVolumesRequests
+)(CreateVolumeForm);
+
+export default enhanced;
