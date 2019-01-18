@@ -14,6 +14,7 @@ import Select from 'src/components/Select';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { setUpCharts } from 'src/utilities/charts';
 import { formatBitsPerSecond, formatBytes, formatNumber, formatPercentage, getMetrics, getTotalTraffic } from 'src/utilities/statMetrics';

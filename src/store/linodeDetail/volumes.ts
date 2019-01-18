@@ -1,5 +1,5 @@
 import { getLinodeVolumes } from 'src/services/linodes';
-import { ThunkActionCreator } from 'src/store/types';
+import { RequestableData, ThunkActionCreator } from 'src/store/types';
 
 // ACTIONS
 const actionTypeGenerator = (s: string) => `@manager/features/linodeDetail/volumes/${s}`;
@@ -10,7 +10,7 @@ const ERROR = actionTypeGenerator('ERROR');
 const UPDATE = actionTypeGenerator('UPDATE');
 
 // STATE
-type State = FeaturesState['linodeDetail']['volumes']
+export type State = RequestableData<Linode.Volume[]>;
 
 export const defaultState: State = {
   lastUpdated: 0,

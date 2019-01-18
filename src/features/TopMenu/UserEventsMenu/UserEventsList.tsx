@@ -5,6 +5,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { ExtendedEvent } from 'src/store/events/event.reducer';
 import UserEventsListItem, { Props as UserEventsListItemProps } from './UserEventsListItem';
 
 const reportUnfoundEvent = (event: Linode.Event) =>

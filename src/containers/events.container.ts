@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { ApplicationState } from 'src/store';
 
 export interface EventsProps {
   eventsData: Linode.Event[];

@@ -1,9 +1,8 @@
 import { accountSettings } from 'src/__data__/account';
-import { mockAPIFieldErrors } from 'src/services';
 import { handleError, handleSuccess, handleUpdate, handleUpdateError, startRequest } from './accountSettings.actions';
 import reducer, { defaultState } from './accountSettings.reducer';
 
-const error = mockAPIFieldErrors([]);
+const error = Error();
 const updatedSettings = {backups_enabled: false, ...accountSettings};
 
 describe("Redux duck for Account settings", () => {

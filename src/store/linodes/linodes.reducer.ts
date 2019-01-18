@@ -1,4 +1,5 @@
 import { Reducer } from "redux";
+import { EntityState } from "src/store/types";
 import updateById from 'src/utilities/updateById';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
@@ -7,7 +8,7 @@ import { deleteLinode, linodesRequest, updateLinode, updateMultipleLinodes, upse
 /**
  * State
  */
-type State = ApplicationState['__resources']['linodes'];
+export type State = EntityState<Linode.Linode>;
 
 export const defaultState: State = {
   results: [],

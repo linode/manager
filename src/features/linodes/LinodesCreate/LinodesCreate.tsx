@@ -18,6 +18,7 @@ import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { displayType, typeLabelDetails } from 'src/features/linodes/presentation';
+import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import { ExtendedLinode } from './SelectLinodePanel';

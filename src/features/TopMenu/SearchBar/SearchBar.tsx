@@ -12,6 +12,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import withImages from 'src/containers/withImages.container';
 import { emptyResults, searchAll, SearchResults } from 'src/features/Search/utils';
+import { ApplicationState } from 'src/store';
 import { getAllEntities } from 'src/utilities/getAll';
 import SearchSuggestion from './SearchSuggestion';
 

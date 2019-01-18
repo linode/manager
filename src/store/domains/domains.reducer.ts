@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import { deleteDomain, getDomainsFailure, getDomainsRequest, getDomainsSuccess, upsertDomain } from './domains.actions';
@@ -7,7 +8,8 @@ import { entitiesFromPayload, resultsFromPayload } from './domains.helpers';
 /**
  * State
  */
-type State = ApplicationState['__resources']['domains'];
+
+export type State = EntityState<Linode.Domain>;
 
 export const defaultState: State = {
   results: [],
