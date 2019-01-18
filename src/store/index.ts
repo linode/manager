@@ -21,6 +21,7 @@ import profile, { defaultState as defaultProfileState, State as ProfileState } f
 import regions, { defaultState as defaultRegionsState, State as RegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState, State as StackScriptDrawerState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState, State as TagImportDrawerState } from 'src/store/tagImportDrawer';
+import volumes, { defaultState as defaultVolumesState, State as VolumesState } from 'src/store/volume/volume.reducer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState, State as VolumeDrawerState } from 'src/store/volumeDrawer';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
@@ -37,13 +38,14 @@ const __resourcesDefaultState = {
   domains: defaultDomainsState,
   images: defaultImagesState,
   linodes: defaultLinodesState,
-  nodeBalancers: defaultNodeBalancerState,
-  nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancerConfigNodes: defaultNodeBalancerConfigNodeState,
+  nodeBalancerConfigs: defaultNodeBalancerConfigState,
+  nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   profile: defaultProfileState,
   regions: defaultRegionsState,
   types: defaultTypesState,
+  volumes: defaultVolumesState,
 };
 
 const featuresDefaultState = {
@@ -60,13 +62,14 @@ export interface ResourcesState {
   domains: DomainsState;
   images: ImagesStata;
   linodes: LinodesState;
-  nodeBalancers: NodeBalancersState;
-  nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancerConfigNodes: NodeBalancerConfigNodesState;
+  nodeBalancerConfigs: NodeBalancerConfigsState;
+  nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   profile: ProfileState;
   regions: RegionsState;
   types: TypesState;
+  volumes: VolumesState;
 }
 
 export interface ApplicationState {
@@ -111,6 +114,7 @@ const __resources = combineReducers({
   profile,
   regions,
   types,
+  volumes
 });
 
 const features = combineReducers({ linodeDetail });

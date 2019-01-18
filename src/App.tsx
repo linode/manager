@@ -33,6 +33,7 @@ import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
+import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
@@ -196,7 +197,7 @@ export class App extends React.Component<CombinedProps, State> {
     } = this.props;
 
     try {
-      const [, , , , , , , , nodeBalancers] = await Promise.all(
+      const [, , , , , , , , , nodeBalancers] = await Promise.all(
         [
           actions.requestProfile(),
           actions.requestDomains(),
@@ -206,6 +207,7 @@ export class App extends React.Component<CombinedProps, State> {
           actions.requestSettings(),
           actions.requestTypes(),
           actions.requestRegions(),
+          actions.requestVolumes(),
           getAllNodeBalancers(),
         ]
       );
@@ -372,6 +374,7 @@ interface DispatchProps {
     requestSettings: () => Promise<Linode.AccountSettings>;
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
+    requestVolumes: () => Promise<Linode.Volume[]>;
   },
 }
 
@@ -386,6 +389,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
+      requestVolumes: () => dispatch(getAllVolumes())
     }
   };
 };
