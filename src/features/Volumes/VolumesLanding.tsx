@@ -21,10 +21,11 @@ import Toggle from 'src/components/Toggle';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import withVolumes, { Props as WithVolumesProps } from 'src/containers/volumes.container';
+import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequests.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
-import { deleteVolume, detachVolume } from 'src/services/volumes';
+import { detachVolume } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
@@ -80,14 +81,14 @@ interface DispatchProps {
 interface State {
   attachmentDrawer: {
     open: boolean;
-    volumeID?: number;
+    volumeId?: number;
     volumeLabel?: string;
     linodeRegion?: string;
   };
   destructiveDialog: {
     open: boolean;
     mode: 'detach' | 'delete';
-    volumeID?: number;
+    volumeId?: number;
   };
 }
 
@@ -95,6 +96,7 @@ type RouteProps = RouteComponentProps<{ linodeId: string }>;
 
 type CombinedProps =
   & Props
+  & VolumesRequests
   & WithVolumesProps
   & WithLinodesProps
   & EventsProps
@@ -141,36 +143,36 @@ type CombinedProps =
   }
 
   handleAttach = (
-    volumeID: number,
+    volumeId: number,
     label: string,
     regionID: string
   ) => {
     this.setState({
       attachmentDrawer: {
         open: true,
-        volumeID,
+        volumeId,
         volumeLabel: label,
         linodeRegion: regionID,
       }
     })
   }
 
-  handleDetach = (volumeID: number) => {
+  handleDetach = (volumeId: number) => {
     this.setState({
       destructiveDialog: {
         open: true,
         mode: 'detach',
-        volumeID,
+        volumeId,
       }
     })
   }
 
-  handleDelete = (volumeID: number) => {
+  handleDelete = (volumeId: number) => {
     this.setState({
       destructiveDialog: {
         open: true,
         mode: 'delete',
-        volumeID,
+        volumeId,
       }
     })
   }
@@ -238,7 +240,7 @@ type CombinedProps =
 
         <VolumeAttachmentDrawer
           open={this.state.attachmentDrawer.open}
-          volumeID={this.state.attachmentDrawer.volumeID || 0}
+          volumeId={this.state.attachmentDrawer.volumeId || 0}
           volumeLabel={this.state.attachmentDrawer.volumeLabel || ''}
           linodeRegion={this.state.attachmentDrawer.linodeRegion || ''}
           onClose={this.handleCloseAttachDrawer}
@@ -349,10 +351,10 @@ type CombinedProps =
   }
 
   detachVolume = () => {
-    const { destructiveDialog: { volumeID } } = this.state;
-    if (!volumeID) { return; }
+    const { destructiveDialog: { volumeId } } = this.state;
+    if (!volumeId) { return; }
 
-    detachVolume(volumeID)
+    detachVolume(volumeId)
       .then((response) => {
         /* @todo: show a progress bar for volume detachment */
         this.props.enqueueSnackbar('Volume detachment started', {
@@ -367,15 +369,17 @@ type CombinedProps =
   }
 
   deleteVolume = () => {
-    const { destructiveDialog: { volumeID } } = this.state;
-    if (!volumeID) { return; }
+    const { destructiveDialog: { volumeId } } = this.state;
+    const { deleteVolume } = this.props;
 
-    deleteVolume(volumeID)
-      .then((response) => {
+    if (!volumeId) { return; }
+
+    deleteVolume({ volumeId })
+      .then(() => {
         this.closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch((response) => {
+      .catch(() => {
         /** @todo Error handling. */
       });
   }
@@ -463,6 +467,7 @@ export default compose<CombinedProps, Props>(
   withLocalStorage,
   documented,
   styled,
+  withVolumesRequests,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)

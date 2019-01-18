@@ -4,12 +4,13 @@
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { createVolume } from 'src/services/volumes';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { openForAttaching } from 'src/store/volumeDrawer';
 import ConfigSelect from './ConfigSelect';
@@ -40,11 +41,12 @@ interface Props {
 
 type CombinedProps =
   & Props
+  & VolumesRequests
   & DispatchProps
   & WithStyles<ClassNames>;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, onSuccess, linodeId, linodeLabel, linodeRegion, actions, } = props;
+  const { onClose, onSuccess, linodeId, linodeLabel, linodeRegion, actions, createVolume } = props;
 
   return (
     <Formik
@@ -186,4 +188,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, 
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default styled(connected(CreateVolumeForm));
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  connected,
+  withVolumesRequests,
+)(CreateVolumeForm)
+
+export default enhanced
