@@ -1,17 +1,13 @@
-import { createVolume as _createVolume, getVolumes, updateVolume as _updateVolume, UpdateVolumeRequest as _UpdateVolumeRequest, VolumeRequestPayload as _VolumeRequestPayload } from 'src/services/volumes';
+import { createVolume as _createVolume, deleteVolume as _deleteVolume, getVolumes, updateVolume as _updateVolume, VolumeRequestPayload as _VolumeRequestPayload } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { createVolumeActions, getAllVolumesActions, updateVolumeActions, UpdateVolumeParams } from './volume.actions';
+import { createVolumeActions, deleteVolumeActions, getAllVolumesActions, updateVolumeActions, UpdateVolumeParams, VolumeId } from './volume.actions';
 
 /*
 * Create Volume
 */
-
-// Export these types to be used where needed (e.g. volumesRequests container)
 export type CreateVolumeRequest = _VolumeRequestPayload;
-export type CreateVolumeResponse = Linode.Volume;
-
-export const createVolume = createRequestThunk<CreateVolumeRequest, CreateVolumeResponse, Linode.ApiFieldError[]>(
+export const createVolume = createRequestThunk<CreateVolumeRequest, Linode.Volume, Linode.ApiFieldError[]>(
   createVolumeActions,
   (data) => _createVolume(data)
 );
@@ -19,11 +15,17 @@ export const createVolume = createRequestThunk<CreateVolumeRequest, CreateVolume
 /*
 * Update Volume
 */
-
-export type UpdateVolumeRequest = _UpdateVolumeRequest;
-export const updateVolume = createRequestThunk<UpdateVolumeParams, CreateVolumeResponse, Linode.ApiFieldError[]>(
+export const updateVolume = createRequestThunk<UpdateVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(
   updateVolumeActions,
   ({ volumeId, ...data }) => _updateVolume(volumeId, data)
+);
+
+/*
+* Delete Volume
+*/
+export const deleteVolume = createRequestThunk<VolumeId, {}, Linode.ApiFieldError[]>(
+  deleteVolumeActions,
+  ({ volumeId }) => _deleteVolume(volumeId)
 );
 
 /*
