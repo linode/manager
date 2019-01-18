@@ -1,7 +1,5 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
-import store from 'src/store';
-import { addOrUpdateImage, removeImage } from 'src/store/image/image.actions';
 import { createImageSchema, updateImageSchema } from './image.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -55,11 +53,7 @@ export const createImage = (
     setURL(`${API_ROOT}/images`),
     setMethod('POST'),
     setData(data, createImageSchema)
-  ).then((response) => {
-    const { data } = response;
-    store.dispatch(addOrUpdateImage(data))
-    return response;
-  });
+  );
 };
 
 /**
@@ -85,12 +79,7 @@ export const updateImage = (
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
     setData(data, updateImageSchema)
-  )
-    .then((response) => {
-      const { data } = response;
-      store.dispatch(addOrUpdateImage(data))
-      return response;
-    });
+  );
 };
 
 /**
@@ -102,9 +91,5 @@ export const deleteImage = (imageId: string) => {
   return Request<{}>(
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('DELETE'),
-  )
-    .then((response) => {
-      store.dispatch(removeImage(imageId));
-      return response;
-    })
+  );
 }
