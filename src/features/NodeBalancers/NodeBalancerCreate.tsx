@@ -236,10 +236,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true, errors: undefined });
 
     createNodeBalancer(nodeBalancerRequestData)
-      .then((r) => {
-        console.log(r)
-        return r;
-      })
       .then((nodeBalancer) => this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`))
       .catch((errorResponse) => {
         const defaultError = [{ reason: `An unexpected error has occured.` }];

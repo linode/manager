@@ -16,8 +16,6 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import ResultGroup from './ResultGroup';
 import { emptyResults, searchAll, SearchResults } from './utils';
 
-
-
 type ClassNames = 'root'
 | 'headline';
 

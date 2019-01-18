@@ -63,10 +63,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     }
   }
 
-  if (isType(action, createNodeBalancerConfigActions.failed)) { }
+  // if (isType(action, createNodeBalancerConfigActions.failed)) { }
 
   /** Update */
-  if (isType(action, updateNodeBalancerConfigActions.started)) { }
+  // if (isType(action, updateNodeBalancerConfigActions.started)) { }
 
   if (isType(action, updateNodeBalancerConfigActions.done)) {
     const { itemsById } = state;
@@ -80,10 +80,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     }
   }
 
-  if (isType(action, updateNodeBalancerConfigActions.failed)) { }
+  // if (isType(action, updateNodeBalancerConfigActions.failed)) { }
 
   /** Delete */
-  if (isType(action, deleteNodeBalancerConfigActions.started)) { }
+  // if (isType(action, deleteNodeBalancerConfigActions.started)) { }
 
   if (isType(action, deleteNodeBalancerConfigActions.done)) {
     const { params: { nodeBalancerConfigId } } = action.payload;
@@ -97,7 +97,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     }
   }
 
-  if (isType(action, deleteNodeBalancerConfigActions.failed)) { }
+  // if (isType(action, deleteNodeBalancerConfigActions.failed)) { }
 
   return state;
 };
