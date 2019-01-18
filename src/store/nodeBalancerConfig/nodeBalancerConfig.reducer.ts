@@ -1,12 +1,13 @@
 
-import { assoc, omit } from 'ramda';
+import { assoc } from 'ramda';
 import { Reducer } from "redux";
+import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
-import { createDefaultState, onError, onStart } from "../store.helpers";
+import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onStart } from "../store.helpers";
 import { createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
 
-export type State = MappedEntityState<Linode.NodeBalancerConfig>;
+export type State = MappedEntityState<NodeBalancerConfig>;
 
 export const defaultState: State = createDefaultState({ loading: false });
 
@@ -49,55 +50,23 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /** Create */
-  if (isType(action, createNodeBalancerConfigActions.started)) { }
-
   if (isType(action, createNodeBalancerConfigActions.done)) {
-    const { itemsById } = state;
     const { result } = action.payload;
-    const updated = assoc(String(result.id), result, itemsById)
-
-    return {
-      ...state,
-      itemsById: updated,
-      items: Object.keys(updated),
-    }
+    return onCreateOrUpdate(result, state);
   }
-
-  // if (isType(action, createNodeBalancerConfigActions.failed)) { }
 
   /** Update */
-  // if (isType(action, updateNodeBalancerConfigActions.started)) { }
-
   if (isType(action, updateNodeBalancerConfigActions.done)) {
-    const { itemsById } = state;
-    const { result } = action.payload;
-    const updated = assoc(String(result.id), result, itemsById)
-
-    return {
-      ...state,
-      itemsById: updated,
-      items: Object.keys(updated),
-    }
+   const { result } = action.payload;
+    return onCreateOrUpdate(result, state);
   }
-
-  // if (isType(action, updateNodeBalancerConfigActions.failed)) { }
 
   /** Delete */
-  // if (isType(action, deleteNodeBalancerConfigActions.started)) { }
-
   if (isType(action, deleteNodeBalancerConfigActions.done)) {
     const { params: { nodeBalancerConfigId } } = action.payload;
-    const { itemsById } = state;
-    const updated = omit([String(nodeBalancerConfigId)], itemsById);
 
-    return {
-      ...state,
-      itemsById: updated,
-      items: Object.keys(updated),
-    }
+    return onDeleteSuccess(nodeBalancerConfigId, state);
   }
-
-  // if (isType(action, deleteNodeBalancerConfigActions.failed)) { }
 
   return state;
 };
