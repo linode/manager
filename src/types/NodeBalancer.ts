@@ -40,6 +40,8 @@ namespace Linode {
     address: string;
     port?: number;
     weight?: number;
+    nodebalancer_id?: number;
+    config_id?: number;
     mode?: NodeBalancerConfigNodeMode;
     /* for the sake of local operations */
     modifyStatus?: 'new' | 'delete' | 'update';

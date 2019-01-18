@@ -7,11 +7,23 @@ import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions'
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { ThunkActionCreator } from '../types';
 
+export interface BackupError {
+  linodeId: number;
+  reason: string;
+}
 
-// HELPERS
-
-// TYPES
-type State = BackupDrawerState;
+export interface State {
+  open: boolean;
+  enabling: boolean;
+  enableErrors: BackupError[];
+  enableSuccess: boolean;
+  updatedCount: number;
+  autoEnroll: boolean;
+  autoEnrollError?: string;
+  enrolling: boolean;
+  error?: Error | Linode.ApiFieldError[];
+  data?: Linode.Linode[];
+}
 
 interface Accumulator {
   success: Linode.Linode[];

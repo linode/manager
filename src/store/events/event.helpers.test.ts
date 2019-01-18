@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import { addToEvents, findInEvents, getNumUnseenEvents, isCompletedEvent, isInProgressEvent, mostRecentCreated, setDeletedEvents, updateInProgressEvents } from './event.helpers';
+import { ExtendedEvent } from './event.reducer';
 
 describe('event.helpers', () => {
   describe('findInEvents', () => {

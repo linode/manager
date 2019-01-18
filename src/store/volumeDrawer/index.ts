@@ -1,6 +1,20 @@
-import { Action, AnyAction } from 'redux';
+import { Action, AnyAction, Reducer } from 'redux';
 import { modes } from 'src/features/Volumes/VolumeDrawer';
 import actionCreatorFactory, { isType } from 'typescript-fsa';
+
+export interface State {
+  mode: string;
+  volumeId?: number;
+  volumeLabel?: string;
+  volumeRegion?: string;
+  volumeSize?: number;
+  volumeTags?: string[];
+  volumePath?: string;
+  linodeId?: number;
+  linodeLabel?: string;
+  linodeRegion?: string;
+  message?: string;
+}
 
 const actionCreator = actionCreatorFactory(`@@manager/volumesDrawer`);
 
@@ -139,7 +153,7 @@ export const openForConfig = (
   });
 };
 
-export const defaultState: ApplicationState['volumeDrawer'] = {
+export const defaultState: State = {
   mode: modes.CLOSED,
   volumeLabel: undefined,
   volumeId: undefined,
@@ -158,7 +172,7 @@ type ActionTypes =
 
 const getMode = (action: AnyAction) => action.meta && action.meta.mode;
 
-export const volumeDrawer = (state = defaultState, action: ActionTypes) => {
+export const volumeDrawer: Reducer<State> = (state = defaultState, action: ActionTypes) => {
   if (isType(action, createVolume)) {
     return {
       ...state,
