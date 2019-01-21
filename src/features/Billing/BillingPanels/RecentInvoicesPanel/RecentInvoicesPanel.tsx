@@ -1,5 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -14,6 +15,10 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { reportException } from 'src/exceptionReporting';
+import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { ThunkDispatch } from 'src/store/types';
+
 import { getInvoices } from 'src/services/account';
 
 type ClassNames = 'root';
@@ -24,10 +29,31 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 
 interface Props extends PaginationProps<Linode.Invoice> {}
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
-class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
-    render() {
+interface PdfGenerationError {
+  itemId: number | undefined
+}
+
+interface State {
+  pdfGenerationError: PdfGenerationError
+}
+
+class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
+  
+  state: State = {
+    pdfGenerationError: {
+      itemId: undefined
+    }
+  }
+
+  componentDidMount() {
+    if (!this.props.account.data) {
+      this.props.requestAccount();
+    }
+  }
+
+  render() {
     const {
       data,
       page,
@@ -46,6 +72,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
               <TableCell>Date Created</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Amount</TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>
@@ -64,6 +91,28 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
         }
       </ExpansionPanel>
     );
+  }
+
+  printInvoice(account: Linode.Account, item: Linode.Payment) {
+    this.setState({
+      pdfGenerationError: {
+        itemId: undefined
+      }
+    });
+    try {
+      printInvoice(account, item);
+    } catch (e) {
+      reportException(
+        Error('Error while generating PDF.'),
+        e
+      );
+      this.setState({
+        pdfGenerationError: {
+          itemId: item.id
+        }
+      });
+    }
+
   }
 
   renderContent = () => {
@@ -90,11 +139,17 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
   renderItems = (items: Linode.Invoice[]) => items.map(this.renderRow);
 
   renderRow = (item: Linode.Invoice) => {
+    const { pdfGenerationError } = this.state;
+
     return (
       <TableRow key={`invoice-${item.id}`} rowLink={`/account/billing/invoices/${item.id}`} data-qa-invoice>
         <TableCell parentColumn="Date Created" data-qa-invoice-date><DateTimeDisplay value={item.date}/></TableCell>
         <TableCell parentColumn="Description" data-qa-invoice-desc={item.id}><Link to={`/account/billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
         <TableCell parentColumn="Amount" data-qa-invoice-amount>${item.total}</TableCell>
+        <TableCell>
+          {account.data && <a href="#" target="_blank" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</a>}
+          {pdfGenerationError.itemId === item.id && <Notice error={true} text="Failed generating PDF." />}
+        </TableCell>
       </TableRow>
     );
   };
@@ -102,12 +157,25 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
+interface S {
+  account: ApplicationState['__resources']['account'];
+}
+
+interface StateProps extends S {
+  requestAccount: () => void;
+}
+
+const connected = connect(
+  (state: ApplicationState): S => ({account: state.__resources.account}),
+  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(requestAccount()) }));
+
 const updatedRequest = (ownProps: any, params: any, filters: any) => getInvoices(params, filters)
   .then((response) => response);
 
 const paginated = paginate(updatedRequest);
 
 const enhanced = compose(
+  connected,
   paginated,
   styled,
 );
