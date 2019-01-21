@@ -1,5 +1,6 @@
 import { clamp, compose, defaultTo } from 'ramda';
 import * as React from 'react';
+import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -10,7 +11,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { updateNodeBalancer } from 'src/services/nodebalancers';
+import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -53,7 +54,7 @@ interface FieldsState {
   client_conn_throttle?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithNodeBalancerActions& WithStyles<ClassNames>;
 
 const errorResources = {
   client_conn_throttle: 'client connection throttle',
@@ -93,15 +94,17 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     });
   }
 
-  updateNodeBalancer = () => {
+  onSubmitUpdateNodeBalancer = () => {
     const { label, client_conn_throttle } = this.state.fields;
+    const { updateNodeBalancer } = this.props;
+
     this.setState({
       errors: undefined,
       isSubmitting: true,
       success: undefined,
     });
     const data = { label, client_conn_throttle };
-    updateNodeBalancer(this.props.nodeBalancerId, data).then(() => {
+    updateNodeBalancer({ nodeBalancerId: this.props.nodeBalancerId, ...data }).then(() => {
       this.setState({
         isSubmitting: false,
         success:'NodeBalancer settings updated successfully',
@@ -160,7 +163,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
             className={classes.expPanelButton}
           >
             <Button
-              onClick={this.updateNodeBalancer}
+              onClick={this.onSubmitUpdateNodeBalancer}
               type="primary"
               disabled={isSubmitting}
               data-qa-label-save
@@ -181,4 +184,9 @@ const controlClientConnectionThrottle = compose(
 
 const styled = withStyles(styles);
 
-export default styled(NodeBalancerSettings);
+const enhanced = composeC<CombinedProps, Props>(
+  styled,
+  withNodeBalancerActions,
+);
+
+export default enhanced(NodeBalancerSettings);

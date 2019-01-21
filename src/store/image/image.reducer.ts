@@ -1,13 +1,13 @@
 import { Reducer } from "redux";
+import { EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import { addOrUpdateImage, getImagesFailure, getImagesRequest, getImagesSuccess, removeImage } from './image.actions';
 
-
 /**
  * State
  */
-type State = ApplicationState['__resources']['images'];
+export type State = EntityState<Linode.Image>;
 
 export const defaultState: State = {
   entities: [],

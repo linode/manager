@@ -20,8 +20,9 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
 import localStorageContainer from 'src/containers/localStorage.container';
 import { NodeBalancerGettingStarted, NodeBalancerReference } from 'src/documentation';
-import { deleteNodeBalancer } from 'src/services/nodebalancers';
-import { nodeBalancersWithConfigs } from 'src/store/notification/notification.selectors';
+import { ApplicationState } from 'src/store';
+import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
 import { sendEvent } from 'src/utilities/analytics';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
@@ -82,6 +83,7 @@ interface State {
 }
 
 type CombinedProps =
+  & WithNodeBalancerActions
   & LocalStorageProps
   & WithNodeBalancers
   & WithStyles<ClassNames>
@@ -116,8 +118,14 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     });
   }
 
-  deleteNodeBalancer = () => {
+  onSubmitDelete = () => {
+    const { deleteNodeBalancer } = this.props;
     const { selectedNodeBalancerId } = this.state;
+
+    if (!selectedNodeBalancerId) {
+      return;
+    }
+
     this.setState({
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
@@ -126,7 +134,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       },
     });
 
-    deleteNodeBalancer(selectedNodeBalancerId!)
+    deleteNodeBalancer({ nodeBalancerId: selectedNodeBalancerId })
       .then((response) => {
         this.setState({
           deleteConfirmDialog: {
@@ -253,7 +261,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         </Button>
         <Button
           data-qa-confirm-cancel
-          onClick={this.deleteNodeBalancer}
+          onClick={this.onSubmitDelete}
           type="secondary"
           destructive
           loading={this.state.deleteConfirmDialog.submitting}
@@ -321,19 +329,25 @@ const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUp
 
 export const enhanced = compose<CombinedProps, {}>(
   connect((state: ApplicationState) => {
-    const { nodeBalancers } = state.__resources;
-    const { error, items, loading } = nodeBalancers;
+    const { __resources } = state;
+    const { nodeBalancers, nodeBalancerConfigs, nodeBalancerConfigNodes } = __resources
+    const { error, items, loading: nodeBalancersLoading } = nodeBalancers;
+    const { loading: nodeBalancersConfigsLoading } = nodeBalancerConfigs;
+    const { loading: nodeBalancerConfigNodesLoading } = nodeBalancerConfigNodes;
 
     return {
       nodeBalancersCount: items.length,
-      nodeBalancersData: nodeBalancersWithConfigs(nodeBalancers),
+      nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: error,
-      nodeBalancersLoading: loading,
+      nodeBalancersLoading: nodeBalancersLoading
+        || nodeBalancersConfigsLoading
+        || nodeBalancerConfigNodesLoading,
     };
   }),
   withLocalStorage,
   styled,
   withRouter,
+  withNodeBalancerActions,
   SectionErrorBoundary,
   setDocs(NodeBalancersLanding.docs),
 );

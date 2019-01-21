@@ -1,8 +1,9 @@
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
+import { RequestableData } from '../types';
 import { getProfileActions, handleUpdate } from './profile.actions';
 
-type State = RequestableData<Linode.Profile>;
+export type State = RequestableData<Linode.Profile>;
 
 interface Action {
   type: string;

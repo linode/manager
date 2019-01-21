@@ -1,8 +1,8 @@
 import { equals, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -10,9 +10,9 @@ import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import withImages from 'src/containers/withImages.container';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { ApplicationState } from 'src/store';
 import { getAllEntities } from 'src/utilities/getAll';
 import { getQueryParam } from 'src/utilities/queryParams';
-
 import ResultGroup from './ResultGroup';
 import { emptyResults, searchAll, SearchResults } from './utils';
 
@@ -166,7 +166,6 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-import { connect } from 'react-redux';
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
 }

@@ -2,6 +2,7 @@ import { Component } from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { LOGIN_ROOT } from 'src/constants';
 import * as session from 'src/session';
+import { ApplicationState } from 'src/store';
 import { logout } from 'src/store/authentication';
 
 interface Props {

@@ -14,7 +14,8 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getNodeBalancer, getNodeBalancerConfigs, updateNodeBalancer } from 'src/services/nodebalancers';
+import { getNodeBalancer, getNodeBalancerConfigs } from 'src/services/nodebalancers';
+import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
@@ -57,6 +58,7 @@ interface State {
 }
 
 type CombinedProps =
+  & WithNodeBalancerActions
   & InjectedNotistackProps
   & RouteProps
   & PreloadedProps
@@ -107,7 +109,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
-    return updateNodeBalancer(nodeBalancer.id, { label })
+    const { updateNodeBalancer } = this.props;
+
+    return updateNodeBalancer({nodeBalancerId: nodeBalancer.id,  label })
       .then(() => {
         this.setState({
           nodeBalancer: { ...nodeBalancer, label }, ApiError: undefined,
@@ -126,7 +130,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateTags = (tags: string[]) => {
     const { nodeBalancer } = this.state;
-    return updateNodeBalancer(nodeBalancer.id, { tags })
+    const {updateNodeBalancer} = this.props;
+
+    return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, tags })
       .then(() => {
         this.setState({ nodeBalancer: { ...nodeBalancer, tags }, ApiError: undefined })
       })
@@ -183,7 +189,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     const apiErrorText = hasErrorFor('label');
 
     const nodeBalancerLabel = (this.state.labelInput !== undefined)
-    ? this.state.labelInput : nodeBalancer.label;
+      ? this.state.labelInput : nodeBalancer.label;
 
     return (
       <React.Fragment>
@@ -245,14 +251,14 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                 nodeBalancerId={nodeBalancer.id}
                 nodeBalancerLabel={nodeBalancer.label}
                 nodeBalancerClientConnThrottle={nodeBalancer.client_conn_throttle}
-                />
+              />
             }
           />
           <Route
             exact
             path={`${path}/configurations`}
             render={() =>
-              <NodeBalancerConfigurations nodeBalancerLabel={nodeBalancer.label}/>
+              <NodeBalancerConfigurations nodeBalancerLabel={nodeBalancer.label} />
             }
           />
           {/* 404 */}
@@ -276,4 +282,5 @@ export default compose(
   styled,
   preloaded,
   withSnackbar,
+  withNodeBalancerActions,
 )(NodeBalancerDetail);

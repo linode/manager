@@ -1,50 +1,61 @@
 
 import { Reducer } from "redux";
+import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
-import { onError, onStart } from "../store.helpers";
-import { getAllNodeBalancersActions } from './nodeBalancer.actions';
+import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from "../store.helpers";
+import { createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, updateNodeBalancersActions } from './nodeBalancer.actions';
 
+export type State = MappedEntityState<Linode.NodeBalancer>;
 
-
-type State = ApplicationState['__resources']['nodeBalancers'];
-
-export const defaultState: State = {
-  nodeBalancers: {},
-  nodeBalancerConfigs: {},
-  loading: true,
-  error: undefined,
-  items: [],
-  lastUpdated: 0,
-};
+export const defaultState: State = createDefaultState();
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
-
+  /** Get all */
   if (isType(action, getAllNodeBalancersActions.started)) {
     return onStart(state);
   }
 
   if (isType(action, getAllNodeBalancersActions.done)) {
-    const { entities, result } = action.payload.result;
+    const { result } = action.payload;
+
     if (result.length === 0) {
       return {
         ...state,
         loading: false,
-      }
+        lastUpdated: Date.now(),
+      };
     }
 
-    const { nodeBalancers, nodeBalancerConfigs } = entities;
-    return {
-      ...state,
-      loading: false,
-      nodeBalancers: nodeBalancers || {},
-      nodeBalancerConfigs: nodeBalancerConfigs || {},
-      items: result,
-    };
+    return onGetAllSuccess(result, state);
   }
 
   if (isType(action, getAllNodeBalancersActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
+  }
+
+  /** Create */
+
+  if (isType(action, createNodeBalancersActions.done)) {
+    const { result } = action.payload;
+
+    return onCreateOrUpdate(result, state);
+  }
+
+
+  /** Update */
+  if (isType(action, updateNodeBalancersActions.done)) {
+    const { result } = action.payload;
+
+    return onCreateOrUpdate(result, state);
+  }
+
+  /** Delete */
+
+  if (isType(action, deleteNodeBalancerActions.done)) {
+    const { params: { nodeBalancerId } } = action.payload;
+
+    return onDeleteSuccess(nodeBalancerId, state);
   }
 
   return state;

@@ -5,6 +5,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { BackupsCTA } from 'src/features/Backups';
+import { ApplicationState } from 'src/store';
 import DocComponent, { Doc } from './DocComponent';
 
 type ClassNames = 'root'

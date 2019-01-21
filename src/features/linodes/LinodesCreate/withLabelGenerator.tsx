@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { ApplicationState } from 'src/store';
 import { deriveDefaultLabel, LabelArgTypes } from './deriveDefaultLabel';
 
 export interface LabelProps {

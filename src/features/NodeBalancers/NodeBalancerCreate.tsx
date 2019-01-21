@@ -19,7 +19,7 @@ import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import { getLinodes } from 'src/services/linodes';
-import { createNodeBalancer } from 'src/services/nodebalancers';
+import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -44,6 +44,7 @@ type ClassNames =
 });
 
 type CombinedProps =
+& WithNodeBalancerActions
   & WithRegions
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
@@ -220,6 +221,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 
   createNodeBalancer = () => {
+    const { createNodeBalancer } = this.props;
     const { nodeBalancerFields } = this.state;
 
     /* transform node data for the requests */
@@ -664,6 +666,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 
 export default compose(
   withRegions,
+  withNodeBalancerActions,
   styled,
   withRouter,
 )(NodeBalancerCreate);

@@ -25,6 +25,7 @@ import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequ
 import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
+import { detachVolume } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';

@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
 import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, updateVolumeActions, updateVolumeStatus } from './volume.actions';
@@ -111,6 +112,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /*
+
   * Get All Volumes
   **/
   if (isType(action, getAllVolumesActions.started)) {
