@@ -250,7 +250,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                 disabled={powerOffDisabled}
                 tooltipText={
                   powerOffDisabled ?
-                    'Your Linode must be fully powered down in order to resize disk'
+                    'Your Linode must be fully powered down in order to resize a disk'
                     : ''
                 }
               >
