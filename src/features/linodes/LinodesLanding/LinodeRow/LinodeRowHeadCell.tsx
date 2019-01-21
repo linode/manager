@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
+import withImages from 'src/containers/withImages.container';
 import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import LinodeStatusIndicator from '../LinodeStatusIndicator';
+import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 type ClassNames = 'root'
  | 'link'
@@ -84,26 +88,60 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 });
 
 interface Props {
+  backups: Linode.LinodeBackups;
+  id: number;
+  image: string | null;
+  ipv4: string[];
+  ipv6: string;
+  label: string;
+  region: string;
+  disk: number;
+  memory: number;
+  vcpus: number;
+  status: Linode.LinodeStatus;
+  type: null | string;
+  tags: string[];
+  mostRecentBackup: string | null;
+
   loading: boolean;
-  linodeDescription: string;
-  linodeId: number;
-  linodeLabel: string;
-  linodeStatus: Linode.LinodeStatus;
-  linodeRecentEvent?: Linode.Event;
+  recentEvent?: Linode.Event;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface WithImagesProps {
+  imagesData: Linode.Image[]
+}
+
+type CombinedProps = Props
+& WithDisplayType
+& WithImagesProps
+& WithStyles<ClassNames>;
 
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
   const {
+    // linode props
+    id,
+    label,
+    status,
+    memory,
+    disk,
+    vcpus,  
+    image,
+    // other props
     classes,
-    linodeDescription,
-    linodeId,
-    linodeLabel,
-    linodeStatus,
     loading,
-    linodeRecentEvent,
+    recentEvent,
+    displayType,
+    imagesData,
   } = props;
+
+  const description = getLinodeDescription(
+    displayType,
+    memory,
+    disk,
+    vcpus,
+    image,
+    imagesData,
+    )
 
 
   return (
@@ -112,7 +150,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
       className={classes.root}
       rowSpan={loading ? 2 : 1}
     >
-      <Link to={`/linodes/${linodeId}`} className={classes.link}>
+      <Link to={`/linodes/${id}`} className={classes.link}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
             <LinodeIcon className={classes.icon}/>
@@ -120,23 +158,23 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item className={classes.labelGridWrapper}>
             <div className={loading ? classes.labelWrapper : ''}>
               {
-                linodeRecentEvent && linodeInTransition(linodeStatus, linodeRecentEvent) &&
+                recentEvent && linodeInTransition(status, recentEvent) &&
                 <ProgressDisplay
                   className={classes.loadingStatus}
-                  text={transitionText(linodeStatus, linodeRecentEvent)}
-                  progress={linodeRecentEvent.percent_complete}
+                  text={transitionText(status, recentEvent)}
+                  progress={recentEvent.percent_complete}
                 />
               }
              <div className={classes.labelStatusWrapper}>
                <Typography role="header" variant="h3" data-qa-label>
-                {linodeLabel}
+                {label}
               </Typography>
               <div className={classes.statusOuter}>
-                <LinodeStatusIndicator status={linodeStatus} />
+                <LinodeStatusIndicator status={status} />
               </div>
             </div>
             <Typography className={classes.linodeDescription}>
-              {linodeDescription}
+              {description}
             </Typography>
             </div>
           </Grid>
@@ -147,8 +185,17 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
 };
 
 const styled = withStyles(styles);
+const enhanced = compose<CombinedProps, Props>(
+  withDisplayType,
+  styled,
+  withImages((ownProps, imagesData, imagesLoading) => ({
+    ...ownProps,
+    imagesData: imagesData.filter(i => i.is_public === true),
+  })),
+)
 
-export default styled(LinodeRowHeadCell);
+
+export default enhanced(LinodeRowHeadCell);
 
 const ProgressDisplay: React.StatelessComponent<{ className: string; progress: null | number; text: string }> = (props) => {
   const { progress, text, className } = props;

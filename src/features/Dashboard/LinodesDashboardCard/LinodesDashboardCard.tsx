@@ -8,15 +8,12 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
+import LinodeRowHeadCell from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRowHeadCell';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import { displayType } from 'src/features/linodes/presentation';
 import { isEntityEvent, isInProgressEvent } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
 
@@ -108,40 +105,35 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
   renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
   renderData = (data: Linode.Linode[]) => {
-    const { classes, typesData } = this.props;
+    const { classes } = this.props;
 
-    return data.map(({ id, label, region, status, type }) => (
-      <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
-        <TableCell className={classes.labelCol}>
-          <Link to={`/linodes/${id}`} className="black nu">
-            <Grid container wrap="nowrap" className={classes.linodeWrapper}>
-              <Grid item>
-                <LinodeStatusIndicator status={status} />
-              </Grid>
-              <Grid item>
-                <Grid container direction="column" spacing={8}>
-                  <Grid item style={{ paddingBottom: 0 }}>
-                    <Typography className={classes.wrapHeader} variant="h3">
-                      {label}
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="body1" data-qa-linode-plan>
-                      {typesData && displayType(type, typesData || [])}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Link>
-        </TableCell>
+    return data.map(linode => {
+      const { id, label, region } = linode;
+      return <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
+        <LinodeRowHeadCell
+          loading={false}
+          backups={linode.backups}
+          id={linode.id}
+          ipv4={linode.ipv4}
+          ipv6={linode.ipv6}
+          label={linode.label}
+          region={linode.region}
+          status={linode.status}
+          tags={linode.tags}
+          mostRecentBackup={linode.mostRecentBackup}
+          disk={linode.specs.disk}
+          vcpus={linode.specs.vcpus}  
+          memory={linode.specs.memory}
+          type={linode.type}
+          image={linode.image}
+      />
         <Hidden xsDown>
           <TableCell className={classes.moreCol} data-qa-linode-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
       </TableRow>
-    ));
+    });
   };
 
 }
