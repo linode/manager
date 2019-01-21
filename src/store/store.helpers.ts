@@ -32,25 +32,11 @@ export const createDefaultState = <E extends Entity>(override: Partial<MappedEnt
 })
 
 export const onDeleteSuccess = <E extends Entity>(id: string | number, state: MappedEntityState<E>): MappedEntityState<E> => {
-  const { itemsById } = state;
-  const iid = typeof id === 'number' ? String(id) : id;
-  const updated = omit([iid], itemsById);
-
-  return {
-    ...state,
-    items: keys(updated),
-    itemsById: updated,
-  }
+  return removeMany([String(id)], state);
 };
 
 export const onCreateOrUpdate = <E extends Entity>(entity: E, state: MappedEntityState<E>): MappedEntityState<E> => {
-  const updated = { ...state.itemsById, [entity.id]: entity };
-
-  return {
-    ...state,
-    itemsById: updated,
-    items: keys(updated),
-  };
+  return addMany([entity], state);
 }
 
 export const removeMany = <E extends Entity>(list: string[], state: MappedEntityState<E>): MappedEntityState<E> => {
@@ -59,7 +45,7 @@ export const removeMany = <E extends Entity>(list: string[], state: MappedEntity
   return {
     ...state,
     itemsById,
-    items: Object.keys(itemsById),
+    items: keys(itemsById),
   }
 };
 
@@ -69,7 +55,7 @@ export const addMany = <E extends Entity>(list: E[], state: MappedEntityState<E>
   return {
     ...state,
     itemsById,
-    items: Object.keys(itemsById),
+    items: keys(itemsById),
   }
 };
 
