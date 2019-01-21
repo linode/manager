@@ -4,7 +4,7 @@ import { isType } from 'typescript-fsa';
 import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
 import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, updateVolumeActions, updateVolumeStatus } from './volume.actions';
 
-type State = ApplicationState['__resources']['volumes'];
+export type State = MappedEntityState<Linode.Volume>;
 
 export const defaultState: State = createDefaultState<Linode.Volume>();
 

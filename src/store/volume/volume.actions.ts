@@ -13,7 +13,6 @@ export type ResizeVolumeParams = VolumeId & ResizeVolumePayload;
 export const actionCreator = actionCreatorFactory('@@manager/volumes');
 
 export const createVolumeActions = actionCreator.async<VolumeRequestPayload, Linode.Volume, Linode.ApiFieldError[]>(`create`);
-
 export const getOneVolumeActions = actionCreator.async<VolumeId, Linode.Volume, Linode.ApiFieldError[]>(`get-one`)
 export const updateVolumeActions = actionCreator.async<UpdateVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`update`);
 export const deleteVolumeActions = actionCreator.async<VolumeId, {}, Linode.ApiFieldError[]>(`delete`);
@@ -24,10 +23,5 @@ export const detachVolumeActions = actionCreator.async<VolumeId, {}, Linode.ApiF
 export const cloneVolumeActions = actionCreator.async<CloneVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`clone`);
 export const resizeVolumeActions = actionCreator.async<ResizeVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`resize`);
 export const updateVolumeStatus = actionCreator<{ volumeId: number, status: Linode.VolumeStatus }>('update-volume-status');
-
-export type UpdateVolumeParams = VolumeId & UpdateVolumeRequest;
-export const updateVolumeActions = actionCreator.async<UpdateVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`update`);
-
-export const deleteVolumeActions = actionCreator.async<VolumeId, Linode.Volume, Linode.ApiFieldError[]>(`delete`);
 
 export const getAllVolumesActions = actionCreator.async<void, Linode.Volume[], Linode.ApiFieldError[]>('get-all');

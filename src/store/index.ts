@@ -12,16 +12,6 @@ import events, { defaultState as eventsDefaultState, State as EventsState } from
 import images, { defaultState as defaultImagesState, State as ImagesStata } from 'src/store/image/image.reducer';
 import linodeDetail, { defaultState as linodeDetailDefaultState, State as LinodeDetailState } from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
-import linodes, { defaultState as defaultLinodesState } from 'src/store/linodes/linodes.reducer';
-import types, { defaultState as defaultTypesState } from 'src/store/linodeType/linodeType.reducer';
-import nodeBalancers, { defaultState as defaultNodeBalancerState } from 'src/store/nodeBalancer/nodeBalancer.reducer';
-import profile, { defaultState as defaultProfileState } from 'src/store/profile/profile.reducer';
-import regions, { defaultState as defaultRegionsState } from 'src/store/regions/regions.reducer';
-import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState } from 'src/store/stackScriptDrawer';
-import tagImportDrawer, { defaultState as tagDrawerDefaultState } from 'src/store/tagImportDrawer';
-import volumeEvents from 'src/store/volume/volume.events';
-import volumes, { defaultState as defaultVolumesState } from 'src/store/volume/volume.reducer';
-import volumeDrawer, { defaultState as volumeDrawerDefaultState } from 'src/store/volumeDrawer';
 import linodes, { defaultState as defaultLinodesState, State as LinodesState } from 'src/store/linodes/linodes.reducer';
 import types, { defaultState as defaultTypesState, State as TypesState } from 'src/store/linodeType/linodeType.reducer';
 import nodeBalancers, { defaultState as defaultNodeBalancerState, State as NodeBalancersState } from 'src/store/nodeBalancer/nodeBalancer.reducer';
@@ -31,6 +21,7 @@ import profile, { defaultState as defaultProfileState, State as ProfileState } f
 import regions, { defaultState as defaultRegionsState, State as RegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState, State as StackScriptDrawerState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState, State as TagImportDrawerState } from 'src/store/tagImportDrawer';
+import volumeEvents from 'src/store/volume/volume.events';
 import volumes, { defaultState as defaultVolumesState, State as VolumesState } from 'src/store/volume/volume.reducer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState, State as VolumeDrawerState } from 'src/store/volumeDrawer';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
