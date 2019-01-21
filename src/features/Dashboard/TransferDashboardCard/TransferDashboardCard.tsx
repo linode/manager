@@ -50,14 +50,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       flexDirection: 'row',
       flexWrap: 'nowrap',
       textAlign: 'left',
-      alignItems: 'flex-start',
     },
   },
   poolUsageProgress: {
     margin: 0,
     height: 'auto',
     [theme.breakpoints.up('lg')]: {
-      margin: '8px auto 20px',
+      margin: '8px auto',
+      paddingRight: theme.spacing.unit * 2
     }
   },
   circleChildren: {
@@ -80,14 +80,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'center',
   },
   title: {
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingBottom: theme.spacing.unit * 2
   },
   divider: {
     backgroundColor: theme.palette.divider,
+    margin: `${theme.spacing.unit}px 0`
   },
   itemText: {
     fontSize: '1rem',
@@ -147,7 +144,6 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     return (
       <DashboardCard className={classes.card}>
         <Paper className={classes.root}>
-          <Typography variant='h2' className={classes.title}>This Month's Network Transfer Pool</Typography>
           <Grid
             container
             direction="column"
@@ -175,22 +171,13 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
               </CircleProgress>
             </Grid>
             <Grid item container direction="column">
-              <Grid item>
-                <Typography>You have used {renderPercentageString(poolUsagePct)} of your available network transfer during the current billing cycle.</Typography>
-              </Grid>
-              <Grid item>
-                <Divider className={classes.divider}/>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.itemText + ' ' + classes.itemTextFirst}>Free: <strong>{quota - used}</strong> GB</Typography>
-                <Typography className={classes.itemText}>Used: <strong>{used}</strong> GB</Typography>
-              </Grid>
-              <Grid item>
-                <Divider className={classes.divider} />
-              </Grid>
-              <Grid item>
-                <Typography className={classes.itemText}>Total: <strong>{quota}</strong> GB</Typography>
-              </Grid>
+              <Typography variant='h2' className={classes.title}>This Month's Network Transfer Pool</Typography>
+              <Typography>You have used {renderPercentageString(poolUsagePct)} of your available network transfer during the current billing cycle.</Typography>
+              <Divider className={classes.divider}/>
+              <Typography className={classes.itemText + ' ' + classes.itemTextFirst}>Free: <strong>{quota - used}</strong> GB</Typography>
+              <Typography className={classes.itemText}>Used: <strong>{used}</strong> GB</Typography>
+              <Divider className={classes.divider} />
+              <Typography className={classes.itemText}>Total: <strong>{quota}</strong> GB</Typography>
             </Grid>
           </Grid>
         </Paper>
