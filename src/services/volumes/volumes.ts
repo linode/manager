@@ -18,6 +18,9 @@ export interface AttachVolumePayload {
   linode_id: number,
   config_id?: number,
 }
+export interface CloneVolumePayload {
+  label: string;
+}
 
 /**
  * getVolume
@@ -108,7 +111,7 @@ export const deleteVolume = (volumeId: number) => Request<{}>(
  * @param data { { label: string } } A label to identify the new volume.
  *
  */
-export const cloneVolume = (volumeId: number, data: { label: string }) => Request<{}>(
+export const cloneVolume = (volumeId: number, data: { label: string }) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
   setMethod('POST'),
   setData(data, CloneVolumeSchema),

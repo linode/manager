@@ -1,4 +1,4 @@
-import { AttachVolumePayload, UpdateVolumeRequest, VolumeRequestPayload } from 'src/services/volumes';
+import { AttachVolumePayload, CloneVolumePayload, UpdateVolumeRequest, VolumeRequestPayload } from 'src/services/volumes';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 export interface VolumeId {
@@ -17,11 +17,15 @@ export const attachVolumeActions = actionCreator.async<AttachVolumeParams, Linod
 
 export const detachVolumeActions = actionCreator.async<VolumeId, {}, Linode.ApiFieldError[]>(`detach`);
 
-export const deleteVolumeActions = actionCreator.async<VolumeId, Linode.Volume, Linode.ApiFieldError[]>(`delete`);
+export const deleteVolumeActions = actionCreator.async<VolumeId, {}, Linode.ApiFieldError[]>(`delete`);
 
 export const getAllVolumesActions = actionCreator.async<void, Linode.Volume[], Linode.ApiFieldError[]>('get-all');
 
+export type CloneVolumeParams = VolumeId & CloneVolumePayload;
+export const cloneVolumeActions = actionCreator.async<CloneVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`clone`);
+
 type UpdateVolumeInStore = (v: Linode.Volume) => Linode.Volume;
-export const updateVolumeInStore = actionCreator<{ id: number, update: UpdateVolumeInStore }>('update-linode-in-store');
+export const updateVolumeInStore = actionCreator<{ volumeId: number, update: UpdateVolumeInStore }>('update-linode-in-store');
 
 export const getOneVolumeActions = actionCreator.async<VolumeId, Linode.Volume, Linode.ApiFieldError[]>(`get-one`)
+
