@@ -53,6 +53,16 @@ export const onCreateOrUpdate = <E extends Entity>(entity: E, state: MappedEntit
   };
 }
 
+export const removeMany = <E extends Entity>(list: string[], state: MappedEntityState<E>): MappedEntityState<E> => {
+  const itemsById = omit(list, state.itemsById);
+
+  return {
+    ...state,
+    itemsById,
+    items: Object.keys(itemsById),
+  }
+};
+
 
 export const createRequestThunk = <Req, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
