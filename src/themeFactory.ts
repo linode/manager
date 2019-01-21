@@ -596,6 +596,7 @@ const themeDefaults: ThemeOptions = {
         },
         '&$disabled': {
           color: '#555',
+          opacity: .5
         },
       },
     },
@@ -634,7 +635,7 @@ const themeDefaults: ThemeOptions = {
       root: {
         '&$disabled': {
           borderColor: '#ccc',
-          color: '#606469',
+          color: '#ccc',
           opacity: .5,
         },
         '&$focused': {

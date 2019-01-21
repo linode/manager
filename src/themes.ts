@@ -342,11 +342,11 @@ export const dark = createTheme({
     },
     MuiInput: {
       root: {
-        '& $disabled': {
+        '&$disabled': {
           borderColor: '#606469',
-          color: '#eee !important',
+          color: '#666 !important',
         },
-        '& $focused': {
+        '&$focused': {
           borderColor: primaryColors.main,
         },
         border: '1px solid #222',
