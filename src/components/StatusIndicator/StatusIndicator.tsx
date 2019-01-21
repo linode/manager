@@ -64,3 +64,34 @@ const StatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
 const styled = withStyles(styles);
 
 export default styled(StatusIndicator);
+
+export const getStatusForDomain = (status: string) => {
+  switch (status) {
+    case 'edit_mode':
+      return 'loading';
+    case 'active':
+      return 'active';
+    case 'disabled':
+      return 'inactive';
+    case 'has_errors':
+      return 'error';
+    default:
+      return 'inactive';
+  }
+}
+
+export const getStatusForVolume = (status: string) => {
+  switch (status) {
+    case 'creating':
+    case 'resizing':
+      return 'loading';
+    case 'active':
+      return 'active';
+    case 'contact_support':
+      return 'error';
+    default:
+      return 'inactive';
+  }
+}
+
+

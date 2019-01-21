@@ -10,7 +10,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import StatusIndicator from 'src/components/StatusIndicator';
+import StatusIndicator, { getStatusForDomain } from 'src/components/StatusIndicator';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -81,21 +81,6 @@ interface State {
 
 type CombinedProps = WithStyles<ClassNames> & WithUpdatingDomainsProps
 
-const getStatus = (status: string) => {
-  switch (status) {
-    case 'edit_mode':
-      return 'loading';
-    case 'active':
-      return 'active';
-    case 'disabled':
-      return 'inactive';
-    case 'has_errors':
-      return 'error';
-    default:
-      return 'inactive';
-  }
-}
-
 class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
   render() {
@@ -159,7 +144,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
                   {domain}
                   </Typography>
                   <div className={classes.statusOuter}>
-                    <StatusIndicator status={getStatus(status)} />
+                    <StatusIndicator status={getStatusForDomain(status)} />
                   </div>
                 </div>
                 <Typography className={classes.description}>
