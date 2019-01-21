@@ -18,3 +18,8 @@ export const attachVolumeActions = actionCreator.async<AttachVolumeParams, Linod
 export const deleteVolumeActions = actionCreator.async<VolumeId, Linode.Volume, Linode.ApiFieldError[]>(`delete`);
 
 export const getAllVolumesActions = actionCreator.async<void, Linode.Volume[], Linode.ApiFieldError[]>('get-all');
+
+type UpdateVolumeInStore = (v: Linode.Volume) => Linode.Volume;
+export const updateVolumeInStore = actionCreator<{ id: number, update: UpdateVolumeInStore }>('update-linode-in-store');
+
+export const getOneVolumeActions = actionCreator.async<VolumeId, Linode.Volume, Linode.ApiFieldError[]>(`get-one`)

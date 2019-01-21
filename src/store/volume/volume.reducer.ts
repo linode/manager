@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from "../store.helpers";
-import { createVolumeActions, deleteVolumeActions, getAllVolumesActions, updateVolumeActions } from './volume.actions';
+import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
+import { attachVolumeActions, createVolumeActions, deleteVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions } from './volume.actions';
 
 type State = ApplicationState['__resources']['volumes'];
 
@@ -46,6 +46,22 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, deleteVolumeActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
+  }
+
+  /*
+  * Attach Volume
+  */
+ if (isType(action, attachVolumeActions.done)) {
+   const { result } = action.payload;
+   return onCreateOrUpdate<Linode.Volume>(result, state)
+ }
+
+  /*
+  * Get One Volume
+  */
+  if (isType(action, getOneVolumeActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate<Linode.Volume>(result, state);
   }
 
   /*
