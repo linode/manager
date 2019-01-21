@@ -85,7 +85,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       backgroundColor: 'transparent',
     },
     '& .react-select__value-container': {
-      width: 150,
+      width: 160,
     },
   },
 });
