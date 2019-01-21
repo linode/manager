@@ -26,6 +26,7 @@ const props = {
   label: "This drawer",
   filesystem: "ext4",
   size: 50,
+  powerOffDisabled: false
 }
 
 const component = shallow(<LinodeDiskDrawer {...props} />)

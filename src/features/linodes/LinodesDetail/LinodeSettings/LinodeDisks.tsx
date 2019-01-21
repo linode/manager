@@ -68,7 +68,7 @@ interface LinodeContextProps {
   linodeError: Linode.ApiFieldError[],
   linodeLoading: boolean,
   linodeId?: number;
-  linodeStatus?: string;
+  linodeStatus?: Linode.LinodeStatus;
   linodeTotalDisk?: number;
 }
 
@@ -96,6 +96,7 @@ interface DrawerState {
     image?: string;
     password?: string;
   };
+  powerOffDisabled: boolean;
 }
 
 interface ImagizeDrawerState {
@@ -135,6 +136,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       filesystem: 'ext4',
       size: 0,
     },
+    powerOffDisabled: false
   };
 
   static defaultImagizeDrawerState: ImagizeDrawerState = {
@@ -247,7 +249,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderTableContent = (loading: boolean, status?: string, error?: Error, data?: Linode.Disk[]) => {
+  renderTableContent = (loading: boolean, status?: Linode.LinodeStatus, error?: Error, data?: Linode.Disk[]) => {
     if (loading) {
       return <TableRowLoading colSpan={3} />
     }
@@ -268,7 +270,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           <LinodeDiskActionMenu
             linodeStatus={status || 'offline'}
             onRename={this.openDrawerForRename(disk)}
-            onResize={this.openDrawerForResize(disk)}
+            onResize={this.openDrawerForResize(disk, status)}
             onImagize={this.openImagizeDrawer(disk)}
             onDelete={this.openConfirmDelete(disk)}
           />
@@ -414,6 +416,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       errors,
       submitting,
       maximumSize,
+      powerOffDisabled,
       fields: { label, size, filesystem, password }, // Image is handled internally by React Select
     } = this.state.drawer;
 
@@ -437,6 +440,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         onPasswordChange={this.onPasswordChange}
         onResetImageMode={this.onResetImageMode}
         userSSHKeys={this.props.userSSHKeys}
+        powerOffDisabled={powerOffDisabled}
       />
     );
   }
@@ -599,7 +603,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     })
   };
 
-  openDrawerForResize = ({ id: diskId, filesystem, label, size }: Linode.Disk) => () => {
+  openDrawerForResize = ({ id: diskId, filesystem, label, size }: Linode.Disk, linodeStatus: Linode.LinodeStatus | undefined) => () => {
     this.setDrawer({
       diskId,
       errors: undefined,
@@ -612,6 +616,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       mode: 'resize',
       open: true,
       submitting: false,
+      powerOffDisabled: linodeStatus !== 'offline',
     })
   };
 

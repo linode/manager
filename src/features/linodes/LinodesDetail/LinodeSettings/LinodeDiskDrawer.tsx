@@ -45,6 +45,7 @@ interface Props extends EditableFields {
   errors?: Linode.ApiFieldError[];
   maximumSize: number;
   submitting: boolean;
+  powerOffDisabled: boolean;
   onClose: () => void;
   onSubmit: () => void;
   onLabelChange: (value: string) => void;
@@ -204,6 +205,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       onClose,
       classes,
       password,
+      powerOffDisabled,
       userSSHKeys,
     } = this.props;
     const { selectedMode } = this.state;
@@ -240,7 +242,18 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>
-              <Button onClick={onSubmit} type="primary" loading={submitting} data-qa-disk-submit>
+              <Button
+                onClick={onSubmit}
+                type="primary"
+                loading={submitting}
+                data-qa-disk-submit
+                disabled={powerOffDisabled}
+                tooltipText={
+                  powerOffDisabled ?
+                    'Your Linode must be fully powered down in order to resize disk'
+                    : ''
+                }
+              >
                 {submitLabelMap[mode]}
               </Button>
               <Button onClick={onClose} type="secondary" className="cancel" data-qa-disk-cancel>
