@@ -60,18 +60,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     padding: '10px 0 8px 12px',
   },
   listItem: {
-    borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create(['background-color', 'border-left-color']),
-    flexShrink: 0,
     padding: '10px 30px 10px 24px',
     '&:hover': {
-      borderLeftColor: 'rgba(0, 0, 0, 0.1)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
         color: 'white',
       },
     },
     '&:focus, &:active': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      outline: 0,
       '& $linkItem': {
         color: 'white',
         zIndex: 2,
@@ -269,29 +269,29 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return (
-      <ListItem
-        key={primaryLink.display}
-        button
-        divider={!isLast}
-        component="li"
-        role="menuitem"
-        focusRipple={true}
-        onClick={() => this.navigate(primaryLink.href)}
-        className={`
-          ${classes.listItem}
-          ${this.linkIsActive(primaryLink.href) && classes.active}
-        `}
-        data-qa-nav-item={primaryLink.key}
-      >
-        <ListItemText
-          primary={primaryLink.display}
-          disableTypography={true}
-          className={`
-            ${classes.linkItem}
-            ${this.linkIsActive(primaryLink.href) && classes.activeLink}
-          `}
-        />
-      </ListItem>
+      <React.Fragment key={primaryLink.key}>
+        <Link
+          role="menuitem"
+          to={primaryLink.href}
+          href="javascript:void(0)"
+          onClick={this.props.closeMenu}
+          data-qa-nav-item={primaryLink.key}
+          className={classNames({
+            [classes.listItem]: true,
+            [classes.active]: this.linkIsActive(primaryLink.href)
+          })}
+        >
+          <ListItemText
+            primary={primaryLink.display}
+            disableTypography={true}
+            className={classNames({
+              [classes.linkItem]: true,
+              [classes.active]: this.linkIsActive(primaryLink.href)
+            })}
+          />
+        </Link>
+        <Divider className={classes.divider} />
+      </React.Fragment>
     );
   }
 
@@ -309,7 +309,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           direction="column"
           wrap="nowrap"
           spacing={0}
-          component="ul"
+          component="nav"
           role="menu"
         >
           <Grid item>
