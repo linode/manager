@@ -4,8 +4,8 @@ import { Reducer } from "redux";
 import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onStart, removeMany } from "../store.helpers";
-import { createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, removeNodeBalancerConfigs, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
+import { addMany, createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onStart, removeMany } from "../store.helpers";
+import { addNodeBalancerConfigs, createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, removeNodeBalancerConfigs, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
 
 export type State = MappedEntityState<NodeBalancerConfig>;
 
@@ -71,7 +71,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, removeNodeBalancerConfigs)) {
     const { payload } = action;
 
-    removeMany(payload.map(String), state);
+    return removeMany(payload.map(String), state);
+  }
+
+  if (isType(action, addNodeBalancerConfigs)) {
+    const { payload } = action;
+
+    return addMany(payload, state);
   }
 
   return state;
