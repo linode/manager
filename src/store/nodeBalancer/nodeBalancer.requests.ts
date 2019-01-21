@@ -1,4 +1,5 @@
-import { createNodeBalancer as _createNodeBalancer, deleteNodeBalancer as _deleteNodeBalancer, getNodeBalancers, updateNodeBalancer as _updateNodeBalancer } from 'src/services/nodebalancers';
+import * as Bluebird from 'bluebird';
+import { createNodeBalancer as _createNodeBalancer, deleteNodeBalancer as _deleteNodeBalancer, getNodeBalancer as _getNodeBalancer, getNodeBalancers, updateNodeBalancer as _updateNodeBalancer } from 'src/services/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { deleteNodeBalancerConfigActions } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
@@ -6,7 +7,7 @@ import { deleteNodeBalancerConfigNodesActions } from '../nodeBalancerConfigNode/
 import { getAllNodeBalancerConfigNodes } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.requests';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
-import { CreateNodeBalancerParams, createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, updateNodeBalancersActions } from './nodeBalancer.actions';
+import { CreateNodeBalancerParams, createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, getNodeBalancerWithConfigsAndNodesActions, GetNodeBalancerWithConfigsAndNodesParams, updateNodeBalancersActions } from './nodeBalancer.actions';
 
 const getAllNodeBalancersRequest = getAll<Linode.NodeBalancer>(getNodeBalancers);
 
@@ -94,4 +95,33 @@ export const updateNodeBalancer = createRequestThunk(
   updateNodeBalancersActions,
   ({ nodeBalancerId, ...data }) => _updateNodeBalancer(nodeBalancerId, data),
 )
+
+export const getNodeBalancerr = createRequestThunk(
+  getNodeBalancerWithConfigsAndNodesActions,
+  ({ nodeBalancerId }) => _getNodeBalancer(nodeBalancerId)
+);
+
+export const getNodeBalancerWithConfigsAndNodes: ThunkActionCreator<Promise<Linode.NodeBalancer>> = (params: GetNodeBalancerWithConfigsAndNodesParams) => (dispatch, getState) => {
+  const { nodeBalancerId } = params;
+  const { started, done, failed } = getNodeBalancerWithConfigsAndNodesActions;
+
+  dispatch(started(params));
+
+  return _getNodeBalancer(nodeBalancerId)
+    .then((nodeBalancer) => {
+      return dispatch(getAllNodeBalancerConfigs({ nodeBalancerId }))
+        .then((nodeBalancerConfigs) =>
+          Bluebird.map(nodeBalancerConfigs, ({ id: nodeBalancerConfigId }) => {
+            dispatch(getAllNodeBalancerConfigNodes({ nodeBalancerId, nodeBalancerConfigId }))
+          })
+            .then(() => {
+              dispatch(done({ params, result: nodeBalancer }));
+              return nodeBalancer;
+            }));
+    })
+    .catch((error) => {
+      dispatch(failed({ params, error }));
+      return error;
+    });
+};
 
