@@ -14,6 +14,11 @@ export interface VolumeRequestPayload {
   tags?: string[],
 };
 
+export interface AttachVolumePayload {
+  linode_id: number,
+  config_id?: number,
+}
+
 /**
  * getVolume
  *
@@ -55,10 +60,8 @@ export const getVolumes = (params?: any, filters?: any) =>
  * @param payload.config_id { number } The configuration profile to include this volume in.
  *   If this value is not provided, the most recently booted Config profile will be chosen.
  */
-export const attachVolume = (volumeId: number, payload: {
-  linode_id: number,
-  config_id?: number,
-}) => Request<Volume>(
+
+export const attachVolume = (volumeId: number, payload: AttachVolumePayload) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
   setMethod('POST'),
   setData(payload),
