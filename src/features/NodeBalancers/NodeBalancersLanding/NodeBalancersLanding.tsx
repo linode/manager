@@ -330,18 +330,14 @@ const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUp
 export const enhanced = compose<CombinedProps, {}>(
   connect((state: ApplicationState) => {
     const { __resources } = state;
-    const { nodeBalancers, nodeBalancerConfigs, nodeBalancerConfigNodes } = __resources
+    const { nodeBalancers } = __resources
     const { error, items, loading: nodeBalancersLoading } = nodeBalancers;
-    const { loading: nodeBalancersConfigsLoading } = nodeBalancerConfigs;
-    const { loading: nodeBalancerConfigNodesLoading } = nodeBalancerConfigNodes;
 
     return {
       nodeBalancersCount: items.length,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: error,
-      nodeBalancersLoading: nodeBalancersLoading
-        || nodeBalancersConfigsLoading
-        || nodeBalancerConfigNodesLoading,
+      nodeBalancersLoading,
     };
   }),
   withLocalStorage,
