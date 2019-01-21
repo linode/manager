@@ -22,6 +22,10 @@ export interface CloneVolumePayload {
   label: string;
 }
 
+export interface ResizeVolumePayload {
+  size: number;
+}
+
 /**
  * getVolume
  *
@@ -111,7 +115,7 @@ export const deleteVolume = (volumeId: number) => Request<{}>(
  * @param data { { label: string } } A label to identify the new volume.
  *
  */
-export const cloneVolume = (volumeId: number, data: { label: string }) => Request<Volume>(
+export const cloneVolume = (volumeId: number, data: CloneVolumePayload) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
   setMethod('POST'),
   setData(data, CloneVolumeSchema),
@@ -127,7 +131,7 @@ export const cloneVolume = (volumeId: number, data: { label: string }) => Reques
  * @param data { { size: number } } The size of the Volume (in GiB).
  *
  */
-export const resizeVolume = (volumeId: number, data: { size: number }) => Request<{}>(
+export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
   setMethod('POST'),
 

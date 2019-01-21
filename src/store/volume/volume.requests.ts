@@ -1,7 +1,7 @@
-import { attachVolume as _attachVolume, cloneVolume as _cloneVolume, createVolume as _createVolume, deleteVolume as _deleteVolume, detachVolume as _detachVolume, getVolume as _getVolume, getVolumes, updateVolume as _updateVolume, VolumeRequestPayload as _VolumeRequestPayload } from 'src/services/volumes';
+import { attachVolume as _attachVolume, cloneVolume as _cloneVolume, createVolume as _createVolume, deleteVolume as _deleteVolume, detachVolume as _detachVolume, getVolume as _getVolume, getVolumes, resizeVolume as _resizeVolume, updateVolume as _updateVolume, VolumeRequestPayload as _VolumeRequestPayload } from 'src/services/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { attachVolumeActions, AttachVolumeParams, cloneVolumeActions, CloneVolumeParams, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions, UpdateVolumeParams, VolumeId } from './volume.actions';
+import { attachVolumeActions, AttachVolumeParams, cloneVolumeActions, CloneVolumeParams, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, ResizeVolumeParams, updateVolumeActions, UpdateVolumeParams, VolumeId } from './volume.actions';
 
 /*
 * Create Volume
@@ -42,6 +42,14 @@ export const attachVolume = createRequestThunk<AttachVolumeParams, Linode.Volume
 export const detachVolume = createRequestThunk<VolumeId, {}, Linode.ApiFieldError[]>(
   detachVolumeActions,
   ({ volumeId }) => _detachVolume(volumeId)
+);
+
+/*
+* Resize Volume
+*/
+export const resizeVolume = createRequestThunk<ResizeVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(
+  resizeVolumeActions,
+  ({ volumeId, ...payload }) => _resizeVolume(volumeId, payload)
 );
 
 /*

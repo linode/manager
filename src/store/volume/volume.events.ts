@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { EventHandler } from '../middleware/combineEventsMiddleware';
-import { deleteVolumeActions } from './volume.actions';
+import { deleteVolumeActions, updateVolumeStatus } from './volume.actions';
 import { getOneVolume } from './volume.requests';
 
 const volumeEventsHandler: EventHandler = (event, dispatch) => {
@@ -8,14 +8,16 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
   const { id } = entity;
 
   switch (action) {
+    case 'volume_create':
     case 'volume_attach':
     case 'volume_detach':
-    case 'volume_create':
+    return handleVolumeUpdate(dispatch, status, id);
+
     case 'volume_resize':
-      return handleVolumeUpdate(dispatch, status, id);
+      return handleVolumeResize(dispatch, status, id);
 
     // case 'volume_clone':
-    //   return handleVolumeClone(dispatch, status, id);
+      // return handleVolumeClone(dispatch, status, id);
 
     case 'volume_delete':
       return handleVolumeDelete(dispatch, status, id);
@@ -39,10 +41,24 @@ const handleVolumeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
   }
 }
 
+const handleVolumeResize = (dispatch: Dispatch<any>, status: Linode.EventStatus, volumeId: number) => {
+  switch (status) {
+
+    // Similarly to cloning volumes, we don't get progress events on resizing, so we have to artificially set the
+    // status to "active" here, or else the volume could potentially be in an "resizing" state until the next
+    // getAllVolumes request.
+    case 'notification':
+      return dispatch(updateVolumeStatus({ volumeId, status: 'active' }));
+
+      default:
+      return;
+  }
+}
+
 // SEE COMMENT IN ./volume.reducer.ts
 // The entity coming through on this event is the SOURCE volume, NOT THE DESTINATION volume. Ideally this is where
 // we would have hardcoded the "active" status, but since we don't know the destination volume, we have to do
-// it in the reducer.
+// it in the reducer. The problem with requesting all volumes here, is that the volume will still be "creating".
 // const handleVolumeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, volumeId: number) => {
 //   switch (status) {
 //     case 'finished':
@@ -50,7 +66,9 @@ const handleVolumeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
 //     case 'failed':
 //     case 'scheduled':
 //     case 'started':
-//     default:
+//       return dispatch(getAllVolumes());
+
+//       default:
 //       return;
 //   }
 // };

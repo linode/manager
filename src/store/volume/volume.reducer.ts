@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
-import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions } from './volume.actions';
+import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, updateVolumeActions, updateVolumeStatus } from './volume.actions';
 
 type State = ApplicationState['__resources']['volumes'];
 
@@ -16,7 +16,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { result } = action.payload;
     return onCreateOrUpdate<Linode.Volume>(result, state)
   }
-
   if (isType(action, createVolumeActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
@@ -29,7 +28,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { result } = action.payload;
     return onCreateOrUpdate<Linode.Volume>(result, state)
   }
-
   if (isType(action, updateVolumeActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
@@ -42,7 +40,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { params } = action.payload;
     return onDeleteSuccess<Linode.Volume>(params.volumeId, state)
   }
-
   if (isType(action, deleteVolumeActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
@@ -51,23 +48,32 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   /*
   * Attach Volume
   */
- if (isType(action, attachVolumeActions.done)) {
-   const { result } = action.payload;
-   return onCreateOrUpdate<Linode.Volume>(result, state)
- }
-
+  if (isType(action, attachVolumeActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate<Linode.Volume>(result, state)
+  }
   /*
   * Detach Volume
   */
- if (isType(action, detachVolumeActions.done)) {
-   const { volumeId } = action.payload.params;
-   return onVolumeDetach(volumeId, state)
- }
+  if (isType(action, detachVolumeActions.done)) {
+    const { volumeId } = action.payload.params;
+    const { itemsById } = state;
+    return {
+      ...state,
+      itemsById: {
+        ...itemsById,
+        [volumeId]: {
+          ...itemsById[volumeId],
+          linode_id: null
+        }
+      }
+    };
+  }
 
   /*
   * Clone Volume
   */
- if (isType(action, cloneVolumeActions.done)) {
+  if (isType(action, cloneVolumeActions.done)) {
     const { result } = action.payload;
 
     // When we send a POST to clone a volume, we get back a 200 with the new volume as JSON. The status will be
@@ -86,7 +92,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const resultHardcodedWithActiveStatus = { ...result, status: hardcodedStatus }
 
     return onCreateOrUpdate<Linode.Volume>(resultHardcodedWithActiveStatus, state)
- }
+  }
+
+  /*
+  * Resize Volume
+  */
+  if (isType(action, resizeVolumeActions.done)) {
+    const { result } = action.payload;
+    return onCreateOrUpdate<Linode.Volume>(result, state);
+  }
 
   /*
   * Get One Volume
@@ -102,34 +116,35 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getAllVolumesActions.started)) {
     return onStart(state);
   }
-
   if (isType(action, getAllVolumesActions.done)) {
     const { result } = action.payload;
     return onGetAllSuccess(result, state);
   }
-
   if (isType(action, getAllVolumesActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
+  }
+
+  /*
+  * Update Volume Status
+  */
+  if (isType(action, updateVolumeStatus)) {
+    const { volumeId, status } = action.payload;
+    const { itemsById } = state;
+
+    return {
+      ...state,
+      itemsById: {
+        ...itemsById,
+        [volumeId]: {
+          ...itemsById[volumeId],
+          status
+        }
+      }
+    }
   }
 
   return state;
 }
 
 export default reducer;
-
-// Change linode_id = null on volume with matching volumeId
-const onVolumeDetach = (volumeId: number, state: State) => {
-  const { itemsById } = state;
-
-  return {
-    ...state,
-    itemsById: {
-      ...itemsById,
-      [volumeId]: {
-        ...itemsById[volumeId],
-        linode_id: null
-      }
-    }
-  };
-}
