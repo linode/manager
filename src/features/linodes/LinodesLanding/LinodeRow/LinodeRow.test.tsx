@@ -25,29 +25,24 @@ describe('LinodeRow', () => {
     recentEvent: undefined,
     openConfigDrawer: jest.fn(),
     mutationAvailable: false,
-    mostRecentBackup: null,
-    linodeType: 'whatever',
-    linodeTags: [],
-    linodeStatus: 'running',
-    linodeRegion: 'us-east',
     linodeNotifications: [],
-    linodeLabel: 'my-linode',
-    linodeIpv6: 'some.long.ipv6.address',
-    linodeIpv4: ['123.123.123.123'],
-    linodeId: 8675309,
-    linodeBackups: {
+    type: 'whatever',
+    tags: [],
+    status: 'running',
+    region: 'us-east',
+    label: 'my-linode',
+    ipv6: 'some.long.ipv6.address',
+    ipv4: ['123.123.123.123'],
+    id: 8675309,
+    backups: {
       enabled: false,
       schedule: { day: 'Friday', window: 'W0' },
     },
-    linodeImage: null,
-     linodeSpecs: {
-       memory: 0,
-       vcpus: 0,
-       disk: 0,
-       transfer: 0
-     },
-     imagesData: [],
-    displayType: 'Some Fancy Name'
+    image: null,
+    memory: 0,
+    vcpus: 0,
+    disk: 0,
+    mostRecentBackup: null,
   };
 
   const mockNotification: Linode.Notification = {
