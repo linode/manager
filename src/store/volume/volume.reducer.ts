@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
-import { attachVolumeActions, createVolumeActions, deleteVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions } from './volume.actions';
+import { attachVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions } from './volume.actions';
 
 type State = ApplicationState['__resources']['volumes'];
 
@@ -57,6 +57,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
  }
 
   /*
+  * Detach Volume
+  */
+ if (isType(action, detachVolumeActions.done)) {
+   const { volumeId } = action.payload.params;
+   return onVolumeDetach(volumeId, state)
+ }
+
+  /*
   * Get One Volume
   */
   if (isType(action, getOneVolumeActions.done)) {
@@ -85,3 +93,19 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 }
 
 export default reducer;
+
+// Change linode_id = null on volume with matching volumeId
+const onVolumeDetach = (volumeId: number, state: State) => {
+  const { itemsById } = state;
+
+  return {
+    ...state,
+    itemsById: {
+      ...itemsById,
+      [volumeId]: {
+        ...itemsById[volumeId],
+        linode_id: null
+      }
+    }
+  };
+}
