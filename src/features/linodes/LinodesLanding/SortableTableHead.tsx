@@ -6,12 +6,15 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
-type ClassNames = 'root' | 'label';
+type ClassNames = 'root' | 'label' | 'tagHeader';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
   label: {
     paddingLeft: 65
+  },
+  tagHeader: {
+    textAlign: 'center'
   }
 });
 
@@ -40,6 +43,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = (props) => {
           direction={order}
           active={isActive('tags')}
           handleClick={handleOrderChange}
+          className={classes.tagHeader}
         >
           Tags
         </TableSortCell>
