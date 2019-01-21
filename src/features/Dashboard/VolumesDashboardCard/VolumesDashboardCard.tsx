@@ -11,7 +11,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import StatusIndicator from 'src/components/StatusIndicator';
+import StatusIndicator, { getStatusForVolume } from 'src/components/StatusIndicator';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -87,20 +87,6 @@ interface State {
 }
 
 type CombinedProps = WithStyles<ClassNames>;
-
-const getStatus = (status: string) => {
-  switch (status) {
-    case 'creating':
-    case 'resizing':
-      return 'loading';
-    case 'active':
-      return 'active';
-    case 'contact_support':
-      return 'error';
-    default:
-      return 'inactive';
-  }
-}
 
 class VolumesDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
@@ -209,7 +195,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
                 {label}
                 </Typography>
                 <div className={classes.statusOuter}>
-                  <StatusIndicator status={getStatus(status)} />
+                  <StatusIndicator status={getStatusForVolume(status)} />
                 </div>
               </div>
               <Typography className={classes.description}>
