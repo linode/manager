@@ -20,3 +20,5 @@ export type DeleteNodeBalancerConfigNodeParams = NodeParams;
 export const deleteNodeBalancerConfigNodesActions = nodeActionCreator.async<DeleteNodeBalancerConfigNodeParams, {}, Linode.ApiFieldError[]>(`delete`);
 
 export const removeNodeBalancerConfigNodes = nodeActionCreator<number[]>(`remove-many`)
+
+export const addNodeBalancerConfigNodes = nodeActionCreator<NodeBalancerConfigNode[]>(`add-many`)

@@ -26,6 +26,7 @@ import volumeDrawer, { defaultState as volumeDrawerDefaultState, State as Volume
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
+import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, { defaultState as notificationsDefaultState, State as NotificationsState } from './notification/notification.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
@@ -142,6 +143,7 @@ const enhancers = compose(
       imageEvents,
       domainEvents,
       nodeBalancerEvents,
+      nodeBalancerConfigEvents
     ),
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f,

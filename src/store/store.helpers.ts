@@ -63,6 +63,29 @@ export const removeMany = <E extends Entity>(list: string[], state: MappedEntity
   }
 };
 
+export const addMany = <E extends Entity>(list: E[], state: MappedEntityState<E>): MappedEntityState<E> => {
+  const itemsById = list.reduce((map, item) => ({ ...map, [item.id]: item }), state.itemsById)
+
+  return {
+    ...state,
+    itemsById,
+    items: Object.keys(itemsById),
+  }
+};
+
+
+export const getAddRemoved = <E extends Entity>(existingList: E[] = [], newList: E[] = []) => {
+  const existingIds = existingList.map(({ id }) => String(id))
+  const newIds = newList.map(({ id }) => String(id))
+
+  const added = newList
+    .filter(({ id }) => !existingIds.includes(String(id)));
+
+  const removed = existingList
+    .filter(({ id }) => !newIds.includes(String(id)));
+
+  return [added, removed];
+}
 
 export const createRequestThunk = <Req, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
