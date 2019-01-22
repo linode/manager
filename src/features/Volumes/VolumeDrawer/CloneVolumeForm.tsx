@@ -99,6 +99,6 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withVolumesRequests
-)(CloneVolumeForm);
+);
 
-export default enhanced;
+export default enhanced(CloneVolumeForm)

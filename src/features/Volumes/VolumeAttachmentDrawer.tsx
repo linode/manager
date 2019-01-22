@@ -224,6 +224,6 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withVolumesRequests
-)(VolumeAttachmentDrawer)
+);
 
-export default enhanced;
+export default enhanced(VolumeAttachmentDrawer);

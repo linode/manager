@@ -138,6 +138,6 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
   withVolumesRequests
-)(AttachVolumeToLinodeForm);
+);
 
-export default enhanced;
+export default enhanced(AttachVolumeToLinodeForm)

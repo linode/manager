@@ -104,6 +104,6 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withVolumesRequests
-)(ResizeVolumeForm);
+);
 
-export default enhanced;
+export default enhanced(ResizeVolumeForm)
