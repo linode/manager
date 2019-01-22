@@ -4,7 +4,7 @@ import { Reducer } from "redux";
 import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
-import { deleteNodeBalancerActions, getAllNodeBalancersActions } from '../nodeBalancer/nodeBalancer.actions';
+import { deleteNodeBalancerActions } from '../nodeBalancer/nodeBalancer.actions';
 import { addEntityRecord, addMany, createDefaultState, mapIDs, onCreateOrUpdate, onDeleteSuccess, onError, onStart, removeMany } from "../store.helpers";
 import { addNodeBalancerConfigs, createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, removeNodeBalancerConfigs, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
 
