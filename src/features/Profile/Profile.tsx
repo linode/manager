@@ -30,7 +30,7 @@ class Profile extends React.Component<Props> {
     { title: 'SSH Keys', routeName: `${this.props.match.url}/keys` },
     { title: 'LISH', routeName: `${this.props.match.url}/lish` },
     { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
-    { title: 'My Apps', routeName: `${this.props.match.url}/clients` },
+    { title: 'OAuth Apps', routeName: `${this.props.match.url}/clients` },
     { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
     { title: 'Settings', routeName: `${this.props.match.url}/settings` },
   ];
