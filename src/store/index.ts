@@ -16,7 +16,6 @@ import linodes, { defaultState as defaultLinodesState, State as LinodesState } f
 import types, { defaultState as defaultTypesState, State as TypesState } from 'src/store/linodeType/linodeType.reducer';
 import nodeBalancers, { defaultState as defaultNodeBalancerState, State as NodeBalancersState } from 'src/store/nodeBalancer/nodeBalancer.reducer';
 import nodeBalancerConfigs, { defaultState as defaultNodeBalancerConfigState, State as NodeBalancerConfigsState } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
-import nodeBalancerConfigNodes, { defaultState as defaultNodeBalancerConfigNodeState, State as NodeBalancerConfigNodesState } from 'src/store/nodeBalancerConfigNode/nodeBalancerConfigNode.reducer';
 import profile, { defaultState as defaultProfileState, State as ProfileState } from 'src/store/profile/profile.reducer';
 import regions, { defaultState as defaultRegionsState, State as RegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState, State as StackScriptDrawerState } from 'src/store/stackScriptDrawer';
@@ -40,7 +39,6 @@ const __resourcesDefaultState = {
   domains: defaultDomainsState,
   images: defaultImagesState,
   linodes: defaultLinodesState,
-  nodeBalancerConfigNodes: defaultNodeBalancerConfigNodeState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
@@ -64,7 +62,6 @@ export interface ResourcesState {
   domains: DomainsState;
   images: ImagesStata;
   linodes: LinodesState;
-  nodeBalancerConfigNodes: NodeBalancerConfigNodesState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
@@ -111,7 +108,6 @@ const __resources = combineReducers({
   linodes,
   nodeBalancers,
   nodeBalancerConfigs,
-  nodeBalancerConfigNodes,
   notifications,
   profile,
   regions,

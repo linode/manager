@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import { CreateNodeBalancerParams, DeleteNodeBalancerParams } from 'src/store/nodeBalancer/nodeBalancer.actions';
-import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
+import { getAllNodeBalancers, getAllNodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { createNodeBalancerConfig, deleteNodeBalancerConfig, getAllNodeBalancerConfigs, updateNodeBalancerConfig } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.requests';
-import { createNodeBalancerConfigNode, deleteNodeBalancerConfigNode, getAllNodeBalancerConfigNodes, updateNodeBalancerConfigNode } from 'src/store/nodeBalancerConfigNode/nodeBalancerConfigNode.requests';
 import { CreateNodeBalancerConfigParams, DeleteNodeBalancerConfigParams, GetAllNodeBalancerConfigsParams, UpdateNodeBalancerConfigParams } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
-import { CreateNodeBalancerConfigNodeParams, DeleteNodeBalancerConfigNodeParams, GetAllNodeBalancerConfigNodesParams, UpdateNodeBalancerConfigNodeParams } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.actions';
 import { UpdateNodeBalancerParams } from './nodeBalancer.actions';
 import { createNodeBalancer, deleteNodeBalancer, updateNodeBalancer } from './nodeBalancer.requests';
 
+
 export interface WithNodeBalancerActions {
+  getAllNodeBalancersWithConfigs: () => Promise<void>;
   getAllNodeBalancers: () => Promise<Linode.NodeBalancer[]>;
   createNodeBalancer: (params: CreateNodeBalancerParams) => Promise<Linode.NodeBalancer>;
   deleteNodeBalancer: (params: DeleteNodeBalancerParams) => Promise<{}>;
@@ -18,16 +18,13 @@ export interface WithNodeBalancerActions {
   createNodeBalancerConfig: (params: CreateNodeBalancerConfigParams) => Promise<Linode.NodeBalancerConfig>;
   deleteNodeBalancerConfig: (params: DeleteNodeBalancerConfigParams) => Promise<{}>;
   updateNodeBalancerConfig: (params: UpdateNodeBalancerConfigParams) => Promise<Linode.NodeBalancerConfig>;
-
-  getAllNodeBalancerConfigNodes: (params: GetAllNodeBalancerConfigNodesParams) => Promise<Linode.NodeBalancerConfigNode[]>;
-  createNodeBalancerConfigNode: (params: CreateNodeBalancerConfigNodeParams) => Promise<Linode.NodeBalancerConfigNode>;
-  deleteNodeBalancerConfigNode: (params: DeleteNodeBalancerConfigNodeParams) => Promise<{}>;
-  updateNodeBalancerConfigNode: (params: UpdateNodeBalancerConfigNodeParams) => Promise<Linode.NodeBalancerConfigNode>;
 }
 
 export const withNodeBalancerActions = connect(
   undefined,
   {
+    getAllNodeBalancersWithConfigs,
+
     getAllNodeBalancers,
     createNodeBalancer,
     deleteNodeBalancer,
@@ -37,10 +34,5 @@ export const withNodeBalancerActions = connect(
     createNodeBalancerConfig,
     updateNodeBalancerConfig,
     deleteNodeBalancerConfig,
-
-    getAllNodeBalancerConfigNodes,
-    createNodeBalancerConfigNode,
-    deleteNodeBalancerConfigNode,
-    updateNodeBalancerConfigNode,
   },
 );

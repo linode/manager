@@ -1,10 +1,14 @@
-import { omit } from 'ramda';
-import { Entity, MappedEntityState, ThunkActionCreator } from 'src/store/types';
+import { assoc, omit } from 'ramda';
+import { Entity, EntityMap, MappedEntityState, ThunkActionCreator } from 'src/store/types';
 import { AsyncActionCreators } from 'typescript-fsa';
 
+
 /** ID's are all mapped to string. */
-const mapIDs = (e: { id: number | string }) => String(e.id);
+export const mapIDs = (e: { id: number | string }) => String(e.id);
 const keys = Object.keys;
+
+export const addEntityRecord = <T extends Entity>(result: EntityMap<T>, current: T): EntityMap<T> =>
+  assoc(String(current.id), current, result)
 
 export const onStart = <S>(state: S) => Object.assign({}, state, { loading: true });
 

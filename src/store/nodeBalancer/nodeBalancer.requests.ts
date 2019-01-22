@@ -1,13 +1,11 @@
 import * as Bluebird from 'bluebird';
-import { createNodeBalancer as _createNodeBalancer, deleteNodeBalancer as _deleteNodeBalancer, getNodeBalancer as _getNodeBalancer, getNodeBalancers, updateNodeBalancer as _updateNodeBalancer } from 'src/services/nodebalancers';
+import { createNodeBalancer as _createNodeBalancer, deleteNodeBalancer as _deleteNodeBalancer, getNodeBalancer as _getNodeBalancer, getNodeBalancerConfigs, getNodeBalancerConfigs as _getNodeBalancerConfigs, getNodeBalancers, NodeBalancerConfig, updateNodeBalancer as _updateNodeBalancer } from 'src/services/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
-import { deleteNodeBalancerConfigActions } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
+import { addNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
-import { deleteNodeBalancerConfigNodesActions } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.actions';
-import { getAllNodeBalancerConfigNodes } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.requests';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
-import { CreateNodeBalancerParams, createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, getNodeBalancerWithConfigsAndNodesActions, GetNodeBalancerWithConfigsAndNodesParams, updateNodeBalancersActions } from './nodeBalancer.actions';
+import { CreateNodeBalancerParams, createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, getNodeBalancerWithConfigsActions, GetNodeBalancerWithConfigsParams, updateNodeBalancersActions } from './nodeBalancer.actions';
 
 const getAllNodeBalancersRequest = getAll<Linode.NodeBalancer>(getNodeBalancers);
 
@@ -17,9 +15,9 @@ export const getAllNodeBalancers = createRequestThunk(
 );
 
 /**
- * API allows for creationg of NodeBalancer with configs and nodes, however the response does not
- * include the configs or nodes. In order to keep the state updated, we manually request the
- * configs and subsequent nodes after successful creation.
+ * API allows for creating of NodeBalancer with configs and nodes, however the response does not
+ * include the newly created configs or nodes. In order to keep the state updated, we manually
+ * request the configs after successful creation.
  */
 export const createNodeBalancer: ThunkActionCreator<Promise<Linode.NodeBalancer>> = (params: CreateNodeBalancerParams) => (dispatch) => {
 
@@ -32,11 +30,6 @@ export const createNodeBalancer: ThunkActionCreator<Promise<Linode.NodeBalancer>
       const { id: nodeBalancerId } = response;
 
       dispatch(getAllNodeBalancerConfigs({ nodeBalancerId }))
-        .then((configs) => {
-          configs.forEach(({ id: nodeBalancerConfigId }) => {
-            dispatch(getAllNodeBalancerConfigNodes({ nodeBalancerId, nodeBalancerConfigId }));
-          });
-        });
 
       dispatch(done({ result: response, params }));
       return response;
@@ -47,48 +40,21 @@ export const createNodeBalancer: ThunkActionCreator<Promise<Linode.NodeBalancer>
     });
 };
 
-export const deleteNodeBalancer: ThunkActionCreator<Promise<{}>> = ({ nodeBalancerId }: { nodeBalancerId: number }) => (dispatch, getStore) => {
+export const deleteNodeBalancer: ThunkActionCreator<Promise<{}>> = (params: { nodeBalancerId: number }) => (dispatch) => {
+  const { nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerActions;
 
   dispatch(started({ nodeBalancerId }));
 
-  const {
-    __resources: {
-      nodeBalancerConfigs: { itemsById: nodeBalancerConfigs },
-      nodeBalancerConfigNodes: { itemsById: nodeBalancerConfigNodes },
-    },
-  } = getStore();
-
   return _deleteNodeBalancer(nodeBalancerId)
     .then((response) => {
-
-      /** Delete nodeBalancerConfigs belonging to this nodeBalancer */
-      Object
-        .values(nodeBalancerConfigs)
-        .filter(({ nodebalancer_id }) => nodebalancer_id === nodeBalancerId)
-        .map(({ id }) => id)
-        .forEach((nodeBalancerConfigId) => {
-          dispatch(deleteNodeBalancerConfigActions.done({ params: { nodeBalancerId, nodeBalancerConfigId }, result: {} }))
-
-          /** Delete nodeBalancerConfigNodes belonging to this nodeBalancerConfig. */
-          Object
-            .values(nodeBalancerConfigNodes)
-            .filter(({ config_id, nodebalancer_id }) => config_id === nodeBalancerConfigId && nodebalancer_id === nodeBalancerId)
-            .map(({ id }) => id)
-            .forEach((nodeBalancerConfigNodeId) => {
-              dispatch(deleteNodeBalancerConfigNodesActions.done({ result: {}, params: { nodeBalancerConfigId, nodeBalancerConfigNodeId, nodeBalancerId } }))
-            });
-
-        });
-
-      dispatch(done({ result: response, params: { nodeBalancerId } }));
-
+      dispatch(done({ params, result: {}, }));
       return response;
     })
     .catch((error) => {
-      dispatch(failed({ error, params: { nodeBalancerId } }));
+      dispatch(failed({ params, error }));
       return Promise.reject(error);
-    })
+    });
 }
 
 export const updateNodeBalancer = createRequestThunk(
@@ -96,32 +62,45 @@ export const updateNodeBalancer = createRequestThunk(
   ({ nodeBalancerId, ...data }) => _updateNodeBalancer(nodeBalancerId, data),
 )
 
-export const getNodeBalancerr = createRequestThunk(
-  getNodeBalancerWithConfigsAndNodesActions,
-  ({ nodeBalancerId }) => _getNodeBalancer(nodeBalancerId)
-);
+export const getAllNodeBalancersWithConfigs: ThunkActionCreator<Promise<void>> = () => async (dispatch) => {
+  const { started, done, failed } = getAllNodeBalancersActions;
+  dispatch(started());
 
-export const getNodeBalancerWithConfigsAndNodes: ThunkActionCreator<Promise<Linode.NodeBalancer>> = (params: GetNodeBalancerWithConfigsAndNodesParams) => (dispatch, getState) => {
+  try {
+    const { data: nodeBalancers } = await getAllNodeBalancersRequest();
+
+    const nodeBalancerConfigs = await Bluebird.reduce(
+      nodeBalancers,
+      async (result: NodeBalancerConfig[], nodeBalancer) => {
+        const { data: configs } = await getAll<NodeBalancerConfig>(() => _getNodeBalancerConfigs(nodeBalancer.id))();
+        return [...result, ...configs];
+      },
+      []);
+
+      dispatch(addNodeBalancerConfigs(nodeBalancerConfigs));
+    dispatch(done({ result: nodeBalancers }));
+  } catch (error) {
+    dispatch(failed({ error }));
+  }
+};
+
+export const getNodeBalancerWithConfigs: ThunkActionCreator<Promise<Linode.NodeBalancer>> = (params: GetNodeBalancerWithConfigsParams) => async (dispatch) => {
   const { nodeBalancerId } = params;
-  const { started, done, failed } = getNodeBalancerWithConfigsAndNodesActions;
+  const { started, done, failed } = getNodeBalancerWithConfigsActions;
 
   dispatch(started(params));
 
-  return _getNodeBalancer(nodeBalancerId)
-    .then((nodeBalancer) => {
-      return dispatch(getAllNodeBalancerConfigs({ nodeBalancerId }))
-        .then((nodeBalancerConfigs) =>
-          Bluebird.map(nodeBalancerConfigs, ({ id: nodeBalancerConfigId }) => {
-            dispatch(getAllNodeBalancerConfigNodes({ nodeBalancerId, nodeBalancerConfigId }))
-          })
-            .then(() => {
-              dispatch(done({ params, result: nodeBalancer }));
-              return nodeBalancer;
-            }));
-    })
-    .catch((error) => {
-      dispatch(failed({ params, error }));
-      return error;
-    });
+  try {
+    const nodeBalancer = await _getNodeBalancer(nodeBalancerId);
+    const { data: nodeBalancerConfigs } = await getAll<NodeBalancerConfig>(getNodeBalancerConfigs)()
+    dispatch(addNodeBalancerConfigs(nodeBalancerConfigs));
+    dispatch(done({ params, result: nodeBalancer }));
+
+    return nodeBalancer;
+  } catch (error) {
+
+    dispatch(failed({ params, error }));
+    throw error;
+  }
 };
 

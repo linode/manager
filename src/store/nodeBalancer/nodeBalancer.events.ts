@@ -1,10 +1,9 @@
 import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
 import { ApplicationState } from '..';
 import { removeNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
-import { removeNodeBalancerConfigNodes } from '../nodeBalancerConfigNode/nodeBalancerConfigNode.actions';
 import { ThunkDispatch } from '../types';
 import { deleteNodeBalancerActions } from './nodeBalancer.actions';
-import { getNodeBalancerWithConfigsAndNodes } from './nodeBalancer.requests';
+import { getNodeBalancerWithConfigs } from './nodeBalancer.requests';
 
 const nodeBalancerEventHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, status } = event;
@@ -30,7 +29,7 @@ type NodeBalancerActionHandler = (
   resourceState: ApplicationState['__resources'],
 ) => void;
 
-const handleNodeBalancerCreate: NodeBalancerActionHandler = (dispatch, id, action, status) => {
+const handleNodeBalancerCreate: NodeBalancerActionHandler = (dispatch, nodeBalancerId, action, status, resourceState) => {
   switch (status) {
     case 'failed':
       return;
@@ -40,7 +39,14 @@ const handleNodeBalancerCreate: NodeBalancerActionHandler = (dispatch, id, actio
     case 'started':
     case 'notification':
     default:
-      dispatch(getNodeBalancerWithConfigsAndNodes({ nodeBalancerId: id }));
+      const { nodeBalancers: { itemsById: nodeBalancers } } = resourceState;
+
+      /** If we already have it, don't request it. */
+      if (nodeBalancers[nodeBalancerId]) {
+        return;
+      }
+
+      dispatch(getNodeBalancerWithConfigs({ nodeBalancerId }));
       return;
   }
 };
@@ -54,12 +60,19 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (dispatch, nodeBalan
     case 'started':
     default:
 
-      /** Delete NodeBalancer and all configs and nodes owned by the NodeBalancer. */
-      const { itemsById: nodeBalancerConfigs } = resourceState.nodeBalancerConfigs;
-      const { itemsById: nodeBalancerConfigNodes } = resourceState.nodeBalancerConfigNodes;
+
+      /** Delete NodeBalancer and all configs owned by the NodeBalancer. */
+      const {
+        nodeBalancers: { itemsById: nodeBalancers },
+        nodeBalancerConfigs: { itemsById: nodeBalancerConfigs },
+      } = resourceState;
+
+      /** If it's already out of state, don't bother trying to delete. */
+      if (!nodeBalancers[nodeBalancerId]) {
+        return;
+      }
 
       const configsArray = Object.values(nodeBalancerConfigs) || [];
-      const nodesArray = Object.values(nodeBalancerConfigNodes) || [];
 
       const configsToDelete = configsArray
         .reduce((result, { nodebalancer_id, id }) =>
@@ -68,14 +81,6 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (dispatch, nodeBalan
             : result,
           []);
 
-
-      const nodesToDelete = configsToDelete
-        .reduce((result, nodeBalancerConfigId) => {
-          const nodes = nodesArray.filter(({ config_id }) => config_id === nodeBalancerConfigId);
-          return nodes ? [...result, ...nodes.map(({ id }) => id)] : result;
-        }, []);
-
-      dispatch(removeNodeBalancerConfigNodes(nodesToDelete));
       dispatch(removeNodeBalancerConfigs(configsToDelete));
       dispatch(deleteNodeBalancerActions.done({ params: { nodeBalancerId }, result: {} }));
       return;

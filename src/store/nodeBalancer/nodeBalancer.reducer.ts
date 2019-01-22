@@ -2,7 +2,7 @@ import { Reducer } from "redux";
 import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
 import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from "../store.helpers";
-import { createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, getNodeBalancerWithConfigsAndNodesActions, updateNodeBalancersActions } from './nodeBalancer.actions';
+import { createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, getNodeBalancerWithConfigsActions, updateNodeBalancersActions } from './nodeBalancer.actions';
 
 export type State = MappedEntityState<Linode.NodeBalancer>;
 
@@ -57,7 +57,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /** Add */
-  if(isType(action, getNodeBalancerWithConfigsAndNodesActions.done)){
+  if(isType(action, getNodeBalancerWithConfigsActions.done)){
     const { result } = action.payload;
 
     return onCreateOrUpdate(result, state);

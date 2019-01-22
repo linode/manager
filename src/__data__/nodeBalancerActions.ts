@@ -1,4 +1,5 @@
 export const mockNodeBalancerActions = {
+  getAllNodeBalancersWithConfigs: jest.fn(),
   getAllNodeBalancers: jest.fn(),
   createNodeBalancer: jest.fn(),
   deleteNodeBalancer: jest.fn(),
@@ -7,8 +8,4 @@ export const mockNodeBalancerActions = {
   createNodeBalancerConfig: jest.fn(),
   updateNodeBalancerConfig: jest.fn(),
   deleteNodeBalancerConfig: jest.fn(),
-  getAllNodeBalancerConfigNodes: jest.fn(),
-  createNodeBalancerConfigNode: jest.fn(),
-  deleteNodeBalancerConfigNode: jest.fn(),
-  updateNodeBalancerConfigNode: jest.fn(),
 };
