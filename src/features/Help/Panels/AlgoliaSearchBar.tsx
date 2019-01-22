@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     }
   },
   searchItemHighlighted: {
-    backgroundColor: theme.color.grey2,
+    backgroundColor: theme.palette.divider,
     cursor: 'pointer',
   },
   textfield: {

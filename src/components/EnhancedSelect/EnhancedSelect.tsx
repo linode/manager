@@ -28,7 +28,7 @@ const styles: StyleRulesCallback = (theme) => ({
     top: '100%',
     padding: 0,
     borderRadius: 0,
-    border: '1px solid #999',
+    border: `1px solid ${theme.palette.primary.main}`,
     overflowY: 'auto',
     maxWidth: '100%',
     zIndex: 2,
