@@ -9,7 +9,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Toggle from 'src/components/Toggle';
-import { updateLinode } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 
@@ -33,7 +33,11 @@ interface State {
   errors?: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeActionsProps
+  & RouteComponentProps<{}>
+  & WithStyles<ClassNames>;
 
 class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -43,9 +47,10 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   };
 
   toggleWatchdog = (e: React.ChangeEvent<HTMLElement>, value: boolean) => {
+    const { linodeActions: { updateLinode } } = this.props;
     this.setState(setSubmitting(true));
 
-    updateLinode(this.props.linodeId, { watchdog_enabled: value })
+    updateLinode({ linodeId: this.props.linodeId, watchdog_enabled: value })
       .then((response) => {
         this.setState(compose(
           setSubmitting(false),
@@ -130,4 +135,5 @@ export default compose(
   errorBoundary,
   withRouter,
   styled,
+  withLinodeActions,
 )(LinodeWatchdogPanel) as React.ComponentType<Props>;

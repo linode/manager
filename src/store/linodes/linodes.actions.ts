@@ -17,7 +17,7 @@ export const upsertLinode = actionCreator<Linode.Linode>(`upsert`);
 
 export const deleteLinode = actionCreator<number>('delete');
 
-export const updateLinode = actionCreator<{ id: number; update: (v: Linode.Linode) => Linode.Linode }>('update_status');
+export const updateLinode = actionCreator<{ id: number; update: (v: Linode.Linode) => Linode.Linode }>('update');
 
 export const linodesRequest = actionCreator.async<void, Linode.Linode[], Linode.ApiFieldError[]>('request');
 
@@ -48,3 +48,9 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispat
       return dispatch(upsertLinode(linode))
     })
 };
+
+export interface UpdateLinodeParams extends Partial<Linode.Linode> {
+  linodeId: number;
+}
+
+export const requestUpdateLinodeActions = actionCreator.async<UpdateLinodeParams, Linode.Linode, Linode.ApiFieldError[]>(`update`);

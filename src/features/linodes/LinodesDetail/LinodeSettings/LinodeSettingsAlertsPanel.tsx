@@ -6,7 +6,7 @@ import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import { updateLinode } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import AlertSection from './AlertSection';
 
@@ -52,7 +52,10 @@ interface Section {
   endAdornment: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeActionsProps
+  & WithStyles<ClassNames>;
 
 const maybeNumber = (v: string) => v === '' ? '' : Number(v);
 
@@ -207,13 +210,14 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   };
 
   setLinodeAlertThresholds = () => {
+    const { linodeActions: { updateLinode } } = this.props;
     this.setState(set(lensPath(['errors']), undefined));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['submitting']), true));
 
     updateLinode(
-      this.props.linodeId,
       {
+        linodeId: this.props.linodeId,
         alerts: {
           cpu: valueUnlessOff(this.state.cpuusage),
           network_in: valueUnlessOff(this.state.incoming),
@@ -267,4 +271,5 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Notification Thresholds' })
 export default compose(
   errorBoundary,
   styled,
+  withLinodeActions,
 )(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;
