@@ -144,7 +144,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
         <TableCell parentColumn="Amount">${item.usd}</TableCell>
         <TableCell>
-          {account.data && <a href="#" target="_blank" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</a>}
+          {account.data && <a href="#" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</a>}
           {pdfGenerationError.itemId === item.id && <Notice error={true} text="Failed generating PDF." />}
         </TableCell>
       </TableRow>
