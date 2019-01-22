@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": "[data-qa-contact-summary] [data-qa-contact-address]"
+}

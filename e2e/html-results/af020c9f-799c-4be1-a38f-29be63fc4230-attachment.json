@@ -1,0 +1,4 @@
+{
+  "using": "css selector",
+  "value": "[data-qa-tp=\"Select Image\"] [data-qa-selection-card]"
+}

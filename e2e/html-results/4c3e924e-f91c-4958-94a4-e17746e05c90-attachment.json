@@ -1,0 +1,6 @@
+{
+  "script": "return (function (elementToClick) {\n            document.querySelector(elementToClick).click();\n        }).apply(null, arguments)",
+  "args": [
+    "[data-qa-action-menu-item=\"Delete\"]"
+  ]
+}

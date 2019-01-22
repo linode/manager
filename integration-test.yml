@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["/src/scripts/start_manager.sh"]
+    entrypoint: ["yarn","start"]
     depends_on:
       - chrome
   manager-e2e:
@@ -45,6 +45,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./e2e/test-results:/src/e2e/test-results
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
+    entrypoint: ["./scripts/start_manager_testing.sh"]
     depends_on:
       - manager-local
