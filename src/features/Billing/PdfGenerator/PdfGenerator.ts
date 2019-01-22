@@ -30,7 +30,7 @@ const formatDescription = (desc: string) => {
   }, '');
 }
 
-const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | null) => {
+const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | null, type: string) => {
   const addLine = (text: string, fontSize = 9) => {
     doc.text(text, leftPadding, currentLine, { charSpace: 0.75 });
     currentLine += fontSize;
@@ -43,7 +43,7 @@ const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | n
 
   addLine(`Page ${page} of ${pages}`);
   if (date) {
-    addLine(`Invoice Date: ${date}`);
+    addLine(`${type} Date: ${date}`);
   }
 
   doc.setFontStyle('bold');
@@ -192,7 +192,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-      addLeftHeader(doc, index + 1, itemsChunks.length, date);
+      addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
       addRightHeader(doc, account);
       addTitle(doc, `Invoice: #${invoiceId}`);
       addTable(itemsChunk);
@@ -263,7 +263,7 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
     };
 
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-    addLeftHeader(doc, 1, 1, date);
+    addLeftHeader(doc, 1, 1, date, 'Payment');
     addRightHeader(doc, account);
     addTitle(doc, `Receipt for Payment #${paymentId}`);
     addTable();
