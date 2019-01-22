@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { ThunkDispatch } from "../types";
+import { bindActionCreators } from "redux";
 import { createLinode, deleteLinode, updateLinode } from './linode.requests';
 import { CreateLinodeParams, DeleteLinodeParams, UpdateLinodeParams } from "./linodes.actions";
 
@@ -11,10 +11,6 @@ export interface LinodeActionsProps {
   }
 }
 
-export const withLinodeActions = connect(undefined, (dispatch: ThunkDispatch) => ({
-  linodeActions: {
-    createLinode: (parmas: CreateLinodeParams) => dispatch(createLinode(parmas)),
-    deleteLinode: (parmas: DeleteLinodeParams) => dispatch(deleteLinode(parmas)),
-    updateLinode: (parmas: UpdateLinodeParams) => dispatch(updateLinode(parmas)),
-  },
+export const withLinodeActions = connect(undefined, (dispatch) => ({
+  linodeActions: bindActionCreators({ createLinode, deleteLinode, updateLinode }, dispatch),
 }));
