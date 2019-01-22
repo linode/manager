@@ -625,8 +625,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           open={this.state.cancelBackupsAlertOpen}
           onClose={this.handleCloseBackupsAlert}
         >
-          Cancelling backups associated with this Linode will
-           delete all existing backups. Are you sure?
+          <Typography>Cancelling backups associated with this Linode will delete all existing backups. Are you sure?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
