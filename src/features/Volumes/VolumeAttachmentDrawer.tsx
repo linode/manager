@@ -1,5 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
@@ -9,10 +10,10 @@ import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
+import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
-import { attachVolume } from 'src/services/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -38,7 +39,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & VolumesRequests
+  & WithStyles<ClassNames>;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -114,7 +118,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   }
 
   attachToLinode = () => {
-    const { volumeId } = this.props;
+    const { volumeId, attachVolume } = this.props;
     const { selectedLinode, selectedConfig } = this.state;
     if (!selectedLinode || selectedLinode === 'none') {
       this.setState({ errors: [
@@ -126,7 +130,8 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    attachVolume(Number(volumeId), {
+    attachVolume({
+      volumeId,
       linode_id: Number(selectedLinode),
       config_id: Number(selectedConfig) || undefined
     })
@@ -216,4 +221,9 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(VolumeAttachmentDrawer);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withVolumesRequests
+);
+
+export default enhanced(VolumeAttachmentDrawer);

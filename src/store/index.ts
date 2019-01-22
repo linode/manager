@@ -20,6 +20,7 @@ import profile, { defaultState as defaultProfileState, State as ProfileState } f
 import regions, { defaultState as defaultRegionsState, State as RegionsState } from 'src/store/regions/regions.reducer';
 import stackScriptDrawer, { defaultState as stackScriptDrawerDefaultState, State as StackScriptDrawerState } from 'src/store/stackScriptDrawer';
 import tagImportDrawer, { defaultState as tagDrawerDefaultState, State as TagImportDrawerState } from 'src/store/tagImportDrawer';
+import volumeEvents from 'src/store/volume/volume.events';
 import volumes, { defaultState as defaultVolumesState, State as VolumesState } from 'src/store/volume/volume.reducer';
 import volumeDrawer, { defaultState as volumeDrawerDefaultState, State as VolumeDrawerState } from 'src/store/volumeDrawer';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
@@ -139,7 +140,8 @@ const enhancers = compose(
       imageEvents,
       domainEvents,
       nodeBalancerEvents,
-      nodeBalancerConfigEvents
+      nodeBalancerConfigEvents,
+      volumeEvents,
     ),
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f,
