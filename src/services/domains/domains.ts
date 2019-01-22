@@ -5,6 +5,9 @@ import { createDomainSchema, importZoneSchema, updateDomainSchema } from './doma
 type Page<T> = Linode.ResourcePage<T>;
 type Domain = Linode.Domain;
 
+export type CreateDomainPayload = Partial<Linode.Domain>;
+export type UpdateDomainPayload = Partial<Linode.Domain>;
+
 /**
  * Returns a paginated list of Domains.
  *
