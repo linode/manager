@@ -17,13 +17,34 @@ type ClassNames =
   | 'transferred';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  ip: { width: '30%', minWidth: 200, },
-  nameCell: { width: '15%', minWidth: 150, },
-  nodeStatus: { width: '10%', minWidth: 100, },
-  ports: { width: '10%', minWidth: 50, },
-  tagGroup: { flexDirection: 'row-reverse', marginBottom: theme.spacing.unit - 2, },
-  title: { marginBottom: theme.spacing.unit * 2, },
-  transferred: { width: '10%', minWidth: 100, },
+  ip: {
+    width: '30%',
+    minWidth: 200,
+  },
+  nameCell: {
+    width: '15%',
+    minWidth: 150,
+    paddingLeft: 65
+  },
+  nodeStatus: {
+    width: '10%',
+    minWidth: 100,
+  },
+  ports: {
+    width: '10%',
+    minWidth: 50,
+  },
+  tagGroup: {
+    flexDirection: 'row-reverse',
+    marginBottom: theme.spacing.unit - 2,
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  transferred: {
+    width: '10%',
+    minWidth: 100,
+  },
 });
 
 type CombinedProps = WithStyles<ClassNames> & Omit<OrderByProps, 'data'>;

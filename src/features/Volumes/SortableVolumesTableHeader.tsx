@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root'
@@ -37,6 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   labelCol: {
     width: '15%',
     minWidth: 150,
+    paddingLeft: 65
   },
   attachmentCol: {
     width: '15%',
