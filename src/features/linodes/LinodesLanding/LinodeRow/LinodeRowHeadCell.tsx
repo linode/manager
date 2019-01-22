@@ -146,7 +146,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <TableCell
-      parentColumn="Linode"
       className={classes.root}
       rowSpan={loading ? 2 : 1}
     >
