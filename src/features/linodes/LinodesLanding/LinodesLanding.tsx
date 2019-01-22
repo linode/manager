@@ -19,8 +19,10 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Toggle from 'src/components/Toggle';
+import withBackupCta, { BackupCTAProps } from 'src/containers/withBackupCTA.container';
 import withImages from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
+import { BackupsCTA } from 'src/features/Backups';
 import LinodeConfigSelectionDrawer, { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
@@ -66,7 +68,8 @@ type CombinedProps =
   & RouteProps
   & StyleProps
   & SetDocsProps
-  & InjectedNotistackProps;
+  & InjectedNotistackProps
+  & BackupCTAProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {
   static eventCategory = 'linodes landing';
@@ -189,7 +192,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesData,
       groupByTags,
       width,
-      classes
+      classes,
+      backupsCTA
     } = this.props;
 
     const {
@@ -233,74 +237,83 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container>
-        <DocumentTitleSegment segment="Linodes" />
-        <Grid container justify="space-between" item xs={12}>
-          <Grid item className={classes.title}>
-            <Typography
-              role="header"
-              variant="h1"
-              className={this.props.classes.title}
-              data-qa-title
-            >
-              Linodes
-          </Typography>
-          </Grid>
-          <Hidden smDown>
-            <FormControlLabel
-              className={classes.tagGroup}
-              control={
-                <Toggle
-                  className={(this.props.groupByTags ? ' checked' : ' unchecked')}
-                  onChange={this.props.toggleGroupByTag}
-                  checked={this.props.groupByTags}
-                  data-qa-tags-toggle={this.props.groupByTags}
-                  />
-              }
-              label="Group by Tag:"
-            />
-            <ToggleBox handleClick={this.changeView} status={display} />
-          </Hidden>
-        </Grid>
-        <Grid item xs={12}>
-          <OrderBy data={linodesData} order={'asc'} orderBy={'label'}>
-            {({ data, handleOrderChange, order, orderBy }) => {
-              const finalProps = {
-                ...componentProps,
-                data,
-                handleOrderChange,
-                order,
-                orderBy,
-              }
+        <Grid item className={`${backupsCTA ? 'mlMain' : ''}`} xs={!backupsCTA && 12}>
+          <Grid container>
+            <DocumentTitleSegment segment="Linodes" />
+            <Grid container justify="space-between" item xs={12}>
+              <Grid item className={classes.title}>
+                <Typography
+                  role="header"
+                  variant="h1"
+                  className={this.props.classes.title}
+                  data-qa-title
+                >
+                  Linodes
+              </Typography>
+              </Grid>
+              <Hidden smDown>
+                <FormControlLabel
+                  className={classes.tagGroup}
+                  control={
+                    <Toggle
+                      className={(this.props.groupByTags ? ' checked' : ' unchecked')}
+                      onChange={this.props.toggleGroupByTag}
+                      checked={this.props.groupByTags}
+                      data-qa-tags-toggle={this.props.groupByTags}
+                      />
+                  }
+                  label="Group by Tag:"
+                />
+                <ToggleBox handleClick={this.changeView} status={display} />
+              </Hidden>
+            </Grid>
+            <Grid item xs={12}>
+              <OrderBy data={linodesData} order={'asc'} orderBy={'label'}>
+                {({ data, handleOrderChange, order, orderBy }) => {
+                  const finalProps = {
+                    ...componentProps,
+                    data,
+                    handleOrderChange,
+                    order,
+                    orderBy,
+                  }
 
-              return groupByTags
-                ? <DisplayGroupedLinodes {...finalProps} />
-                : <DisplayLinodes {...finalProps} />
-            }}
-          </OrderBy>
+                  return groupByTags
+                    ? <DisplayGroupedLinodes {...finalProps} />
+                    : <DisplayLinodes {...finalProps} />
+                }}
+              </OrderBy>
+            </Grid>
+            <LinodeConfigSelectionDrawer
+              onClose={this.closeConfigDrawer}
+              onSubmit={this.submitConfigChoice}
+              onChange={this.selectConfig}
+              open={configDrawer.open}
+              configs={configDrawer.configs}
+              selected={String(configDrawer.selected)}
+              error={configDrawer.error}
+            />
+            <ConfirmationDialog
+              title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
+              actions={this.renderConfirmationActions}
+              open={powerAlertOpen}
+              onClose={this.closePowerAlert}
+            >
+              <Typography>
+                {bootOption === 'reboot'
+                  ? 'Are you sure you want to reboot your Linode?'
+                  : 'Are you sure you want to power down your Linode?'
+                }
+              </Typography>
+            </ConfirmationDialog>
+          </Grid>
         </Grid>
-        <LinodeConfigSelectionDrawer
-          onClose={this.closeConfigDrawer}
-          onSubmit={this.submitConfigChoice}
-          onChange={this.selectConfig}
-          open={configDrawer.open}
-          configs={configDrawer.configs}
-          selected={String(configDrawer.selected)}
-          error={configDrawer.error}
-        />
-        <ConfirmationDialog
-          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
-          actions={this.renderConfirmationActions}
-          open={powerAlertOpen}
-          onClose={this.closePowerAlert}
-        >
-          <Typography>
-            {bootOption === 'reboot'
-              ? 'Are you sure you want to reboot your Linode?'
-              : 'Are you sure you want to power down your Linode?'
-            }
-          </Typography>
-        </ConfirmationDialog>
-      </Grid>
+        {backupsCTA &&
+          <Grid item className='mlSidebar py0'>
+            <BackupsCTA />
+          </Grid>
+        }
+        </Grid>
     );
   }
 
@@ -438,7 +451,8 @@ export const enhanced = compose(
     ...ownProps,
     imagesLoading,
     imagesError,
-  }))
+  })),
+  withBackupCta,
 );
 
 export default enhanced(ListLinodes);

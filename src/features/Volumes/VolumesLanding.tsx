@@ -33,17 +33,84 @@ import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 
 type ClassNames = 'root'
   | 'title'
-  | 'tagGroup';
+  | 'tagGroup'
+  | 'labelCol'
+  | 'icon'
+  | 'labelStatusWrapper'
+  | 'statusOuter'
+  | 'attachmentCol'
+  | 'sizeCol'
+  | 'pathCol'
+  | 'volumesWrapper'
+  | 'linodeVolumesWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
-  title: {
-    marginBottom: theme.spacing.unit * 2,
-  },
   tagGroup: {
     flexDirection: 'row-reverse',
     marginBottom: theme.spacing.unit -2,
-  }
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  // styles for /volumes table
+  volumesWrapper: {
+  },
+  // styles for linodes/id/volumes table
+  linodeVolumesWrapper: {
+    '& $labelCol': {
+      width: '20%',
+      minWidth: 200,
+    },
+    '& $sizeCol': {
+      width: '15%',
+      minWidth: 100,
+    },
+    '& $pathCol': {
+      width: '55%',
+      minWidth: 350,
+    },
+  },
+  labelCol: {
+    width: '25%',
+    minWidth: 150,
+    paddingLeft: 65,
+  },
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+  },
+  statusOuter: {
+    top: 0,
+    position: 'relative',
+    marginLeft: 4,
+    lineHeight: '0.8rem',
+  },
+  attachmentCol: {
+    width: '15%',
+    minWidth: 150,
+  },
+  sizeCol: {
+    width: '10%',
+    minWidth: 75,
+  },
+  pathCol: {
+    width: '25%',
+    minWidth: 250,
+  },
 });
 
 interface WithLinodesProps {
@@ -204,7 +271,7 @@ type CombinedProps =
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography role="header" variant="h1" className={classes.title} data-qa-title >
               Volumes
@@ -225,7 +292,7 @@ type CombinedProps =
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
-              <Grid item>
+              <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.openCreateVolumeDrawer}
                   label="Create a Volume"

@@ -1,14 +1,29 @@
 import * as React from 'react';
+import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
-const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = (props) => {
-  const { order, orderBy, handleOrderChange } = props;
+type ClassNames = 'root' | 'label' | 'tagHeader';
 
-  const isActive = (label: string) => label === orderBy;
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+  root: {},
+  label: {
+    paddingLeft: 65
+  },
+  tagHeader: {
+    textAlign: 'center'
+  }
+});
+
+type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
+
+const SortableTableHead: React.StatelessComponent<combinedProps> = (props) => {
+  const { order, orderBy, handleOrderChange, classes } = props;
+
+  const isActive = (label: string) => label.toLowerCase() === orderBy.toLowerCase();
 
   return (
     <TableHead data-qa-table-head>
@@ -19,6 +34,7 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
           active={isActive('label')}
           handleClick={handleOrderChange}
           data-qa-sort-label={order}
+          className={classes.label}
         >
           Linode
         </TableSortCell>
@@ -27,11 +43,27 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
           direction={order}
           active={isActive('tags')}
           handleClick={handleOrderChange}
+          className={classes.tagHeader}
         >
           Tags
         </TableSortCell>
-        <TableCell noWrap>Last Backup</TableCell>
-        <TableCell>IP Addresses</TableCell>
+        <TableSortCell
+          noWrap
+          label='mostRecentBackup'
+          direction={order}
+          active={isActive('mostRecentBackup')}
+          handleClick={handleOrderChange}
+        >
+          Last Backup
+        </TableSortCell>
+        <TableSortCell
+          label="ipv4[0]" // we want to sort by the first ipv4
+          active={isActive('ipv4[0]')}
+          handleClick={handleOrderChange}
+          direction={order}
+        >
+          IP Addresses
+        </TableSortCell>
         <TableSortCell
           label='region'
           direction={order}
@@ -47,4 +79,6 @@ const SortableTableHead: React.StatelessComponent<Omit<OrderByProps, 'data'>> = 
   );
 };
 
-export default SortableTableHead;
+const styled = withStyles(styles);
+
+export default styled(SortableTableHead);

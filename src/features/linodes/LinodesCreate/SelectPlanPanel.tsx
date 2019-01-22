@@ -1,6 +1,7 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+// import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
@@ -12,11 +13,15 @@ export interface ExtendedType extends Linode.LinodeType {
   subHeadings: [string, string];
 }
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'copy';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
     marginTop: theme.spacing.unit * 3,
+  },
+  copy: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 3,
   },
 });
 
@@ -38,6 +43,9 @@ const getStandard = (types: ExtendedType[]) =>
 const getHighMem = (types: ExtendedType[]) =>
   types.filter(t => /highmem/.test(t.class));
 
+const getDedicated = (types: ExtendedType[]) =>
+  types.filter(t => /dedicated/.test(t.class));
+
 export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
@@ -48,11 +56,11 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     const planTooSmall = selectedDiskSize > type.disk
     const isSamePlan = type.heading === currentPlanHeading;
 
-    if(planTooSmall){
+    if (planTooSmall) {
       tooltip = `This plan is too small for the selected image.`;
     }
 
-    if(isSamePlan){
+    if (isSamePlan) {
       tooltip = `This is your current plan. Please select another to resize.`;
     }
 
@@ -73,15 +81,19 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
+    const dedicated = getDedicated(types);
 
     if (!isEmpty(nanodes)) {
       tabs.push({
         render: () => {
 
           return (
-            <Grid container spacing={16}>
-              {nanodes.map(this.renderCard)}
-            </Grid>
+            <>
+              {/* <Typography className={classes.copy}>The Nanode is Linode's smallest plan, offering enough resources to host static web sites, small blogs, self-hosted utilities, and hobby projects.</Typography> */}
+              <Grid container spacing={16}>
+                {nanodes.map(this.renderCard)}
+              </Grid>
+            </>
           );
         },
         title: 'Nanode',
@@ -92,12 +104,31 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
       tabs.push({
         render: () => {
           return (
-            <Grid container spacing={16}>
-              {standards.map(this.renderCard)}
-            </Grid>
+            <>
+              {/* <Typography className={classes.copy}>The Standard plans represent different tiers of service suitable for hosting applications, databases, and web sites.</Typography> */}
+              <Grid container spacing={16}>
+                {standards.map(this.renderCard)}
+              </Grid>
+            </>
           );
         },
         title: 'Standard',
+      });
+    }
+
+    if (!isEmpty(dedicated)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              {/* <Typography className={classes.copy}>Dedicated CPU plans are tailored for consistently-high CPU workloads like, as data analytics services, CI/CD toolchains and build servers, and other CPU-bound tasks.</Typography> */}
+              <Grid container spacing={16}>
+                {dedicated.map(this.renderCard)}
+              </Grid>
+            </>
+          );
+        },
+        title: 'Dedicated CPU',
       });
     }
 
@@ -105,9 +136,12 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
       tabs.push({
         render: () => {
           return (
-            <Grid container spacing={16}>
-              {highmem.map(this.renderCard)}
-            </Grid>
+            <>
+              {/* <Typography className={classes.copy}>The High Memory Linode plans are perfect for running memory intensive applications, like in-memory databases.</Typography> */}
+              <Grid container spacing={16}>
+                {highmem.map(this.renderCard)}
+              </Grid>
+            </>
           );
         },
         title: 'High Memory',

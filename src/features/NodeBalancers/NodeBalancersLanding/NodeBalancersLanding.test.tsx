@@ -21,6 +21,7 @@ describe.skip('NodeBalancers', () => {
             root: '',
             title: '',
             nameCell: '',
+            icon: '',
             nodeStatus: '',
             transferred: '',
             ports: '',

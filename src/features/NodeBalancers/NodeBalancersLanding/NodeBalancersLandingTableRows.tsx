@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
@@ -9,7 +11,7 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-type ClassNames = 'ip' | 'tagWrapper' | 'ipsWrapper';
+type ClassNames = 'ip' | 'tagWrapper' | 'ipsWrapper' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   ip: {
@@ -25,6 +27,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   ipsWrapper: {
     display: 'inline-flex',
     flexDirection: 'column',
+  },
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
   },
 });
 
@@ -57,10 +71,17 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = (
             >
               <TableCell parentColumn="Name" data-qa-nodebalancer-label>
                 <Link to={`/nodebalancers/${nodeBalancer.id}`}>
-                  {nodeBalancer.label}
-                  <div className={classes.tagWrapper}>
-                    <Tags tags={nodeBalancer.tags} />
-                  </div>
+                  <Grid container wrap="nowrap" alignItems="center">
+                    <Grid item className="py0">
+                      <NodeBalancer className={classes.icon} />
+                    </Grid>
+                    <Grid item>
+                      {nodeBalancer.label}
+                      <div className={classes.tagWrapper}>
+                        <Tags tags={nodeBalancer.tags} />
+                      </div>
+                    </Grid>
+                  </Grid>
                 </Link>
               </TableCell>
               <TableCell parentColumn="Node Status" data-qa-node-status>
