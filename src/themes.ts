@@ -437,6 +437,12 @@ export const dark = createTheme({
           color: '#fff',
         },
       },
+      textColorPrimary: {
+        color: '#fff',
+        '&$selected, &$selected:hover': {
+          color: '#fff',
+        },
+      },
       selected: {}
     },
     MuiTableCell: {

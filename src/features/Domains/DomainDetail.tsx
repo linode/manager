@@ -10,6 +10,7 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import TabLink from 'src/components/TabLink';
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getDomain, getDomainRecords, updateDomain } from 'src/services/domains';
@@ -202,7 +203,11 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           >
             {
               this.tabs.map(tab =>
-                <Tab key={tab.title} label={tab.title} disabled={tab.disabled} />,
+                <Tab
+                  key={tab.title}
+                  disabled={tab.disabled}
+                  component={() => <TabLink to={tab.routeName} title={tab.title} />}
+                />,
               )
             }
           </Tabs>
