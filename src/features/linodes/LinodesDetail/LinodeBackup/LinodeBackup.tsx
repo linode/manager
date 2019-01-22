@@ -32,13 +32,13 @@ import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
 import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
 import BackupTableRow from './BackupTableRow';
-import { updateBackupsWindow } from './backupUtils';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
@@ -122,7 +122,9 @@ interface State {
   enabling: boolean;
 }
 
-type CombinedProps = PreloadedProps
+type CombinedProps =
+  & PreloadedProps
+  & LinodeActionsProps
   & StateProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
@@ -301,10 +303,18 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   saveSettings = () => {
-    const { linodeID, enqueueSnackbar } = this.props;
+    const { linodeID, enqueueSnackbar, linodeActions: {updateLinode} } = this.props;
     const { settingsForm } = this.state;
 
-    updateBackupsWindow(linodeID, settingsForm.day, settingsForm.window)
+    updateLinode({
+      linodeId: linodeID,
+      backups: {
+        schedule: {
+          day: settingsForm.day,
+          window: settingsForm.window,
+        },
+      },
+    })
       .then(() => {
         enqueueSnackbar('Backup settings saved', {
           variant: 'success'
@@ -701,5 +711,6 @@ export default compose<CombinedProps, {}>(
   styled as any,
   withRouter,
   connected,
-  withSnackbar
+  withSnackbar,
+  withLinodeActions,
 )(LinodeBackup);
