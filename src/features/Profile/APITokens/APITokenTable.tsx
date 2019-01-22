@@ -30,7 +30,6 @@ import APITokenMenu from './APITokenMenu';
 type ClassNames = 'headline'
   | 'paper'
   | 'labelCell'
-  | 'typeCell'
   | 'createdCell';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => {
@@ -43,13 +42,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       marginBottom: theme.spacing.unit * 2,
     },
     labelCell: {
-      width: '30%',
-    },
-    typeCell: {
-      width: '20%',
+      width: '40%',
     },
     createdCell: {
-      width: '20%',
+      width: '30%',
     },
   });
 };
@@ -380,11 +376,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             {token.label}
           </Typography>
         </TableCell>
-        <TableCell parentColumn="Type">
-          <Typography variant="body1" data-qa-token-type>
-            {type}
-          </Typography>
-        </TableCell>
         <TableCell parentColumn="Created">
           <Typography variant="body1" data-qa-token-created>
             <DateTimeDisplay value={token.created} humanizeCutoff="month"/>
@@ -448,7 +439,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
             <TableHead>
               <TableRow data-qa-table-head>
                 <TableCell className={classes.labelCell}>Label</TableCell>
-                <TableCell className={classes.typeCell}>Type</TableCell>
                 <TableCell className={classes.createdCell}>Created</TableCell>
                 <TableCell>Expires</TableCell>
                 <TableCell />

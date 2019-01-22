@@ -110,6 +110,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = (props) => {
             onRemove={onRemove}
             tags={domain.tags}
             type={domain.type}
+            status={domain.status}
           />)
       }
     </>
