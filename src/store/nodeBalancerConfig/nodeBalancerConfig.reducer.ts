@@ -4,8 +4,9 @@ import { Reducer } from "redux";
 import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onStart } from "../store.helpers";
-import { createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
+import { deleteNodeBalancerActions } from '../nodeBalancer/nodeBalancer.actions';
+import { addEntityRecord, addMany, createDefaultState, mapIDs, onCreateOrUpdate, onDeleteSuccess, onError, onStart, removeMany } from "../store.helpers";
+import { addNodeBalancerConfigs, createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, removeNodeBalancerConfigs, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
 
 export type State = MappedEntityState<NodeBalancerConfig>;
 
@@ -57,7 +58,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   /** Update */
   if (isType(action, updateNodeBalancerConfigActions.done)) {
-   const { result } = action.payload;
+    const { result } = action.payload;
     return onCreateOrUpdate(result, state);
   }
 
@@ -66,6 +67,32 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { params: { nodeBalancerConfigId } } = action.payload;
 
     return onDeleteSuccess(nodeBalancerConfigId, state);
+  }
+
+  if (isType(action, removeNodeBalancerConfigs)) {
+    const { payload } = action;
+
+    return removeMany(payload.map(String), state);
+  }
+
+  if (isType(action, addNodeBalancerConfigs)) {
+    const { payload } = action;
+
+    return addMany(payload, state);
+  }
+
+  /** When a NodeBalancer is deleted, we need to remove all of it's configs. */
+  if (isType(action, deleteNodeBalancerActions.done)) {
+    const { params: { nodeBalancerId } } = action.payload;
+    const updated = Object
+      .values(state.itemsById)
+      .filter(({ nodebalancer_id }) => nodebalancer_id !== nodeBalancerId);
+
+    return {
+      ...state,
+      items: updated.map(mapIDs),
+      itemsById: updated.reduce(addEntityRecord, {}),
+    };
   }
 
   return state;

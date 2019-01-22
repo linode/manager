@@ -18,4 +18,8 @@ export type UpdateNodeBalancerConfigParams = ConfigParams & UpdateNodeBalancerCo
 export const updateNodeBalancerConfigActions = actionCreator.async<UpdateNodeBalancerConfigParams, Entity, Linode.ApiFieldError[]>(`update`);
 
 export type DeleteNodeBalancerConfigParams = ConfigParams;
-export const deleteNodeBalancerConfigActions = actionCreator.async<ConfigParams, {}, Linode.ApiFieldError[]>(`delete`);
+export const deleteNodeBalancerConfigActions = actionCreator.async<DeleteNodeBalancerConfigParams, {}, Linode.ApiFieldError[]>(`delete`);
+
+export const removeNodeBalancerConfigs = actionCreator<number[]>(`remove-many`);
+
+export const addNodeBalancerConfigs= actionCreator<NodeBalancerConfig[]>(`add-many`);

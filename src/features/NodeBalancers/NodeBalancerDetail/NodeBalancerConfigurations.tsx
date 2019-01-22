@@ -13,7 +13,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { getLinodes } from 'src/services/linodes';
-import { getNodeBalancerConfigNodes, getNodeBalancerConfigs } from 'src/services/nodebalancers';
+import { createNodeBalancerConfigNode, deleteNodeBalancerConfigNode, getNodeBalancerConfigNodes, getNodeBalancerConfigs, updateNodeBalancerConfigNode } from 'src/services/nodebalancers';
 import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
@@ -544,7 +544,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   deleteNode = (configIdx: number, nodeIdx: number) => {
     const {
-      deleteNodeBalancerConfigNode,
       match: { params: { nodeBalancerId } },
     } = this.props;
 
@@ -564,11 +563,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const node = config.nodes[nodeIdx];
     if (!node || !node.id) { return; }
 
-    return deleteNodeBalancerConfigNode({
-      nodeBalancerConfigId: config.id,
-      nodeBalancerId: Number(nodeBalancerId),
-      nodeBalancerConfigNodeId: node.id
-    })
+    return deleteNodeBalancerConfigNode(Number(nodeBalancerId), config.id, node.id)
       .then(() => {
         this.setState(
           over(
@@ -602,7 +597,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   createNode = (configIdx: number, nodeIdx: number) => {
     const {
-      createNodeBalancerConfigNode,
       match: { params: { nodeBalancerId } },
     } = this.props;
     const config = this.state.configs[configIdx];
@@ -613,11 +607,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     if (!nodeBalancerId) { return; }
     if (!config || !config.id) { return; }
 
-    return createNodeBalancerConfigNode({
-      nodeBalancerId: Number(nodeBalancerId),
-      nodeBalancerConfigId: config.id,
-      ...nodeData,
-    })
+    return createNodeBalancerConfigNode(Number(nodeBalancerId), config.id, nodeData)
       .then((responseNode) => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
@@ -661,7 +651,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   updateNode = (configIdx: number, nodeIdx: number) => {
     const {
-      updateNodeBalancerConfigNode,
+
       match: { params: { nodeBalancerId } },
     } = this.props;
     const config = this.state.configs[configIdx];
@@ -674,12 +664,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     if (!node || !node.id) { return; }
 
     return (
-      updateNodeBalancerConfigNode({
-        nodeBalancerId: Number(nodeBalancerId),
-        nodeBalancerConfigId: config.id,
-        nodeBalancerConfigNodeId: node.id,
-        ...nodeData,
-      })
+      updateNodeBalancerConfigNode( Number(nodeBalancerId), config.id, node.id, nodeData )
         .then((responseNode) => {
           /* Set the new Node data including the ID
              This also clears the errors and modify status. */
