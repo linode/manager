@@ -54,11 +54,14 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
   },
   usageWrapper: {
-    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    }
   },
   usage: {
     animation: 'fadeIn .3s ease-in-out forwards',
     marginTop: 0,
+    maxWidth: 150,
   },
 });
 
@@ -85,12 +88,12 @@ class AlertSection extends React.Component<CombinedProps> {
 
     return (
         <React.Fragment>
-            <Grid
+          <Grid
             container
             alignItems="flex-start"
             className={classes.root}
             data-qa-alerts-panel
-            >
+          >
             <Grid item className={classes.switch}>
               <FormControlLabel
                 className="toggleLabel"
@@ -120,7 +123,7 @@ class AlertSection extends React.Component<CombinedProps> {
                 className={classes.usage}
               />
             </Grid>
-            </Grid>
+          </Grid>
             <Divider />
         </React.Fragment>
     );

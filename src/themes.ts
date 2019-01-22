@@ -344,7 +344,7 @@ export const dark = createTheme({
       root: {
         '&$disabled': {
           borderColor: '#606469',
-          color: '#eee !important',
+          color: '#666 !important',
         },
         '&$focused': {
           borderColor: primaryColors.main,
