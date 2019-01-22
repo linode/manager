@@ -107,7 +107,7 @@ export class Profile extends Page {
 
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
-    get oauthClientsTab() { return $('[data-qa-tab="My Apps"]'); }
+    get oauthClientsTab() { return $('[data-qa-tab="OAuth Apps"]'); }
     get tableHeader() { return $$('[data-qa-table]'); }
     get tableHead() { return $$('[data-qa-table-head]'); }
     get tableRow() { return $$('[data-qa-table-row]'); }
