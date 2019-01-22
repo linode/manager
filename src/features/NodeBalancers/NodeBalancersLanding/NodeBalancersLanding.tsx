@@ -123,7 +123,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   }
 
   onSubmitDelete = () => {
-    const { deleteNodeBalancer } = this.props;
+    const { nodeBalancerActions: { deleteNodeBalancer } } = this.props;
     const { selectedNodeBalancerId } = this.state;
 
     if (!selectedNodeBalancerId) {

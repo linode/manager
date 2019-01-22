@@ -14,7 +14,7 @@ import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc, { State as UserSSHKeyProps } from 'src/features/linodes/userSSHKeyHoc';
-import { createLinode } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -23,7 +23,6 @@ import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
 import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
-
 const DEFAULT_IMAGE = 'linode/debian9';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -88,6 +87,7 @@ const errorResources = {
 
 type CombinedProps =
   & Props
+  & LinodeActionsProps
   & UserSSHKeyProps
   & InjectedNotistackProps
   & LabelProps
@@ -163,7 +163,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   }
 
   createNewLinode = () => {
-    const { history, userSSHKeys } = this.props;
+    const { history, userSSHKeys, linodeActions: {createLinode} } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -374,7 +374,8 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   userSSHKeyHoc,
-  withLabelGenerator
+  withLabelGenerator,
+  withLinodeActions,
 );
 
 export default enhanced(FromImageContent);

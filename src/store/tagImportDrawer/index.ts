@@ -214,8 +214,8 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch, getSt
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
   Bluebird.join(
-    Bluebird.reduce(entities.linodes as any, linodeAccumulator, { success: [], errors: [] }),
-    Bluebird.reduce(entities.domains as any, domainAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.linodes, linodeAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.domains, domainAccumulator, { success: [], errors: [] }),
     dispatch,
     handleAccumulatedResponsesAndErrors,
   )

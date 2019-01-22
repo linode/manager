@@ -1,8 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
-
+import withLinodeActions from 'src/__data__/withLinodeActions';
 import { FromStackScriptContent } from './FromStackScriptContent';
 
 const mockProps = {
@@ -35,6 +34,7 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromStackScriptContent
+      {...withLinodeActions}
       enqueueSnackbar={jest.fn()}
       onPresentSnackbar={jest.fn()}
       handleDisablePasswordField={jest.fn()}
@@ -55,6 +55,7 @@ describe('FromImageContent', () => {
 
   const component = shallow(
     <FromStackScriptContent
+      {...withLinodeActions}
       enqueueSnackbar={jest.fn()}
       onPresentSnackbar={jest.fn()}
       handleDisablePasswordField={jest.fn()}

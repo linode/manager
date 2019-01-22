@@ -109,9 +109,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateLabel = (label: string) => {
     const { nodeBalancer } = this.state;
-    const { updateNodeBalancer } = this.props;
+    const { nodeBalancerActions: { updateNodeBalancer } } = this.props;
 
-    return updateNodeBalancer({nodeBalancerId: nodeBalancer.id,  label })
+    return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, label })
       .then(() => {
         this.setState({
           nodeBalancer: { ...nodeBalancer, label }, ApiError: undefined,
@@ -130,7 +130,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
   updateTags = (tags: string[]) => {
     const { nodeBalancer } = this.state;
-    const {updateNodeBalancer} = this.props;
+    const { nodeBalancerActions: { updateNodeBalancer } } = this.props;
 
     return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, tags })
       .then(() => {

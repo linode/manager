@@ -14,7 +14,7 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import { getLinodes } from 'src/services/linodes';
 import { createNodeBalancerConfigNode, deleteNodeBalancerConfigNode, getNodeBalancerConfigNodes, getNodeBalancerConfigs, updateNodeBalancerConfigNode } from 'src/services/nodebalancers';
-import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { withNodeBalancerConfigActions, WithNodeBalancerConfigActions } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
@@ -63,7 +63,7 @@ interface State {
 
 type CombinedProps =
   & Props
-  & WithNodeBalancerActions
+  & WithNodeBalancerConfigActions
   & RouteProps
   & WithStyles<ClassNames>
   & PreloadedProps;
@@ -220,7 +220,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   ) => {
     /* Update a config and its nodes simultaneously */
     const {
-      updateNodeBalancerConfig,
+      nodeBalancerConfigActions: { updateNodeBalancerConfig },
       match: { params: { nodeBalancerId } },
     } = this.props;
 
@@ -330,7 +330,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     */
 
     const {
-      createNodeBalancerConfig,
+      nodeBalancerConfigActions: { createNodeBalancerConfig },
       match: { params: { nodeBalancerId } },
     } = this.props;
 
@@ -473,7 +473,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     });
 
     const {
-      deleteNodeBalancerConfig,
+      nodeBalancerConfigActions: { deleteNodeBalancerConfig },
       match: { params: { nodeBalancerId } },
     } = this.props;
 
@@ -664,7 +664,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     if (!node || !node.id) { return; }
 
     return (
-      updateNodeBalancerConfigNode( Number(nodeBalancerId), config.id, node.id, nodeData )
+      updateNodeBalancerConfigNode(Number(nodeBalancerId), config.id, node.id, nodeData)
         .then((responseNode) => {
           /* Set the new Node data including the ID
              This also clears the errors and modify status. */
@@ -987,7 +987,7 @@ const enhanced = composeC<CombinedProps, Props>(
   styled,
   withRouter,
   preloaded,
-  withNodeBalancerActions,
+  withNodeBalancerConfigActions,
 );
 
 export default enhanced(NodeBalancerConfigurations);

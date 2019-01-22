@@ -19,7 +19,7 @@ import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { createLinode } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -111,6 +111,7 @@ const errorResources = {
 
 type CombinedProps =
   & Props
+  & LinodeActionsProps
   & InjectedNotistackProps
   & LabelProps
   & WithStyles<ClassNames>;
@@ -240,7 +241,7 @@ export class FromStackScriptContent extends React.Component<CombinedProps, State
   }
 
   createLinode = () => {
-    const { history, userSSHKeys } = this.props;
+    const { history, userSSHKeys, linodeActions: { createLinode } } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -534,7 +535,8 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   userSSHKeyHoc,
-  withLabelGenerator
+  withLabelGenerator,
+  withLinodeActions,
 );
 
 export default enhanced(FromStackScriptContent) as any;
