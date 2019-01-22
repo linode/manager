@@ -1,5 +1,5 @@
 import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
-import { updateNodeBalancerConfigsAndNodes } from './nodeBalancerConfig.requests';
+import { updateNodeBalancerConfigs } from './nodeBalancerConfig.requests';
 
 /**
  * Since the API provided event only returns the ID of the affected NodeBalancer, we have diff
@@ -10,10 +10,11 @@ const nodeBalancerConfigEventHandler: EventHandler = (event, dispatch, getState)
   const { id } = entity;
 
   switch (action) {
-    case 'nodebalancer_config_create':
     case 'nodebalancer_config_delete':
+    case 'nodebalancer_config_create':
+      return dispatch(updateNodeBalancerConfigs(id));
     default:
-      return dispatch(updateNodeBalancerConfigsAndNodes(id));
+      return;
   }
 };
 

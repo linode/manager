@@ -4,7 +4,8 @@ import { Reducer } from "redux";
 import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from "typescript-fsa";
-import { addMany, createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onStart, removeMany } from "../store.helpers";
+import { deleteNodeBalancerActions, getAllNodeBalancersActions } from '../nodeBalancer/nodeBalancer.actions';
+import { addEntityRecord, addMany, createDefaultState, mapIDs, onCreateOrUpdate, onDeleteSuccess, onError, onStart, removeMany } from "../store.helpers";
 import { addNodeBalancerConfigs, createNodeBalancerConfigActions, deleteNodeBalancerConfigActions, getAllNodeBalancerConfigsActions, removeNodeBalancerConfigs, updateNodeBalancerConfigActions } from "./nodeBalancerConfig.actions";
 
 export type State = MappedEntityState<NodeBalancerConfig>;
@@ -78,6 +79,20 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { payload } = action;
 
     return addMany(payload, state);
+  }
+
+  /** When a NodeBalancer is deleted, we need to remove all of it's configs. */
+  if (isType(action, deleteNodeBalancerActions.done)) {
+    const { params: { nodeBalancerId } } = action.payload;
+    const updated = Object
+      .values(state.itemsById)
+      .filter(({ nodebalancer_id }) => nodebalancer_id !== nodeBalancerId);
+
+    return {
+      ...state,
+      items: updated.map(mapIDs),
+      itemsById: updated.reduce(addEntityRecord, {}),
+    };
   }
 
   return state;

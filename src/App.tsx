@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path } from 'ramda';
@@ -189,15 +188,10 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   async componentDidMount() {
-    const {
-      actions,
-      getAllNodeBalancers,
-      getAllNodeBalancerConfigs,
-      getAllNodeBalancerConfigNodes,
-    } = this.props;
+    const { actions, getAllNodeBalancersWithConfigs } = this.props;
 
     try {
-      const [, , , , , , , , , nodeBalancers] = await Promise.all(
+      await Promise.all(
         [
           actions.requestProfile(),
           actions.requestDomains(),
@@ -208,19 +202,9 @@ export class App extends React.Component<CombinedProps, State> {
           actions.requestTypes(),
           actions.requestRegions(),
           actions.requestVolumes(),
-          getAllNodeBalancers(),
+          getAllNodeBalancersWithConfigs(),
         ]
       );
-
-      /** Get all NodeBalancer configs for each NodeBalancer */
-      const nodeBalancerConfigs = await Bluebird.map(nodeBalancers, ({ id }) => getAllNodeBalancerConfigs({ nodeBalancerId: id }));
-
-      /** nodeBalancerConfig is NodeBalancerConfig[][] so we need to flatten it first. */
-      const flattenedNodeBalancerConfigs = nodeBalancerConfigs.reduce((result, each) => [...result, ...each], [])
-
-      /** Get all NodeBalancer config nodes for each NodeBalancer config. */
-      await Bluebird.map(flattenedNodeBalancerConfigs, ({ id, nodebalancer_id }) => getAllNodeBalancerConfigNodes({ nodeBalancerConfigId: id, nodeBalancerId: nodebalancer_id }));
-
     } catch (error) { /** We choose to do nothing, relying on the Redux error state. */ }
 
     /*
