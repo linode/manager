@@ -75,3 +75,23 @@ export const createRequestThunk = <Req, Res, Err>(
     throw error;
   }
 };
+
+export const updateInPlace = <E extends Entity>(id: number | string, update: (e: E) => E, state: MappedEntityState<E>) => {
+
+  const { itemsById } = state;
+
+  // If this entity cannot be found in state, return the state as-is.
+  if (!itemsById[id]) {
+    return state;
+  }
+
+  // Return the state as-is EXCEPT replacing the original entity with the updated entity.
+  const updated = update(itemsById[id]);
+  return {
+    ...state,
+    itemsById: {
+      ...itemsById,
+      [id]: updated
+    }
+  }
+}
