@@ -30,7 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   strengthText: {
     position: 'relative',
-    top: 3,
     fontSize: '.85rem',
     textAlign: 'right',
     [theme.breakpoints.down('xs')]: {
