@@ -52,20 +52,12 @@ const Option = (props: any) => {
 
 class SearchBar extends React.Component<CombinedProps, State> {
   selectRef = React.createRef<HTMLInputElement>();
-  mounted: boolean = false;
+
   state: State = {
     searchText: '',
     searchActive: false,
     menuOpen: false,
   };
-
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
 
   dataAvailable() {
     return (

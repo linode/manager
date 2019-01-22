@@ -95,8 +95,8 @@ const nodeBalToItem = (nodebal: Linode.NodeBalancer) => ({
 });
 
 const linodeSelector = (state: State) => state.linodes.entities;
-const volumeSelector = (state: State) => [] // state.volumes.entities;
-const nodebalSelector = (state: State) => [] // state.nodebalancers;
+const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
+const nodebalSelector = ({ nodeBalancers}: State) => Object.values(nodeBalancers.itemsById);
 const imageSelector = (state: State) => state.images.entities;
 const domainSelector = (state: State) => state.domains.entities;
 const typesSelector = (state: State) => state.types.entities;
