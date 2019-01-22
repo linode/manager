@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
-import { getLinode, getLinodes } from "src/services/linodes";
+import { CreateLinodeRequest, getLinode, getLinodes } from "src/services/linodes";
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory from 'typescript-fsa';
@@ -21,6 +21,7 @@ export const updateLinode = actionCreator<{ id: number; update: (v: Linode.Linod
 
 export const linodesRequest = actionCreator.async<void, Linode.Linode[], Linode.ApiFieldError[]>('request');
 
+type LinodeParam = { linodeId: number };
 export const requestLinodes: ThunkActionCreator<Promise<Linode.Linode[]>> = () => (dispatch) => {
   dispatch(linodesRequest.started);
 
@@ -31,7 +32,7 @@ export const requestLinodes: ThunkActionCreator<Promise<Linode.Linode[]>> = () =
       return result;
     })
     .catch((err) => {
-      dispatch(linodesRequest.failed({ error: getAPIErrorOrDefault(err, 'There was an error retrieving your Linodes.')}));
+      dispatch(linodesRequest.failed({ error: getAPIErrorOrDefault(err, 'There was an error retrieving your Linodes.') }));
       return err;
     });
 };
@@ -49,8 +50,14 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = (id) => (dispat
     })
 };
 
-export interface UpdateLinodeParams extends Partial<Linode.Linode> {
-  linodeId: number;
-}
+/**
+ * Thunk Actions
+ */
+export type CreateLinodeParams = CreateLinodeRequest;
+export const createLinodeActions = actionCreator.async<CreateLinodeParams, Linode.Linode, Linode.ApiFieldError[]>('create');
 
-export const requestUpdateLinodeActions = actionCreator.async<UpdateLinodeParams, Linode.Linode, Linode.ApiFieldError[]>(`update`);
+export type UpdateLinodeParams = Partial<Linode.Linode> & LinodeParam;
+export const updateLinodeActions = actionCreator.async<UpdateLinodeParams, Linode.Linode, Linode.ApiFieldError[]>(`update`);
+
+export type DeleteLinodeParams = LinodeParam;
+export const deleteLinodeActions = actionCreator.async<DeleteLinodeParams, {}, Linode.ApiFieldError[]>('delete');
