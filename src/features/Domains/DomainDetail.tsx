@@ -12,7 +12,8 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getDomain, getDomainRecords, updateDomain } from 'src/services/domains';
+import { getDomain, getDomainRecords } from 'src/services/domains';
+import { DomainActionsProps, withDomainActions } from 'src/store/domains/domains.container';
 import DomainRecords from './DomainRecords';
 
 interface State {
@@ -48,7 +49,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
 });
 
-type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
+type CombinedProps =
+  & DomainActionsProps
+  & RouteProps
+  & PreloadedProps
+  & WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
   domain: ({ match: { params: { domainId } } }) => {
@@ -123,10 +128,11 @@ class DomainDetail extends React.Component<CombinedProps, State> {
 
   handleUpdateTags = (tagsList: string[]) => {
     const { domain } = this.state;
-    return updateDomain(
-      domain.id,
-      { tags: tagsList }
-    )
+    const { domainActions } = this.props;
+    return domainActions.updateDomain({
+      domainId: domain.id,
+      tags: tagsList
+    })
     .then((data: Linode.Domain) => {
       this.setState({
         domain: data,
@@ -230,9 +236,10 @@ const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   },
 );
 
-export default compose<any, any, any, any, any>(
+export default compose<any, any, any, any, any, any>(
   setDocs(DomainDetail.docs),
   reloaded,
   styled,
   preloaded,
+  withDomainActions
 )(DomainDetail);

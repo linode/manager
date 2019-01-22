@@ -1,9 +1,15 @@
 import { Dispatch } from 'redux';
-import { getDomain, getDomains } from 'src/services/domains';
+import { CreateDomainPayload, getDomain, getDomains, UpdateDomainPayload } from 'src/services/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 import { ThunkActionCreator } from '../types';
+
+export interface DomainId {
+  domainId: number;
+}
+
+export type UpdateDomainParams = DomainId & UpdateDomainPayload;
 
 /**
  * Actions
@@ -19,6 +25,10 @@ export const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 export const upsertDomain = actionCreator<Linode.Domain>('upsert');
 
 export const deleteDomain = actionCreator<number>('delete');
+
+export const createDomainActions = actionCreator.async<CreateDomainPayload, Linode.Domain, Linode.ApiFieldError[]>('create');
+export const updateDomainActions = actionCreator.async<UpdateDomainParams, Linode.Domain, Linode.ApiFieldError[]>('update');
+export const deleteDomainActions = actionCreator.async<DomainId, {}, Linode.ApiFieldError[]>('delete');
 
 /**
  * Async
