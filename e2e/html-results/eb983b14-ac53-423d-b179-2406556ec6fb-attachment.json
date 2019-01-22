@@ -1,4 +1,0 @@
-{
-  "using": "css selector",
-  "value": "[data-qa-action-menu-item=\"Delete\"] [data-qa-tooltip]"
-}
