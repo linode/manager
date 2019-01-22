@@ -1,8 +1,8 @@
 import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
-import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, updateVolumeActions, updateVolumeStatus } from './volume.actions';
+import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart, updateInPlace } from '../store.helpers';
+import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, updateVolumeActions, updateVolumeInStore } from './volume.actions';
 
 export type State = MappedEntityState<Linode.Volume>;
 
@@ -15,7 +15,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   **/
   if (isType(action, createVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume>(result, state)
+    return onCreateOrUpdate(result, state)
   }
   if (isType(action, createVolumeActions.failed)) {
     const { error } = action.payload;
@@ -27,7 +27,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   **/
   if (isType(action, updateVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume>(result, state)
+    return onCreateOrUpdate(result, state)
   }
   if (isType(action, updateVolumeActions.failed)) {
     const { error } = action.payload;
@@ -51,24 +51,17 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   */
   if (isType(action, attachVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume>(result, state)
+    return onCreateOrUpdate(result, state)
   }
   /*
   * Detach Volume
   */
   if (isType(action, detachVolumeActions.done)) {
     const { volumeId } = action.payload.params;
-    const { itemsById } = state;
-    return {
-      ...state,
-      itemsById: {
-        ...itemsById,
-        [volumeId]: {
-          ...itemsById[volumeId],
-          linode_id: null
-        }
-      }
-    };
+
+    const updateFn = (existing: Linode.Volume) => ({ ...existing, linode_id: null });
+
+    return updateInPlace(volumeId, updateFn, state);
   }
 
   /*
@@ -92,7 +85,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const hardcodedStatus: Linode.VolumeStatus = 'active';
     const resultHardcodedWithActiveStatus = { ...result, status: hardcodedStatus }
 
-    return onCreateOrUpdate<Linode.Volume>(resultHardcodedWithActiveStatus, state)
+    return onCreateOrUpdate(resultHardcodedWithActiveStatus, state)
   }
 
   /*
@@ -100,7 +93,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   */
   if (isType(action, resizeVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume>(result, state);
+    return onCreateOrUpdate(result, state);
   }
 
   /*
@@ -108,11 +101,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   */
   if (isType(action, getOneVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume>(result, state);
+    return onCreateOrUpdate(result, state);
   }
 
   /*
-
   * Get All Volumes
   **/
   if (isType(action, getAllVolumesActions.started)) {
@@ -128,22 +120,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /*
-  * Update Volume Status
-  */
-  if (isType(action, updateVolumeStatus)) {
-    const { volumeId, status } = action.payload;
-    const { itemsById } = state;
-
-    return {
-      ...state,
-      itemsById: {
-        ...itemsById,
-        [volumeId]: {
-          ...itemsById[volumeId],
-          status
-        }
-      }
-    }
+  * Update Volume in Store
+  **/
+  if (isType(action, updateVolumeInStore)) {
+    const { volumeId, update } = action.payload;
+    return updateInPlace(volumeId, update, state);
   }
 
   return state;

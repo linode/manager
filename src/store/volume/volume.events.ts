@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { EventHandler } from '../middleware/combineEventsMiddleware';
-import { deleteVolumeActions, updateVolumeStatus } from './volume.actions';
+import { deleteVolumeActions, updateVolumeInStore } from './volume.actions';
 import { getOneVolume } from './volume.requests';
 
 const volumeEventsHandler: EventHandler = (event, dispatch) => {
@@ -48,9 +48,9 @@ const handleVolumeResize = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     // status to "active" here, or else the volume could potentially be in an "resizing" state until the next
     // getAllVolumes request.
     case 'notification':
-      return dispatch(updateVolumeStatus({ volumeId, status: 'active' }));
+      updateVolumeStatus(dispatch, volumeId, 'active');
 
-      default:
+    default:
       return;
   }
 }
@@ -86,6 +86,14 @@ const handleVolumeDelete = (dispatch: Dispatch<any>, status: Linode.EventStatus,
       });
       return dispatch(action);
   }
+}
+
+export const updateVolumeStatus = (dispatch: Dispatch<any>, volumeId: number, status: Linode.VolumeStatus) => {
+  const action = updateVolumeInStore({
+    volumeId,
+    update: (existing) => ({ ...existing, status })
+  });
+  dispatch(action);
 }
 
 export default volumeEventsHandler;

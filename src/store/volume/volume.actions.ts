@@ -22,6 +22,11 @@ export const detachVolumeActions = actionCreator.async<VolumeId, {}, Linode.ApiF
 
 export const cloneVolumeActions = actionCreator.async<CloneVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`clone`);
 export const resizeVolumeActions = actionCreator.async<ResizeVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`resize`);
-export const updateVolumeStatus = actionCreator<{ volumeId: number, status: Linode.VolumeStatus }>('update-volume-status');
 
 export const getAllVolumesActions = actionCreator.async<void, Linode.Volume[], Linode.ApiFieldError[]>('get-all');
+
+export interface UpdateVolumeInStore {
+  volumeId: number;
+  update: (volume: Linode.Volume) => Linode.Volume;
+}
+export const updateVolumeInStore = actionCreator<UpdateVolumeInStore>('update-volume-in-store');
