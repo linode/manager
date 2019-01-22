@@ -15,18 +15,16 @@ const styles: StyleRulesCallback<ClassNames> = (theme: any) => ({
 interface Props {
   to: string;
   title: string;
+  selected?: boolean;
 }
 
 type CombinedProps = Props &  WithStyles<ClassNames>;
 
 class TabLink extends React.Component<CombinedProps> {
 
-  
-
   render() {
     const { classes, title, to } = this.props;
-
-    const pathName = document.location.pathname; 
+    const pathName = document.location.pathname;
 
     return (
         <Link

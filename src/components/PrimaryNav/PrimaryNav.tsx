@@ -224,7 +224,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // }
 
     if (hasAccountAccess) {
-      primaryLinks.push({ display: 'Account', href: '/account', key: 'account' });
+      primaryLinks.push({ display: 'Account', href: '/account/billing', key: 'account' });
     }
 
     primaryLinks.push({ display: 'Get Help', href: '/support', key: 'support' });
@@ -258,7 +258,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   goToProfile = () => {
-    this.navigate('/profile');
+    this.navigate('/profile/display');
   }
 
   logOut = () => {
@@ -336,7 +336,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 className={classNames({
                   [classes.listItem]: true,
                   [classes.collapsible]: true,
-                  [classes.active]: this.linkIsActive('/profile') === true,
+                  [classes.active]: this.linkIsActive('/profile/display') === true,
                 })}
               >
                 <ListItemText
@@ -345,7 +345,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                     [classes.linkItem]: true,
                     [classes.activeLink]:
                       expandedMenus.support
-                      || this.linkIsActive('/profile') === true,
+                      || this.linkIsActive('/profile/display') === true,
                   })}
                 >
                   My Profile
