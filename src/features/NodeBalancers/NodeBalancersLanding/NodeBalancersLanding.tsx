@@ -31,6 +31,7 @@ import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
 
 type ClassNames =
   | 'root'
+  | 'titleWrapper'
   | 'title'
   | 'nodeStatus'
   | 'nameCell'
@@ -42,6 +43,9 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  titleWrapper: {
+    flex: 1
+  },
   title: {
     marginBottom: theme.spacing.unit * 2,
   },
@@ -67,7 +71,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit - 2,
+    marginBottom: theme.spacing.unit + 2,
   }
 });
 
@@ -194,12 +198,12 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
         <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
-          <Grid item>
+          <Grid item className={classes.titleWrapper}>
             <Typography role="header" variant="h1" data-qa-title className={classes.title}>
               NodeBalancers
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="p0">
             <FormControlLabel
               className={classes.tagGroup}
               label="Group by Tag:"
