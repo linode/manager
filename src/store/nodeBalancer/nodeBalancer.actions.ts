@@ -22,3 +22,6 @@ export type DeleteNodeBalancerParams = BalancerParams;
 
 export const deleteNodeBalancerActions = actionCreator.async<DeleteNodeBalancerParams, {}, Linode.ApiFieldError[]>(`delete`);
 
+export type GetNodeBalancerWithConfigsParams = BalancerParams;
+
+export const getNodeBalancerWithConfigsActions = actionCreator.async<GetNodeBalancerWithConfigsParams, Linode.NodeBalancer, Linode.ApiFieldError>(`get`);

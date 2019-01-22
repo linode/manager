@@ -1,10 +1,14 @@
-import { omit } from 'ramda';
-import { Entity, MappedEntityState, ThunkActionCreator } from 'src/store/types';
+import { assoc, omit } from 'ramda';
+import { Entity, EntityMap, MappedEntityState, ThunkActionCreator } from 'src/store/types';
 import { AsyncActionCreators } from 'typescript-fsa';
 
+
 /** ID's are all mapped to string. */
-const mapIDs = (e: { id: number | string }) => String(e.id);
+export const mapIDs = (e: { id: number | string }) => String(e.id);
 const keys = Object.keys;
+
+export const addEntityRecord = <T extends Entity>(result: EntityMap<T>, current: T): EntityMap<T> =>
+  assoc(String(current.id), current, result)
 
 export const onStart = <S>(state: S) => Object.assign({}, state, { loading: true });
 
@@ -32,27 +36,46 @@ export const createDefaultState = <E extends Entity>(override: Partial<MappedEnt
 })
 
 export const onDeleteSuccess = <E extends Entity>(id: string | number, state: MappedEntityState<E>): MappedEntityState<E> => {
-  const { itemsById } = state;
-  const iid = typeof id === 'number' ? String(id) : id;
-  const updated = omit([iid], itemsById);
-
-  return {
-    ...state,
-    items: keys(updated),
-    itemsById: updated,
-  }
+  return removeMany([String(id)], state);
 };
 
 export const onCreateOrUpdate = <E extends Entity>(entity: E, state: MappedEntityState<E>): MappedEntityState<E> => {
-  const updated = { ...state.itemsById, [entity.id]: entity };
+  return addMany([entity], state);
+}
+
+export const removeMany = <E extends Entity>(list: string[], state: MappedEntityState<E>): MappedEntityState<E> => {
+  const itemsById = omit(list, state.itemsById);
 
   return {
     ...state,
-    itemsById: updated,
-    items: keys(updated),
-  };
-}
+    itemsById,
+    items: keys(itemsById),
+  }
+};
 
+export const addMany = <E extends Entity>(list: E[], state: MappedEntityState<E>): MappedEntityState<E> => {
+  const itemsById = list.reduce((map, item) => ({ ...map, [item.id]: item }), state.itemsById)
+
+  return {
+    ...state,
+    itemsById,
+    items: keys(itemsById),
+  }
+};
+
+
+export const getAddRemoved = <E extends Entity>(existingList: E[] = [], newList: E[] = []) => {
+  const existingIds = existingList.map(({ id }) => String(id))
+  const newIds = newList.map(({ id }) => String(id))
+
+  const added = newList
+    .filter(({ id }) => !existingIds.includes(String(id)));
+
+  const removed = existingList
+    .filter(({ id }) => !newIds.includes(String(id)));
+
+  return [added, removed];
+}
 
 export const createRequestThunk = <Req, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
