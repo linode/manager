@@ -286,7 +286,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             disableTypography={true}
             className={classNames({
               [classes.linkItem]: true,
-              [classes.active]: this.linkIsActive(primaryLink.href)
             })}
           />
         </Link>

@@ -433,21 +433,11 @@ export const dark = createTheme({
     MuiTab: {
       root: {
         color: '#fff',
-        '&:hover': {
-          color: primaryColors.main,
+        '&$selected, &$selected:hover': {
+          color: '#fff',
         },
       },
-      textColorPrimary: {
-        color: primaryColors.text,
-        '&$selected': {
-          color: primaryColors.text,
-        },
-        '&$disabled': {
-          color: '#666',
-          cursor: 'not-allowed',
-          pointerEvents: 'all !important',
-        },
-      },
+      selected: {}
     },
     MuiTableCell: {
       root: {
@@ -499,11 +489,6 @@ export const dark = createTheme({
         '& a': {
           color: primaryColors.offBlack,
         },
-      },
-    },
-    MuiTableSortLabel: {
-      root: {
-        textDecoration: 'underline',
       },
     },
     MuiTooltip: {
