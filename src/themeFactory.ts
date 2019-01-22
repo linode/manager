@@ -265,6 +265,7 @@ const themeDefaults: ThemeOptions = {
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
         padding: '9px 28px 11px',
+        maxHeight: 48,
         '&:hover': {
           backgroundColor: '#fff',
         },
