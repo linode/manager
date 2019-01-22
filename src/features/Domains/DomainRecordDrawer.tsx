@@ -180,7 +180,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   ServiceField = () => <this.TextField field="service" label="Service" />;
 
   PriorityField = ({ label }: { label: string }) =>
-    <this.NumberField field="priority" label={label} defaultValue={5} />
+    <this.NumberField field="priority" label={label} />
 
   PortField = () =>
     <this.NumberField field="port" label="Port" />
