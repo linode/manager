@@ -96,7 +96,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
   onSubmitUpdateNodeBalancer = () => {
     const { label, client_conn_throttle } = this.state.fields;
-    const { updateNodeBalancer } = this.props;
+    const { nodeBalancerActions: { updateNodeBalancer } } = this.props;
 
     this.setState({
       errors: undefined,

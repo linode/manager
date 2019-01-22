@@ -186,7 +186,7 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   async componentDidMount() {
-    const { actions, getAllNodeBalancersWithConfigs } = this.props;
+    const { actions, nodeBalancerActions: { getAllNodeBalancersWithConfigs } } = this.props;
 
     try {
       await Promise.all(

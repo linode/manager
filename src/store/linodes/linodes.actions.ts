@@ -21,7 +21,8 @@ export const updateLinode = actionCreator<{ id: number; update: (v: Linode.Linod
 
 export const linodesRequest = actionCreator.async<void, Linode.Linode[], Linode.ApiFieldError[]>('request');
 
-type LinodeParam = { linodeId: number };
+interface LinodeParam { linodeId: number };
+
 export const requestLinodes: ThunkActionCreator<Promise<Linode.Linode[]>> = () => (dispatch) => {
   dispatch(linodesRequest.started);
 
