@@ -71,7 +71,7 @@ exports.login = (username, password, credFilePath) => {
     }
 
     if(process.env.REACT_APP_APP_ROOT.includes('local')){
-        if($('.oauthauthorize-page').isExisting() && browser.getUrl().includes('login')){
+        if($$('.oauthauthorize-page').length > 0 && browser.getUrl().includes('login')){
           $('.form-actions>.btn').click();
         }
     }
