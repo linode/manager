@@ -25,7 +25,6 @@ import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequ
 import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
-import { detachVolume } from 'src/services/volumes';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/volumeDrawer';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
@@ -352,9 +351,10 @@ type CombinedProps =
 
   detachVolume = () => {
     const { destructiveDialog: { volumeId } } = this.state;
+    const { detachVolume } = this.props;
     if (!volumeId) { return; }
 
-    detachVolume(volumeId)
+    detachVolume({ volumeId })
       .then((response) => {
         /* @todo: show a progress bar for volume detachment */
         this.props.enqueueSnackbar('Volume detachment started', {
