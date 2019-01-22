@@ -1,7 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -157,7 +156,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={`invoice-${item.id}`} rowLink={`/account/billing/invoices/${item.id}`} data-qa-invoice>
         <TableCell parentColumn="Date Created" data-qa-invoice-date><DateTimeDisplay value={item.date}/></TableCell>
-        <TableCell parentColumn="Description" data-qa-invoice-desc={item.id}><Link to={`/account/billing/invoices/${item.id}`}>Invoice #{item.id}</Link></TableCell>
+        <TableCell parentColumn="Description" data-qa-invoice-desc={item.id}>Invoice #{item.id}</TableCell>
         <TableCell parentColumn="Amount" data-qa-invoice-amount>${item.total}</TableCell>
         <TableCell>
           {account.data && <a href="#" onClick={e => this.printInvoice(e, account.data as Linode.Account, item)}>Download PDF</a>}

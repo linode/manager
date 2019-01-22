@@ -1053,7 +1053,7 @@ const themeDefaults: ThemeOptions = {
       },
       hover: {
         cursor: 'pointer',
-        '& a': {
+        '& a.secondaryLink': {
           color: primaryColors.offBlack,
           fontFamily: 'LatoWebBold',
         },
