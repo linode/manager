@@ -1,9 +1,9 @@
 import { Reducer } from "redux";
 import { EntityState } from "src/store/types";
-import updateById from 'src/utilities/updateById';
+import updateById from "src/utilities/updateById";
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { deleteLinode, linodesRequest, updateLinode, updateMultipleLinodes, upsertLinode } from './linodes.actions';
+import { deleteLinode, linodesRequest, requestUpdateLinodeActions, updateLinode, updateMultipleLinodes, upsertLinode } from './linodes.actions';
 
 /**
  * State
@@ -101,6 +101,17 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: updated,
       results: updated.map((l) => l.id),
+    }
+  }
+
+  if (isType(action, requestUpdateLinodeActions.done)) {
+    const { result } = action.payload;
+    const update = updateOrAdd(result, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(({ id }) => id),
     }
   }
 

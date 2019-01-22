@@ -8,7 +8,8 @@ import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 import TagsPanel from 'src/components/TagsPanel';
 import { lishLaunch } from 'src/features/Lish';
-import { scheduleOrQueueMigration, updateLinode } from 'src/services/linodes';
+import { scheduleOrQueueMigration } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
@@ -44,7 +45,12 @@ interface State {
   hasScheduledMigration: boolean;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps & InjectedNotistackProps;
+type CombinedProps =
+  & LinodeActionsProps
+  & Props
+  & StateProps
+  & DispatchProps
+  & InjectedNotistackProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
@@ -88,11 +94,9 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   }
 
   handleUpdateTags = (tagsList: string[]) => {
-    const { linodeId, linodeUpdate } = this.props;
-    return updateLinode(
-      linodeId,
-      { tags: tagsList }
-    )
+    const { linodeId, linodeUpdate, linodeActions: { updateLinode } } = this.props;
+
+    return updateLinode({ linodeId, tags: tagsList })
       .then(() => {
         linodeUpdate();
       })
@@ -173,9 +177,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
 };
 
 const filterNotifications = (linodeId: number, notifications: Linode.Notification[] = []) => {
-    return notifications.filter((notification) =>
-      pathOr(0, ['entity','id'], notification) === linodeId
-    )
+  return notifications.filter((notification) =>
+    pathOr(0, ['entity', 'id'], notification) === linodeId
+  )
 }
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   notificationsLoading: state.__resources.notifications.loading,
@@ -194,5 +198,6 @@ export const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, Props>(
   connected,
-  withSnackbar
+  withSnackbar,
+  withLinodeActions,
 )(LinodesDetailHeader);
