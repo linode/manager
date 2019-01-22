@@ -50,7 +50,7 @@ const styles: StyleRulesCallback = (theme) => ({
     },
   },
   backDrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: theme.color.drawerBackdrop,
   },
 });
 

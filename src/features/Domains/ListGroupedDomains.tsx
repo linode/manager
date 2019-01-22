@@ -85,7 +85,16 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
                           </Typography>
                         </TableCell>
                       </TableRow>
-                      {paginatedData.map((domain) => <DomainTableRow key={domain.domain} domain={domain.domain} id={domain.id} onClone={onClone} onRemove={onRemove} tags={domain.tags} type={domain.type} />)}
+                      {paginatedData.map((domain) => <DomainTableRow
+                        key={domain.domain}
+                        domain={domain.domain}
+                        id={domain.id}
+                        onClone={onClone}
+                        onRemove={onRemove}
+                        tags={domain.tags}
+                        type={domain.type}
+                        status={domain.status}
+                      />)}
                       {count > DEFAULT_PAGE_SIZE && <TableRow>
                         <TableCell colSpan={7} className={classes.paginationCell}>
                           <PaginationFooter

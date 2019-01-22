@@ -30,6 +30,7 @@ describe('ListLinodes', () => {
             onPresentSnackbar={jest.fn()}
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
+            backupsCTA={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -57,6 +58,7 @@ describe('ListLinodes', () => {
             onPresentSnackbar={jest.fn()}
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
+            backupsCTA={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,
@@ -88,6 +90,7 @@ describe('ListLinodes', () => {
             onPresentSnackbar={jest.fn()}
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
+            backupsCTA={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>,

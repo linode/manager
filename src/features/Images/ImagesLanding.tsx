@@ -254,7 +254,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} updateFor={[]}>
+        <Grid container justify="space-between" alignItems="flex-end" updateFor={[]}>
           <Grid item>
             <Typography variant="h1" data-qa-title className={classes.title}>
               Images
@@ -262,7 +262,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
-              <Grid item>
+              <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.openForCreate}
                   label="Add an Image"

@@ -27,12 +27,12 @@ class Profile extends React.Component<Props> {
     /* NB: These must correspond to the routes inside the Switch */
     { title: 'Display', routeName: `${this.props.match.url}/display` },
     { title: 'Password & Authentication', routeName: `${this.props.match.url}/auth` },
-    { title: 'Settings', routeName: `${this.props.match.url}/settings` },
-    { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
-    { title: 'My Apps', routeName: `${this.props.match.url}/clients` },
-    { title: 'LISH', routeName: `${this.props.match.url}/lish` },
-    { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
     { title: 'SSH Keys', routeName: `${this.props.match.url}/keys` },
+    { title: 'LISH', routeName: `${this.props.match.url}/lish` },
+    { title: 'API Tokens', routeName: `${this.props.match.url}/tokens` },
+    { title: 'OAuth Apps', routeName: `${this.props.match.url}/clients` },
+    { title: 'Referrals', routeName: `${this.props.match.url}/referrals` },
+    { title: 'Settings', routeName: `${this.props.match.url}/settings` },
   ];
 
   render() {

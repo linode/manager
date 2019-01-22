@@ -22,7 +22,7 @@ class AccountLanding extends React.Component<Props> {
     /* NB: These must correspond to the routes inside the Switch */
     { title: 'Billing Info', routeName: `${this.props.match.url}/billing` },
     { title: 'Users', routeName: `${this.props.match.url}/users` },
-    { title: 'Global Settings', routeName: `${this.props.match.url}/settings` },
+    { title: 'Settings', routeName: `${this.props.match.url}/settings` },
   ];
 
   render() {

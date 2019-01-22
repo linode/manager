@@ -29,7 +29,10 @@ import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
 import nodeBalancerConfigEvents from './nodeBalancerConfig/nodeBalancerConfig.events';
 import notifications, { defaultState as notificationsDefaultState, State as NotificationsState } from './notification/notification.reducer';
 
+import { initReselectDevtools } from './selectors';
+
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
+initReselectDevtools();
 
 /**
  * Default State

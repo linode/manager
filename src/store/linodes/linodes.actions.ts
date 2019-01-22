@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getLinode, getLinodes } from "src/services/linodes";
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from "src/utilities/getAll";
 import actionCreatorFactory from 'typescript-fsa';
 import { ThunkActionCreator } from '../types';
@@ -30,7 +31,7 @@ export const requestLinodes: ThunkActionCreator<Promise<Linode.Linode[]>> = () =
       return result;
     })
     .catch((err) => {
-      dispatch(linodesRequest.failed(err));
+      dispatch(linodesRequest.failed({ error: getAPIErrorOrDefault(err, 'There was an error retrieving your Linodes.')}));
       return err;
     });
 };

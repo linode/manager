@@ -11,10 +11,13 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import DomainTableRow from 'src/features/Domains/DomainTableRow';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'label';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  label: {
+    paddingLeft: 65
+  }
 });
 
 interface Props {
@@ -30,7 +33,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ListDomains: React.StatelessComponent<CombinedProps> = (props) => {
   const {
-    data, orderBy, order, handleOrderChange,
+    data, orderBy, order, handleOrderChange, classes
   } = props;
   return (
     <Paginate data={data} pageSize={25}>
@@ -46,6 +49,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = (props) => {
                     direction={order}
                     handleClick={handleOrderChange}
                     data-qa-domain-name-header={order}
+                    className={classes.label}
                   >
                     Domain
                 </TableSortCell>
@@ -106,6 +110,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = (props) => {
             onRemove={onRemove}
             tags={domain.tags}
             type={domain.type}
+            status={domain.status}
           />)
       }
     </>

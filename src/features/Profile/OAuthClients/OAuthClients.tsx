@@ -237,11 +237,11 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
 
-    // TODO Need to unify internal & external usage of 'OAuth Clients'/'My Apps'.
-    // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'My Apps' for user-facing displays.
+    // TODO Need to unify internal & external usage of 'OAuth Clients'/'OAuth Apps'.
+    // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
     return (
       <React.Fragment>
-        <DocumentTitleSegment segment="My Apps" />
+        <DocumentTitleSegment segment="OAuth Apps" />
         <Grid
           container
           justify="space-between"
@@ -249,19 +249,19 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         >
           <Grid item>
             <Typography role="header" className={classes.title} variant="h2" data-qa-table={classes.title}>
-              My Apps
+              OAuth Apps
             </Typography>
           </Grid>
           <Grid item>
             <AddNewLink
               onClick={this.openCreateDrawer}
-              label="Create My App"
+              label="Create OAuth App"
               data-qa-oauth-create
             />
           </Grid>
         </Grid>
         <Paper>
-          <Table aria-label="List of My Apps">
+          <Table aria-label="List of OAuth Apps">
             <TableHead data-qa-table-head>
               <TableRow>
                 <TableCell style={{ width: '20%' }}>Label</TableCell>

@@ -4,7 +4,7 @@ export const collectBackups = ({ automatic, snapshot }: Linode.LinodeBackupsResp
   snapshot.in_progress,
 ].filter(Boolean);
 
-export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => undefined | string = (response) => {
+export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => null | string = (response) => {
 
   return collectBackups(response)
 
@@ -21,5 +21,5 @@ export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => undefi
       if (new Date(finished) > new Date(result)) { return finished; }
 
       return result;
-    }, undefined);
+    }, null) || null;
 };

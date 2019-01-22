@@ -2,15 +2,17 @@ import { compose, take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
+import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import StatusIndicator, { getStatusForVolume } from 'src/components/StatusIndicator';
+import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -21,6 +23,11 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames =
   'root'
+  | 'icon'
+  | 'labelGridWrapper'
+  | 'description'
+  | 'labelStatusWrapper'
+  | 'statusOuter'
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol'
@@ -28,6 +35,36 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
+  icon: {
+    position: 'relative',
+    top: 3,
+    width: 40,
+    height: 40,
+    '& .circle': {
+      fill: theme.bg.offWhiteDT,
+    },
+    '& .outerCircle': {
+      stroke: theme.bg.main,
+    },
+  },
+  labelGridWrapper: {
+    paddingLeft: '4px !important',
+    paddingRight: '4px !important',
+  },
+  description: {
+    paddingTop: theme.spacing.unit / 2,
+  },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+  },
+  statusOuter: {
+    top: 0,
+    position: 'relative',
+    marginLeft: 4,
+    lineHeight: '0.8rem',
+  },
   labelCol: {
     width: '60%',
   },
@@ -148,15 +185,21 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
     return data.map(({ label, region, size, status }) => (
       <TableRow key={label} data-qa-volume={label}>
         <TableCell className={classes.labelCol}>
-          <Grid container direction="column" spacing={8}>
-            <Grid item style={{ paddingBottom: 0 }}>
-              <Typography className={classes.wrapHeader} variant="h3">
-                {label}
-              </Typography>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item className="py0">
+              <VolumeIcon className={classes.icon}/>
             </Grid>
-            <Grid item>
-              <Typography variant="body1" data-qa-volume-status>
-                {status}, {size} GiB
+            <Grid item className={classes.labelGridWrapper}>
+              <div className={classes.labelStatusWrapper}>
+                <Typography role="header" variant="h3" data-qa-label>
+                {label}
+                </Typography>
+                <div className={classes.statusOuter}>
+                  <StatusIndicator status={getStatusForVolume(status)} />
+                </div>
+              </div>
+              <Typography className={classes.description}>
+                {size} GiB
               </Typography>
             </Grid>
           </Grid>
