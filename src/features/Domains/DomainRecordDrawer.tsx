@@ -1,5 +1,6 @@
 import { cond, defaultTo, equals, lensPath, path, pathOr, pick, set } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button, { ButtonProps } from 'src/components/Button';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -7,7 +8,8 @@ import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import { default as _TextField, Props as TextFieldProps } from 'src/components/TextField';
-import { createDomainRecord, updateDomain, updateDomainRecord } from 'src/services/domains';
+import { createDomainRecord, updateDomainRecord } from 'src/services/domains';
+import { DomainActionsProps, withDomainActions } from 'src/store/domains/domains.container';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -70,7 +72,10 @@ interface State {
   fields: EditableRecordFields | EditableDomainFields;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & DomainActionsProps
+  & WithStyles<ClassNames>;
 
 /* tslint:disable-next-line */
 interface _TextFieldProps {
@@ -309,14 +314,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   }
 
   onDomainEdit = () => {
-    const { domainId, type } = this.props;
+    const { domainId, type, domainActions } = this.props;
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
       ...this.filterDataByType(this.state.fields, type),
     } as Partial<EditableDomainFields>;
 
-    updateDomain(domainId, { ...data, status: 'active' })
+    domainActions.updateDomain({ domainId, ...data, status: 'active' })
       .then(() => {
         this.props.updateDomain();
         this.onClose();
@@ -576,4 +581,9 @@ const typeMap = {
 
 const styled = withStyles(styles);
 
-export default styled(DomainRecordDrawer) as React.ComponentType<Props>;
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withDomainActions
+);
+
+export default enhanced(DomainRecordDrawer);

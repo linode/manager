@@ -24,8 +24,8 @@ import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
-import { deleteDomain } from 'src/services/domains';
 import { openForCloning, openForCreating } from 'src/store/domainDrawer';
+import { DomainActionsProps, withDomainActions } from 'src/store/domains/domains.container';
 import { sendEvent } from 'src/utilities/analytics';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
@@ -86,6 +86,7 @@ interface State {
 
 type CombinedProps =
   WithDomainsProps
+  & DomainActionsProps
   & LocalStorageProps
   & WithStyles<ClassNames>
   & RouteComponentProps<{}>
@@ -143,9 +144,10 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   removeDomain = () => {
     const { removeDialog: { domainID } } = this.state;
-    const { enqueueSnackbar } = this.props;
+    const { enqueueSnackbar, domainActions } = this.props;
     if (domainID) {
-      deleteDomain(domainID)
+      // @todo: Replace all "domainID" with "domainId"
+      domainActions.deleteDomain({ domainId: domainID })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -350,5 +352,6 @@ export default compose<CombinedProps, {}>(
   withLocalStorage,
   styled,
   connected,
-  withSnackbar
+  withSnackbar,
+  withDomainActions
 )(DomainsLanding);
