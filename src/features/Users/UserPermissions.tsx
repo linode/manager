@@ -656,7 +656,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           <Grid item>
             <Grid container alignItems="center" className={classes.permSelect}>
               <Grid item>
-                Set all permissions to:
+                <Typography>Set all permissions to:</Typography>
               </Grid>
               <Grid item>
                 <Select
