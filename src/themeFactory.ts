@@ -309,7 +309,7 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
-        padding: '11px 26px 13px',
+        padding: '9px 28px 11px',
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
