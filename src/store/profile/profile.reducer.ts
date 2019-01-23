@@ -7,7 +7,7 @@ type State = RequestableData<Linode.Profile>;
 interface Action {
   type: string;
   error?: Error;
-  data?: any;
+  payload?: any;
 }
 
 
@@ -35,7 +35,7 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action) =>
   }
 
   if (isType(action, handleUpdate)) {
-    return { ...state, loading: false, lastUpdated: Date.now(), data: action.data };
+    return { ...state, loading: false, lastUpdated: Date.now(), data: action.payload };
   }
 
   return state;
