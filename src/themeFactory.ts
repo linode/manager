@@ -282,6 +282,9 @@ const themeDefaults: ThemeOptions = {
           color: primaryColors.text,
         },
       },
+      text: {
+        padding: '9px 28px 11px',
+      },
       flat: {
         '&.cancel:hover': {
           backgroundColor: 'transparent',
