@@ -36,11 +36,11 @@ const handleVolumeCreate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     case 'notification':
       updateVolumeStatus(dispatch, volumeId, 'active');
 
-      case 'failed':
-      case 'finished':
-      case 'scheduled':
-      case 'started':
-        dispatch(getOneVolume({ volumeId }));
+    case 'failed':
+    case 'finished':
+    case 'scheduled':
+    case 'started':
+      dispatch(getOneVolume({ volumeId }));
 
     default:
       return;
