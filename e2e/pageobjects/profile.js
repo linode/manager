@@ -135,7 +135,7 @@ export class Profile extends Page {
         expect(this.tokenCreate.waitForVisible(constants.wait.normal)).toBe(true);
         expect(this.tableHeader.length).toBe(2);
         expect(this.tableHead.length).toBe(2);
-        this.tableHead.forEach(t => expect(t.$$('th').length).toBe(5));
+        this.tableHead.forEach(t => expect(t.$$('th').length).toBe(4));
     }
 
     oauthBaseElems() {
