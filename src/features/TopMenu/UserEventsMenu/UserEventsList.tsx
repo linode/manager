@@ -1,6 +1,6 @@
+import { captureException } from '@sentry/browser';
 import * as moment from 'moment';
 import { compose, path } from 'ramda';
-import * as Raven from 'raven-js';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
@@ -9,12 +9,12 @@ import UserEventsListItem, { Props as UserEventsListItemProps } from './UserEven
 
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'
-    ? Raven.captureException
+    ? captureException
     : console.log('Unknown API event received.', { extra: { event } }); /* tslint:disable-line */
 
 const reportEventError = (e: Linode.Event, err: Error) =>
   process.env.NODE_ENV === 'production'
-    ? Raven.captureException(err)
+    ? captureException(err)
     : console.log('Event Error', err); /* tslint:disable-line */
 
 type ClassNames = 'root';
