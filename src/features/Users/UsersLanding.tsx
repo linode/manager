@@ -53,9 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '&:hover': {
       color: theme.palette.primary.main,
     },
-    [theme.breakpoints.up('md')]: {
-      padding: 8,
-    },
   },
   avatar: {
     borderRadius: '50%',
