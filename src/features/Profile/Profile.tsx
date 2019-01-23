@@ -56,13 +56,13 @@ class Profile extends React.Component<Props> {
             textColor="primary"
             variant="scrollable"
             scrollButtons="on"
+            data-qa-tabs
           >
             {this.tabs
               .map(tab =>
                 <Tab
                   key={tab.title}
-                  data-qa-tab={tab.title}
-                  component={() => <TabLink to={tab.routeName} title={tab.title} />}
+                  component={() => <TabLink to={tab.routeName} title={tab.title}/>}
                 />)}
           </Tabs>
         </AppBar>
