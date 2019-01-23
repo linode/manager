@@ -8,7 +8,10 @@ import SearchPanel from './Panels/SearchPanel';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+  root: {
+    maxWidth: 960,
+    margin: '0 auto'
+  },
 });
 
 type CombinedProps = WithStyles<ClassNames>;
