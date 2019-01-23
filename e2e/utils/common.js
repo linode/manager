@@ -193,10 +193,12 @@ export const createVolumes = (volumeObjArray) => {
 
     browser.url(constants.routes.volumes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
-
+    $('[data-qa-volume-loading]').waitForVisible(constants.wait.long, true);
     volumeObjArray.forEach((volumeObj) => {
-        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal)
+        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal);
     });
+    $('[data-qa-toast]').waitForVisible(constants.wait.minute);
+    $('[data-qa-toast]').waitForVisible(constants.wait.long, true);
 }
 
 export const switchTab = () => {

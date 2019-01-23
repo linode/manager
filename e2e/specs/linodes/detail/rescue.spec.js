@@ -58,20 +58,28 @@ describe('Rescue Linode Suite', () => {
         } while (!checkIfToastIsPresent('Linode rescue started.') && checkIfToastIsPresent('Linode busy.') && i < 10);
     }
 
-    beforeAll(() => {
+  /*  beforeAll(() => {
         const linode = apiCreateLinode(linodeLabel);
         createVolumes(generateVolumeArray(linode.id));
         browser.url(`${constants.routes.linodes}/${linode.id}`);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
+        LinodeDetail.toast.waitForVisible(constants.wait.minute*3);
+        LinodeDetail.toast.waitForVisible(constants.wait.long,true);
         LinodeDetail.changeTab('Rescue');
         browser.pause(500);
-    });
+    }); */
 
     afterAll(() => {
         apiDeleteAllVolumes();
     });
 
     it('Rescue Linode Tab displays', () => {
+        const linode = apiCreateLinode(linodeLabel);
+        createVolumes(generateVolumeArray(linode.id));
+        browser.url(`${constants.routes.linodes}/${linode.id}`);
+        LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
+        LinodeDetail.changeTab('Rescue');
+        browser.pause(500);
         Rescue.rescueDetailDisplays();
     });
 
@@ -93,8 +101,6 @@ describe('Rescue Linode Suite', () => {
             browser.pause(500);
             Resize.landingElemsDisplay();
             Resize.planCards.find(plan => plan.$(`[${cardHeader}]`).getAttribute(cardHeader) === 'Linode 4GB').click();
-            Resize.toast.waitForVisible(constants.wait.normal);
-            Resize.toast.waitForVisible(constants.wait.long,true);
             Resize.submit.click();
             Resize.toastDisplays('Linode resize started.');
             Resize.linearProgress.waitForVisible(constants.wait.normal);
