@@ -126,7 +126,7 @@ export class Profile extends Page {
     get oauthId() { return $('[data-qa-oauth-id]'); }
     get oauthCallback() { return $('[data-qa-oauth-callback]'); }
     get oauthActionMenu() { return $('[data-qa-action-menu]'); }
-    get oauthCreate() { return this.addIcon('Create My App'); }
+    get oauthCreate() { return this.addIcon('Create OAuth App'); }
 
     tokenBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
