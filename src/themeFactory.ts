@@ -264,8 +264,9 @@ const themeDefaults: ThemeOptions = {
         fontSize: '1rem',
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
-        padding: '9px 28px 11px',
+        padding: '11px 28px 13px',
         maxHeight: 48,
+        lineHeight: 1,
         '&:hover': {
           backgroundColor: '#fff',
         },
@@ -281,6 +282,9 @@ const themeDefaults: ThemeOptions = {
         '&.loading': {
           color: primaryColors.text,
         },
+      },
+      text: {
+        padding: '11px 28px 13px',
       },
       flat: {
         '&.cancel:hover': {
