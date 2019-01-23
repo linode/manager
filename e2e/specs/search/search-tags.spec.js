@@ -24,7 +24,6 @@ describe('Search - Tags Suite', () => {
 
             const suggestionTitle = SearchBar.suggestionTitle.getText();
             const tagTitle = SearchBar.tags.map(tag => tag.getText());
-            console.log(tagTitle);
 
             expect(tagTitle.includes(t)).toBe(true);
             expect(suggestionTitle).toBe(linodeLabel);
