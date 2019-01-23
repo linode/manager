@@ -18,7 +18,7 @@ interface MenuLink {
 };
 
 const menuLinks: MenuLink[] = [
-  { display: 'My Profile', href: '/profile' },
+  { display: 'My Profile', href: '/profile/display' },
   { display: 'Log Out', href: '/logout' },
 ];
 

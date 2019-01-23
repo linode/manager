@@ -939,15 +939,28 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTab: {
       root: {
-        color: '#C5C6C8',
+        color: 'rgba(0, 0, 0, 0.54)',
         minWidth: 50,
         textTransform: 'inherit',
-        fontFamily: 'LatoWeb',
+        padding: '6px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+        maxWidth: '264',
+        boxSizing: 'border-box',
+        minHeight: 48,
+        flexShrink: 0,
+        display: 'inline-flex',
+        alignItems: 'center',
+        verticalAlign: 'middle',
+        justifyContent: 'center',
+        appearance: 'none',
+        margin: 1,
         [breakpoints.up('md')]: {
           minWidth: 75,
         },
-        '&$selected': {
+        '&$selected, &$selected:hover': {
           fontFamily: 'LatoWebBold',
+          color: primaryColors.headline
         },
         '&:hover': {
           color: primaryColors.main,
@@ -971,6 +984,7 @@ const themeDefaults: ThemeOptions = {
           color: '#32363C',
         },
       },
+      selected: {}
     },
     MuiTable: {
       root: {

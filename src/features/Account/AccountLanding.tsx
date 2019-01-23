@@ -5,6 +5,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import TabLink from 'src/components/TabLink';
 import Billing from 'src/features/Billing';
 import Users from 'src/features/Users';
 import GlobalSettings from './GlobalSettings';
@@ -47,8 +48,12 @@ class AccountLanding extends React.Component<Props> {
             scrollButtons="on"
           >
             {this.tabs
-              .map(tab => <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}
-            />)}
+              .map(tab =>
+                <Tab
+                  key={tab.title}
+                  data-qa-tab={tab.title}
+                  component={() => <TabLink to={tab.routeName} title={tab.title} />}
+                />)}
           </Tabs>
         </AppBar>
         <Switch>

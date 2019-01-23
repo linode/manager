@@ -4,6 +4,7 @@ import AppBar from 'src/components/core/AppBar';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabLink from 'src/components/TabLink';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import LinodeBackup from '../LinodeBackup';
@@ -20,6 +21,7 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {},
 });
+
 interface Props {
   linodeId: number;
   linodeLabel: string;
@@ -34,7 +36,15 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { linodeRecentEvent, linodeStatus, url, linodeId, linodeRegion, linodeLabel, linodeConfigs } = props;
+  const {
+    linodeRecentEvent,
+    linodeStatus,
+    url,
+    linodeId,
+    linodeRegion,
+    linodeLabel,
+    linodeConfigs,
+  } = props;
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -69,7 +79,13 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
           scrollButtons="on"
         >
           {tabs.map(tab =>
-            <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
+            <Tab
+              key={tab.title}
+              label={tab.title}
+              data-qa-tab={tab.title}
+              component={() => <TabLink to={tab.routeName} title={tab.title} />}
+            />
+          )}
         </Tabs>
       </AppBar>
       <Switch>
