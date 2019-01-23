@@ -4,10 +4,10 @@ import { getProfileActions, handleUpdate } from './profile.actions';
 
 type State = RequestableData<Linode.Profile>;
 
-interface Action {
+interface Action<T> {
   type: string;
   error?: Error;
-  payload?: any;
+  payload?: T;
 }
 
 
@@ -18,7 +18,7 @@ export const defaultState: State = {
   error: undefined,
 };
 
-const reducer: Reducer<State> = (state: State = defaultState, action: Action) => {
+const reducer: Reducer<State> = (state: State = defaultState, action: Action<Linode.Profile>) => {
   if (isType(action, getProfileActions.started)) {
     const { } = action.payload;
     return { ...state, loading: true };
