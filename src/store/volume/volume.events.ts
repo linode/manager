@@ -9,9 +9,11 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
 
   switch (action) {
     case 'volume_create':
+      return handleVolumeCreate(dispatch, status, id);
+
     case 'volume_attach':
     case 'volume_detach':
-    return handleVolumeUpdate(dispatch, status, id);
+      return handleVolumeUpdate(dispatch, status, id);
 
     case 'volume_resize':
       return handleVolumeResize(dispatch, status, id);
@@ -21,6 +23,24 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
 
     case 'volume_delete':
       return handleVolumeDelete(dispatch, status, id);
+
+    default:
+      return;
+  }
+}
+
+// Manually set the status of this volume to "active", instead of dispatching "getOneVolume", because
+// when we get this volume back from the API, it may still be "creating"
+const handleVolumeCreate = (dispatch: Dispatch<any>, status: Linode.EventStatus, volumeId: number) => {
+  switch (status) {
+    case 'notification':
+      updateVolumeStatus(dispatch, volumeId, 'active');
+
+      case 'failed':
+      case 'finished':
+      case 'scheduled':
+      case 'started':
+        dispatch(getOneVolume({ volumeId }));
 
     default:
       return;
