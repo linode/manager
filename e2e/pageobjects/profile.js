@@ -131,7 +131,7 @@ export class Profile extends Page {
     tokenBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
         expect(this.profileHeader.isVisible()).toBe(true);
-        expect(this.apiTokensTab.isVisible()).toBe(true);
+        expect(this.profileTab('API Tokens').isVisible()).toBe(true);
         expect(this.tokenCreate.waitForVisible(constants.wait.normal)).toBe(true);
         expect(this.tableHeader.length).toBe(2);
         expect(this.tableHead.length).toBe(2);
@@ -140,8 +140,7 @@ export class Profile extends Page {
 
     oauthBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
-        const oauthSelected = browser.getAttribute('[data-qa-tab="My Apps"]', 'aria-selected').includes('true');
-        expect(oauthSelected).toBe(true);
+        expect(this.profileTab('OAuth Apps').getAttribute('aria-selected')).toBe('true');
 
         browser.waitForVisible('[data-qa-oauth-label]', constants.wait.normal);
         expect(this.oauthLabel.isVisible()).toBe(true);
@@ -184,5 +183,9 @@ export class Profile extends Page {
         if (type == 'token') {
 
         }
+    }
+
+    profileTab(tabText){
+        return $$('[data-qa-tabs] a').find( tab => tab.getText() === tabText);
     }
 }

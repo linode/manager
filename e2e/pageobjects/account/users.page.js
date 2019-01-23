@@ -48,7 +48,6 @@ class Users extends Page {
         this.createDrawerUsername.setValue(userConfig.username);
 
         if (userConfig.restricted) {
-            console.log('here');
             this.createDrawerRestricted.click();
             const selector = this.toggleOption.selector;
             const attribute = selector.substring(1,(selector.length-1));
