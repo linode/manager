@@ -5,7 +5,7 @@ import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/component
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 
-type ClassNames = 'root' | 'spinner' | 'title';
+type ClassNames = 'root' | 'spinner' | 'title' | 'graphsUnavailable';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -18,6 +18,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     justifyContent: 'center',
     width: '100%',
   },
+  graphsUnavailable: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    paddingBottom: '32px'
+  },
   title: {
     padding: theme.spacing.unit * 2
   }
@@ -29,12 +36,14 @@ interface Props {
   error?: string;
   title: string;
   height: number;
+  isTooEarlyForGraphData?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, error, height, loading, renderBody, title } = props;
+  const { classes, error, height, loading, renderBody, title, isTooEarlyForGraphData } = props;
+
   return (
     <Paper className={classes.root} >
       <Typography
@@ -44,11 +53,15 @@ export const StatsPanel: React.StatelessComponent<CombinedProps> = (props) => {
       >
         {title}
       </Typography>
-      {loading
-        ? <div className={classes.spinner} style={{minHeight: height}}><CircleProgress mini /></div>
-        : error
-          ? <ErrorState errorText={error} />
-          : renderBody()
+      {isTooEarlyForGraphData
+        ? <Typography data-qa-graphs-unavailable className={classes.graphsUnavailable}>
+            Graphs for this Linode are not yet available – check back later
+          </Typography>
+        : loading
+          ? <div className={classes.spinner} style={{minHeight: height}}><CircleProgress mini /></div>
+          : error
+            ? <ErrorState errorText={error} />
+            : renderBody()
       }
     </Paper>
   );

@@ -16,6 +16,7 @@ import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import { setUpCharts } from 'src/utilities/charts';
+import { isRecent } from 'src/utilities/isRecent';
 import { formatBitsPerSecond, formatBytes, formatNumber, formatPercentage, getMetrics, getTotalTraffic } from 'src/utilities/statMetrics';
 import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
@@ -91,7 +92,9 @@ interface State {
   rangeSelection: string;
   statsLoadError?: string;
   dataIsLoading: boolean;
+  isTooEarlyForGraphData?: boolean;
   statsError?: string;
+
 }
 
 type CombinedProps =
@@ -194,6 +197,16 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       })
       .catch((errorResponse) => {
         if (!this.mounted) { return; }
+
+        const { linodeCreated } = this.props;
+
+        // If a Linode has just been created, we'll get an error from the API when
+        // requesting stats (since there's no data available yet.) In this case,
+        // it'd be jarring to display the error state – we'd rather show a friendlier message.
+        if (isRecent(linodeCreated, moment.utc().format())) {
+          return this.setState({ dataIsLoading: false, isTooEarlyForGraphData: true });
+        }
+
         const errorText = pathOr("There was an error retrieving information for this Linode.",
           ['reason'], errorResponse[0]);
         this.setState({ dataIsLoading: false, statsError: errorText, })
@@ -557,13 +570,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       typesData,
     } = this.props;
 
-    const { dataIsLoading, statsError, rangeSelection } = this.state;
+    const { dataIsLoading, statsError, rangeSelection, isTooEarlyForGraphData } = this.state;
 
     // Shared props for all stats charts
     const chartProps = {
       loading: dataIsLoading,
       error: statsError,
-      height: chartHeight
+      height: chartHeight,
+      isTooEarlyForGraphData
     }
 
     if (!linode || !volumes) {
@@ -582,50 +596,50 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
         <SummaryPanel linode={linode} volumes={volumes} typesLongLabel={longLabel} linodeImageId={linode.image} />
 
-        <React.Fragment>
-          <div className={classes.graphControls}>
-            <Typography role="header" variant="h2" className={classes.graphTitle}>
-              Graphs
-            </Typography>
-            <FormControl style={{ marginTop: 0 }}>
-              <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                Select Time Range
-              </InputLabel>
-              <Select
-                value={rangeSelection}
-                onChange={this.handleChartRangeChange}
-                inputProps={{ name: 'chartRange', id: 'chartRange' }}
-              >
-                {this.rangeSelectOptions}
-              </Select>
-            </FormControl>
-          </div>
+          <React.Fragment>
+            <div className={classes.graphControls}>
+              <Typography role="header" variant="h2" className={classes.graphTitle}>
+                Graphs
+              </Typography>
+              <FormControl style={{ marginTop: 0 }}>
+                <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                  Select Time Range
+                </InputLabel>
+                <Select
+                  value={rangeSelection}
+                  onChange={this.handleChartRangeChange}
+                  inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                >
+                  {this.rangeSelectOptions}
+                </Select>
+              </FormControl>
+            </div>
 
-          <StatsPanel
-            title="CPU Usage"
-            renderBody={this.renderCPUChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="CPU Usage"
+              renderBody={this.renderCPUChart}
+              {...chartProps}
+            />
 
-          <StatsPanel
-            title="IPv4 Traffic"
-            renderBody={this.renderIPv4TrafficChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="IPv4 Traffic"
+              renderBody={this.renderIPv4TrafficChart}
+              {...chartProps}
+            />
 
-          <StatsPanel
-            title="IPv6 Traffic"
-            renderBody={this.renderIPv6TrafficChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="IPv6 Traffic"
+              renderBody={this.renderIPv6TrafficChart}
+              {...chartProps}
+            />
 
-          <StatsPanel
-            title="Disk IO"
-            renderBody={this.renderDiskIOChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="Disk IO"
+              renderBody={this.renderDiskIOChart}
+              {...chartProps}
+            />
 
-        </React.Fragment>
+          </React.Fragment>
       </React.Fragment>
     );
   }
