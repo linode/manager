@@ -93,8 +93,6 @@ describe('Rescue Linode Suite', () => {
             browser.pause(500);
             Resize.landingElemsDisplay();
             Resize.planCards.find(plan => plan.$(`[${cardHeader}]`).getAttribute(cardHeader) === 'Linode 4GB').click();
-            Resize.toast.waitForVisible(constants.wait.normal);
-            Resize.toast.waitForVisible(constants.wait.long,true);
             Resize.submit.click();
             Resize.toastDisplays('Linode resize started.');
             Resize.linearProgress.waitForVisible(constants.wait.normal);

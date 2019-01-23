@@ -195,8 +195,10 @@ export const createVolumes = (volumeObjArray) => {
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
 
     volumeObjArray.forEach((volumeObj) => {
-        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal)
+        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"] [data-qa-status="active"]`, constants.wait.normal)
     });
+
+    browser.waitForVisible('[data-qa-toast]', constants.wait.long, true)
 }
 
 export const switchTab = () => {
