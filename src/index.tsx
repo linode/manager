@@ -1,120 +1,73 @@
 import 'font-logos/assets/font-logos.css';
-import createBrowserHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import {
-  BrowserRouter as Router,
-  Route,
-  RouteProps,
-  Switch
-} from 'react-router-dom';
-import { initAnalytics, initTagManager } from 'src/analytics';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
-import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
-import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import { theme } from 'src/utilities/storage';
-import App from './App';
+import Application from './Application';
 import './events';
 import './index.css';
+import Layout from './Layout';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import {
-  initialize as sessionInitialize,
-  refreshOAuthOnUserInteraction,
-  refreshOAuthToken
-} from './session';
 
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish')
 });
 
-/*
- * Initialize Analytic and Google Tag Manager
- */
-initAnalytics(GA_ID, isProduction);
-initTagManager(GTM_ID);
-
-if (theme.get() === 'dark') {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Dark Theme',
-    label: location.pathname
-  });
-} else {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Light Theme',
-    label: location.pathname
-  });
-}
-
-/**
- * Send pageviews unless blacklisted.
- */
-createBrowserHistory().listen(({ pathname }) => {
-  /** https://palantir.github.io/tslint/rules/strict-boolean-expressions/ */
-  if ((window as any).ga && isPathOneOf(['/oauth'], pathname) === false) {
-    (window as any).ga('send', 'pageview');
-  }
-});
-
-sessionInitialize();
-if (!isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname)) {
-  refreshOAuthToken();
-}
-refreshOAuthOnUserInteraction();
-
-const renderNullAuth = () => <span>null auth route</span>;
-
-const renderNull = () => <span>null route</span>;
-
-const renderApp = (props: RouteProps) => (
-  <LinodeThemeWrapper>
-    {toggle => (
-      <SnackBar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        maxSnack={3}
-        autoHideDuration={4000}
-        data-qa-toast
-        hideIconVariant={true}
-      >
-        <App toggleTheme={toggle} location={props.location} />
-      </SnackBar>
-    )}
-  </LinodeThemeWrapper>
-);
-
-const renderAuthentication = () => (
-  <AuthenticationWrapper>
-    <Switch>
-      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-      <Route exact path="/nullauth" render={renderNullAuth} />
-      <Route exact path="/logout" component={Logout} />
-      <Route render={renderApp} />
-    </Switch>
-  </AuthenticationWrapper>
-);
+const renderNull = () => <div />;
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <Switch>
-        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-        <Route path="/linodes/:linodeId/lish" compo={Lish} />
-        <Route exact path="/null" render={renderNull} />
-        <Route render={renderAuthentication} />
-      </Switch>
-    </Router>
-  </Provider>,
+  <Application>
+    <Provider store={store}>
+      <LinodeThemeWrapper>
+        {toggleTheme => (
+          <SnackBar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            maxSnack={3}
+            autoHideDuration={4000}
+            data-qa-toast
+            hideIconVariant={true}
+          >
+            <Router>
+              <Switch>
+                <Route path="/linodes/:linodeId/lish" compo={Lish} />
+                {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+                <Route exact path="/null" render={renderNull} />
+                <Route
+                  render={() => (
+                    <AuthenticationWrapper>
+                      <Switch>
+                        <Route
+                          exact
+                          path="/oauth/callback"
+                          component={OAuthCallbackPage}
+                        />
+                        {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+                        <Route exact path="/nullauth" render={renderNull} />
+                        <Route exact path="/logout" component={Logout} />
+                        <Route
+                          render={routeProps => (
+                            <Layout toggleTheme={toggleTheme} {...routeProps} />
+                          )}
+                        />
+                      </Switch>
+                    </AuthenticationWrapper>
+                  )}
+                />
+              </Switch>
+            </Router>
+          </SnackBar>
+        )}
+      </LinodeThemeWrapper>
+    </Provider>
+  </Application>,
   document.getElementById('root') as HTMLElement
 );

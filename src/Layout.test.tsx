@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 
 import store from 'src/store';
-import { App } from './App';
+import { Layout } from './Layout';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 it('renders without crashing', () => {
@@ -12,15 +12,9 @@ it('renders without crashing', () => {
     <LinodeThemeWrapper>
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
-          <App
+          <Layout
             onPresentSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
-            location={{
-              pathname: '',
-              hash: '',
-              search: '',
-              state: {},
-            }}
             classes={{
               appFrame: '',
               content: '',
