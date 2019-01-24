@@ -130,16 +130,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         : moment.utc(linodeCreated).month() + 1,
       moment.utc(linodeCreated).year(),
     ];
+
+    const currentMonth = moment.utc().month() + 1; // Add 1 here because JS months are 0-indexed
+    const currentYear = moment.utc().year();
+
     const creationFirstOfMonth = moment(`${createYear}-${createMonth}-01`);
-    let [testMonth, testYear] = [
-      moment.utc().month() + 1,
-      moment.utc().year()
-    ];
+    let [testMonth, testYear] = [currentMonth, currentYear];
     let formattedTestDate;
     do {
+      // When we request Linode stats for the CURRENT month/year, the data we get back is
+      // from the last 30 days. We want the options to reflect this.
+      //
+      // Example: If it's Jan. 15, the options would be "Last 24 Hours", "Last 30 Days", "Dec 2018" ... etc.
+      const optionDisplay = (testYear === currentYear && testMonth === currentMonth)
+        ? 'Last 30 Days'
+        :  `${moment().month(testMonth - 1).format('MMM')} ${testYear}`;
+
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
-        `${moment().month(testMonth - 1).format('MMM')} ${testYear}`,
+        optionDisplay
       ]);
 
       if (testMonth === 1) {

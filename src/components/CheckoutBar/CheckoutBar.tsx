@@ -10,7 +10,8 @@ type ClassNames = 'root'
   | 'checkoutSection'
   | 'noBorder'
   | 'sidebarTitle'
-  | 'detail';
+  | 'detail'
+  | 'createButton';
 
   const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   '@keyframes fadeIn': {
@@ -50,6 +51,11 @@ type ClassNames = 'root'
     color: theme.color.headline,
     lineHeight: '1.5em',
   },
+  createButton: {
+    [theme.breakpoints.up('lg')]: {
+      width: '100%'
+    }
+  }
 });
 
 interface Props {
@@ -125,8 +131,8 @@ class CheckoutBar extends React.Component<CombinedProps> {
         <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
           <Button
             type="primary"
+            className={classes.createButton}
             disabled={disabled}
-            fullWidth
             onClick={onDeploy}
             data-qa-deploy-linode
           >

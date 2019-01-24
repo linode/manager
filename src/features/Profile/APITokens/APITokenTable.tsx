@@ -384,12 +384,15 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         <TableCell parentColumn="Expires">
           <Typography variant="body1" data-qa-token-expiry>
             {
-              /** 
-               * The expiry time of tokens that never expire are returned from the API as 
+              /**
+               * The expiry time of tokens that never expire are returned from the API as
                * 200 years in the future, so we just need to check that they're at least
-               * 100 years into the future to safely assume they never expire
+               * 100 years into the future to safely assume they never expire.
+               *
+               * The expiry time of apps that don't expire until revoked come back as 'null'.
+               * In this case, we display an expiry time of "never" as well.
                */
-              (isWayInTheFuture(token.expiry))
+              (isWayInTheFuture(token.expiry) || token.expiry === null)
                 ? 'never'
                 : <DateTimeDisplay value={token.expiry} humanizeCutoff="month" />
             }

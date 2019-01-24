@@ -89,17 +89,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
    */
   static defaultFieldsState = (props: Partial<CombinedProps>) => ({
     id: pathOr(undefined, ['id'], props),
-    name: pathOr(undefined, ['name'], props),
+    name: pathOr('', ['name'], props),
     port: pathOr(80, ['port'], props),
     priority: pathOr(10, ['priority'], props),
-    protocol: pathOr(undefined, ['protocol'], props),
-    service: pathOr(undefined, ['service'], props),
+    protocol: pathOr('tcp', ['protocol'], props),
+    service: pathOr('', ['service'], props),
     tag: pathOr('issue', ['tag'], props),
-    target: pathOr(undefined, ['target'], props),
-    ttl_sec: pathOr(undefined, ['ttl_sec'], props),
+    target: pathOr('', ['target'], props),
+    ttl_sec: pathOr(0, ['ttl_sec'], props),
     weight: pathOr(5, ['weight'], props),
     domain: pathOr(undefined, ['domain'], props),
-    soa_email: pathOr(undefined, ['soa_email'], props),
+    soa_email: pathOr('', ['soa_email'], props),
     axfr_ips: pathOr(0, ['axfr_ips'], props),
     refresh_sec: pathOr(0, ['refresh_sec'], props),
     retry_sec: pathOr(0, ['retry_sec'], props),
@@ -151,13 +151,14 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           this.state.errors,
         )(field)
       }
-      value={defaultTo('', this.state.fields[field])}
+      value={defaultTo(DomainRecordDrawer.defaultFieldsState(this.props)[field], this.state.fields[field])}
       onChange={e => this.updateField(field)(e.target.value)}
       data-qa-target={label}
     />
 
-  NumberField = ({ label, field, defaultValue = 0 }: NumberFieldProps) =>
-    <TextField
+  NumberField = ({ label, field }: NumberFieldProps) => {
+    const defaultValue = DomainRecordDrawer.defaultFieldsState(this.props)[field]
+    return <TextField
       label={label}
       type="number"
       errorText={
@@ -170,6 +171,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       onChange={e => this.updateField(field)(defaultNumeric(defaultValue)(e.target.value))}
       data-qa-target={label}
     />
+  }
 
   NameField = ({ label }: { label: string }) => <this.TextField field="name" label={label} />;
 
@@ -178,7 +180,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   ServiceField = () => <this.TextField field="service" label="Service" />;
 
   PriorityField = ({ label }: { label: string }) =>
-    <this.NumberField field="priority" label={label} defaultValue={5} />
+    <this.NumberField field="priority" label={label} />
 
   PortField = () =>
     <this.NumberField field="port" label="Port" />
@@ -202,7 +204,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <TextField
       label="Expire Rate"
       select
-      value={defaultTo(0, (this.state.fields as EditableDomainFields).expire_sec)}
+      value={defaultTo(DomainRecordDrawer.defaultFieldsState(this.props).expire_sec, (this.state.fields as EditableDomainFields).expire_sec)}
       onChange={e => this.setExpireSec(+e.target.value)}
       data-qa-expire-rate
     >
@@ -224,7 +226,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <TextField
       label={label}
       select
-      value={defaultTo(0, this.state.fields[field])}
+      value={defaultTo(DomainRecordDrawer.defaultFieldsState(this.props)[field], this.state.fields[field])}
       onChange={e => fn(+e.target.value)}
       data-qa-domain-select={label}
     >
@@ -247,7 +249,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <TextField
       select
       label="Protocol"
-      value={defaultTo('tcp', (this.state.fields as EditableRecordFields).protocol)}
+      value={defaultTo(DomainRecordDrawer.defaultFieldsState(this.props).protocol, (this.state.fields as EditableRecordFields).protocol)}
       onChange={e => this.setProtocol(e.target.value)}
       data-qa-protocol
     >
@@ -262,7 +264,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <TextField
       label="Tag"
       select
-      value={defaultTo('issue', (this.state.fields as EditableRecordFields).tag)}
+      value={defaultTo(DomainRecordDrawer.defaultFieldsState(this.props).tag, (this.state.fields as EditableRecordFields).tag)}
       onChange={e => this.setTag(e.target.value)}
       data-qa-caa-tag
     >
@@ -282,7 +284,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         )('axfr_ips')
       }
       rows="3"
-      value={defaultTo('', (this.state.fields as EditableDomainFields).axfr_ips)}
+      value={defaultTo(DomainRecordDrawer.defaultFieldsState(this.props).axfr_ips, (this.state.fields as EditableDomainFields).axfr_ips)}
       onChange={e => this.updateField('axfr_ips')(e.target.value)}
     />
 

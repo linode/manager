@@ -34,7 +34,6 @@ type ClassNames = 'root'
   | 'title'
   | 'domain'
   | 'tagWrapper'
-  | 'domainRow'
   | 'tagGroup';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
@@ -47,9 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   domain: {
     width: '60%',
-  },
-  domainRow: {
-    height: 75,
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
