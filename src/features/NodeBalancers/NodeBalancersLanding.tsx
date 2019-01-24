@@ -9,7 +9,11 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -25,15 +29,23 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
 import Tags from 'src/components/Tags';
-import { NodeBalancerGettingStarted, NodeBalancerReference } from 'src/documentation';
+import {
+  NodeBalancerGettingStarted,
+  NodeBalancerReference
+} from 'src/documentation';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import { deleteNodeBalancer, getNodeBalancerConfigs, getNodeBalancers } from 'src/services/nodebalancers';
+import {
+  deleteNodeBalancer,
+  getNodeBalancerConfigs,
+  getNodeBalancers
+} from 'src/services/nodebalancers';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'title'
   | 'nodeStatus'
   | 'nameCell'
@@ -45,15 +57,15 @@ type ClassNames = 'root'
   | 'ip'
   | 'tagWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   nameCell: {
     width: '20%',
     minWidth: 150,
-    paddingLeft: 65,
+    paddingLeft: 65
   },
   icon: {
     position: 'relative',
@@ -61,38 +73,38 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 40,
     height: 40,
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
-    },
+      stroke: theme.bg.main
+    }
   },
   nodeStatus: {
     width: '10%',
-    minWidth: 100,
+    minWidth: 100
   },
   transferred: {
     width: '10%',
-    minWidth: 100,
+    minWidth: 100
   },
   ports: {
     width: '10%',
-    minWidth: 50,
+    minWidth: 50
   },
   ipsWrapper: {
     display: 'inline-flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   ip: {
     width: '30%',
-    minWidth: 200,
+    minWidth: 200
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
     '& [class*="MuiChip"]': {
-      cursor: 'pointer',
-    },
-  },
+      cursor: 'pointer'
+    }
+  }
 });
 
 interface DeleteConfirmDialogState {
@@ -101,35 +113,35 @@ interface DeleteConfirmDialogState {
   errors?: Linode.ApiFieldError[];
 }
 
-interface Props extends PaginationProps<Linode.ExtendedNodeBalancer> { };
+interface Props extends PaginationProps<Linode.ExtendedNodeBalancer> {}
 
 interface State {
   deleteConfirmDialog: DeleteConfirmDialogState;
   selectedNodeBalancerId?: number;
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>
-  & SetDocsProps;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  SetDocsProps;
 
-export class NodeBalancersLanding extends React.Component<CombinedProps, State> {
+export class NodeBalancersLanding extends React.Component<
+  CombinedProps,
+  State
+> {
   mounted: boolean = false;
 
   static defaultDeleteConfirmDialogState = {
     submitting: false,
     open: false,
-    errors: undefined,
+    errors: undefined
   };
 
   state: State = {
-    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
   };
 
-  static docs = [
-    NodeBalancerGettingStarted,
-    NodeBalancerReference,
-  ];
+  static docs = [NodeBalancerGettingStarted, NodeBalancerReference];
 
   componentDidMount() {
     this.mounted = true;
@@ -145,10 +157,10 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       selectedNodeBalancerId: nodeBalancerId,
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
-        open: !this.state.deleteConfirmDialog.open,
-      },
+        open: !this.state.deleteConfirmDialog.open
+      }
     });
-  }
+  };
 
   deleteNodeBalancer = () => {
     const { selectedNodeBalancerId } = this.state;
@@ -156,59 +168,63 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
         errors: undefined,
-        submitting: true,
-      },
+        submitting: true
+      }
     });
 
     deleteNodeBalancer(selectedNodeBalancerId!)
-      .then((response) => {
+      .then(response => {
         this.props.onDelete();
         this.setState({
           deleteConfirmDialog: {
             open: false,
-            submitting: false,
-          },
+            submitting: false
+          }
         });
       })
-      .catch((err) => {
-        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+      .catch(err => {
+        const apiError = path<Linode.ApiFieldError[]>(
+          ['response', 'data', 'error'],
+          err
+        );
 
-        return this.setState({
-          deleteConfirmDialog: {
-            ...this.state.deleteConfirmDialog,
-            submitting: false,
-            errors: apiError
-              ? apiError
-              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
+        return this.setState(
+          {
+            deleteConfirmDialog: {
+              ...this.state.deleteConfirmDialog,
+              submitting: false,
+              errors: apiError
+                ? apiError
+                : [
+                    {
+                      field: 'none',
+                      reason: 'Unable to complete your request at this time.'
+                    }
+                  ]
+            }
           },
-        }, () => {
-          scrollErrorIntoView();
-        });
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
-  }
+  };
 
   render() {
     const { classes, history } = this.props;
 
     const {
-      deleteConfirmDialog: {
-        open: deleteConfirmAlertOpen,
-      },
+      deleteConfirmDialog: { open: deleteConfirmAlertOpen }
     } = this.state;
 
-    const {
-      count,
-      loading,
-      page,
-      pageSize
-    } = this.props;
+    const { count, loading, page, pageSize } = this.props;
 
-    if(loading){
+    if (loading) {
       return this.renderLoading();
     }
 
     if (count === 0) {
-      return this.renderEmpty()
+      return this.renderEmpty();
     }
 
     return (
@@ -216,7 +232,12 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         <DocumentTitleSegment segment="NodeBalancers" />
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography role="header" variant="h1" className={classes.title} data-qa-title >
+            <Typography
+              role="header"
+              variant="h1"
+              className={classes.title}
+              data-qa-title
+            >
               NodeBalancers
             </Typography>
           </Grid>
@@ -236,17 +257,21 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             <TableHead>
               <TableRow>
                 <TableCell className={classes.nameCell}>Name</TableCell>
-                <TableCell className={classes.nodeStatus} noWrap>Node Status</TableCell>
-                <TableCell className={classes.transferred}>Transferred</TableCell>
+                <TableCell className={classes.nodeStatus} noWrap>
+                  Node Status
+                </TableCell>
+                <TableCell className={classes.transferred}>
+                  Transferred
+                </TableCell>
                 <TableCell className={classes.ports}>Ports</TableCell>
-                <TableCell className={classes.ip} noWrap>IP Addresses</TableCell>
+                <TableCell className={classes.ip} noWrap>
+                  IP Addresses
+                </TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
-            <TableBody>
-              {this.renderContent()}
-            </TableBody>
+            <TableBody>{this.renderContent()}</TableBody>
           </Table>
         </Paper>
         <PaginationFooter
@@ -260,11 +285,15 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
           title="Confirm Deletion"
-          error={(this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',')}
+          error={(this.state.deleteConfirmDialog.errors || [])
+            .map(e => e.reason)
+            .join(',')}
           actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}
         >
-          <Typography>Are you sure you want to delete your NodeBalancer</Typography>
+          <Typography>
+            Are you sure you want to delete your NodeBalancer
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -291,17 +320,15 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         </Button>
       </ActionsPanel>
     );
-  }
+  };
 
-  closeConfirmationDialog = () => this.setState({
-    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-  });
+  closeConfirmationDialog = () =>
+    this.setState({
+      deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
+    });
 
   renderContent = () => {
-    const {
-      error,
-      data: nodeBalancers
-    } = this.props;
+    const { error, data: nodeBalancers } = this.props;
 
     if (error) {
       return this.renderErrors(error);
@@ -315,11 +342,16 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   };
 
   renderLoading = () => {
-    return (<CircleProgress />);
+    return <CircleProgress />;
   };
 
   renderErrors = (errors: Error) => {
-    return <TableRowError message="There was an error loading your NodeBalancers. Please try again later." colSpan={7} />;
+    return (
+      <TableRowError
+        message="There was an error loading your NodeBalancers. Please try again later."
+        colSpan={7}
+      />
+    );
   };
 
   renderEmpty = () => {
@@ -332,7 +364,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           icon={NodeBalancer}
           buttonProps={{
             onClick: () => this.props.history.push('/nodebalancers/create'),
-            children: 'Add a NodeBalancer',
+            children: 'Add a NodeBalancer'
           }}
         />
       </React.Fragment>
@@ -342,20 +374,20 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
   renderData = (nodeBalancers: Linode.ExtendedNodeBalancer[]) => {
     const { classes } = this.props;
 
-    return nodeBalancers.map((nodeBalancer) => {
+    return nodeBalancers.map(nodeBalancer => {
       return (
         <TableRow
           key={nodeBalancer.id}
           data-qa-nodebalancer-cell
           rowLink={`/nodebalancers/${nodeBalancer.id}`}
           className="fade-in-table"
-          arial-label={nodeBalancer.label}
+          aria-label={nodeBalancer.label}
         >
           <TableCell parentColumn="Name" data-qa-nodebalancer-label>
             <Link to={`/nodebalancers/${nodeBalancer.id}`}>
               <Grid container wrap="nowrap" alignItems="center">
                 <Grid item className="py0">
-                  <NodeBalancer className={classes.icon}/>
+                  <NodeBalancer className={classes.icon} />
                 </Grid>
                 <Grid item>
                   {nodeBalancer.label}
@@ -380,7 +412,9 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
             <div className={classes.ipsWrapper}>
               <IPAddress ips={[nodeBalancer.ipv4]} copyRight showMore />
-              {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} copyRight showMore />}
+              {nodeBalancer.ipv6 && (
+                <IPAddress ips={[nodeBalancer.ipv6]} copyRight showMore />
+              )}
             </div>
           </TableCell>
           <TableCell parentColumn="Region" data-qa-region>
@@ -394,9 +428,9 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
           </TableCell>
         </TableRow>
       );
-    })
-  }
-};
+    });
+  };
+}
 
 const styled = withStyles(styles);
 
@@ -409,32 +443,42 @@ const updatedRequest = (ownProps: any, params: any, filter: any) => {
    * and each down time together
    */
   return getNodeBalancers(params, filter)
-    .then((response) => {
+    .then(response => {
       return new Promise((resolve, reject) => {
         /*
          * Iterate over each nodebalancer and get it's configs
          */
-        Promise.map(response.data, (nodeBalancer) => getNodeBalancerConfigs(nodeBalancer.id)
-          .then(({ data: configs }) => ({
+        Promise.map(response.data, nodeBalancer =>
+          getNodeBalancerConfigs(nodeBalancer.id).then(({ data: configs }) => ({
             ...nodeBalancer,
             // add the nodes_status down from each config together
-            down: configs.reduce((acc: number, config) => acc + config.nodes_status.down, 0),
+            down: configs.reduce(
+              (acc: number, config) => acc + config.nodes_status.down,
+              0
+            ),
             // add the nodes_status up from each config together
-            up: configs.reduce((acc: number, config) => acc + config.nodes_status.up, 0),
+            up: configs.reduce(
+              (acc: number, config) => acc + config.nodes_status.up,
+              0
+            ),
             // concat all the ports on each config
-            ports: configs.reduce((acc: [number], config) => [...acc, config.port], []),
-          })))
-          .then((data) => resolve({ ...response, data }))
-          .catch((error) => reject(error));
+            ports: configs.reduce(
+              (acc: [number], config) => [...acc, config.port],
+              []
+            )
+          }))
+        )
+          .then(data => resolve({ ...response, data }))
+          .catch(error => reject(error));
       });
     })
     .then((response: Linode.ResourcePage<Linode.ExtendedNodeBalancer>) => {
       return response;
     })
-    .catch((error) => {
+    .catch(error => {
       return error;
     });
-}
+};
 
 const paginated = paginate(updatedRequest);
 
@@ -443,7 +487,7 @@ export const enhanced = compose<any, any, any, any, any, any>(
   withRouter,
   SectionErrorBoundary,
   paginated,
-  setDocs(NodeBalancersLanding.docs),
+  setDocs(NodeBalancersLanding.docs)
 );
 
 export default enhanced(NodeBalancersLanding);
