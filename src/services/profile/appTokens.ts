@@ -18,7 +18,12 @@ export const getAppTokens = (params?: any, filters?: any) =>
     setXFilter(filters),
     setURL(`${API_ROOT}/profile/apps`),
   )
-    .then(response => response.data);
+    .then(response => {
+      const data = response.data;
+      // remove linode apps from the list
+      data.data = data.data.filter(app => !app.website || !/.linode.com$/.test(app.website));
+      return data;
+    });
 
 /**
  * getAppToken
