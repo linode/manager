@@ -11,7 +11,6 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import StatusIndicator, { getStatusForVolume } from 'src/components/StatusIndicator';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -26,8 +25,6 @@ type ClassNames =
   | 'icon'
   | 'labelGridWrapper'
   | 'description'
-  | 'labelStatusWrapper'
-  | 'statusOuter'
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol'
@@ -53,17 +50,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   description: {
     paddingTop: theme.spacing.unit / 2,
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-  },
-  statusOuter: {
-    top: 0,
-    position: 'relative',
-    marginLeft: 4,
-    lineHeight: '0.8rem',
   },
   labelCol: {
     width: '60%',
@@ -190,14 +176,9 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
               <VolumeIcon className={classes.icon}/>
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
-              <div className={classes.labelStatusWrapper}>
-                <Typography role="header" variant="h3" data-qa-label>
-                {label}
-                </Typography>
-                <div className={classes.statusOuter}>
-                  <StatusIndicator status={getStatusForVolume(status)} />
-                </div>
-              </div>
+              <Typography role="header" variant="h3" data-qa-label>
+              {label}
+              </Typography>
               <Typography className={classes.description}>
                 {size} GiB
               </Typography>

@@ -20,7 +20,6 @@ import LinearProgress from 'src/components/LinearProgress';
 import paginate, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import StatusIndicator, { getStatusForVolume } from 'src/components/StatusIndicator';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -42,8 +41,6 @@ type ClassNames = 'root'
   | 'title'
   | 'labelCol'
   | 'icon'
-  | 'labelStatusWrapper'
-  | 'statusOuter'
   | 'attachmentCol'
   | 'sizeCol'
   | 'pathCol'
@@ -91,17 +88,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& .outerCircle': {
       stroke: theme.bg.main,
     },
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-  },
-  statusOuter: {
-    top: 0,
-    position: 'relative',
-    marginLeft: 4,
-    lineHeight: '0.8rem',
   },
   attachmentCol: {
     width: '15%',
@@ -433,14 +419,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   <VolumesIcon className={classes.icon}/>
                 </Grid>
                 <Grid item>
-                  <div className={classes.labelStatusWrapper}>
                     <Typography role="header" variant="h3" data-qa-label>
                     {label}
                     </Typography>
-                    <div className={classes.statusOuter}>
-                      <StatusIndicator status={getStatusForVolume(status)} />
-                    </div>
-                  </div>
                   <RenderTags tags={volume.tags} />
                 </Grid>
               </Grid>
@@ -458,14 +439,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   <VolumesIcon className={classes.icon} />
                 </Grid>
                 <Grid item>
-                  <div className={classes.labelStatusWrapper}>
-                    <Typography role="header" variant="h3" data-qa-label>
+                  <Typography role="header" variant="h3" data-qa-label>
                     {volume.label}
-                    </Typography>
-                    <div className={classes.statusOuter}>
-                      <StatusIndicator status={getStatusForVolume(volume.status)} />
-                    </div>
-                  </div>
+                  </Typography>
                   <RenderTags tags={volume.tags} />
                 </Grid>
               </Grid>
