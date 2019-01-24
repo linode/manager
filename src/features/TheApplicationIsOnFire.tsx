@@ -3,16 +3,25 @@ import Dialog from 'src/components/core/Dialog';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogTitle from 'src/components/core/DialogTitle';
 
-const TheApplicationIsOnFire: React.StatelessComponent<{}> = (props) => {
+interface Props {
+  title?: string;
+  message?: string;
+}
+
+const TheApplicationIsOnFire: React.StatelessComponent<Props> = (props) => {
+const { title, message } = props;
   return (
     <Dialog open>
-      <DialogTitle>Oh snap!</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        Something went terribly wrong. Did you try {<ReloadLink />}?
+        { message ? message : <>Something went terribly wrong. Did you try {<ReloadLink />}?</> }
       </DialogContent>
     </Dialog>
   );
 };
+TheApplicationIsOnFire.defaultProps = {
+  title: `Oh no!`
+}
 
 const ReloadLink = () => <a onClick={() => { location.reload(); }}>restarting it</a>;
 
