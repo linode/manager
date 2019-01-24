@@ -1,6 +1,8 @@
 import { mergeDeepRight } from 'ramda';
 import createBreakpoints from 'src/components/core/styles/createBreakpoints';
-import createMuiTheme, { ThemeOptions } from 'src/components/core/styles/createMuiTheme';
+import createMuiTheme, {
+  ThemeOptions
+} from 'src/components/core/styles/createMuiTheme';
 
 /**
  * Augmenting Palette and Palette Options
@@ -8,26 +10,25 @@ import createMuiTheme, { ThemeOptions } from 'src/components/core/styles/createM
  */
 
 declare module '@material-ui/core/styles/createPalette' {
-
   interface Palette {
     status: {
-      success: string,
-      successDark: string,
-      warning: string,
-      warningDark: string,
-      error: string,
-      errorDark: string,
+      success: string;
+      successDark: string;
+      warning: string;
+      warningDark: string;
+      error: string;
+      errorDark: string;
     };
   }
 
   interface PaletteOptions {
     status?: {
-      success?: string,
-      successDark?: string,
-      warning?: string,
-      warningDark?: string,
-      error?: string,
-      errorDark?: string,
+      success?: string;
+      successDark?: string;
+      warning?: string;
+      warningDark?: string;
+      error?: string;
+      errorDark?: string;
     };
   }
 }
@@ -36,7 +37,6 @@ declare module '@material-ui/core/styles/createPalette' {
  * Augmenting the Theme and ThemeOptions.
  */
 declare module '@material-ui/core/styles/createMuiTheme' {
-
   interface Theme {
     name: string;
     '@keyframes rotate': any;
@@ -70,25 +70,25 @@ const primaryColors = {
   headline: '#32363C',
   divider: '#f4f4f4',
   offBlack: '#444',
-  white: '#fff',
-}
+  white: '#fff'
+};
 
 const iconCircleAnimation = {
   '& .circle': {
     fill: primaryColors.main,
-    transition: 'fill .2s ease-in-out .2s',
+    transition: 'fill .2s ease-in-out .2s'
   },
   '& .outerCircle': {
     stroke: primaryColors.dark,
     strokeDasharray: 1000,
     strokeDashoffset: 1000,
-    animation: 'dash 2s linear forwards',
+    animation: 'dash 2s linear forwards'
   },
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
-    stroke: 'white',
-  },
-}
+    stroke: 'white'
+  }
+};
 
 const themeDefaults: ThemeOptions = {
   breakpoints,
@@ -117,20 +117,20 @@ const themeDefaults: ThemeOptions = {
     'none',
     'none',
     'none',
-    'none',
+    'none'
   ],
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(0deg)',
+      transform: 'rotate(0deg)'
     },
     to: {
-      transform: 'rotate(360deg)',
-    },
+      transform: 'rotate(360deg)'
+    }
   },
   '@keyframes dash': {
     to: {
-      'stroke-dashoffset': 0,
-    },
+      'stroke-dashoffset': 0
+    }
   },
   bg: {
     main: '#f4f4f4',
@@ -140,7 +140,7 @@ const themeDefaults: ThemeOptions = {
     lightBlue: '#D7E3EF',
     white: '#fff',
     pureWhite: '#fff',
-    tableHeader: '#fbfbfb',
+    tableHeader: '#fbfbfb'
   },
   color: {
     headline: primaryColors.headline,
@@ -169,21 +169,21 @@ const themeDefaults: ThemeOptions = {
     drawerBackdrop: 'rgba(255, 255, 255, 0.5)'
   },
   animateCircleIcon: {
-    ...iconCircleAnimation,
+    ...iconCircleAnimation
   },
   notificationList: {
     padding: '16px 32px 16px 23px',
     borderBottom: '1px solid #fbfbfb',
     transition: 'background-color 225ms ease-in-out',
     '&:hover': {
-      backgroundColor: '#f4f4f4',
-    },
+      backgroundColor: '#f4f4f4'
+    }
   },
   palette: {
     divider: primaryColors.divider,
     primary: primaryColors,
     text: {
-      primary: primaryColors.text,
+      primary: primaryColors.text
     },
     status: {
       success: '#d7e3EF',
@@ -191,8 +191,8 @@ const themeDefaults: ThemeOptions = {
       warning: '#fdf4da',
       warningDark: '#ffd002',
       error: '#f8dedf',
-      errorDark: '#cd2227',
-    },
+      errorDark: '#cd2227'
+    }
   },
   typography: {
     useNextVariants: true,
@@ -205,33 +205,33 @@ const themeDefaults: ThemeOptions = {
       fontFamily: 'LatoWebBold',
       [breakpoints.up('lg')]: {
         fontSize: '1.5rem',
-        lineHeight: '1.875rem',
-      },
+        lineHeight: '1.875rem'
+      }
     },
     h2: {
       color: primaryColors.headline,
       fontSize: '1.125rem',
       fontFamily: 'LatoWebBold',
-      lineHeight: '1.5rem',
+      lineHeight: '1.5rem'
     },
     h3: {
       color: primaryColors.headline,
       fontSize: '1rem',
       fontFamily: 'LatoWebBold',
-      lineHeight: '1rem',
+      lineHeight: '1rem'
     },
     body1: {
       fontSize: '0.875rem',
-      lineHeight: '1rem',
+      lineHeight: '1rem'
     },
     body2: {
       fontSize: '0.875rem',
-      lineHeight: '1rem',
+      lineHeight: '1rem'
     },
     caption: {
       fontSize: '0.625rem',
       lineHeight: '0.625rem',
-      color: primaryColors.text,
+      color: primaryColors.text
     },
     h4: {
       fontSize: '2.188rem',
@@ -239,24 +239,24 @@ const themeDefaults: ThemeOptions = {
       color: primaryColors.text,
       [breakpoints.up('lg')]: {
         fontSize: '2.5rem',
-        lineHeight: '2.5rem',
+        lineHeight: '2.5rem'
       }
-    },
+    }
   },
   overrides: {
     MuiAppBar: {
       colorDefault: {
-        backgroundColor: 'inherit',
-      },
+        backgroundColor: 'inherit'
+      }
     },
     MuiBackdrop: {
       root: {
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-      },
+        backgroundColor: 'rgba(255, 255, 255, 0.8)'
+      }
     },
     MuiButton: {
       label: {
-        position: 'relative',
+        position: 'relative'
       },
       root: {
         textTransform: 'inherit',
@@ -267,47 +267,47 @@ const themeDefaults: ThemeOptions = {
         padding: '9px 28px 11px',
         maxHeight: 48,
         '&:hover': {
-          backgroundColor: '#fff',
+          backgroundColor: '#fff'
         },
         '&:focus': {
-          backgroundColor: 'transparent',
+          backgroundColor: 'transparent'
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: primaryColors.dark,
+          backgroundColor: primaryColors.dark
         },
         '&$disabled': {
-          color: '#bbb',
+          color: '#bbb'
         },
         '&.loading': {
-          color: primaryColors.text,
-        },
+          color: primaryColors.text
+        }
       },
       text: {
-        padding: '9px 28px 11px',
+        padding: '9px 28px 11px'
       },
       flat: {
         '&.cancel:hover': {
-          backgroundColor: 'transparent',
-        },
+          backgroundColor: 'transparent'
+        }
       },
       containedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.light,
+          backgroundColor: primaryColors.light
         },
         '&:active': {
-          backgroundColor: primaryColors.dark,
+          backgroundColor: primaryColors.dark
         },
         '&$disabled': {
-          color: 'white',
+          color: 'white'
         },
         '&.loading': {
-          backgroundColor: primaryColors.text,
+          backgroundColor: primaryColors.text
         },
         '&.cancel': {
           '&:hover, &:focus': {
-            borderColor: '#222',
-          },
-        },
+            borderColor: '#222'
+          }
+        }
       },
       containedSecondary: {
         backgroundColor: 'transparent',
@@ -318,24 +318,24 @@ const themeDefaults: ThemeOptions = {
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
           color: primaryColors.light,
-          borderColor: primaryColors.light,
+          borderColor: primaryColors.light
         },
         '&:active': {
           backgroundColor: 'transparent',
           color: primaryColors.dark,
-          borderColor: primaryColors.dark,
+          borderColor: primaryColors.dark
         },
         '&$disabled': {
           borderColor: '#C9CACB',
           backgroundColor: 'transparent',
-          color: '#C9CACB',
+          color: '#C9CACB'
         },
         '&.cancel': {
           borderColor: 'transparent',
           '&:hover, &:focus': {
             borderColor: primaryColors.light,
-            backgroundColor: 'transparent',
-          },
+            backgroundColor: 'transparent'
+          }
         },
         '&.destructive': {
           borderColor: '#C44742',
@@ -343,12 +343,12 @@ const themeDefaults: ThemeOptions = {
           '&:hover, &:focus': {
             color: '#DF6560',
             borderColor: '#DF6560',
-            backgroundColor: 'transparent',
+            backgroundColor: 'transparent'
           },
           '&:active': {
             color: '#963530',
-            borderColor: '#963530',
-          },
+            borderColor: '#963530'
+          }
         },
         '&.loading': {
           borderColor: primaryColors.text,
@@ -357,24 +357,24 @@ const themeDefaults: ThemeOptions = {
           '& svg': {
             width: 22,
             height: 22,
-            animation: 'rotate 2s linear infinite',
-          },
-        },
-      },
+            animation: 'rotate 2s linear infinite'
+          }
+        }
+      }
     },
     MuiButtonBase: {
       root: {
-        fontSize: '1rem',
-      },
+        fontSize: '1rem'
+      }
     },
     MuiCardHeader: {
       root: {
-        backgroundColor: '#fbfbfb',
+        backgroundColor: '#fbfbfb'
       },
       content: {
         // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
-        minWidth: 0,
-      },
+        minWidth: 0
+      }
     },
     MuiChip: {
       root: {
@@ -398,19 +398,19 @@ const themeDefaults: ThemeOptions = {
             color: primaryColors.white,
             '&:hover': {
               color: primaryColors.main,
-              backgroundColor: primaryColors.white,
-            },
-          },
+              backgroundColor: primaryColors.white
+            }
+          }
         },
         '&:focus': {
-          outline: '1px dotted #999',
+          outline: '1px dotted #999'
         }
       },
       label: {
         paddingLeft: 4,
         paddingRight: 4,
         position: 'relative',
-        top: -1,
+        top: -1
       },
       deleteIcon: {
         padding: 2,
@@ -423,7 +423,7 @@ const themeDefaults: ThemeOptions = {
         '& svg': {
           width: 12,
           height: 12,
-          borderRadius: '50%',
+          borderRadius: '50%'
         },
         [breakpoints.down('xs')]: {
           marginLeft: 8,
@@ -433,25 +433,25 @@ const themeDefaults: ThemeOptions = {
             width: 22,
             height: 22,
             borderRadius: '50%',
-            backgroundColor: primaryColors.main,
-          },
-        },
-      },
+            backgroundColor: primaryColors.main
+          }
+        }
+      }
     },
     MuiCircularProgress: {
       circle: {
-        strokeLinecap: 'inherit',
-      },
+        strokeLinecap: 'inherit'
+      }
     },
     MuiCollapse: {
       container: {
-        width: '100%',
-      },
+        width: '100%'
+      }
     },
     MuiDialog: {
       paper: {
-        boxShadow: '0 0 5px #bbb',
-      },
+        boxShadow: '0 0 5px #bbb'
+      }
     },
     MuiDialogActions: {
       root: {
@@ -459,21 +459,21 @@ const themeDefaults: ThemeOptions = {
         padding: '0 24px 24px 24px',
         justifyContent: 'flex-start',
         '& .actionPanel': {
-          padding: 0,
-        },
+          padding: 0
+        }
       },
       action: {
-        margin: 0,
-      },
+        margin: 0
+      }
     },
     MuiDialogTitle: {
       root: {
         borderBottom: '1px solid #eee',
         marginBottom: 20,
         '& h2': {
-          color: primaryColors.headline,
-        },
-      },
+          color: primaryColors.headline
+        }
+      }
     },
     MuiDrawer: {
       paper: {
@@ -482,67 +482,67 @@ const themeDefaults: ThemeOptions = {
         // overflowY: 'overlay',
         display: 'block',
         fallbacks: {
-          overflowY: 'auto',
-        },
-      },
+          overflowY: 'auto'
+        }
+      }
     },
     MuiExpansionPanel: {
       root: {
         '& .actionPanel': {
           paddingLeft: 16,
-          paddingRight: 16,
+          paddingRight: 16
         },
         '& table': {
           border: `1px solid ${primaryColors.divider}`,
-          borderBottom: 0,
-        },
-      },
+          borderBottom: 0
+        }
+      }
     },
     MuiExpansionPanelDetails: {
       root: {
         padding: 16,
-        backgroundColor: 'white',
-      },
+        backgroundColor: 'white'
+      }
     },
     MuiExpansionPanelSummary: {
       root: {
         '&$focused': {
-          backgroundColor: '#fbfbfb',
+          backgroundColor: '#fbfbfb'
         },
         padding: '0 18px',
         backgroundColor: '#fbfbfb',
         justifyContent: 'flex-start',
         '& h3': {
-          transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+          transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
         '&:hover': {
           '& h3': {
-            color: primaryColors.light,
+            color: primaryColors.light
           },
           '& $expandIcon': {
             '& svg': {
               fill: primaryColors.light,
-              stroke: 'white',
-            },
-          },
+              stroke: 'white'
+            }
+          }
         },
         '&:focus': {
           outline: '1px dotted #999',
-          zIndex: 2,
+          zIndex: 2
         },
         '&$expanded': {
-          minHeight: 48,
-        },
+          minHeight: 48
+        }
       },
       content: {
         flexGrow: 0,
         order: 2,
         '&$expanded': {
-          margin: 0,
-        },
+          margin: 0
+        }
       },
       expanded: {
-        margin: 0,
+        margin: 0
       },
       expandIcon: {
         display: 'flex',
@@ -558,33 +558,33 @@ const themeDefaults: ThemeOptions = {
           transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
             ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
           width: 22,
-          height: 22,
+          height: 22
         },
         '& .border': {
-          stroke: `${primaryColors.light} !important`,
+          stroke: `${primaryColors.light} !important`
         },
         '&$expanded': {
-          transform: 'none',
-        },
+          transform: 'none'
+        }
       },
-      focused: {},
+      focused: {}
     },
     MuiFormControl: {
       root: {
         marginTop: 16,
         minWidth: 120,
         '&.copy > div': {
-          backgroundColor: '#f4f4f4',
+          backgroundColor: '#f4f4f4'
         },
         [breakpoints.down('xs')]: {
-          width: '100%',
+          width: '100%'
         }
-      },
+      }
     },
     MuiFormControlLabel: {
       root: {
-        marginLeft: -11,
-      },
+        marginLeft: -11
+      }
     },
     MuiFormLabel: {
       root: {
@@ -593,58 +593,58 @@ const themeDefaults: ThemeOptions = {
         fontSize: '.9rem',
         marginBottom: 2,
         '&$focused': {
-          color: '#555',
+          color: '#555'
         },
         '&$error': {
-          color: '#555',
+          color: '#555'
         },
         '&$disabled': {
           color: '#555',
-          opacity: .5
-        },
-      },
+          opacity: 0.5
+        }
+      }
     },
     MuiFormHelperText: {
       root: {
         '&$error': {
-          color: '#CA0813',
-        },
-      },
+          color: '#CA0813'
+        }
+      }
     },
     MuiIconButton: {
       root: {
         color: primaryColors.main,
         '&:hover': {
           color: primaryColors.light,
-          backgroundColor: 'transparent',
-        },
-      },
+          backgroundColor: 'transparent'
+        }
+      }
     },
     MuiRadio: {
       root: {
         '& $checked': {
-          color: primaryColors.main,
+          color: primaryColors.main
         },
-        color: primaryColors.main,
+        color: primaryColors.main
       },
       checked: {},
       colorSecondary: {
         color: primaryColors.main,
         '&$checked': {
-          color: primaryColors.main,
+          color: primaryColors.main
         }
-      },
+      }
     },
     MuiInput: {
       root: {
         '&$disabled': {
           borderColor: '#ccc',
           color: '#ccc',
-          opacity: .5,
+          opacity: 0.5
         },
         '&$focused': {
           borderColor: primaryColors.main,
-          boxShadow: '0 0 2px 1px #e1edfa',
+          boxShadow: '0 0 2px 1px #e1edfa'
         },
         maxWidth: 415,
         border: '1px solid #ccc',
@@ -657,42 +657,42 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: '#fff',
         [breakpoints.down('xs')]: {
           maxWidth: '100%',
-          width: '100%',
+          width: '100%'
         },
         '& svg': {
           fontSize: 18,
           color: primaryColors.main,
           '&:hover': {
-            color: '#5E9AEA',
-          },
+            color: '#5E9AEA'
+          }
         },
         '&.affirmative': {
-          borderColor: '#00B159',
-        },
+          borderColor: '#00B159'
+        }
       },
       inputMultiline: {
         minHeight: 125,
         padding: '5px 12px',
-        lineHeight: 1.4,
+        lineHeight: 1.4
       },
       focused: {},
       error: {
-        borderColor: '#CA0813',
+        borderColor: '#CA0813'
       },
       disabled: {},
       input: {
         padding: '12px 12px 13px',
         fontSize: '.9rem',
-        boxSizing: 'border-box',
+        boxSizing: 'border-box'
       },
       inputType: {
-        height: 'auto',
+        height: 'auto'
       },
       formControl: {
         'label + &': {
-          marginTop: 0,
-        },
-      },
+          marginTop: 0
+        }
+      }
     },
     MuiInputAdornment: {
       root: {
@@ -701,25 +701,25 @@ const themeDefaults: ThemeOptions = {
         whiteSpace: 'nowrap',
         '& p': {
           fontSize: '.9rem',
-          color: '#606469',
-        },
+          color: '#606469'
+        }
       },
       positionEnd: {
-        marginRight: 10,
-      },
+        marginRight: 10
+      }
     },
     MuiInputLabel: {
       formControl: {
-        position: 'relative',
+        position: 'relative'
       },
       shrink: {
-        transform: 'none',
-      },
+        transform: 'none'
+      }
     },
     MuiList: {
       padding: {
         paddingTop: 0,
-        paddingBottom: 0,
+        paddingBottom: 0
       },
       root: {
         '&.reset': {
@@ -729,28 +729,28 @@ const themeDefaults: ThemeOptions = {
           '& li': {
             display: 'list-item',
             padding: 0,
-            listStyleType: 'initial',
-          },
-        },
-      },
+            listStyleType: 'initial'
+          }
+        }
+      }
     },
     MuiListItem: {
       root: {
         color: primaryColors.text,
         '&$disabled': {
-          opacity: .5,
+          opacity: 0.5
         },
         '&$selected, &$selected:hover': {
           backgroundColor: 'transparent',
           color: primaryColors.main
         },
-        
+
         '&.selectHeader': {
           opacity: 1,
           fontFamily: 'LatoWebBold',
           fontSize: '1rem',
-          color: primaryColors.text,
-        },
+          color: primaryColors.text
+        }
       },
       disabled: {},
       selected: {}
@@ -758,8 +758,8 @@ const themeDefaults: ThemeOptions = {
     MuiListItemText: {
       secondary: {
         marginTop: 4,
-        lineHeight: '1.2em',
-      },
+        lineHeight: '1.2em'
+      }
     },
     MuiMenu: {
       paper: {
@@ -770,7 +770,7 @@ const themeDefaults: ThemeOptions = {
           border: `1px solid ${primaryColors.main}`,
           margin: '0 0 0 -1px',
           outline: 0,
-          borderRadius: 0,
+          borderRadius: 0
         },
         '& .selectMenuList': {
           maxHeight: 250,
@@ -780,13 +780,13 @@ const themeDefaults: ThemeOptions = {
           padding: 4,
           '& li': {
             paddingLeft: 12,
-            paddingRight: 12,
+            paddingRight: 12
           },
           [breakpoints.down('xs')]: {
-            minWidth: 200,
-          },
-        },
-      },
+            minWidth: 200
+          }
+        }
+      }
     },
     MuiMenuItem: {
       root: {
@@ -801,22 +801,22 @@ const themeDefaults: ThemeOptions = {
         '&$selected, &$selected:hover': {
           backgroundColor: 'transparent',
           color: primaryColors.main,
-          opacity: 1,
+          opacity: 1
         },
         '&:hover': {
           backgroundColor: primaryColors.main,
-          color: 'white',
+          color: 'white'
         },
         '& em': {
-          fontStyle: 'normal !important',
-        },
+          fontStyle: 'normal !important'
+        }
       },
-      selected: {},
+      selected: {}
     },
     MuiPaper: {
       rounded: {
-        borderRadius: 0,
-      },
+        borderRadius: 0
+      }
     },
     MuiPopover: {
       paper: {
@@ -824,16 +824,16 @@ const themeDefaults: ThemeOptions = {
         borderRadius: 0,
         minWidth: 200,
         [breakpoints.up('lg')]: {
-          minWidth: 250,
-        },
-      },
+          minWidth: 250
+        }
+      }
     },
     MuiSelect: {
       selectMenu: {
         '&$disabled': {
           '&+ input + $icon': {
-            opacity: '.5',
-          },
+            opacity: '.5'
+          }
         },
         padding: '6px 32px 5px 16px',
         color: primaryColors.text,
@@ -842,18 +842,18 @@ const themeDefaults: ThemeOptions = {
         minHeight: 46,
         minWidth: 150,
         '&:focus': {
-          backgroundColor: '#fff',
+          backgroundColor: '#fff'
         },
         '& em': {
-          fontStyle: 'normal',
-        },
+          fontStyle: 'normal'
+        }
       },
       select: {
         '&[aria-pressed="true"]': {
           '&+ input + $icon': {
-            opacity: 1,
-          },
-        },
+            opacity: 1
+          }
+        }
       },
       icon: {
         marginTop: -2,
@@ -862,13 +862,12 @@ const themeDefaults: ThemeOptions = {
         height: 28,
         transition: 'color 225ms ease-in-out',
         color: '#aaa !important',
-        opacity: .5,
+        opacity: 0.5
       },
-      disabled: {},
+      disabled: {}
     },
     MuiSnackbar: {
-      root: { 
-      }
+      root: {}
     },
     MuiSnackbarContent: {
       root: {
@@ -878,9 +877,9 @@ const themeDefaults: ThemeOptions = {
         borderLeft: `6px solid transparent`,
         borderRadius: 0,
         [breakpoints.up('md')]: {
-          borderRadius: 0,
-        },
-      },
+          borderRadius: 0
+        }
+      }
     },
     MuiSwitch: {
       root: {
@@ -888,15 +887,27 @@ const themeDefaults: ThemeOptions = {
           transform: 'translateX(20px)',
           color: `${primaryColors.main} !important`,
           '& input': {
-            left: -20,
+            left: -20
           },
           '& .square': {
-            fill: 'white',
+            fill: 'white'
           },
           '& + $bar': {
             opacity: 1,
-            backgroundColor: '#f4f4f4',
-          },
+            backgroundColor: '#f4f4f4'
+          }
+        },
+        '& $disabled': {
+          '&$switchBase': {
+            opacity: 0.5,
+            '& + $bar': {
+              backgroundColor: '#ddd',
+              borderColor: '#ccc'
+            },
+            '& .square': {
+              fill: 'white'
+            }
+          }
         },
         '& .icon': {
           transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
@@ -904,25 +915,35 @@ const themeDefaults: ThemeOptions = {
           left: 0,
           width: 16,
           height: 16,
-          borderRadius: 0,
+          borderRadius: 0
         },
         '& .square': {
-          transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+          transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
         '&:hover, &:focus': {
+          '& $disabled': {
+            '&$switchBase': {
+              opacity: 0.5,
+              '& + $bar': {
+                backgroundColor: '#ddd',
+                borderColor: '#ccc'
+              }
+            }
+          },
           '& $bar, & + $bar': {
-            borderColor: '#606469',
+            borderColor: '#606469'
           },
           '& .square': {
-            fill: '#aaa',
+            fill: '#aaa'
           },
           '& $checked': {
             '& .square': {
-              fill: '#eee',
-            },
+              fill: '#eee'
+            }
           }
-        },
+        }
       },
+      disabled: {},
       checked: {},
       bar: {
         top: 12,
@@ -935,11 +956,11 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: '#F4F4F4',
         border: '1px solid #999',
         boxSizing: 'content-box',
-        transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+        transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
       },
       switchBase: {
-        color: primaryColors.main,
-      },
+        color: primaryColors.main
+      }
     },
     MuiTab: {
       root: {
@@ -960,63 +981,63 @@ const themeDefaults: ThemeOptions = {
         appearance: 'none',
         margin: 1,
         [breakpoints.up('md')]: {
-          minWidth: 75,
+          minWidth: 75
         },
         '&$selected, &$selected:hover': {
           fontFamily: 'LatoWebBold',
           color: primaryColors.headline
         },
         '&:hover': {
-          color: primaryColors.main,
-        },
+          color: primaryColors.main
+        }
       },
       label: {
         [breakpoints.up('md')]: {
-          fontSize: '1rem',
-        },
+          fontSize: '1rem'
+        }
       },
       labelContainer: {
         paddingLeft: 9,
         paddingRight: 9,
         [breakpoints.up('md')]: {
           paddingLeft: 18,
-          paddingRight: 18,
-        },
+          paddingRight: 18
+        }
       },
       textColorPrimary: {
         '&$selected': {
-          color: '#32363C',
-        },
+          color: '#32363C'
+        }
       },
       selected: {}
     },
     MuiTable: {
       root: {
-        borderCollapse: 'initial',
-      },
+        borderCollapse: 'initial'
+      }
     },
     MuiTableCell: {
       root: {
         padding: '10px',
         borderBottom: `2px solid ${primaryColors.divider}`,
         '&:last-child': {
-          paddingRight: 10,
-        },
+          paddingRight: 10
+        }
       },
       head: {
-        fontSize: '.9rem',
+        fontSize: '.9rem'
       },
       body: {
-        fontSize: '.9rem',
-      },
+        fontSize: '.9rem'
+      }
     },
     MuiTabs: {
       root: {
         margin: '16px 0',
-        boxShadow: 'inset 0 -1px 0 #C5C6C8',
+        boxShadow: 'inset 0 -1px 0 #C5C6C8'
       },
       fixed: {
-        overflowX: 'auto',
+        overflowX: 'auto'
       },
       flexContainer: {
         position: 'relative',
@@ -1034,16 +1055,16 @@ const themeDefaults: ThemeOptions = {
         }
       },
       scrollButtons: {
-        flex: '0 0 40px',
+        flex: '0 0 40px'
       },
       indicator: {
         primary: {
-          backgroundColor: primaryColors.main,
+          backgroundColor: primaryColors.main
         },
         secondary: {
-          backgroundColor: primaryColors.main,
-        },
-      },
+          backgroundColor: primaryColors.main
+        }
+      }
     },
     MuiTableRow: {
       root: {
@@ -1052,47 +1073,47 @@ const themeDefaults: ThemeOptions = {
         position: 'relative',
         zIndex: 1,
         '&:before': {
-          borderLeftColor: 'white',
+          borderLeftColor: 'white'
         },
         '&:hover': {
           '&$hover': {
             backgroundColor: '#fbfbfb',
             '&:before': {
-              backgroundColor: primaryColors.main,
-            },
-          },
-        },
+              backgroundColor: primaryColors.main
+            }
+          }
+        }
       },
       head: {
         height: 'auto',
         backgroundColor: '#fbfbfb',
         '&:before': {
-          borderLeftColor: '#fbfbfb',
-        },
+          borderLeftColor: '#fbfbfb'
+        }
       },
       hover: {
         cursor: 'pointer',
         '& a.secondaryLink': {
           color: primaryColors.offBlack,
-          fontFamily: 'LatoWebBold',
-        },
-      },
+          fontFamily: 'LatoWebBold'
+        }
+      }
     },
     MuiTableSortLabel: {
       root: {
         fontSize: '.9rem',
         transition: 'color 225ms ease-in-out',
         '&:hover': {
-          color: primaryColors.main,
+          color: primaryColors.main
         },
         '&:focus': {
-          outline: '1px dotted #999',
+          outline: '1px dotted #999'
         }
       },
       active: {
         color: primaryColors.main,
         '&:hover': {
-          color: primaryColors.main,
+          color: primaryColors.main
         }
       },
       icon: {
@@ -1102,7 +1123,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTooltip: {
       popper: {
-        opacity: 1,
+        opacity: 1
       },
       tooltip: {
         borderRadius: 0,
@@ -1113,11 +1134,12 @@ const themeDefaults: ThemeOptions = {
         textAlign: 'left',
         [breakpoints.up('sm')]: {
           padding: '8px 10px',
-          fontSize: '.9rem',
-        },
-      },
-    },
-  },
+          fontSize: '.9rem'
+        }
+      }
+    }
+  }
 };
 
-export default (options: ThemeOptions) => createMuiTheme(mergeDeepRight(themeDefaults, options));
+export default (options: ThemeOptions) =>
+  createMuiTheme(mergeDeepRight(themeDefaults, options));
