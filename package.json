@@ -108,6 +108,7 @@
   },
   "scripts": {
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
+    "format": "NODE_PATH=./ prettier src/**/*.{ts,tsx} --write",
     "compare": "./scripts/jira-changelog.sh",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/src:/src/src manager test",
@@ -117,7 +118,6 @@
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
-    "precommit": "./scripts/pre-commit.sh",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js --env=jsdom",
@@ -139,9 +139,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn precommit",
+      "pre-commit": "lint-staged && ./scripts/pre-commit.sh",
       "pre-push": "yarn prepush"
     }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [ "prettier --write", "git add" ]
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -202,12 +205,14 @@
     "csstype": "^2.5.5",
     "eslint": "4.19.1",
     "hapi": "^17.5.3",
-    "husky": "^1.1.3",
+    "husky": "^1.3.1",
     "inert": "^5.1.0",
     "inquirer": "^6.2.0",
+    "lint-staged": "^8.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "mountebank": "^1.14.1",
     "otplib": "^10.0.1",
+    "prettier": "1.16.1",
     "reselect-tools": "^0.0.7",
     "selenium-standalone": "^6.13.0",
     "storybook-react-router": "^1.0.2",
