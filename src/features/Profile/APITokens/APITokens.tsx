@@ -10,7 +10,7 @@ export const APITokens: React.StatelessComponent = () => {
       <DocumentTitleSegment segment="APITokens" />
 
       <APITokenTable title="Personal Access Tokens" type="Personal Access Token" />
-      <APITokenTable title="Apps" type="OAuth Client Token" />
+      <APITokenTable title="Third Party Access Tokens" type="OAuth Client Token" />
 
     </React.Fragment>
   );

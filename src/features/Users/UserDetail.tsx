@@ -11,6 +11,7 @@ import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
 import { handleUpdate } from 'src/store/profile/profile.actions';
@@ -293,8 +294,12 @@ class UserDetail extends React.Component<CombinedProps> {
             scrollButtons="on"
           >
             {this.tabs
-              .map(tab => <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title}
-            />)}
+              .map(tab =>
+                <Tab
+                  key={tab.title}
+                  data-qa-tab={tab.title}
+                  component={() => <TabLink to={tab.routeName} title={tab.title} />}
+                />)}
           </Tabs>
         </AppBar>
         {createdUsername &&

@@ -74,6 +74,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       boxShadow: 'none',
       border: `1px solid ${theme.color.selectDropDowns}`,
       maxWidth: 415,
+      zIndex: 100
     },
     '& .react-select__group-heading': {
       textTransform: 'initial',

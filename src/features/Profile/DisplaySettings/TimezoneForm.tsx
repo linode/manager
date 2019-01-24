@@ -96,7 +96,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
         })
       })
       .catch((error) => {
-        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
+        const fallbackError = [{ reason: 'An unexpected error has occurred.' }];
         this.setState({
           submitting: false,
           errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),

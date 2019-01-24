@@ -265,6 +265,7 @@ const themeDefaults: ThemeOptions = {
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
         padding: '9px 28px 11px',
+        maxHeight: 48,
         '&:hover': {
           backgroundColor: '#fff',
         },
@@ -280,6 +281,9 @@ const themeDefaults: ThemeOptions = {
         '&.loading': {
           color: primaryColors.text,
         },
+      },
+      text: {
+        padding: '9px 28px 11px',
       },
       flat: {
         '&.cancel:hover': {
@@ -309,7 +313,7 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
-        padding: '11px 26px 13px',
+        padding: '9px 28px 11px',
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
@@ -939,15 +943,28 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTab: {
       root: {
-        color: '#C5C6C8',
+        color: 'rgba(0, 0, 0, 0.54)',
         minWidth: 50,
         textTransform: 'inherit',
-        fontFamily: 'LatoWeb',
+        padding: '6px 16px',
+        position: 'relative',
+        overflow: 'hidden',
+        maxWidth: '264',
+        boxSizing: 'border-box',
+        minHeight: 48,
+        flexShrink: 0,
+        display: 'inline-flex',
+        alignItems: 'center',
+        verticalAlign: 'middle',
+        justifyContent: 'center',
+        appearance: 'none',
+        margin: 1,
         [breakpoints.up('md')]: {
           minWidth: 75,
         },
-        '&$selected': {
+        '&$selected, &$selected:hover': {
           fontFamily: 'LatoWebBold',
+          color: primaryColors.headline
         },
         '&:hover': {
           color: primaryColors.main,
@@ -971,6 +988,7 @@ const themeDefaults: ThemeOptions = {
           color: '#32363C',
         },
       },
+      selected: {}
     },
     MuiTable: {
       root: {
