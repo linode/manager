@@ -6,7 +6,9 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import hasMutationAvailable, { HasMutationAvailable } from '../hasMutationAvailable';
+import hasMutationAvailable, {
+  HasMutationAvailable
+} from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
@@ -34,18 +36,24 @@ interface Props {
   tags: string[];
   mostRecentBackup: string | null;
 
-  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
-  toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
+  openConfigDrawer: (
+    configs: Linode.Config[],
+    action: LinodeConfigSelectionDrawerCallback
+  ) => void;
+  toggleConfirmation: (
+    bootOption: Linode.BootAction,
+    linodeId: number,
+    linodeLabel: string
+  ) => void;
 }
 
-export type CombinedProps =
-  & Props
-  & HasMutationAvailable
-  & WithRecentEvent
-  & WithNotifications
-  & StyleProps
+export type CombinedProps = Props &
+  HasMutationAvailable &
+  WithRecentEvent &
+  WithNotifications &
+  StyleProps;
 
-export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
+export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
   const {
     // linode props
     backups,
@@ -58,7 +66,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
     tags,
     mostRecentBackup,
     disk,
-    vcpus,  
+    vcpus,
     memory,
     type,
     image,
@@ -69,54 +77,72 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = (props) => {
     toggleConfirmation,
     // displayType, @todo use for M3-2059
     recentEvent,
-    mutationAvailable,
+    mutationAvailable
   } = props;
 
   const loading = linodeInTransition(status, recentEvent);
 
-  const headCell = <LinodeRowHeadCell
-    loading={loading}
-    recentEvent={recentEvent}
-    backups={backups}
-    id={id}
-    type={type}
-    ipv4={ipv4}
-    ipv6={ipv6}
-    label={label}
-    region={region}
-    status={status}
-    tags={tags}
-    mostRecentBackup={mostRecentBackup}
-    disk={disk}
-    vcpus={vcpus}  
-    memory={memory}
-    image={image}
-
-  />
+  const headCell = (
+    <LinodeRowHeadCell
+      loading={loading}
+      recentEvent={recentEvent}
+      backups={backups}
+      id={id}
+      type={type}
+      ipv4={ipv4}
+      ipv6={ipv6}
+      label={label}
+      region={region}
+      status={status}
+      tags={tags}
+      mostRecentBackup={mostRecentBackup}
+      disk={disk}
+      vcpus={vcpus}
+      memory={memory}
+      image={image}
+    />
+  );
 
   return (
     <React.Fragment>
-      {loading && <LinodeRowLoading linodeStatus={status} linodeId={id} linodeRecentEvent={recentEvent}>
-        {headCell}
-      </ LinodeRowLoading>}
+      {loading && (
+        <LinodeRowLoading
+          linodeStatus={status}
+          linodeId={id}
+          linodeRecentEvent={recentEvent}
+        >
+          {headCell}
+        </LinodeRowLoading>
+      )}
       <TableRow
         key={id}
         className={classes.bodyRow}
         data-qa-loading
         data-qa-linode={label}
         rowLink={`/linodes/${id}`}
-        arial-label={label}
+        aria-label={label}
       >
-      {!loading && headCell}
+        {!loading && headCell}
         <LinodeRowTagCell tags={tags} />
-        <LinodeRowBackupCell linodeId={id} mostRecentBackup={mostRecentBackup || ''} />
-        <TableCell parentColumn="IP Addresses" className={classes.ipCell} data-qa-ips>
+        <LinodeRowBackupCell
+          linodeId={id}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
+        <TableCell
+          parentColumn="IP Addresses"
+          className={classes.ipCell}
+          data-qa-ips
+        >
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={ipv4} copyRight showCopyOnHover />
             <IPAddress ips={[ipv6]} copyRight showCopyOnHover />
           </div>
         </TableCell>
-        <TableCell parentColumn="Region" className={classes.regionCell} data-qa-region>
+        <TableCell
+          parentColumn="Region"
+          className={classes.regionCell}
+          data-qa-region
+        >
           <RegionIndicator region={region} />
         </TableCell>
         <TableCell className={classes.actionCell} data-qa-notifications>
@@ -145,21 +171,21 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withRecentEvent,
   hasMutationAvailable,
-  withNotifications,
+  withNotifications
 );
 
 export default enhanced(LinodeRow);
 
 export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[],
-  classes: any
-}> = (props) => {
+  linodeNotifications: Linode.Notification[];
+  classes: any;
+}> = props => {
   /*
-  * Render either a flag for if the Linode has a notification
-  * or if it has a pending mutation available. Mutations take
-  * precedent over notifications
-  */
+   * Render either a flag for if the Linode has a notification
+   * or if it has a pending mutation available. Mutations take
+   * precedent over notifications
+   */
   const { mutationAvailable, linodeNotifications, classes } = props;
 
   if (mutationAvailable) {
@@ -167,20 +193,20 @@ export const RenderFlag: React.StatelessComponent<{
       <Tooltip title="There is a free upgrade available for this Linode">
         <Flag className={classes.flag} />
       </Tooltip>
-    )
+    );
   }
   if (linodeNotifications.length > 0) {
     return (
       <>
-        {
-          linodeNotifications.map((notification, idx) => (
-            <Tooltip key={idx} title={notification.message}><Flag className={classes.flag} /></Tooltip>
-          ))
-        }
+        {linodeNotifications.map((notification, idx) => (
+          <Tooltip key={idx} title={notification.message}>
+            <Flag className={classes.flag} />
+          </Tooltip>
+        ))}
       </>
     );
   }
   return null;
-}
+};
 
 RenderFlag.displayName = `RenderFlag`;
