@@ -24,7 +24,7 @@ const NodeBalancersTableWrapper: React.StatelessComponent<CombinedProps> = (prop
     <Paper className={classes.paperWrapper}>
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
-          <Table arial-label="List of NodeBalancers">
+          <Table aria-label="List of NodeBalancers">
             <SortableTableHead order={order} orderBy={orderBy} handleOrderChange={handleOrderChange} />
             {props.children}
           </Table>
