@@ -14,7 +14,8 @@ type ClassNames =
   | 'ports'
   | 'tagGroup'
   | 'title'
-  | 'transferred';
+  | 'transferred'
+  | 'region';
 
 const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   ip: {
@@ -25,6 +26,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '15%',
     minWidth: 150,
     paddingLeft: 65
+  },
+  region: {
+    width: '15%',
+    minWidth: 150,
   },
   nodeStatus: {
     width: '10%',
@@ -71,7 +76,7 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = (props) => {
         <TableCell className={classes.ports}>Ports</TableCell>
         <TableCell className={classes.ip} noWrap>IP Addresses</TableCell>
         <TableSortCell
-          className={classes.nameCell}
+          className={classes.region}
           active={isActive('region')}
           label="region"
           direction={order}
