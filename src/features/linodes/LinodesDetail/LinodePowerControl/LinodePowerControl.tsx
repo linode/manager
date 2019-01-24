@@ -50,18 +50,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: theme.color.white,
     transition: theme.transitions.create(['background-color', 'color', 'border-color']),
     border: `1px solid ${theme.color.border1}`,
-    padding: '12px 16px 13px',
     minWidth: 145,
     '&:hover, &.active': {
-      borderColor: theme.palette.primary.main,
-      backgroundColor: theme.palette.primary.main,
+      borderColor: theme.palette.primary.light,
+      backgroundColor: theme.palette.primary.light,
       color: 'white',
-      '& svg': {
+      '& $caret, & $powerOn, & $powerOff': {
         color: 'white',
       },
     },
+    '&:focus': {
+      backgroundColor: 'white'
+    }
   },
   caret: {
+    color: theme.palette.primary.main,
     transition: theme.transitions.create(['color']),
     position: 'relative',
     top: 2,
@@ -84,9 +87,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   powerOn: {
     color: theme.color.green,
+    transition: theme.transitions.create(['color']),
   },
   powerOff: {
     color: theme.color.red,
+    transition: theme.transitions.create(['color']),
   },
   rotate: {
     animation: 'rotate 2s linear infinite',
