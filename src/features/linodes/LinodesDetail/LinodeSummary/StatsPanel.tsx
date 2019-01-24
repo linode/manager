@@ -23,7 +23,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    paddingBottom: '32px'
+    padding: theme.spacing.unit * 2,
+    paddingTop: 0
   },
   title: {
     padding: theme.spacing.unit * 2
