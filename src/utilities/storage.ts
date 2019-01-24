@@ -1,25 +1,33 @@
 import * as Cookies from 'js-cookie';
+import ErrorClass from 'src/ErrorClass';
+import * as Store from 'store';
+
+export class LocalStorageAccessError extends ErrorClass {
+  constructor(message?: string) {
+    super(message);
+    this.name = `LocalStorageAccessError`;
+  }
+}
 
 export const getStorage = (key: string, fallback?: any) => {
-  const item = window.localStorage.getItem(key);
-  /*
-  * Basically, if localstorage doesn't exist,
-  * return whatever we set as a fallback
-  */
-  if (item === null && !!fallback) {
-    return fallback;
-  }
-
   try {
-    return JSON.parse(item as any);
-  } catch (e) {
-    return item;
+    return Store.get(key, fallback);
+  } catch (error) {
+    throw new LocalStorageAccessError(
+      `Unable to access key ${key} from storage.`
+    );
   }
-}
+};
 
-export const setStorage = (key: string, value: string) => {
-  return window.localStorage.setItem(key, value);
-}
+export const setStorage = (key: string, value: any) => {
+  try {
+    return Store.set(key, value);
+  } catch (error) {
+    throw new LocalStorageAccessError(
+      `Unable to access key ${key} from storage.`
+    );
+  }
+};
 
 const THEME = 'themeChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
@@ -48,72 +56,74 @@ export interface Storage {
     linode: {
       get: () => LinodeView;
       set: (view: LinodeView) => void;
-    },
+    };
     grouped: {
-      get: () => 'true' | 'false';
-      set: (v: 'true' | 'false') => void;
-    },
+      get: () => boolean;
+      set: (v: boolean) => void;
+    };
   };
   loginCloudManager: {
     get: () => undefined | string;
     set: (v: string | object, options?: Cookies.CookieAttributes) => void;
   };
   hideGroupImportCTA: {
-    get: () => 'true' | 'false';
+    get: () => boolean;
     set: () => void;
   };
   hasImportedGroups: {
-    get: () => 'true' | 'false';
+    get: () => boolean;
     set: () => void;
   };
   groupDomainsByTag: {
     get: () => boolean;
-    set: (v: 'true' | 'false') => void;
+    set: (v: boolean) => void;
   };
-};
+}
 
 export const storage: Storage = {
   theme: {
     get: () => getStorage(THEME, 'light'),
-    set: (v) => setStorage(THEME, v),
+    set: v => setStorage(THEME, v)
   },
   notifications: {
     welcome: {
       /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
       get: () => getStorage(BETA_NOTIFICATION, 'open'),
-      set: (open) => setStorage(BETA_NOTIFICATION, open),
+      set: open => setStorage(BETA_NOTIFICATION, open)
     }
   },
   views: {
     linode: {
       get: (): LinodeView => getStorage(LINODE_VIEW),
-      set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
+      set: (view: LinodeView) => setStorage(LINODE_VIEW, view)
     },
     grouped: {
       get: () => getStorage(GROUP_LINODES),
-      set: (v) => setStorage(GROUP_LINODES, v),
-    },
+      set: v => setStorage(GROUP_LINODES, v)
+    }
   },
   loginCloudManager: {
     get: () => Cookies.get('loginCloudManager'),
     set: (
       v: string | object,
-      options: Cookies.CookieAttributes = { domain: '.linode.com', expires: 1000 * 60 * 60 * 24 * 356 },
-    ) =>
-      Cookies.set('loginCloudManager', v, options),
+      options: Cookies.CookieAttributes = {
+        domain: '.linode.com',
+        expires: 1000 * 60 * 60 * 24 * 356
+      }
+    ) => Cookies.set('loginCloudManager', v, options)
   },
   hideGroupImportCTA: {
     get: () => getStorage(HIDE_DISPLAY_GROUPS_CTA),
-    set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, 'true')
+    set: () => setStorage(HIDE_DISPLAY_GROUPS_CTA, true)
   },
   hasImportedGroups: {
     get: () => getStorage(HAS_IMPORTED_GROUPS),
-    set: () => setStorage(HAS_IMPORTED_GROUPS, 'true')
+    set: () => setStorage(HAS_IMPORTED_GROUPS, true)
   },
   groupDomainsByTag: {
     get: () => getStorage(GROUP_DOMAINS),
-    set: (v) => setStorage(GROUP_DOMAINS, v)
-  },
-}
+    set: v => setStorage(GROUP_DOMAINS, v)
+  }
+};
 
 export const { theme, notifications, views } = storage;

@@ -2089,6 +2089,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/store@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/store/-/store-2.0.1.tgz#7307dce59365b14b8030b0dadc0f7e584749da44"
+  integrity sha512-ovw9CatPd5Z5hcRxgtkZqVU4H9Z4l9fEzd/HrIDfMJM57D48F9rKqk6lLdtcCOv6kBWlzMPyJxcemlC10+rJ4g==
+
 "@types/storybook__addon-actions@^3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@types/storybook__addon-actions/-/storybook__addon-actions-3.4.1.tgz#8f90d76b023b58ee794170f2fe774a3fddda2c1d"
@@ -12798,6 +12803,11 @@ stealthy-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
+
+store@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
+  integrity sha1-jFNOKguDH3K3X8XxEZhXxE711ZM=
 
 storybook-react-router@^1.0.2:
   version "1.0.2"

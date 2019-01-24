@@ -393,7 +393,7 @@ const toggleGroupState = withStateHandlers(
   },
   {
     toggleGroupByTag: (state, ownProps) => (e, checked) => {
-      storage.views.grouped.set(checked ? 'true' : 'false')
+      storage.views.grouped.set(checked)
 
       sendEvent({
         category: ListLinodes.eventCategory,

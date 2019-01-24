@@ -321,7 +321,7 @@ const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUp
   },
   (storage) => ({
     toggleGroupByTag: (state) => (checked: boolean) => {
-      storage.groupDomainsByTag.set(checked ? 'true' : 'false');
+      storage.groupDomainsByTag.set(checked);
 
       sendEvent({
         category: DomainsLanding.eventCategory,
