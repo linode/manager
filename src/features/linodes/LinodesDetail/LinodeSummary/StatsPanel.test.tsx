@@ -15,6 +15,7 @@ const component = shallow(
       'root':'',
       'spinner':'',
       'title':'',
+      'graphsUnavailable': ''
     }}
     title={title}
     height={300}
@@ -39,5 +40,9 @@ describe("StatsPanel component", () => {
   it("should call its renderContent function if neither error or loading", () => {
     component.setProps({ error: undefined });
     expect(renderMain).toHaveBeenCalled();
+  });
+  it("should render a friendly message if graph data is not yet available", () => {
+    component.setProps({ isTooEarlyForGraphData: true });
+    expect(component.find('[data-qa-graphs-unavailable]').children().text()).toBe('Graphs for this Linode are not yet available – check back later');
   });
 });
