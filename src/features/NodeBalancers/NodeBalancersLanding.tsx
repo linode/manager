@@ -358,7 +358,7 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
                   <NodeBalancer className={classes.icon}/>
                 </Grid>
                 <Grid item>
-                  {nodeBalancer.label}
+                  <Typography variant="h3">{nodeBalancer.label}</Typography>
                   <div className={classes.tagWrapper}>
                     <Tags tags={nodeBalancer.tags} />
                   </div>
