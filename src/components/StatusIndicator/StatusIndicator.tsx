@@ -80,18 +80,3 @@ export const getStatusForDomain = (status: string) => {
   }
 }
 
-export const getStatusForVolume = (status: string) => {
-  switch (status) {
-    case 'creating':
-    case 'resizing':
-      return 'loading';
-    case 'active':
-      return 'active';
-    case 'contact_support':
-      return 'error';
-    default:
-      return 'inactive';
-  }
-}
-
-
