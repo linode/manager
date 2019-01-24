@@ -3,7 +3,12 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, RouteProps, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  RouteProps,
+  Switch
+} from 'react-router-dom';
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
 import DefaultLoader from 'src/components/DefaultLoader';
@@ -22,10 +27,14 @@ import App from './App';
 import './events';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import { initialize as sessionInitialize, refreshOAuthOnUserInteraction, refreshOAuthToken } from './session';
+import {
+  initialize as sessionInitialize,
+  refreshOAuthOnUserInteraction,
+  refreshOAuthToken
+} from './session';
 
 const Lish = DefaultLoader({
-  loader: () => import('src/features/Lish'),
+  loader: () => import('src/features/Lish')
 });
 
 /*
@@ -38,14 +47,14 @@ if (theme.get() === 'dark') {
   sendEvent({
     category: 'Theme Choice',
     action: 'Dark Theme',
-    label: location.pathname,
-  })
+    label: location.pathname
+  });
 } else {
   sendEvent({
     category: 'Theme Choice',
     action: 'Light Theme',
-    label: location.pathname,
-  })
+    label: location.pathname
+  });
 }
 
 /**
@@ -59,25 +68,18 @@ createBrowserHistory().listen(({ pathname }) => {
 });
 
 sessionInitialize();
-if (!(isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname))) {
+if (!isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname)) {
   refreshOAuthToken();
 }
 refreshOAuthOnUserInteraction();
 
-const renderNullAuth = () =>
-  <span>null auth route</span>
+const renderNullAuth = () => <span>null auth route</span>;
 
-const renderNull = () =>
-  <span>null route</span>
+const renderNull = () => <span>null route</span>;
 
-const renderLish = () =>
+const renderApp = (props: RouteProps) => (
   <LinodeThemeWrapper>
-    {(toggle) => (<Lish />)}
-  </LinodeThemeWrapper>
-
-const renderApp = (props: RouteProps) =>
-  <LinodeThemeWrapper>
-    {(toggle) => (
+    {toggle => (
       <SnackBar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         maxSnack={3}
@@ -89,11 +91,11 @@ const renderApp = (props: RouteProps) =>
       </SnackBar>
     )}
   </LinodeThemeWrapper>
+);
 
-const renderAuthentication = () =>
+const renderAuthentication = () => (
   <AuthenticationWrapper>
     <Switch>
-      <Route path="/linodes/:linodeId/lish" render={renderLish} />
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
       <Route exact path="/nullauth" render={renderNullAuth} />
@@ -101,16 +103,18 @@ const renderAuthentication = () =>
       <Route render={renderApp} />
     </Switch>
   </AuthenticationWrapper>
+);
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
         {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+        <Route path="/linodes/:linodeId/lish" compo={Lish} />
         <Route exact path="/null" render={renderNull} />
         <Route render={renderAuthentication} />
       </Switch>
     </Router>
   </Provider>,
-  document.getElementById('root') as HTMLElement,
+  document.getElementById('root') as HTMLElement
 );

@@ -1,32 +1,44 @@
 import * as React from 'react';
-import { matchPath, Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import {
+  matchPath,
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter
+} from 'react-router-dom';
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
+import { withThemWrapper } from 'src/LinodeThemeWrapper';
 import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   tabs: {
     backgroundColor: theme.bg.offWhite,
-    margin: 0,
+    margin: 0
   },
   tabRoot: {
-    minWidth: '50%',
+    minWidth: '50%'
   },
   progress: {
-    height: 'auto',
+    height: 'auto'
   },
   notFound: {
     color: '#f4f4f4 !important',
     '& h1': {
-      color: '#f4f4f4 !important',
-    },
+      color: '#f4f4f4 !important'
+    }
   }
 });
 
@@ -36,18 +48,23 @@ interface State {
   token?: string;
 }
 
-type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{ linodeId?: string }>;
+type CombinedProps = WithStyles<ClassNames> &
+  RouteComponentProps<{ linodeId?: string }>;
 
 class Lish extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: true,
+    loading: true
   };
 
   mounted: boolean;
 
   componentDidMount() {
     this.mounted = true;
-    const { match: { params: { linodeId } } } = this.props;
+    const {
+      match: {
+        params: { linodeId }
+      }
+    } = this.props;
 
     const webLishCss = import('' + '../../assets/weblish/weblish.css');
     const xtermCss = import('' + '../../assets/weblish/xterm.css');
@@ -59,16 +76,20 @@ class Lish extends React.Component<CombinedProps, State> {
     }
 
     getLinode(+linodeId)
-      .then((response) => {
+      .then(response => {
         const { data: linode } = response;
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
         this.setState({
           linode,
-          loading: false,
+          loading: false
         });
       })
       .catch(() => {
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
         this.setState({ loading: false });
       });
 
@@ -80,7 +101,11 @@ class Lish extends React.Component<CombinedProps, State> {
   }
 
   refreshToken = () => {
-    const { match: { params: { linodeId } } } = this.props;
+    const {
+      match: {
+        params: { linodeId }
+      }
+    } = this.props;
 
     if (!linodeId) {
       this.setState({ loading: false });
@@ -88,52 +113,73 @@ class Lish extends React.Component<CombinedProps, State> {
     }
 
     return getLinodeLishToken(+linodeId)
-      .then((response) => {
-        const { data: { lish_token: token } } = response;
-        if (!this.mounted) { return; }
+      .then(response => {
+        const {
+          data: { lish_token: token }
+        } = response;
+        if (!this.mounted) {
+          return;
+        }
         this.setState({
           token,
-          loading: false,
+          loading: false
         });
       })
       .catch(() => {
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
         this.setState({ loading: false });
       });
-  }
+  };
 
-  handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
+  handleTabChange = (
+    event: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
-  }
+  };
 
   tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { routeName: `${this.props.match.url}/weblish`, title: 'Weblish' },
-    { routeName: `${this.props.match.url}/glish`, title: 'Glish' },
+    { routeName: `${this.props.match.url}/glish`, title: 'Glish' }
   ];
 
-  matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
+  matches = (p: string) =>
+    Boolean(matchPath(p, { path: this.props.location.pathname }));
 
   renderWeblish = () => {
     const { linode, token } = this.state;
     if (linode && token) {
-      return <Weblish token={token} linode={linode} refreshToken={this.refreshToken} />;
+      return (
+        <Weblish
+          token={token}
+          linode={linode}
+          refreshToken={this.refreshToken}
+        />
+      );
     }
     return null;
-  }
+  };
 
   renderGlish = () => {
     const { linode, token } = this.state;
     if (linode && token) {
-      return <Glish token={token} linode={linode} refreshToken={this.refreshToken}/>;
+      return (
+        <Glish token={token} linode={linode} refreshToken={this.refreshToken} />
+      );
     }
     return null;
-  }
+  };
 
   render() {
-    const { classes, match: { path } } = this.props;
+    const {
+      classes,
+      match: { path }
+    } = this.props;
     const { loading, linode, token } = this.state;
 
     return (
@@ -147,35 +193,39 @@ class Lish extends React.Component<CombinedProps, State> {
           variant="scrollable"
           scrollButtons="on"
         >
-          {this.tabs.map(tab =>
+          {this.tabs.map(tab => (
             <Tab
               classes={{
-                root: classes.tabRoot,
+                root: classes.tabRoot
               }}
               key={tab.title}
               label={tab.title}
               data-qa-tab={tab.title}
-            />)}
+            />
+          ))}
         </Tabs>
-        {loading &&
-          <CircleProgress noInner className={classes.progress}/>
-        }
+        {loading && <CircleProgress noInner className={classes.progress} />}
         {/* Only show 404 component if we are missing _both_ linode and token */}
-        {(!loading && !linode && !token) &&
-          <NotFound className={classes.notFound}/>
-        }
-        {(!loading && token && linode) &&
+        {!loading && !linode && !token && (
+          <NotFound className={classes.notFound} />
+        )}
+        {!loading && token && linode && (
           <Switch>
             <Route exact path={`${path}/weblish`} render={this.renderWeblish} />
             <Route exact path={`${path}/glish`} render={this.renderGlish} />
           </Switch>
-        }
+        )}
       </React.Fragment>
     );
   }
 }
 
-
 const styled = withStyles(styles);
 
-export default styled(withRouter(Lish));
+const enhanced = compose(
+  styled,
+  withRouter,
+  withThemWrapper
+);
+
+export default enhanced(Lish);
