@@ -23,7 +23,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: '60%',
   },
   domainRow: {
-    height: 75,
     backgroundColor: theme.bg.white,
   },
   icon: {
