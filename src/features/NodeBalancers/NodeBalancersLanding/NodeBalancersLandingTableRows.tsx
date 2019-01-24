@@ -68,7 +68,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = (
               data-qa-nodebalancer-cell
               rowLink={`/nodebalancers/${nodeBalancer.id}`}
               className="fade-in-table"
-              arial-label={nodeBalancer.label}
+              aria-label={nodeBalancer.label}
             >
               <TableCell parentColumn="Name" data-qa-nodebalancer-label>
                 <Link to={`/nodebalancers/${nodeBalancer.id}`}>
