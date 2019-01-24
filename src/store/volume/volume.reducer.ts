@@ -1,8 +1,9 @@
+import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart, updateInPlace } from '../store.helpers';
-import { attachVolumeActions, cloneVolumeActions, createVolumeActions, deleteVolumeActions, detachVolumeActions, getAllVolumesActions, getOneVolumeActions, resizeVolumeActions, updateVolumeActions, updateVolumeInStore } from './volume.actions';
+import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
+import { createVolumeActions, deleteVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions } from './volume.actions';
 
 export type State = MappedEntityState<Linode.Volume>;
 
@@ -47,56 +48,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   /*
-  * Attach Volume
-  */
-  if (isType(action, attachVolumeActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state)
-  }
-  /*
-  * Detach Volume
-  */
-  if (isType(action, detachVolumeActions.done)) {
-    const { volumeId } = action.payload.params;
-
-    const updateFn = (existing: Linode.Volume) => ({ ...existing, linode_id: null });
-
-    return updateInPlace(volumeId, updateFn, state);
-  }
-
-  /*
-  * Clone Volume
-  */
-  if (isType(action, cloneVolumeActions.done)) {
-    const { result } = action.payload;
-
-    // When we send a POST to clone a volume, we get back a 200 with the new volume as JSON. The status will be
-    // "creating", since it takes some time to clone a volume. There's a problem: the event notification that we will
-    // get back in a few seconds from the API won't include the new volume. The status will at this point still be
-    // "creating" most likely, and WE WILL NOT GET ANOTHER EVENT WHEN THE STATUS IS ACTIVE.
-    //
-    // Therefore, we will have a volume that is stuck in a "creating" state until the next request to get all volumes.
-    //
-    // We don't know how long this will take, so we can't simply delay a request to get all volumes from the time the
-    // cloning notification event comes through. So, at this point, we will choose to hardcode the status as "active"
-    // once a POST to clone a volume is successful.
-    //
-    // THIS IS NOT IDEAL, AND SHOULD BE IMPROVED!
-    const hardcodedStatus: Linode.VolumeStatus = 'active';
-    const resultHardcodedWithActiveStatus = { ...result, status: hardcodedStatus }
-
-    return onCreateOrUpdate(resultHardcodedWithActiveStatus, state)
-  }
-
-  /*
-  * Resize Volume
-  */
-  if (isType(action, resizeVolumeActions.done)) {
-    const { result } = action.payload;
-    return onCreateOrUpdate(result, state);
-  }
-
-  /*
   * Get One Volume
   */
   if (isType(action, getOneVolumeActions.done)) {
@@ -108,7 +59,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   * Get All Volumes
   **/
   if (isType(action, getAllVolumesActions.started)) {
-    return onStart(state);
+    const shouldSetLoading = pathOr(true, ['payload', 'shouldSetLoading'], action);
+    if (shouldSetLoading) {
+      return onStart(state);
+    }
   }
   if (isType(action, getAllVolumesActions.done)) {
     const { result } = action.payload;
@@ -117,14 +71,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, getAllVolumesActions.failed)) {
     const { error } = action.payload;
     return onError(error, state)
-  }
-
-  /*
-  * Update Volume in Store
-  **/
-  if (isType(action, updateVolumeInStore)) {
-    const { volumeId, update } = action.payload;
-    return updateInPlace(volumeId, update, state);
   }
 
   return state;

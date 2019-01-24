@@ -23,10 +23,10 @@ export const detachVolumeActions = actionCreator.async<VolumeId, {}, Linode.ApiF
 export const cloneVolumeActions = actionCreator.async<CloneVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`clone`);
 export const resizeVolumeActions = actionCreator.async<ResizeVolumeParams, Linode.Volume, Linode.ApiFieldError[]>(`resize`);
 
-export const getAllVolumesActions = actionCreator.async<void, Linode.Volume[], Linode.ApiFieldError[]>('get-all');
-
-export interface UpdateVolumeInStore {
-  volumeId: number;
-  update: (volume: Linode.Volume) => Linode.Volume;
+// We want to provide the option NOT to set { loading: true } when requesting all Volumes.
+// Specifically, after cloning, we need to "getAllVolumes", but we want to do this "in the background",
+// so that the loading spinner doesn't take over the page.
+export interface GetAllVolumesOptions {
+  setLoading?: boolean;
 }
-export const updateVolumeInStore = actionCreator<UpdateVolumeInStore>('update-volume-in-store');
+export const getAllVolumesActions = actionCreator.async<GetAllVolumesOptions, Linode.Volume[], Linode.ApiFieldError[]>('get-all');
