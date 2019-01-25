@@ -3,7 +3,7 @@ import { API_ROOT } from 'src/constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
-type Token = Linode.Token
+type Token = Linode.Token;
 
 /**
  * getAppTokens
@@ -16,14 +16,8 @@ export const getAppTokens = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/profile/apps`),
-  )
-    .then(response => {
-      const data = response.data;
-      // remove linode apps from the list
-      data.data = data.data.filter(app => !app.website || !/.linode.com$/.test(app.website));
-      return data;
-    });
+    setURL(`${API_ROOT}/profile/apps`)
+  ).then(response => response.data);
 
 /**
  * getAppToken
@@ -35,9 +29,8 @@ export const getAppTokens = (params?: any, filters?: any) =>
 export const getAppToken = (tokenId: number) =>
   Request<Token>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/profile/apps/${tokenId}`),
-  )
-    .then(response => response.data);
+    setURL(`${API_ROOT}/profile/apps/${tokenId}`)
+  ).then(response => response.data);
 
 /**
  * deleteAppToken
@@ -50,6 +43,5 @@ export const getAppToken = (tokenId: number) =>
 export const deleteAppToken = (tokenId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/profile/apps/${tokenId}`),
-    setMethod('DELETE'),
+    setMethod('DELETE')
   );
-
