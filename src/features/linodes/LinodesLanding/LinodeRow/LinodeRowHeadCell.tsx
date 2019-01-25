@@ -51,7 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   dashboard: {
-    width: '60%'
+    width: '70%'
   },
   status: {
     marginLeft: theme.spacing.unit / 2,
