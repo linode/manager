@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -114,7 +113,7 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
-  isDashboard?: boolean;
+  width?: string;
 
   loading: boolean;
   recentEvent?: Linode.Event;
@@ -145,7 +144,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     recentEvent,
     displayType,
     imagesData,
-    isDashboard
+    width
   } = props;
 
   const description = getLinodeDescription(
@@ -159,10 +158,8 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <TableCell
-      className={classNames({
-        [classes.root]: true,
-        [classes.dashboard]: isDashboard
-      })}
+      className={classes.root}
+      style={{ width }}
       rowSpan={loading ? 2 : 1}
     >
       <Link to={`/linodes/${id}`} className={classes.link}>

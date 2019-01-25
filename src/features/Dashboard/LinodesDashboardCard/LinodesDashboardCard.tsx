@@ -134,7 +134,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             memory={linode.specs.memory}
             type={linode.type}
             image={linode.image}
-            isDashboard={true}
+            width={'70%'}
           />
           <Hidden xsDown>
             <TableCell className={classes.moreCol} data-qa-linode-region>
