@@ -156,12 +156,10 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     imagesData
   );
 
+  const style = width ? { width: `${width}%` } : {};
+
   return (
-    <TableCell
-      className={classes.root}
-      style={{ width: `${width}%` }}
-      rowSpan={loading ? 2 : 1}
-    >
+    <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
       <Link to={`/linodes/${id}`} className={classes.link}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
