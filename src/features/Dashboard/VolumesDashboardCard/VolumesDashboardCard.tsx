@@ -5,7 +5,11 @@ import { Subscription } from 'rxjs/Subscription';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -21,7 +25,7 @@ import { getVolumes } from 'src/services/volumes';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
-  'root'
+  | 'root'
   | 'icon'
   | 'labelGridWrapper'
   | 'description'
@@ -30,7 +34,7 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   icon: {
     position: 'relative',
@@ -38,31 +42,31 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 40,
     height: 40,
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
-    },
+      stroke: theme.bg.main
+    }
   },
   labelGridWrapper: {
     paddingLeft: '4px !important',
-    paddingRight: '4px !important',
+    paddingRight: '4px !important'
   },
   description: {
-    paddingTop: theme.spacing.unit / 2,
+    paddingTop: theme.spacing.unit / 2
   },
   labelCol: {
-    width: '60%',
+    width: '70%'
   },
   moreCol: {
-    width: '30%',
+    width: '30%'
   },
   actionsCol: {
-    width: '10%',
+    width: '10%'
   },
   wrapHeader: {
-    wordBreak: 'break-all',
-  },
+    wordBreak: 'break-all'
+  }
 });
 
 interface State {
@@ -76,7 +80,7 @@ type CombinedProps = WithStyles<ClassNames>;
 
 class VolumesDashboardCard extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: true,
+    loading: true
   };
 
   mounted: boolean = false;
@@ -84,7 +88,9 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
   subscription: Subscription;
 
   requestData = (initial: boolean = false) => {
-    if (!this.mounted) { return; }
+    if (!this.mounted) {
+      return;
+    }
 
     if (initial) {
       this.setState({ loading: true });
@@ -92,17 +98,22 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
 
     getVolumes({ page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
       .then(({ data, results }) => {
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
         this.setState({
           loading: false,
           data: take(5, data),
-          results,
-        })
+          results
+        });
       })
-      .catch((error) => {
-        this.setState({ loading: false, errors: [{ reason: 'Unable to load Volumes.' }] })
-      })
-  }
+      .catch(error => {
+        this.setState({
+          loading: false,
+          errors: [{ reason: 'Unable to load Volumes.' }]
+        });
+      });
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -112,7 +123,11 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
     this.subscription = events$
       .filter(e => !e._initial)
       .filter(e => Boolean(e.entity && e.entity.type === 'volume'))
-      .filter(e => Boolean(this.state.data && this.state.data.length < 5) || isFoundInData(e.entity!.id, this.state.data))
+      .filter(
+        e =>
+          Boolean(this.state.data && this.state.data.length < 5) ||
+          isFoundInData(e.entity!.id, this.state.data)
+      )
       .subscribe(() => this.requestData(false));
   }
 
@@ -123,21 +138,24 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
 
   render() {
     return (
-      <DashboardCard title="Volumes" headerAction={this.renderAction} data-qa-dash-volume>
+      <DashboardCard
+        title="Volumes"
+        headerAction={this.renderAction}
+        data-qa-dash-volume
+      >
         <Paper>
           <Table>
-            <TableBody>
-              {this.renderContent()}
-            </TableBody>
+            <TableBody>{this.renderContent()}</TableBody>
           </Table>
         </Paper>
       </DashboardCard>
     );
   }
 
-  renderAction = () => this.state.results && this.state.results > 5
-    ? <Link to={'/volumes'}>View All</Link>
-    : null;
+  renderAction = () =>
+    this.state.results && this.state.results > 5 ? (
+      <Link to={'/volumes'}>View All</Link>
+    ) : null;
 
   renderContent = () => {
     const { loading, data, errors } = this.state;
@@ -154,14 +172,15 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
     }
 
     return this.renderEmpty();
-  }
-
-  renderLoading = () => {
-    return <TableRowLoading colSpan={3} />
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) =>
-    <TableRowError colSpan={3} message={`Unable to load Volumes.`} />;
+  renderLoading = () => {
+    return <TableRowLoading colSpan={3} />;
+  };
+
+  renderErrors = (errors: Linode.ApiFieldError[]) => (
+    <TableRowError colSpan={3} message={`Unable to load Volumes.`} />
+  );
 
   renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
@@ -173,11 +192,11 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
-              <VolumeIcon className={classes.icon}/>
+              <VolumeIcon className={classes.icon} />
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
               <Typography role="header" variant="h3" data-qa-label>
-              {label}
+                {label}
               </Typography>
               <Typography className={classes.description}>
                 {size} GiB
@@ -193,7 +212,6 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
       </TableRow>
     ));
   };
-
 }
 
 const styled = withStyles(styles);
