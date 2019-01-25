@@ -113,7 +113,7 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
-  width?: string;
+  width?: number;
 
   loading: boolean;
   recentEvent?: Linode.Event;
@@ -159,7 +159,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
   return (
     <TableCell
       className={classes.root}
-      style={{ width }}
+      style={{ width: `${width}%` }}
       rowSpan={loading ? 2 : 1}
     >
       <Link to={`/linodes/${id}`} className={classes.link}>
