@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -67,7 +68,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = (
               data-qa-nodebalancer-cell
               rowLink={`/nodebalancers/${nodeBalancer.id}`}
               className="fade-in-table"
-              arial-label={nodeBalancer.label}
+              aria-label={nodeBalancer.label}
             >
               <TableCell parentColumn="Name" data-qa-nodebalancer-label>
                 <Link to={`/nodebalancers/${nodeBalancer.id}`}>
@@ -76,7 +77,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<CombinedProps> = (
                       <NodeBalancer className={classes.icon} />
                     </Grid>
                     <Grid item>
-                      {nodeBalancer.label}
+                    <Typography variant="h3">{nodeBalancer.label}</Typography>
                       <div className={classes.tagWrapper}>
                         <Tags tags={nodeBalancer.tags} />
                       </div>
