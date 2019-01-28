@@ -1,6 +1,10 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
@@ -8,15 +12,15 @@ import PaginationControls from '../PaginationControls';
 
 type ClassNames = 'root' | 'padded';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  return ({
+const styles: StyleRulesCallback<ClassNames> = theme => {
+  return {
     root: {
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing.unit
     },
     padded: {
-      padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
-    },
-  });
+      padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit}px`
+    }
+  };
 };
 
 export interface PaginationProps {
@@ -35,13 +39,23 @@ interface Props extends PaginationProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PaginationFooter extends React.PureComponent<CombinedProps> {
-
-  handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => this.props.handleSizeChange(+e.target.value);
+  handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    this.props.handleSizeChange(+e.target.value);
 
   render() {
-    const { classes, count, page, pageSize, handlePageChange, padded, eventCategory } = this.props;
+    const {
+      classes,
+      count,
+      page,
+      pageSize,
+      handlePageChange,
+      padded,
+      eventCategory
+    } = this.props;
 
-    if (count <= pageSize) { return null; }
+    if (count <= 25) {
+      return null;
+    }
 
     return (
       <Grid
@@ -50,8 +64,9 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
         alignItems="center"
         className={classNames({
           [classes.root]: true,
-          [classes.padded]: padded,
-        })}>
+          [classes.padded]: padded
+        })}
+      >
         <Grid item>
           <PaginationControls
             onClickHandler={handlePageChange}
@@ -78,6 +93,5 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
     );
   }
 }
-
 
 export default withStyles(styles)(PaginationFooter);
