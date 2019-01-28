@@ -5,5 +5,8 @@ export const isRecent = (a: string, b: string) => {
   const timeToCompare = moment.utc(a);
   const twentyFourHoursBeforeB = moment.utc(b).subtract(24, 'hours');
 
-  return timeToCompare.isBefore(moment.utc(b)) && timeToCompare.isAfter(twentyFourHoursBeforeB);
-}
+  return (
+    timeToCompare.isBefore(moment.utc(b)) &&
+    timeToCompare.isAfter(twentyFourHoursBeforeB)
+  );
+};

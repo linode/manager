@@ -2,25 +2,30 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'checkoutSection'
   | 'noBorder'
   | 'sidebarTitle'
   | 'detail'
   | 'createButton';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   root: {
     minHeight: '24px',
@@ -30,26 +35,26 @@ type ClassNames = 'root'
       left: '0 !important',
       bottom: '0 !important',
       background: theme.color.white,
-      padding: theme.spacing.unit * 2,
-    },
+      padding: theme.spacing.unit * 2
+    }
   },
   checkoutSection: {
     opacity: 0,
     padding: `${theme.spacing.unit * 2}px 0`,
     borderTop: `1px solid ${theme.color.border2}`,
-    animation: 'fadeIn 225ms linear forwards',
+    animation: 'fadeIn 225ms linear forwards'
   },
   noBorder: {
-    border: 0,
+    border: 0
   },
   sidebarTitle: {
     fontSize: '1.5rem',
-    color: theme.color.green,
+    color: theme.color.green
   },
   detail: {
     fontSize: '.8rem',
     color: theme.color.headline,
-    lineHeight: '1.5em',
+    lineHeight: '1.5em'
   },
   createButton: {
     [theme.breakpoints.up('lg')]: {
@@ -64,15 +69,14 @@ interface Props {
   calculatedPrice?: number;
   isSticky?: boolean;
   disabled?: boolean;
-  displaySections?: { title: string, details?: string | number }[];
+  displaySections?: { title: string; details?: string | number }[];
 }
 
 type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
 class CheckoutBar extends React.Component<CombinedProps> {
-
   static defaultProps: Partial<Props> = {
-    calculatedPrice: 0,
+    calculatedPrice: 0
   };
 
   render() {
@@ -89,42 +93,59 @@ class CheckoutBar extends React.Component<CombinedProps> {
       heading,
       calculatedPrice,
       disabled,
-      displaySections,
+      displaySections
     } = this.props;
 
     let finalStyle;
     if (isSticky) {
       finalStyle = {
         ...style,
-        paddingTop: 24,
+        paddingTop: 24
       };
     }
 
     return (
       <div className={classes.root} style={finalStyle}>
-        <Typography role="header" variant="h2" className={classes.sidebarTitle} data-qa-order-summary>
+        <Typography
+          role="header"
+          variant="h2"
+          className={classes.sidebarTitle}
+          data-qa-order-summary
+        >
           {heading}
         </Typography>
-        {
-          displaySections && displaySections.map(({ title, details }, idx) => (
+        {displaySections &&
+          displaySections.map(({ title, details }, idx) => (
             <div
               key={idx}
               className={classNames({
                 [classes.checkoutSection]: true,
-                [classes.noBorder]: idx === 0,
+                [classes.noBorder]: idx === 0
               })}
             >
-              {title &&
-                <Typography role="header" variant="h3" data-qa-subheading={title}>
+              {title && (
+                <Typography
+                  role="header"
+                  variant="h3"
+                  data-qa-subheading={title}
+                >
                   {title}
-                </Typography>}
-              {details && <Typography className={classes.detail}>{details}</Typography>}
+                </Typography>
+              )}
+              {details && (
+                <Typography className={classes.detail}>{details}</Typography>
+              )}
             </div>
-          ))
-        }
+          ))}
         {
-          <div className={`${classes.checkoutSection} ${classes.noBorder}`} data-qa-total-price>
-            <DisplayPrice price={calculatedPrice ? calculatedPrice : 0} interval="mo" />
+          <div
+            className={`${classes.checkoutSection} ${classes.noBorder}`}
+            data-qa-total-price
+          >
+            <DisplayPrice
+              price={calculatedPrice ? calculatedPrice : 0}
+              interval="mo"
+            />
           </div>
         }
 
@@ -139,7 +160,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
             {!disabled ? 'Create' : 'Creating...'}
           </Button>
         </div>
-
       </div>
     );
   }

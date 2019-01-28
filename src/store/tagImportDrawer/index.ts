@@ -4,14 +4,26 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
 import getEntitiesWithGroupsToImport, { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import { ThunkActionCreator } from 'src/store/types';
 import { storage } from 'src/utilities/storage';
 import actionCreatorFactory from 'typescript-fsa';
-import { ThunkActionCreator } from '../types';
 
 const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
-type State = ApplicationState['tagImportDrawer'];
+export interface TagError {
+  entityId: string | number;
+  entityLabel?: string;
+  reason: string;
+}
+
+export interface State {
+  open: boolean;
+  loading: boolean;
+  errors: TagError[];
+  success: boolean;
+}
 
 interface Accumulator<T> {
   success: T[];
@@ -202,8 +214,8 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch, getSt
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
   Bluebird.join(
-    Bluebird.reduce(entities.linodes as any, linodeAccumulator, { success: [], errors: [] }),
-    Bluebird.reduce(entities.domains as any, domainAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.linodes, linodeAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.domains, domainAccumulator, { success: [], errors: [] }),
     dispatch,
     handleAccumulatedResponsesAndErrors,
   )

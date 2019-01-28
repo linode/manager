@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
+import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { close, openForConfig, viewResizeInstructions } from 'src/store/volumeDrawer';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';

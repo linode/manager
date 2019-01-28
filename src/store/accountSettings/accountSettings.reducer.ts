@@ -1,7 +1,12 @@
+import { RequestableData } from '../types';
 import { Action, ERROR, LOAD, SUCCESS, UPDATE, UPDATE_ERROR } from './accountSettings.actions';
 
+export type State = RequestableData<Linode.AccountSettings> & {
+  updateError?: Error;
+};
+
 // DEFAULT STATE
-export const defaultState: AccountSettingsState = {
+export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
@@ -10,7 +15,7 @@ export const defaultState: AccountSettingsState = {
 };
 
 // REDUCER
-export default (state: AccountSettingsState = defaultState, action: Action) => {
+export default (state: State = defaultState, action: Action) => {
   switch (action.type) {
     case LOAD:
       return { ...state, loading: true };

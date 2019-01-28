@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import { ApplicationState } from 'src/store';
 
 export default <TInner extends {}, TOutter extends {}>(
   propsSelector: (ownProps: TOutter) => null | string,

@@ -1,9 +1,10 @@
 import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
+import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { cloneVolume } from 'src/services/volumes';
 import { CloneVolumeSchema } from 'src/services/volumes/volumes.schema';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -25,19 +26,22 @@ interface Props {
   volumeRegion: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & VolumesRequests
+  & WithStyles<ClassNames>;
 
 const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
 const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
+  const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize, cloneVolume } = props;
   return (
     <Formik
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        cloneVolume(volumeId, { label: values.label })
+        cloneVolume({ volumeId, label: values.label })
           .then(response => {
             onClose();
             resetEventsPolling();
@@ -92,4 +96,9 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(CloneVolumeForm);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withVolumesRequests
+);
+
+export default enhanced(CloneVolumeForm)

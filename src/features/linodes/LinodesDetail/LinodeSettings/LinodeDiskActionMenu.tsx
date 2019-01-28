@@ -15,12 +15,14 @@ type CombinedProps = Props;
 class DiskActionMenu extends React.Component<CombinedProps> {
   createActions = () => (closeMenu: Function): Action[] => {
     const { linodeStatus } = this.props;
-    const disabledProps =  linodeStatus === 'offline' ?
-      {} :
-      {
-        tooltip: 'Your Linode must be fully powered down in order to perform this action',
-        disabled: true
-      };
+    const disabledProps =
+      linodeStatus === 'offline'
+        ? {}
+        : {
+            tooltip:
+              'Your Linode must be fully powered down in order to perform this action',
+            disabled: true
+          };
     const actions = [
       {
         title: 'Rename',
@@ -28,7 +30,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.props.onRename();
           closeMenu();
-        },
+        }
       },
       {
         title: 'Resize',
@@ -45,7 +47,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.props.onImagize();
           closeMenu();
-        },
+        }
       },
       {
         title: 'Delete',
@@ -55,16 +57,14 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           closeMenu();
         },
         ...disabledProps
-      },
+      }
     ];
 
     return actions;
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

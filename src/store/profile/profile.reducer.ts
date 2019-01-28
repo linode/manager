@@ -1,8 +1,9 @@
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
+import { RequestableData } from '../types';
 import { getProfileActions, handleUpdate } from './profile.actions';
 
-type State = RequestableData<Linode.Profile>;
+export type State = RequestableData<Linode.Profile>;
 
 interface Action<T> {
   type: string;
@@ -10,17 +11,19 @@ interface Action<T> {
   payload?: T;
 }
 
-
 export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
-  error: undefined,
+  error: undefined
 };
 
-const reducer: Reducer<State> = (state: State = defaultState, action: Action<Linode.Profile>) => {
+const reducer: Reducer<State> = (
+  state: State = defaultState,
+  action: Action<Linode.Profile>
+) => {
   if (isType(action, getProfileActions.started)) {
-    const { } = action.payload;
+    const {} = action.payload;
     return { ...state, loading: true };
   }
 
@@ -35,10 +38,15 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action<Lin
   }
 
   if (isType(action, handleUpdate)) {
-    return { ...state, loading: false, lastUpdated: Date.now(), data: action.payload };
+    return {
+      ...state,
+      loading: false,
+      lastUpdated: Date.now(),
+      data: action.payload
+    };
   }
 
   return state;
-}
+};
 
 export default reducer;

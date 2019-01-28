@@ -1,19 +1,35 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
-import { matchPath, Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import {
+  matchPath,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch
+} from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader/PromiseLoader';
+import PromiseLoader, {
+  PromiseLoaderResponse
+} from 'src/components/PromiseLoader/PromiseLoader';
 import TabLink from 'src/components/TabLink';
 import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getDomain, getDomainRecords, updateDomain } from 'src/services/domains';
+import { getDomain, getDomainRecords } from 'src/services/domains';
+import {
+  DomainActionsProps,
+  withDomainActions
+} from 'src/store/domains/domains.container';
 import DomainRecords from './DomainRecords';
 
 interface State {
@@ -29,30 +45,35 @@ interface PreloadedProps {
   records: PromiseLoaderResponse<Linode.DomainRecord>;
 }
 
-type ClassNames = 'root'
-  | 'titleWrapper'
-  | 'backButton';
+type ClassNames = 'root' | 'titleWrapper' | 'backButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   titleWrapper: {
     display: 'flex',
     alignItems: 'center',
-    wordBreak: 'break-all',
+    wordBreak: 'break-all'
   },
   backButton: {
     margin: '2px 0 0 -16px',
     '& svg': {
       width: 34,
-      height: 34,
-    },
-  },
+      height: 34
+    }
+  }
 });
 
-type CombinedProps = RouteProps & PreloadedProps & WithStyles<ClassNames>;
+type CombinedProps = DomainActionsProps &
+  RouteProps &
+  PreloadedProps &
+  WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
-  domain: ({ match: { params: { domainId } } }) => {
+  domain: ({
+    match: {
+      params: { domainId }
+    }
+  }) => {
     if (!domainId) {
       return Promise.reject(new Error('domainId param not set.'));
     }
@@ -60,85 +81,105 @@ const preloaded = PromiseLoader<CombinedProps>({
     return getDomain(+domainId);
   },
 
-  records: ({ match: { params: { domainId } } }) => {
+  records: ({
+    match: {
+      params: { domainId }
+    }
+  }) => {
     if (!domainId) {
       return Promise.reject(new Error('domainId param not set.'));
     }
 
     return getDomainRecords(+domainId);
-  },
+  }
 });
 
 class DomainDetail extends React.Component<CombinedProps, State> {
-
   state: State = {
     domain: pathOr(undefined, ['response'], this.props.domain),
     records: pathOr([], ['response', 'data'], this.props.records),
-    error: pathOr(undefined, ['error'], this.props.domain),
+    error: pathOr(undefined, ['error'], this.props.domain)
   };
 
-  handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
+  handleTabChange = (
+    event: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeName;
     history.push(`${routeName}`);
-  }
+  };
 
   static docs: Linode.Doc[] = [
     {
       title: 'DNS Manager Overview',
-      src: 'https://linode.com/docs/platform/manager/dns-manager-new-manager/#add-records',
+      src:
+        'https://linode.com/docs/platform/manager/dns-manager-new-manager/#add-records',
       body: `The DNS Manager is a comprehensive DNS management interface available within the
       Linode Manager that allows you to add DNS records for all of your domain names. This guide
       covers the use of Linode’s DNS Manager and basic domain zone setup. For an introduction to
-      DNS in general, please see our Introduction to DNS Records guide.`,
-    },
+      DNS in general, please see our Introduction to DNS Records guide.`
+    }
   ];
 
-  tabs: { routeName: string, title: string, disabled?: boolean}[] = [
-    { routeName: `${this.props.match.url}/records`, title: 'DNS Records' },
+  tabs: { routeName: string; title: string; disabled?: boolean }[] = [
+    { routeName: `${this.props.match.url}/records`, title: 'DNS Records' }
     // { routeName: `${this.props.match.url}/check-zone`, title: 'Check Zone', disabled: true },
     // { routeName: `${this.props.match.url}/zone-file`, title: 'Zone File', disabled: true },
   ];
 
   updateRecords = () => {
-    const { match: { params: { domainId } } } = this.props;
-    if (!domainId) { return; }
+    const {
+      match: {
+        params: { domainId }
+      }
+    } = this.props;
+    if (!domainId) {
+      return;
+    }
 
     getDomainRecords(+domainId)
-      .then((data) => {
+      .then(data => {
         this.setState({ records: data.data });
       })
       .catch(console.error);
-  }
+  };
 
   updateDomain = () => {
-    const { match: { params: { domainId } } } = this.props;
-    if (!domainId) { return; }
+    const {
+      match: {
+        params: { domainId }
+      }
+    } = this.props;
+    if (!domainId) {
+      return;
+    }
 
     getDomain(+domainId)
       .then((data: Linode.Domain) => {
         this.setState({ domain: data });
       })
       .catch(console.error);
-  }
+  };
 
   handleUpdateTags = (tagsList: string[]) => {
     const { domain } = this.state;
-    return updateDomain(
-      domain.id,
-      { tags: tagsList }
-    )
-    .then((data: Linode.Domain) => {
-      this.setState({
-        domain: data,
+    const { domainActions } = this.props;
+    return domainActions
+      .updateDomain({
+        domainId: domain.id,
+        tags: tagsList
       })
-    });
-  }
-
+      .then((data: Linode.Domain) => {
+        this.setState({
+          domain: data
+        });
+      });
+  };
 
   goToDomains = () => {
     this.props.history.push('/domains');
-  }
+  };
 
   renderDomainRecords = () => {
     const { domain, records } = this.state;
@@ -149,31 +190,35 @@ class DomainDetail extends React.Component<CombinedProps, State> {
         updateRecords={this.updateRecords}
         updateDomain={this.updateDomain}
       />
-    )
-  }
+    );
+  };
 
   renderCheckZone = () => {
-    return <h1>Check Zone</h1>
-  }
+    return <h1>Check Zone</h1>;
+  };
 
   renderZoneFile = () => {
-    return <h1>Zone File</h1>
-  }
+    return <h1>Zone File</h1>;
+  };
 
   render() {
-    const matches = (p: string) => Boolean(matchPath(p, { path: this.props.location.pathname }));
-    const { match: { path, url }, classes } = this.props;
+    const matches = (p: string) =>
+      Boolean(matchPath(p, { path: this.props.location.pathname }));
+    const {
+      match: { path, url },
+      classes
+    } = this.props;
     const { error, domain } = this.state;
 
     /** Empty State */
-    if (!domain) { return null; }
+    if (!domain) {
+      return null;
+    }
 
     /** Error State */
     if (error) {
       return (
-        <ErrorState
-          errorText="There was an error retrieving your domain. Please reload and try again."
-        />
+        <ErrorState errorText="There was an error retrieving your domain. Please reload and try again." />
       );
     }
 
@@ -189,10 +234,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
-          <TagsPanel
-            tags={domain.tags}
-            updateTags={this.handleUpdateTags}
-          />
+          <TagsPanel tags={domain.tags} updateTags={this.handleUpdateTags} />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}
@@ -201,15 +243,15 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             variant="scrollable"
             scrollButtons="on"
           >
-            {
-              this.tabs.map(tab =>
-                <Tab
-                  key={tab.title}
-                  disabled={tab.disabled}
-                  component={() => <TabLink to={tab.routeName} title={tab.title} />}
-                />,
-              )
-            }
+            {this.tabs.map(tab => (
+              <Tab
+                key={tab.title}
+                disabled={tab.disabled}
+                component={() => (
+                  <TabLink to={tab.routeName} title={tab.title} />
+                )}
+              />
+            ))}
           </Tabs>
         </AppBar>
         <Switch>
@@ -218,10 +260,18 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             path={`${path}/records`}
             render={this.renderDomainRecords}
           />
-          <Route exact path={`${path}/check-zone`} render={this.renderCheckZone} />
-          <Route exact path={`${path}/zone-file`} render={this.renderZoneFile} />
+          <Route
+            exact
+            path={`${path}/check-zone`}
+            render={this.renderCheckZone}
+          />
+          <Route
+            exact
+            path={`${path}/zone-file`}
+            render={this.renderZoneFile}
+          />
           {/* 404 */}
-          < Redirect to={`${url}/records`} />
+          <Redirect to={`${url}/records`} />
         </Switch>
       </React.Fragment>
     );
@@ -231,13 +281,17 @@ class DomainDetail extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   (routePropsOld, routePropsNew) => {
-    return routePropsOld.match.params.domainId !== routePropsNew.match.params.domainId;
-  },
+    return (
+      routePropsOld.match.params.domainId !==
+      routePropsNew.match.params.domainId
+    );
+  }
 );
 
-export default compose<any, any, any, any, any>(
+export default compose<any, any, any, any, any, any>(
   setDocs(DomainDetail.docs),
   reloaded,
   styled,
   preloaded,
+  withDomainActions
 )(DomainDetail);

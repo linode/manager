@@ -1,13 +1,16 @@
 import { Reducer } from "redux";
-import updateById from 'src/utilities/updateById';
+import { EntityState, HasNumericID } from "src/store/types";
+import updateById from "src/utilities/updateById";
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { deleteLinode, linodesRequest, updateLinode, updateMultipleLinodes, upsertLinode } from './linodes.actions';
+import { createLinodeActions, deleteLinode, deleteLinodeActions, linodesRequest, updateLinode, updateLinodeActions, updateMultipleLinodes, upsertLinode } from './linodes.actions';
+
+const getId = <E extends HasNumericID>({ id }: E) => id;
 
 /**
  * State
  */
-type State = ApplicationState['__resources']['linodes'];
+export type State = EntityState<Linode.Linode>;
 
 export const defaultState: State = {
   results: [],
@@ -21,6 +24,7 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
+  /** Get ALL */
   if (isType(action, linodesRequest.started)) {
     return {
       ...state,
@@ -32,8 +36,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { payload: { result } } = action;
     return {
       ...state,
-      entities: entitiesFromPayload(result),
-      results: resultsFromPayload(result),
+      entities: result,
+      results: result.map(getId),
       lastUpdated: Date.now(),
       loading: false,
     };
@@ -51,14 +55,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, upsertLinode)) {
     const { payload } = action;
-    const { entities } = state;
-    // @todo check for unnecessary state rendering
-    const newEntities = updateOrAdd(payload, entities);
+    const entities = updateOrAdd(payload, state.entities);
 
     return {
       ...state,
-      entities: newEntities,
-      results: resultsFromPayload(newEntities)
+      entities,
+      results: entities.map(getId),
     }
   }
 
@@ -92,32 +94,49 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, updateLinode)) {
     const { id, update } = action.payload;
-    const { entities } = state;
-
-    const updated = updateById(update, id, entities);
+    const entities = updateById(update, id, state.entities);
 
     return {
       ...state,
-      entities: updated,
-      results: updated.map((l) => l.id),
+      entities,
+      results: entities.map(getId),
     }
+  }
+
+  if (isType(action, updateLinodeActions.done)) {
+    const { result } = action.payload;
+    const update = updateOrAdd(result, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(getId),
+    }
+  }
+
+  if (isType(action, createLinodeActions.done)) {
+    const { result } = action.payload;
+    const entities = [...state.entities, result];
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(getId)
+    }
+  }
+
+  if (isType(action, deleteLinodeActions.done)) {
+    const { params: { linodeId } } = action.payload;
+    const entities = state.entities.filter(({ id }) => id !== linodeId);
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(getId),
+    };
   }
 
   return state
 };
 
 export default reducer;
-
-/**
- * Helpers
- */
-const entitiesFromPayload = (linodes: Linode.Linode[]) => {
-  /** transform as necessary */
-  return linodes.map(i => i);
-}
-
-const resultsFromPayload = (linodes: Linode.Linode[]) => {
-  return linodes.map(l => l.id);
-}
-
-export const helpers = {};

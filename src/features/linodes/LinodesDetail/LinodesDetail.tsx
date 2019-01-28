@@ -18,9 +18,10 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { Requestable } from 'src/requestableContext';
-import { getLinode, getLinodeConfigs, getType, startMutation, updateLinode } from 'src/services/linodes';
+import { getLinode, getLinodeConfigs, getType, startMutation } from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/linodeDetail/volumes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -69,7 +70,11 @@ interface MatchProps { linodeId?: string };
 
 type RouteProps = RouteComponentProps<MatchProps>;
 
-type CombinedProps = DispatchProps & RouteProps & InjectedNotistackProps;
+type CombinedProps =
+  & LinodeActionsProps
+  & DispatchProps
+  & RouteProps
+  & InjectedNotistackProps;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
@@ -359,9 +364,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   // (Currently, including multiple error strings
   // breaks the layout)
   updateLabel = (label: string) => {
+    const { linodeActions: { updateLinode } } = this.props;
     const { data: linode } = this.state.context.linode;
     /** "!" is okay because linode being undefined is being handled by render() */
-    return updateLinode(linode!.id, { label })
+    return updateLinode({ linodeId: linode!.id, label })
       .then((linodeResponse) => {
         this.composeState(
           set(L.linode.data, linodeResponse),
@@ -586,7 +592,8 @@ const enhanced = compose(
   connected,
   reloadable,
   LinodeDetailErrorBoundary,
-  withSnackbar
+  withSnackbar,
+  withLinodeActions,
 );
 
 export default enhanced(LinodeDetail);

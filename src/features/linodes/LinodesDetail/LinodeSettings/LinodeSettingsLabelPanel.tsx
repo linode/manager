@@ -7,7 +7,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { updateLinode } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -31,7 +31,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames>;
+type CombinedProps =
+  & LinodeActionsProps
+  & ContextProps
+  & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -41,11 +44,12 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   };
 
   changeLabel = () => {
+    const { linodeActions: { updateLinode } } = this.props;
     this.setState(set(lensPath(['submitting']), true));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['errors']), undefined));
 
-    updateLinode(this.props.linodeId, { label: this.state.updatedValue })
+    updateLinode({ linodeId: this.props.linodeId, label: this.state.updatedValue })
       .then(response => response)
       .then((linode) => {
         this.props.updateLinode((existingLinode) => ({
@@ -116,5 +120,6 @@ const linodeContext = withLinode((context) => ({
 export default compose(
   errorBoundary,
   styled,
- linodeContext
+  linodeContext,
+  withLinodeActions,
 )(LinodeSettingsLabelPanel) as React.ComponentType<{}>;

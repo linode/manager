@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
-
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { emptyResults, filterMatched } from 'src/features/Search/utils';
+import { ApplicationState } from 'src/store';
 import entitiesErrors, { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, { SearchResults } from 'src/store/selectors/getSearchEntities';

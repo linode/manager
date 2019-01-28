@@ -19,7 +19,7 @@ import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import { getLinodes } from 'src/services/linodes';
-import { createNodeBalancer } from 'src/services/nodebalancers';
+import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -31,7 +31,7 @@ type ClassNames =
   | 'sidebar'
   | 'title';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   root: {
   },
   main: {
@@ -44,6 +44,7 @@ type ClassNames =
 });
 
 type CombinedProps =
+  & WithNodeBalancerActions
   & WithRegions
   & RouteComponentProps<{}>
   & WithStyles<ClassNames>;
@@ -137,14 +138,14 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   onNodeWeightChange = (configIdx: number, nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'weight', value)
 
-  afterProtocolUpdate = (L: { [key: string]: Lens}) => () => {
+  afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(compose(
       set(L.sslCertificateLens, ''),
       set(L.privateKeyLens, ''),
     ))
   }
 
-  afterHealthCheckTypeUpdate = (L: { [key: string]: Lens}) => () => {
+  afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(compose(
       set(L.checkPathLens,
         NodeBalancerCreate.defaultFieldsStates.configs[0].check_path),
@@ -220,6 +221,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 
   createNodeBalancer = () => {
+    const { nodeBalancerActions: { createNodeBalancer } } = this.props;
     const { nodeBalancerFields } = this.state;
 
     /* transform node data for the requests */
@@ -238,7 +240,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       .catch((errorResponse) => {
         const defaultError = [{ reason: `An unexpected error has occured.` }];
         const errors = pathOr(defaultError, ['response', 'data', 'errors'], errorResponse);
-        this.setNodeErrors(errors.map((e:Linode.ApiFieldError) => ({
+        this.setNodeErrors(errors.map((e: Linode.ApiFieldError) => ({
           ...e,
           ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
         })));
@@ -330,7 +332,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   updateState = (
     lens: Lens,
-    L?: { [key: string]: Lens},
+    L?: { [key: string]: Lens },
     callback?: (L: { [key: string]: Lens }) => () => void
   ) => (value: any) => {
     this.setState(set(lens, value), L && callback ? callback(L) : undefined);
@@ -408,7 +410,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 value: nodeBalancerFields.label || '',
               }}
               tagsInputProps={{
-                value: nodeBalancerFields.tags ? nodeBalancerFields.tags.map(tag => ({label: tag, value: tag})) : [],
+                value: nodeBalancerFields.tags ? nodeBalancerFields.tags.map(tag => ({ label: tag, value: tag })) : [],
                 onChange: this.tagsChange,
                 tagError: hasErrorFor('tag'),
               }}
@@ -657,13 +659,14 @@ interface WithRegions {
 }
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map((r) => ({...r, display: dcDisplayNames[r.id ]})),
+  regionsData: data.map((r) => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
   regionsError: error,
 }));
 
 export default compose(
   withRegions,
+  withNodeBalancerActions,
   styled,
   withRouter,
 )(NodeBalancerCreate);

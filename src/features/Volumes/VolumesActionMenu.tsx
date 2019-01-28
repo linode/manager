@@ -16,25 +16,25 @@ interface Props {
     volumeLabel: string,
   ) => void;
   onClone: (
-    volumeID: number,
+    volumeId: number,
     label: string,
     size: number,
     regionID: string,
   ) => void;
   attached: boolean;
   onAttach: (
-    volumeID: number,
+    volumeId: number,
     label: string,
     linodeRegion: string,
   ) => void;
-  onDetach: (volumeID: number) => void;
+  onDetach: (volumeId: number) => void;
   poweredOff: boolean;
-  onDelete: (volumeID: number) => void;
+  onDelete: (volumeId: number) => void;
   filesystemPath: string;
   label: string;
   linodeLabel: string;
   regionID: string;
-  volumeID: number;
+  volumeId: number;
   volumeTags: string[];
   size: number;
 }
@@ -49,59 +49,59 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
 
   handleOpenEdit = () => {
     const {
-      volumeID,
+      volumeId,
       label,
       volumeTags,
       onEdit
     } = this.props;
-    onEdit(volumeID, label, volumeTags)
+    onEdit(volumeId, label, volumeTags)
   }
 
   handleResize = () => {
     const {
-      volumeID,
+      volumeId,
       size,
       label,
       onResize,
     } = this.props;
-    onResize(volumeID, size, label)
+    onResize(volumeId, size, label)
   }
 
   handleClone = () => {
     const {
-      volumeID,
+      volumeId,
       label,
       size,
       regionID,
       onClone
     } = this.props;
-    onClone(volumeID, label, size, regionID)
+    onClone(volumeId, label, size, regionID)
   }
 
   handleAttach = () => {
     const {
-      volumeID,
+      volumeId,
       label,
       regionID,
       onAttach
     } = this.props;
-    onAttach(volumeID, label, regionID);
+    onAttach(volumeId, label, regionID);
   }
 
   handleDetach = () => {
     const {
-      volumeID,
+      volumeId,
       onDetach
     } = this.props;
-    onDetach(volumeID);
+    onDetach(volumeId);
   }
 
   handleDelete = () => {
     const {
-      volumeID,
+      volumeId,
       onDelete
     } = this.props;
-    onDelete(volumeID);
+    onDelete(volumeId);
   }
 
   createActions = () => {
