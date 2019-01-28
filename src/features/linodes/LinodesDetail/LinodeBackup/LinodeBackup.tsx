@@ -527,7 +527,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <Typography variant="body1" data-qa-manual-desc>
             You can make a manual backup of your Linode by taking a snapshot.
-            Creating the manual snapshot can take serval minutes, depending on
+            Creating the manual snapshot can take several minutes, depending on
             the size of your Linode and the amount of data you have stored on
             it.
           </Typography>
