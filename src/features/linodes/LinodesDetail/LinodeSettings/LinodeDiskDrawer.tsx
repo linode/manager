@@ -6,7 +6,11 @@ import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -17,17 +21,15 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 import ImageAndPassword from './ImageAndPassword';
 
-type ClassNames = 'root'
-  | 'section'
-  | 'divider';
+type ClassNames = 'root' | 'section' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   section: {},
   divider: {
     margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
-  },
+    width: `calc(100% - ${theme.spacing.unit * 2}px)`
+  }
 });
 
 interface EditableFields {
@@ -56,7 +58,7 @@ interface Props extends EditableFields {
 }
 
 interface State {
-  hasErrorFor?: (v: string) => any,
+  hasErrorFor?: (v: string) => any;
   initialSize: number;
   selectedMode: diskMode;
 }
@@ -65,38 +67,41 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const modes = {
   EMPTY: 'create_empty' as diskMode,
-  IMAGE: 'from_image' as diskMode,
-}
+  IMAGE: 'from_image' as diskMode
+};
 
 type diskMode = 'create_empty' | 'from_image';
 
 const modeList: Mode<diskMode>[] = [
   {
-    label: "Create Empty Disk",
+    label: 'Create Empty Disk',
     mode: modes.EMPTY
   },
   {
-    label: "Create from Image",
+    label: 'Create from Image',
     mode: modes.IMAGE
   }
-]
+];
 
 const submitLabelMap = {
-  'create': 'Add',
-  'rename': 'Rename',
-  'resize': 'Resize'
-}
+  create: 'Add',
+  rename: 'Rename',
+  resize: 'Resize'
+};
 
 export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    hasErrorFor: (v) => null,
+    hasErrorFor: v => null,
     initialSize: this.props.size,
-    selectedMode: modes.EMPTY,
+    selectedMode: modes.EMPTY
   };
 
   static getDerivedStateFromProps(props: CombinedProps, state: State) {
     return {
-      hasErrorFor: getAPIErrorsFor({ label: 'label', size: 'size', root_pass: 'root_pass' }, props.errors || []),
+      hasErrorFor: getAPIErrorsFor(
+        { label: 'label', size: 'size', root_pass: 'root_pass' },
+        props.errors || []
+      )
     };
   }
 
@@ -131,13 +136,14 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
   onModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ selectedMode: e.target.value as diskMode });
     this.props.onResetImageMode(); // Reset image and root_pass
-  }
+  };
 
   onImageChange = (selected: Item<string>) => {
     this.props.onImageChange(selected ? selected.value : undefined);
-  }
+  };
 
-  getErrors = (key: string) => this.state.hasErrorFor && this.state.hasErrorFor(key);
+  getErrors = (key: string) =>
+    this.state.hasErrorFor && this.state.hasErrorFor(key);
 
   labelField = () => (
     <TextField
@@ -162,11 +168,14 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       errorText={this.getErrors('filesystem')}
       errorGroup="linode-disk-drawer"
     >
-      <MenuItem value="_none_"><em>Select a Filesystem</em></MenuItem>
-      {
-        ['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs =>
-          <MenuItem value={fs} key={fs}>{fs}</MenuItem>)
-      }
+      <MenuItem value="_none_">
+        <em>Select a Filesystem</em>
+      </MenuItem>
+      {['raw', 'swap', 'ext3', 'ext4', 'initrd'].map(fs => (
+        <MenuItem value={fs} key={fs}>
+          {fs}
+        </MenuItem>
+      ))}
     </TextField>
   );
 
@@ -182,10 +191,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
         errorText={this.getErrors('size')}
         errorGroup="linode-disk-drawer"
         InputProps={{
-          endAdornment:
-            <InputAdornment position="end">
-              MB
-            </InputAdornment>,
+          endAdornment: <InputAdornment position="end">MB</InputAdornment>
         }}
         data-qa-disk-size
       />
@@ -204,7 +210,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       onClose,
       classes,
       password,
-      userSSHKeys,
+      userSSHKeys
     } = this.props;
     const { selectedMode } = this.state;
 
@@ -213,20 +219,35 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
     const imageFieldError = this.getErrors('image');
 
     return (
-      <Drawer title={LinodeDiskDrawer.getTitle(mode)} open={open} onClose={onClose}>
+      <Drawer
+        title={LinodeDiskDrawer.getTitle(mode)}
+        open={open}
+        onClose={onClose}
+      >
         <Grid container direction="row">
-          {mode === 'create' &&
+          {mode === 'create' && (
             <Grid item data-qa-mode-toggle>
-              <ModeSelect modes={modeList} selected={selectedMode} onChange={this.onModeChange} />
+              <ModeSelect
+                modes={modeList}
+                selected={selectedMode}
+                onChange={this.onModeChange}
+              />
             </Grid>
-          }
+          )}
           <Grid item xs={12}>
-            {generalError && <Notice error spacingBottom={8} errorGroup="linode-disk-drawer" text={generalError} />}
+            {generalError && (
+              <Notice
+                error
+                spacingBottom={8}
+                errorGroup="linode-disk-drawer"
+                text={generalError}
+              />
+            )}
           </Grid>
           <Grid item xs={12} className={classes.section}>
             <this.labelField />
-            {selectedMode === modes.EMPTY && <this.filesystemField /> }
-            {selectedMode === modes.IMAGE &&
+            {selectedMode === modes.EMPTY && <this.filesystemField />}
+            {selectedMode === modes.IMAGE && (
               <ImageAndPassword
                 onImageChange={this.onImageChange}
                 imageFieldError={imageFieldError}
@@ -235,15 +256,25 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                 onPasswordChange={this.props.onPasswordChange}
                 userSSHKeys={userSSHKeys || []}
               />
-            }
+            )}
             <this.sizeField />
           </Grid>
           <Grid item className={classes.section}>
             <ActionsPanel>
-              <Button onClick={onSubmit} type="primary" loading={submitting} data-qa-disk-submit>
+              <Button
+                onClick={onSubmit}
+                type="primary"
+                loading={submitting}
+                data-qa-disk-submit
+              >
                 {submitLabelMap[mode]}
               </Button>
-              <Button onClick={onClose} type="secondary" className="cancel" data-qa-disk-cancel>
+              <Button
+                onClick={onClose}
+                type="secondary"
+                className="cancel"
+                data-qa-disk-cancel
+              >
                 Cancel
               </Button>
             </ActionsPanel>
@@ -256,8 +287,6 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-)(LinodeDiskDrawer);
+const enhanced = compose<CombinedProps, Props>(styled)(LinodeDiskDrawer);
 
 export default enhanced;
