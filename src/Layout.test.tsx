@@ -20,7 +20,7 @@ it('renders without crashing', () => {
               content: '',
               wrapper: '',
               grid: '',
-              switchWrapper: '',
+              switchWrapper: ''
             }}
             userId={123456}
             profileLoading={false}
@@ -32,14 +32,14 @@ it('renders without crashing', () => {
               requestProfile: jest.fn(),
               requestSettings: jest.fn(),
               requestTypes: jest.fn(),
-              requestRegions: jest.fn(),
+              requestRegions: jest.fn()
             }}
             documentation={[]}
             toggleTheme={jest.fn()}
           />
         </StaticRouter>
       </Provider>
-    </LinodeThemeWrapper>,
+    </LinodeThemeWrapper>
   );
-  expect(component.find('App')).toHaveLength(1);
+  expect(component.find('Layout')).toHaveLength(1);
 });
