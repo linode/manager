@@ -1,26 +1,28 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 
 import Sort from 'src/assets/icons/sort.svg';
 import SortUp from 'src/assets/icons/sortUp.svg';
 
-type ClassNames = 'root'
-  | 'intialIcon'
-  | 'noWrap';
+type ClassNames = 'root' | 'intialIcon' | 'noWrap';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.primary
   },
   intialIcon: {
-    margin: '2px 0 0 4px'
+    margin: '2px 4px 0 4px'
   },
   noWrap: {
-    whiteSpace: 'nowrap',
-  },
+    whiteSpace: 'nowrap'
+  }
 });
 
 interface Props extends TableCellProps {
@@ -35,14 +37,11 @@ interface Props extends TableCellProps {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TableSortCell extends React.PureComponent<CombinedProps, {}> {
-
   handleClick = () => {
     const { label, direction, handleClick } = this.props;
-    const nextOrder = (direction === 'asc')
-      ? 'desc'
-      : 'asc';
+    const nextOrder = direction === 'asc' ? 'desc' : 'asc';
     return handleClick(label, nextOrder);
-  }
+  };
 
   render() {
     const {
@@ -68,7 +67,7 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
           hideSortIcon={true}
         >
           {children}
-          {!active && <Sort className={classes.intialIcon} /> }
+          {!active && <Sort className={classes.intialIcon} />}
         </TableSortLabel>
         {isLoading && <CircleProgress mini sort />}
       </TableCell>

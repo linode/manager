@@ -1,10 +1,16 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import StatusIndicator, { getStatusForDomain } from 'src/components/StatusIndicator';
+import StatusIndicator, {
+  getStatusForDomain
+} from 'src/components/StatusIndicator';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
@@ -18,13 +24,12 @@ type ClassNames =
   | 'tagWrapper'
   | 'domainRow';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   domain: {
-    width: '60%',
+    width: '60%'
   },
   domainRow: {
-    height: 75,
-    backgroundColor: theme.bg.white,
+    backgroundColor: theme.bg.white
   },
   icon: {
     position: 'relative',
@@ -32,31 +37,30 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 40,
     height: 40,
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
-    },
+      stroke: theme.bg.main
+    }
   },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   statusOuter: {
     top: 0,
     position: 'relative',
     marginLeft: 4,
-    lineHeight: '0.8rem',
+    lineHeight: '0.8rem'
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
     '& [class*="MuiChip"]': {
-      cursor: 'pointer',
-    },
-  },
+      cursor: 'pointer'
+    }
+  }
 });
-
 
 interface Props {
   domain: string;
@@ -70,7 +74,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DomainTableRow: React.StatelessComponent<CombinedProps> = (props) => {
+const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, domain, id, tags, type, status, onClone, onRemove } = props;
 
   return (
@@ -84,17 +88,17 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = (props) => {
         <Link to={`/domains/${id}`}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
-              <DomainIcon className={classes.icon}/>
+              <DomainIcon className={classes.icon} />
             </Grid>
             <Grid item>
               <div className={classes.labelStatusWrapper}>
-                  <Typography role="header" variant="h3" data-qa-label>
-                    {domain}
-                  </Typography>
-                  <div className={classes.statusOuter}>
-                    <StatusIndicator status={getStatusForDomain(status)} />
-                  </div>
+                <Typography role="header" variant="h3" data-qa-label>
+                  {domain}
+                </Typography>
+                <div className={classes.statusOuter}>
+                  <StatusIndicator status={getStatusForDomain(status)} />
                 </div>
+              </div>
               <div className={classes.tagWrapper}>
                 <Tags tags={tags} />
               </div>
@@ -102,7 +106,9 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
         </Link>
       </TableCell>
-      <TableCell parentColumn="Type" data-qa-domain-type>{type}</TableCell>
+      <TableCell parentColumn="Type" data-qa-domain-type>
+        {type}
+      </TableCell>
       <TableCell>
         <ActionMenu
           domain={domain}

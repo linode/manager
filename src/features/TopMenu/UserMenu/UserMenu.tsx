@@ -8,18 +8,22 @@ import ButtonBase from 'src/components/core/ButtonBase';
 import Hidden from 'src/components/core/Hidden';
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
-  display: string,
-  href: string,
-};
+  display: string;
+  href: string;
+}
 
 const menuLinks: MenuLink[] = [
-  { display: 'My Profile', href: '/profile' },
-  { display: 'Log Out', href: '/logout' },
+  { display: 'My Profile', href: '/profile/display' },
+  { display: 'Log Out', href: '/logout' }
 ];
 
 type CSSClasses =
@@ -31,26 +35,26 @@ type CSSClasses =
   | 'menuItem'
   | 'hidden';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   menu: {
-    transform: `translateY(${theme.spacing.unit}px)`,
+    transform: `translateY(${theme.spacing.unit}px)`
   },
   button: {
     padding: theme.spacing.unit,
     borderRadius: 30,
     '&:hover, &.active': {
       '& $username': {
-        color: theme.palette.primary.main,
+        color: theme.palette.primary.main
       },
       '& $userWrapper': {
-        boxShadow: '0 0 10px #bbb',
-      },
+        boxShadow: '0 0 10px #bbb'
+      }
     },
     '&:focus': {
       '& $username': {
-        color: theme.palette.primary.main,
-      },
-    },
+        color: theme.palette.primary.main
+      }
+    }
   },
   userWrapper: {
     marginRight: theme.spacing.unit,
@@ -61,35 +65,37 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     [theme.breakpoints.down('md')]: {
       margin: 0,
       width: '30px',
-      height: '30px',
-    },
+      height: '30px'
+    }
   },
   leftIcon: {
     width: '100%',
     height: '100%',
-    borderRadius: '50%',
+    borderRadius: '50%'
   },
   username: {
     transition: theme.transitions.create(['color']),
     [theme.breakpoints.down('md')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   menuItem: {
     fontSize: '.9rem',
     fontFamily: 'LatoWeb',
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
-    },
+      color: 'white'
+    }
   },
   hidden: {
     height: 0,
-    padding: 0,
-  },
+    padding: 0
+  }
 });
 
-type CombinedProps = StateProps & WithStyles<CSSClasses> & RouteComponentProps<{}>;
+type CombinedProps = StateProps &
+  WithStyles<CSSClasses> &
+  RouteComponentProps<{}>;
 
 interface State {
   anchorEl?: HTMLElement;
@@ -99,7 +105,7 @@ interface State {
 export class UserMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined,
-    gravatarUrl: undefined,
+    gravatarUrl: undefined
   };
 
   constructor(props: CombinedProps) {
@@ -110,11 +116,11 @@ export class UserMenu extends React.Component<CombinedProps, State> {
 
   handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
-  }
+  };
 
   handleClose = () => {
     this.setState({ anchorEl: undefined });
-  }
+  };
 
   navigate(href: string) {
     const { history } = this.props;
@@ -137,10 +143,9 @@ export class UserMenu extends React.Component<CombinedProps, State> {
   }
 
   setGravatarUrl(email: string) {
-    getGravatarUrl(email)
-      .then((url) => {
-        this.setState({ gravatarUrl: url });
-      });
+    getGravatarUrl(email).then(url => {
+      this.setState({ gravatarUrl: url });
+    });
   }
 
   componentWillReceiveProps(nextProps: StateProps) {
@@ -156,12 +161,15 @@ export class UserMenu extends React.Component<CombinedProps, State> {
   renderAvatar() {
     const { classes } = this.props;
     const { gravatarUrl } = this.state;
-    if (!gravatarUrl) { return null; }
-    return (gravatarUrl !== 'not found'
-      ? <div className={classes.userWrapper}>
+    if (!gravatarUrl) {
+      return null;
+    }
+    return gravatarUrl !== 'not found' ? (
+      <div className={classes.userWrapper}>
         <img src={gravatarUrl} className={classes.leftIcon} alt="Gravatar" />
       </div>
-      : <div className={classes.userWrapper}>
+    ) : (
+      <div className={classes.userWrapper}>
         <UserIcon className={classes.leftIcon} />
       </div>
     );
@@ -195,31 +203,33 @@ export class UserMenu extends React.Component<CombinedProps, State> {
             data-qa-user-menu
             aria-label="User Menu"
           >
-            {username &&
+            {username && (
               <React.Fragment>
                 {this.renderAvatar()}
-                <span className={classes.username}>
-                  {username && username}
-                </span>
+                <span className={classes.username}>{username && username}</span>
               </React.Fragment>
-            }
+            )}
           </ButtonBase>
           <Menu
             anchorEl={anchorEl}
             getContentAnchorEl={undefined}
             anchorOrigin={{
               vertical: 'bottom',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
             open={open}
             onClose={this.handleClose}
             className={classes.menu}
           >
-            <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
+            <MenuItem
+              key="placeholder"
+              aria-hidden
+              className={classes.hidden}
+            />
             {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
           </Menu>
         </Hidden>
@@ -235,11 +245,16 @@ interface StateProps {
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
   userEmail: path(['data', 'email'], state.__resources.profile),
-  username: path(['data', 'username'], state.__resources.profile),
+  username: path(['data', 'username'], state.__resources.profile)
 });
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+export default compose<
+  Linode.TodoAny,
+  Linode.TodoAny,
+  Linode.TodoAny,
+  Linode.TodoAny
+>(
   connect(mapStateToProps),
   withStyles(styles),
-  withRouter,
+  withRouter
 )(UserMenu);

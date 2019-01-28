@@ -4,7 +4,7 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { PrimaryNav } from './PrimaryNav';
 
 const findLinkIn = (w: ShallowWrapper) => (s: string) => {
-  return w.find(`WithStyles(ListItem)[data-qa-nav-item="${s}"]`);
+  return w.find(`[data-qa-nav-item="${s}"]`);
 };
 const mockClasses = {
   active: '',
@@ -21,7 +21,7 @@ const mockClasses = {
   spacer: '',
   sublink: '',
   sublinkActive: '',
-  sublinkPanel: '',
+  sublinkPanel: ''
 };
 
 describe('PrimaryNav', () => {

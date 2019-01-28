@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
 import AppBar from 'src/components/core/AppBar';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import TabLink from 'src/components/TabLink';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import LinodeBackup from '../LinodeBackup';
@@ -17,9 +22,10 @@ import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
+
 interface Props {
   linodeId: number;
   linodeLabel: string;
@@ -33,8 +39,18 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) => {
-  const { linodeRecentEvent, linodeStatus, url, linodeId, linodeRegion, linodeLabel, linodeConfigs } = props;
+const TabsAndStatusBarPanel: React.StatelessComponent<
+  CombinedProps
+> = props => {
+  const {
+    linodeRecentEvent,
+    linodeStatus,
+    url,
+    linodeId,
+    linodeRegion,
+    linodeLabel,
+    linodeConfigs
+  } = props;
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
@@ -45,20 +61,26 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
     { routeName: `${url}/rescue`, title: 'Rescue' },
     { routeName: `${url}/rebuild`, title: 'Rebuild' },
     { routeName: `${url}/backup`, title: 'Backups' },
-    { routeName: `${url}/settings`, title: 'Settings' },
+    { routeName: `${url}/settings`, title: 'Settings' }
   ];
 
-  const handleTabChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
+  const handleTabChange = (
+    event: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
     const { history } = props;
     const routeName = tabs[value].routeName;
     history.push(`${routeName}`);
-  }
+  };
 
   return (
     <React.Fragment>
-      {linodeInTransition(linodeStatus, linodeRecentEvent) &&
-        <LinodeBusyStatus status={linodeStatus} recentEvent={linodeRecentEvent} />
-      }
+      {linodeInTransition(linodeStatus, linodeRecentEvent) && (
+        <LinodeBusyStatus
+          status={linodeStatus}
+          recentEvent={linodeRecentEvent}
+        />
+      )}
       <AppBar position="static" color="default">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
@@ -68,16 +90,26 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
           variant="scrollable"
           scrollButtons="on"
         >
-          {tabs.map(tab =>
-            <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />)}
+          {tabs.map(tab => (
+            <Tab
+              key={tab.title}
+              label={tab.title}
+              data-qa-tab={tab.title}
+              component={() => <TabLink to={tab.routeName} title={tab.title} />}
+            />
+          ))}
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact path={`/linodes/:linodeId/summary`} component={LinodeSummary} />
+        <Route
+          exact
+          path={`/linodes/:linodeId/summary`}
+          component={LinodeSummary}
+        />
         <Route
           exact
           path={`/linodes/:linodeId/volumes`}
-          render={(routeProps) => (
+          render={routeProps => (
             <VolumesLanding
               linodeId={linodeId}
               linodeLabel={linodeLabel}
@@ -87,12 +119,36 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
             />
           )}
         />
-        <Route exact path={`/linodes/:linodeId/networking`} component={LinodeNetworking} />
-        <Route exact path={`/linodes/:linodeId/resize`} component={LinodeResize} />
-        <Route exact path={`/linodes/:linodeId/rescue`} component={LinodeRescue} />
-        <Route exact path={`/linodes/:linodeId/rebuild`} component={LinodeRebuild} />
-        <Route exact path={`/linodes/:linodeId/backup`} component={LinodeBackup} />
-        <Route exact path={`/linodes/:linodeId/settings`} component={LinodeSettings} />
+        <Route
+          exact
+          path={`/linodes/:linodeId/networking`}
+          component={LinodeNetworking}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/resize`}
+          component={LinodeResize}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/rescue`}
+          component={LinodeRescue}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/rebuild`}
+          component={LinodeRebuild}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/backup`}
+          component={LinodeBackup}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/settings`}
+          component={LinodeSettings}
+        />
         {/* 404 */}
         <Redirect to={`${url}/summary`} />
       </Switch>
@@ -102,7 +158,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<CombinedProps> = (props) =
 
 const matches = (p: string) => {
   return Boolean(matchPath(p, { path: location.pathname }));
-}
+};
 
 const styled = withStyles(styles);
 

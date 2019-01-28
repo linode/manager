@@ -1,6 +1,6 @@
 import * as jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
-import formatDate from 'src/utilities/formatDate'
+import formatDate from 'src/utilities/formatDate';
 import LinodeLogo from './LinodeLogo';
 
 const leftPadding = 15;
@@ -9,32 +9,42 @@ const tableBodyStart = 155;
 const cellHeight = 25;
 const maxInstanceNameLength = 25;
 
-const renderDate = (v: null | string) => v ? formatDate(v, {format: `YYYY-MM-DD HH:mm:ss`}) : null;
+const renderDate = (v: null | string) =>
+  v ? formatDate(v, { format: `YYYY-MM-DD HH:mm:ss` }) : null;
 
-const renderUnitPrice = (v: null | number) => v ? `$${v}` : null;
+const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
-const renderQuantity = (v: null | number) => v ? v : null;
+const renderQuantity = (v: null | number) => (v ? v : null);
 
 const formatDescription = (desc: string) => {
   const isBackup = /^Backup/.test(desc);
   const descChunks = desc.split(' - ');
   const nameIndex = isBackup ? 2 : 1;
-  descChunks[nameIndex] = descChunks[nameIndex].split(' (').map(s => s.substring(0, maxInstanceNameLength)).join(' (');
+  descChunks[nameIndex] = descChunks[nameIndex]
+    .split(' (')
+    .map(s => s.substring(0, maxInstanceNameLength))
+    .join(' (');
 
   return descChunks.reduce((acc, chunk, i) => {
-    const delimiter = (i === nameIndex) ? ' - \n' : ' - '; // insert line break before long entity name
+    const delimiter = i === nameIndex ? ' - \n' : ' - '; // insert line break before long entity name
     if (i === 0) {
       return chunk; // avoid inserting delimeter for the first element
     }
     return acc + delimiter + chunk;
   }, '');
-}
+};
 
-const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | null) => {
+const addLeftHeader = (
+  doc: jsPDF,
+  page: number,
+  pages: number,
+  date: string | null,
+  type: string
+) => {
   const addLine = (text: string, fontSize = 9) => {
     doc.text(text, leftPadding, currentLine, { charSpace: 0.75 });
     currentLine += fontSize;
-  }
+  };
 
   let currentLine = 55;
 
@@ -43,7 +53,7 @@ const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | n
 
   addLine(`Page ${page} of ${pages}`);
   if (date) {
-    addLine(`Invoice Date: ${date}`);
+    addLine(`${type} Date: ${date}`);
   }
 
   doc.setFontStyle('bold');
@@ -57,14 +67,24 @@ const addLeftHeader = (doc: jsPDF, page: number, pages: number, date: string | n
 };
 
 const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
-  const { address_1, address_2, city, company, country, first_name, last_name, state, zip } = account;
+  const {
+    address_1,
+    address_2,
+    city,
+    company,
+    country,
+    first_name,
+    last_name,
+    state,
+    zip
+  } = account;
 
   const RightHeaderPadding = 300;
 
   const addLine = (text: string, fontSize = 9) => {
     doc.text(text, RightHeaderPadding, currentLine, { charSpace: 0.75 });
     currentLine += fontSize;
-  }
+  };
 
   let currentLine = 55;
 
@@ -74,7 +94,6 @@ const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
   doc.setFontStyle('bold');
   addLine('Invoice To:');
   doc.setFontStyle('normal');
-
 
   addLine(`${first_name} ${last_name}`);
   addLine(`${company}`);
@@ -91,9 +110,12 @@ const addFooter = (doc: jsPDF) => {
   let currentLine = 600;
 
   const addLine = (text: string, customPadding: number) => {
-    doc.text(text, customPadding, currentLine, { charSpace: 0.75, align: 'center' });
+    doc.text(text, customPadding, currentLine, {
+      charSpace: 0.75,
+      align: 'center'
+    });
     currentLine += fontSize * 2;
-  }
+  };
 
   doc.setFontSize(fontSize);
   doc.setFont(baseFont);
@@ -101,7 +123,10 @@ const addFooter = (doc: jsPDF) => {
   // Second number argument - manual centering cos automatic doesn't work well
   addLine('249 Arch St. - Philadelphia, PA 19106', 210);
   addLine('USA', 220);
-  addLine('P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com', 190);
+  addLine(
+    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com',
+    190
+  );
 };
 
 const addTitle = (doc: jsPDF, title: string) => {
@@ -110,16 +135,20 @@ const addTitle = (doc: jsPDF, title: string) => {
   doc.text(title, leftPadding, 130, { charSpace: 0.75 });
   // reset text format
   doc.setFontStyle('normal');
-}
+};
 
-export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, items: Linode.InvoiceItem[]) => {
+export const printInvoice = (
+  account: Linode.Account,
+  invoice: Linode.Invoice,
+  items: Linode.InvoiceItem[]
+) => {
   try {
     const itemsPerPage = 18;
-    const date = formatDate(invoice.date, {format: 'YYYY-MM-DD'});
+    const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
     const invoiceId = invoice.id;
     const itemsChunks = items ? splitEvery(itemsPerPage, items) : [[]];
-    const tableEnd = tableBodyStart + cellHeight * itemsChunks[itemsChunks.length - 1].length
-
+    const tableEnd =
+      tableBodyStart + cellHeight * itemsChunks[itemsChunks.length - 1].length;
 
     const doc = new jsPDF({
       unit: 'px'
@@ -129,12 +158,12 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
       doc.setFontSize(10);
 
       const header = [
-        {name: 'Description', prompt: 'Description', width: 235},
-        {name: 'From', prompt: 'From', width: 72},
-        {name: 'To', prompt: 'To', width: 72},
-        {name: 'Quantity', prompt: 'Quantity', width: 52},
-        {name: 'Unit Price', prompt: 'Unit Price', width: 67},
-        {name: 'Amount', prompt: 'Amount', width: 52}
+        { name: 'Description', prompt: 'Description', width: 235 },
+        { name: 'From', prompt: 'From', width: 72 },
+        { name: 'To', prompt: 'To', width: 72 },
+        { name: 'Quantity', prompt: 'Quantity', width: 52 },
+        { name: 'Unit Price', prompt: 'Unit Price', width: 67 },
+        { name: 'Amount', prompt: 'Amount', width: 52 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
       const itemRows = itemsChunk.map(item => {
@@ -146,7 +175,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
           Quantity: renderQuantity(quantity),
           'Unit Price': renderUnitPrice(unit_price),
           Amount: '$' + amount
-        }
+        };
       });
 
       // Place table header
@@ -184,7 +213,15 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
       // "Total" cell
       doc.cell(leftPadding, tableEnd + 10, 374, 20, 'Total:  ', 2, 'right');
       // Total value cell
-      doc.cell(leftPadding + 300, tableEnd + 10, 38.5, 20, `$${Number(invoice.total).toFixed(2)}`, 2, 'left');
+      doc.cell(
+        leftPadding + 300,
+        tableEnd + 10,
+        38.5,
+        20,
+        `$${Number(invoice.total).toFixed(2)}`,
+        2,
+        'left'
+      );
       // reset text format
       doc.setFontStyle('normal');
     };
@@ -192,7 +229,7 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-      addLeftHeader(doc, index + 1, itemsChunks.length, date);
+      addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
       addRightHeader(doc, account);
       addTitle(doc, `Invoice: #${invoiceId}`);
       addTable(itemsChunk);
@@ -208,12 +245,14 @@ export const printInvoice = (account: Linode.Account, invoice: Linode.Invoice, i
   } catch (e) {
     console.error(e);
   }
-}
+};
 
-export const printPayment = (account: Linode.Account, payment: Linode.Payment) => {
-
+export const printPayment = (
+  account: Linode.Account,
+  payment: Linode.Payment
+) => {
   try {
-    const date = formatDate(payment.date, {format: 'YYYY-MM-DD'});
+    const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
     const paymentId = payment.id;
     const amount = payment.usd;
     const tableEnd = tableBodyStart + cellHeight;
@@ -225,16 +264,18 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
       doc.setFontSize(10);
 
       const header = [
-        {name: 'Description', prompt: 'Description', width: 292},
-        {name: 'Date', prompt: 'Date', width: 128},
-        {name: 'Amount', prompt: 'Amount', width: 128}
+        { name: 'Description', prompt: 'Description', width: 292 },
+        { name: 'Date', prompt: 'Date', width: 128 },
+        { name: 'Amount', prompt: 'Amount', width: 128 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
-      const itemRows = [{
-        Description: 'Payment. Thank you.', // Automatic line breaks don't work well. Doing it manually
-        Date: renderDate(date),
-        Amount: '$' + amount
-      }]
+      const itemRows = [
+        {
+          Description: 'Payment. Thank you.', // Automatic line breaks don't work well. Doing it manually
+          Date: renderDate(date),
+          Amount: '$' + amount
+        }
+      ];
 
       doc.table(leftPadding, 140, itemRows, header, {
         fontSize: 12,
@@ -255,15 +296,31 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
       // Empty line
       doc.cell(leftPadding, tableEnd, 411, 10, ' ', 1, 'left');
       // "Total" cell
-      doc.cell(leftPadding, tableEnd + 10, 374, 20, 'Payment Total:    ', 2, 'right');
+      doc.cell(
+        leftPadding,
+        tableEnd + 10,
+        374,
+        20,
+        'Payment Total:    ',
+        2,
+        'right'
+      );
       // Total value cell
-      doc.cell(leftPadding + 300, tableEnd + 10, 37, 20, `$${Number(amount).toFixed(2)}`, 2, 'left');
+      doc.cell(
+        leftPadding + 300,
+        tableEnd + 10,
+        37,
+        20,
+        `$${Number(amount).toFixed(2)}`,
+        2,
+        'left'
+      );
       // reset text format
       doc.setFontStyle('normal');
     };
 
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-    addLeftHeader(doc, 1, 1, date);
+    addLeftHeader(doc, 1, 1, date, 'Payment');
     addRightHeader(doc, account);
     addTitle(doc, `Receipt for Payment #${paymentId}`);
     addTable();
@@ -274,6 +331,4 @@ export const printPayment = (account: Linode.Account, payment: Linode.Payment) =
   } catch (e) {
     console.error(e);
   }
-
-}
-
+};
