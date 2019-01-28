@@ -8,7 +8,11 @@ import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -33,17 +37,17 @@ import ActionMenu from './UsersActionMenu';
 
 type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   userButton: {
     borderRadius: 30,
@@ -51,11 +55,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     padding: 0,
     color: theme.palette.text.primary,
     '&:hover': {
-      color: theme.palette.primary.main,
-    },
-    [theme.breakpoints.up('md')]: {
-      padding: 8,
-    },
+      color: theme.palette.primary.main
+    }
   },
   avatar: {
     borderRadius: '50%',
@@ -65,8 +66,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     animation: 'fadeIn 150ms linear forwards',
     [theme.breakpoints.up('md')]: {
       width: 50,
-      height: 50,
-    },
+      height: 50
+    }
   },
   emptyImage: {
     display: 'inline',
@@ -75,8 +76,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginRight: theme.spacing.unit * 2,
     [theme.breakpoints.up('md')]: {
       width: 50,
-      height: 50,
-    },
+      height: 50
+    }
   }
 });
 
@@ -88,32 +89,33 @@ interface State {
   userDeleteError?: boolean;
 }
 
-type CombinedProps =
-  & WithStyles<ClassNames>
-  & InjectedNotistackProps
-  & PaginationProps<Linode.User>
-  & RouteComponentProps<{}>;
+type CombinedProps = WithStyles<ClassNames> &
+  InjectedNotistackProps &
+  PaginationProps<Linode.User> &
+  RouteComponentProps<{}>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
   state: State = {
     createDrawerOpen: false,
-    deleteConfirmDialogOpen: false,
+    deleteConfirmDialogOpen: false
   };
 
   static docs: Linode.Doc[] = [
     {
       title: 'Accounts and Password',
-      src: 'https://www.linode.com/docs/platform/manager/accounts-and-passwords-new-manager/',
+      src:
+        'https://www.linode.com/docs/platform/manager/accounts-and-passwords-new-manager/',
       body: `Maintaining your user Linode Manager accounts, passwords, and
       contact information is just as important as administering your Linode.
       This guide shows you how to control access to the Linode Manager,
       update your contact information, and modify account passwords. Note
       that the information in this guide applies to the Linode Manager only,
-      except for the section on resetting the root password.`,
+      except for the section on resetting the root password.`
     },
     {
       title: 'Linode Manager Security Controls',
-      src: 'https://www.linode.com/docs/security/linode-manager-security-controls-new-manager/',
+      src:
+        'https://www.linode.com/docs/security/linode-manager-security-controls-new-manager/',
       body: `The Linode Manager is the gateway to all of your Linode products
       and services, and you should take steps to protect it from unauthorized
       access. This guide documents several of Linode Manager’s features that
@@ -130,88 +132,95 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   addUser = () => {
     this.props.request();
-  }
+  };
 
   openForCreate = () => {
     this.setState({
-      createDrawerOpen: true,
-    })
-  }
+      createDrawerOpen: true
+    });
+  };
 
   userCreateOnClose = () => {
     this.setState({
-      createDrawerOpen: false,
-    })
-  }
+      createDrawerOpen: false
+    });
+  };
 
   onDeleteConfirm = (username: string) => {
     this.setState({
       newUsername: undefined,
       userDeleteError: false,
-      deleteConfirmDialogOpen: false,
+      deleteConfirmDialogOpen: false
     });
 
     deleteUser(username)
       .then(() => {
         this.props.onDelete();
-        this.props.enqueueSnackbar(`User ${username} has been deleted successfully.`, { variant: 'success' });
+        this.props.enqueueSnackbar(
+          `User ${username} has been deleted successfully.`,
+          { variant: 'success' }
+        );
       })
       .catch(() => {
         this.setState({
           userDeleteError: true,
-          toDeleteUsername: '',
-        })
+          toDeleteUsername: ''
+        });
         scrollErrorIntoView();
       });
-  }
+  };
 
   onDeleteCancel = () => {
     this.setState({
-      deleteConfirmDialogOpen: false,
+      deleteConfirmDialogOpen: false
     });
-  }
+  };
 
   onDelete = (username: string) => {
     this.setState({
       deleteConfirmDialogOpen: true,
-      toDeleteUsername: username,
-    })
-  }
+      toDeleteUsername: username
+    });
+  };
 
   renderUserRow = (user: Linode.User) => {
     const { classes } = this.props;
     return (
-      <TableRow key={user.username} data-qa-user-row rowLink={`/account/users/${user.username}`}>
+      <TableRow
+        key={user.username}
+        data-qa-user-row
+        rowLink={`/account/users/${user.username}`}
+      >
         <TableCell parentColumn="Username" data-qa-username>
           <Link to={`/account/users/${user.username}`} title={user.username}>
             <Button className={classes.userButton} tabIndex={-1}>
-              {user.gravatarUrl === undefined
-                ? <div className={classes.emptyImage} />
-                : user.gravatarUrl === 'not found'
-                  ? <UserIcon className={classes.avatar} />
-                  : <img
-                    alt={`user ${user.username}'s avatar`}
-                    src={user.gravatarUrl}
-                    className={classes.avatar}
-                  />
-              }
+              {user.gravatarUrl === undefined ? (
+                <div className={classes.emptyImage} />
+              ) : user.gravatarUrl === 'not found' ? (
+                <UserIcon className={classes.avatar} />
+              ) : (
+                <img
+                  alt={`user ${user.username}'s avatar`}
+                  src={user.gravatarUrl}
+                  className={classes.avatar}
+                />
+              )}
               {user.username}
             </Button>
           </Link>
         </TableCell>
-        <TableCell parentColumn="Email Address" data-qa-user-email>{user.email}</TableCell>
+        <TableCell parentColumn="Email Address" data-qa-user-email>
+          {user.email}
+        </TableCell>
         <TableCell parentColumn="Account Access" data-qa-user-restriction>
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
         <TableCell>
-          <ActionMenu
-            username={user.username}
-            onDelete={this.onDelete}
-          />
+          <ActionMenu username={user.username} onDelete={this.onDelete} />
         </TableCell>
       </TableRow>
-    )
-  }
+    );
+  };
 
   render() {
     const { classes, data: users, error, loading } = this.props;
@@ -226,33 +235,40 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Users" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }} >
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          style={{ marginTop: 8 }}
+        >
           <Grid item>
-            <Typography role="header" variant="h1" data-qa-title className={classes.title}>
+            <Typography
+              role="header"
+              variant="h1"
+              data-qa-title
+              className={classes.title}
+            >
               Users
-                  </Typography>
+            </Typography>
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <AddNewLink
-                  onClick={this.openForCreate}
-                  label="Add a User"
-                />
+                <AddNewLink onClick={this.openForCreate} label="Add a User" />
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        {newUsername &&
+        {newUsername && (
           <Notice success text={`User ${newUsername} created successfully`} />
-        }
-        {userDeleteError &&
+        )}
+        {userDeleteError && (
           <Notice
             style={{ marginTop: newUsername ? 16 : 0 }}
             error
             text={`Error when deleting user, please try again later`}
           />
-        }
+        )}
         <Paper>
           <Table aria-label="List of Users">
             <TableHead>
@@ -291,18 +307,23 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderTableContent = (loading: boolean, error?: Error, data?: Linode.User[]) => {
-
+  renderTableContent = (
+    loading: boolean,
+    error?: Error,
+    data?: Linode.User[]
+  ) => {
     if (loading) {
-      return <TableRowLoading colSpan={4} />
+      return <TableRowLoading colSpan={4} />;
     }
 
     if (error) {
-      return <TableRowError colSpan={4} message={`Unable to load user data.`} />
+      return (
+        <TableRowError colSpan={4} message={`Unable to load user data.`} />
+      );
     }
 
     if (!data || data.length === 0) {
-      return <TableRowEmptyState colSpan={4} />
+      return <TableRowEmptyState colSpan={4} />;
     }
 
     return data.map(user => this.renderUserRow(user));
@@ -313,19 +334,21 @@ const styled = withStyles(styles);
 
 const memoizedGetGravatarURL = memoize(getGravatarUrl);
 
-const paginated = Pagey((ownProps, params, filters) => getUsers(params, filters)
-  .then(({ data, page, pages, results }) =>
-    mapPromise(
-      data,
-      (user) => memoizedGetGravatarURL(user.email)
-        .then((gravatarUrl: string) => ({ ...user, gravatarUrl }))
-    )
-      .then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))));
+const paginated = Pagey((ownProps, params, filters) =>
+  getUsers(params, filters).then(({ data, page, pages, results }) =>
+    mapPromise(data, user =>
+      memoizedGetGravatarURL(user.email).then((gravatarUrl: string) => ({
+        ...user,
+        gravatarUrl
+      }))
+    ).then(updatedUsers => ({ page, pages, results, data: updatedUsers }))
+  )
+);
 
 export default compose<CombinedProps, {}>(
   withRouter,
   setDocs(UsersLanding.docs),
   styled,
   paginated,
-  withSnackbar,
+  withSnackbar
 )(UsersLanding);

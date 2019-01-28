@@ -1,6 +1,10 @@
 import Cached from '@material-ui/icons/Cached';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 export interface Props {
   status: 'loading' | 'active' | 'inactive' | 'error';
@@ -10,17 +14,17 @@ type CSSClasses = 'loading' | 'active' | 'inactive' | 'error';
 
 const defaultStyles = {
   fontSize: '1.5rem',
-  'user-select': 'none',
-}
+  'user-select': 'none'
+};
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(0deg)',
+      transform: 'rotate(0deg)'
     },
     to: {
-      transform: 'rotate(360deg)',
-    },
+      transform: 'rotate(360deg)'
+    }
   },
   loading: {
     fontSize: '1.0rem',
@@ -29,8 +33,8 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     left: -1,
     '& svg': {
       animation: 'rotate 2s linear infinite',
-      fill: theme.color.offBlack,
-    },
+      fill: theme.color.offBlack
+    }
   },
   active: {
     color: '#01b159',
@@ -43,22 +47,16 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
   inactive: {
     color: '#efefef',
     ...defaultStyles
-  },
+  }
 });
 
 const StatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   const { classes, status } = props;
   return (
-    <span
-    className={`${classes[status]}`}
-    data-qa-status={status}
-      >
-        {status === 'loading' ?
-          <Cached /> :
-          <span>&#x25CF;</span>
-        }
+    <span className={`${classes[status]}`} data-qa-status={status}>
+      {status === 'loading' ? <Cached /> : <span>&#x25CF;</span>}
     </span>
-  )
+  );
 };
 
 const styled = withStyles(styles);
@@ -78,20 +76,4 @@ export const getStatusForDomain = (status: string) => {
     default:
       return 'inactive';
   }
-}
-
-export const getStatusForVolume = (status: string) => {
-  switch (status) {
-    case 'creating':
-    case 'resizing':
-      return 'loading';
-    case 'active':
-      return 'active';
-    case 'contact_support':
-      return 'error';
-    default:
-      return 'inactive';
-  }
-}
-
-
+};

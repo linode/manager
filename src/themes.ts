@@ -4,7 +4,7 @@ import createTheme from './themeFactory';
 const breakpoints = createBreakpoints({});
 
 export const light = createTheme({
-  name: 'lightTheme',
+  name: 'lightTheme'
 });
 
 const primaryColors = {
@@ -15,41 +15,41 @@ const primaryColors = {
   headline: '#f4f4f4',
   divider: '#222222',
   offBlack: '#fff',
-  white: '#222',
-}
+  white: '#222'
+};
 
 const iconCircleAnimation = {
   '& .circle': {
     fill: primaryColors.main,
-    transition: 'fill .2s ease-in-out .2s',
+    transition: 'fill .2s ease-in-out .2s'
   },
   '& .outerCircle': {
     stroke: primaryColors.dark,
     strokeDasharray: 1000,
     strokeDashoffset: 1000,
-    animation: 'dash 2s linear forwards',
+    animation: 'dash 2s linear forwards'
   },
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
-    stroke: 'white',
-  },
-} 
+    stroke: 'white'
+  }
+};
 
 export const dark = createTheme({
   name: 'darkTheme',
   breakpoints,
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(0deg)',
+      transform: 'rotate(0deg)'
     },
     to: {
-      transform: 'rotate(360deg)',
-    },
+      transform: 'rotate(360deg)'
+    }
   },
   '@keyframes dash': {
     to: {
-      'stroke-dashoffset': 0,
-    },
+      'stroke-dashoffset': 0
+    }
   },
   bg: {
     main: '#2F3236',
@@ -59,7 +59,7 @@ export const dark = createTheme({
     lightBlue: '#222',
     white: '#32363C',
     pureWhite: '#000',
-    tableHeader: 'rgba(0, 0, 0, 0.15)',
+    tableHeader: 'rgba(0, 0, 0, 0.15)'
   },
   color: {
     headline: primaryColors.headline,
@@ -88,107 +88,107 @@ export const dark = createTheme({
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)'
   },
   animateCircleIcon: {
-    ...iconCircleAnimation,
+    ...iconCircleAnimation
   },
   notificationList: {
     borderBottom: '1px solid #f4f4f4',
     '&:hover': {
-      backgroundColor: '#111111',
-    },
+      backgroundColor: '#111111'
+    }
   },
   palette: {
     divider: primaryColors.divider,
     primary: primaryColors,
     text: {
-      primary: primaryColors.text,
-    },
+      primary: primaryColors.text
+    }
   },
   typography: {
     h1: {
-      color: primaryColors.headline,
+      color: primaryColors.headline
     },
     h2: {
-      color: primaryColors.headline,
+      color: primaryColors.headline
     },
     h3: {
-      color: primaryColors.headline,
+      color: primaryColors.headline
     },
     caption: {
-      color: primaryColors.text,
+      color: primaryColors.text
     },
     h4: {
-      color: primaryColors.text,
-    },
+      color: primaryColors.text
+    }
   },
   overrides: {
     MuiAppBar: {
       colorDefault: {
-        backgroundColor: 'transparent',
-      },
+        backgroundColor: 'transparent'
+      }
     },
     MuiBackdrop: {
       root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+      }
     },
     MuiButton: {
       label: {
-        position: 'relative',
+        position: 'relative'
       },
       root: {
         color: primaryColors.main,
         '&:hover': {
-          backgroundColor: '#000',
+          backgroundColor: '#000'
         },
         '&[aria-expanded="true"]': {
-          backgroundColor: primaryColors.dark,
+          backgroundColor: primaryColors.dark
         },
         '&$disabled': {
-          color: '#888',
+          color: '#888'
         },
         '&.loading': {
-          color: primaryColors.text,
-        },
+          color: primaryColors.text
+        }
       },
       containedPrimary: {
         '&:hover, &:focus': {
-          backgroundColor: primaryColors.light,
+          backgroundColor: primaryColors.light
         },
         '&:active': {
-          backgroundColor: primaryColors.dark,
+          backgroundColor: primaryColors.dark
         },
         '&$disabled': {
-          color: '#888',
+          color: '#888'
         },
         '&.loading': {
-          backgroundColor: primaryColors.text,
+          backgroundColor: primaryColors.text
         },
         '&.cancel': {
           '&:hover, &:focus': {
-            borderColor: '#fff',
-          },
-        },
+            borderColor: '#fff'
+          }
+        }
       },
       containedSecondary: {
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
         '&:hover, &:focus': {
           color: primaryColors.light,
-          borderColor: primaryColors.light,
+          borderColor: primaryColors.light
         },
         '&:active': {
           color: primaryColors.dark,
-          borderColor: primaryColors.dark,
+          borderColor: primaryColors.dark
         },
         '&$disabled': {
           borderColor: '#C9CACB',
-          color: '#C9CACB',
+          color: '#C9CACB'
         },
         '&.cancel': {
           borderColor: 'transparent',
           '&:hover, &:focus': {
-            borderColor: primaryColors.light,
-          },
+            borderColor: primaryColors.light
+          }
         },
         '&.destructive': {
           borderColor: '#C44742',
@@ -196,12 +196,12 @@ export const dark = createTheme({
           '&:hover, &:focus': {
             color: '#DF6560',
             borderColor: '#DF6560',
-            backgroundColor: 'transparent',
+            backgroundColor: 'transparent'
           },
           '&:active': {
             color: '#963530',
-            borderColor: '#963530',
-          },
+            borderColor: '#963530'
+          }
         },
         '&.loading': {
           borderColor: primaryColors.text,
@@ -210,97 +210,97 @@ export const dark = createTheme({
           '& svg': {
             width: 22,
             height: 22,
-            animation: 'rotate 2s linear infinite',
-          },
-        },
-      },
+            animation: 'rotate 2s linear infinite'
+          }
+        }
+      }
     },
     MuiButtonBase: {
       root: {
-        fontSize: '1rem',
-      },
+        fontSize: '1rem'
+      }
     },
     MuiCardHeader: {
       root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      },
+        backgroundColor: 'rgba(0, 0, 0, 0.2)'
+      }
     },
     MuiChip: {
       root: {
         color: primaryColors.text,
-        backgroundColor: primaryColors.main,
+        backgroundColor: primaryColors.main
       }
     },
     MuiCardActions: {
       root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2) !important',
-      },
+        backgroundColor: 'rgba(0, 0, 0, 0.2) !important'
+      }
     },
     MuiDialog: {
       paper: {
         boxShadow: '0 0 5px #222',
-        background: '#000',
-      },
+        background: '#000'
+      }
     },
     MuiDialogTitle: {
       root: {
         borderBottom: '1px solid #222',
         '& h2': {
-          color: primaryColors.headline,
-        },
-      },
+          color: primaryColors.headline
+        }
+      }
     },
     MuiDrawer: {
       paper: {
-        boxShadow: '0 0 5px #222',
-      },
+        boxShadow: '0 0 5px #222'
+      }
     },
     MuiExpansionPanel: {
       root: {
         '& table': {
-          border: `1px solid ${primaryColors.divider}`,
-        },
-      },
+          border: `1px solid ${primaryColors.divider}`
+        }
+      }
     },
     MuiExpansionPanelDetails: {
       root: {
-        backgroundColor: '#32363C',
-      },
+        backgroundColor: '#32363C'
+      }
     },
     MuiExpansionPanelSummary: {
       root: {
         '& $focused': {
-          backgroundColor: '#111111',
+          backgroundColor: '#111111'
         },
         backgroundColor: '#32363C',
         '&:hover': {
           '& h3': {
-            color: primaryColors.light,
+            color: primaryColors.light
           },
           '& $expandIcon': {
             '& svg': {
-              fill: primaryColors.light,
-            },
-          },
-        },
+              fill: primaryColors.light
+            }
+          }
+        }
       },
       expandIcon: {
         color: primaryColors.main,
         '& svg': {
-          fill: 'transparent',
+          fill: 'transparent'
         },
         '& .border': {
-          stroke: `${primaryColors.light} !important`,
-        },
+          stroke: `${primaryColors.light} !important`
+        }
       },
-      focused: {},
+      focused: {}
     },
     MuiFormControl: {
       root: {
         '&.copy > div': {
-          backgroundColor: '#2F3236',
-        },
-      },
+          backgroundColor: '#2F3236'
+        }
+      }
     },
     MuiFormControlLabel: {
       root: {
@@ -308,73 +308,73 @@ export const dark = createTheme({
           color: '#aaa !important'
         }
       },
-      disabled: {},
+      disabled: {}
     },
     MuiFormLabel: {
       root: {
         color: '#C9CACB',
         '&$focused': {
-          color: '#C9CACB',
+          color: '#C9CACB'
         },
         '&$error': {
-          color: '#C9CACB',
+          color: '#C9CACB'
         },
         '&$disabled': {
-          color: '#C9CACB',
-        },
-      },
+          color: '#C9CACB'
+        }
+      }
     },
     MuiFormHelperText: {
       root: {
         color: '#C9CACB',
         '&$error': {
-          color: '#CA0813',
-        },
-      },
+          color: '#CA0813'
+        }
+      }
     },
     MuiIconButton: {
       root: {
         color: primaryColors.main,
         '&:hover': {
-          color: primaryColors.light,
-        },
-      },
+          color: primaryColors.light
+        }
+      }
     },
     MuiInput: {
       root: {
         '&$disabled': {
           borderColor: '#606469',
-          color: '#666 !important',
+          color: '#666 !important'
         },
         '&$focused': {
           borderColor: primaryColors.main,
-          boxShadow: '0 0 2px 1px #222',
+          boxShadow: '0 0 2px 1px #222'
         },
         border: '1px solid #222',
         color: primaryColors.text,
         backgroundColor: '#444',
         '& svg': {
-          color: primaryColors.main,
-        },
+          color: primaryColors.main
+        }
       },
       focused: {},
-      disabled: {},
+      disabled: {}
     },
     MuiInputAdornment: {
       root: {
         color: '#eee',
         '& p': {
-          color: '#eee',
-        },
-      },
+          color: '#eee'
+        }
+      }
     },
     MuiListItem: {
       root: {
         color: primaryColors.text,
         '&.selectHeader': {
-          color: primaryColors.text,
-        },
-      },
+          color: primaryColors.text
+        }
+      }
     },
     MuiMenuItem: {
       root: {
@@ -382,149 +382,140 @@ export const dark = createTheme({
         '&$selected, &$selected:hover': {
           backgroundColor: 'transparent',
           color: primaryColors.main,
-          opacity: 1,
-        },
+          opacity: 1
+        }
       },
-      selected: {},
+      selected: {}
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#32363C',
-      },
+        backgroundColor: '#32363C'
+      }
     },
     MuiPopover: {
       paper: {
-        boxShadow: '0 0 5px #222',
-      },
+        boxShadow: '0 0 5px #222'
+      }
     },
     MuiSelect: {
       selectMenu: {
         color: primaryColors.text,
         backgroundColor: '#444',
         '&:focus': {
-          backgroundColor: '#444',
-        },
-      },
+          backgroundColor: '#444'
+        }
+      }
     },
     MuiSnackbarContent: {
       root: {
         backgroundColor: '#32363C',
         color: primaryColors.text,
-        boxShadow: '0 0 5px #222',
-      },
+        boxShadow: '0 0 5px #222'
+      }
     },
     MuiSwitch: {
       root: {
         '& $checked': {
           color: `#abadaf !important`,
           '& .square': {
-            fill: 'white !important',
-          },
-        },
+            fill: 'white !important'
+          }
+        }
       },
       checked: {},
       switchBase: {
-        color: '#abadaf !important',
+        color: '#abadaf !important'
       },
       bar: {
-        border: '1px solid #222',
+        border: '1px solid #222'
       }
     },
     MuiTab: {
       root: {
         color: '#fff',
-        '&:hover': {
-          color: primaryColors.main,
-        },
+        '&$selected, &$selected:hover': {
+          color: '#fff'
+        }
       },
       textColorPrimary: {
-        color: primaryColors.text,
-        '&$selected': {
-          color: primaryColors.text,
-        },
-        '&$disabled': {
-          color: '#666',
-          cursor: 'not-allowed',
-          pointerEvents: 'all !important',
-        },
+        color: '#fff',
+        '&$selected, &$selected:hover': {
+          color: '#fff'
+        }
       },
+      selected: {}
     },
     MuiTableCell: {
       root: {
-        borderBottom: `2px solid ${primaryColors.divider}`,
+        borderBottom: `2px solid ${primaryColors.divider}`
       },
       head: {
         color: primaryColors.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
-      },
+        backgroundColor: 'rgba(0, 0, 0, 0.15)'
+      }
     },
     MuiTabs: {
       root: {
-        boxShadow: 'inset 0 -1px 0 #222',
+        boxShadow: 'inset 0 -1px 0 #222'
       },
       flexContainer: {
         '& $scrollButtons:first-child': {
-          color: '#222',
+          color: '#222'
         }
       },
       scrollButtons: {
-        color: '#fff',
-      },
+        color: '#fff'
+      }
     },
     MuiTableRow: {
       root: {
         backgroundColor: '#32363C',
         '&:before': {
-          borderLeftColor: '#32363C',
+          borderLeftColor: '#32363C'
         },
         '&:hover': {
           '&$hover': {
             backgroundColor: 'rgba(0, 0, 0, 0.1)',
             '&:before': {
-              borderLeftColor: primaryColors.main,
-            },
-          },
-        },
+              borderLeftColor: primaryColors.main
+            }
+          }
+        }
       },
       head: {
         backgroundColor: '#32363C',
         '&:before': {
-          backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
-        },
+          backgroundColor: 'rgba(0, 0, 0, 0.15) !important'
+        }
       },
       hover: {
         '& > td:first-child': {
-          paddingLeft: 13,
+          paddingLeft: 13
         },
         '& a': {
-          color: primaryColors.offBlack,
-        },
-      },
-    },
-    MuiTableSortLabel: {
-      root: {
-        textDecoration: 'underline',
-      },
+          color: primaryColors.offBlack
+        }
+      }
     },
     MuiTooltip: {
       tooltip: {
         backgroundColor: '#444',
         boxShadow: '0 0 5px #222',
-        color: '#fff',
-      },
+        color: '#fff'
+      }
     },
     MuiTypography: {
       root: {
         '& a.black': {
-          color: primaryColors.text,
+          color: primaryColors.text
         },
         '& a.black:visited': {
-          color: primaryColors.text,
+          color: primaryColors.text
         },
         '& a.black:hover': {
-          color: primaryColors.text,
-        },
-      },
-    },
-  },
+          color: primaryColors.text
+        }
+      }
+    }
+  }
 });

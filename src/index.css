@@ -241,6 +241,11 @@ a.black:not(.nu):active {
   margin-bottom: 0 !important;
 }
 
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

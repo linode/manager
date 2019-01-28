@@ -7,7 +7,11 @@ import Divider from 'src/components/core/Divider';
 import Hidden from 'src/components/core/Hidden';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
@@ -17,10 +21,10 @@ interface PrimaryLink {
   display: string;
   href: string;
   key: string;
-};
+}
 
 type ClassNames =
-  'menuGrid'
+  | 'menuGrid'
   | 'fadeContainer'
   | 'logoItem'
   | 'listItem'
@@ -36,7 +40,7 @@ type ClassNames =
   | 'listItemAccount'
   | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuGrid: {
     minHeight: 64,
     width: '100%',
@@ -44,67 +48,70 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     margin: 0,
     padding: 0,
     [theme.breakpoints.up('sm')]: {
-      minHeight: 72,
+      minHeight: 72
     },
     [theme.breakpoints.up('md')]: {
-      minHeight: 80,
-    },
+      minHeight: 80
+    }
   },
   fadeContainer: {
     width: '100%',
     height: '100%',
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   logoItem: {
-    padding: '10px 0 8px 12px',
+    padding: '10px 0 8px 12px'
   },
   listItem: {
-    borderBottomColor: 'rgba(0, 0, 0, 0.12)',
     borderLeft: '6px solid transparent',
-    transition: theme.transitions.create(['background-color', 'border-left-color']),
-    flexShrink: 0,
+    transition: theme.transitions.create([
+      'background-color',
+      'border-left-color'
+    ]),
     padding: '10px 30px 10px 24px',
     '&:hover': {
-      borderLeftColor: 'rgba(0, 0, 0, 0.1)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
-        color: 'white',
-      },
+        color: 'white'
+      }
     },
     '&:focus, &:active': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      outline: 0,
       '& $linkItem': {
         color: 'white',
-        zIndex: 2,
-      },
-    },
+        zIndex: 2
+      }
+    }
   },
   listItemAccount: {
     '&:hover': {
-      borderLeftColor: 'transparent',
-    },
+      borderLeftColor: 'transparent'
+    }
   },
   collapsible: {
-    fontSize: '.9rem',
+    fontSize: '.9rem'
   },
   linkItem: {
     transition: theme.transitions.create(['color']),
     color: '#C9CACB',
-    fontFamily: 'LatoWebBold',
+    fontFamily: 'LatoWebBold'
   },
   active: {
     transition: 'border-color .7s ease-in-out',
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     borderLeftColor: theme.color.green,
     '&:hover': {
-      borderLeftColor: theme.color.green,
-    },
+      borderLeftColor: theme.color.green
+    }
   },
   sublinkPanel: {
     paddingLeft: theme.spacing.unit * 6,
     paddingRight: theme.spacing.unit * 2,
     fontSize: '.9rem',
     flexShrink: 0,
-    listStyleType: 'none',
+    listStyleType: 'none'
   },
   sublink: {
     padding: '4px 0 4px 8px',
@@ -113,31 +120,31 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     fontSize: '.8rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
-      outline: 0,
-    },
+      outline: 0
+    }
   },
   activeLink: {
     color: 'white',
     '& $arrow': {
-      transform: 'rotate(90deg)',
-    },
+      transform: 'rotate(90deg)'
+    }
   },
   sublinkActive: {
-    textDecoration: 'underline',
+    textDecoration: 'underline'
   },
   arrow: {
     position: 'relative',
     top: 4,
     fontSize: '1.2rem',
     margin: '0 4px 0 -7px',
-    transition: theme.transitions.create(['transform']),
+    transition: theme.transitions.create(['transform'])
   },
   spacer: {
-    padding: 25,
+    padding: 25
   },
   divider: {
-    backgroundColor: 'rgba(0, 0, 0, 0.12)',
-  },
+    backgroundColor: 'rgba(0, 0, 0, 0.12)'
+  }
 });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
@@ -158,9 +165,9 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     drawerOpen: false,
     expandedMenus: {
       account: false,
-      support: false,
+      support: false
     },
-    primaryLinks: [],
+    primaryLinks: []
   };
 
   mounted: boolean = false;
@@ -184,7 +191,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const {
       hasAccountAccess,
       // isLongviewEnabled,
-      isManagedAccount,
+      isManagedAccount
     } = this.props;
 
     const primaryLinks = [
@@ -200,7 +207,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // }
 
     // if (canAccessNodeBalancers) {
-    primaryLinks.push({ display: 'NodeBalancers', href: '/nodebalancers', key: 'nodebalancers' });
+    primaryLinks.push({
+      display: 'NodeBalancers',
+      href: '/nodebalancers',
+      key: 'nodebalancers'
+    });
     // }
 
     // if (canAccessDomains) {
@@ -208,15 +219,27 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // }
 
     // if (isLongviewEnabled) {
-    primaryLinks.push({ display: 'Longview', href: '/longview', key: 'longview' });
+    primaryLinks.push({
+      display: 'Longview',
+      href: '/longview',
+      key: 'longview'
+    });
     // }
 
     if (isManagedAccount) {
-      primaryLinks.push({ display: 'Managed', href: '/managed', key: 'managed' });
+      primaryLinks.push({
+        display: 'Managed',
+        href: '/managed',
+        key: 'managed'
+      });
     }
 
     // if(canAccessStackscripts){
-    primaryLinks.push({ display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' });
+    primaryLinks.push({
+      display: 'StackScripts',
+      href: '/stackscripts',
+      key: 'stackscripts'
+    });
     // }
 
     // if(canAccessImages){
@@ -224,10 +247,18 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // }
 
     if (hasAccountAccess) {
-      primaryLinks.push({ display: 'Account', href: '/account', key: 'account' });
+      primaryLinks.push({
+        display: 'Account',
+        href: '/account/billing',
+        key: 'account'
+      });
     }
 
-    primaryLinks.push({ display: 'Get Help', href: '/support', key: 'support' });
+    primaryLinks.push({
+      display: 'Get Help',
+      href: '/support',
+      key: 'support'
+    });
 
     this.setState({ primaryLinks });
   };
@@ -236,64 +267,65 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const { history, closeMenu } = this.props;
     history.push(href);
     closeMenu();
-  }
+  };
 
   linkIsActive = (href: string) => {
     return isPathOneOf([href], this.props.location.pathname);
-  }
+  };
 
   expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
     const menuName = e.currentTarget.getAttribute('data-menu-name');
-    if (!menuName) { return };
+    if (!menuName) {
+      return;
+    }
     this.setState({
       expandedMenus: {
         ...this.state.expandedMenus,
-        [menuName]: !this.state.expandedMenus[menuName],
+        [menuName]: !this.state.expandedMenus[menuName]
       }
     });
   };
 
   goToHelp = () => {
     this.navigate('/support');
-  }
+  };
 
   goToProfile = () => {
-    this.navigate('/profile');
-  }
+    this.navigate('/profile/display');
+  };
 
   logOut = () => {
     this.navigate('/logout');
-  }
+  };
 
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes } = this.props;
 
     return (
-      <ListItem
-        key={primaryLink.display}
-        button
-        divider={!isLast}
-        component="li"
-        role="menuitem"
-        focusRipple={true}
-        onClick={() => this.navigate(primaryLink.href)}
-        className={`
-          ${classes.listItem}
-          ${this.linkIsActive(primaryLink.href) && classes.active}
-        `}
-        data-qa-nav-item={primaryLink.key}
-      >
-        <ListItemText
-          primary={primaryLink.display}
-          disableTypography={true}
-          className={`
-            ${classes.linkItem}
-            ${this.linkIsActive(primaryLink.href) && classes.activeLink}
-          `}
-        />
-      </ListItem>
+      <React.Fragment key={primaryLink.key}>
+        <Link
+          role="menuitem"
+          to={primaryLink.href}
+          href="javascript:void(0)"
+          onClick={this.props.closeMenu}
+          data-qa-nav-item={primaryLink.key}
+          className={classNames({
+            [classes.listItem]: true,
+            [classes.active]: this.linkIsActive(primaryLink.href)
+          })}
+        >
+          <ListItemText
+            primary={primaryLink.display}
+            disableTypography={true}
+            className={classNames({
+              [classes.linkItem]: true
+            })}
+          />
+        </Link>
+        <Divider className={classes.divider} />
+      </React.Fragment>
     );
-  }
+  };
 
   render() {
     const { classes, toggleTheme } = this.props;
@@ -309,7 +341,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           direction="column"
           wrap="nowrap"
           spacing={0}
-          component="ul"
+          component="nav"
           role="menu"
         >
           <Grid item>
@@ -319,13 +351,15 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               </Link>
             </div>
           </Grid>
-          <div className={classNames({
-            ['fade-in-table']: true,
-            [classes.fadeContainer]: true,
-          })}>
-
+          <div
+            className={classNames({
+              ['fade-in-table']: true,
+              [classes.fadeContainer]: true
+            })}
+          >
             {this.state.primaryLinks.map((primaryLink, id, arr) =>
-              this.renderPrimaryLink(primaryLink, id === arr.length - 1))}
+              this.renderPrimaryLink(primaryLink, id === arr.length - 1)
+            )}
 
             <Hidden mdUp>
               <Divider className={classes.divider} />
@@ -337,7 +371,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 className={classNames({
                   [classes.listItem]: true,
                   [classes.collapsible]: true,
-                  [classes.active]: this.linkIsActive('/profile') === true,
+                  [classes.active]:
+                    this.linkIsActive('/profile/display') === true
                 })}
               >
                 <ListItemText
@@ -345,8 +380,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                   className={classNames({
                     [classes.linkItem]: true,
                     [classes.activeLink]:
-                      expandedMenus.support
-                      || this.linkIsActive('/profile') === true,
+                      expandedMenus.support ||
+                      this.linkIsActive('/profile/display') === true
                   })}
                 >
                   My Profile
@@ -360,7 +395,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 className={classNames({
                   [classes.listItem]: true,
                   [classes.collapsible]: true,
-                  [classes.active]: this.linkIsActive('/logout') === true,
+                  [classes.active]: this.linkIsActive('/logout') === true
                 })}
               >
                 <ListItemText
@@ -368,8 +403,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                   className={classNames({
                     [classes.linkItem]: true,
                     [classes.activeLink]:
-                      expandedMenus.support
-                      || this.linkIsActive('/logout') === true,
+                      expandedMenus.support ||
+                      this.linkIsActive('/logout') === true
                   })}
                 >
                   Log Out
@@ -401,7 +436,7 @@ const userHasAccountAccess = (profile: Linode.Profile) => {
     return false;
   }
 
-  return Boolean(grants.global.account_access)
+  return Boolean(grants.global.account_access);
 };
 
 const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
@@ -415,18 +450,17 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false,
+      isManagedAccount: false
       // isLongviewEnabled: false,
-    }
+    };
   }
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account),
+    isManagedAccount: accountHasManaged(account)
     // isLongviewEnabled: accountHasLongviewSubscription(account),
-  }
+  };
 };
-
 
 const connected = connect(mapStateToProps);
 
