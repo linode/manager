@@ -26,6 +26,7 @@ import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import { openForClone, openForConfig, openForCreating, openForEdit, openForResize } from 'src/store/volumeDrawer';
+import { sendEvent } from 'src/utilities/analytics';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
 import ListVolumes from './ListVolumes';
@@ -178,7 +179,9 @@ type CombinedProps =
   & WithMappedVolumesProps
   & WithStyles<ClassNames>;
 
-  class VolumesLanding extends React.Component<CombinedProps, State> {
+class VolumesLanding extends React.Component<CombinedProps, State> {
+  static eventCategory = `volumes landing`;
+
   state: State = {
     attachmentDrawer: {
       open: false,
@@ -485,12 +488,11 @@ const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUp
     toggleGroupByTag: (state) => (checked: boolean) => {
       storage.groupVolumesByTag.set(checked ? 'true' : 'false');
 
-      // @todo: Uncomment to send event to GA
-      // sendEvent({
-      //   category: VolumesLanding.eventCategory,
-      //   action: 'group by tag',
-      //   label: String(checked),
-      // });
+      sendEvent({
+        category: VolumesLanding.eventCategory,
+        action: 'group by tag',
+        label: String(checked),
+      });
 
       return {
         ...state,
