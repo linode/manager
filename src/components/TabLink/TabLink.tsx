@@ -1,13 +1,17 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'selected';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: any) => ({
   root: {
-     ...theme.overrides.MuiTab.root,
+    ...theme.overrides.MuiTab.root
   },
   selected: {}
 });
@@ -18,27 +22,26 @@ interface Props {
   selected?: boolean;
 }
 
-type CombinedProps = Props &  WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TabLink extends React.Component<CombinedProps> {
-
   render() {
     const { classes, title, to } = this.props;
     const pathName = document.location.pathname;
 
     return (
-        <Link
-          to={to}
-          className={classNames({
-            [classes.root]: true,
-            [classes.selected]: pathName === to
-          })}
-          role="tab"
-          tabIndex={0}
-          aria-selected={pathName === to}
-        >
-          {title}
-        </Link>
+      <Link
+        to={to}
+        className={classNames({
+          [classes.root]: true,
+          [classes.selected]: pathName === to
+        })}
+        role="tab"
+        tabIndex={0}
+        aria-selected={pathName === to}
+      >
+        {title}
+      </Link>
     );
   }
 }

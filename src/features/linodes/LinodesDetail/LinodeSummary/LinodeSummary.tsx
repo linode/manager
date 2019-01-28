@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 import FormControl from 'src/components/core/FormControl';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -14,10 +18,18 @@ import Select from 'src/components/Select';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { setUpCharts } from 'src/utilities/charts';
 import { isRecent } from 'src/utilities/isRecent';
-import { formatBitsPerSecond, formatBytes, formatNumber, formatPercentage, getMetrics, getTotalTraffic } from 'src/utilities/statMetrics';
+import {
+  formatBitsPerSecond,
+  formatBytes,
+  formatNumber,
+  formatPercentage,
+  getMetrics,
+  getTotalTraffic
+} from 'src/utilities/statMetrics';
 import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
@@ -25,25 +37,26 @@ import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 
 setUpCharts();
 
-type ClassNames = 'chart'
+type ClassNames =
+  | 'chart'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
   | 'graphControls'
   | 'totalTraffic';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
+const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     chart: {
       position: 'relative',
       width: 'calc(100vw - 80px)',
       paddingLeft: theme.spacing.unit * 4,
       [theme.breakpoints.up('md')]: {
-        width: 'calc(100vw - 310px)',
+        width: 'calc(100vw - 310px)'
       },
       [theme.breakpoints.up('xl')]: {
-        width: 'calc(100vw - 370px)',
-      },
+        width: 'calc(100vw - 370px)'
+      }
     },
     leftLegend: {
       position: 'absolute',
@@ -51,10 +64,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       bottom: '50%',
       transform: 'rotate(-90deg)',
       color: '#777',
-      fontSize: 14,
+      fontSize: 14
     },
     bottomLegend: {
-      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${theme.spacing.unit}px`,
+      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${
+        theme.spacing.unit
+      }px`,
       padding: 10,
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
@@ -62,20 +77,20 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
         '& > div': {
-          marginBottom: theme.spacing.unit * 2,
-        },
-      },
+          marginBottom: theme.spacing.unit * 2
+        }
+      }
     },
     graphTitle: {
-      marginRight: theme.spacing.unit * 2,
+      marginRight: theme.spacing.unit * 2
     },
     graphControls: {
       margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     totalTraffic: {
-      margin: '12px',
+      margin: '12px'
     }
   };
 };
@@ -94,13 +109,11 @@ interface State {
   dataIsLoading: boolean;
   isTooEarlyForGraphData?: boolean;
   statsError?: string;
-
 }
 
-type CombinedProps =
- & LinodeContextProps
- & WithTypesProps
- & WithStyles<ClassNames>;
+type CombinedProps = LinodeContextProps &
+  WithTypesProps &
+  WithStyles<ClassNames>;
 
 const chartHeight = 300;
 
@@ -113,7 +126,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   state: State = {
     stats: undefined,
     rangeSelection: '24',
-    dataIsLoading: false,
+    dataIsLoading: false
   };
 
   rangeSelectOptions: (typeof MenuItem)[] = [];
@@ -121,7 +134,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
     const { linodeCreated } = props;
-    if(!linodeCreated) { return };
+    if (!linodeCreated) {
+      return;
+    }
 
     const options: [string, string][] = [['24', 'Last 24 Hours']];
     const [createMonth, createYear] = [
@@ -131,7 +146,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       (moment.utc(linodeCreated).month() + 1).toString().length === 1
         ? `0${moment.utc(linodeCreated).month() + 1}`
         : moment.utc(linodeCreated).month() + 1,
-      moment.utc(linodeCreated).year(),
+      moment.utc(linodeCreated).year()
     ];
 
     const currentMonth = moment.utc().month() + 1; // Add 1 here because JS months are 0-indexed
@@ -145,9 +160,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       // from the last 30 days. We want the options to reflect this.
       //
       // Example: If it's Jan. 15, the options would be "Last 24 Hours", "Last 30 Days", "Dec 2018" ... etc.
-      const optionDisplay = (testYear === currentYear && testMonth === currentMonth)
-        ? 'Last 30 Days'
-        :  `${moment().month(testMonth - 1).format('MMM')} ${testYear}`;
+      const optionDisplay =
+        testYear === currentYear && testMonth === currentMonth
+          ? 'Last 30 Days'
+          : `${moment()
+              .month(testMonth - 1)
+              .format('MMM')} ${testYear}`;
 
       options.push([
         `${testYear} ${testMonth.toString().padStart(2, '0')}`,
@@ -162,21 +180,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       }
       // same comment as above. Month needs to be prepended with a "0"
       // if it's only one digit to appease moment.js
-      formattedTestDate = (testMonth.toString().length === 1)
-        ? `${testYear}-0${testMonth}-01`
-        : `${testYear}-${testMonth}-01`;
+      formattedTestDate =
+        testMonth.toString().length === 1
+          ? `${testYear}-0${testMonth}-01`
+          : `${testYear}-${testMonth}-01`;
     } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
-    (this.rangeSelectOptions as Linode.TodoAny) = options.map((option) => {
-      return <MenuItem key={option[0]} value={option[0]}>{option[1]}</MenuItem>;
+    (this.rangeSelectOptions as Linode.TodoAny) = options.map(option => {
+      return (
+        <MenuItem key={option[0]} value={option[0]}>
+          {option[1]}
+        </MenuItem>
+      );
     });
-
   }
 
   componentDidMount() {
     this.mounted = true;
     // Only use loading state on initial data load. This will be set to false
     // in the getStats then and catch handlers.
-    this.setState({ dataIsLoading: true, }, this.getStats);
+    this.setState({ dataIsLoading: true }, this.getStats);
     this.statsInterval = window.setInterval(this.getStats, statsFetchInterval);
   }
 
@@ -188,8 +210,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   getStats = () => {
     const { linodeId } = this.props;
     const { rangeSelection } = this.state;
-    if (!linodeId) { return; }
-    this.setState({ statsError: undefined, });
+    if (!linodeId) {
+      return;
+    }
+    this.setState({ statsError: undefined });
     let req;
     if (rangeSelection === '24') {
       req = getLinodeStats(linodeId);
@@ -198,14 +222,18 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       req = getLinodeStatsByDate(linodeId, year, month);
     }
     req
-      .then((response) => {
-        if (!this.mounted) { return; }
+      .then(response => {
+        if (!this.mounted) {
+          return;
+        }
 
         this.setState({ statsLoadError: undefined });
         this.setState({ stats: response.data, dataIsLoading: false });
       })
-      .catch((errorResponse) => {
-        if (!this.mounted) { return; }
+      .catch(errorResponse => {
+        if (!this.mounted) {
+          return;
+        }
 
         const { linodeCreated } = this.props;
 
@@ -213,26 +241,32 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         // requesting stats (since there's no data available yet.) In this case,
         // it'd be jarring to display the error state – we'd rather show a friendlier message.
         if (isRecent(linodeCreated, moment.utc().format())) {
-          return this.setState({ dataIsLoading: false, isTooEarlyForGraphData: true });
+          return this.setState({
+            dataIsLoading: false,
+            isTooEarlyForGraphData: true
+          });
         }
 
-        const errorText = pathOr("There was an error retrieving information for this Linode.",
-          ['reason'], errorResponse[0]);
-        this.setState({ dataIsLoading: false, statsError: errorText, })
+        const errorText = pathOr(
+          'There was an error retrieving information for this Linode.',
+          ['reason'],
+          errorResponse[0]
+        );
+        this.setState({ dataIsLoading: false, statsError: errorText });
       });
-  }
+  };
 
   handleChartRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     this.setState({ rangeSelection: value }, () => {
       this.getStats();
     });
-  }
+  };
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
     const { classes } = this.props;
-    const data = pathOr([], ['data','cpu'], stats);
+    const data = pathOr([], ['data', 'cpu'], stats);
 
     const metrics = getMetrics(data);
     const format = formatPercentage;
@@ -240,9 +274,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>
-            CPU %
-          </div>
+          <div className={classes.leftLegend}>CPU %</div>
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
@@ -250,8 +282,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               {
                 borderColor: '#428ade',
                 data,
-                label: 'CPU %',
-              },
+                label: 'CPU %'
+              }
             ]}
           />
         </div>
@@ -272,25 +304,25 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           </Grid>
         </div>
       </React.Fragment>
-    )
-  }
+    );
+  };
 
   renderIPv4TrafficChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const v4Data = {
-      publicIn: pathOr([], ['data','netv4','in'], stats),
-      publicOut: pathOr([], ['data','netv4','out'], stats),
-      privateIn: pathOr([], ['data','netv4','private_in'], stats),
-      privateOut: pathOr([], ['data','netv4','private_out'], stats)
+      publicIn: pathOr([], ['data', 'netv4', 'in'], stats),
+      publicOut: pathOr([], ['data', 'netv4', 'out'], stats),
+      privateIn: pathOr([], ['data', 'netv4', 'private_in'], stats),
+      privateOut: pathOr([], ['data', 'netv4', 'private_out'], stats)
     };
 
     // Need these to calculate Total Traffic
     const v6Data = {
-      publicIn: pathOr([], ['data','netv6','in'], stats),
-      publicOut: pathOr([], ['data','netv6','out'], stats),
-      privateIn: pathOr([], ['data','netv6','private_in'], stats),
+      publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
+      publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
+      privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats)
     };
 
     const format = formatBitsPerSecond;
@@ -303,20 +335,21 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const netv4InMetrics = getMetrics(v4Data.publicIn);
     const netv4OutMetrics = getMetrics(v4Data.publicOut);
 
-    const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
-      netv4InMetrics.total,
-      netv4OutMetrics.total,
-      v4Data.publicIn.length,
-      netv6InMetrics.total,
-      netv6OutMetrics.total,
-    ));
+    const totalTraffic: TotalTrafficProps = map(
+      formatBytes,
+      getTotalTraffic(
+        netv4InMetrics.total,
+        netv4OutMetrics.total,
+        v4Data.publicIn.length,
+        netv6InMetrics.total,
+        netv6OutMetrics.total
+      )
+    );
 
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>
-            bits/sec
-          </div>
+          <div className={classes.leftLegend}>bits/sec</div>
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
@@ -324,23 +357,23 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               {
                 borderColor: '#3683dc',
                 data: v4Data.publicIn,
-                label: 'Public Traffic In',
+                label: 'Public Traffic In'
               },
               {
                 borderColor: '#01b159',
                 data: v4Data.publicOut,
-                label: 'Public Traffic Out',
+                label: 'Public Traffic Out'
               },
               {
                 borderColor: '#d01e1e',
                 data: v4Data.privateIn,
-                label: 'Private Traffic In',
+                label: 'Private Traffic In'
               },
               {
                 borderColor: '#ffd100',
                 data: v4Data.privateOut,
-                label: 'Private Traffic Out',
-              },
+                label: 'Private Traffic Out'
+              }
             ]}
           />
         </div>
@@ -384,7 +417,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </div>
-        {rangeSelection === '24' &&
+        {rangeSelection === '24' && (
           <Grid item xs={12} sm={6} className={classes.totalTraffic}>
             <TotalTraffic
               inTraffic={totalTraffic.inTraffic}
@@ -392,20 +425,20 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               combinedTraffic={totalTraffic.combinedTraffic}
             />
           </Grid>
-        }
+        )}
       </React.Fragment>
-    )
-  }
+    );
+  };
 
   renderIPv6TrafficChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
-      publicIn: pathOr([], ['data','netv6','in'], stats),
-      publicOut: pathOr([], ['data','netv6','out'], stats),
-      privateIn: pathOr([], ['data','netv6','private_in'], stats),
-      privateOut: pathOr([], ['data','netv6','private_out'], stats)
+      publicIn: pathOr([], ['data', 'netv6', 'in'], stats),
+      publicOut: pathOr([], ['data', 'netv6', 'out'], stats),
+      privateIn: pathOr([], ['data', 'netv6', 'private_in'], stats),
+      privateOut: pathOr([], ['data', 'netv6', 'private_out'], stats)
     };
 
     const format = formatBitsPerSecond;
@@ -413,18 +446,19 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     const publicInMetrics = getMetrics(data.publicIn);
     const publicOutMetrics = getMetrics(data.publicOut);
 
-    const totalTraffic: TotalTrafficProps = map(formatBytes, getTotalTraffic(
-      publicInMetrics.total,
-      publicOutMetrics.total,
-      publicInMetrics.length
-    ));
+    const totalTraffic: TotalTrafficProps = map(
+      formatBytes,
+      getTotalTraffic(
+        publicInMetrics.total,
+        publicOutMetrics.total,
+        publicInMetrics.length
+      )
+    );
 
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>
-            bits/sec
-          </div>
+          <div className={classes.leftLegend}>bits/sec</div>
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
@@ -432,23 +466,23 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               {
                 borderColor: '#3683dc',
                 data: data.publicIn,
-                label: 'Public Traffic In',
+                label: 'Public Traffic In'
               },
               {
                 borderColor: '#01b159',
                 data: data.publicOut,
-                label: 'Public Traffic Out',
+                label: 'Public Traffic Out'
               },
               {
                 borderColor: '#d01e1e',
                 data: data.privateIn,
-                label: 'Private Traffic In',
+                label: 'Private Traffic In'
               },
               {
                 borderColor: '#ffd100',
                 data: data.privateOut,
-                label: 'Private Traffic Out',
-              },
+                label: 'Private Traffic Out'
+              }
             ]}
           />
         </div>
@@ -492,7 +526,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </div>
-        {rangeSelection === '24' &&
+        {rangeSelection === '24' && (
           <Grid item xs={12} sm={6} className={classes.totalTraffic}>
             <TotalTraffic
               inTraffic={totalTraffic.inTraffic}
@@ -500,18 +534,18 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               combinedTraffic={totalTraffic.combinedTraffic}
             />
           </Grid>
-        }
+        )}
       </React.Fragment>
-    )
-  }
+    );
+  };
 
   renderDiskIOChart = () => {
     const { classes } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
-      io: pathOr([], ['data','io','io'], stats),
-      swap: pathOr([], ['data','io','swap'], stats)
+      io: pathOr([], ['data', 'io', 'io'], stats),
+      swap: pathOr([], ['data', 'io', 'swap'], stats)
     };
 
     const format = formatNumber;
@@ -521,7 +555,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <div className={classes.chart}>
           <div className={classes.leftLegend} style={{ left: -18, bottom: 48 }}>
             blocks/sec
-            </div>
+          </div>
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
@@ -529,13 +563,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               {
                 borderColor: '#ffd100',
                 data: data.io,
-                label: 'Disk I/O',
+                label: 'Disk I/O'
               },
               {
                 borderColor: '#d01e1e',
                 data: data.swap,
-                label: 'Swap I/O',
-              },
+                label: 'Swap I/O'
+              }
             ]}
           />
         </div>
@@ -568,18 +602,23 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           </Grid>
         </div>
       </React.Fragment>
-    )
-  }
+    );
+  };
 
   render() {
     const {
       linodeData: linode,
       volumesData: volumes,
       classes,
-      typesData,
+      typesData
     } = this.props;
 
-    const { dataIsLoading, statsError, rangeSelection, isTooEarlyForGraphData } = this.state;
+    const {
+      dataIsLoading,
+      statsError,
+      rangeSelection,
+      isTooEarlyForGraphData
+    } = this.state;
 
     // Shared props for all stats charts
     const chartProps = {
@@ -587,7 +626,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       error: statsError,
       height: chartHeight,
       isTooEarlyForGraphData
-    }
+    };
 
     if (!linode || !volumes) {
       return null;
@@ -597,58 +636,66 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       displayType(linode.type, typesData || []),
       linode.specs.memory,
       linode.specs.disk,
-      linode.specs.vcpus,
+      linode.specs.vcpus
     );
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
-        <SummaryPanel linode={linode} volumes={volumes} typesLongLabel={longLabel} linodeImageId={linode.image} />
+        <SummaryPanel
+          linode={linode}
+          volumes={volumes}
+          typesLongLabel={longLabel}
+          linodeImageId={linode.image}
+        />
 
-          <React.Fragment>
-            <div className={classes.graphControls}>
-              <Typography role="header" variant="h2" className={classes.graphTitle}>
-                Graphs
-              </Typography>
-              <FormControl style={{ marginTop: 0 }}>
-                <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                  Select Time Range
-                </InputLabel>
-                <Select
-                  value={rangeSelection}
-                  onChange={this.handleChartRangeChange}
-                  inputProps={{ name: 'chartRange', id: 'chartRange' }}
-                >
-                  {this.rangeSelectOptions}
-                </Select>
-              </FormControl>
-            </div>
+        <React.Fragment>
+          <div className={classes.graphControls}>
+            <Typography
+              role="header"
+              variant="h2"
+              className={classes.graphTitle}
+            >
+              Graphs
+            </Typography>
+            <FormControl style={{ marginTop: 0 }}>
+              <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                Select Time Range
+              </InputLabel>
+              <Select
+                value={rangeSelection}
+                onChange={this.handleChartRangeChange}
+                inputProps={{ name: 'chartRange', id: 'chartRange' }}
+              >
+                {this.rangeSelectOptions}
+              </Select>
+            </FormControl>
+          </div>
 
-            <StatsPanel
-              title="CPU Usage"
-              renderBody={this.renderCPUChart}
-              {...chartProps}
-            />
+          <StatsPanel
+            title="CPU Usage"
+            renderBody={this.renderCPUChart}
+            {...chartProps}
+          />
 
-            <StatsPanel
-              title="IPv4 Traffic"
-              renderBody={this.renderIPv4TrafficChart}
-              {...chartProps}
-            />
+          <StatsPanel
+            title="IPv4 Traffic"
+            renderBody={this.renderIPv4TrafficChart}
+            {...chartProps}
+          />
 
-            <StatsPanel
-              title="IPv6 Traffic"
-              renderBody={this.renderIPv6TrafficChart}
-              {...chartProps}
-            />
+          <StatsPanel
+            title="IPv6 Traffic"
+            renderBody={this.renderIPv6TrafficChart}
+            {...chartProps}
+          />
 
-            <StatsPanel
-              title="Disk IO"
-              renderBody={this.renderDiskIOChart}
-              {...chartProps}
-            />
-
-          </React.Fragment>
+          <StatsPanel
+            title="Disk IO"
+            renderBody={this.renderDiskIOChart}
+            {...chartProps}
+          />
+        </React.Fragment>
       </React.Fragment>
     );
   }
@@ -656,11 +703,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode((context) => ({
+const linodeContext = withLinode(context => ({
   linodeCreated: context.data!.created,
   linodeId: context.data!.id,
   /** @todo get rid of this */
-  linodeData: context.data,
+  linodeData: context.data
 }));
 
 interface WithTypesProps {
@@ -668,15 +715,15 @@ interface WithTypesProps {
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
-  typesData: state.__resources.types.entities,
+  typesData: state.__resources.types.entities
 }));
 
 interface StateProps {
-  volumesData?: Linode.Volume[]
+  volumesData?: Linode.Volume[];
 }
 
 const withVolumesData: MapState<StateProps, {}> = (state, ownProps) => ({
-  volumesData: state.features.linodeDetail.volumes.data,
+  volumesData: state.features.linodeDetail.volumes.data
 });
 
 const connected = connect(withVolumesData);
@@ -685,7 +732,7 @@ const enhanced = compose(
   connected,
   styled,
   withTypes,
-  linodeContext,
+  linodeContext
 );
 
 export default enhanced(LinodeSummary);

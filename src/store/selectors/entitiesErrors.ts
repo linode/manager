@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { ApplicationState } from 'src/store';
 
 type State = ApplicationState['__resources'];
 

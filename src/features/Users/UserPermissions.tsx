@@ -7,7 +7,11 @@ import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -26,7 +30,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames =
-  'titleWrapper'
+  | 'titleWrapper'
   | 'toggle'
   | 'topGrid'
   | 'unrestrictedRoot'
@@ -38,53 +42,53 @@ type ClassNames =
   | 'tableSubheading'
   | 'permSelect';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   topGrid: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit
   },
   titleWrapper: {
     marginTop: 0,
     padding: 0,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   toggle: {
-    marginRight: 3,
+    marginRight: 3
   },
   permSelect: {
     width: 'auto',
     [theme.breakpoints.up('sm')]: {
-      justifyContent: 'flex-end',
-    },
+      justifyContent: 'flex-end'
+    }
   },
   unrestrictedRoot: {
     marginTop: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   globalSection: {
     marginTop: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   globalRow: {
-    padding: `${theme.spacing.unit}px 0`,
+    padding: `${theme.spacing.unit}px 0`
   },
   section: {
     marginTop: theme.spacing.unit * 2,
-    paddingBottom: 0,
+    paddingBottom: 0
   },
   grantTable: {
     '& th': {
       width: '25%',
-      minWidth: 150,
-    },
+      minWidth: 150
+    }
   },
   tableSubheading: {
     marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   selectAll: {
-    cursor: 'pointer',
-  },
+    cursor: 'pointer'
+  }
 });
 
 interface Props {
@@ -99,15 +103,15 @@ interface State {
   loadingGrants: boolean;
   saving: {
     [key: string]: boolean;
-  },
+  };
   grants?: Linode.Grants;
-  originalGrants?: Linode.Grants; /* used to implement cancel functionality */
+  originalGrants?: Linode.Grants /* used to implement cancel functionality */;
   restricted?: boolean;
   errors?: Linode.ApiFieldError[];
   success?: {
-    global: string,
-    specific: string,
-  }
+    global: string;
+    specific: string;
+  };
   /* null needs to be a string here because it's a Select value */
   setAllPerm: 'null' | 'read_only' | 'read_write';
 }
@@ -121,7 +125,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     setAllPerm: 'null',
     saving: {
       global: false,
-      entity: false,
+      entity: false
     }
   };
 
@@ -144,40 +148,44 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'volume',
     'nodebalancer',
     'domain',
-    'longview',
-  ]
+    'longview'
+  ];
 
   getUserGrants = () => {
     const { username } = this.props;
     if (username) {
       getGrants(username)
-        .then((grants) => {
+        .then(grants => {
           if (grants.global) {
             this.setState({
               grants,
               originalGrants: grants,
               loading: false,
               loadingGrants: false,
-              restricted: true,
-            })
+              restricted: true
+            });
           } else {
             this.setState({
               grants,
               loading: false,
               loadingGrants: false,
-              restricted: false,
-            })
+              restricted: false
+            });
           }
         })
-        .catch((errResponse) => {
+        .catch(errResponse => {
           this.setState({
-            errors: [{ reason:
-              'Unknown error occured while fetching user permissions. Try again later.'}]
+            errors: [
+              {
+                reason:
+                  'Unknown error occured while fetching user permissions. Try again later.'
+              }
+            ]
           });
           scrollErrorIntoView();
         });
     }
-  }
+  };
 
   componentDidMount() {
     this.getUserGrants();
@@ -195,100 +203,132 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (!username || !(grants && grants[type])) {
       return this.setState({
         errors: [
-          { reason: `Can\'t set ${type} permissions at this time. Please try again later`}]
-      })
+          {
+            reason: `Can\'t set ${type} permissions at this time. Please try again later`
+          }
+        ]
+      });
     }
 
     clearNewUser();
 
     if (type === 'global') {
-      this.setState(compose(
-        set(lensPath(['success', 'global']), ''),
-        set(lensPath(['saving', 'global']), true),
-      ));
-      updateGrants(username, { global: grants.global } as Partial<Linode.Grants>)
-        .then((grantsResponse) => {
-          this.setState(compose(
-            set(lensPath(['grants', 'global']), grantsResponse.global),
-            set(lensPath(['originalGrants', 'global']), grantsResponse.global),
-            set(lensPath(['success', 'global']),
-              'Successfully updated global permissions'),
-            set(lensPath(['saving', 'global']), false),
-          ));
+      this.setState(
+        compose(
+          set(lensPath(['success', 'global']), ''),
+          set(lensPath(['saving', 'global']), true)
+        )
+      );
+      updateGrants(username, { global: grants.global } as Partial<
+        Linode.Grants
+      >)
+        .then(grantsResponse => {
+          this.setState(
+            compose(
+              set(lensPath(['grants', 'global']), grantsResponse.global),
+              set(
+                lensPath(['originalGrants', 'global']),
+                grantsResponse.global
+              ),
+              set(
+                lensPath(['success', 'global']),
+                'Successfully updated global permissions'
+              ),
+              set(lensPath(['saving', 'global']), false)
+            )
+          );
         })
-        .catch((errResponse) => {
+        .catch(errResponse => {
           this.setState({
             errors: pathOr(
-              [{ reason:
-                'Error while updating global permissions for this user. Try again later'}],
+              [
+                {
+                  reason:
+                    'Error while updating global permissions for this user. Try again later'
+                }
+              ],
               ['response', 'data', 'errors'],
-              errResponse,
-            ),
-          })
-          this.setState(set(lensPath(['saving', 'global']), false))
+              errResponse
+            )
+          });
+          this.setState(set(lensPath(['saving', 'global']), false));
           scrollErrorIntoView();
         });
       return;
     }
 
     /* This is where individual entity saving could be implemented */
-  }
+  };
 
   saveSpecificGrants = () => {
     const { username } = this.props;
     const { grants } = this.state;
-    if (!username || !(grants)) {
+    if (!username || !grants) {
       return this.setState({
         errors: [
-          { reason: `Can\'t set entity-specific permissions at this time. Please try again later` }
+          {
+            reason: `Can\'t set entity-specific permissions at this time. Please try again later`
+          }
         ]
-      })
+      });
     }
 
-    this.setState(compose(
-      set(lensPath(['success', 'specific']), ''),
-      set(lensPath(['saving', 'entity']), true),
-    ));
+    this.setState(
+      compose(
+        set(lensPath(['success', 'specific']), ''),
+        set(lensPath(['saving', 'entity']), true)
+      )
+    );
     const requestPayload = omit(['global'], grants);
     updateGrants(username, requestPayload as Partial<Linode.Grants>)
-      .then((grantsResponse) => {
+      .then(grantsResponse => {
         /* build array of update fns */
-        let updateFns = this.entityPerms.map((entity) => {
+        let updateFns = this.entityPerms.map(entity => {
           const lens = lensPath(['grants', entity]);
           const lensOrig = lensPath(['originalGrants', entity]);
           return [
             set(lens, grantsResponse[entity]),
-            set(lensOrig, grantsResponse[entity]),
+            set(lensOrig, grantsResponse[entity])
           ];
-        })
+        });
         updateFns = flatten(updateFns);
         /* apply all of them at once */
         if (updateFns.length) {
           this.setState((compose as any)(...updateFns));
         }
-        this.setState(compose(
-          set(lensPath(['success', 'specific']),
-            'Successfully updated entity-specific permissions'),
-          set(lensPath(['saving', 'entity']), false),
-        ));
+        this.setState(
+          compose(
+            set(
+              lensPath(['success', 'specific']),
+              'Successfully updated entity-specific permissions'
+            ),
+            set(lensPath(['saving', 'entity']), false)
+          )
+        );
       })
-      .catch((errResponse) => {
+      .catch(errResponse => {
         this.setState({
           errors: pathOr(
-            [{ reason:
-              'Error while updating entity-specific permissions for this user. Try again later'}],
+            [
+              {
+                reason:
+                  'Error while updating entity-specific permissions for this user. Try again later'
+              }
+            ],
             ['response', 'data', 'errors'],
-            errResponse,
-          ),
-        })
+            errResponse
+          )
+        });
         this.setState(set(lensPath(['saving', 'entity']), false));
         scrollErrorIntoView();
       });
-  }
+  };
 
   cancelPermsType = (type: string) => () => {
     const { grants, originalGrants } = this.state;
-    if (!grants || !originalGrants) { return; }
+    if (!grants || !originalGrants) {
+      return;
+    }
 
     if (type === 'global') {
       this.setState(set(lensPath(['grants', 'global']), originalGrants.global));
@@ -297,52 +337,61 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
     if (type === 'entity') {
       /* build array of update fns */
-      const updateFns = this.entityPerms.map((entity) => {
+      const updateFns = this.entityPerms.map(entity => {
         const lens = lensPath(['grants', entity]);
         return set(lens, originalGrants[entity]);
-      })
+      });
       /* apply all of them at once */
       if (updateFns.length) {
         this.setState((compose as any)(...updateFns));
       }
       return;
     }
-  }
+  };
 
   onChangeRestricted = () => {
     const { username } = this.props;
     this.setState({
       errors: [],
-      loadingGrants: true,
-    })
+      loadingGrants: true
+    });
     if (username) {
       updateUser(username, { restricted: !this.state.restricted })
-        .then((user) => {
+        .then(user => {
           this.setState({
             restricted: user.restricted,
-            success: undefined,
-          })
+            success: undefined
+          });
         })
         .then(() => {
           /* unconditionally sets this.state.loadingGrants to false */
-          this.getUserGrants()
+          this.getUserGrants();
         })
-        .catch((errResponse) => {
-          const defaultError = [{
-            reason: 'Error when updating user restricted status. Please try again later.'
-          }];
+        .catch(errResponse => {
+          const defaultError = [
+            {
+              reason:
+                'Error when updating user restricted status. Please try again later.'
+            }
+          ];
           this.setState({
-            errors: pathOr(defaultError, ['response', 'data', 'errors'], errResponse),
-            loadingGrants: false,
-          })
-        })
+            errors: pathOr(
+              defaultError,
+              ['response', 'data', 'errors'],
+              errResponse
+            ),
+            loadingGrants: false
+          });
+        });
     }
-  }
+  };
 
-  globalPermOnChange = (perm: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  globalPermOnChange = (perm: string) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const lp = lensPath(['grants', 'global', perm]);
     this.setState(set(lp, e.target.checked));
-  }
+  };
 
   renderGlobalPerm = (perm: string, checked: boolean) => {
     const { classes } = this.props;
@@ -350,13 +399,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_linodes: 'Can add Linodes to this account ($)',
       add_nodebalancers: 'Can add NodeBalancers to this account ($)',
       add_longview: 'Can add Longview clients to this account',
-      longview_subscription: 'Can modify this account\'s Longview subscription ($)',
+      longview_subscription:
+        "Can modify this account's Longview subscription ($)",
       add_domains: 'Can add Domains using the DNS Manager',
       add_stackscripts: 'Can create StackScripts under this account',
       add_images: 'Can create frozen Images under this account',
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
-      cancel_account: 'Can cancel the entire account',
-    }
+      cancel_account: 'Can cancel the entire account'
+    };
     return (
       <React.Fragment key={perm}>
         <FormControlLabel
@@ -373,22 +423,28 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         <Divider />
       </React.Fragment>
     );
-  }
+  };
 
   billingPermOnClick = (value: string | null) => () => {
     const lp = lensPath(['grants', 'global', 'account_access']);
     this.setState(set(lp, value));
-  }
+  };
 
   renderBillingPerm = () => {
     const { classes } = this.props;
     const { grants } = this.state;
-    if (!(grants && grants.global)) { return null; }
+    if (!(grants && grants.global)) {
+      return null;
+    }
     return (
       <div className={classes.section}>
         <Grid container className={classes.section} data-qa-billing-section>
           <Grid item>
-            <Typography role="header" variant="h3" data-qa-permissions-header="billing">
+            <Typography
+              role="header"
+              variant="h3"
+              data-qa-permissions-header="billing"
+            >
               Billing Access
             </Typography>
           </Grid>
@@ -403,14 +459,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           />
           <SelectionCard
             heading="Read Only"
-            subheadings={['Can view invoices, view billing info, and will receive copies of all invoices and payment emails.']}
+            subheadings={[
+              'Can view invoices, view billing info, and will receive copies of all invoices and payment emails.'
+            ]}
             checked={grants.global.account_access === 'read_only'}
             onClick={this.billingPermOnClick('read_only')}
             data-qa-billing-access="Read Only"
           />
           <SelectionCard
             heading="Read-Write"
-            subheadings={['Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails']}
+            subheadings={[
+              'Can make payments, update contact and billing info, and will receive copies of all invoices and payment emails'
+            ]}
             checked={grants.global.account_access === 'read_write'}
             onClick={this.billingPermOnClick('read_write')}
             data-qa-billing-access="Read-Write"
@@ -418,12 +478,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         </Grid>
       </div>
     );
-  }
+  };
 
   renderActions = (
     onConfirm: () => void,
     onCancel: () => void,
-    loading: boolean,
+    loading: boolean
   ) => {
     const { classes } = this.props;
     return (
@@ -436,33 +496,39 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         >
           Save
         </Button>
-        <Button
-          type="cancel"
-          onClick={onCancel}
-          data-qa-cancel
-        >
+        <Button type="cancel" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
       </ActionsPanel>
     );
-  }
+  };
 
   renderGlobalPerms = () => {
     const { classes } = this.props;
     const { grants, success, saving } = this.state;
     return (
       <Paper className={classes.globalSection} data-qa-global-section>
-        <Typography role="header" variant="h2" data-qa-permissions-header="Global Permissions">
+        <Typography
+          role="header"
+          variant="h2"
+          data-qa-permissions-header="Global Permissions"
+        >
           Global Permissions
         </Typography>
-        {success && success.global &&
-          <Notice success text={success.global} className={classes.section} spacingTop={8} />
-        }
+        {success && success.global && (
+          <Notice
+            success
+            text={success.global}
+            className={classes.section}
+            spacingTop={8}
+          />
+        )}
         <div className={classes.section}>
-          {grants && grants.global &&
-            this.globalBooleanPerms
-              .map((perm) => this.renderGlobalPerm(perm, grants.global[perm] as boolean))
-          }
+          {grants &&
+            grants.global &&
+            this.globalBooleanPerms.map(perm =>
+              this.renderGlobalPerm(perm, grants.global[perm] as boolean)
+            )}
         </div>
         {this.renderBillingPerm()}
         {this.renderActions(
@@ -471,44 +537,56 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           saving.global
         )}
       </Paper>
-    )
-  }
+    );
+  };
 
   entityIsAll = (entity: string, value: Linode.GrantLevel): boolean => {
     const { grants } = this.state;
-    if (!(grants && grants[entity])) { return false; }
+    if (!(grants && grants[entity])) {
+      return false;
+    }
     return grants[entity].reduce((acc: boolean, grant: Linode.Grant) => {
       return acc && grant.permissions === value;
     }, true);
-  }
+  };
 
-  entitySetAllTo = (entity: Linode.GrantType, value: Linode.GrantLevel) => () => {
+  entitySetAllTo = (
+    entity: Linode.GrantType,
+    value: Linode.GrantLevel
+  ) => () => {
     const { grants } = this.state;
-    if (!(grants && grants[entity])) { return; }
+    if (!(grants && grants[entity])) {
+      return;
+    }
     /* map entities to an array of state update functions */
     const updateFns = grants[entity].map((grant, idx) => {
-      const lens = lensPath(['grants', entity, idx, 'permissions'])
+      const lens = lensPath(['grants', entity, idx, 'permissions']);
       return set(lens, value);
     });
     /* compose all of the update functions and setState */
     if (updateFns.length) {
       this.setState((compose as any)(...updateFns));
     }
-  }
+  };
 
-  setGrantTo = (entity: string, idx: number, value: Linode.GrantLevel) => () => {
+  setGrantTo = (
+    entity: string,
+    idx: number,
+    value: Linode.GrantLevel
+  ) => () => {
     const { grants } = this.state;
-    if (!(grants && grants[entity])) { return; }
-    this.setState(set(
-      lensPath(['grants', entity, idx, 'permissions']),
-      value
-    ));
-  }
+    if (!(grants && grants[entity])) {
+      return;
+    }
+    this.setState(set(lensPath(['grants', entity, idx, 'permissions']), value));
+  };
 
   renderEntitySection = (entity: Linode.GrantType) => {
     const { classes } = this.props;
     const { grants } = this.state;
-    if (!(grants && grants[entity] && grants[entity].length)) { return null; }
+    if (!(grants && grants[entity] && grants[entity].length)) {
+      return null;
+    }
     const entityGrants = grants[entity];
 
     const entityNameMap = {
@@ -518,7 +596,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       volume: 'Volumes',
       nodebalancer: 'NodeBalancers',
       domain: 'Domains',
-      longview: 'Longview Clients',
+      longview: 'Longview Clients'
     };
 
     return (
@@ -528,19 +606,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           variant="h3"
           className={classes.tableSubheading}
           data-qa-permissions-header={entityNameMap[entity]}
-          >
+        >
           {entityNameMap[entity]}
         </Typography>
         <Table aria-label="User Permissions" className={classes.grantTable}>
           <TableHead data-qa-table-head>
             <TableRow>
-              <TableCell>
-                Label
-              </TableCell>
-              <TableCell
-                padding="checkbox"
-              >
-                <label className={classes.selectAll} style={{ marginLeft: -35 }}>
+              <TableCell>Label</TableCell>
+              <TableCell padding="checkbox">
+                <label
+                  className={classes.selectAll}
+                  style={{ marginLeft: -35 }}
+                >
                   None
                   <Radio
                     name={`${entity}-select-all`}
@@ -551,10 +628,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   />
                 </label>
               </TableCell>
-              <TableCell
-                padding="checkbox"
-              >
-                <label className={classes.selectAll} style={{ marginLeft: -65 }}>
+              <TableCell padding="checkbox">
+                <label
+                  className={classes.selectAll}
+                  style={{ marginLeft: -65 }}
+                >
                   Read Only
                   <Radio
                     name={`${entity}-select-all`}
@@ -565,10 +643,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   />
                 </label>
               </TableCell>
-              <TableCell
-                padding="checkbox"
-              >
-                <label className={classes.selectAll} style={{ marginLeft: -73 }}>
+              <TableCell padding="checkbox">
+                <label
+                  className={classes.selectAll}
+                  style={{ marginLeft: -73 }}
+                >
                   Read-Write
                   <Radio
                     name={`${entity}-select-all`}
@@ -585,13 +664,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             {entityGrants.map((grant, idx) => {
               return (
                 <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
-                  <TableCell parentColumn="Label">
-                    {grant.label}
-                  </TableCell>
-                  <TableCell
-                    parentColumn="None"
-                    padding="checkbox"
-                  >
+                  <TableCell parentColumn="Label">{grant.label}</TableCell>
+                  <TableCell parentColumn="None" padding="checkbox">
                     <Radio
                       name={`${grant.id}-perms`}
                       checked={grant.permissions === null}
@@ -600,10 +674,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       data-qa-permission="None"
                     />
                   </TableCell>
-                  <TableCell
-                    parentColumn="Read Only"
-                    padding="checkbox"
-                  >
+                  <TableCell parentColumn="Read Only" padding="checkbox">
                     <Radio
                       name={`${grant.id}-perms`}
                       checked={grant.permissions === 'read_only'}
@@ -612,10 +683,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                       data-qa-permission="Read Only"
                     />
                   </TableCell>
-                  <TableCell
-                    parentColumn="Read-Write"
-                    padding="checkbox"
-                  >
+                  <TableCell parentColumn="Read-Write" padding="checkbox">
                     <Radio
                       name={`${grant.id}-perms`}
                       checked={grant.permissions === 'read_write'}
@@ -630,17 +698,18 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </TableBody>
         </Table>
       </div>
-    )
-  }
+    );
+  };
 
   setAllEntitiesTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value === 'null' ? null : e.target.value;
     this.entityPerms.map((entity: Linode.GrantType) =>
-      this.entitySetAllTo(entity, value as Linode.GrantLevel)());
+      this.entitySetAllTo(entity, value as Linode.GrantLevel)()
+    );
     this.setState({
-      setAllPerm: e.target.value as 'null' | 'read_only' | 'read_write',
-    })
-  }
+      setAllPerm: e.target.value as 'null' | 'read_only' | 'read_write'
+    });
+  };
 
   renderSpecificPerms = () => {
     const { classes } = this.props;
@@ -649,7 +718,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <Typography role="header" variant="h2" data-qa-permissions-header="Specific Permissions">
+            <Typography
+              role="header"
+              variant="h2"
+              data-qa-permissions-header="Specific Permissions"
+            >
               Specific Permissions
             </Typography>
           </Grid>
@@ -664,15 +737,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
                   onChange={this.setAllEntitiesTo}
                   inputProps={{ name: 'setall', id: 'setall' }}
                 >
-                  <MenuItem value="null">
-                    None
-                  </MenuItem>
-                  <MenuItem value="read_only">
-                    Read Only
-                  </MenuItem>
-                  <MenuItem value="read_write">
-                    Read Write
-                  </MenuItem>
+                  <MenuItem value="null">None</MenuItem>
+                  <MenuItem value="read_only">Read Only</MenuItem>
+                  <MenuItem value="read_write">Read Write</MenuItem>
                 </Select>
               </Grid>
             </Grid>
@@ -682,20 +749,24 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           {grants &&
             this.entityPerms.map((entity: Linode.GrantType) => {
               return this.renderEntitySection(entity);
-            })
-          }
+            })}
         </div>
-        {success && success.specific &&
-          <Notice success text={success.specific} className={classes.section} spacingTop={8} />
-        }
+        {success && success.specific && (
+          <Notice
+            success
+            text={success.specific}
+            className={classes.section}
+            spacingTop={8}
+          />
+        )}
         {this.renderActions(
           this.saveSpecificGrants,
           this.cancelPermsType('entity'),
           saving.entity
         )}
       </Paper>
-    )
-  }
+    );
+  };
 
   renderPermissions = () => {
     const { loadingGrants } = this.state;
@@ -707,9 +778,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           {this.renderGlobalPerms()}
           {this.renderSpecificPerms()}
         </React.Fragment>
-      )
+      );
     }
-  }
+  };
 
   renderUnrestricted = () => {
     const { classes } = this.props;
@@ -721,38 +792,39 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         </Typography>
       </Paper>
     );
-  }
+  };
 
   renderBody = () => {
     const { classes, currentUser, username } = this.props;
     const { restricted, errors } = this.state;
-    const hasErrorFor = getAPIErrorsFor({ restricted: "Restricted" }, errors,)
+    const hasErrorFor = getAPIErrorsFor({ restricted: 'Restricted' }, errors);
     const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
-        {generalError &&
-          <Notice error text={generalError} spacingTop={8} />
-        }
+        {generalError && <Notice error text={generalError} spacingTop={8} />}
         <Grid container alignItems="center" style={{ width: 'auto' }}>
           <Grid item>
-            <Typography role="header" variant="h2" data-qa-restrict-access={restricted}>
+            <Typography
+              role="header"
+              variant="h2"
+              data-qa-restrict-access={restricted}
+            >
               Full Account Access:
-              </Typography>
+            </Typography>
           </Grid>
           <Grid item>
             <Typography role="header" variant="h2">
-              {!restricted
-                ? 'On'
-                : 'Off'
-              }
+              {!restricted ? 'On' : 'Off'}
             </Typography>
           </Grid>
           <Grid item>
             <Toggle
-              tooltipText={(username === currentUser)
-                ? 'You cannot restrict the current active user.'
-                : ''}
+              tooltipText={
+                username === currentUser
+                  ? 'You cannot restrict the current active user.'
+                  : ''
+              }
               disabled={username === currentUser}
               checked={!restricted}
               onChange={this.onChangeRestricted}
@@ -760,13 +832,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        {restricted
-          ? this.renderPermissions()
-          : this.renderUnrestricted()
-        }
+        {restricted ? this.renderPermissions() : this.renderUnrestricted()}
       </React.Fragment>
     );
-  }
+  };
 
   render() {
     const { loading } = this.state;
@@ -775,12 +844,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${username} - Permissions`} />
-        {loading
-          ? <CircleProgress />
-          : this.renderBody()
-        }
+        {loading ? <CircleProgress /> : this.renderBody()}
       </React.Fragment>
-    )
+    );
   }
 }
 

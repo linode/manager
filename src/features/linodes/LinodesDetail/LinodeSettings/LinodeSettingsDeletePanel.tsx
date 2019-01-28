@@ -1,6 +1,7 @@
-import { compose, lensPath, set } from 'ramda';
+import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -9,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { resetEventsPolling } from 'src/events';
-import { deleteLinode } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
@@ -22,7 +23,11 @@ interface Props { linodeId: number; }
 
 interface State { open: boolean; }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps =
+  & Props
+  & LinodeActionsProps
+  & RouteComponentProps<{}>
+  & WithStyles<ClassNames>;
 
 class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -30,8 +35,10 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   };
 
   deleteLinode = () => {
+    const { linodeActions: { deleteLinode } } = this.props;
     this.setState(set(lensPath(['submitting']), true));
-    deleteLinode(this.props.linodeId)
+
+    deleteLinode({linodeId: this.props.linodeId})
       .then((response) => {
         resetEventsPolling();
         this.props.history.push('/linodes');
@@ -97,8 +104,11 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
-export default compose(
+const enhanced = compose<CombinedProps, Props>(
   errorBoundary,
   withRouter,
   styled,
-)(LinodeSettingsDeletePanel) as React.ComponentType<Props>;
+  withLinodeActions,
+);
+
+export default enhanced(LinodeSettingsDeletePanel) as React.ComponentType<Props>;

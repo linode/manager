@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
+import withLinodeActions from 'src/__data__/withLinodeActions';
 
 import { FromBackupsContent } from './FromBackupsContent';
 
@@ -66,6 +66,7 @@ const mockPropsWithNotice = {
 describe('FromBackupsContent', () => {
   const component = shallow(
     <FromBackupsContent
+      {...withLinodeActions}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
     />,
@@ -73,6 +74,7 @@ describe('FromBackupsContent', () => {
 
   const componentWithNotice = shallow(
     <FromBackupsContent
+      {...withLinodeActions}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockPropsWithNotice}
     />,

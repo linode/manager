@@ -21,7 +21,7 @@ const mockClasses = {
   spacer: '',
   sublink: '',
   sublinkActive: '',
-  sublinkPanel: '',
+  sublinkPanel: ''
 };
 
 describe('PrimaryNav', () => {

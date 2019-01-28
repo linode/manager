@@ -2,7 +2,6 @@ import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import CircleProgress from 'src/components/CircleProgress';
 import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -12,7 +11,6 @@ import Placeholder from 'src/components/Placeholder';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
-
 import ResultGroup from './ResultGroup';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';

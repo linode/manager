@@ -7,7 +7,12 @@ export const CREATING = '@manager/domains/CREATING';
 export const CLONING = '@manager/domains/CLONING';
 export const RESET = '@manager/domains/RESET';
 
-type State = DomainDrawerState;
+export interface State {
+  open: boolean;
+  mode: string;
+  cloneId?: number;
+  domain?: string;
+}
 
 interface Creating extends Action {
   type: typeof CREATING;

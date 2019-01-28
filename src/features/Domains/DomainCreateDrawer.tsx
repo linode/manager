@@ -17,8 +17,10 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
-import { cloneDomain, createDomain } from 'src/services/domains';
+import { cloneDomain } from 'src/services/domains';
+import { ApplicationState } from 'src/store';
 import { CLONING, CREATING, resetDrawer } from 'src/store/domainDrawer';
+import { DomainActionsProps, withDomainActions } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -45,6 +47,7 @@ interface State {
 }
 
 type CombinedProps = WithStyles<ClassNames>
+  & DomainActionsProps
   & DispatchProps
   & RouteComponentProps<{}>
   & StateProps
@@ -221,6 +224,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
   create = () => {
     const { domain, type, soaEmail, master_ips } = this.state;
+    const { domainActions } = this.props;
     const tags = this.state.tags.map(tag => tag.value);
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
@@ -243,7 +247,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
       : { domain, type, tags, master_ips: finalMasterIPs }
 
     this.setState({ submitting: true });
-    createDomain(data)
+    domainActions.createDomain(data)
       .then((domainData: Linode.Domain) => {
         if (!this.mounted) { return; }
         this.redirect(domainData.id || '');
@@ -354,6 +358,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose<CombinedProps, {}>(
+  withDomainActions,
   styled,
   connected,
   withRouter,

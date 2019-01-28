@@ -1,8 +1,9 @@
 import { Reducer } from "redux";
+import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { getLinodeTypesActions } from './linodeType.actions';
 
-type State = ApplicationState['__resources']['types'];
+export type State = EntityState<Linode.LinodeType>;
 
 export const defaultState: State = {
   entities: [],

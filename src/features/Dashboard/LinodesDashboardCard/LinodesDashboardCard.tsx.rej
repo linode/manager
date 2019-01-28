@@ -1,0 +1,7 @@
+diff a/src/features/Dashboard/LinodesDashboardCard/LinodesDashboardCard.tsx b/src/features/Dashboard/LinodesDashboardCard/LinodesDashboardCard.tsx	(rejected hunks)
+@@ -22 +22,4 @@ import { ApplicationState } from 'src/store';
+-import { isEntityEvent, isInProgressEvent } from 'src/store/events/event.helpers';
++import {
++  isEntityEvent,
++  isInProgressEvent
++} from 'src/store/events/event.helpers';

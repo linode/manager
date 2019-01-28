@@ -14,6 +14,18 @@ export interface VolumeRequestPayload {
   tags?: string[],
 };
 
+export interface AttachVolumePayload {
+  linode_id: number,
+  config_id?: number,
+}
+export interface CloneVolumePayload {
+  label: string;
+}
+
+export interface ResizeVolumePayload {
+  size: number;
+}
+
 /**
  * getVolume
  *
@@ -55,10 +67,8 @@ export const getVolumes = (params?: any, filters?: any) =>
  * @param payload.config_id { number } The configuration profile to include this volume in.
  *   If this value is not provided, the most recently booted Config profile will be chosen.
  */
-export const attachVolume = (volumeId: number, payload: {
-  linode_id: number,
-  config_id?: number,
-}) => Request<Volume>(
+
+export const attachVolume = (volumeId: number, payload: AttachVolumePayload) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
   setMethod('POST'),
   setData(payload),
@@ -105,7 +115,7 @@ export const deleteVolume = (volumeId: number) => Request<{}>(
  * @param data { { label: string } } A label to identify the new volume.
  *
  */
-export const cloneVolume = (volumeId: number, data: { label: string }) => Request<{}>(
+export const cloneVolume = (volumeId: number, data: CloneVolumePayload) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
   setMethod('POST'),
   setData(data, CloneVolumeSchema),
@@ -121,7 +131,7 @@ export const cloneVolume = (volumeId: number, data: { label: string }) => Reques
  * @param data { { size: number } } The size of the Volume (in GiB).
  *
  */
-export const resizeVolume = (volumeId: number, data: { size: number }) => Request<{}>(
+export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
   setMethod('POST'),
 
@@ -133,6 +143,11 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
 )
 .then(response => response.data);
 
+export interface UpdateVolumeRequest {
+  label: string;
+  tags?: string[];
+}
+
 /**
  * updateVolume
  *
@@ -142,7 +157,7 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
  * @param data { { label: string; tags: string[] } } The updated label for this Volume.
  *
  */
-export const updateVolume = (volumeId: number, data: { label: string, tags?: string[] }) => Request<Volume>(
+export const updateVolume = (volumeId: number, data: UpdateVolumeRequest) => Request<Volume>(
   setURL(`${API_ROOT}/volumes/${volumeId}`),
   setMethod('PUT'),
   setData(data, UpdateVolumeSchema),

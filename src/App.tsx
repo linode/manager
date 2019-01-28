@@ -21,6 +21,7 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
@@ -29,9 +30,11 @@ import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
+import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import { withNodeBalancerActions, WithNodeBalancerActions } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
 
 shim(); // allows for .finally() usage
@@ -159,7 +162,9 @@ interface State {
   hasError: boolean;
 }
 
-type CombinedProps = Props
+type CombinedProps =
+  & Props
+  & WithNodeBalancerActions
   & DispatchProps
   & StateProps
   & WithStyles<ClassNames>
@@ -180,17 +185,25 @@ export class App extends React.Component<CombinedProps, State> {
     this.setState({ hasError: true });
   }
 
-  componentDidMount() {
-    const { actions } = this.props;
+  async componentDidMount() {
+    const { actions, nodeBalancerActions: { getAllNodeBalancersWithConfigs } } = this.props;
 
-    actions.requestDomains();
-    actions.requestImages();
-    actions.requestLinodes();
-    actions.requestNotifications();
-    actions.requestProfile();
-    actions.requestSettings();
-    actions.requestTypes();
-    actions.requestRegions();
+    try {
+      await Promise.all(
+        [
+          actions.requestProfile(),
+          actions.requestDomains(),
+          actions.requestImages(),
+          actions.requestLinodes(),
+          actions.requestNotifications(),
+          actions.requestSettings(),
+          actions.requestTypes(),
+          actions.requestRegions(),
+          actions.requestVolumes(),
+          getAllNodeBalancersWithConfigs(),
+        ]
+      );
+    } catch (error) { /** We choose to do nothing, relying on the Redux error state. */ }
 
     /*
      * We want to listen for migration events side-wide
@@ -323,14 +336,15 @@ const themeDataAttr = () => {
 
 interface DispatchProps {
   actions: {
-    requestDomains: () => void;
-    requestImages: () => void;
-    requestLinodes: () => void;
-    requestNotifications: () => void;
-    requestProfile: () => void;
-    requestSettings: () => void;
-    requestTypes: () => void;
-    requestRegions: () => void;
+    requestDomains: () => Promise<Linode.Domain[]>;
+    requestImages: () => Promise<Linode.Image[]>;
+    requestLinodes: () => Promise<Linode.Linode[]>;
+    requestNotifications: () => Promise<Linode.Notification[]>;
+    requestProfile: () => Promise<Linode.Profile>;
+    requestSettings: () => Promise<Linode.AccountSettings>;
+    requestTypes: () => Promise<Linode.LinodeType[]>;
+    requestRegions: () => Promise<Linode.Region[]>;
+    requestVolumes: () => Promise<Linode.Volume[]>;
   },
 }
 
@@ -345,6 +359,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: 
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
+      requestVolumes: () => dispatch(getAllVolumes())
     }
   };
 };
@@ -376,4 +391,5 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
+  withNodeBalancerActions,
 )(App);

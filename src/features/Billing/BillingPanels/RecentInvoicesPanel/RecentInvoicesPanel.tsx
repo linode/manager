@@ -1,7 +1,11 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -17,15 +21,15 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { reportException } from 'src/exceptionReporting';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import { getInvoiceItems, getInvoices } from 'src/services/account';
+import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
-import { getInvoiceItems, getInvoices } from 'src/services/account';
-
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props extends PaginationProps<Linode.Invoice> {}
@@ -33,22 +37,21 @@ interface Props extends PaginationProps<Linode.Invoice> {}
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 interface PdfGenerationError {
-  itemId: number | undefined
+  itemId: number | undefined;
 }
 
 interface State {
-  pdfGenerationError: PdfGenerationError,
-  loading: boolean
+  pdfGenerationError: PdfGenerationError;
+  loading: boolean;
 }
 
 class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
-  
   state: State = {
     pdfGenerationError: {
       itemId: undefined
     },
     loading: false
-  }
+  };
 
   componentDidMount() {
     if (!this.props.account.data) {
@@ -65,18 +68,10 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      data,
-      page,
-      pageSize,
-      count,
-    } = this.props;
+    const { data, page, pageSize, count } = this.props;
 
     return (
-      <ExpansionPanel
-        heading="Recent Invoices"
-        onChange={this.handleExpansion}
-      >
+      <ExpansionPanel heading="Recent Invoices" onChange={this.handleExpansion}>
         <Table aria-label="List of Recent Invoices">
           <TableHead>
             <TableRow>
@@ -86,11 +81,9 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
               <TableCell />
             </TableRow>
           </TableHead>
-          <TableBody>
-            { this.renderContent() }
-          </TableBody>
+          <TableBody>{this.renderContent()}</TableBody>
         </Table>
-        {data && data.length > 0 &&
+        {data && data.length > 0 && (
           <PaginationFooter
             count={count}
             page={page}
@@ -99,7 +92,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
             handleSizeChange={this.props.handlePageSizeChange}
             eventCategory="recent invoices panel"
           />
-        }
+        )}
       </ExpansionPanel>
     );
   }
@@ -109,35 +102,42 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     event.stopPropagation();
     this.setPdfError(undefined);
 
-    getInvoiceItems(item.id).then(response => {
-      const invoiceItems = response.data;
-      try {
-        printInvoice(account, item, invoiceItems);
-      } catch (e) {
-        reportException(
-          Error('Error while generating PDF.'),
-          e
-        );
+    getInvoiceItems(item.id)
+      .then(response => {
+        const invoiceItems = response.data;
+        try {
+          printInvoice(account, item, invoiceItems);
+        } catch (e) {
+          reportException(Error('Error while generating PDF.'), e);
+          this.setPdfError(item.id);
+        }
+      })
+      .catch(() => {
         this.setPdfError(item.id);
-      }  
-    }).catch(() => {
-      this.setPdfError(item.id);
-    })
-
+      });
   }
 
   renderContent = () => {
     const { data, error, loading } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={4} />
+      return <TableRowLoading colSpan={4} />;
     }
 
     if (error) {
-      return <TableRowError colSpan={4} message="We were unable to load your invoices." />
+      return (
+        <TableRowError
+          colSpan={4}
+          message="We were unable to load your invoices."
+        />
+      );
     }
 
-    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={4} />
+    return data && data.length > 0 ? (
+      this.renderItems(data)
+    ) : (
+      <TableRowEmptyState colSpan={4} />
+    );
   };
 
   handleExpansion = (e: any, expanded: boolean) => {
@@ -154,13 +154,34 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     const { account } = this.props;
 
     return (
-      <TableRow key={`invoice-${item.id}`} rowLink={`/account/billing/invoices/${item.id}`} data-qa-invoice>
-        <TableCell parentColumn="Date Created" data-qa-invoice-date><DateTimeDisplay value={item.date}/></TableCell>
-        <TableCell parentColumn="Description" data-qa-invoice-desc={item.id}>Invoice #{item.id}</TableCell>
-        <TableCell parentColumn="Amount" data-qa-invoice-amount>${item.total}</TableCell>
+      <TableRow
+        key={`invoice-${item.id}`}
+        rowLink={`/account/billing/invoices/${item.id}`}
+        data-qa-invoice
+      >
+        <TableCell parentColumn="Date Created" data-qa-invoice-date>
+          <DateTimeDisplay value={item.date} />
+        </TableCell>
+        <TableCell parentColumn="Description" data-qa-invoice-desc={item.id}>
+          Invoice #{item.id}
+        </TableCell>
+        <TableCell parentColumn="Amount" data-qa-invoice-amount>
+          ${item.total}
+        </TableCell>
         <TableCell>
-          {account.data && <a href="#" onClick={e => this.printInvoice(e, account.data as Linode.Account, item)}>Download PDF</a>}
-          {pdfGenerationError.itemId === item.id && <Notice error={true} text="Failed generating PDF." />}
+          {account.data && (
+            <a
+              href="#"
+              onClick={e =>
+                this.printInvoice(e, account.data as Linode.Account, item)
+              }
+            >
+              Download PDF
+            </a>
+          )}
+          {pdfGenerationError.itemId === item.id && (
+            <Notice error={true} text="Failed generating PDF." />
+          )}
         </TableCell>
       </TableRow>
     );
@@ -178,18 +199,21 @@ interface StateProps extends S {
 }
 
 const connected = connect(
-  (state: ApplicationState): S => ({account: state.__resources.account}),
-  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(requestAccount()) }));
+  (state: ApplicationState): S => ({ account: state.__resources.account }),
+  (dispatch: ThunkDispatch): { requestAccount: () => void } => ({
+    requestAccount: () => dispatch(requestAccount())
+  })
+);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getInvoices(params, filters)
-  .then((response) => response);
+const updatedRequest = (ownProps: any, params: any, filters: any) =>
+  getInvoices(params, filters).then(response => response);
 
 const paginated = paginate(updatedRequest);
 
 const enhanced = compose(
   connected,
   paginated,
-  styled,
+  styled
 );
 
 export default enhanced(RecentInvoicesPanel);

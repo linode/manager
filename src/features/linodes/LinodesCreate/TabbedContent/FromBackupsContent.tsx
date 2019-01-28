@@ -15,7 +15,8 @@ import Placeholder from 'src/components/Placeholder';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import { createLinode, getLinodeBackups } from 'src/services/linodes';
+import { getLinodeBackups } from 'src/services/linodes';
+import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import getLinodeInfo from 'src/utilities/getLinodeInfo';
@@ -83,6 +84,7 @@ interface State {
 
 type CombinedProps =
   & Props
+  & LinodeActionsProps
   & InjectedNotistackProps
   & LabelProps
   & WithStyles<ClassNames>;
@@ -212,7 +214,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   createLinode = () => {
-    const { history } = this.props;
+    const { history, linodeActions: { createLinode } } = this.props;
     const {
       selectedRegionID,
       selectedTypeID,
@@ -459,7 +461,8 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
-  withLabelGenerator
+  withLabelGenerator,
+  withLinodeActions,
 );
 
 export default enhanced(FromBackupsContent);

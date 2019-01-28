@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import withLinodeActions from 'src/__data__/withLinodeActions';
 import { FromImageContent } from './FromImageContent';
 
 const mockProps = {
@@ -34,6 +34,7 @@ const mockProps = {
 describe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromImageContent
+      {...withLinodeActions}
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
@@ -46,6 +47,7 @@ describe('FromImageContent', () => {
 
   const component = shallow<FromImageContent>(
     <FromImageContent
+      {...withLinodeActions}
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
@@ -54,6 +56,7 @@ describe('FromImageContent', () => {
 
   const componentWithImages = shallow<FromImageContent>(
     <FromImageContent
+      {...withLinodeActions}
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}

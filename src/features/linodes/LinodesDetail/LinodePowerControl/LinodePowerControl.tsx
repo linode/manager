@@ -7,13 +7,22 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Menu from 'src/components/core/Menu';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
-import { powerOffLinode, powerOnLinode, rebootLinode } from 'src/features/linodes/LinodesLanding/powerActions';
+import {
+  powerOffLinode,
+  powerOnLinode,
+  rebootLinode
+} from 'src/features/linodes/LinodesLanding/powerActions';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'button'
   | 'caret'
   | 'menuItem'
@@ -24,31 +33,35 @@ type ClassNames = 'root'
   | 'fadeIn'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   '@keyframes rotate': {
     from: {
-      transform: 'rotate(0deg)',
+      transform: 'rotate(0deg)'
     },
     to: {
-      transform: 'rotate(360deg)',
-    },
+      transform: 'rotate(360deg)'
+    }
   },
   root: {
     '& svg': {
-      transition: theme.transitions.create(['color']),
-    },
+      transition: theme.transitions.create(['color'])
+    }
   },
   button: {
     backgroundColor: theme.color.white,
-    transition: theme.transitions.create(['background-color', 'color', 'border-color']),
+    transition: theme.transitions.create([
+      'background-color',
+      'color',
+      'border-color'
+    ]),
     border: `1px solid ${theme.color.border1}`,
     minWidth: 145,
     '&:hover, &.active': {
@@ -56,8 +69,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       backgroundColor: theme.palette.primary.light,
       color: 'white',
       '& $caret, & $powerOn, & $powerOff': {
-        color: 'white',
-      },
+        color: 'white'
+      }
     },
     '&:focus': {
       backgroundColor: 'white'
@@ -69,7 +82,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     position: 'relative',
     top: 2,
     left: 2,
-    marginLeft: theme.spacing.unit / 2,
+    marginLeft: theme.spacing.unit / 2
   },
   menuItem: {
     color: theme.palette.primary.main,
@@ -78,32 +91,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
       '& svg': {
-        color: 'white',
-      },
-    },
+        color: 'white'
+      }
+    }
   },
   icon: {
-    marginRight: theme.spacing.unit + 2,
+    marginRight: theme.spacing.unit + 2
   },
   powerOn: {
     color: theme.color.green,
-    transition: theme.transitions.create(['color']),
+    transition: theme.transitions.create(['color'])
   },
   powerOff: {
     color: theme.color.red,
-    transition: theme.transitions.create(['color']),
+    transition: theme.transitions.create(['color'])
   },
   rotate: {
     animation: 'rotate 2s linear infinite',
-    color: theme.palette.text.primary,
+    color: theme.palette.text.primary
   },
   fadeIn: {
-    animation: 'fadeIn .2s ease-in-out',
+    animation: 'fadeIn .2s ease-in-out'
   },
   hidden: {
     height: 0,
-    padding: 0,
-  },
+    padding: 0
+  }
 });
 
 interface Props {
@@ -111,7 +124,10 @@ interface Props {
   label: string;
   status: Linode.LinodeStatus;
   recentEvent?: Linode.Event;
-  openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
+  openConfigDrawer: (
+    config: Linode.Config[],
+    action: (id: number) => void
+  ) => void;
 }
 
 interface State {
@@ -127,35 +143,36 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class LinodePowerButton extends React.Component<CombinedProps, State> {
   state = {
     menu: {
-      anchorEl: undefined,
+      anchorEl: undefined
     },
     bootOption: null,
-    powerAlertOpen: false,
+    powerAlertOpen: false
   };
 
-  _toggleMenu = (value?: HTMLElement) => this.setState({ menu: { anchorEl: value } });
+  _toggleMenu = (value?: HTMLElement) =>
+    this.setState({ menu: { anchorEl: value } });
 
   openMenu = (e: React.MouseEvent<HTMLElement>) => {
     this._toggleMenu(e.currentTarget);
-  }
+  };
 
   closeMenu = () => {
     this._toggleMenu();
-  }
+  };
 
   powerOn = () => {
     const { id, label, openConfigDrawer } = this.props;
     powerOnLinode(openConfigDrawer, id, label);
     this.closeMenu();
-  }
+  };
 
   toggleDialog = (bootOption: Linode.BootAction) => {
     this.setState({
       powerAlertOpen: !this.state.powerAlertOpen,
-      bootOption,
+      bootOption
     });
     this.closeMenu();
-  }
+  };
 
   rebootOrPowerLinode = () => {
     const { bootOption } = this.state;
@@ -166,11 +183,15 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
       powerOffLinode(id, label);
     }
     this.setState({ powerAlertOpen: false });
-  }
+  };
 
   render() {
     const { status, classes, recentEvent } = this.props;
-    const { menu: { anchorEl }, bootOption, powerAlertOpen } = this.state;
+    const {
+      menu: { anchorEl },
+      bootOption,
+      powerAlertOpen
+    } = this.state;
 
     const isBusy = linodeInTransition(status, recentEvent);
     const isRunning = !isBusy && status === 'running';
@@ -186,29 +207,29 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
           data-qa-power-control={status}
         >
-          {isRunning &&
+          {isRunning && (
             <span className={classes.fadeIn}>
               <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
               Running
             </span>
-          }
-          {isOffline &&
+          )}
+          {isOffline && (
             <span className={classes.fadeIn}>
               <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
               Offline
             </span>
-          }
-          {isBusy &&
+          )}
+          {isBusy && (
             <span className={classes.fadeIn}>
               <Reload className={`${classes.icon} ${classes.rotate}`} />
               Busy
             </span>
-          }
-          {
-            anchorEl
-              ? <KeyboardArrowUp className={classes.caret} />
-              : <KeyboardArrowDown className={classes.caret} />
-          }
+          )}
+          {anchorEl ? (
+            <KeyboardArrowUp className={classes.caret} />
+          ) : (
+            <KeyboardArrowDown className={classes.caret} />
+          )}
         </Button>
         <Menu
           id="power"
@@ -228,7 +249,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
             <Reload className={`${classes.icon}`} />
             Reboot
           </MenuItem>
-          {isRunning &&
+          {isRunning && (
             <MenuItem
               onClick={this.togglePowerDownDialog}
               className={classes.menuItem}
@@ -237,8 +258,8 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
               Power Off
             </MenuItem>
-          }
-          {isOffline &&
+          )}
+          {isOffline && (
             <MenuItem
               onClick={this.powerOn}
               className={classes.menuItem}
@@ -247,18 +268,23 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
               Power On
             </MenuItem>
-          }
+          )}
         </Menu>
         <ConfirmationDialog
-          title={(bootOption === 'reboot') ? 'Confirm Reboot' : 'Powering Off'}
+          title={bootOption === 'reboot' ? 'Confirm Reboot' : 'Powering Off'}
           actions={this.renderActions}
           open={powerAlertOpen}
           onClose={this.closePowerAlert}
         >
-          {bootOption === 'reboot'
-            ? <Typography>Are you sure you want to reboot your Linode?</Typography>
-            : <Typography>Are you sure you want to power down your Linode?</Typography>
-          }
+          {bootOption === 'reboot' ? (
+            <Typography>
+              Are you sure you want to reboot your Linode?
+            </Typography>
+          ) : (
+            <Typography>
+              Are you sure you want to power down your Linode?
+            </Typography>
+          )}
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -286,12 +312,11 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >
-          {(bootOption === 'reboot') ? 'Reboot' : 'Power Off'}
+          {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
         </Button>
       </ActionsPanel>
     );
   };
-
 }
 
 const styled = withStyles(styles);

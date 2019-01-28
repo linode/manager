@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { ApplicationState } from 'src/store';
 import inProgressEvents from './inProgressEvents';
 
 const findInProgressEvent = (e: Linode.Event[]) => (id: number) => {

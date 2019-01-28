@@ -18,6 +18,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import LinodeRowHeadCell from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRowHeadCell';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { ApplicationState } from 'src/store';
 import {
   isEntityEvent,
   isInProgressEvent
