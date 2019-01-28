@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.47.0] - 2019.01.29
+
+### Added:
+- Sorting for remaining Linode table headers.
+- Entity icons on Dashboard page, and entity listing pages.
+- Group by Tag for NodeBalancers.
+- Group by Tag for Volumes.
+- Friendly error message when graph data is unavailable for a newly created Linode.
+- Graph Display Options (Last 30 Days).
+
+### Changed:
+- Improve pagination experience.
+- Friendly error message when graph data is unavailable.
+- Order of tabs on the Profile page.
+- My Profile > My Apps changed to My Profile > OAuth Apps.
+
+### Fixed:
+- Update timezone error
+- Fix pagination display logic
+- Add missing Typography on NB labels (to feature branch)
+- Invalid Date on OAuth Apps
+
 ## [0.46.0] - 2019.01.18
 
 ### Added:
