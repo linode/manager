@@ -65,8 +65,8 @@ exports.login = (username, password, credFilePath) => {
         }, constants.wait.normal);
     } catch (err) {
         console.log('failed to login!');
-        if ($('.form-action').getText().includes('CSRF')) {
-            console.log($('.form-action').getText());
+        if ($('.form-actions').getText().includes('CSRF')) {
+            console.log($('.form-actions').getText());
             browser.trySetValue('#password', password);
             browser.trySetValue('#username', username);
             $(loginButton).click();
