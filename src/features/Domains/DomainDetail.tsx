@@ -30,6 +30,7 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
+import { getAllWithArguments } from 'src/utilities/getAll';
 import DomainRecords from './DomainRecords';
 
 interface State {
@@ -90,7 +91,9 @@ const preloaded = PromiseLoader<CombinedProps>({
       return Promise.reject(new Error('domainId param not set.'));
     }
 
-    return getDomainRecords(+domainId);
+    return getAllWithArguments<Linode.DomainRecord>(getDomainRecords)([
+      +domainId
+    ]);
   }
 });
 
@@ -138,9 +141,9 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       return;
     }
 
-    getDomainRecords(+domainId)
-      .then(data => {
-        this.setState({ records: data.data });
+    getAllWithArguments<Linode.DomainRecord>(getDomainRecords)([+domainId])
+      .then(({ data }) => {
+        this.setState({ records: data });
       })
       .catch(console.error);
   };

@@ -29,6 +29,9 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
+import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -96,6 +99,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 interface IType {
   title: string;
   data: any[];
+  order: 'asc' | 'desc';
+  orderBy: 'name' | 'target' | 'domain';
   columns: {
     title: string;
     render: (
@@ -252,10 +257,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       : this.openForEditSlaveDomain(d);
   };
 
-  generateTypes = () => [
+  generateTypes = (): IType[] => [
     /** SOA Record */
     {
       title: 'SOA Record',
+      orderBy: 'domain',
+      order: 'asc',
       data: [this.props.domain],
       columns: [
         {
@@ -308,6 +315,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** NS Record */
     {
       title: 'NS Record',
+      orderBy: 'target',
+      order: 'asc',
       data: getNSRecords(this.props),
       columns: [
         {
@@ -358,6 +367,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** MX Record */
     {
       title: 'MX Record',
+      orderBy: 'target',
+      order: 'asc',
       data: this.props.domainRecords.filter(typeEq('MX')),
       columns: [
         {
@@ -408,6 +419,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** A/AAAA Record */
     {
       title: 'A/AAAA Record',
+      orderBy: 'name',
+      order: 'asc',
       data: this.props.domainRecords.filter(
         r => typeEq('AAAA', r) || typeEq('A', r)
       ),
@@ -440,6 +453,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** CNAME Record */
     {
       title: 'CNAME Record',
+      orderBy: 'name',
+      order: 'asc',
       data: this.props.domainRecords.filter(typeEq('CNAME')),
       columns: [
         { title: 'Hostname', render: (r: Linode.DomainRecord) => r.name },
@@ -471,6 +486,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** TXT Record */
     {
       title: 'TXT Record',
+      orderBy: 'name',
+      order: 'asc',
       data: this.props.domainRecords.filter(typeEq('TXT')),
       columns: [
         { title: 'Hostname', render: (r: Linode.DomainRecord) => r.name },
@@ -500,6 +517,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** SRV Record */
     {
       title: 'SRV Record',
+      orderBy: 'name',
+      order: 'asc',
       data: this.props.domainRecords.filter(typeEq('SRV')),
       columns: [
         { title: 'Name', render: (r: Linode.DomainRecord) => r.name },
@@ -552,6 +571,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     /** CAA Record */
     {
       title: 'CAA Record',
+      orderBy: 'name',
+      order: 'asc',
       data: this.props.domainRecords.filter(typeEq('CAA')),
       columns: [
         { title: 'Name', render: (r: Linode.DomainRecord) => r.name },
@@ -632,6 +653,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
         {this.state.types.map((type, eachTypeIdx) => {
+          const ref: React.Ref<any> = React.createRef();
+
           return (
             <div key={eachTypeIdx}>
               <Grid
@@ -641,6 +664,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 className={classes.root}
               >
                 <Grid item>
+                  <a ref={ref} />
                   <Typography
                     variant="h2"
                     className={classes.titles}
@@ -651,50 +675,96 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 </Grid>
                 {type.link && (
                   <Grid item>
-                    <div className={classes.linkContainer}>{type.link()}</div>
+                    {' '}
+                    <div className={classes.linkContainer}>
+                      {type.link()}
+                    </div>{' '}
                   </Grid>
                 )}
               </Grid>
-              <Paper>
-                <Table aria-label="List of Domains MX Records">
-                  <TableHead>
-                    <TableRow>
-                      {type.columns.length > 0 &&
-                        type.columns.map((col, columnIndex) => {
-                          return (
-                            <TableCell key={columnIndex}>{col.title}</TableCell>
-                          );
-                        })}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {type.data.length === 0 ? (
-                      <TableRowEmptyState colSpan={type.columns.length} />
-                    ) : (
-                      type.data.map((data, idx) => {
+              <OrderBy
+                data={type.data}
+                order={type.order}
+                orderBy={type.orderBy}
+              >
+                {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+                  return (
+                    <Paginate data={orderedData} scrollToRef={ref}>
+                      {({
+                        count,
+                        data: paginatedData,
+                        handlePageChange,
+                        handlePageSizeChange,
+                        page,
+                        pageSize
+                      }) => {
                         return (
-                          <TableRow key={idx} data-qa-record-row={type.title}>
-                            {type.columns.length > 0 &&
-                              type.columns.map(
-                                ({ title, render }, columnIndex) => {
-                                  return (
-                                    <TableCell
-                                      parentColumn={title}
-                                      key={columnIndex}
-                                      data-qa-column={title}
-                                    >
-                                      {render(data)}
-                                    </TableCell>
-                                  );
-                                }
-                              )}
-                          </TableRow>
+                          <>
+                            <Paper>
+                              <Table aria-label="List of Domains MX Records">
+                                <TableHead>
+                                  <TableRow>
+                                    {type.columns.length > 0 &&
+                                      type.columns.map((col, columnIndex) => {
+                                        return (
+                                          <TableCell key={columnIndex}>
+                                            {col.title}
+                                          </TableCell>
+                                        );
+                                      })}
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {type.data.length === 0 ? (
+                                    <TableRowEmptyState
+                                      colSpan={type.columns.length}
+                                    />
+                                  ) : (
+                                    paginatedData.map((data, idx) => {
+                                      return (
+                                        <TableRow
+                                          key={idx}
+                                          data-qa-record-row={type.title}
+                                        >
+                                          {type.columns.length > 0 &&
+                                            type.columns.map(
+                                              (
+                                                { title, render },
+                                                columnIndex
+                                              ) => {
+                                                return (
+                                                  <TableCell
+                                                    parentColumn={title}
+                                                    key={columnIndex}
+                                                    data-qa-column={title}
+                                                  >
+                                                    {render(data)}
+                                                  </TableCell>
+                                                );
+                                              }
+                                            )}
+                                        </TableRow>
+                                      );
+                                    })
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </Paper>
+                            <PaginationFooter
+                              count={count}
+                              handlePageChange={handlePageChange}
+                              handleSizeChange={handlePageSizeChange}
+                              page={page}
+                              pageSize={pageSize}
+                              eventCategory={`${type.title.toLowerCase()} panel`}
+                            />
+                          </>
                         );
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </Paper>
+                      }}
+                    </Paginate>
+                  );
+                }}
+              </OrderBy>
             </div>
           );
         })}

@@ -1,6 +1,6 @@
 import { clamp, slice } from 'ramda';
 import * as React from 'react';
-import scrollToTop from 'src/utilities/scrollToTop';
+import scrollTo from 'src/utilities/scrollTo';
 
 const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
   list: T[]
@@ -35,6 +35,7 @@ interface Props {
   children: (p: PaginationProps) => React.ReactNode;
   page?: number;
   pageSize?: number;
+  scrollToRef?: React.RefObject<any>;
 }
 
 export default class Paginate extends React.Component<Props, State> {
@@ -44,7 +45,8 @@ export default class Paginate extends React.Component<Props, State> {
   };
 
   handlePageChange = (page: number) => {
-    scrollToTop();
+    const { scrollToRef } = this.props;
+    scrollTo(scrollToRef);
     this.setState({ page });
   };
 
