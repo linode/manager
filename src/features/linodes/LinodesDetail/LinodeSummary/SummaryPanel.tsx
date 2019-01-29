@@ -144,7 +144,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
           >
             Linode Details
           </Typography>
-          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
           <div className={classes.section}>{this.renderImage()}</div>
           <div className={classes.section}>{<span>{typesLongLabel}</span>}</div>
           <div className={classes.section} data-qa-volumes={volumes.length}>
@@ -178,6 +177,17 @@ class SummaryPanel extends React.Component<CombinedProps> {
               <IPAddress ips={[linodeIpv6]} copyRight showMore />
             </div>
           )}
+        </Paper>
+        <Paper className={classes.summarySection}>
+          <Typography
+            role="header"
+            variant="h3"
+            className={classes.title}
+            data-qa-title
+          >
+            Tags
+          </Typography>
+          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
         </Paper>
       </div>
     );
