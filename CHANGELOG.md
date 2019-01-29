@@ -15,9 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Group by Tag for NodeBalancers.
 - Group by Tag for Volumes.
 - Friendly error message when graph data is unavailable for a newly created Linode.
-- Graph Display Options (Last 30 Days).
 
 ### Changed:
+- Graph Display Options (Last 30 Days).
 - Removed Documentation panel sidebar.
 - Improve pagination experience.
 - Friendly error message when graph data is unavailable.
@@ -25,10 +25,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - My Profile > My Apps changed to My Profile > OAuth Apps.
 
 ### Fixed:
-- Update timezone error
-- Fix pagination display logic
-- Add missing Typography on NB labels
-- Invalid Date on OAuth Apps
+- Update timezone error.
+- Fix pagination display logic.
+- Invalid Date on OAuth Apps.
 
 ## [0.46.0] - 2019.01.18
 
