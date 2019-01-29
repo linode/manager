@@ -42,7 +42,7 @@ exports.readToken = (username) => {
 * @returns {null} returns nothing
 */
 exports.login = (username, password, credFilePath) => {
-    let loginButton,letsGoButton;
+    let letsGoButton;
 
     browser.url(constants.routes.linodes);
     try {
@@ -56,7 +56,8 @@ exports.login = (username, password, credFilePath) => {
     browser.trySetValue('#username', username);
     browser.trySetValue('#password', password);
     letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
-    browser.click('.btn#submit');
+    const loginButton = '.btn#submit';
+    $(loginButton).click();
 
     try {
         browser.waitUntil(function() {
@@ -64,9 +65,11 @@ exports.login = (username, password, credFilePath) => {
         }, constants.wait.normal);
     } catch (err) {
         console.log('failed to login!');
-        if (browser.getText('.alert').includes('This field is required.')) {
+        if ($('.form-action').getText().includes('CSRF')) {
+            console.log($('.form-action').getText());
             browser.trySetValue('#password', password);
-            browser.click(loginButton);
+            browser.trySetValue('#username', username);
+            $(loginButton).click();
         }
     }
 
