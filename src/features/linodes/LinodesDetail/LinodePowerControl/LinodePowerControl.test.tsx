@@ -53,4 +53,20 @@ describe('Linode Power Control Dialogs', () => {
     cancelButton.simulate('click');
     expect(renderedComponent.state('powerAlertOpen')).toBeFalsy();
   });
+
+  it('should only have the option to reboot if the status is "running"', () => {
+    const renderedComponent = shallow(component);
+
+    // "Running"
+    renderedComponent.setProps({ status: 'running' });
+    expect(
+      renderedComponent.find('[data-qa-set-power="reboot"]').exists()
+    ).toBeTruthy();
+
+    // "Offline"
+    renderedComponent.setProps({ status: 'offline' });
+    expect(
+      renderedComponent.find('[data-qa-set-power="reboot"]').exists()
+    ).toBeFalsy();
+  });
 });
