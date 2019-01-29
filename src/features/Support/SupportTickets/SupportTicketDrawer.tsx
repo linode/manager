@@ -22,7 +22,7 @@ import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
+import { getVersionString } from 'src/utilities/getVersionString';
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import { reshapeFiles } from '../ticketUtils';
@@ -56,7 +56,7 @@ export interface Props {
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
 }
 
-interface State {
+export interface State {
   data: Item[];
   inputValue: string;
   loading: boolean;
@@ -73,7 +73,7 @@ interface Ticket {
   summary: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export type CombinedProps = Props & WithStyles<ClassNames>;
 
 const L = {
   open: lensPath(['ticket', 'open']),
@@ -106,7 +106,7 @@ const text = {
     "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
 };
 
-class SupportTicketDrawer extends React.Component<CombinedProps, State> {
+export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   composeState = composeState;
   defaultTicket: Ticket = {
@@ -363,8 +363,14 @@ class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       errors: undefined,
       submitting: true
     });
+
+    const versionString = getVersionString();
+    const updatedDescription = versionString
+      ? description + '\n\n' + versionString
+      : description;
+
     createSupportTicket({
-      description,
+      description: updatedDescription,
       summary,
       [entity_type]: Number(entity_id)
     })
