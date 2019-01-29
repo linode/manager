@@ -8,9 +8,15 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import TagsPanel from 'src/components/TagsPanel';
 import withImage from 'src/containers/withImage.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import {
+  LinodeActionsProps,
+  withLinodeActions
+} from 'src/store/linodes/linode.containers';
 import { formatRegion } from 'src/utilities';
+import { withLinode } from '../context';
 
 type ClassNames =
   | 'root'
@@ -85,12 +91,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  linode: Linode.Linode;
-  linodeImageId: null | string;
   volumes: Linode.Volume[];
   typesLongLabel: string;
 }
-type CombinedProps = Props & WithImage & WithStyles<ClassNames>;
+
+type CombinedProps = Props &
+  LinodeContextProps &
+  LinodeActionsProps &
+  WithImage &
+  WithStyles<ClassNames>;
 
 class SummaryPanel extends React.Component<CombinedProps> {
   renderImage = () => {
@@ -103,8 +112,26 @@ class SummaryPanel extends React.Component<CombinedProps> {
     );
   };
 
+  updateTags = async (tags: string[]) => {
+    const { request, linodeId, linodeActions } = this.props;
+
+    /** Send the request (which updates the internal store.) */
+    await linodeActions.updateLinode({ linodeId, tags });
+
+    /** Until the Linode Context reads from the Redux store, we need to request the latest version from API. */
+    await request();
+  };
   render() {
-    const { classes, linode, volumes, typesLongLabel } = this.props;
+    const {
+      classes,
+      volumes,
+      typesLongLabel,
+      linodeTags,
+      linodeId,
+      linodeRegion,
+      linodeIpv4,
+      linodeIpv6
+    } = this.props;
 
     return (
       <div className={classes.root}>
@@ -117,19 +144,20 @@ class SummaryPanel extends React.Component<CombinedProps> {
           >
             Linode Details
           </Typography>
+          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
           <div className={classes.section}>{this.renderImage()}</div>
           <div className={classes.section}>{<span>{typesLongLabel}</span>}</div>
           <div className={classes.section} data-qa-volumes={volumes.length}>
             Volumes:&#160;
             <Link
               className={classes.volumeLink}
-              to={`/linodes/${linode.id}/volumes`}
+              to={`/linodes/${linodeId}/volumes`}
             >
               {volumes.length}
             </Link>
           </div>
           <div className={`${classes.section}`}>
-            {formatRegion(linode.region)}
+            {formatRegion(linodeRegion)}
           </div>
         </Paper>
 
@@ -143,11 +171,11 @@ class SummaryPanel extends React.Component<CombinedProps> {
             IP Addresses
           </Typography>
           <div className={classes.section}>
-            <IPAddress ips={linode.ipv4} copyRight showMore />
+            <IPAddress ips={linodeIpv4} copyRight showMore />
           </div>
-          {linode.ipv6 && (
+          {linodeIpv6 && (
             <div className={classes.section}>
-              <IPAddress ips={[linode.ipv6]} copyRight showMore />
+              <IPAddress ips={[linodeIpv6]} copyRight showMore />
             </div>
           )}
         </Paper>
@@ -162,9 +190,31 @@ interface WithImage {
   image?: Linode.Image;
 }
 
+interface LinodeContextProps {
+  linodeId: number;
+  linodeImageId: string;
+  linodeIpv4: any;
+  linodeIpv6: any;
+  linodeRegion: string;
+  linodeTags: string[];
+  request: () => Promise<Linode.Linode>;
+}
+
+const linodeContext = withLinode(context => ({
+  linodeIpv4: context.data!.ipv4,
+  linodeIpv6: context.data!.ipv6,
+  linodeRegion: context.data!.region,
+  linodeImageId: context.data!.image,
+  linodeTags: context.data!.tags,
+  linodeId: context.data!.id,
+  request: context.request
+}));
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withImage<Props & WithImage, Props>(
+  linodeContext,
+  withLinodeActions,
+  withImage<LinodeContextProps & WithImage, LinodeContextProps>(
     props => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })
   )

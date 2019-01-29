@@ -657,12 +657,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
         <Grid container>
           <Grid item xs={12} md={3} className={classes.sidebar}>
-            <SummaryPanel
-              linode={linode}
-              volumes={volumes}
-              typesLongLabel={longLabel}
-              linodeImageId={linode.image}
-            />
+            <SummaryPanel volumes={volumes} typesLongLabel={longLabel} />
           </Grid>
           <Grid item xs={12} md={9} className={classes.main}>
             <div className={classes.graphControls}>
