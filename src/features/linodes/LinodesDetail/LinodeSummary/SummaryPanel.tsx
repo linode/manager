@@ -8,7 +8,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import withImage from 'src/containers/withImage.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { formatRegion } from 'src/utilities';
@@ -16,6 +15,7 @@ import { formatRegion } from 'src/utilities';
 type ClassNames =
   | 'root'
   | 'title'
+  | 'summarySection'
   | 'section'
   | 'region'
   | 'volumeLink'
@@ -23,12 +23,21 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 2,
-    paddingBottom: 12,
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit,
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: theme.spacing.unit
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing.unit,
+      paddingRight: 0
+    }
   },
   title: {
     marginBottom: theme.spacing.unit * 2
+  },
+  summarySection: {
+    padding: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 3
   },
   section: {
     display: 'flex',
@@ -98,59 +107,51 @@ class SummaryPanel extends React.Component<CombinedProps> {
     const { classes, linode, volumes, typesLongLabel } = this.props;
 
     return (
-      <Paper className={classes.root}>
-        <Grid container>
-          <Grid item xs={12}>
-            <Typography
-              role="header"
-              variant="h2"
-              className={classes.title}
-              data-qa-title
+      <div className={classes.root}>
+        <Paper className={classes.summarySection}>
+          <Typography
+            role="header"
+            variant="h3"
+            className={classes.title}
+            data-qa-title
+          >
+            Linode Details
+          </Typography>
+          <div className={classes.section}>{this.renderImage()}</div>
+          <div className={classes.section}>{<span>{typesLongLabel}</span>}</div>
+          <div className={classes.section} data-qa-volumes={volumes.length}>
+            Volumes:&#160;
+            <Link
+              className={classes.volumeLink}
+              to={`/linodes/${linode.id}/volumes`}
             >
-              Summary
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={6} lg={4}>
-            <div className={classes.section}>{this.renderImage()}</div>
+              {volumes.length}
+            </Link>
+          </div>
+          <div className={`${classes.section}`}>
+            {formatRegion(linode.region)}
+          </div>
+        </Paper>
+
+        <Paper className={classes.summarySection}>
+          <Typography
+            role="header"
+            variant="h3"
+            className={classes.title}
+            data-qa-title
+          >
+            IP Addresses
+          </Typography>
+          <div className={classes.section}>
+            <IPAddress ips={linode.ipv4} copyRight showMore />
+          </div>
+          {linode.ipv6 && (
             <div className={classes.section}>
-              {<span>{typesLongLabel}</span>}
+              <IPAddress ips={[linode.ipv6]} copyRight showMore />
             </div>
-          </Grid>
-          <Grid item xs={12} sm={6} lg={4}>
-            <div className={classes.section}>
-              <IPAddress ips={linode.ipv4} copyRight showMore />
-            </div>
-            {linode.ipv6 && (
-              <div className={classes.section}>
-                <IPAddress ips={[linode.ipv6]} copyRight showMore />
-              </div>
-            )}
-          </Grid>
-          <Grid item xs={12} sm={6} lg={4} className={classes.region}>
-            <Grid container>
-              <Grid item xs={12} sm={6} lg={12} className={classes.regionInner}>
-                <div className={`${classes.section}`}>
-                  {formatRegion(linode.region)}
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={12} className={classes.regionInner}>
-                <div
-                  className={classes.section}
-                  data-qa-volumes={volumes.length}
-                >
-                  Volumes:&#160;
-                  <Link
-                    className={classes.volumeLink}
-                    to={`/linodes/${linode.id}/volumes`}
-                  >
-                    {volumes.length}
-                  </Link>
-                </div>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
+          )}
+        </Paper>
+      </div>
     );
   }
 }

@@ -12,6 +12,8 @@ describe('LinodeSummary', () => {
       linodeData={linodes[0]}
       volumesData={[]}
       classes={{
+        main: '',
+        sidebar: '',
         chart: '',
         leftLegend: '',
         bottomLegend: '',
