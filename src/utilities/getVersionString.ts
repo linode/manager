@@ -1,3 +1,4 @@
 const { VERSION } = process.env;
 
-export const getVersionString = () => `Cloud Manager Version: ${VERSION}`;
+export const getVersionString = () =>
+  VERSION ? `Cloud Manager Version: ${VERSION}` : '';
