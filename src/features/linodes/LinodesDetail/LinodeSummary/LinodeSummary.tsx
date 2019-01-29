@@ -38,6 +38,8 @@ import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 setUpCharts();
 
 type ClassNames =
+  | 'main'
+  | 'sidebar'
   | 'chart'
   | 'leftLegend'
   | 'bottomLegend'
@@ -47,15 +49,25 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
+    },
     chart: {
       position: 'relative',
       width: 'calc(100vw - 80px)',
       paddingLeft: theme.spacing.unit * 4,
       [theme.breakpoints.up('md')]: {
-        width: 'calc(100vw - 310px)'
+        width: 'calc(80vw - 310px)'
       },
       [theme.breakpoints.up('xl')]: {
-        width: 'calc(100vw - 370px)'
+        width: 'calc(80vw - 370px)'
       }
     },
     leftLegend: {
@@ -642,60 +654,64 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
-        <SummaryPanel
-          linode={linode}
-          volumes={volumes}
-          typesLongLabel={longLabel}
-          linodeImageId={linode.image}
-        />
 
-        <React.Fragment>
-          <div className={classes.graphControls}>
-            <Typography
-              role="header"
-              variant="h2"
-              className={classes.graphTitle}
-            >
-              Graphs
-            </Typography>
-            <FormControl style={{ marginTop: 0 }}>
-              <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                Select Time Range
-              </InputLabel>
-              <Select
-                value={rangeSelection}
-                onChange={this.handleChartRangeChange}
-                inputProps={{ name: 'chartRange', id: 'chartRange' }}
+        <Grid container>
+          <Grid item xs={12} md={3} className={classes.sidebar}>
+            <SummaryPanel
+              linode={linode}
+              volumes={volumes}
+              typesLongLabel={longLabel}
+              linodeImageId={linode.image}
+            />
+          </Grid>
+          <Grid item xs={12} md={9} className={classes.main}>
+            <div className={classes.graphControls}>
+              <Typography
+                role="header"
+                variant="h2"
+                className={classes.graphTitle}
               >
-                {this.rangeSelectOptions}
-              </Select>
-            </FormControl>
-          </div>
+                Graphs
+              </Typography>
+              <FormControl style={{ marginTop: 0 }}>
+                <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                  Select Time Range
+                </InputLabel>
+                <Select
+                  value={rangeSelection}
+                  onChange={this.handleChartRangeChange}
+                  inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                >
+                  {this.rangeSelectOptions}
+                </Select>
+              </FormControl>
+            </div>
 
-          <StatsPanel
-            title="CPU Usage"
-            renderBody={this.renderCPUChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="CPU Usage"
+              renderBody={this.renderCPUChart}
+              {...chartProps}
+            />
 
-          <StatsPanel
-            title="IPv4 Traffic"
-            renderBody={this.renderIPv4TrafficChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="IPv4 Traffic"
+              renderBody={this.renderIPv4TrafficChart}
+              {...chartProps}
+            />
 
-          <StatsPanel
-            title="IPv6 Traffic"
-            renderBody={this.renderIPv6TrafficChart}
-            {...chartProps}
-          />
+            <StatsPanel
+              title="IPv6 Traffic"
+              renderBody={this.renderIPv6TrafficChart}
+              {...chartProps}
+            />
 
-          <StatsPanel
-            title="Disk IO"
-            renderBody={this.renderDiskIOChart}
-            {...chartProps}
-          />
-        </React.Fragment>
+            <StatsPanel
+              title="Disk IO"
+              renderBody={this.renderDiskIOChart}
+              {...chartProps}
+            />
+          </Grid>
+        </Grid>
       </React.Fragment>
     );
   }
