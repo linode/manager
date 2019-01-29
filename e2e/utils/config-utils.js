@@ -131,7 +131,6 @@ exports.generateCreds = (credFilePath, config, userCount) => {
             setCredCollection('MANAGER_USER', `_${i}`);
         }
     }
-
     writeFileSync(credFilePath, JSON.stringify(credCollection));
 }
 

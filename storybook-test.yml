@@ -15,7 +15,7 @@ services:
       - ./src/components:/src/src/components
     entrypoint: yarn storybook
     depends_on:
-      - selenium-standalone
+      - selenium
     networks:
       - backend
   storybook-test:
