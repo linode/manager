@@ -67,23 +67,23 @@ namespace Linode {
     label: string;
   }
   export type GlobalGrantTypes =
-    'add_linodes' |
-    'add_longview' |
-    'longview_subscription' |
-    'account_access' |
-    'cancel_account' |
-    'add_domains' |
-    'add_stackscripts' |
-    'add_nodebalancers' |
-    'add_images' |
-    'add_volumes';
+    | 'add_linodes'
+    | 'add_longview'
+    | 'longview_subscription'
+    | 'account_access'
+    | 'cancel_account'
+    | 'add_domains'
+    | 'add_stackscripts'
+    | 'add_nodebalancers'
+    | 'add_images'
+    | 'add_volumes';
 
   export interface GlobalGrants {
     global: Record<GlobalGrantTypes, boolean | GrantLevel>;
   }
 
   export type GrantType =
-    'linode'
+    | 'linode'
     | 'domain'
     | 'nodebalancer'
     | 'image'
@@ -99,5 +99,3 @@ namespace Linode {
     quota: number;
   }
 }
-
-

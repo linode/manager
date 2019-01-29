@@ -7,7 +7,7 @@ export const sortByString = (a: string, b: string, order: SortOrder) => {
   if (a.toLowerCase() < b.toLowerCase()) {
     result = -1;
   } else if (a.toLowerCase() > b.toLowerCase()) {
-    result = 1
+    result = 1;
   }
   if (order === 'asc') {
     return result; // ascending order
@@ -32,7 +32,7 @@ export const sortByNumber = (a: number, b: number, order: SortOrder) => {
   if (a < b) {
     result = -1;
   } else if (a > b) {
-    result = 1
+    result = 1;
   }
   if (order === 'asc') {
     return result; // ascending order
@@ -45,20 +45,24 @@ export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {
   if (a.length > b.length) {
     result = 1;
   } else if (a.length < b.length) {
-    result = -1
+    result = -1;
   }
 
-  return (order === 'asc') ? result : -result
-}
+  return order === 'asc' ? result : -result;
+};
 
 // Sort function for Array.sort comparator functions
 export const sortAlphabetically = (a: string, b: string): number => {
   const aLower = a.toLowerCase();
   const bLower = b.toLowerCase();
 
-  if (aLower < bLower) { return -1; }
-  if (aLower > bLower) { return 1; }
+  if (aLower < bLower) {
+    return -1;
+  }
+  if (aLower > bLower) {
+    return 1;
+  }
   return 0;
-}
+};
 
 export default sortAlphabetically;

@@ -7,9 +7,9 @@
  */
 export const generateInFilter = (keyName: string, arr: any[]) => {
   return {
-    '+or': arr.map(el => ({ [keyName]: el })),
+    '+or': arr.map(el => ({ [keyName]: el }))
   };
-}
+};
 
 /**
  * Generates a filter for API reqeusts;
@@ -21,14 +21,11 @@ export const generateInFilter = (keyName: string, arr: any[]) => {
  * This filter is invoked on every events request to only get the latest or in-progress events.
  */
 export const generatePollingFilter = (datestamp: string, ids: string[]) => {
-  return ids.length ?
-    {
-      '+or': [
-        { created: { '+gt': datestamp } },
-        generateInFilter('id', ids),
-      ],
-    }
+  return ids.length
+    ? {
+        '+or': [{ created: { '+gt': datestamp } }, generateInFilter('id', ids)]
+      }
     : {
-      created: { '+gt': datestamp },
-    };
-}
+        created: { '+gt': datestamp }
+      };
+};
