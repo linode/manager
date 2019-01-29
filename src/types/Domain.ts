@@ -17,33 +17,25 @@ namespace Linode {
     zonefile: ZoneFile;
   }
 
-  export type DomainStatus =
-    'active'
-    | 'disabled'
-    | 'edit_mode';
+  export type DomainStatus = 'active' | 'disabled' | 'edit_mode';
 
-  export type DomainType =
-    'master'
-    | 'slave';
+  export type DomainType = 'master' | 'slave';
 
   export interface ZoneFile {
-    rendered: string,
-    status:
-    'current'
-    | 'setting_up'
-    | 'updating',
-  };
+    rendered: string;
+    status: 'current' | 'setting_up' | 'updating';
+  }
 
   export type RecordType =
-    'A' |
-    'AAAA'|
-    'CAA' |
-    'CNAME' |
-    'MX' |
-    'NS' |
-    'PTR' |
-    'SRV' |
-    'TXT';
+    | 'A'
+    | 'AAAA'
+    | 'CAA'
+    | 'CNAME'
+    | 'MX'
+    | 'NS'
+    | 'PTR'
+    | 'SRV'
+    | 'TXT';
 
   export interface DomainRecord {
     id: number;

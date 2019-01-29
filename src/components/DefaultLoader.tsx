@@ -7,25 +7,28 @@ interface OptionalLoadable<Props> {
   timeout?: number | false | null;
   modules?: string[];
   webpack?: () => number[];
-  loader(): Promise<React.ComponentType<Props> | { default: React.ComponentType<Props> }>;
+  loader(): Promise<
+    React.ComponentType<Props> | { default: React.ComponentType<Props> }
+  >;
 }
 
-const Loader = (config: OptionalLoadable<{}>) => Loadable({
-  loading: (props) => {
-    if (props.error) {
+const Loader = (config: OptionalLoadable<{}>) =>
+  Loadable({
+    loading: props => {
+      if (props.error) {
+        return null;
+      }
+
+      // if (props.pastDelay) {
+      //  For now, no loader.
+      // }
+
       return null;
-    }
+    },
 
-    // if (props.pastDelay) {
-    //  For now, no loader.
-    // }
+    delay: 250,
 
-    return null;
-  },
-
-  delay: 250,
-
-  ...config,
-});
+    ...config
+  });
 
 export default Loader;

@@ -20,10 +20,14 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
  *       )
  * @param promiseFn a function that returns a promise (i.e )
  */
-const transformPromiseToCancellableObservable = (promiseFn: () => Promise<any>) => {
-  return fromPromise(promiseFn())
-    /** cancel previous subscribed request in favor of the new one */
-    .switchMap(() => promiseFn())
-}
+const transformPromiseToCancellableObservable = (
+  promiseFn: () => Promise<any>
+) => {
+  return (
+    fromPromise(promiseFn())
+      /** cancel previous subscribed request in favor of the new one */
+      .switchMap(() => promiseFn())
+  );
+};
 
 export default transformPromiseToCancellableObservable;

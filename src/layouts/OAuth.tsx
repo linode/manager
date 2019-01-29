@@ -29,7 +29,7 @@ export class OAuthCallbackPage extends Component<Linode.TodoAny> {
       access_token: accessToken,
       scope: scopes,
       expires_in: expiresIn,
-      state: nonce,
+      state: nonce
     } = hashParams as Linode.TodoAny;
     if (!accessToken) {
       return redirect('/', history);
@@ -42,7 +42,7 @@ export class OAuthCallbackPage extends Component<Linode.TodoAny> {
     this.checkNonce(nonce);
 
     const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime() + ((+expiresIn) * 1000));
+    expireDate.setTime(expireDate.getTime() + +expiresIn * 1000);
 
     // begin our authenticated session
     startSession(accessToken, scopes, expireDate.toString());
@@ -62,10 +62,13 @@ const mapDispatchToProps = (dispatch: Linode.TodoAny) => ({
   },
   redirect(path: string, history: Linode.TodoAny) {
     history.push(path);
-  },
+  }
 });
 
 export default compose(
-  connect(undefined, mapDispatchToProps),
-  withRouter,
+  connect(
+    undefined,
+    mapDispatchToProps
+  ),
+  withRouter
 )(OAuthCallbackPage);
