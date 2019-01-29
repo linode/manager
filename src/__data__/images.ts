@@ -9,7 +9,7 @@ export const images: Linode.Image[] = [
     created: '2011-06-05T19:11:59',
     is_public: true,
     label: 'Slackware 13.37',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -21,7 +21,7 @@ export const images: Linode.Image[] = [
     created: '2013-11-25T16:11:02',
     is_public: true,
     label: 'Slackware 14.1',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -33,7 +33,7 @@ export const images: Linode.Image[] = [
     created: '2014-04-28T18:16:59',
     is_public: true,
     label: 'Ubuntu 12.04 LTS',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -45,7 +45,7 @@ export const images: Linode.Image[] = [
     created: '2014-04-28T19:19:34',
     is_public: true,
     label: 'CentOS 6.5',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -57,7 +57,7 @@ export const images: Linode.Image[] = [
     created: '2014-07-08T14:07:21',
     is_public: true,
     label: 'CentOS 7',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -69,7 +69,7 @@ export const images: Linode.Image[] = [
     created: '2014-09-24T17:59:32',
     is_public: true,
     label: 'Debian 7',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -81,7 +81,7 @@ export const images: Linode.Image[] = [
     created: '2014-12-17T22:55:42',
     is_public: true,
     label: 'openSUSE 13.2',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -93,7 +93,7 @@ export const images: Linode.Image[] = [
     created: '2015-04-27T20:26:41',
     is_public: true,
     label: 'Debian 8.1',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -105,7 +105,7 @@ export const images: Linode.Image[] = [
     created: '2016-04-22T18:11:29',
     is_public: true,
     label: 'Ubuntu 16.04 LTS',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -117,7 +117,7 @@ export const images: Linode.Image[] = [
     created: '2016-05-26T17:36:32',
     is_public: true,
     label: 'Fedora 23',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -129,7 +129,7 @@ export const images: Linode.Image[] = [
     created: '2016-06-13T20:31:34',
     is_public: true,
     label: 'Arch 2016.09.03',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -141,7 +141,7 @@ export const images: Linode.Image[] = [
     created: '2016-06-22T19:03:38',
     is_public: true,
     label: 'Fedora 24',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -153,7 +153,7 @@ export const images: Linode.Image[] = [
     created: '2016-06-27T17:01:16',
     is_public: true,
     label: 'openSUSE Leap 42.1',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -165,7 +165,7 @@ export const images: Linode.Image[] = [
     created: '2016-10-13T13:14:34',
     is_public: true,
     label: 'Slackware 14.2',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -177,7 +177,7 @@ export const images: Linode.Image[] = [
     created: '2016-10-13T21:22:25',
     is_public: true,
     label: 'Ubuntu 16.10',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -189,7 +189,7 @@ export const images: Linode.Image[] = [
     created: '2016-10-25T17:31:25',
     is_public: true,
     label: 'Gentoo 2016-10-13',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -201,7 +201,7 @@ export const images: Linode.Image[] = [
     created: '2016-11-17T19:52:54',
     is_public: true,
     label: 'openSUSE Leap 42.2',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -213,7 +213,7 @@ export const images: Linode.Image[] = [
     created: '2016-11-28T19:53:47',
     is_public: true,
     label: 'Fedora 25',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -225,7 +225,7 @@ export const images: Linode.Image[] = [
     created: '2017-06-16T20:02:29',
     is_public: true,
     label: 'Debian 9',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -237,7 +237,7 @@ export const images: Linode.Image[] = [
     created: '2017-08-15T22:28:13',
     is_public: true,
     label: 'Debian 8.7',
-    description: null,
+    description: null
   },
   {
     created_by: 'linode',
@@ -249,6 +249,6 @@ export const images: Linode.Image[] = [
     created: '2017-08-15T22:28:13',
     is_public: true,
     label: 'Container Linux',
-    description: null,
-  },
+    description: null
+  }
 ];

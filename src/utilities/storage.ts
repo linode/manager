@@ -3,9 +3,9 @@ import * as Cookies from 'js-cookie';
 export const getStorage = (key: string, fallback?: any) => {
   const item = window.localStorage.getItem(key);
   /*
-  * Basically, if localstorage doesn't exist,
-  * return whatever we set as a fallback
-  */
+   * Basically, if localstorage doesn't exist,
+   * return whatever we set as a fallback
+   */
   if (item === null && !!fallback) {
     return fallback;
   }
@@ -15,11 +15,11 @@ export const getStorage = (key: string, fallback?: any) => {
   } catch (e) {
     return item;
   }
-}
+};
 
 export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
-}
+};
 
 const THEME = 'themeChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
@@ -50,11 +50,11 @@ export interface Storage {
     linode: {
       get: () => LinodeView;
       set: (view: LinodeView) => void;
-    },
+    };
     grouped: {
       get: () => 'true' | 'false';
       set: (v: 'true' | 'false') => void;
-    },
+    };
   };
   loginCloudManager: {
     get: () => undefined | string;
@@ -80,37 +80,39 @@ export interface Storage {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
   };
-};
+}
 
 export const storage: Storage = {
   theme: {
     get: () => getStorage(THEME, 'light'),
-    set: (v) => setStorage(THEME, v),
+    set: v => setStorage(THEME, v)
   },
   notifications: {
     welcome: {
       /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
       get: () => getStorage(BETA_NOTIFICATION, 'open'),
-      set: (open) => setStorage(BETA_NOTIFICATION, open),
+      set: open => setStorage(BETA_NOTIFICATION, open)
     }
   },
   views: {
     linode: {
       get: (): LinodeView => getStorage(LINODE_VIEW),
-      set: (view: LinodeView) => setStorage(LINODE_VIEW, view),
+      set: (view: LinodeView) => setStorage(LINODE_VIEW, view)
     },
     grouped: {
       get: () => getStorage(GROUP_LINODES),
-      set: (v) => setStorage(GROUP_LINODES, v),
-    },
+      set: v => setStorage(GROUP_LINODES, v)
+    }
   },
   loginCloudManager: {
     get: () => Cookies.get('loginCloudManager'),
     set: (
       v: string | object,
-      options: Cookies.CookieAttributes = { domain: '.linode.com', expires: 1000 * 60 * 60 * 24 * 356 },
-    ) =>
-      Cookies.set('loginCloudManager', v, options),
+      options: Cookies.CookieAttributes = {
+        domain: '.linode.com',
+        expires: 1000 * 60 * 60 * 24 * 356
+      }
+    ) => Cookies.set('loginCloudManager', v, options)
   },
   hideGroupImportCTA: {
     get: () => getStorage(HIDE_DISPLAY_GROUPS_CTA),
@@ -122,16 +124,16 @@ export const storage: Storage = {
   },
   groupDomainsByTag: {
     get: () => getStorage(GROUP_DOMAINS),
-    set: (v) => setStorage(GROUP_DOMAINS, v)
+    set: v => setStorage(GROUP_DOMAINS, v)
   },
   groupNodeBalancersByTag: {
     get: () => getStorage(GROUP_NODEBALANCERS),
-    set: (v) => setStorage(GROUP_NODEBALANCERS, v)
+    set: v => setStorage(GROUP_NODEBALANCERS, v)
   },
   groupVolumesByTag: {
     get: () => getStorage(GROUP_VOLUMES),
-    set: (v) => setStorage(GROUP_VOLUMES, v)
-  },
-}
+    set: v => setStorage(GROUP_VOLUMES, v)
+  }
+};
 
 export const { theme, notifications, views } = storage;

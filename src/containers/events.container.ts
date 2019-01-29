@@ -6,9 +6,10 @@ export interface EventsProps {
 }
 
 export default <TInner extends {}, TOutter extends {}>(
-  mapEventsToProps: (ownProps: TOutter, eventsData: Linode.Event[]) => TInner,
-) => connect((state: ApplicationState, ownProps: TOutter) => {
-  const eventsData = state.events.events;
+  mapEventsToProps: (ownProps: TOutter, eventsData: Linode.Event[]) => TInner
+) =>
+  connect((state: ApplicationState, ownProps: TOutter) => {
+    const eventsData = state.events.events;
 
-  return mapEventsToProps(ownProps, eventsData);
-});
+    return mapEventsToProps(ownProps, eventsData);
+  });

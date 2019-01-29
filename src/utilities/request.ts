@@ -14,26 +14,30 @@ const handleSuccess = (response: AxiosResponse) => {
 };
 
 const handleError = (error: AxiosError) => {
-  if (!!error.config.headers['x-maintenance-mode']
-    || (error.response && error.response.status === 401)) {
+  if (
+    !!error.config.headers['x-maintenance-mode'] ||
+    (error.response && error.response.status === 401)
+  ) {
     expire();
   }
 
   return Promise.reject(error);
-}
+};
 
-Axios.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
-  const state = store.getState();
-  const token = path(['authentication', 'token'], state);
+Axios.interceptors.request.use(
+  (config: AxiosRequestConfig): AxiosRequestConfig => {
+    const state = store.getState();
+    const token = path(['authentication', 'token'], state);
 
-  return {
-    ...config,
-    headers: {
-      ...config.headers,
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-  };
-});
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        ...(token && { Authorization: `Bearer ${token}` })
+      }
+    };
+  }
+);
 
 /*
 Interceptor that initiates re-authentication if:

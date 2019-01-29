@@ -11,17 +11,25 @@ import * as parseUrl from 'url-parse';
 export const parseQueryParams = (str: string) =>
   parse(str, { ignoreQueryPrefix: true });
 
-export const getQueryParam = (str: string, paramName: string, defaultValue: string = '') => {
+export const getQueryParam = (
+  str: string,
+  paramName: string,
+  defaultValue: string = ''
+) => {
   const params = parseQueryParams(str);
   return pathOr(defaultValue, [paramName], params);
-}
+};
 
 export const getParamsFromUrl = (url: string) => {
   const parsedUrl = parseUrl(url) as any;
   return parseQueryParams(parsedUrl.query);
-}
+};
 
-export const getParamFromUrl = (url: string, paramName: string, defaultValue: string = '') => {
+export const getParamFromUrl = (
+  url: string,
+  paramName: string,
+  defaultValue: string = ''
+) => {
   const parsedUrl = parseUrl(url) as any;
   return getQueryParam(parsedUrl.query, paramName, defaultValue);
-}
+};
