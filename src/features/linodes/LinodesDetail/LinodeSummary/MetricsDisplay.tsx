@@ -99,7 +99,7 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
   const rowHeaders = ['Max', 'Avg', 'Last'];
 
   return (
-    <Table aria-label="Linode stats and metrics" className={classes.root}>
+    <Table aria-label="Stats and metrics" className={classes.root}>
       <TableHead>
         <TableRow>
           <TableCell>{''}</TableCell>
