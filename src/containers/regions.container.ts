@@ -7,10 +7,14 @@ export interface DefaultProps {
   regionsLoading: boolean;
 }
 
-const defaultMap: (p: InjectedProps) => DefaultProps = ({ data, error, loading }) => ({
+const defaultMap: (p: InjectedProps) => DefaultProps = ({
+  data,
+  error,
+  loading
+}) => ({
   regionsData: data,
   regionsError: error,
-  regionsLoading: loading,
+  regionsLoading: loading
 });
 
 interface InjectedProps {
@@ -20,7 +24,7 @@ interface InjectedProps {
 }
 
 const mapStateToPropsFactory = <MappedProps>(
-  updater: (v: InjectedProps) => MappedProps,
+  updater: (v: InjectedProps) => MappedProps
 ) => (state: ApplicationState): MappedProps => {
   const { entities: data, loading, error } = state.__resources.regions;
 
@@ -28,10 +32,10 @@ const mapStateToPropsFactory = <MappedProps>(
 };
 
 const regionsContainer = <MappedProps>(
-  updater: (v: InjectedProps) => DefaultProps | MappedProps = defaultMap,
+  updater: (v: InjectedProps) => DefaultProps | MappedProps = defaultMap
 ) => {
-  const mapStateToProps = mapStateToPropsFactory(updater)
+  const mapStateToProps = mapStateToPropsFactory(updater);
   return connect(mapStateToProps);
-}
+};
 
 export default regionsContainer;

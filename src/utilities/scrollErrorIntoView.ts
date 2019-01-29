@@ -7,9 +7,9 @@ const scrollErrorIntoView = (errorGroup?: string) => {
     element.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
-      inline: 'nearest',
+      inline: 'nearest'
     });
   }
-}
+};
 
 export default scrollErrorIntoView;

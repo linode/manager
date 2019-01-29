@@ -3,7 +3,7 @@ import { ApplicationState } from 'src/store';
 
 interface VolumesData {
   items: string[];
-  itemsById: Record<string, Linode.Volume>
+  itemsById: Record<string, Linode.Volume>;
 }
 
 export interface Props {
@@ -13,13 +13,24 @@ export interface Props {
 }
 
 export default <TInner extends {}, TOutter extends {}>(
-  mapVolumesToProps: (ownProps: TOutter, volumesData: VolumesData, volumesLoading: boolean, volumesError?: Error ) => TInner,
-) => connect((state: ApplicationState, ownProps: TOutter) => {
-  const { items, itemsById } = state.__resources.volumes;
+  mapVolumesToProps: (
+    ownProps: TOutter,
+    volumesData: VolumesData,
+    volumesLoading: boolean,
+    volumesError?: Error
+  ) => TInner
+) =>
+  connect((state: ApplicationState, ownProps: TOutter) => {
+    const { items, itemsById } = state.__resources.volumes;
 
-  const volumesData = { items, itemsById };
-  const volumesLoading = state.__resources.volumes.loading;
-  const volumesError = state.__resources.volumes.error;
+    const volumesData = { items, itemsById };
+    const volumesLoading = state.__resources.volumes.loading;
+    const volumesError = state.__resources.volumes.error;
 
-  return mapVolumesToProps(ownProps, volumesData, volumesLoading, volumesError);
-});
+    return mapVolumesToProps(
+      ownProps,
+      volumesData,
+      volumesLoading,
+      volumesError
+    );
+  });

@@ -13,6 +13,6 @@ export const substituteLink = (text: string, substr: string, path: string) => {
       {text.slice(loc + substr.length)}
     </React.Fragment>
   );
-}
+};
 
 export default substituteLink;

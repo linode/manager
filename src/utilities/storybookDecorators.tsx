@@ -7,11 +7,11 @@ import { dark, light } from 'src/themes';
 
 const options = {
   dark,
-  light,
+  light
 };
 
 const ThemeDecorator = (story: Function) => {
-  const key = select('theme', [ 'light', 'dark' ], 'light');
+  const key = select('theme', ['light', 'dark'], 'light');
   const content = story();
 
   return (
