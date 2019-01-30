@@ -1,4 +1,13 @@
-import { addMany, createDefaultState, getAddRemoved, onError, onGetAllSuccess, onStart, removeMany, updateInPlace } from './store.helpers';
+import {
+  addMany,
+  createDefaultState,
+  getAddRemoved,
+  onError,
+  onGetAllSuccess,
+  onStart,
+  removeMany,
+  updateInPlace
+} from './store.helpers';
 
 describe('store.helpers', () => {
   describe('getAddRemoved', () => {
@@ -21,7 +30,7 @@ describe('store.helpers', () => {
         lastUpdated: 0,
         items: [],
         itemsById: {},
-        error: undefined,
+        error: undefined
       });
     });
   });
@@ -29,7 +38,7 @@ describe('store.helpers', () => {
   describe('removeMany', () => {
     const state = createDefaultState({
       items: ['1', '2', '3'],
-      itemsById: { 1: { id: 1 }, 2: { id: 2 }, 3: { id: 3 } },
+      itemsById: { 1: { id: 1 }, 2: { id: 2 }, 3: { id: 3 } }
     });
     const result = removeMany(['2', '3'], state);
 
@@ -37,7 +46,7 @@ describe('store.helpers', () => {
       expect(result).toEqual({
         ...state,
         items: ['1'],
-        itemsById: { 1: { id: 1 } },
+        itemsById: { 1: { id: 1 } }
       });
     });
   });
@@ -45,7 +54,7 @@ describe('store.helpers', () => {
   describe('addMany', () => {
     const state = createDefaultState({
       items: ['1', '2', '3'],
-      itemsById: { 1: { id: 1 }, 2: { id: 2 }, 3: { id: 3 } },
+      itemsById: { 1: { id: 1 }, 2: { id: 2 }, 3: { id: 3 } }
     });
     const result = addMany([{ id: 99 }, { id: 66 }], state);
 
@@ -58,8 +67,8 @@ describe('store.helpers', () => {
           2: { id: 2 },
           3: { id: 3 },
           99: { id: 99 },
-          66: { id: 66 },
-        },
+          66: { id: 66 }
+        }
       });
     });
   });
@@ -71,8 +80,8 @@ describe('store.helpers', () => {
     it('should update state with error and complete loading', () => {
       expect(result).toEqual({
         ...createDefaultState(),
-        error: [{ reason: 'Something bad happened.' }],
-      })
+        error: [{ reason: 'Something bad happened.' }]
+      });
     });
   });
 
@@ -89,7 +98,10 @@ describe('store.helpers', () => {
     });
 
     it('should set itemsById map', () => {
-      expect(result).toHaveProperty('itemsById', { 1: { id: 1 }, 2: { id: 2 } });
+      expect(result).toHaveProperty('itemsById', {
+        1: { id: 1 },
+        2: { id: 2 }
+      });
     });
   });
 
@@ -100,18 +112,27 @@ describe('store.helpers', () => {
     it('should set to true', () => {
       expect(result).toHaveProperty('loading', true);
     });
-
   });
 
   describe('updateInPlace', () => {
-    interface TestEntity { id: number, status: 'active' | 'resizing' };
+    interface TestEntity {
+      id: number;
+      status: 'active' | 'resizing';
+    }
 
     const state = createDefaultState({
       items: ['1', '2', '3'],
-      itemsById: { 1: { id: 1, status: 'active' }, 2: { id: 2, status: 'active' }, 3: { id: 3, status: 'active' } },
+      itemsById: {
+        1: { id: 1, status: 'active' },
+        2: { id: 2, status: 'active' },
+        3: { id: 3, status: 'active' }
+      }
     });
 
-    const updateFn = (existing: TestEntity) => ({ ...existing, status: 'resizing'});
+    const updateFn = (existing: TestEntity) => ({
+      ...existing,
+      status: 'resizing'
+    });
 
     it('should update the item when it exists in state', () => {
       const updated = updateInPlace(1, updateFn, state);
@@ -129,4 +150,3 @@ describe('store.helpers', () => {
     });
   });
 });
-

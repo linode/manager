@@ -11,16 +11,17 @@ describe('services', () => {
       it('should return specific error message', () => {
         const data = { label: 1234 };
         const schema = object().shape({
-          region: string().required('A region is required.'),
+          region: string().required('A region is required.')
         });
 
-        return Request(setData(data, schema))
-          .catch((response) => {
-            expect(response.response.data.errors).toEqual([{
+        return Request(setData(data, schema)).catch(response => {
+          expect(response.response.data.errors).toEqual([
+            {
               field: 'region',
-              reason: `A region is required.`,
-            }]);
-          });
+              reason: `A region is required.`
+            }
+          ]);
+        });
       });
     });
   });

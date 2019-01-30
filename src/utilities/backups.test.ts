@@ -11,11 +11,11 @@ describe('utilities/backups', () => {
         automatic,
         snapshot: {
           current: null,
-          in_progress: null,
-        },
+          in_progress: null
+        }
       } as Linode.LinodeBackupsResponse;
 
-      expect(collectBackups(response)).toEqual(automatic)
+      expect(collectBackups(response)).toEqual(automatic);
     });
   });
 
@@ -24,81 +24,90 @@ describe('utilities/backups', () => {
       describe('and automatic contains most recent', () => {
         it('should return it', () => {
           const response = {
-            automatic: [{
-              status: 'failed',
-              finished: notTheMostRecent,
-            }, {
-              status: 'successful',
-              finished: mostRecent,
-            }, {
-              status: 'successful',
-              finished: notTheMostRecent,
-            }],
+            automatic: [
+              {
+                status: 'failed',
+                finished: notTheMostRecent
+              },
+              {
+                status: 'successful',
+                finished: mostRecent
+              },
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              }
+            ],
             snapshot: {
               in_progress: {
                 status: 'successful',
-                finished: notTheMostRecent,
+                finished: notTheMostRecent
               },
               current: null
             }
           } as Linode.LinodeBackupsResponse;
 
-          expect(mostRecentFromResponse(response))
-            .toEqual(mostRecent);
+          expect(mostRecentFromResponse(response)).toEqual(mostRecent);
         });
       });
 
       describe('and in_progress snapshot is the most recent', () => {
         it('should return it', () => {
           const response = {
-            automatic: [{
-              status: 'successful',
-              finished: notTheMostRecent,
-            }, {
-              status: 'successful',
-              finished: notTheMostRecent,
-            }, {
-              status: 'successful',
-              finished: notTheMostRecent,
-            }],
+            automatic: [
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              },
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              },
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              }
+            ],
             snapshot: {
               in_progress: null,
               current: {
                 status: 'successful',
-                finished: mostRecent,
+                finished: mostRecent
               }
             }
           } as Linode.LinodeBackupsResponse;
 
-          expect(mostRecentFromResponse(response))
-            .toEqual(mostRecent);
+          expect(mostRecentFromResponse(response)).toEqual(mostRecent);
         });
       });
 
       describe('and current snapshot is the most recent', () => {
         it('should return it', () => {
           const response = {
-            automatic: [{
-              status: 'successful',
-              finished: notTheMostRecent,
-            }, {
-              status: 'successful',
-              finished: notTheMostRecent,
-            }, {
-              status: 'successful',
-              finished: notTheMostRecent,
-            }],
+            automatic: [
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              },
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              },
+              {
+                status: 'successful',
+                finished: notTheMostRecent
+              }
+            ],
             snapshot: {
               in_progress: {
                 status: 'successful',
-                finished: mostRecent,
+                finished: mostRecent
               },
               current: null
             }
           } as Linode.LinodeBackupsResponse;
 
-          expect(mostRecentFromResponse(response))
-            .toEqual(mostRecent);
+          expect(mostRecentFromResponse(response)).toEqual(mostRecent);
         });
       });
     });
@@ -109,8 +118,8 @@ describe('utilities/backups', () => {
           automatic: [],
           snapshot: {
             current: null,
-            in_progress: null,
-          },
+            in_progress: null
+          }
         } as Linode.LinodeBackupsResponse;
 
         expect(mostRecentFromResponse(response)).toBe(null);
@@ -120,20 +129,24 @@ describe('utilities/backups', () => {
     describe('when no successful backups are found', () => {
       it('should return null', () => {
         const response = {
-          automatic: [{
-            status: 'failed',
-            finished: mostRecent,
-          }, {
-            status: 'failed',
-            finished: notTheMostRecent,
-          }, {
-            status: 'failed',
-            finished: notTheMostRecent,
-          }],
+          automatic: [
+            {
+              status: 'failed',
+              finished: mostRecent
+            },
+            {
+              status: 'failed',
+              finished: notTheMostRecent
+            },
+            {
+              status: 'failed',
+              finished: notTheMostRecent
+            }
+          ],
           snapshot: {
             in_progress: {
               status: 'failed',
-              finished: mostRecent,
+              finished: mostRecent
             },
             current: null
           }
