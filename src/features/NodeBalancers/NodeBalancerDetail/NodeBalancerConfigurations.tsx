@@ -72,6 +72,7 @@ interface Props {
 
 interface MatchProps {
   nodeBalancerId?: string;
+  configIdx?: string;
 }
 type RouteProps = RouteComponentProps<MatchProps>;
 
@@ -945,6 +946,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     const lensTo = lensFrom(['configs', idx]);
 
+    // Check whether config is expended based on the URL
+    const expandedConfigIdx = this.props.match.params.configIdx;
+    const isExpanded = expandedConfigIdx
+      ? parseInt(expandedConfigIdx, 10) === idx
+      : false;
+
     const L = {
       algorithmLens: lensTo(['algorithm']),
       checkPassiveLens: lensTo(['check_passive']),
@@ -972,7 +979,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           panelMessages[idx],
           panelNodeMessages[idx]
         ]}
-        defaultExpanded={isNewConfig}
+        defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
         heading={`Port ${config.port !== undefined ? config.port : ''}`}
       >
@@ -1099,9 +1106,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           NodeBalancer Configurations
         </Typography>
 
-        {configs.map(
-          this.renderConfig(panelMessages, configErrors, configSubmitting)
-        )}
+        {Array.isArray(configs) &&
+          configs.map(
+            this.renderConfig(panelMessages, configErrors, configSubmitting)
+          )}
 
         {!hasUnsavedConfig && (
           <Grid item style={{ marginTop: 16 }}>

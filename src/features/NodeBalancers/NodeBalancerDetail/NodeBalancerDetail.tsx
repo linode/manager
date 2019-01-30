@@ -316,6 +316,14 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               />
             )}
           />
+          <Route
+            path={`${path}/configurations/:configIdx`}
+            render={() => (
+              <NodeBalancerConfigurations
+                nodeBalancerLabel={nodeBalancer.label}
+              />
+            )}
+          />
           {/* 404 */}
           <Redirect to={`${url}/summary`} />
         </Switch>

@@ -104,8 +104,16 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
               {convertMegabytesTo(nodeBalancer.transfer.total)}
             </TableCell>
             <TableCell parentColumn="Ports" data-qa-ports>
-              {ports.length === 0 && 'None'}
-              {ports.join(', ')}
+              {ports.map((port, i) => (
+                <React.Fragment>
+                  <Link
+                    to={`/nodebalancers/${nodeBalancer.id}/configurations/${i}`}
+                  >
+                    {port}
+                  </Link>
+                  {i < ports.length - 1 ? ', ' : ''}
+                </React.Fragment>
+              )) || 'None'}
             </TableCell>
             <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
               <div className={classes.ipsWrapper}>
