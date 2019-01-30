@@ -97,7 +97,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       marginRight: theme.spacing.unit * 2
     },
     graphControls: {
-      margin: `${theme.spacing.unit * 2}px 0`,
+      marginTop: theme.spacing.unit / 2,
+      marginBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2,
       display: 'flex',
       alignItems: 'center'
     },

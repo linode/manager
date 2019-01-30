@@ -29,7 +29,6 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginTop: theme.spacing.unit,
     [theme.breakpoints.up('md')]: {
       paddingLeft: theme.spacing.unit
     },
