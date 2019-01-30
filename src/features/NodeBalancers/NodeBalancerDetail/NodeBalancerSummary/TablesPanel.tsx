@@ -204,6 +204,13 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    this.setState({ loadingStats: true });
+    this.getStats();
+
+    this.statsInterval = window.setInterval(
+      () => this.getStats(),
+      statsFetchInterval
+    );
   }
 
   componentWillUnmount() {
