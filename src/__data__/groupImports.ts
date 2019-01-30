@@ -18,8 +18,8 @@ export const linodes: GroupImportProps[] = [
     label: 'linode-2',
     tags: ['tag1', 'tag2'],
     group: 'group2'
-  },
-]
+  }
+];
 
 export const domains: GroupImportProps[] = [
   {
@@ -27,10 +27,11 @@ export const domains: GroupImportProps[] = [
     label: 'domain-1',
     tags: ['tag1', 'tag2'],
     group: 'group1'
-  },  {
+  },
+  {
     id: 22222,
     label: 'domain-2',
     tags: ['tag1', 'tag2'],
     group: 'group2'
-  },
-]
+  }
+];

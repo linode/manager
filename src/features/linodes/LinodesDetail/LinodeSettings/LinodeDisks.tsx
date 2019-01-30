@@ -690,14 +690,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   openDrawerForCreation = () => {
+    const maximumSize = this.calculateDiskFree(0);
+
     this.setDrawer({
       diskId: undefined,
       errors: undefined,
-      maximumSize: this.calculateDiskFree(0),
+      maximumSize,
       fields: {
         filesystem: 'ext4',
         label: '',
-        size: 0
+        size: maximumSize
       },
       mode: 'create',
       open: true,

@@ -4,15 +4,9 @@ describe('requestFilters', () => {
   describe('generateInFilter', () => {
     it('generates a filter from an array of values', () => {
       const res = generateInFilter('id', [12, 21, 32]);
-      expect(res).toEqual(
-        {
-          '+or': [
-            { id: 12 },
-            { id: 21 },
-            { id: 32 },
-          ],
-        },
-      );
+      expect(res).toEqual({
+        '+or': [{ id: 12 }, { id: 21 }, { id: 32 }]
+      });
     });
   });
 

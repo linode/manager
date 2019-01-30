@@ -26,7 +26,7 @@ namespace Linode {
     down: number;
   }
 
-  export interface BalancerTransfer{
+  export interface BalancerTransfer {
     in: number;
     out: number;
     total: number;
@@ -72,20 +72,20 @@ namespace Linode {
     modifyStatus?: 'new';
   }
 
-  export interface ExtendedNodeBalancer extends NodeBalancer{
+  export interface ExtendedNodeBalancer extends NodeBalancer {
     up: number;
     down: number;
     ports: number[];
   }
 
-  export interface NodeBalancerStats{
+  export interface NodeBalancerStats {
     title: string;
     data: {
       connections: [number, number][];
       traffic: {
         out: [number, number][];
         in: [number, number][];
-      }
+      };
     };
   }
 }

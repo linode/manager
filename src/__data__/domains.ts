@@ -8,14 +8,12 @@ export const domain1: Linode.Domain = {
   id: 9999997,
   description: '',
   type: 'master',
-  tags: [
-    'app'
-  ],
+  tags: ['app'],
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
   ttl_sec: 0,
-  zonefile: {rendered: '', status: 'current'}
+  zonefile: { rendered: '', status: 'current' }
 };
 
 export const domain2: Linode.Domain = {
@@ -28,14 +26,12 @@ export const domain2: Linode.Domain = {
   id: 9999998,
   description: '',
   type: 'master',
-  tags: [
-    'app2'
-  ],
+  tags: ['app2'],
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
   ttl_sec: 0,
-  zonefile: {rendered: '', status: 'current'}
+  zonefile: { rendered: '', status: 'current' }
 };
 
 export const domain3: Linode.Domain = {
@@ -48,19 +44,12 @@ export const domain3: Linode.Domain = {
   id: 9999999,
   description: '',
   type: 'master',
-  tags: [
-    'Production',
-    'app'
-  ],
+  tags: ['Production', 'app'],
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
   ttl_sec: 0,
-  zonefile: {rendered: '', status: 'current'}
+  zonefile: { rendered: '', status: 'current' }
 };
 
-export const domains = [
-  domain1,
-  domain2,
-  domain3
-];
+export const domains = [domain1, domain2, domain3];

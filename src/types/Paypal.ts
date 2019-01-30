@@ -4,7 +4,7 @@ namespace Paypal {
     orderID: string;
     payerID: string;
     paymentID: string;
-    returnUrl: string
+    returnUrl: string;
   }
 
   interface Client {
@@ -15,12 +15,12 @@ namespace Paypal {
   type Env = 'sandbox' | 'production';
 
   /*
-  * Please note. The is not the full list of available props
-  * but for our purposes, these are the ones we require
-  */
+   * Please note. The is not the full list of available props
+   * but for our purposes, these are the ones we require
+   */
   export interface PayButtonProps {
     env: Env;
-    client: Client,
+    client: Client;
     onAuthorize: (data: AuthData) => void;
     onCancel: () => void;
     onClick?: () => void;
