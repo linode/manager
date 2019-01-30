@@ -139,7 +139,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && ./scripts/pre-commit.sh",
+      "pre-commit": "lint-staged && npx madge --circular --extensions ts src/ && ./scripts/pre-commit.sh",
       "pre-push": "yarn prepush"
     }
   },
@@ -213,6 +213,7 @@
     "inert": "^5.1.0",
     "inquirer": "^6.2.0",
     "lint-staged": "^8.1.0",
+    "madge": "^3.4.3",
     "mini-css-extract-plugin": "^0.5.0",
     "mountebank": "^1.14.1",
     "otplib": "^10.0.1",
