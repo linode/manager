@@ -46,7 +46,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   row: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'flex-start'
   },
   left: {
     marginLeft: theme.spacing.unit
@@ -63,7 +63,8 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   ip: {
     color: theme.palette.text.primary,
-    fontSize: '.9rem'
+    fontSize: '.9rem',
+    wordBreak: 'break-all'
   },
   ipLink: {
     color: theme.palette.primary.main,
