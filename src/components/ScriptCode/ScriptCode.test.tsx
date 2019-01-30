@@ -7,7 +7,9 @@ describe('ScriptCode', () => {
   it('should render multiple lines of code if there are line breaks', () => {
     const component = shallow(
       <ScriptCode
-        script={'This is my custom script to display\nNew line\nAnother New Line'}
+        script={
+          'This is my custom script to display\nNew line\nAnother New Line'
+        }
         classes={{
           root: '',
           container: '',
@@ -15,7 +17,7 @@ describe('ScriptCode', () => {
           row: '',
           numberCell: '',
           codeCell: '',
-          code: '',
+          code: ''
         }}
       />
     );

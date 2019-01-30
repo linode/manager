@@ -3,7 +3,11 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
@@ -18,25 +22,21 @@ import { StackScriptTabs } from '../stackScriptUtils';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
 }
 
-type ClassNames = 'root'
-  | 'table'
-  | 'link'
-  | 'selecting';
+type ClassNames = 'root' | 'table' | 'link' | 'selecting';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   table: {
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.color.white
   },
   selecting: {
     minHeight: '400px',
@@ -44,13 +44,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     overflowX: 'auto',
     overflowY: 'scroll',
     paddingTop: 0,
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   link: {
     display: 'block',
     textAlign: 'right',
     marginBottom: 24,
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -58,13 +58,18 @@ interface Props {
   selectedId: number | undefined;
   selectedUsername?: string;
   error?: string;
-  onSelect: (id: number, label: string, username: string, images: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
+  onSelect: (
+    id: number,
+    label: string,
+    username: string,
+    images: string[],
+    userDefinedFields: Linode.StackScript.UserDefinedField[]
+  ) => void;
   publicImages: Linode.Image[];
   resetSelectedStackScript: () => void;
 }
 
-type CombinedProps = Props &  StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 interface State {
   stackScript?: Linode.StackScript.Response;
@@ -73,23 +78,30 @@ interface State {
 }
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
-
   state: State = {
     stackScriptLoading: false,
     stackScriptError: false
-  }
+  };
 
   mounted: boolean = false;
 
   componentDidMount() {
     if (this.props.selectedId) {
-      this.setState({stackScriptLoading: true});
-      getStackScript(this.props.selectedId).then(stackScript => {
-        this.setState({stackScript, stackScriptLoading: false});
-        this.props.onSelect(stackScript.id, stackScript.label, stackScript.username, stackScript.images, stackScript.user_defined_fields);
-      }).catch(e => {
-        this.setState({stackScriptLoading: false, stackScriptError: true});
-      })
+      this.setState({ stackScriptLoading: true });
+      getStackScript(this.props.selectedId)
+        .then(stackScript => {
+          this.setState({ stackScript, stackScriptLoading: false });
+          this.props.onSelect(
+            stackScript.id,
+            stackScript.label,
+            stackScript.username,
+            stackScript.images,
+            stackScript.user_defined_fields
+          );
+        })
+        .catch(e => {
+          this.setState({ stackScriptLoading: false, stackScriptError: true });
+        });
     }
     this.mounted = true;
   }
@@ -100,29 +112,31 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
 
   createTabs = StackScriptTabs.map(tab => ({
     title: tab.title,
-    render: () => <SelectStackScriptPanelContent
-      onSelect={this.props.onSelect}
-      resetStackScriptSelection={this.props.resetSelectedStackScript}
-      publicImages={this.props.publicImages}
-      currentUser={this.props.username}
-      request={tab.request}
-      key={tab.category + '-tab'}
-      category={tab.category}
-    />
+    render: () => (
+      <SelectStackScriptPanelContent
+        onSelect={this.props.onSelect}
+        resetStackScriptSelection={this.props.resetSelectedStackScript}
+        publicImages={this.props.publicImages}
+        currentUser={this.props.username}
+        request={tab.request}
+        key={tab.category + '-tab'}
+        category={tab.category}
+      />
+    )
   }));
 
   handleTabChange = () => {
     /*
-    * if we're coming from a query string, the stackscript will be preselected
-    * however, we don't want the user to have their stackscript still preselected
-    * when they change StackScript tabs
-    */
+     * if we're coming from a query string, the stackscript will be preselected
+     * however, we don't want the user to have their stackscript still preselected
+     * when they change StackScript tabs
+     */
     this.props.resetSelectedStackScript();
-  }
+  };
 
   resetStackScript = () => {
-    this.setState({stackScript: undefined, stackScriptLoading: false});
-  }
+    this.setState({ stackScript: undefined, stackScriptLoading: false });
+  };
 
   render() {
     const { error, classes, selectedId } = this.props;
@@ -130,7 +144,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
 
     if (selectedId) {
       if (stackScriptLoading) {
-        return (<CircleProgress />)
+        return <CircleProgress />;
       }
       if (stackScript) {
         return (
@@ -139,7 +153,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               isResponsive={false}
               aria-label="List of StackScripts"
               noOverflow={true}
-              tableClass={classes.table}>
+              tableClass={classes.table}
+            >
               <StackScriptTableHead
                 currentFilterType={null}
                 isSelecting={true}
@@ -166,25 +181,28 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                 href="/linodes/create?type=fromStackScript"
                 onClick={this.resetStackScript}
                 type="secondary"
-                >
+              >
                 Choose another StackScript
               </Button>
             </div>
           </React.Fragment>
-        )
+        );
       }
     }
 
     return (
       <React.Fragment>
-        {stackScriptError && <Typography variant="body2">
-          An error occured while loading selected stackScript. Please, choose one of the list.
-        </Typography>}
+        {stackScriptError && (
+          <Typography variant="body2">
+            An error occured while loading selected stackScript. Please, choose
+            one of the list.
+          </Typography>
+        )}
         <TabbedPanel
           error={error}
           rootClass={classes.root}
           shrinkTabContent={classes.selecting}
-          header={"Select StackScript"}
+          header={'Select StackScript'}
           tabs={this.createTabs}
           initTab={0}
           handleTabChange={this.handleTabChange}
@@ -198,16 +216,21 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, Props> = state => ({
+  username: pathOr('', ['data', 'username'], state.__resources.profile)
 });
 
 const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+export default compose<
+  Linode.TodoAny,
+  Linode.TodoAny,
+  Linode.TodoAny,
+  Linode.TodoAny
+>(
   connected,
   RenderGuard,
-  styled,
+  styled
 )(SelectStackScriptPanel);

@@ -5,7 +5,11 @@ import { RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
@@ -14,54 +18,55 @@ import { StackScripts as StackScriptsDocs } from 'src/documentation';
 
 import { getStackScript } from 'src/services/stackscripts';
 
-interface MatchProps { stackScriptId: string };
+interface MatchProps {
+  stackScriptId: string;
+}
 type RouteProps = RouteComponentProps<MatchProps>;
 interface State {
   loading: boolean;
-  stackScript?: Linode.StackScript.Response
+  stackScript?: Linode.StackScript.Response;
 }
 
 type ClassNames = 'root' | 'titleWrapper' | 'cta' | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   titleWrapper: {
     display: 'flex',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 5
   },
   cta: {
     marginTop: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',
-      flexBasis: '100%',
-    },
+      flexBasis: '100%'
+    }
   },
   button: {
-    marginBottom: theme.spacing.unit * 2,
-  },
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 type CombinedProps = RouteProps & WithStyles<ClassNames> & SetDocsProps;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
-
   state: State = {
     loading: true,
     stackScript: undefined
-  }
+  };
 
   componentDidMount() {
     const { stackScriptId } = this.props.match.params;
 
     getStackScript(+stackScriptId)
       .then(stackScript => {
-        this.setState({ stackScript, loading: false })
+        this.setState({ stackScript, loading: false });
       })
       .catch(error => {
-        this.setState({ error, loading: false })
-      })
+        this.setState({ error, loading: false });
+      });
   }
 
   render() {
@@ -69,21 +74,16 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     const { loading, stackScript } = this.state;
 
     if (loading) {
-      return <CircleProgress />
+      return <CircleProgress />;
     }
 
     if (!stackScript) {
       return <NotFound />;
     }
 
-
-
     return (
       <React.Fragment>
-        <Grid
-        container
-        justify="space-between"
-        >
+        <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <div className={classes.titleWrapper}>
               <Breadcrumb
@@ -97,14 +97,18 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             <Button
               type="primary"
               className={classes.button}
-              href={`/linodes/create?type=fromStackScript&stackScriptID=${stackScript.id}&stackScriptUsername=${stackScript.username}`}
+              href={`/linodes/create?type=fromStackScript&stackScriptID=${
+                stackScript.id
+              }&stackScriptUsername=${stackScript.username}`}
               data-qa-stack-deploy
             >
               Deploy New Linode
             </Button>
           </Grid>
         </Grid>
-        <div className="detailsWrapper"><StackScript data={stackScript} /></div>
+        <div className="detailsWrapper">
+          <StackScript data={stackScript} />
+        </div>
       </React.Fragment>
     );
   }
@@ -113,4 +117,4 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 export default compose(
   withStyles(styles),
   setDocs([StackScriptsDocs])
-)(StackScriptsDetail)
+)(StackScriptsDetail);

@@ -6,8 +6,10 @@ export const importZoneSchema = object({
 });
 
 const domainSchemaBase = object().shape({
-  domain: string()
-    .matches(/([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/, 'Domain is not valid.'),
+  domain: string().matches(
+    /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
+    'Domain is not valid.'
+  ),
   status: mixed().oneOf(['disabled', 'active', 'edit_mode', 'has_errors']),
   tags: array(),
   description: string()
@@ -24,7 +26,10 @@ const domainSchemaBase = object().shape({
 export const createDomainSchema = domainSchemaBase.shape({
   domain: string()
     .required('Domain is required.')
-    .matches(/([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/, 'Domain is not valid.'),
+    .matches(
+      /([a-zA-Z0-9-_]+\.)+([a-zA-Z]{2,3}\.)?([a-zA-Z]{2,16}|XN--[a-zA-Z0-9]+)/,
+      'Domain is not valid.'
+    ),
   type: mixed()
     .required()
     .oneOf(['master', 'slave']),
@@ -34,7 +39,7 @@ export const createDomainSchema = domainSchemaBase.shape({
       then: string().required('SOA Email is required.'),
       otherwise: string()
     })
-    .email('SOA Email is not valid.'),
+    .email('SOA Email is not valid.')
 });
 
 export const updateDomainSchema = domainSchemaBase.shape({

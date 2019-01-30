@@ -2,12 +2,16 @@ import Check from '@material-ui/icons/Check';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Fade from 'src/components/core/Fade';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 
 type CSSClasses =
-  'root'
+  | 'root'
   | 'icon'
   | 'checked'
   | 'flex'
@@ -17,14 +21,14 @@ type CSSClasses =
   | 'disabled'
   | 'showCursor';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   root: {
     minWidth: 200,
@@ -36,33 +40,32 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     '&.checked $innerGrid': {
       borderColor: theme.palette.primary.main,
       '& span': {
-        color: theme.palette.primary.main,
-      },
+        color: theme.palette.primary.main
+      }
     },
     '&:focus $innerGrid': {
-      outline: `1px dotted ${theme.color.focusBorder}`,
+      outline: `1px dotted ${theme.color.focusBorder}`
     },
     '& .disabledInnerGrid': {
       width: '100%',
       backgroundColor: theme.bg.offWhiteDT,
-      border: '1px solid ' + `${theme.color.grey1}`,
+      border: '1px solid ' + `${theme.color.grey1}`
     },
     '& [class^="fl-"]': {
-      transition: 'color 225ms ease-in-out',
-    },
-
+      transition: 'color 225ms ease-in-out'
+    }
   },
   icon: {
     display: 'flex',
     justifyContent: 'flex-end',
     '& svg, & span': {
       fontSize: '32px',
-      color: '#939598',
+      color: '#939598'
     },
     '& img': {
       maxHeight: '32px',
-      maxWidth: '32px',
-    },
+      maxWidth: '32px'
+    }
   },
   checked: {
     display: 'flex',
@@ -72,26 +75,26 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       border: '1px solid',
       borderColor: theme.palette.primary.main,
       fontSize: '16px',
-      color: theme.palette.primary.main,
-    },
+      color: theme.palette.primary.main
+    }
   },
   showCursor: {
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   disabled: {
     cursor: 'not-allowed',
     '& > div': {
-      opacity: .4,
-    },
+      opacity: 0.4
+    }
   },
   heading: {
     fontFamily: 'LatoWebBold',
     fontSize: '1rem',
-    color: theme.color.headline,
+    color: theme.color.headline
   },
   subheading: {
     fontSize: '0.875rem',
-    color: theme.palette.text.primary,
+    color: theme.palette.text.primary
   },
   innerGrid: {
     width: '100%',
@@ -107,17 +110,17 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     `,
     '&:hover': {
       backgroundColor: theme.bg.main,
-      borderColor: theme.color.border2,
-    },
+      borderColor: theme.color.border2
+    }
   },
   flex: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-around',
     '&> div': {
-      lineHeight: 1.3,
-    },
-  },
+      lineHeight: 1.3
+    }
+  }
 });
 
 export interface Props {
@@ -138,9 +141,17 @@ interface WithTooltipProps {
   render: () => JSX.Element;
 }
 
-const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({ title, render }) => (title)
-  ? (<Tooltip title={title} className={"disabledInnerGrid"}>{render()}</Tooltip>)
-  : render();
+const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({
+  title,
+  render
+}) =>
+  title ? (
+    <Tooltip title={title} className={'disabledInnerGrid'}>
+      {render()}
+    </Tooltip>
+  ) : (
+    render()
+  );
 
 class SelectionCard extends React.PureComponent<CombinedProps, {}> {
   handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -149,14 +160,14 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
       e.preventDefault();
       onClick(e);
     }
-  }
+  };
 
   handleClick = (e: React.MouseEvent<HTMLElement>) => {
     const { onClick, disabled } = this.props;
     if (onClick && !disabled) {
       onClick(e);
     }
-  }
+  };
 
   content = () => {
     const { checked, classes, heading, renderIcon, subheadings } = this.props;
@@ -168,23 +179,25 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
         justify="space-between"
         className={classes.innerGrid}
       >
-        {renderIcon &&
+        {renderIcon && (
           <Grid item className={classes.icon}>
             {renderIcon()}
           </Grid>
-        }
-        <Grid
-          item
-          xs={10}
-          className={classes.flex}
-        >
-          <div className={classes.heading} data-qa-select-card-heading={heading}>
+        )}
+        <Grid item xs={10} className={classes.flex}>
+          <div
+            className={classes.heading}
+            data-qa-select-card-heading={heading}
+          >
             {heading}
           </div>
           {subheadings.map((subheading, idx) => {
             return (
-              <div key={idx} className={classes.subheading}
-                data-qa-select-card-subheading={subheading}>
+              <div
+                key={idx}
+                className={classes.subheading}
+                data-qa-select-card-subheading={subheading}
+              >
                 {subheading}
               </div>
             );
@@ -196,15 +209,15 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
           data-qa-checked={checked}
           xs={2}
         >
-          {checked &&
+          {checked && (
             <Fade in={checked}>
               <Check />
             </Fade>
-          }
+          )}
         </Grid>
       </Grid>
-    )
-  }
+    );
+  };
 
   render() {
     const { checked, classes, disabled, onClick, tooltip } = this.props;
@@ -217,27 +230,22 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
         md={4}
         xl={3}
         tabIndex={0}
-        className={
-          classNames({
-            [classes.root]: true,
-            checked: checked === true,
-            [classes.disabled]: disabled === true,
-            [classes.showCursor]: onClick && !disabled,
-            selectionCard: true,
-          })
-        }
+        className={classNames({
+          [classes.root]: true,
+          checked: checked === true,
+          [classes.disabled]: disabled === true,
+          [classes.showCursor]: onClick && !disabled,
+          selectionCard: true
+        })}
         onClick={this.handleClick}
         onKeyPress={this.handleKeyPress}
         data-qa-selection-card
       >
-        <WithTooltip
-          title={tooltip}
-          render={this.content}
-        />
+        <WithTooltip title={tooltip} render={this.content} />
       </Grid>
     );
   }
-};
+}
 
 const styled = withStyles(styles);
 

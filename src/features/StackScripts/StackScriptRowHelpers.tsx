@@ -4,7 +4,8 @@ import Chip from 'src/components/core/Chip';
 import { StyleRulesCallback } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 
-export type ClassNames = 'root'
+export type ClassNames =
+  | 'root'
   | 'respPadding'
   | 'images'
   | 'libTitleContainer'
@@ -19,35 +20,35 @@ export type ClassNames = 'root'
   | 'deployButton'
   | 'detailsButton';
 
-export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+export const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 2,
-    borderBottom: `solid 1px ${theme.palette.grey['200']}`,
+    borderBottom: `solid 1px ${theme.palette.grey['200']}`
   },
   labelCell: {
     background: theme.bg.offWhite,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   respPadding: {
     [theme.breakpoints.down('md')]: {
-      paddingLeft: '78px !important',
-    },
+      paddingLeft: '78px !important'
+    }
   },
   colImages: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit
   },
   libTitleContainer: {
-    display: 'flex',
+    display: 'flex'
   },
   libRadio: {
     display: 'flex',
     flexWrap: 'wrap',
     height: '100%',
     alignItems: 'center',
-    width: 70,
+    width: 70
   },
   libRadioLabel: {
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   libTitle: {
     display: 'flex',
@@ -56,56 +57,66 @@ export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'space-between',
     paddingBottom: '0 !important',
     '& h3': {
-      marginRight: 10,
-    },
+      marginRight: 10
+    }
   },
   libTitleLink: {
     display: 'block',
     marginTop: -1,
-    fontSize: '.9rem',
+    fontSize: '.9rem'
   },
   libDescription: {
     paddingTop: '0 !important',
     [theme.breakpoints.up('md')]: {
-      paddingRight: '100px !important',
-    },
+      paddingRight: '100px !important'
+    }
   },
   images: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   stackScriptCell: {
-    maxWidth: '200px',
+    maxWidth: '200px'
   },
   stackScriptUsername: {
-    color: theme.color.grey1,
+    color: theme.color.grey1
   },
   deployButton: {
     // marginLeft: -26,
     // width: '100%',
     // justifyContent: 'flex-start',
     whiteSpace: 'nowrap',
-    border: 0,
+    border: 0
   },
   detailsButton: {
     textAlign: 'left',
-    padding: 0,
+    padding: 0
   }
 });
 
-const createTag: (images: string) => JSX.Element =
-  v => <Chip label={v} key={v} style={{ margin: '2px 2px', outline: 0 }} role="term" />;
+const createTag: (images: string) => JSX.Element = v => (
+  <Chip
+    label={v}
+    key={v}
+    style={{ margin: '2px 2px', outline: 0 }}
+    role="term"
+  />
+);
 
-const createTags: (images: string[]) => JSX.Element[] =
-  map(createTag);
+const createTags: (images: string[]) => JSX.Element[] = map(createTag);
 
-const createShowMore: (images: string[]) => JSX.Element =
-  images => <ShowMore key={0} items={images} render={createTags} />;
+const createShowMore: (images: string[]) => JSX.Element = images => (
+  <ShowMore key={0} items={images} render={createTags} />
+);
 
-export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] =
-  compose<string[], string[][], any, JSX.Element[][]>(
-    over(lensIndex(1), unless(isEmpty, createShowMore)),
-    over(lensIndex(0), createTags),
-    splitAt(3),
-  );
+export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
+  string[],
+  string[][],
+  any,
+  JSX.Element[][]
+>(
+  over(lensIndex(1), unless(isEmpty, createShowMore)),
+  over(lensIndex(0), createTags),
+  splitAt(3)
+);

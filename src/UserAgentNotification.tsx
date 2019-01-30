@@ -1,12 +1,16 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -18,7 +22,11 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserAgentNotification extends React.Component<CombinedProps, {}> {
-  actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
+  actions = () => (
+    <Button onClick={this.props.onClose} type="primary">
+      Dismiss
+    </Button>
+  );
 
   render() {
     const { warning } = this.props;

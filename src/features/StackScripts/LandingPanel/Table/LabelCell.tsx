@@ -1,7 +1,7 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
 
@@ -11,34 +11,35 @@ import Arrow from 'src/assets/icons/diagonalArrow.svg';
 
 import truncateText from 'src/utilities/truncateText';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'label'
   | 'stackScriptUsername'
   | 'labelWrapper'
   | 'linkIcon'
   | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     display: 'block',
     '&:hover $label': {
-      color: theme.palette.primary.main,
+      color: theme.palette.primary.main
     }
   },
   label: {
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   stackScriptUsername: {
-    color: theme.color.grey1,
+    color: theme.color.grey1
   },
   labelWrapper: {
-    display: 'flex',
+    display: 'flex'
   },
   linkIcon: {
     marginLeft: theme.spacing.unit,
     color: theme.palette.primary.main,
     width: 14,
-    height: 14,
+    height: 14
   },
   title: {
     flexGrow: 1
@@ -52,10 +53,9 @@ interface Props {
   stackScriptId: number;
 }
 
-
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
+const LabelCell: React.StatelessComponent<CombinedProps> = props => {
   const {
     label,
     description,
@@ -66,31 +66,35 @@ const LabelCell: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <a target="_blank" href={`https://www.linode.com/stackscripts/view/${stackScriptId}`} className={classes.root}>
+      <a
+        target="_blank"
+        href={`https://www.linode.com/stackscripts/view/${stackScriptId}`}
+        className={classes.root}
+      >
         <div className={classes.labelWrapper}>
           <Typography className={classes.title} role="header" variant="h3">
-            {stackScriptUsername &&
+            {stackScriptUsername && (
               <label
                 htmlFor={`${stackScriptId}`}
-                className={`${classes.label} ${classes.stackScriptUsername}`}>
+                className={`${classes.label} ${classes.stackScriptUsername}`}
+              >
                 {stackScriptUsername} /&nbsp;
-            </label>
-            }
-            <label
-              htmlFor={`${stackScriptId}`}
-              className={classes.label}>
+              </label>
+            )}
+            <label htmlFor={`${stackScriptId}`} className={classes.label}>
               {label}
             </label>
             <Arrow className={classes.linkIcon} />
           </Typography>
         </div>
-        <Typography variant="body1">{truncateText(description, 100)}</Typography>
+        <Typography variant="body1">
+          {truncateText(description, 100)}
+        </Typography>
       </a>
     </React.Fragment>
-  )
+  );
 };
 
 const styled = withStyles(styles);
 
 export default styled(LabelCell);
-

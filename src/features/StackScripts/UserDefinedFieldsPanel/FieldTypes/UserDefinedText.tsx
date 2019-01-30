@@ -1,17 +1,21 @@
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     margin: `${theme.spacing.unit * 3}px 0`,
     paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
+    borderBottom: `1px solid ${theme.palette.divider}`
+  }
 });
 
 interface Props {
@@ -38,7 +42,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         placeholder={placeholder}
       />
     );
-  }
+  };
 
   renderPasswordField = () => {
     const { udf_data, field, placeholder, isOptional } = this.props;
@@ -53,17 +57,17 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         placeholder={placeholder}
       />
     );
-  }
+  };
 
   handleUpdateText = (e: any) => {
     const { updateFormState, field } = this.props;
     updateFormState(field.name, e.target.value);
-  }
+  };
 
   handleUpdatePassword = (value: string) => {
     const { updateFormState, field } = this.props;
     updateFormState(field.name, value);
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -71,8 +75,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
       <div className={classes.root}>
         {this.props.isPassword
           ? this.renderPasswordField()
-          : this.renderTextField()
-        }
+          : this.renderTextField()}
       </div>
     );
   }

@@ -3,12 +3,12 @@ import * as React from 'react';
 import List from 'src/components/core/List';
 import EventListItem from './EventListItem';
 
-const testContent = 'We hope you\'re doing well! We\'re sending you this update ' +
-  'because you\'re participating in our Block Storage beta and we would like to ' +
-  'know more about how you\'re using the service.';
+const testContent =
+  "We hope you're doing well! We're sending you this update " +
+  "because you're participating in our Block Storage beta and we would like to " +
+  "know more about how you're using the service.";
 
-storiesOf('EventListItem', module)
-.add('All EventListItems', () => (
+storiesOf('EventListItem', module).add('All EventListItems', () => (
   <React.Fragment>
     <List disablePadding>
       <EventListItem

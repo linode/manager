@@ -4,42 +4,48 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
-type ClassNames = 'root'
-| 'itemTitle'
-| 'header'
-| 'icon'
-| 'section'
-| 'sectionLink'
-| 'title'
-| 'ctaLink';
+type ClassNames =
+  | 'root'
+  | 'itemTitle'
+  | 'header'
+  | 'icon'
+  | 'section'
+  | 'sectionLink'
+  | 'title'
+  | 'ctaLink';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    width: '100%',
+    width: '100%'
   },
   header: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 18
   },
   icon: {
     color: theme.color.blueDTwhite,
     margin: theme.spacing.unit,
-    fontSize: 32,
+    fontSize: 32
   },
   itemTitle: {
     marginBottom: theme.spacing.unit,
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   section: {
     padding: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`
   },
   sectionLink: {
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   title: {
     background: theme.bg.tableHeader,
@@ -47,11 +53,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: `${theme.spacing.unit}px !important`,
+    padding: `${theme.spacing.unit}px !important`
   },
   ctaLink: {
-    display: 'block',
-  },
+    display: 'block'
+  }
 });
 
 interface Props {
@@ -62,78 +68,93 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
-export const BackupsDashboardCard: React.StatelessComponent<CombinedProps> = (props) => {
-  const { accountBackups, classes, linodesWithoutBackups, openBackupDrawer } = props;
+export const BackupsDashboardCard: React.StatelessComponent<
+  CombinedProps
+> = props => {
+  const {
+    accountBackups,
+    classes,
+    linodesWithoutBackups,
+    openBackupDrawer
+  } = props;
 
-  if (accountBackups && !linodesWithoutBackups) { return null; }
+  if (accountBackups && !linodesWithoutBackups) {
+    return null;
+  }
 
   return (
     <DashboardCard>
-      <Paper className={classNames(
-        {
+      <Paper
+        className={classNames({
           [classes.section]: true,
           [classes.title]: true
-        }
-      )}>
+        })}
+      >
         <Backup className={classes.icon} />
         <Typography className={classes.header} variant="h1">
           Back Up Your Data and Keep it Safe
         </Typography>
       </Paper>
-      {!accountBackups &&
-        <Link to="/account/settings" data-qa-account-link className={classes.ctaLink}>
-          <Paper className={classNames(
-            {
+      {!accountBackups && (
+        <Link
+          to="/account/settings"
+          data-qa-account-link
+          className={classes.ctaLink}
+        >
+          <Paper
+            className={classNames({
               [classes.section]: true,
               [classes.sectionLink]: true
-            }
-            )}
+            })}
           >
-            <Typography variant="h3" className={classes.itemTitle} >
+            <Typography variant="h3" className={classes.itemTitle}>
               Linode Backup Auto-Enrollment
             </Typography>
-            <Typography variant="body1" >
-              If you enable this global setting, new Linodes will be automatically enrolled
-              in the Backups service.
+            <Typography variant="body1">
+              If you enable this global setting, new Linodes will be
+              automatically enrolled in the Backups service.
             </Typography>
           </Paper>
         </Link>
-      }
+      )}
       {/* Only show this section if the user has Linodes without backups */}
-      {Boolean(linodesWithoutBackups) &&
-        <a onClick={openBackupDrawer} data-qa-backup-existing className={classes.ctaLink} href="javascript:;">
+      {Boolean(linodesWithoutBackups) && (
+        <a
+          onClick={openBackupDrawer}
+          data-qa-backup-existing
+          className={classes.ctaLink}
+          href="javascript:;"
+        >
           <Paper
-            className={classNames(
-              {
-                [classes.section]: true,
-                [classes.sectionLink]: true
-              }
-            )}
+            className={classNames({
+              [classes.section]: true,
+              [classes.sectionLink]: true
+            })}
           >
-            <Typography variant="h3" className={classes.itemTitle} >
+            <Typography variant="h3" className={classes.itemTitle}>
               Enable Backups for Existing Linodes
             </Typography>
             <Typography variant="body1" data-qa-linodes-message>
-              {
-                `You currently have
-                ${linodesWithoutBackups} ${linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'}
-                without backups. Enable backups to protect your data.`
+              {`You currently have
+                ${linodesWithoutBackups} ${
+                linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'
               }
+                without backups. Enable backups to protect your data.`}
             </Typography>
           </Paper>
         </a>
-      }
+      )}
     </DashboardCard>
   );
 };
 
-BackupsDashboardCard.displayName = "BackupsDashboardCard";
+BackupsDashboardCard.displayName = 'BackupsDashboardCard';
 
 const styled = withStyles(styles);
 
 const enhanced: any = compose(
   styled,
-  withRouter,
-)(BackupsDashboardCard)
+  withRouter
+)(BackupsDashboardCard);
 
 export default enhanced;

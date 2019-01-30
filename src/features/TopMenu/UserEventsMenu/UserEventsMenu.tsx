@@ -2,19 +2,23 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import ListItem from 'src/components/core/ListItem';
 import Menu from 'src/components/core/Menu';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
-type ClassNames = 'root'
-  | 'dropDown'
-  | 'hidden';
+type ClassNames = 'root' | 'dropDown' | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    transform: `translate(-${theme.spacing.unit * 2}px, ${theme.spacing.unit}px)`,
+    transform: `translate(-${theme.spacing.unit * 2}px, ${
+      theme.spacing.unit
+    }px)`
   },
   dropDown: {
     position: 'absolute',
@@ -26,32 +30,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 250,
     maxHeight: 300,
     [theme.breakpoints.up('sm')]: {
-      width: 380,
-    },
+      width: 380
+    }
   },
   hidden: {
     height: 0,
-    padding: 0,
-  },
+    padding: 0
+  }
 });
 
 interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps =
-  & StateProps
-  & DispatchProps
-  & WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
-    anchorEl: undefined,
+    anchorEl: undefined
   };
 
   static defaultProps = {
     unseenCount: 0,
-    events: [],
+    events: []
   };
 
   render() {
@@ -90,8 +91,8 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
   closeMenu = (e: React.MouseEvent<HTMLElement>) => {
     const { actions } = this.props;
     actions.markAllSeen();
-    this.setState({ anchorEl: undefined })
-  }
+    this.setState({ anchorEl: undefined });
+  };
 }
 
 const styled = withStyles(styles);
@@ -99,26 +100,31 @@ const styled = withStyles(styles);
 interface DispatchProps {
   actions: {
     markAllSeen: () => Promise<any>;
-  },
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch: ThunkDispatch) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch
+) => ({
   actions: {
-    markAllSeen: () => dispatch(markAllSeen()),
-  },
+    markAllSeen: () => dispatch(markAllSeen())
+  }
 });
 
 interface StateProps {
   events: Linode.Event[];
   unseenCount: number;
 }
-const mapStateToProps: MapState<StateProps, {}> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = state => {
   return {
     events: state.events.events,
-    unseenCount: state.events.countUnseenEvents,
+    unseenCount: state.events.countUnseenEvents
   };
 };
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default styled(connected(UserEventsMenu));

@@ -9,7 +9,11 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -19,9 +23,15 @@ import OrderBy from 'src/components/OrderBy';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
 import localStorageContainer from 'src/containers/localStorage.container';
-import { NodeBalancerGettingStarted, NodeBalancerReference } from 'src/documentation';
+import {
+  NodeBalancerGettingStarted,
+  NodeBalancerReference
+} from 'src/documentation';
 import { ApplicationState } from 'src/store';
-import { withNodeBalancerActions, WithNodeBalancerActions } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import {
+  withNodeBalancerActions,
+  WithNodeBalancerActions
+} from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
 import { sendEvent } from 'src/utilities/analytics';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -41,37 +51,37 @@ type ClassNames =
   | 'ip'
   | 'tagGroup';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   titleWrapper: {
     flex: 1
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   nameCell: {
     width: '15%',
-    minWidth: 150,
+    minWidth: 150
   },
   nodeStatus: {
     width: '10%',
-    minWidth: 100,
+    minWidth: 100
   },
   transferred: {
     width: '10%',
-    minWidth: 100,
+    minWidth: 100
   },
   ports: {
     width: '10%',
-    minWidth: 50,
+    minWidth: 50
   },
   ip: {
     width: '30%',
-    minWidth: 200,
+    minWidth: 200
   },
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit + 2,
+    marginBottom: theme.spacing.unit + 2
   }
 });
 
@@ -86,44 +96,45 @@ interface State {
   selectedNodeBalancerId?: number;
 }
 
-type CombinedProps =
-  & WithNodeBalancerActions
-  & LocalStorageProps
-  & WithNodeBalancers
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>
-  & SetDocsProps;
+type CombinedProps = WithNodeBalancerActions &
+  LocalStorageProps &
+  WithNodeBalancers &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  SetDocsProps;
 
-export class NodeBalancersLanding extends React.Component<CombinedProps, State> {
+export class NodeBalancersLanding extends React.Component<
+  CombinedProps,
+  State
+> {
   static eventCategory = `nodebalancers landing`;
 
   static defaultDeleteConfirmDialogState = {
     submitting: false,
     open: false,
-    errors: undefined,
+    errors: undefined
   };
 
   state: State = {
-    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
   };
 
-  static docs = [
-    NodeBalancerGettingStarted,
-    NodeBalancerReference,
-  ];
+  static docs = [NodeBalancerGettingStarted, NodeBalancerReference];
 
   toggleDialog = (nodeBalancerId: number) => {
     this.setState({
       selectedNodeBalancerId: nodeBalancerId,
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
-        open: !this.state.deleteConfirmDialog.open,
-      },
+        open: !this.state.deleteConfirmDialog.open
+      }
     });
-  }
+  };
 
   onSubmitDelete = () => {
-    const { nodeBalancerActions: { deleteNodeBalancer } } = this.props;
+    const {
+      nodeBalancerActions: { deleteNodeBalancer }
+    } = this.props;
     const { selectedNodeBalancerId } = this.state;
 
     if (!selectedNodeBalancerId) {
@@ -134,35 +145,46 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
         errors: undefined,
-        submitting: true,
-      },
+        submitting: true
+      }
     });
 
     deleteNodeBalancer({ nodeBalancerId: selectedNodeBalancerId })
-      .then((response) => {
+      .then(response => {
         this.setState({
           deleteConfirmDialog: {
             open: false,
-            submitting: false,
-          },
+            submitting: false
+          }
         });
       })
-      .catch((err) => {
-        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
+      .catch(err => {
+        const apiError = path<Linode.ApiFieldError[]>(
+          ['response', 'data', 'error'],
+          err
+        );
 
-        return this.setState({
-          deleteConfirmDialog: {
-            ...this.state.deleteConfirmDialog,
-            submitting: false,
-            errors: apiError
-              ? apiError
-              : [{ field: 'none', reason: 'Unable to complete your request at this time.' }],
+        return this.setState(
+          {
+            deleteConfirmDialog: {
+              ...this.state.deleteConfirmDialog,
+              submitting: false,
+              errors: apiError
+                ? apiError
+                : [
+                    {
+                      field: 'none',
+                      reason: 'Unable to complete your request at this time.'
+                    }
+                  ]
+            }
           },
-        }, () => {
-          scrollErrorIntoView();
-        });
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
-  }
+  };
 
   render() {
     const {
@@ -173,13 +195,11 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
       nodeBalancersData,
       nodeBalancersError,
       groupByTag,
-      toggleGroupByTag,
+      toggleGroupByTag
     } = this.props;
 
     const {
-      deleteConfirmDialog: {
-        open: deleteConfirmAlertOpen,
-      },
+      deleteConfirmDialog: { open: deleteConfirmAlertOpen }
     } = this.state;
 
     if (nodeBalancersError) {
@@ -191,15 +211,25 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
     }
 
     if (nodeBalancersCount === 0) {
-      return <NodeBalancersLandingEmptyState />
+      return <NodeBalancersLandingEmptyState />;
     }
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
-        <Grid container justify="space-between" alignItems="flex-end" style={{ marginTop: 8 }}>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          style={{ marginTop: 8 }}
+        >
           <Grid item className={classes.titleWrapper}>
-            <Typography role="header" variant="h1" data-qa-title className={classes.title}>
+            <Typography
+              role="header"
+              variant="h1"
+              data-qa-title
+              className={classes.title}
+            >
               NodeBalancers
             </Typography>
           </Grid>
@@ -209,9 +239,10 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
               label="Group by Tag:"
               control={
                 <Toggle
-                  className={(groupByTag ? ' checked' : ' unchecked')}
+                  className={groupByTag ? ' checked' : ' unchecked'}
                   onChange={(e, checked) => toggleGroupByTag(checked)}
-                  checked={groupByTag} />
+                  checked={groupByTag}
+                />
               }
             />
           </Grid>
@@ -226,28 +257,38 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
             </Grid>
           </Grid>
         </Grid>
-        <OrderBy data={Object.values(nodeBalancersData)} order={'desc'} orderBy={`label`}>
+        <OrderBy
+          data={Object.values(nodeBalancersData)}
+          order={'desc'}
+          orderBy={`label`}
+        >
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const props = {
               data: orderedData,
               handleOrderChange,
               order,
               orderBy,
-              toggleDialog: this.toggleDialog,
+              toggleDialog: this.toggleDialog
             };
-            return groupByTag
-              ? <ListGroupedNodeBalancers {...props} />
-              : <ListNodeBalancers {...props} />
+            return groupByTag ? (
+              <ListGroupedNodeBalancers {...props} />
+            ) : (
+              <ListNodeBalancers {...props} />
+            );
           }}
         </OrderBy>
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
           title="Confirm Deletion"
-          error={(this.state.deleteConfirmDialog.errors || []).map(e => e.reason).join(',')}
+          error={(this.state.deleteConfirmDialog.errors || [])
+            .map(e => e.reason)
+            .join(',')}
           actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}
         >
-          <Typography>Are you sure you want to delete your NodeBalancer?</Typography>
+          <Typography>
+            Are you sure you want to delete your NodeBalancer?
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -274,13 +315,13 @@ export class NodeBalancersLanding extends React.Component<CombinedProps, State> 
         </Button>
       </ActionsPanel>
     );
-  }
+  };
 
-  closeConfirmationDialog = () => this.setState({
-    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-  });
-
-};
+  closeConfirmationDialog = () =>
+    this.setState({
+      deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
+    });
+}
 
 const styled = withStyles(styles);
 
@@ -306,42 +347,45 @@ interface LocalStorageUpdater {
   [key: string]: (...args: any[]) => Partial<LocalStorageState>;
 }
 
-
-const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUpdater, {}>(
-  (storage) => {
+const withLocalStorage = localStorageContainer<
+  LocalStorageState,
+  LocalStorageUpdater,
+  {}
+>(
+  storage => {
     return {
-      groupByTag: storage.groupNodeBalancersByTag.get(),
-    }
+      groupByTag: storage.groupNodeBalancersByTag.get()
+    };
   },
-  (storage) => ({
-    toggleGroupByTag: (state) => (checked: boolean) => {
+  storage => ({
+    toggleGroupByTag: state => (checked: boolean) => {
       storage.groupNodeBalancersByTag.set(checked ? 'true' : 'false');
 
       sendEvent({
         category: NodeBalancersLanding.eventCategory,
         action: 'group by tag',
-        label: String(checked),
+        label: String(checked)
       });
 
       return {
         ...state,
-        groupByTag: checked,
-      }
-    },
-  }),
+        groupByTag: checked
+      };
+    }
+  })
 );
 
 export const enhanced = compose<CombinedProps, {}>(
   connect((state: ApplicationState) => {
     const { __resources } = state;
-    const { nodeBalancers } = __resources
+    const { nodeBalancers } = __resources;
     const { error, items, loading: nodeBalancersLoading } = nodeBalancers;
 
     return {
       nodeBalancersCount: items.length,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: error,
-      nodeBalancersLoading,
+      nodeBalancersLoading
     };
   }),
   withLocalStorage,
@@ -349,17 +393,17 @@ export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
-  setDocs(NodeBalancersLanding.docs),
+  setDocs(NodeBalancersLanding.docs)
 );
 
 export default enhanced(NodeBalancersLanding);
 
 const LoadingState = () => {
   return <CircleProgress />;
-}
+};
 
 const RenderError = () => {
-  return <ErrorState
-    errorText="There was an error loading your NodeBalancers. Please try again later."
-  />
-}
+  return (
+    <ErrorState errorText="There was an error loading your NodeBalancers. Please try again later." />
+  );
+};

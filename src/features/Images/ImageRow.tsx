@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
@@ -8,14 +12,14 @@ import ActionMenu from './ImagesActionMenu';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
     width: '30%',
     [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
-  },
+      width: '100%'
+    }
+  }
 });
 
 interface Props {
@@ -28,25 +32,28 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ImageRow: React.StatelessComponent<CombinedProps> = (props) => {
-    const { classes, image, ...rest } = props;
-    return (
-        <TableRow key={image.id} data-qa-image-cell={image.id}>
-            <TableCell parentColumn="Label" className={classes.label} data-qa-image-label>
-            {image.label}
-            </TableCell>
-            <TableCell parentColumn="Date Created" data-qa-image-date>
-                {formatDate(image.created)}
-            </TableCell>
-            <TableCell parentColumn="Size" data-qa-image-size>{image.size} MB</TableCell>
-            <TableCell>
-                <ActionMenu
-                    image={image}
-                    {...rest}
-                />
-            </TableCell>
-        </TableRow>
-    );
+const ImageRow: React.StatelessComponent<CombinedProps> = props => {
+  const { classes, image, ...rest } = props;
+  return (
+    <TableRow key={image.id} data-qa-image-cell={image.id}>
+      <TableCell
+        parentColumn="Label"
+        className={classes.label}
+        data-qa-image-label
+      >
+        {image.label}
+      </TableCell>
+      <TableCell parentColumn="Date Created" data-qa-image-date>
+        {formatDate(image.created)}
+      </TableCell>
+      <TableCell parentColumn="Size" data-qa-image-size>
+        {image.size} MB
+      </TableCell>
+      <TableCell>
+        <ActionMenu image={image} {...rest} />
+      </TableCell>
+    </TableRow>
+  );
 };
 
 const styled = withStyles(styles);

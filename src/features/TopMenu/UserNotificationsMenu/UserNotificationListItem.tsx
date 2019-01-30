@@ -1,7 +1,11 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =
@@ -16,12 +20,14 @@ type ClassNames =
   | 'pointer'
   | 'root';
 
-const styles: StyleRulesCallback = (theme) => {
-  const { palette: { status } } = theme;
+const styles: StyleRulesCallback = theme => {
+  const {
+    palette: { status }
+  } = theme;
 
   return {
     pointer: {
-      cursor: 'pointer',
+      cursor: 'pointer'
     },
     root: {
       margin: 0,
@@ -30,48 +36,48 @@ const styles: StyleRulesCallback = (theme) => {
       borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create('background-color'),
       '& p': {
-        color: '#32363C',
+        color: '#32363C'
       },
       '& + .notice': {
-        marginTop: '0 !important',
+        marginTop: '0 !important'
       },
       '&:hover, &:focus': {
-        backgroundColor: theme.bg.main,
+        backgroundColor: theme.bg.main
       },
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
-      outline: 0,
+      outline: 0
     },
     inner: {
       width: '100%',
-      display: 'block',
+      display: 'block'
     },
     innerLink: {
       '& > h3': {
         lineHeight: '1.2',
-        textDecoration: 'underline',
-      },
+        textDecoration: 'underline'
+      }
     },
     innerTitle: {
-      marginBottom: theme.spacing.unit / 2,
+      marginBottom: theme.spacing.unit / 2
     },
     noticeText: {
       color: theme.palette.text.primary,
-      fontFamily: 'LatoWebBold',
+      fontFamily: 'LatoWebBold'
     },
     critical: {
-      borderLeft: `5px solid ${status.errorDark}`,
+      borderLeft: `5px solid ${status.errorDark}`
     },
     major: {
-      borderLeft: `5px solid ${status.warningDark}`,
+      borderLeft: `5px solid ${status.warningDark}`
     },
     minor: {
-      borderLeft: `5px solid ${status.successDark}`,
+      borderLeft: `5px solid ${status.successDark}`
     },
     flag: {
-      marginRight: theme.spacing.unit * 2,
-    },
+      marginRight: theme.spacing.unit * 2
+    }
   };
 };
 
@@ -84,14 +90,10 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    classes,
-    label,
-    message,
-    severity,
-    onClick,
-  } = props;
+const userNotificationListItem: React.StatelessComponent<
+  CombinedProps
+> = props => {
+  const { classes, label, message, severity, onClick } = props;
 
   return (
     <ListItem
@@ -99,7 +101,7 @@ const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props
         [classes.root]: true,
         [classes[severity]]: true,
         [classes.pointer]: Boolean(onClick),
-        notice: true,
+        notice: true
       })}
       data-qa-notice
       component="li"
@@ -107,13 +109,15 @@ const userNotificationListItem: React.StatelessComponent<CombinedProps> = (props
       onClick={onClick}
       button={Boolean(onClick)}
     >
-      <div className={classNames(
-        {
+      <div
+        className={classNames({
           [classes.inner]: true,
-          [classes.innerLink]: Boolean(onClick),
-        }
-      )}>
-        <Typography role="header" variant="h3" className={classes.innerTitle}>{label}</Typography>
+          [classes.innerLink]: Boolean(onClick)
+        })}
+      >
+        <Typography role="header" variant="h3" className={classes.innerTitle}>
+          {label}
+        </Typography>
         <Typography variant="body1">{message}</Typography>
       </div>
     </ListItem>

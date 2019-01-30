@@ -6,7 +6,11 @@ import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -19,58 +23,87 @@ import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { dateFormat } from 'src/time';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { Permission, permTuplesToScopeString, scopeStringToPermTuples } from './utils';
+import {
+  Permission,
+  permTuplesToScopeString,
+  scopeStringToPermTuples
+} from './utils';
 
 type Expiry = [string, string];
 
 export const genExpiryTups = (): Expiry[] => {
   return [
-    ['In 6 months', moment().add(6, 'months').startOf('day').format(dateFormat)],
-    ['In 3 months', moment().add(3, 'months').startOf('day').format(dateFormat)],
-    ['In 1 month', moment().add(1, 'months').startOf('day').format(dateFormat)],
-    ['Never', moment().add(200, 'years').startOf('day').format(dateFormat)],
+    [
+      'In 6 months',
+      moment()
+        .add(6, 'months')
+        .startOf('day')
+        .format(dateFormat)
+    ],
+    [
+      'In 3 months',
+      moment()
+        .add(3, 'months')
+        .startOf('day')
+        .format(dateFormat)
+    ],
+    [
+      'In 1 month',
+      moment()
+        .add(1, 'months')
+        .startOf('day')
+        .format(dateFormat)
+    ],
+    [
+      'Never',
+      moment()
+        .add(200, 'years')
+        .startOf('day')
+        .format(dateFormat)
+    ]
   ];
 };
 
-type ClassNames = 'permsTable'
+type ClassNames =
+  | 'permsTable'
   | 'selectCell'
   | 'accessCell'
   | 'noneCell'
   | 'readOnlyCell'
   | 'readWritecell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   permsTable: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   selectCell: {
     fontFamily: 'LatoWebBold',
-    fontSize: '.9rem',
+    fontSize: '.9rem'
   },
   accessCell: {
     width: '31%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
+    }
   },
   noneCell: {
     width: '23%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
+    }
   },
   readOnlyCell: {
     width: '23%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
+    }
   },
   readWritecell: {
     width: '23%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
-  },
+    }
+  }
 });
 
 export type DrawerMode = 'view' | 'edit' | 'create';
@@ -107,7 +140,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
     scopes: scopeStringToPermTuples(this.props.scopes || ''),
     expiryTups: genExpiryTups(),
-    selectAllSelectedScope: null,
+    selectAllSelectedScope: null
   };
 
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
@@ -117,44 +150,49 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       this.props.id !== nextProps.id
     ) {
       /* Then update our current scopes state */
-      this.setState({ scopes: scopeStringToPermTuples(nextProps.scopes || '') });
+      this.setState({
+        scopes: scopeStringToPermTuples(nextProps.scopes || '')
+      });
     }
   }
 
   handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const scopeTups = this.state.scopes;
     const targetIndex = scopeTups.findIndex(
-      (scopeTup: Permission) => scopeTup[0] === e.currentTarget.name);
+      (scopeTup: Permission) => scopeTup[0] === e.currentTarget.name
+    );
     if (targetIndex !== undefined) {
-      scopeTups[targetIndex][1] = +(e.currentTarget.value);
+      scopeTups[targetIndex][1] = +e.currentTarget.value;
     }
     this.setState({ scopes: scopeTups });
-  }
+  };
 
   handleSelectAllScopes = (e: React.SyntheticEvent<RadioButton>): void => {
     const { scopes } = this.state;
     const value = +e.currentTarget.value;
 
     this.setState({
-      scopes: scopes.map((scope): Permission => ([scope[0], value])),
-      selectAllSelectedScope: value,
+      scopes: scopes.map((scope): Permission => [scope[0], value]),
+      selectAllSelectedScope: value
     });
-  }
+  };
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.onChange('label', e.target.value);
-  }
+  };
 
   handleExpiryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.props.onChange('expiry', e.target.value);
-  }
+  };
 
   // return whether all scopes selected in the create token flow are the same
   allScopesIdentical = () => {
     const { scopes, selectAllSelectedScope } = this.state;
-    const allScopesIdentical = scopes.every(scope => scope[1] === selectAllSelectedScope);
+    const allScopesIdentical = scopes.every(
+      scope => scope[1] === selectAllSelectedScope
+    );
     return allScopesIdentical;
-  }
+  };
 
   permNameMap = {
     account: 'Account',
@@ -166,7 +204,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     longview: 'Longview',
     nodebalancers: 'NodeBalancers',
     stackscripts: 'StackScripts',
-    volumes: 'Volumes',
+    volumes: 'Volumes'
   };
 
   renderPermsTable() {
@@ -188,104 +226,127 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mode === 'create' &&
+          {mode === 'create' && (
             <TableRow data-qa-row="Select All">
-              <TableCell parentColumn="Access" padding="checkbox" className={classes.selectCell}>
+              <TableCell
+                parentColumn="Access"
+                padding="checkbox"
+                className={classes.selectCell}
+              >
                 Select All
               </TableCell>
-              <TableCell parentColumn="None" padding="checkbox" className={classes.noneCell}>
+              <TableCell
+                parentColumn="None"
+                padding="checkbox"
+                className={classes.noneCell}
+              >
                 <Radio
                   name="Select All"
-                  checked={selectAllSelectedScope === 0 && this.allScopesIdentical()}
+                  checked={
+                    selectAllSelectedScope === 0 && this.allScopesIdentical()
+                  }
                   value="0"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-none-radio
                 />
               </TableCell>
-            <TableCell
-              parentColumn="Read Only"
-              padding="checkbox"
-              className={classes.readOnlyCell}
-            >
+              <TableCell
+                parentColumn="Read Only"
+                padding="checkbox"
+                className={classes.readOnlyCell}
+              >
                 <Radio
                   name="Select All"
-                  checked={selectAllSelectedScope === 1 && this.allScopesIdentical()}
+                  checked={
+                    selectAllSelectedScope === 1 && this.allScopesIdentical()
+                  }
                   value="1"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-read-radio
                 />
               </TableCell>
-            <TableCell
-              parentColumn="Read/Write"
-              padding="checkbox"
-              className={classes.readWritecell}
-            >
+              <TableCell
+                parentColumn="Read/Write"
+                padding="checkbox"
+                className={classes.readWritecell}
+              >
                 <Radio
                   name="Select All"
-                  checked={selectAllSelectedScope === 2 && this.allScopesIdentical()}
+                  checked={
+                    selectAllSelectedScope === 2 && this.allScopesIdentical()
+                  }
                   value="2"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-rw-radio
                 />
               </TableCell>
             </TableRow>
-          }
-          {scopes.map(
-            (scopeTup) => {
-              return (
-                <TableRow key={scopeTup[0]} data-qa-row={this.permNameMap[scopeTup[0]]}>
-                  <TableCell parentColumn="Access" padding="checkbox" className={classes.accessCell}>
-                    {this.permNameMap[scopeTup[0]]}
-                  </TableCell>
-                  <TableCell parentColumn="None" padding="checkbox" className={classes.noneCell}>
-                    <Radio
-                      name={scopeTup[0]}
-                      disabled={mode !== 'create' && scopeTup[1] !== 0}
-                      checked={scopeTup[1] === 0}
-                      value="0"
-                      onChange={this.handleScopeChange}
-                      data-qa-perm-none-radio
-                    />
-                  </TableCell>
-                  <TableCell
-                    parentColumn="Read Only"
-                    padding="checkbox"
-                    className={classes.readOnlyCell}
-                  >
-                    <Radio
-                      name={scopeTup[0]}
-                      disabled={mode !== 'create' && scopeTup[1] !== 1}
-                      checked={scopeTup[1] === 1}
-                      value="1"
-                      onChange={this.handleScopeChange}
-                      data-qa-perm-read-radio
-                    />
-                  </TableCell>
-                  <TableCell
-                    parentColumn="Read/Write"
-                    padding="checkbox"
-                    className={classes.readWritecell}
-                  >
-                    <Radio
-                      name={scopeTup[0]}
-                      disabled={mode !== 'create' && scopeTup[1] !== 2}
-                      checked={scopeTup[1] === 2}
-                      value="2"
-                      onChange={this.handleScopeChange}
-                      data-qa-perm-rw-radio
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            },
           )}
+          {scopes.map(scopeTup => {
+            return (
+              <TableRow
+                key={scopeTup[0]}
+                data-qa-row={this.permNameMap[scopeTup[0]]}
+              >
+                <TableCell
+                  parentColumn="Access"
+                  padding="checkbox"
+                  className={classes.accessCell}
+                >
+                  {this.permNameMap[scopeTup[0]]}
+                </TableCell>
+                <TableCell
+                  parentColumn="None"
+                  padding="checkbox"
+                  className={classes.noneCell}
+                >
+                  <Radio
+                    name={scopeTup[0]}
+                    disabled={mode !== 'create' && scopeTup[1] !== 0}
+                    checked={scopeTup[1] === 0}
+                    value="0"
+                    onChange={this.handleScopeChange}
+                    data-qa-perm-none-radio
+                  />
+                </TableCell>
+                <TableCell
+                  parentColumn="Read Only"
+                  padding="checkbox"
+                  className={classes.readOnlyCell}
+                >
+                  <Radio
+                    name={scopeTup[0]}
+                    disabled={mode !== 'create' && scopeTup[1] !== 1}
+                    checked={scopeTup[1] === 1}
+                    value="1"
+                    onChange={this.handleScopeChange}
+                    data-qa-perm-read-radio
+                  />
+                </TableCell>
+                <TableCell
+                  parentColumn="Read/Write"
+                  padding="checkbox"
+                  className={classes.readWritecell}
+                >
+                  <Radio
+                    name={scopeTup[0]}
+                    disabled={mode !== 'create' && scopeTup[1] !== 2}
+                    checked={scopeTup[1] === 2}
+                    value="2"
+                    onChange={this.handleScopeChange}
+                    data-qa-perm-rw-radio
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     );
   }
 
   errorResources = {
-    label: 'label',
+    label: 'label'
   };
 
   render() {
@@ -297,7 +358,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       mode,
       closeDrawer,
       onCreate,
-      onEdit,
+      onEdit
     } = this.props;
     const { expiryTups } = this.state;
 
@@ -306,15 +367,15 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer
         title={
-          mode === 'view' && label
-          || mode === 'create' && 'Add Personal Access Token'
-          || mode === 'edit' && 'Edit Personal Access Token'
-          || ''
+          (mode === 'view' && label) ||
+          (mode === 'create' && 'Add Personal Access Token') ||
+          (mode === 'edit' && 'Edit Personal Access Token') ||
+          ''
         }
         open={open}
         onClose={closeDrawer}
       >
-        {(mode === 'create' || mode === 'edit') &&
+        {(mode === 'create' || mode === 'edit') && (
           <TextField
             errorText={errorFor('label')}
             value={label || ''}
@@ -322,12 +383,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleLabelChange}
             data-qa-add-label
           />
-        }
-        {mode === 'create' &&
+        )}
+        {mode === 'create' && (
           <FormControl>
-            <InputLabel htmlFor="expiry">
-              Expiry
-            </InputLabel>
+            <InputLabel htmlFor="expiry">Expiry</InputLabel>
             <Select
               value={expiry || expiryTups[0][1]}
               onChange={this.handleExpiryChange}
@@ -340,52 +399,46 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               ))}
             </Select>
           </FormControl>
-        }
-        {mode === 'view' &&
+        )}
+        {mode === 'view' && (
           <Typography>This application has access to your:</Typography>
-        }
-        {(mode === 'view' || mode === 'create') &&
-          this.renderPermsTable()
-        }
-        {errorFor('scopes') &&
+        )}
+        {(mode === 'view' || mode === 'create') && this.renderPermsTable()}
+        {errorFor('scopes') && (
           <FormHelperText error>{errorFor('scopes')}</FormHelperText>
-        }
-        {errorFor('none') &&
+        )}
+        {errorFor('none') && (
           <FormHelperText error>{errorFor('none')}</FormHelperText>
-        }
+        )}
         <ActionsPanel>
-          {mode === 'view' &&
-            <Button
-              type="primary"
-              onClick={closeDrawer}
-              data-qa-close-drawer
-            >
+          {mode === 'view' && (
+            <Button type="primary" onClick={closeDrawer} data-qa-close-drawer>
               Done
             </Button>
-          }
-          {(mode === 'create' || mode === 'edit') &&
-            [
-              <Button
-                key="create"
-                type="primary"
-                onClick={mode as string === 'create'
+          )}
+          {(mode === 'create' || mode === 'edit') && [
+            <Button
+              key="create"
+              type="primary"
+              onClick={
+                (mode as string) === 'create'
                   ? () => onCreate(permTuplesToScopeString(this.state.scopes))
                   : () => onEdit()
-                }
-                data-qa-submit
-              >
-                {mode as string === 'create' ? 'Submit' : 'Save'}
-              </Button>,
-              <Button
-                type="secondary"
-                className="cancel"
-                key="cancel"
-                onClick={closeDrawer} data-qa-cancel
-              >
-                Cancel
-              </Button>,
-            ]
-          }
+              }
+              data-qa-submit
+            >
+              {(mode as string) === 'create' ? 'Submit' : 'Save'}
+            </Button>,
+            <Button
+              type="secondary"
+              className="cancel"
+              key="cancel"
+              onClick={closeDrawer}
+              data-qa-cancel
+            >
+              Cancel
+            </Button>
+          ]}
         </ActionsPanel>
       </Drawer>
     );

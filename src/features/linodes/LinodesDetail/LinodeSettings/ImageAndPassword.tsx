@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -9,8 +13,8 @@ import { ImageSelect } from 'src/features/Images';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -26,7 +30,9 @@ interface Props {
 
 type CombinedProps = Props & WithImages & WithStyles<ClassNames>;
 
-export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props) => {
+export const ImageAndPassword: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     images,
     imageError,
@@ -35,7 +41,7 @@ export const ImageAndPassword: React.StatelessComponent<CombinedProps> = (props)
     onPasswordChange,
     password,
     passwordError,
-    userSSHKeys,
+    userSSHKeys
   } = props;
 
   return (
@@ -61,8 +67,12 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withImages((ownProps, images, imagesLoading, imageError) =>
-    ({ ...ownProps, images, imagesLoading, imageError })),
+  withImages((ownProps, images, imagesLoading, imageError) => ({
+    ...ownProps,
+    images,
+    imagesLoading,
+    imageError
+  }))
 )(ImageAndPassword);
 
 export default enhanced;

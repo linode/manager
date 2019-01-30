@@ -3,24 +3,26 @@ import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
 import Support from 'src/assets/icons/support.svg';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tile from 'src/components/Tile';
 
-type ClassNames = 'root'
-| 'wrapper'
-| 'heading'
+type ClassNames = 'root' | 'wrapper' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   wrapper: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   heading: {
     textAlign: 'center',
-    marginBottom: theme.spacing.unit * 4,
-  },
+    marginBottom: theme.spacing.unit * 4
+  }
 });
 
 interface State {
@@ -30,15 +32,15 @@ interface State {
 type CombinedProps = WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
-  state: State = { };
+  state: State = {};
 
   ada: any = undefined;
 
   componentDidMount() {
     /*
-    * Init Ada Chaperone chat app
-    * Script is included in index.html
-    */
+     * Init Ada Chaperone chat app
+     * Script is included in index.html
+     */
     if ('AdaChaperone' in window) {
       this.ada = new (window as any).AdaChaperone('linode');
     }
@@ -46,31 +48,28 @@ export class OtherWays extends React.Component<CombinedProps, State> {
 
   handleAdaInit = () => {
     /*
-    * Show the Ada chat
-    */
+     * Show the Ada chat
+     */
     if (typeof this.ada === 'undefined') {
-      this.setState({ error: 'There was an issue loading the chat at this time. Please try again later.' })
+      this.setState({
+        error:
+          'There was an issue loading the chat at this time. Please try again later.'
+      });
       return;
     }
-    this.setState({ error: '' })
+    this.setState({ error: '' });
     this.ada.show();
-  }
+  };
 
   render() {
     const { classes } = this.props;
 
     return (
       <React.Fragment>
-        <Typography
-          variant="h2"
-          className={classes.heading}
-        >
+        <Typography variant="h2" className={classes.heading}>
           Other Ways to Get Help
         </Typography>
-        <Grid
-          container
-          className={classes.wrapper}
-        >
+        <Grid container className={classes.wrapper}>
           <Grid item xs={12} sm={6}>
             <Tile
               title="Guides and Tutorials"

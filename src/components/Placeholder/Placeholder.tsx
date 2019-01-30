@@ -1,69 +1,69 @@
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Button, { ButtonProps } from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-type ClassNames = 'root'
-  | 'title'
-  | 'copy'
-  | 'icon'
-  | 'button';
+type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes scaleIn': {
     from: {
-      transform: 'translateX( -10px ) rotateY( -180deg )',
+      transform: 'translateX( -10px ) rotateY( -180deg )'
     },
     to: {
-      transformOrigin: 'center center',
-    },
+      transformOrigin: 'center center'
+    }
   },
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   root: {
     padding: `${theme.spacing.unit * 2}px 0`,
     [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing.unit * 10}px 0`,
-    },
+      padding: `${theme.spacing.unit * 10}px 0`
+    }
   },
   copy: {
     textAlign: 'center',
     maxWidth: '85%',
     marginTop: -theme.spacing.unit * 3,
     [theme.breakpoints.up('md')]: {
-      maxWidth: 500,
+      maxWidth: 500
     }
   },
   icon: {
-    '&.animate' : {
-      animation: 'scaleIn .5s ease-in-out',
+    '&.animate': {
+      animation: 'scaleIn .5s ease-in-out'
     },
     width: '150px',
     height: '150px',
     [theme.breakpoints.up('md')]: {
       width: '225px',
-      height: '225px',
+      height: '225px'
     },
     '& .outerCircle': {
       fill: theme.color.absWhite,
-      stroke: theme.bg.offWhite,
+      stroke: theme.bg.offWhite
     },
     '& .circle': {
-      fill: theme.color.absWhite,
+      fill: theme.color.absWhite
     },
     '& .insidePath path': {
       opacity: 0,
       animation: 'fadeIn .2s ease-in-out forwards .3s',
-      stroke: theme.palette.primary.main,
-    },
+      stroke: theme.palette.primary.main
+    }
   },
   title: {
     textAlign: 'center',
@@ -72,12 +72,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     lineHeight: '3.75rem',
     [theme.breakpoints.up('md')]: {
       fontSize: '2.5rem',
-      lineHeight: '4rem',
+      lineHeight: '4rem'
     }
   },
   button: {
-    marginBottom: theme.spacing.unit * 4,
-  },
+    marginBottom: theme.spacing.unit * 4
+  }
 });
 
 export interface Props {
@@ -91,7 +91,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
+const Placeholder: React.StatelessComponent<CombinedProps> = props => {
   const { animate, classes, copy, title, icon: Icon, buttonProps } = props;
   return (
     <Grid
@@ -103,9 +103,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       className={`${classes.root} ${props.className}`}
     >
       <Grid item xs={12}>
-        {Icon &&
-          <Icon className={`${classes.icon} ${animate && 'animate'}`} />
-        }
+        {Icon && <Icon className={`${classes.icon} ${animate && 'animate'}`} />}
       </Grid>
       <Grid item xs={12}>
         <Typography className={classes.title} data-qa-placeholder-title>
@@ -115,7 +113,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
       <Grid item xs={12} lg={10} className={classes.copy}>
         <Typography variant="body1">{copy}</Typography>
       </Grid>
-      {buttonProps &&
+      {buttonProps && (
         <Grid item xs={12} lg={10}>
           <Button
             type="primary"
@@ -124,16 +122,17 @@ const Placeholder: React.StatelessComponent<CombinedProps> = (props) => {
             data-qa-placeholder-button
           />
         </Grid>
-      }
-    </Grid >
+      )}
+    </Grid>
   );
 };
 
 Placeholder.defaultProps = {
   icon: LinodeIcon,
-  copy: 'The feature you are looking for is currently in development. Please check back soon.',
+  copy:
+    'The feature you are looking for is currently in development. Please check back soon.',
   title: 'Feature in Progress',
-  animate: true,
+  animate: true
 };
 
 const styled = withStyles(styles);

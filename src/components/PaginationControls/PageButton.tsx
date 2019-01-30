@@ -1,10 +1,14 @@
 import * as React from 'react';
 import Button, { ButtonProps } from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     backgroundColor: theme.bg.white,
     border: '1px solid ' + `${theme.color.borderPagination}`,
@@ -18,46 +22,47 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       height: 30,
       minHeight: 30,
       fontSize: '0.8rem',
-      padding: 5,
+      padding: 5
     },
     '& svg': {
       fontSize: 22,
       [theme.breakpoints.down('xs')]: {
-        fontSize: 20,
-      },
+        fontSize: 20
+      }
     },
     '&.active': {
       backgroundColor: theme.bg.main,
-      color: theme.color.black,
+      color: theme.color.black
     },
     '&:last-child': {
-      borderRight: '1px solid ' + `${theme.color.borderPagination}`,
+      borderRight: '1px solid ' + `${theme.color.borderPagination}`
     },
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
-      color: '#fff',
+      color: '#fff'
     },
     '&:disabled': {
       backgroundColor: theme.bg.main,
-      color: theme.color.black,
+      color: theme.color.black
     }
-  },
+  }
 });
 
 const styled = withStyles<CSSClasses>(styles);
 
 /* tslint:disable-next-line */
-export interface Props extends ButtonProps { }
+export interface Props extends ButtonProps {}
 
-const PageButton: React.StatelessComponent<Props & WithStyles<CSSClasses>> = ((props) => {
+const PageButton: React.StatelessComponent<
+  Props & WithStyles<CSSClasses>
+> = props => {
   const { classes, children, ...rest } = props;
 
   return (
-    <Button 
-    className={classes.root} {...rest}>
+    <Button className={classes.root} {...rest}>
       {children}
     </Button>
   );
-});
+};
 
 export default styled(PageButton);

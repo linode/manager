@@ -2,7 +2,11 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -11,8 +15,8 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -30,11 +34,14 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, State> {
+export class SSHKeyCreationDrawer extends React.PureComponent<
+  CombinedProps,
+  State
+> {
   state: State = {
     submitting: false,
     label: '',
-    sshKey: '',
+    sshKey: ''
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -44,17 +51,20 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
         submitting: false,
         errors: undefined,
         label: '',
-        sshKey: '',
+        sshKey: ''
       });
     }
   }
 
   render() {
     const { errors } = this.state;
-    const hasErrorFor = getAPIErrorFor({
-      label: 'Label',
-      ssh_key: 'Public key',
-    }, errors);
+    const hasErrorFor = getAPIErrorFor(
+      {
+        label: 'Label',
+        ssh_key: 'Public key'
+      },
+      errors
+    );
     const generalError = hasErrorFor('none');
 
     return (
@@ -84,8 +94,17 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
         />
 
         <ActionsPanel>
-          <Button data-qa-submit type="primary" loading={this.state.submitting} onClick={this.onSubmit}>Add Key</Button>
-          <Button data-qa-cancel type="cancel" onClick={this.props.onCancel}>Cancel</Button>
+          <Button
+            data-qa-submit
+            type="primary"
+            loading={this.state.submitting}
+            onClick={this.onSubmit}
+          >
+            Add Key
+          </Button>
+          <Button data-qa-cancel type="cancel" onClick={this.props.onCancel}>
+            Cancel
+          </Button>
         </ActionsPanel>
       </Drawer>
     );
@@ -111,20 +130,20 @@ export class SSHKeyCreationDrawer extends React.PureComponent<CombinedProps, Sta
     this.setState({ submitting: true });
 
     createSSHKey({ label, ssh_key: sshKey })
-      .then((response) => {
-        this.setState({ submitting: false, });
+      .then(response => {
+        this.setState({ submitting: false });
         this.props.onSuccess();
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           errors: pathOr(
             [{ reason: 'Unable to save SSH key. Please try again.' }],
             ['response', 'data', 'errors'],
-            error,
+            error
           ),
-          submitting: false,
+          submitting: false
         });
-      })
+      });
   };
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -13,39 +13,41 @@ interface CreatorsForStatus {
 /** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   backups_cancel: {
-    notification: e => `Backups have been cancelled for ${e.entity!.label}.`,
+    notification: e => `Backups have been cancelled for ${e.entity!.label}.`
   },
   backups_enable: {
-    notification: e => `Backups have been enabled for ${e.entity!.label}.`,
+    notification: e => `Backups have been enabled for ${e.entity!.label}.`
   },
   backups_restore: {
     scheduled: e => `Backup restoration scheduled for ${e.entity!.label}`,
     started: e => `Backup restoration started for ${e.entity!.label}`,
     failed: e => `Backup restoration failed for ${e.entity!.label}.`,
     finished: e => `Backup restoration completed for ${e.entity!.label}.`,
-    notification: e => `Backup restoration completed for ${e.entity!.label}.`,
+    notification: e => `Backup restoration completed for ${e.entity!.label}.`
   },
   community_question_reply: {
-    notification: e => `There has been a reply to your thread "${e.entity!.label}".`,
+    notification: e =>
+      `There has been a reply to your thread "${e.entity!.label}".`
   },
   community_like: {
     notification: e => e.entity!.label
   },
   credit_card_updated: {
-    notification: e => `Credit card information has been updated.`,
+    notification: e => `Credit card information has been updated.`
   },
   disk_create: {
     scheduled: e => `Disk is being added to Linode ${e.entity!.label}.`,
     started: e => `Disk is being added to ${e.entity!.label}.`,
     failed: e => `Disk could not be added to Linode ${e.entity!.label}.`,
-    finished: e => `Disk has been added to Linode ${e.entity!.label}.`,
+    finished: e => `Disk has been added to Linode ${e.entity!.label}.`
     // notification: e => ``,
   },
   disk_delete: {
-    scheduled: e => `A disk on Linode ${e.entity!.label} is scheduled for deletion.`,
+    scheduled: e =>
+      `A disk on Linode ${e.entity!.label} is scheduled for deletion.`,
     started: e => `A disk on Linode ${e.entity!.label} is being deleted.`,
     failed: e => `A disk on Linode ${e.entity!.label} could not be deleted.`,
-    finished: e => `A disk on Linode ${e.entity!.label} has been deleted`,
+    finished: e => `A disk on Linode ${e.entity!.label} has been deleted`
     // notification: e => ``,
   },
   // disk_duplicate: {
@@ -61,7 +63,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Image scheduled for creation.`,
     started: e => `Image being created.`,
     failed: e => `Image creation failed.`,
-    finished: e => `Image has been created.`,
+    finished: e => `Image has been created.`
     // notification: e => ``,
   },
   // disk_resize: {
@@ -75,75 +77,76 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `A disk on ${e.entity!.label} is scheduled for resizing.`,
     started: e => `A disk on Linode ${e.entity!.label} is being resized.`,
     failed: e => `A disk on Linode ${e.entity!.label} could not be resized.`,
-    finished: e => `A disk on Linode ${e.entity!.label} has been resized`,
+    finished: e => `A disk on Linode ${e.entity!.label} has been resized`
     // notification: e => ``,
   },
   dns_record_create: {
-    notification: e => `DNS record has been added to ${e.entity!.label}`,
+    notification: e => `DNS record has been added to ${e.entity!.label}`
   },
   dns_record_delete: {
-    notification: e => `DNS record has been removed from ${e.entity!.label}`,
+    notification: e => `DNS record has been removed from ${e.entity!.label}`
   },
   dns_zone_create: {
-    notification: e => `DNS zone has been added to ${e.entity!.label}`,
+    notification: e => `DNS zone has been added to ${e.entity!.label}`
   },
   dns_zone_delete: {
-    notification: e => `DNS zone has been removed from ${e.entity!.label}`,
+    notification: e => `DNS zone has been removed from ${e.entity!.label}`
   },
   domain_create: {
-    notification: e => `Domain ${e.entity!.label} has been created.`,
+    notification: e => `Domain ${e.entity!.label} has been created.`
   },
   domain_delete: {
-    notification: e => `Domain ${e.entity!.label} has been deleted.`,
+    notification: e => `Domain ${e.entity!.label} has been deleted.`
   },
   domain_record_create: {
-    notification: e => `A domain record has been created for ${e.entity!.label}`,
+    notification: e => `A domain record has been created for ${e.entity!.label}`
   },
   domain_record_delete: {
-    notification: e => `A domain record has been deleted from ${e.entity!.label}`,
+    notification: e =>
+      `A domain record has been deleted from ${e.entity!.label}`
   },
   image_delete: {
     // scheduled: e => `Image ${e.entity!.label} scheduled for deletion.`,
     // started: e => `Image ${e.entity!.label} is being deleted.`,
     // failed: e => `There was a problem deleting ${e.entity!.label}.`,
     // finished: e => `${e.entity!.label}`,
-    notification: e => `Image ${e.entity!.label} has been deleted.`,
+    notification: e => `Image ${e.entity!.label} has been deleted.`
   },
   linode_addip: {
-    notification: e => `An IP has been added to ${e.entity!.label}.`,
+    notification: e => `An IP has been added to ${e.entity!.label}.`
   },
   linode_boot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to boot.`,
     started: e => `Linode ${e.entity!.label} is booting.`,
     failed: e => `Linode ${e.entity!.label} could not be booted.`,
-    finished: e => `Linode ${e.entity!.label} has booted.`,
+    finished: e => `Linode ${e.entity!.label} has booted.`
   },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
     started: e => `Linode ${e.entity!.label} is being cloned.`,
     failed: e => `Linode ${e.entity!.label} could not be cloned.`,
-    finished: e => `Linode ${e.entity!.label} has been cloned.`,
+    finished: e => `Linode ${e.entity!.label} has been cloned.`
   },
   linode_create: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for creation.`,
     started: e => `Linode ${e.entity!.label} is being created.`,
     failed: e => `Linode ${e.entity!.label} could not be created.`,
-    finished: e => `Linode ${e.entity!.label} has been created.`,
+    finished: e => `Linode ${e.entity!.label} has been created.`
   },
   linode_delete: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for deletion.`,
     started: e => `Linode ${e.entity!.label} is being deleted.`,
     failed: e => `Linode ${e.entity!.label} could not be deleted.`,
-    finished: e => `Linode ${e.entity!.label} has been deleted.`,
+    finished: e => `Linode ${e.entity!.label} has been deleted.`
   },
   linode_deleteip: {
-    notification: e => `An IP was deleted from Linode ${e.entity!.id}`,
+    notification: e => `An IP was deleted from Linode ${e.entity!.id}`
   },
   linode_migrate: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for migration.`,
     started: e => `Linode ${e.entity!.label} is being migrated.`,
     failed: e => `Migration failed for Linode ${e.entity!.label}.`,
-    finished: e => `Linode ${e.entity!.label} has been migrated.`,
+    finished: e => `Linode ${e.entity!.label} has been migrated.`
   },
   // linode_mutate: {
   //   scheduled: e => ``,
@@ -156,31 +159,33 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
     started: e => `Linode ${e.entity!.label} is rebooting.`,
     failed: e => `Linode ${e.entity!.label} could not be rebooted.`,
-    finished: e => `Linode ${e.entity!.label} was rebooted.`,
+    finished: e => `Linode ${e.entity!.label} was rebooted.`
   },
   linode_rebuild: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for rebuild.`,
     started: e => `Linode ${e.entity!.label} is being rebuilt.`,
     failed: e => `Linode ${e.entity!.label} could not be rebuilt.`,
-    finished: e => `Linode ${e.entity!.label} was rebuilt.`,
+    finished: e => `Linode ${e.entity!.label} was rebuilt.`
   },
   linode_resize: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for resizing.`,
     started: e => `Linode ${e.entity!.label} is resizing.`,
     failed: e => `Linode ${e.entity!.label} could not be resized`,
-    finished: e => `Linode ${e.entity!.label} has been resized.`,
+    finished: e => `Linode ${e.entity!.label} has been resized.`
   },
   linode_shutdown: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for shutdown.`,
     started: e => `Linode ${e.entity!.label} is shutting down.`,
     failed: e => `Linode ${e.entity!.label} could not be shut down.`,
-    finished: e => `Linode ${e.entity!.label} has been shut down.`,
+    finished: e => `Linode ${e.entity!.label} has been shut down.`
   },
   linode_snapshot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for a snapshot backup.`,
-    started: e => `A snapshot backup is being created for Linode ${e.entity!.label}.`,
+    scheduled: e =>
+      `Linode ${e.entity!.label} is scheduled for a snapshot backup.`,
+    started: e =>
+      `A snapshot backup is being created for Linode ${e.entity!.label}.`,
     failed: e => `Snapshot backup failed on Linode ${e.entity!.label}.`,
-    finished: e => `A snapshot backup has been created for ${e.entity!.label}.`,
+    finished: e => `A snapshot backup has been created for ${e.entity!.label}.`
   },
   // longviewclient_create: {
   //   scheduled: e => ``,
@@ -225,22 +230,24 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   notification: e => ``,
   // },
   nodebalancer_config_create: {
-    notification: e => `NodeBalancer configuration ${e.entity!.label} has been created.`,
+    notification: e =>
+      `NodeBalancer configuration ${e.entity!.label} has been created.`
   },
   nodebalancer_config_delete: {
-    notification: e => `NodeBalancer configuration ${e.entity!.label} has been deleted.`,
+    notification: e =>
+      `NodeBalancer configuration ${e.entity!.label} has been deleted.`
   },
   nodebalancer_create: {
-    notification: e => `NodeBalancer ${e.entity!.label} has been created.`,
+    notification: e => `NodeBalancer ${e.entity!.label} has been created.`
   },
   nodebalancer_delete: {
-    notification: e => `NodeBalancer ${e.entity!.label} has been deleted.`,
+    notification: e => `NodeBalancer ${e.entity!.label} has been deleted.`
   },
   password_reset: {
     scheduled: e => `A password reset is scheduled for ${e.entity!.label}.`,
     started: e => `The password for ${e.entity!.label} is being reset.`,
     failed: e => `Password reset failed for Linode ${e.entity!.label}.`,
-    finished: e => `Password has been reset on Linode ${e.entity!.label}.`,
+    finished: e => `Password has been reset on Linode ${e.entity!.label}.`
   },
   // payment_submitted: {
   //   scheduled: e => ``,
@@ -250,22 +257,22 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   notification: e => ``,
   // },
   stackscript_create: {
-    notification: e => `StackScript ${e.entity!.label} has been created.`,
+    notification: e => `StackScript ${e.entity!.label} has been created.`
   },
   stackscript_delete: {
-    notification: e => `StackScript ${e.entity!.label} has been deleted.`,
+    notification: e => `StackScript ${e.entity!.label} has been deleted.`
   },
   stackscript_publicize: {
-    notification: e => `StackScript ${e.entity!.label} has been made public.`,
+    notification: e => `StackScript ${e.entity!.label} has been made public.`
   },
   stackscript_revise: {
-    notification: e => `StackScript ${e.entity!.label} has been revised.`,
+    notification: e => `StackScript ${e.entity!.label} has been revised.`
   },
   tfa_disabled: {
-    notification: e => `Two-factor authentication has been disabled.`,
+    notification: e => `Two-factor authentication has been disabled.`
   },
   tfa_enabled: {
-    notification: e => `Two-factor authentication has been enabled.`,
+    notification: e => `Two-factor authentication has been enabled.`
   },
   // ticket_attachment_upload: {
   //   scheduled: e => ``,
@@ -275,7 +282,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   notification: e => ``,
   // },
   ticket_create: {
-    notification: e => `New support ticket "${e.entity!.label}" created.`,
+    notification: e => `New support ticket "${e.entity!.label}" created.`
   },
   // ticket_reply: {
   //   scheduled: e => ``,
@@ -285,7 +292,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   notification: e => ``,
   // },
   ticket_update: {
-    notification: e => `Support ticket "${e.entity!.label}" has been updated.`,
+    notification: e => `Support ticket "${e.entity!.label}" has been updated.`
   },
   volume_attach: {
     // @todo Once we have better events, display the name of the attached Linode
@@ -294,24 +301,24 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Volume ${e.entity!.label} is being attached.`,
     failed: e => `Volume ${e.entity!.label} failed to attach.`,
     finished: e => `Volume ${e.entity!.label} has been attached.`,
-    notification: e => `Volume ${e.entity!.label} has been attached.`,
+    notification: e => `Volume ${e.entity!.label} has been attached.`
   },
   volume_clone: {
-    notification: e => `Volume ${e.entity!.label} has been cloned.`,
+    notification: e => `Volume ${e.entity!.label} has been cloned.`
   },
   volume_create: {
     scheduled: e => `Volume ${e.entity!.label} is scheduled for creation.`,
     started: e => `Volume ${e.entity!.label} is being created.`,
     failed: e => `Creation of volume ${e.entity!.label} failed.`,
     finished: e => `Volume ${e.entity!.label} has been created.`,
-    notification: e => `Volume ${e.entity!.label} has been created.`,
+    notification: e => `Volume ${e.entity!.label} has been created.`
   },
   volume_delete: {
     scheduled: e => ``,
     started: e => ``,
     failed: e => ``,
     finished: e => ``,
-    notification: e => `Volume ${e.entity!.label} has been deleted.`,
+    notification: e => `Volume ${e.entity!.label} has been deleted.`
   },
   volume_detach: {
     // @todo Once we have better events, display the name of the attached Linode
@@ -320,28 +327,33 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Volume ${e.entity!.label} is being detached.`,
     failed: e => `Volume ${e.entity!.label} failed to detach.`,
     finished: e => `Volume ${e.entity!.label} has been detached.`,
-    notification: e => `Volume ${e.entity!.label} has been detached.`,
+    notification: e => `Volume ${e.entity!.label} has been detached.`
   },
   volume_resize: {
-    notification: e => `Volume ${e.entity!.label} has been resized.`,
+    notification: e => `Volume ${e.entity!.label} has been resized.`
   },
   user_ssh_key_add: {
-    notification: e => `An SSH key has been added to your profile.`,
+    notification: e => `An SSH key has been added to your profile.`
   },
   user_ssh_key_delete: {
-    notification: e => `An SSH key has been removed from your profile.`,
-  },
+    notification: e => `An SSH key has been removed from your profile.`
+  }
 };
 
 export default (
   e: Linode.Event,
   onUnfound?: (e: Linode.Event) => void,
-  onError?: (e: Linode.Event, err: Error) => void,
+  onError?: (e: Linode.Event, err: Error) => void
 ) => {
-  const fn = path<EventMessageCreator>([e.action, e.status], eventMessageCreators);
+  const fn = path<EventMessageCreator>(
+    [e.action, e.status],
+    eventMessageCreators
+  );
 
   if (!fn) {
-    if (onUnfound) { onUnfound(e); }
+    if (onUnfound) {
+      onUnfound(e);
+    }
     return;
   }
 
@@ -349,7 +361,9 @@ export default (
   try {
     message = fn(e);
   } catch (error) {
-    if (onError) { onError(e, error); }
+    if (onError) {
+      onError(e, error);
+    }
     return;
   }
 

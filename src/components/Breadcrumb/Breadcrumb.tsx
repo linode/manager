@@ -3,14 +3,24 @@ import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import IconButton from 'src/components/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
 import LabelText from './LabelText';
 
-type ClassNames = 'root' | 'backButton' | 'linkText' | 'labelText' | 'subtitleLinkText' | 'prefixComponentWrapper';
+type ClassNames =
+  | 'root'
+  | 'backButton'
+  | 'linkText'
+  | 'labelText'
+  | 'subtitleLinkText'
+  | 'prefixComponentWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   backButton: {
     margin: '0',
@@ -21,8 +31,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       position: 'relative',
       top: 2,
       width: 24,
-      height: 24,
-    },
+      height: 24
+    }
   },
   linkText: {
     display: 'flex',
@@ -36,11 +46,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       display: 'inline-block',
       padding: '0 8px 0 6px',
       height: '38px',
-      borderRight: `1px solid ${theme.color.grey1}`,
+      borderRight: `1px solid ${theme.color.grey1}`
     },
     [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   subtitleLinkText: {
     display: 'flex',
@@ -53,11 +63,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       content: "'|'",
       display: 'inline-block',
       padding: '0 0 0 8px',
-      color: theme.color.grey1,
+      color: theme.color.grey1
     },
     [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   labelText: {
     padding: '2px 10px'
@@ -67,7 +77,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& svg': {
       position: 'relative',
       top: 2,
-      marginRight: '0',
+      marginRight: '0'
     }
   }
 });
@@ -89,42 +99,49 @@ export interface Props {
   linkText?: string;
   labelTitle: string;
   labelOptions?: LabelProps;
-  onEditHandlers?: EditableProps
+  onEditHandlers?: EditableProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, linkTo, linkText, labelTitle, labelOptions, onEditHandlers } = props;
+export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    classes,
+    linkTo,
+    linkText,
+    labelTitle,
+    labelOptions,
+    onEditHandlers
+  } = props;
 
   return (
     <React.Fragment>
       <Link to={linkTo} data-qa-link>
-        <IconButton
-          className={classes.backButton}
-          tabIndex={-1}
-        >
-        <KeyboardArrowLeft />
-        {linkText && <Typography
-          variant="h3"
-          className={(labelOptions && labelOptions.subtitle)
-            ? classes.subtitleLinkText
-            : classes.linkText}
-          data-qa-link-text
-        >
-          {linkText}
-        </Typography>}
-      </IconButton>
+        <IconButton className={classes.backButton} tabIndex={-1}>
+          <KeyboardArrowLeft />
+          {linkText && (
+            <Typography
+              variant="h3"
+              className={
+                labelOptions && labelOptions.subtitle
+                  ? classes.subtitleLinkText
+                  : classes.linkText
+              }
+              data-qa-link-text
+            >
+              {linkText}
+            </Typography>
+          )}
+        </IconButton>
       </Link>
 
-      {labelOptions && labelOptions.prefixComponent &&
+      {labelOptions && labelOptions.prefixComponent && (
         <div className={classes.prefixComponentWrapper} data-qa-prefixwrapper>
           {labelOptions.prefixComponent}
         </div>
-      }
+      )}
 
-      {onEditHandlers
-        ?
+      {onEditHandlers ? (
         <EditableText
           role="header"
           typeVariant="h2"
@@ -135,16 +152,17 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = (props) => {
           labelLink={labelOptions && labelOptions.linkTo}
           data-qa-editable-text
         />
-        : <LabelText
-            title={props.labelTitle}
-            subtitle={labelOptions && labelOptions.subtitle}
-            titleLink={labelOptions && labelOptions.linkTo}
-            data-qa-labeltext
-          />
-      }
+      ) : (
+        <LabelText
+          title={props.labelTitle}
+          subtitle={labelOptions && labelOptions.subtitle}
+          titleLink={labelOptions && labelOptions.linkTo}
+          data-qa-labeltext
+        />
+      )}
     </React.Fragment>
   );
-}
+};
 
 const styled = withStyles(styles);
 export default styled(Breadcrumb);

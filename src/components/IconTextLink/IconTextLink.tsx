@@ -1,17 +1,16 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 
-type CSSClasses = 'root'
-| 'active'
-| 'disabled'
-| 'icon'
-| 'left'
-| 'label';
+type CSSClasses = 'root' | 'active' | 'disabled' | 'icon' | 'left' | 'label';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     display: 'flex',
     alignItems: 'flex-start',
@@ -26,23 +25,23 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       backgroundColor: 'transparent',
       '& $icon': {
         fill: theme.palette.primary.light,
-        color: 'white',
+        color: 'white'
       },
       '& .border': {
-        color: theme.palette.primary.light,
-      },
-    },
+        color: theme.palette.primary.light
+      }
+    }
   },
   active: {
-    color: '#1f64b6',
+    color: '#1f64b6'
   },
   disabled: {
     color: '#939598',
     pointerEvents: 'none',
     '& $icon': {
       color: '#939598',
-      borderColor: '#939598',
-    },
+      borderColor: '#939598'
+    }
   },
   icon: {
     transition: theme.transitions.create(['fill', 'color']),
@@ -52,15 +51,15 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     position: 'relative',
     top: 2,
     '& .border': {
-      transition: theme.transitions.create(['color']),
-    },
+      transition: theme.transitions.create(['color'])
+    }
   },
   left: {
-    left: -12,
+    left: -12
   },
   label: {
-    whiteSpace: 'nowrap',
-  },
+    whiteSpace: 'nowrap'
+  }
 });
 
 export interface Props {
@@ -76,7 +75,7 @@ export interface Props {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
+const IconTextLink: React.StatelessComponent<FinalProps> = props => {
   const {
     SideIcon,
     classes,
@@ -86,30 +85,27 @@ const IconTextLink: React.StatelessComponent<FinalProps> = (props) => {
     disabled,
     title,
     left,
-    className,
+    className
   } = props;
 
   return (
     <Button
-      className={
-        classNames({
+      className={classNames(
+        {
           [classes.root]: true,
           [classes.disabled]: disabled === true,
           [classes.active]: active === true,
           [classes.left]: left === true,
-          iconTextLink: true,
+          iconTextLink: true
         },
         className
-      )
-      }
+      )}
       title={title}
       onClick={onClick}
       data-qa-icon-text-link={title}
     >
       <SideIcon className={classes.icon} />
-      <span className={classes.label}>
-        {text}
-      </span>
+      <span className={classes.label}>{text}</span>
     </Button>
   );
 };

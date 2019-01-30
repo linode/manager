@@ -1,9 +1,14 @@
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles,
+  WithTheme
+} from 'src/components/core/styles';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
 type ClassNames =
-  'actionCell'
+  | 'actionCell'
   | 'actionInner'
   | 'bodyRow'
   | 'ipCell'
@@ -14,32 +19,32 @@ type ClassNames =
   | 'icon'
   | 'iconGridCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   actionCell: {
     width: '5%',
     textAlign: 'right',
     '& button': {
-      width: 30,
+      width: 30
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
+    }
   },
   actionInner: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   bodyRow: {
     height: 'auto',
     '&:hover .backupIcon': {
-      fill: theme.palette.primary.main,
-    },
+      fill: theme.palette.primary.main
+    }
   },
   iconTableCell: {
     [theme.breakpoints.up('md')]: {
       width: '4%',
-      padding: 4,
-    },
+      padding: 4
+    }
   },
   icon: {
     position: 'relative',
@@ -47,39 +52,39 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 40,
     height: 40,
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
-    },
+      stroke: theme.bg.main
+    }
   },
   iconGridCell: {
     display: 'flex',
     alignItems: 'center',
-    padding: 4,
+    padding: 4
   },
   ipCell: {
     width: '25%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
+    }
   },
   ipCellWrapper: {
     display: 'inline-flex',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   planCell: {
     width: '15%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
+    }
   },
   regionCell: {
     width: '10%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
-    },
-  },
+    }
+  }
 });
 
-export default withStyles(styles, { withTheme: true });;
+export default withStyles(styles, { withTheme: true });

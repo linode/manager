@@ -2,15 +2,18 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItemText from 'src/components/core/ListItemText';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type ClassNames = 'root'
-  | 'error'
-  | 'warning'
-  | 'success';
+type ClassNames = 'root' | 'error' | 'warning' | 'success';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  const { palette: { status } } = theme;
+const styles: StyleRulesCallback<ClassNames> = theme => {
+  const {
+    palette: { status }
+  } = theme;
   return {
     root: {
       paddingTop: 16,
@@ -20,18 +23,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       borderLeftColor: 'transparent',
       transition: theme.transitions.create(['background-color']),
       '&:hover': {
-        backgroundColor: theme.bg.offWhite,
-      },
+        backgroundColor: theme.bg.offWhite
+      }
     },
     error: {
-      borderLeftColor: status.errorDark,
+      borderLeftColor: status.errorDark
     },
     warning: {
-      borderLeftColor: status.warningDark,
+      borderLeftColor: status.warningDark
     },
     success: {
-      borderLeftColor: status.successDark,
-    },
+      borderLeftColor: status.successDark
+    }
   };
 };
 
@@ -46,7 +49,7 @@ interface Props extends MenuItemProps {
 
 type FinalProps = Props & WithStyles<ClassNames>;
 
-const EventListItem: React.StatelessComponent<FinalProps> = (props) => {
+const EventListItem: React.StatelessComponent<FinalProps> = props => {
   const {
     classes,
     title,
@@ -64,17 +67,14 @@ const EventListItem: React.StatelessComponent<FinalProps> = (props) => {
         [classes.root]: true,
         [classes.error]: error,
         [classes.warning]: warning,
-        [classes.success]: success,
+        [classes.success]: success
       })}
       role="menu"
       {...rest}
-      {...((onClick) && { onClick, onKeyPress: onClick })}
+      {...onClick && { onClick, onKeyPress: onClick }}
       divider={true}
     >
-      <ListItemText
-        primary={title}
-        secondary={content}
-      />
+      <ListItemText primary={title} secondary={content} />
     </MenuItem>
   );
 };

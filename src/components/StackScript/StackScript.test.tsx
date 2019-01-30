@@ -31,7 +31,7 @@ describe('StackScript', () => {
           author: '',
           description: '',
           scriptHeading: '',
-          descriptionText: '',
+          descriptionText: ''
         }}
       />
     );

@@ -1,7 +1,12 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { light } from 'src/themes';
-import { CombinedProps, LinodeCard, RenderFlag, RenderTitle } from './LinodeCard';
+import {
+  CombinedProps,
+  LinodeCard,
+  RenderFlag,
+  RenderTitle
+} from './LinodeCard';
 
 describe('LinodeRow', () => {
   const mockClasses = {
@@ -26,7 +31,7 @@ describe('LinodeRow', () => {
     link: '',
     statusProgress: '',
     statusText: '',
-    wrapHeader: '',
+    wrapHeader: ''
   };
 
   const mockProps: CombinedProps = {
@@ -47,7 +52,7 @@ describe('LinodeRow', () => {
     id: 8675309,
     backups: {
       enabled: false,
-      schedule: { day: 'Friday', window: 'W0' },
+      schedule: { day: 'Friday', window: 'W0' }
     },
     image: null,
     memory: 0,
@@ -57,8 +62,7 @@ describe('LinodeRow', () => {
 
     linodeNotifications: [],
     displayType: 'Some Fancy Name',
-    imageLabel: 'string',
-
+    imageLabel: 'string'
   };
 
   const mockNotification: Linode.Notification = {
@@ -68,7 +72,7 @@ describe('LinodeRow', () => {
       label: 'my-linode',
       id: 8675309
     },
-    label: 'Here\'s a notification!',
+    label: "Here's a notification!",
     message: 'Something something... whatever.',
     severity: 'major',
     when: null,
@@ -94,7 +98,7 @@ describe('LinodeRow', () => {
           flag: '',
           flagContainer: '',
           linkWrapper: '',
-          wrapHeader: '',
+          wrapHeader: ''
         }}
       />
     );
@@ -102,21 +106,20 @@ describe('LinodeRow', () => {
     expect(wrapper.find('RenderFlag')).toHaveLength(1);
   });
 
-
   describe('when linodeNotifications is not empty', () => {
     it('should render a Flag', () => {
       const wrapper = shallow(
         <RenderFlag
           mutationAvailable={false}
           linodeNotifications={[mockNotification]}
-          classes={{ flag: '', }}
+          classes={{ flag: '' }}
         />
       );
 
       const Tooltip = wrapper.find('WithStyles(Tooltip)');
 
       expect(Tooltip).toHaveLength(1);
-      expect(Tooltip.props()).toHaveProperty('title', mockNotification.message)
+      expect(Tooltip.props()).toHaveProperty('title', mockNotification.message);
     });
   });
 });

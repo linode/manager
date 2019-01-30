@@ -11,19 +11,14 @@ describe('RestoreToLinodeDrawer', () => {
     backupCreated: '12 hours ago',
     onClose: jest.fn(),
     onSubmit: jest.fn()
-  }
+  };
 
   const wrapper = shallow<RestoreToLinodeDrawer>(
-    <RestoreToLinodeDrawer
-      {...props}
-      classes={{ root: '' }}
-    />
+    <RestoreToLinodeDrawer {...props} classes={{ root: '' }} />
   );
 
-  it('doesn\'t wipe linodes when calling reset() method', () => {
-    const mockLinodes = [
-      ['123456', 'test-label']
-    ];
+  it("doesn't wipe linodes when calling reset() method", () => {
+    const mockLinodes = [['123456', 'test-label']];
 
     wrapper.setState({ linodes: mockLinodes });
     const instance = wrapper.instance() as any;

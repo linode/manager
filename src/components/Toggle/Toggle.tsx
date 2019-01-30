@@ -2,22 +2,23 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Switch, { SwitchProps } from 'src/components/core/Switch';
 import HelpIcon from 'src/components/HelpIcon';
 import './toggle.css';
 
-type CSSClasses =
-  'root'
-  | 'checked'
-  | 'disabled';
+type CSSClasses = 'root' | 'checked' | 'disabled';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   checked: {},
-  disabled: {},
+  disabled: {}
 });
 
 interface Props {
@@ -26,13 +27,13 @@ interface Props {
 
 type CombinedProps = Props & SwitchProps & WithStyles<CSSClasses>;
 
-const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = (props) => {
+const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = props => {
   const { classes, tooltipText, ...rest } = props;
 
   const classnames = classNames({
     [classes.root]: true,
     [classes.checked]: Boolean(props.checked),
-    [classes.disabled]: props.disabled === true,
+    [classes.disabled]: props.disabled === true
   });
 
   return (

@@ -15,7 +15,7 @@ interface Props {
   items?: any[];
 }
 
-const InvoiceTable: React.StatelessComponent<Props> = (props) => {
+const InvoiceTable: React.StatelessComponent<Props> = props => {
   const { loading, errors, items } = props;
   return (
     <Table border aria-label="Invoice Details">
@@ -25,7 +25,9 @@ const InvoiceTable: React.StatelessComponent<Props> = (props) => {
           <TableCell data-qa-column="From">From</TableCell>
           <TableCell data-qa-column="To">To</TableCell>
           <TableCell data-qa-column="Quantity">Quantity</TableCell>
-          <TableCell noWrap data-qa-column="Unit Price">Unit Price</TableCell>
+          <TableCell noWrap data-qa-column="Unit Price">
+            Unit Price
+          </TableCell>
           <TableCell data-qa-column="Amount">Amount</TableCell>
         </TableRow>
       </TableHead>
@@ -36,24 +38,45 @@ const InvoiceTable: React.StatelessComponent<Props> = (props) => {
   );
 };
 
-const renderDate = (v: null | string) => v ? <DateTimeDisplay value={v} format={`Y-MM-DD HH:mm:ss`} data-qa-invoice-date/> : null;
+const renderDate = (v: null | string) =>
+  v ? (
+    <DateTimeDisplay
+      value={v}
+      format={`Y-MM-DD HH:mm:ss`}
+      data-qa-invoice-date
+    />
+  ) : null;
 
-const renderUnitPrice = (v: null | number) => v ? `$${v}` : null;
+const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
-const renderQuantity = (v: null | number) => v ? v : null;
+const renderQuantity = (v: null | number) => (v ? v : null);
 
-const RenderData: React.StatelessComponent<{ items: Linode.InvoiceItem[] }> = (props) => {
+const RenderData: React.StatelessComponent<{
+  items: Linode.InvoiceItem[];
+}> = props => {
   const { items } = props;
   return (
     <>
       {items.map(({ label, from, to, quantity, unit_price, amount }) => (
         <TableRow key={`${label}-${from}-${to}`}>
-          <TableCell parentColumn="Description" data-qa-descrition>{label}</TableCell>
-          <TableCell parentColumn="From" data-qa-from>{renderDate(from)}</TableCell>
-          <TableCell parentColumn="To" data-qa-to>{renderDate(to)}</TableCell>
-          <TableCell parentColumn="Quantity" data-qa-quantity>{renderQuantity(quantity)}</TableCell>
-          <TableCell parentColumn="Unit Price" data-qa-unit-price>{renderUnitPrice(unit_price)}</TableCell>
-          <TableCell parentColumn="Amount" data-qa-amount>${amount}</TableCell>
+          <TableCell parentColumn="Description" data-qa-descrition>
+            {label}
+          </TableCell>
+          <TableCell parentColumn="From" data-qa-from>
+            {renderDate(from)}
+          </TableCell>
+          <TableCell parentColumn="To" data-qa-to>
+            {renderDate(to)}
+          </TableCell>
+          <TableCell parentColumn="Quantity" data-qa-quantity>
+            {renderQuantity(quantity)}
+          </TableCell>
+          <TableCell parentColumn="Unit Price" data-qa-unit-price>
+            {renderUnitPrice(unit_price)}
+          </TableCell>
+          <TableCell parentColumn="Amount" data-qa-amount>
+            ${amount}
+          </TableCell>
         </TableRow>
       ))}
     </>
@@ -61,26 +84,27 @@ const RenderData: React.StatelessComponent<{ items: Linode.InvoiceItem[] }> = (p
 };
 
 const RenderLoading: React.StatelessComponent<{}> = () => {
-  return (
-    <TableRowLoading colSpan={6} />
-  );
+  return <TableRowLoading colSpan={6} />;
 };
 
-const RenderErrors: React.StatelessComponent<{ errors: Linode.ApiFieldError[] }> = (props) => {
+const RenderErrors: React.StatelessComponent<{
+  errors: Linode.ApiFieldError[];
+}> = props => {
   return (
     <TableRowError colSpan={6} message="Unable to retrieve invoice items." />
   );
-
 };
 
 const RenderEmpty: React.StatelessComponent<{}> = () => {
-  return (
-    <TableRowEmptyState colSpan={6} />
-  );
+  return <TableRowEmptyState colSpan={6} />;
 };
 
-const MaybeRenderContent: React.StatelessComponent<{ loading: boolean; errors?: Linode.ApiFieldError[]; items?: any[]; }> = (props) => {
-  const { loading, errors, items } = props
+const MaybeRenderContent: React.StatelessComponent<{
+  loading: boolean;
+  errors?: Linode.ApiFieldError[];
+  items?: any[];
+}> = props => {
+  const { loading, errors, items } = props;
 
   if (loading) {
     return <RenderLoading />;

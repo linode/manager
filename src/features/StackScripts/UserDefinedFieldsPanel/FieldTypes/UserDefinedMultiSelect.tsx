@@ -1,6 +1,10 @@
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -8,15 +12,13 @@ import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'toggle';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     margin: `${theme.spacing.unit * 3}px 0`,
     paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`
   },
-  toggle: {
-
-  },
+  toggle: {}
 });
 
 interface Props {
@@ -34,7 +36,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
-    manyof: this.props.field.manyof!.split(','),
+    manyof: this.props.field.manyof!.split(',')
   };
 
   handleSelectManyOf = (e: any) => {
@@ -42,7 +44,8 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
     // when sending POST data to create a new linode, the 'manyof' prop needs to be taken
     // as a comma-seperate string, but for the time being we'll convert to an array to compare
-    const selectedValuesToArray = udf_data[field.name] && udf_data[field.name].split(',') || [];
+    const selectedValuesToArray =
+      (udf_data[field.name] && udf_data[field.name].split(',')) || [];
 
     let iterator = 0;
     let alreadySelected = false; // is the value we're toggling already turned on?
@@ -67,8 +70,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
     const newSelections = selectedValuesToArray.join(',');
 
     updateFormState(field.name, newSelections);
-
-  }
+  };
 
   render() {
     const { manyof } = this.state;
@@ -76,15 +78,14 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
     // we are setting default values in the parent component, so we want to use these
     // default values to determine what will be checked upon initial render
-    const selectedValuesToArray = udf_data[field.name] && udf_data[field.name].split(',') || [];
+    const selectedValuesToArray =
+      (udf_data[field.name] && udf_data[field.name].split(',')) || [];
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="h3" >
+        <Typography role="header" variant="h3">
           {field.label}
-          {!isOptional &&
-            ' *'
-          }
+          {!isOptional && ' *'}
         </Typography>
         <Grid container>
           {manyof.map((choice: string, index) => {
@@ -98,11 +99,15 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
                         value={choice}
                         checked={
                           selectedValuesToArray // do we have selected values?
-                            ? selectedValuesToArray.some((selectedValue: string) =>
-                              choice === selectedValue)
-                            : false} // otherwise, nothing is checked
+                            ? selectedValuesToArray.some(
+                                (selectedValue: string) =>
+                                  choice === selectedValue
+                              )
+                            : false
+                        } // otherwise, nothing is checked
                         onChange={this.handleSelectManyOf}
-                      />}
+                      />
+                    }
                     label={choice}
                   />
                 </Grid>

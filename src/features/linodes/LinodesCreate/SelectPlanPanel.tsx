@@ -1,6 +1,10 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 // import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -15,14 +19,14 @@ export interface ExtendedType extends Linode.LinodeType {
 
 type ClassNames = 'root' | 'copy';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   copy: {
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3,
-  },
+    marginBottom: theme.spacing.unit * 3
+  }
 });
 
 interface Props {
@@ -46,14 +50,18 @@ const getHighMem = (types: ExtendedType[]) =>
 const getDedicated = (types: ExtendedType[]) =>
   types.filter(t => /dedicated/.test(t.class));
 
-export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNames>> {
+export class SelectPlanPanel extends React.Component<
+  Props & WithStyles<ClassNames>
+> {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   renderCard = (type: ExtendedType) => {
     const { selectedID, currentPlanHeading } = this.props;
-    const selectedDiskSize = (this.props.selectedDiskSize) ? this.props.selectedDiskSize : 0;
+    const selectedDiskSize = this.props.selectedDiskSize
+      ? this.props.selectedDiskSize
+      : 0;
     let tooltip;
-    const planTooSmall = selectedDiskSize > type.disk
+    const planTooSmall = selectedDiskSize > type.disk;
     const isSamePlan = type.heading === currentPlanHeading;
 
     if (planTooSmall) {
@@ -64,16 +72,18 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
       tooltip = `This is your current plan. Please select another to resize.`;
     }
 
-    return <SelectionCard
-      key={type.id}
-      checked={type.id === String(selectedID)}
-      onClick={this.onSelect(type.id)}
-      heading={type.heading}
-      subheadings={type.subHeadings}
-      disabled={planTooSmall || isSamePlan}
-      tooltip={tooltip}
-    />;
-  }
+    return (
+      <SelectionCard
+        key={type.id}
+        checked={type.id === String(selectedID)}
+        onClick={this.onSelect(type.id)}
+        heading={type.heading}
+        subheadings={type.subHeadings}
+        disabled={planTooSmall || isSamePlan}
+        tooltip={tooltip}
+      />
+    );
+  };
 
   createTabs = () => {
     const { types } = this.props;
@@ -86,7 +96,6 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
     if (!isEmpty(nanodes)) {
       tabs.push({
         render: () => {
-
           return (
             <>
               {/* <Typography className={classes.copy}>The Nanode is Linode's smallest plan, offering enough resources to host static web sites, small blogs, self-hosted utilities, and hobby projects.</Typography> */}
@@ -96,7 +105,7 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
             </>
           );
         },
-        title: 'Nanode',
+        title: 'Nanode'
       });
     }
 
@@ -112,7 +121,7 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
             </>
           );
         },
-        title: 'Standard',
+        title: 'Standard'
       });
     }
 
@@ -128,7 +137,7 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
             </>
           );
         },
-        title: 'Dedicated CPU',
+        title: 'Dedicated CPU'
       });
     }
 
@@ -144,12 +153,12 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
             </>
           );
         },
-        title: 'High Memory',
+        title: 'High Memory'
       });
     }
 
     return tabs;
-  }
+  };
 
   render() {
     return (
@@ -166,4 +175,6 @@ export class SelectPlanPanel extends React.Component<Props & WithStyles<ClassNam
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel));
+export default styled(
+  RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel)
+);

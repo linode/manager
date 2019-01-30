@@ -10,23 +10,23 @@ const dummyProps = {
   types: ExtendedType,
   regions: [],
   images: {
-    response: images,
+    response: images
   },
   linodes: {
-    response: LinodesWithBackups,
-  },
+    response: LinodesWithBackups
+  }
 };
 
 describe('FromImageContent', () => {
   const component = shallow(
-      <LinodeCreate
-        classes={{
-          root: '',
-          main: '',
-        }}
-        {...dummyProps}
-        {...reactRouterProps}
-      />
+    <LinodeCreate
+      classes={{
+        root: '',
+        main: ''
+      }}
+      {...dummyProps}
+      {...reactRouterProps}
+    />
   );
 
   it('should render create tabs', () => {

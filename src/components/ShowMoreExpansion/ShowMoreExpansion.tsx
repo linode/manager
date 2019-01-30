@@ -2,12 +2,15 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type CSSClasses = 'root'
-| 'caret';
+type CSSClasses = 'root' | 'caret';
 
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   root: {
     paddingLeft: 0,
     paddingRight: 0,
@@ -21,9 +24,9 @@ const styles: StyleRulesCallback = (theme) => ({
     '&:hover': {
       color: theme.palette.primary.main,
       '& $caret': {
-        color: theme.palette.primary.light,
-      },
-    },
+        color: theme.palette.primary.light
+      }
+    }
   },
   caret: {
     color: theme.palette.primary.main,
@@ -32,9 +35,9 @@ const styles: StyleRulesCallback = (theme) => ({
     transition: 'transform .1s ease-in-out',
     '&.rotate': {
       transition: 'transform .3s ease-in-out',
-      transform: 'rotate(90deg)',
-    },
-  },
+      transform: 'rotate(90deg)'
+    }
+  }
 });
 
 interface Props {
@@ -49,14 +52,14 @@ type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class ShowMoreExpansion extends React.Component<CombinedProps, State> {
   state = {
-    open: false,
+    open: false
   };
 
   handleNameClick = () => {
     this.setState({
-      open: !this.state.open,
+      open: !this.state.open
     });
-  }
+  };
 
   render() {
     const { name, classes, children } = this.props;
@@ -73,21 +76,15 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
           onClick={this.handleNameClick}
           data-qa-show-more-toggle
         >
-          {open
-            ? <KeyboardArrowRight className={classes.caret + ' rotate'} />
-            : <KeyboardArrowRight className={classes.caret} />
-          }
+          {open ? (
+            <KeyboardArrowRight className={classes.caret + ' rotate'} />
+          ) : (
+            <KeyboardArrowRight className={classes.caret} />
+          )}
           <div>{name}</div>
         </Button>
         <Collapse in={open} className={open ? 'pOpen' : ''}>
-          {open
-            ? (
-              <div>
-                {children}
-              </div>
-            )
-            : null
-          }
+          {open ? <div>{children}</div> : null}
         </Collapse>
       </React.Fragment>
     );

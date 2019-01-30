@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 import { always, cond, groupBy, propOr } from 'ramda';
 
@@ -7,13 +11,11 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 
-type ClassNames = 'root'
-  | 'selectContainer'
-  | 'icon';
+type ClassNames = 'root' | 'selectContainer' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    width: '100%',
+    width: '100%'
   },
   icon: {
     marginTop: 30,
@@ -22,8 +24,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   selectContainer: {
     width: 415 + theme.spacing.unit * 2,
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
+      width: '100%'
+    }
   }
 });
 
@@ -43,7 +45,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class ImageSelect extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
-    renderedImages: getImagesOptions(this.props.images) as GroupType<string>[],
+    renderedImages: getImagesOptions(this.props.images) as GroupType<string>[]
   };
 
   componentDidMount() {
@@ -55,10 +57,14 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (!this.mounted) { return; }
+    if (!this.mounted) {
+      return;
+    }
     if (prevProps.images !== this.props.images) {
       this.setState({
-        renderedImages: getImagesOptions(this.props.images) as GroupType<string>[]
+        renderedImages: getImagesOptions(this.props.images) as GroupType<
+          string
+        >[]
       });
     }
   }
@@ -68,7 +74,14 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
-        <Grid className={classes.root} container wrap="nowrap" direction="row" justify="flex-start" alignItems="flex-start">
+        <Grid
+          className={classes.root}
+          container
+          wrap="nowrap"
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-start"
+        >
           <Grid item className={classes.selectContainer}>
             <Select
               id={'image-select'}
@@ -82,9 +95,12 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
             />
           </Grid>
           <Grid item xs={1}>
-            <HelpIcon className={classes.icon} text="Choosing a 64-bit distro is recommended." />
+            <HelpIcon
+              className={classes.icon}
+              text="Choosing a 64-bit distro is recommended."
+            />
           </Grid>
-      </Grid>
+        </Grid>
       </React.Fragment>
     );
   }
@@ -92,22 +108,24 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
 
 export const getImagesOptions = (images: Linode.Image[]) => {
   const groupedImages = groupImages(images);
-  return ['recommended', 'older', 'images', 'deleted'].reduce((accumulator: GroupType<string>[], category: string) => {
-    if (groupedImages[category]) {
-      return [
-        ...accumulator,
-        {
-          label: getDisplayNameForGroup(category),
-          options: groupedImages[category].map(
-            ({ id, label }: Linode.Image) => (
-                { label, value: id }
+  return ['recommended', 'older', 'images', 'deleted'].reduce(
+    (accumulator: GroupType<string>[], category: string) => {
+      if (groupedImages[category]) {
+        return [
+          ...accumulator,
+          {
+            label: getDisplayNameForGroup(category),
+            options: groupedImages[category].map(
+              ({ id, label }: Linode.Image) => ({ label, value: id })
             )
-          )
-        }
-      ]}
-    return accumulator;
-  }, []);
-}
+          }
+        ];
+      }
+      return accumulator;
+    },
+    []
+  );
+};
 
 interface GroupedImages {
   deleted?: Linode.Image[];
@@ -116,29 +134,34 @@ interface GroupedImages {
   images?: Linode.Image[];
 }
 
-const isRecentlyDeleted = (i: Linode.Image) => i.created_by === null && i.type === 'automatic';
-const isByLinode = (i: Linode.Image) => i.created_by !== null && i.created_by === 'linode';
+const isRecentlyDeleted = (i: Linode.Image) =>
+  i.created_by === null && i.type === 'automatic';
+const isByLinode = (i: Linode.Image) =>
+  i.created_by !== null && i.created_by === 'linode';
 const isDeprecated = (i: Linode.Image) => i.deprecated === true;
 const isRecommended = (i: Linode.Image) => isByLinode(i) && !isDeprecated(i);
 const isOlderImage = (i: Linode.Image) => isByLinode(i) && isDeprecated(i);
 
 export let groupImages: (i: Linode.Image[]) => GroupedImages;
-groupImages = groupBy(cond([
-  [isRecentlyDeleted, always('deleted')],
-  [isRecommended, always('recommended')],
-  [isOlderImage, always('older')],
-  [(i: Linode.Image) => true, always('images')],
-]));
+groupImages = groupBy(
+  cond([
+    [isRecentlyDeleted, always('deleted')],
+    [isRecommended, always('recommended')],
+    [isOlderImage, always('older')],
+    [(i: Linode.Image) => true, always('images')]
+  ])
+);
 
 export const groupNameMap = {
   _default: 'Other',
   deleted: 'Recently Deleted Disks',
   recommended: '64-bit Distributions - Recommended',
   older: 'Older Distributions',
-  images: 'Images',
+  images: 'Images'
 };
 
-const getDisplayNameForGroup = (key: string) => propOr('Other', key, groupNameMap);
+const getDisplayNameForGroup = (key: string) =>
+  propOr('Other', key, groupNameMap);
 
 const styled = withStyles(styles);
 

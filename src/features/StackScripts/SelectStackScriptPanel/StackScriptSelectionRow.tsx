@@ -10,7 +10,11 @@ import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
-import { ClassNames, displayTagsAndShowMore, styles } from '../StackScriptRowHelpers'
+import {
+  ClassNames,
+  displayTagsAndShowMore,
+  styles
+} from '../StackScriptRowHelpers';
 
 export interface Props {
   label: string;
@@ -29,9 +33,15 @@ interface DispatchProps {
   openStackScriptDrawer: (stackScriptId: number) => void;
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames> & DispatchProps & RenderGuardProps;
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  RenderGuardProps;
 
-export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> {
+export class StackScriptSelectionRow extends React.Component<
+  CombinedProps,
+  {}
+> {
   render() {
     const {
       classes,
@@ -45,28 +55,31 @@ export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> 
       updated,
       stackScriptID,
       stackScriptUsername,
-      openStackScriptDrawer,
+      openStackScriptDrawer
     } = this.props;
 
     const renderLabel = () => {
-
       const openDrawer = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         openStackScriptDrawer(stackScriptID);
-      }
+      };
       return (
         <React.Fragment>
           <Typography role="header" variant="h3">
-            {stackScriptUsername &&
+            {stackScriptUsername && (
               <label
                 htmlFor={`${stackScriptID}`}
-                className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                className={`${classes.libRadioLabel} ${
+                  classes.stackScriptUsername
+                }`}
+              >
                 {stackScriptUsername} /&nbsp;
               </label>
-            }
+            )}
             <label
               htmlFor={`${stackScriptID}`}
-              className={classes.libRadioLabel}>
+              className={classes.libRadioLabel}
+            >
               {label}
             </label>
           </Typography>
@@ -75,34 +88,44 @@ export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> 
             Show Details
           </Button>
         </React.Fragment>
-      )
-    }
+      );
+    };
 
     return (
       <React.Fragment>
-        <TableRow data-qa-table-row={label} rowLink={() => onSelect({}, !checked)}>
+        <TableRow
+          data-qa-table-row={label}
+          rowLink={() => onSelect({}, !checked)}
+        >
           <TableCell>
-            <Radio checked={checked} disabled={disabledCheckedSelect} onChange={onSelect} id={`${stackScriptID}`} />
+            <Radio
+              checked={checked}
+              disabled={disabledCheckedSelect}
+              onChange={onSelect}
+              id={`${stackScriptID}`}
+            />
           </TableCell>
-          <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
+          <TableCell
+            className={classes.stackScriptCell}
+            data-qa-stackscript-title
+          >
             {renderLabel()}
           </TableCell>
           <TableCell>
-            <Typography
-              role="header"
-              variant="h3"
-              data-qa-stackscript-deploys
-            >
+            <Typography role="header" variant="h3" data-qa-stackscript-deploys>
               {deploymentsActive}
             </Typography>
           </TableCell>
           <TableCell>
-            <Typography role="header" variant="h3" data-qa-stackscript-revision>{updated}</Typography>
+            <Typography role="header" variant="h3" data-qa-stackscript-revision>
+              {updated}
+            </Typography>
           </TableCell>
-          <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
-            {
-              displayTagsAndShowMore(images)
-            }
+          <TableCell
+            className={classes.stackScriptCell}
+            data-qa-stackscript-images
+          >
+            {displayTagsAndShowMore(images)}
           </TableCell>
         </TableRow>
       </React.Fragment>
@@ -110,14 +133,21 @@ export class StackScriptSelectionRow extends React.Component<CombinedProps, {}> 
   }
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch) => {
+const mapDispatchToProps: MapDispatchToProps<
+  DispatchProps,
+  Props
+> = dispatch => {
   return {
-    openStackScriptDrawer: (stackScriptId: number) => dispatch(openStackScriptDrawerAction(stackScriptId)),
+    openStackScriptDrawer: (stackScriptId: number) =>
+      dispatch(openStackScriptDrawerAction(stackScriptId))
   };
-}
+};
 
 export default recompose<CombinedProps, Props & RenderGuardProps>(
-  connect(undefined, mapDispatchToProps),
+  connect(
+    undefined,
+    mapDispatchToProps
+  ),
   RenderGuard,
-  withStyles(styles),
+  withStyles(styles)
 )(StackScriptSelectionRow);

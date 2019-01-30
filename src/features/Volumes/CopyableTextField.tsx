@@ -1,37 +1,39 @@
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
-type ClassNames = 'root'
-| 'input'
-| 'copyIcon';
+type ClassNames = 'root' | 'input' | 'copyIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   input: {
-    backgroundColor: theme.bg.offWhite,
+    backgroundColor: theme.bg.offWhite
   },
   copyIcon: {
-    marginRight: theme.spacing.unit,
-  },
+    marginRight: theme.spacing.unit
+  }
 });
 
 type Props = TextFieldProps & {
   className: string;
-}
+};
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CopyableTextField extends React.Component<CombinedProps> {
   clickIcon = (value: string) => {
     this.setState({
-      copied: true,
+      copied: true
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
     copy(value);
-  }
+  };
 
   render() {
     const { value, classes, className, ...restProps } = this.props;
@@ -44,11 +46,8 @@ class CopyableTextField extends React.Component<CombinedProps> {
         data-qa-copy-tooltip
         InputProps={{
           endAdornment: (
-            <CopyTooltip
-              text={`${value}`}
-              className={classes.copyIcon}
-            />
-          ),
+            <CopyTooltip text={`${value}`} className={classes.copyIcon} />
+          )
         }}
       />
     );

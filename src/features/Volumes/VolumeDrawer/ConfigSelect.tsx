@@ -1,4 +1,8 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -9,19 +13,18 @@ import { getLinodeConfigs } from 'src/services/linodes';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
-  error?: string
+  error?: string;
   onChange: (value: number) => void;
   onBlur: (e: any) => void;
   linodeId: number;
   name: string;
   value: number;
 }
-
 
 type ConfigTuple = [number, string];
 interface State {
@@ -32,11 +35,10 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class ConfigSelect extends React.Component<CombinedProps, State> {
-
   state: State = {
     configs: [],
-    loading: false,
-  }
+    loading: false
+  };
 
   setInitialState = () => {
     /**
@@ -71,9 +73,16 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
 
     getLinodeConfigs(linodeId)
       .then(({ data }) => {
-        this.setState({
-          configs: data.map((config) => [config.id, config.label] as ConfigTuple)
-        }, () => { this.setInitialState() });
+        this.setState(
+          {
+            configs: data.map(
+              config => [config.id, config.label] as ConfigTuple
+            )
+          },
+          () => {
+            this.setInitialState();
+          }
+        );
       })
       .catch(() => {
         /*
@@ -121,20 +130,25 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
         <Select
           name={name}
           value={value}
-          onChange={(e) => { onChange(+e.target.value); }}
+          onChange={e => {
+            onChange(+e.target.value);
+          }}
           onBlur={onBlur}
           inputProps={{ name, id: name }}
           error={hasError}
         >
-          {
-            configs && configs.map(([v, label]) => <MenuItem key={v} value={v}>{label}</MenuItem>)
-          }
+          {configs &&
+            configs.map(([v, label]) => (
+              <MenuItem key={v} value={v}>
+                {label}
+              </MenuItem>
+            ))}
         </Select>
         {hasError && <FormHelperText error>{error}</FormHelperText>}
       </FormControl>
     );
   }
-};
+}
 
 const styled = withStyles(styles);
 

@@ -16,16 +16,20 @@ describe('SSHKeys', () => {
         classes={{ root: '' }}
         {...pageyProps}
         data={[
-          { id: 1, label: '', ssh_key: '', created: '', fingerprint: '', },
-          { id: 2, label: '', ssh_key: '', created: '', fingerprint: '', },
-          { id: 3, label: '', ssh_key: '', created: '', fingerprint: '', },
+          { id: 1, label: '', ssh_key: '', created: '', fingerprint: '' },
+          { id: 2, label: '', ssh_key: '', created: '', fingerprint: '' },
+          { id: 3, label: '', ssh_key: '', created: '', fingerprint: '' }
         ]}
         timezone={'GMT'}
       />
     );
 
     it('should have table header with SSH Keys title and an action', () => {
-      expect(wrapper.find(`WithStyles(TableHeader)[title="SSH Keys"][action]`).exists()).toBeTruthy();
+      expect(
+        wrapper
+          .find(`WithStyles(TableHeader)[title="SSH Keys"][action]`)
+          .exists()
+      ).toBeTruthy();
     });
 
     it('should have a table', () => {
@@ -33,11 +37,15 @@ describe('SSHKeys', () => {
     });
 
     it('should have pagination controls', () => {
-      expect(wrapper.find(`WithStyles(PaginationFooter)`).exists()).toBeTruthy();
+      expect(
+        wrapper.find(`WithStyles(PaginationFooter)`).exists()
+      ).toBeTruthy();
     });
 
     it('should display table row for each key', () => {
-      expect(wrapper.find(`WithStyles(TableRow)[data-qa-content-row]`)).toHaveLength(3)
+      expect(
+        wrapper.find(`WithStyles(TableRow)[data-qa-content-row]`)
+      ).toHaveLength(3);
     });
   });
 
@@ -79,6 +87,8 @@ describe('SSHKeys', () => {
       />
     );
 
-    expect(wrapper.find(`WithStyles(TableRowEmptyState)`).exists()).toBeTruthy();
+    expect(
+      wrapper.find(`WithStyles(TableRowEmptyState)`).exists()
+    ).toBeTruthy();
   });
 });

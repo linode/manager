@@ -1,18 +1,22 @@
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     margin: `${theme.spacing.unit * 3}px 0`,
     paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
+    borderBottom: `1px solid ${theme.palette.divider}`
+  }
 });
 
 interface Props {
@@ -32,13 +36,13 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class UserDefinedSelect extends React.Component<CombinedProps, State> {
   state: State = {
     oneof: this.props.field.oneof!.split(','),
-    selectedOption: '',
+    selectedOption: ''
   };
 
   handleSelectOneOf = (e: any) => {
     const { updateFormState, field } = this.props;
     updateFormState(field.name, e.target.value);
-  }
+  };
 
   render() {
     const { oneof } = this.state;
@@ -46,11 +50,9 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.root}>
-        <Typography role="header" variant="h3" >
+        <Typography role="header" variant="h3">
           {field.label}
-          {!isOptional &&
-            ' *'
-          }
+          {!isOptional && ' *'}
         </Typography>
         {oneof.map((choice: string, index) => {
           return (
@@ -60,9 +62,9 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
                 control={
                   <Radio
                     name={choice}
-                    checked=
-                    {(!!udf_data[field.name]
-                      && udf_data[field.name] === choice)}
+                    checked={
+                      !!udf_data[field.name] && udf_data[field.name] === choice
+                    }
                     /*
                     NOTE: Although the API returns a default value and we're auto selecting
                     a value for the user, it is not necessary to store this value

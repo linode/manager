@@ -3,7 +3,7 @@ import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import Select, { Item } from './Select';
 
-const tz = timezones.map((timezone:any) => {
+const tz = timezones.map((timezone: any) => {
   return { value: timezone.name, label: timezone.label };
 });
 
@@ -27,8 +27,8 @@ const fruit = [
   {
     label: 'Strawberry',
     value: 'strawberry'
-  },
-]
+  }
+];
 
 interface State {
   open: boolean;
@@ -40,74 +40,76 @@ interface State {
   valueLoading: Item | null;
 }
 
-class Example extends React.Component<{},State> {
-  state:State = {
+class Example extends React.Component<{}, State> {
+  state: State = {
     open: false,
     valueCreatable: [],
     valueError: null,
     valueMulti: [],
     valueSingle: null,
     valueAsync: null,
-    valueLoading: null,
+    valueLoading: null
   };
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
-  }
+  };
 
   handleChangeSingle = (valueSingle: Item) => {
     this.setState({
-      valueSingle,
-    })
-  }
+      valueSingle
+    });
+  };
 
   handleChangeCreatable = (valueCreatable: Item[]) => {
     this.setState({
-      valueCreatable,
+      valueCreatable
     });
   };
 
   handleChangeMulti = (valueMulti: Item[]) => {
     this.setState({
-      valueMulti,
-    })
-  }
+      valueMulti
+    });
+  };
 
   handleChangeAsync = (valueAsync: Item) => {
     this.setState({
-      valueAsync,
-    })
-  }
+      valueAsync
+    });
+  };
 
   handleChangeError = (valueError: Item) => {
     this.setState({
-      valueError,
-    })
-  }
+      valueError
+    });
+  };
 
   handleChangeLoading = (valueLoading: Item) => {
     this.setState({
-      valueLoading,
-    })
-  }
+      valueLoading
+    });
+  };
 
-  filterFruit = (value:string) => {
-    return fruit.filter((f) => f.label.toLowerCase().includes(value.toLowerCase()));
-  }
+  filterFruit = (value: string) => {
+    return fruit.filter(f =>
+      f.label.toLowerCase().includes(value.toLowerCase())
+    );
+  };
 
-  loadOptions = (inputValue:string) : Promise<Item[]> => {
-    return new Promise((resolve) => {
+  loadOptions = (inputValue: string): Promise<Item[]> => {
+    return new Promise(resolve => {
       setTimeout(() => resolve(this.filterFruit(inputValue)), 2000);
-    })
-  }
+    });
+  };
 
-  createNew = (inputValue:string) => {
+  createNew = (inputValue: string) => {
     const { valueCreatable } = this.state;
-    const newItem = {value:inputValue, label:inputValue};
+    const newItem = { value: inputValue, label: inputValue };
     tz.push(newItem);
     valueCreatable.push(newItem);
     this.setState({ valueCreatable });
-  }
+  };
 
   render() {
     const {
@@ -116,7 +118,7 @@ class Example extends React.Component<{},State> {
       valueMulti,
       valueSingle,
       valueError,
-      valueLoading,
+      valueLoading
     } = this.state;
 
     return (
@@ -174,7 +176,4 @@ class Example extends React.Component<{},State> {
   }
 }
 
-storiesOf('Enhanced Select', module)
-  .add('Example', () => (
-    <Example />
-  ));
+storiesOf('Enhanced Select', module).add('Example', () => <Example />);

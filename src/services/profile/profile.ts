@@ -1,6 +1,12 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
 import { updateProfileSchema } from './profile.schema';
 
 type Profile = Linode.Profile;
@@ -11,10 +17,8 @@ type Profile = Linode.Profile;
  * Return the current (logged in) user's profile.
  *
  */
-export const getProfile = () => Request<Profile>(
-  setURL(`${API_ROOT}/profile`),
-  setMethod('GET'),
-);
+export const getProfile = () =>
+  Request<Profile>(setURL(`${API_ROOT}/profile`), setMethod('GET'));
 
 /**
  * updateProfile
@@ -24,12 +28,12 @@ export const getProfile = () => Request<Profile>(
  * unchanged.
  *
  */
-export const updateProfile = (data: any) => Request<Profile>(
-  setURL(`${API_ROOT}/profile`),
-  setMethod('PUT'),
-  setData(data, updateProfileSchema),
-)
-  .then(response => response.data);
+export const updateProfile = (data: any) =>
+  Request<Profile>(
+    setURL(`${API_ROOT}/profile`),
+    setMethod('PUT'),
+    setData(data, updateProfileSchema)
+  ).then(response => response.data);
 
 /**
  * listGrants
@@ -42,9 +46,10 @@ export const updateProfile = (data: any) => Request<Profile>(
  *
  * This endpoint is unauthenticated.
  */
-export const listGrants = () => Request<Linode.Grants>(
-  setURL(`${API_ROOT}/profile/grants`)
-).then(response => response.data)
+export const listGrants = () =>
+  Request<Linode.Grants>(setURL(`${API_ROOT}/profile/grants`)).then(
+    response => response.data
+  );
 
 /**
  * getMyGrants
@@ -56,14 +61,15 @@ export const listGrants = () => Request<Linode.Grants>(
  * options you should present to the acting User.
  *
  */
-export const getMyGrants = () => Request<Linode.Grants>(
-  setURL(`${API_ROOT}/profile/grants`),
-  setMethod('GET'),
-).then(response => response.data);
+export const getMyGrants = () =>
+  Request<Linode.Grants>(
+    setURL(`${API_ROOT}/profile/grants`),
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * getTrustedDevices
- * 
+ *
  * Returns a paginated list of all trusted devices associated with the user's profile.
  */
 export const getTrustedDevices = (params: any, filter: any) =>
@@ -72,16 +78,15 @@ export const getTrustedDevices = (params: any, filter: any) =>
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
-  ).then(response => response.data)
+  ).then(response => response.data);
 
 /**
  * deleteTrustedDevice
- * 
- * Deletes a trusted device from a user's profile 
+ *
+ * Deletes a trusted device from a user's profile
  */
 export const deleteTrustedDevice = (id: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/profile/devices/${id}`),
-    setMethod('DELETE'),
-  ).then(response => response.data)
-
+    setMethod('DELETE')
+  ).then(response => response.data);

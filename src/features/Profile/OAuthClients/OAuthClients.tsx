@@ -4,7 +4,11 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -21,21 +25,27 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { LinodeAPI } from 'src/documentation';
-import { createOAuthClient, deleteOAuthClient, getOAuthClients, resetOAuthClientSecret, updateOAuthClient } from 'src/services/account';
+import {
+  createOAuthClient,
+  deleteOAuthClient,
+  getOAuthClients,
+  resetOAuthClientSecret,
+  updateOAuthClient
+} from 'src/services/account';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './OAuthClientActionMenu';
 import OAuthFormDrawer from './OAuthFormDrawer';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    margin: `0 0 ${theme.spacing.unit * 2}px`,
-  },
+    margin: `0 0 ${theme.spacing.unit * 2}px`
+  }
 });
 
-interface Props extends PaginationProps<Linode.OAuthClient> { }
+interface Props extends PaginationProps<Linode.OAuthClient> {}
 
 interface FormValues {
   label: string;
@@ -48,7 +58,7 @@ interface FormState {
   open: boolean;
   errors?: Linode.ApiFieldError[];
   id?: string;
-  values: FormValues
+  values: FormValues;
 }
 
 interface SecretState {
@@ -67,7 +77,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
   static defaultState = {
     secret: {
       open: false,
-      value: undefined,
+      value: undefined
     },
     form: {
       id: undefined,
@@ -77,65 +87,75 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
       values: {
         label: '',
         redirect_uri: '',
-        public: false,
-      },
-    },
+        public: false
+      }
+    }
   };
 
   mounted: boolean = false;
 
   state = {
-    ...OAuthClients.defaultState,
+    ...OAuthClients.defaultState
   };
 
   static defaultProps = {
-    data: [],
+    data: []
   };
 
-  static docs = [
-    LinodeAPI,
-  ]
+  static docs = [LinodeAPI];
 
   reset = () => {
     this.setState({ ...OAuthClients.defaultState });
-  }
+  };
 
   setForm = (fn: (v: FormState) => FormState): void => {
-    this.setState(prevState => ({ ...prevState, form: fn(prevState.form) }), () => {
-      scrollErrorIntoView();
-    });
-  }
+    this.setState(
+      prevState => ({ ...prevState, form: fn(prevState.form) }),
+      () => {
+        scrollErrorIntoView();
+      }
+    );
+  };
 
   deleteClient = (id: string) => {
-    deleteOAuthClient(id)
-      .then(() => this.props.onDelete());
-  }
+    deleteOAuthClient(id).then(() => this.props.onDelete());
+  };
 
   resetSecret = (id: string) => {
-    resetOAuthClientSecret(id)
-      .then(({ secret }) => {
-        if (!this.mounted) { return; }
+    resetOAuthClientSecret(id).then(({ secret }) => {
+      if (!this.mounted) {
+        return;
+      }
 
-        return this.setState({ secret: { open: true, value: secret } });
-      });
-  }
+      return this.setState({ secret: { open: true, value: secret } });
+    });
+  };
 
-  startEdit = (id: string, label: string, redirectUri: string, isPublic: boolean) => {
+  startEdit = (
+    id: string,
+    label: string,
+    redirectUri: string,
+    isPublic: boolean
+  ) => {
     this.setState({
       form: {
         edit: true,
         open: true,
         id,
-        values: { label, redirect_uri: redirectUri, public: isPublic },
-      },
+        values: { label, redirect_uri: redirectUri, public: isPublic }
+      }
     });
-  }
+  };
 
   createClient = () => {
-    const { form: { values } } = this.state;
+    const {
+      form: { values }
+    } = this.state;
     createOAuthClient(values)
-      .then((data) => {
-        if (!this.mounted) { return; }
+      .then(data => {
+        if (!this.mounted) {
+          return;
+        }
 
         return this.setState({
           secret: { value: data.secret, open: true },
@@ -145,68 +165,94 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
             values: {
               label: '',
               redirect_uri: '',
-              public: false,
-            },
-          },
+              public: false
+            }
+          }
         });
       })
-      .then((data) => {
-        if (!this.mounted) { return; }
+      .then(data => {
+        if (!this.mounted) {
+          return;
+        }
 
         this.props.request();
       })
-      .catch((errResponse) => {
-        if (!this.mounted) { return; }
+      .catch(errResponse => {
+        if (!this.mounted) {
+          return;
+        }
 
         this.setForm(form => ({
           ...form,
-          errors: path(['response', 'data', 'errors'], errResponse),
+          errors: path(['response', 'data', 'errors'], errResponse)
         }));
       });
-  }
+  };
 
   editClient = () => {
-    const { form: { id, values } } = this.state;
-    if (!id) { return; }
+    const {
+      form: { id, values }
+    } = this.state;
+    if (!id) {
+      return;
+    }
 
     updateOAuthClient(id, values)
-      .then((response) => {
+      .then(response => {
         this.reset();
       })
-      .then((response) => {
+      .then(response => {
         this.props.request();
       })
-      .catch((errResponse) => {
+      .catch(errResponse => {
         this.setForm(form => ({
           ...form,
-          errors: path(['response', 'data', 'errors'], errResponse),
+          errors: path(['response', 'data', 'errors'], errResponse)
         }));
       });
-  }
+  };
 
-  toggleCreateDrawer = (v: boolean) => this.setForm(form => ({ ...form, open: v }));
+  toggleCreateDrawer = (v: boolean) =>
+    this.setForm(form => ({ ...form, open: v }));
 
   renderContent = () => {
     const { data, error, loading } = this.props;
 
     if (error) {
-      return <TableRowError colSpan={6} message="We were unable to load your OAuth Clients." />
+      return (
+        <TableRowError
+          colSpan={6}
+          message="We were unable to load your OAuth Clients."
+        />
+      );
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={6} />
+      return <TableRowLoading colSpan={6} />;
     }
 
-    return data && data.length > 0 ? this.renderRows(data) : <TableRowEmptyState colSpan={6} />
-  }
+    return data && data.length > 0 ? (
+      this.renderRows(data)
+    ) : (
+      <TableRowEmptyState colSpan={6} />
+    );
+  };
 
   renderRows = (data: Linode.OAuthClient[]) => {
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
       <TableRow key={id} data-qa-table-row={label}>
-        <TableCell parentColumn="Label" data-qa-oauth-label>{label}</TableCell>
-        <TableCell parentColumn="Access" data-qa-oauth-access>{isPublic ? 'Public' : 'Private'}</TableCell>
-        <TableCell parentColumn="ID" data-qa-oauth-id>{id}</TableCell>
-        <TableCell parentColumn="Callback URL" data-qa-oauth-callback>{redirect_uri}</TableCell>
+        <TableCell parentColumn="Label" data-qa-oauth-label>
+          {label}
+        </TableCell>
+        <TableCell parentColumn="Access" data-qa-oauth-access>
+          {isPublic ? 'Public' : 'Private'}
+        </TableCell>
+        <TableCell parentColumn="ID" data-qa-oauth-id>
+          {id}
+        </TableCell>
+        <TableCell parentColumn="Callback URL" data-qa-oauth-callback>
+          {redirect_uri}
+        </TableCell>
         <TableCell>
           <ActionMenu
             id={id}
@@ -217,11 +263,12 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
             }}
             onDelete={this.deleteClient}
             onReset={this.resetSecret}
-            onEdit={this.startEdit} />
+            onEdit={this.startEdit}
+          />
         </TableCell>
       </TableRow>
     ));
-  }
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -242,13 +289,14 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="OAuth Apps" />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-        >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography role="header" className={classes.title} variant="h2" data-qa-table={classes.title}>
+            <Typography
+              role="header"
+              className={classes.title}
+              variant="h2"
+              data-qa-table={classes.title}
+            >
               OAuth Apps
             </Typography>
           </Grid>
@@ -271,9 +319,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
                 <TableCell style={{ width: '20%' }} />
               </TableRow>
             </TableHead>
-            <TableBody>
-              { this.renderContent() }
-            </TableBody>
+            <TableBody>{this.renderContent()}</TableBody>
           </Table>
         </Paper>
 
@@ -286,7 +332,11 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           <Typography variant="body1">
             {`Here is your client secret! Store it securely, as it won't be shown again.`}
           </Typography>
-          <Notice typeProps={{ variant: 'body1' }} warning text={this.state.secret.value!} />
+          <Notice
+            typeProps={{ variant: 'body1' }}
+            warning
+            text={this.state.secret.value!}
+          />
         </ConfirmationDialog>
 
         <OAuthFormDrawer
@@ -315,24 +365,30 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     );
   }
 
-  onChange = (key: string, value: any) => this.setForm(form => ({
-    ...form,
-    values: { ...form.values, [key]: value },
-  }));
+  onChange = (key: string, value: any) =>
+    this.setForm(form => ({
+      ...form,
+      values: { ...form.values, [key]: value }
+    }));
 
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(this.createNewFormState('label', e.target.value))
-  }
+    this.setState(this.createNewFormState('label', e.target.value));
+  };
 
   handleChangeRedirectURI = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(this.createNewFormState('redirect_uri', e.target.value))
-  }
+    this.setState(this.createNewFormState('redirect_uri', e.target.value));
+  };
 
   handleChangePublic = () => {
-    this.setState(this.createNewFormState('public', !this.state.form.values.public))
-  }
+    this.setState(
+      this.createNewFormState('public', !this.state.form.values.public)
+    );
+  };
 
-  createNewFormState = (newState: keyof FormValues, newValue: string | boolean) => {
+  createNewFormState = (
+    newState: keyof FormValues,
+    newValue: string | boolean
+  ) => {
     return {
       form: {
         ...this.state.form,
@@ -341,25 +397,27 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           [newState]: newValue
         }
       }
-    }
-  }
+    };
+  };
 
   renderClientSecretActions = () => (
-    <Button type="primary" onClick={this.reset} data-qa-close-dialog>Got it!</Button>
+    <Button type="primary" onClick={this.reset} data-qa-close-dialog>
+      Got it!
+    </Button>
   );
 }
 
 const styled = withStyles(styles);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getOAuthClients(params, filters)
-  .then((response) => response);
+const updatedRequest = (ownProps: any, params: any, filters: any) =>
+  getOAuthClients(params, filters).then(response => response);
 
 const paginated = paginate(updatedRequest);
 
 const enhanced = compose<any, any, any, any>(
   styled,
   paginated,
-  setDocs(OAuthClients.docs),
+  setDocs(OAuthClients.docs)
 );
 
 export default enhanced(OAuthClients);

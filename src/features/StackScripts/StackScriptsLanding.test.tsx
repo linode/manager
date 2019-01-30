@@ -15,11 +15,13 @@ describe('StackScripts Landing', () => {
       classes={{ root: '', title: '' }}
       {...reactRouterProps}
     />
-  )
+  );
 
   it('title of page should read "StackScripts"', () => {
-    const titleText = component.find('WithStyles(Typography)[variant="h1"]')
-    .children().text();
+    const titleText = component
+      .find('WithStyles(Typography)[variant="h1"]')
+      .children()
+      .text();
     expect(titleText).toBe('StackScripts');
   });
 
@@ -28,12 +30,17 @@ describe('StackScripts Landing', () => {
   });
 
   it('icon text link text should read "Create New StackScript"', () => {
-    const iconText = component.find('[data-qa-create-new-stackscript]').prop('label');
+    const iconText = component
+      .find('[data-qa-create-new-stackscript]')
+      .prop('label');
     expect(iconText).toBe('Create New StackScript');
   });
 
   it('should render SelectStackScriptPanel', () => {
-    expect(component.find('Connect(WithTheme(WithRenderGuard(WithStyles(SelectStackScriptPanel))))'))
-      .toHaveLength(1);
+    expect(
+      component.find(
+        'Connect(WithTheme(WithRenderGuard(WithStyles(SelectStackScriptPanel))))'
+      )
+    ).toHaveLength(1);
   });
 });

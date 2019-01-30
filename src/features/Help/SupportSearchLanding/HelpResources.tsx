@@ -4,29 +4,34 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tile from 'src/components/Tile';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
-type ClassNames = 'root'
-| 'wrapper'
-| 'heading'
-| 'card'
-| 'tileTitle'
-| 'icon'
-| 'ada';
+type ClassNames =
+  | 'root'
+  | 'wrapper'
+  | 'heading'
+  | 'card'
+  | 'tileTitle'
+  | 'icon'
+  | 'ada';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   wrapper: {
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit * 4
   },
   heading: {
     textAlign: 'center',
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   card: {
     display: 'flex',
@@ -35,12 +40,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     backgroundColor: theme.color.white,
     padding: theme.spacing.unit * 4,
     border: `1px solid ${theme.color.grey2}`,
-    height: '100%',
+    height: '100%'
   },
   tileTitle: {
     fontSize: '1.2rem',
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   icon: {
     margin: '0 auto 16px',
@@ -50,11 +55,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     border: `2px solid ${theme.palette.divider}`,
     width: 66,
     height: 66,
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   ada: {
     color: '#3683DC',
-    cursor: 'pointer',
+    cursor: 'pointer'
   }
 });
 
@@ -67,16 +72,16 @@ type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export class OtherWays extends React.Component<CombinedProps, State> {
   state: State = {
-    drawerOpen: false,
+    drawerOpen: false
   };
 
   ada: any = undefined;
 
   componentDidMount() {
     /*
-    * Init Ada Chaperone chat app
-    * Script is included in index.html
-    */
+     * Init Ada Chaperone chat app
+     * Script is included in index.html
+     */
     if ('AdaChaperone' in window) {
       this.ada = new (window as any).AdaChaperone('linode');
     }
@@ -84,34 +89,40 @@ export class OtherWays extends React.Component<CombinedProps, State> {
 
   handleAdaInit = () => {
     /*
-    * Show the Ada chat
-    */
+     * Show the Ada chat
+     */
     if (typeof this.ada === 'undefined') {
-      this.setState({ error: 'There was an issue loading the chat at this time. Please try again later.' })
+      this.setState({
+        error:
+          'There was an issue loading the chat at this time. Please try again later.'
+      });
       return;
     }
-    this.setState({ error: '' })
+    this.setState({ error: '' });
     this.ada.show();
-  }
+  };
 
-  openTicketDrawer = (e:React.MouseEvent) => {
+  openTicketDrawer = (e: React.MouseEvent) => {
     this.setState({ drawerOpen: true });
-  }
+  };
 
   closeTicketDrawer = () => {
-    this.setState({ drawerOpen: false })
-  }
+    this.setState({ drawerOpen: false });
+  };
 
-  onTicketCreated = (ticketId: number, attachmentErrors: AttachmentError[] = []) => {
+  onTicketCreated = (
+    ticketId: number,
+    attachmentErrors: AttachmentError[] = []
+  ) => {
     const { history } = this.props;
     history.push({
       pathname: `/support/tickets/${ticketId}`,
       state: { attachmentErrors }
-    })
+    });
     this.setState({
-      drawerOpen: false,
-    })
-  }
+      drawerOpen: false
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -120,15 +131,9 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid item>
-          <Grid
-            container
-            className={classes.wrapper}
-          >
+          <Grid container className={classes.wrapper}>
             <Grid item xs={12}>
-              <Typography
-                variant="h2"
-                className={classes.heading}
-              >
+              <Typography variant="h2" className={classes.heading}>
                 Didn't find what you need? Get help.
               </Typography>
             </Grid>
@@ -172,7 +177,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<any,any,any>(
+export default compose<any, any, any>(
   styled,
   withRouter
 )(OtherWays);

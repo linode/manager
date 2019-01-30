@@ -10,18 +10,19 @@ const props = {
   handleFileSelected: jest.fn(),
   updateFiles: jest.fn(),
   inlineDisplay: true,
-  classes: { root: '',
+  classes: {
+    root: '',
     attachFileButton: '',
     attachmentsContainer: '',
     attachmentField: '',
-    uploadProgress: '',
+    uploadProgress: ''
   }
-}
+};
 
 const component = shallow(<AttachFileForm {...props} />);
 
-describe("AttachFileForm component", () => {
-  it("should render", () => {
+describe('AttachFileForm component', () => {
+  it('should render', () => {
     expect(component).toBeDefined();
   });
   // @todo test event handlers

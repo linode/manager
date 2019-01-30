@@ -1,2 +1,2 @@
 import LinodeRow from './LinodeRow';
-export default LinodeRow 
+export default LinodeRow;

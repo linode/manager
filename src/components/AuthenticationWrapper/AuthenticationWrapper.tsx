@@ -5,14 +5,13 @@ import { compose } from 'redux';
 import { redirectToLogin } from 'src/session';
 import { MapState } from 'src/store/types';
 
-
 interface Props {
   location: {
-    pathname: string,
-    search: string,
+    pathname: string;
+    search: string;
   };
   history: {
-    push: Function,
+    push: Function;
   };
 }
 
@@ -20,15 +19,19 @@ type CombinedProps = Props & StateProps & DispatchProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
-    showChildren: false,
+    showChildren: false
   };
 
   static defaultProps = {
-    isAuthenticated: false,
+    isAuthenticated: false
   };
 
   componentWillMount() {
-    const { isAuthenticated, location: { pathname }, actions } = this.props;
+    const {
+      isAuthenticated,
+      location: { pathname },
+      actions
+    } = this.props;
 
     if (this.isExcludedRoute(pathname) || isAuthenticated) {
       this.setState({ showChildren: true });
@@ -41,7 +44,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   }
 
   componentWillReceiveProps(nextProps: CombinedProps) {
-    const { isAuthenticated, location: { pathname }, actions } = nextProps;
+    const {
+      isAuthenticated,
+      location: { pathname },
+      actions
+    } = nextProps;
     if (!isAuthenticated && !this.isExcludedRoute(pathname)) {
       return actions.loginRedirect();
     }
@@ -49,17 +56,16 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
 
   isExcludedRoute = (pathname: string) => {
     const excludedPaths = ['/oauth/callback', '/logout'];
-    return excludedPaths.reduce((result, current) => result || pathname.includes(current), false);
-  }
+    return excludedPaths.reduce(
+      (result, current) => result || pathname.includes(current),
+      false
+    );
+  };
 
   render() {
     const { children } = this.props;
     const { showChildren } = this.state;
-    return (
-      <React.Fragment>
-        {showChildren && children}
-      </React.Fragment>
-    );
+    return <React.Fragment>{showChildren && children}</React.Fragment>;
   }
 }
 
@@ -67,28 +73,36 @@ interface StateProps {
   isAuthenticated: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  isAuthenticated: Boolean(state.authentication.token),
+const mapStateToProps: MapState<StateProps, Props> = state => ({
+  isAuthenticated: Boolean(state.authentication.token)
 });
 
 interface DispatchProps {
   actions: {
-    loginRedirect: () => void,
-  },
+    loginRedirect: () => void;
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch,
+  ownProps
+) => ({
   actions: {
     loginRedirect: () => {
-      const { location: { pathname: path, search: querystring } } = ownProps;
+      const {
+        location: { pathname: path, search: querystring }
+      } = ownProps;
       redirectToLogin(path, querystring);
-    },
+    }
   }
 });
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
   withRouter,
-  connected,
+  connected
 )(AuthenticationWrapper);

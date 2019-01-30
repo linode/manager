@@ -1,11 +1,18 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from 'src/services';
 
 import {
   CreditCardSchema,
   ExecutePaypalPaymentSchema,
   PaymentSchema,
-  StagePaypalPaymentSchema } from './account.schema';
+  StagePaypalPaymentSchema
+} from './account.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 
@@ -21,9 +28,9 @@ interface ExecutePayload {
 }
 
 interface SaveCreditCardData {
-  card_number: string,
-  expiry_year: number,
-  expiry_month: number
+  card_number: string;
+  expiry_year: number;
+  expiry_month: number;
 }
 
 interface PaymentID {
@@ -42,9 +49,8 @@ export const getPayments = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter),
-  )
-    .then(response => response.data);
+    setXFilter(filter)
+  ).then(response => response.data);
 
 /**
  * makePayment
@@ -58,13 +64,12 @@ export const getPayments = (params?: any, filter?: any) =>
  * credit card.
  *
  */
-export const makePayment = (data: { usd: string, cvv?: string }) =>
+export const makePayment = (data: { usd: string; cvv?: string }) =>
   Request<Linode.Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
-    setData(data, PaymentSchema),
-  )
-    .then(response => response.data)
+    setData(data, PaymentSchema)
+  ).then(response => response.data);
 
 /**
  * stagePaypalPayment
@@ -83,10 +88,8 @@ export const stagePaypalPayment = (data: Paypal) =>
   Request<PaymentID>(
     setURL(`${API_ROOT}/account/payments/paypal`),
     setMethod('POST'),
-    setData(data, StagePaypalPaymentSchema),
-  )
-    .then(response => response.data);
-
+    setData(data, StagePaypalPaymentSchema)
+  ).then(response => response.data);
 
 /**
  * executePaypalPayment
@@ -104,9 +107,8 @@ export const executePaypalPayment = (data: ExecutePayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/payments/paypal/execute`),
     setMethod('POST'),
-    setData(data, ExecutePaypalPaymentSchema),
-  )
-    .then(response => response.data);
+    setData(data, ExecutePaypalPaymentSchema)
+  ).then(response => response.data);
 
 /**
  * saveCreditCard
@@ -116,9 +118,9 @@ export const executePaypalPayment = (data: ExecutePayload) =>
  * existing information.
  *
  */
-export const saveCreditCard = (data: SaveCreditCardData) => Request<{}>(
-  setURL(`${API_ROOT}/account/credit-card`),
-  setMethod('POST'),
-  setData(data, CreditCardSchema),
-)
-  .then(response => response.data);
+export const saveCreditCard = (data: SaveCreditCardData) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/account/credit-card`),
+    setMethod('POST'),
+    setData(data, CreditCardSchema)
+  ).then(response => response.data);

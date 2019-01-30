@@ -6,7 +6,7 @@ import {
   isNil,
   last,
   objOf,
-  split,
+  split
 } from 'ramda';
 
 export interface DevicesAsStrings {
@@ -20,18 +20,28 @@ export interface DevicesAsStrings {
   sdh?: string;
 }
 
-let getIdOrNullFor: (t: string) => (d?: string) => null | Linode.VolumeDevice | Linode.DiskDevice;
-getIdOrNullFor = type => compose(
-  ifElse(isNil, always(null), compose(
+let getIdOrNullFor: (
+  t: string
+) => (d?: string) => null | Linode.VolumeDevice | Linode.DiskDevice;
+getIdOrNullFor = type =>
+  compose(
     ifElse(
-      contains(type),
-      compose<string, string[], string, number, Record<string, number>>(
-        objOf(`${type}_id`), Number, last, split('-'),
-      ),
+      isNil,
       always(null),
-    ),
-  )),
-);
+      compose(
+        ifElse(
+          contains(type),
+          compose<string, string[], string, number, Record<string, number>>(
+            objOf(`${type}_id`),
+            Number,
+            last,
+            split('-')
+          ),
+          always(null)
+        )
+      )
+    )
+  );
 
 const idForDisk = getIdOrNullFor('disk');
 const idForVolume = getIdOrNullFor('volume');
@@ -45,7 +55,7 @@ createDevicesFromStrings = devices => ({
   sde: idForDisk(devices.sde) || idForVolume(devices.sde),
   sdf: idForDisk(devices.sdf) || idForVolume(devices.sdf),
   sdg: idForDisk(devices.sdg) || idForVolume(devices.sdg),
-  sdh: idForDisk(devices.sdh) || idForVolume(devices.sdh),
+  sdh: idForDisk(devices.sdh) || idForVolume(devices.sdh)
 });
 
 export default createDevicesFromStrings;

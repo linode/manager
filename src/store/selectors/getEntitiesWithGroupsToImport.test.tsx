@@ -63,14 +63,12 @@ describe('Entities that have groups to import', () => {
         id: 9999999,
         description: '',
         type: 'master',
-        tags: [
-          'production'
-        ],
+        tags: ['production'],
         retry_sec: 0,
         soa_email: '',
         status: 'active',
         ttl_sec: 0,
-        zonefile: {rendered: '', status: 'current'}
+        zonefile: { rendered: '', status: 'current' }
       };
 
       const newState = {

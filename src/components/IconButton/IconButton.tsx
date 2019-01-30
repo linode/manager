@@ -1,10 +1,13 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import IconButton, { IconButtonProps } from 'src/components/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type ClassNames = 'root'
-  | 'destructive'
+type ClassNames = 'root' | 'destructive';
 
 interface Props extends IconButtonProps {
   destructive?: boolean;
@@ -14,32 +17,33 @@ interface Props extends IconButtonProps {
   disabled?: boolean;
 }
 
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   root: {
-    transition: theme.transitions.create(['opacity']),
+    transition: theme.transitions.create(['opacity'])
   },
   destructive: {
     color: theme.palette.status.errorDark,
     '&:hover': {
       color: theme.palette.status.errorDark,
-      opacity: .8,
+      opacity: 0.8
     },
     '&:focus': {
-      color: theme.palette.status.errorDark,
-    },
-  },
+      color: theme.palette.status.errorDark
+    }
+  }
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const IconButtonWrapper: React.StatelessComponent<CombinedProps> = (props) => {
+const IconButtonWrapper: React.StatelessComponent<CombinedProps> = props => {
   const { classes, destructive, style, className, ...rest } = props;
 
   return (
     <IconButton
-      className={classNames({
-        [classes.root]: true,
-        [classes.destructive]: destructive,
+      className={classNames(
+        {
+          [classes.root]: true,
+          [classes.destructive]: destructive
         },
         className
       )}

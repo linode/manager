@@ -14,13 +14,13 @@ describe('Email change form', () => {
       <EmailChangeForm
         classes={{
           root: '',
-          title: '',
+          title: ''
         }}
-        username='ThisUser'
-        email='thisuser@example.com'
+        username="ThisUser"
+        email="thisuser@example.com"
         updateProfile={updateProfile}
       />
-    </LinodeThemeWrapper>,
+    </LinodeThemeWrapper>
   );
 
   it('should render textfields for username and email.', () => {
@@ -28,7 +28,9 @@ describe('Email change form', () => {
   });
 
   it('the username field should be disabled.', () => {
-    expect(component.find('TextField[data-qa-username]').props().disabled).toBeTruthy();
+    expect(
+      component.find('TextField[data-qa-username]').props().disabled
+    ).toBeTruthy();
   });
 
   // This is an active-ish issue on Github (https://github.com/airbnb/enzyme/issues/1188)
@@ -38,13 +40,17 @@ describe('Email change form', () => {
     const success = 'Account information updated.';
     component.setState({ success });
     component.update();
-    expect(component.containsMatchingElement(<Notice success text={success} />)).toBeTruthy();
+    expect(
+      component.containsMatchingElement(<Notice success text={success} />)
+    ).toBeTruthy();
   });
 
   xit('should display a notice for a general error', () => {
-    const errors = [{'reason': 'Something bad'}];
+    const errors = [{ reason: 'Something bad' }];
     component.setState({ errors });
     component.update();
-    expect(component.containsMatchingElement(<Notice error text={'Something bad'} />)).toBeTruthy();
+    expect(
+      component.containsMatchingElement(<Notice error text={'Something bad'} />)
+    ).toBeTruthy();
   });
 });

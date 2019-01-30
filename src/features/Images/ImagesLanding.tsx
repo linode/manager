@@ -11,7 +11,11 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -37,40 +41,38 @@ import ImagesDrawer from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2,
-  },
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 interface State {
   imageDrawer: {
-    open: boolean,
-    mode: 'edit' | 'create' | 'restore',
-    imageID?: string,
-    label?: string,
-    description?: string,
-    selectedLinode?: string,
-    selectedDisk?: string,
+    open: boolean;
+    mode: 'edit' | 'create' | 'restore';
+    imageID?: string;
+    label?: string;
+    description?: string;
+    selectedLinode?: string;
+    selectedDisk?: string;
   };
   removeDialog: {
-    open: boolean,
-    submitting: boolean,
-    image?: string,
-    imageID?: string,
-    error?: string,
+    open: boolean;
+    submitting: boolean;
+    image?: string;
+    imageID?: string;
+    error?: string;
   };
 }
 
-type CombinedProps =
-  & WithPrivateImages
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>
-  & InjectedNotistackProps;
+type CombinedProps = WithPrivateImages &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  InjectedNotistackProps;
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
-
   eventsSub: Subscription;
 
   state: State = {
@@ -78,43 +80,48 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       open: false,
       mode: 'edit',
       label: '',
-      description: '',
+      description: ''
     },
     removeDialog: {
       open: false,
-      submitting: false,
-    },
+      submitting: false
+    }
   };
 
   static docs: Linode.Doc[] = [
     Images,
     {
       title: 'Deploy an Image to a Linode',
-      src: 'https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode/',
+      src:
+        'https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode/',
       body: `This QuickAnswer will show you how to deploy a Linux distribution to your Linode.`
     }
   ];
 
-
-
   openForCreate = () => {
     this.setState({
-      imageDrawer: { open: true, mode: 'create', label: '', description: '', },
+      imageDrawer: { open: true, mode: 'create', label: '', description: '' }
     });
-  }
+  };
 
   openRemoveDialog = (image: string, imageID: string) => {
     this.setState({
-      removeDialog: { open: true, image, imageID, submitting: false, error: undefined, },
+      removeDialog: {
+        open: true,
+        image,
+        imageID,
+        submitting: false,
+        error: undefined
+      }
     });
-  }
+  };
 
   closeRemoveDialog = () => {
     const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { ...removeDialog, open: false, },
+      removeDialog: { ...removeDialog, open: false }
     });
-  }
+  };
 
   openForEdit = (label: string, description: string, imageID: string) => {
     this.setState({
@@ -123,36 +130,40 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         mode: 'edit',
         description,
         imageID,
-        label,
+        label
       }
-    })
-  }
+    });
+  };
 
   openForRestore = (imageID: string) => {
     this.setState({
       imageDrawer: {
         open: true,
         mode: 'restore',
-        imageID,
+        imageID
       }
-    })
-  }
+    });
+  };
 
   deployNewLinode = (imageID: string) => {
     const { history } = this.props;
     history.push({
       pathname: '/linodes/create',
-      state: { selectedImageId: imageID, selectedTab: 0, initTab: 1 },
+      state: { selectedImageId: imageID, selectedTab: 0, initTab: 1 }
     });
-  }
+  };
 
   removeImage = () => {
     const { removeDialog } = this.state;
     if (!this.state.removeDialog.imageID) {
-      this.setState({ removeDialog: { ...removeDialog, error: "Image is not available." } });
+      this.setState({
+        removeDialog: { ...removeDialog, error: 'Image is not available.' }
+      });
       return;
     }
-    this.setState({ removeDialog: { ...removeDialog, submitting: true, errors: undefined, } });
+    this.setState({
+      removeDialog: { ...removeDialog, submitting: true, errors: undefined }
+    });
     deleteImage(this.state.removeDialog.imageID)
       .then(() => {
         this.closeRemoveDialog();
@@ -170,34 +181,51 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           variant: 'info'
         });
       })
-      .catch((err) => {
-        const error = getErrorStringOrDefault(err, "There was an error deleting the image.");
+      .catch(err => {
+        const error = getErrorStringOrDefault(
+          err,
+          'There was an error deleting the image.'
+        );
         this.setState({ removeDialog: { ...removeDialog, error } });
-      })
-  }
+      });
+  };
 
   changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (this.state.imageDrawer.selectedLinode !== e.target.value) {
-      this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: 'none', selectedLinode: e.target.value } });
+      this.setState({
+        imageDrawer: {
+          ...this.state.imageDrawer,
+          selectedDisk: 'none',
+          selectedLinode: e.target.value
+        }
+      });
     }
-  }
+  };
 
   changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value } });
-  }
+    this.setState({
+      imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value }
+    });
+  };
 
   setLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, label: e.target.value } });
-  }
+    this.setState({
+      imageDrawer: { ...this.state.imageDrawer, label: e.target.value }
+    });
+  };
 
   setDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, description: e.target.value } });
-  }
+    this.setState({
+      imageDrawer: { ...this.state.imageDrawer, description: e.target.value }
+    });
+  };
 
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>Cancel</Button>
+        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+          Cancel
+        </Button>
         <Button
           type="secondary"
           destructive
@@ -208,31 +236,33 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           Confirm
         </Button>
       </ActionsPanel>
-    )
-  }
+    );
+  };
 
   closeImageDrawer = () => {
-    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false, } });
-  }
+    this.setState({ imageDrawer: { ...this.state.imageDrawer, open: false } });
+  };
 
   renderImageDrawer = () => {
     const { imageDrawer } = this.state;
-    return <ImagesDrawer
-      open={imageDrawer.open}
-      mode={imageDrawer.mode}
-      label={imageDrawer.label}
-      description={imageDrawer.description}
-      selectedDisk={imageDrawer.selectedDisk}
-      selectedLinode={imageDrawer.selectedLinode}
-      imageID={imageDrawer.imageID}
-      changeDisk={this.changeSelectedDisk}
-      changeLinode={this.changeSelectedLinode}
-      changeLabel={this.setLabel}
-      changeDescription={this.setDescription}
-      onClose={this.closeImageDrawer}
-      onSuccess={() => null}
-    />
-  }
+    return (
+      <ImagesDrawer
+        open={imageDrawer.open}
+        mode={imageDrawer.mode}
+        label={imageDrawer.label}
+        description={imageDrawer.description}
+        selectedDisk={imageDrawer.selectedDisk}
+        selectedLinode={imageDrawer.selectedLinode}
+        imageID={imageDrawer.imageID}
+        changeDisk={this.changeSelectedDisk}
+        changeLinode={this.changeSelectedLinode}
+        changeLabel={this.setLabel}
+        changeDescription={this.setDescription}
+        onClose={this.closeImageDrawer}
+        onSuccess={() => null}
+      />
+    );
+  };
 
   render() {
     const { classes, imagesData, imagesLoading, imagesError } = this.props;
@@ -254,7 +284,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
-        <Grid container justify="space-between" alignItems="flex-end" updateFor={[]}>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          updateFor={[]}
+        >
           <Grid item>
             <Typography variant="h1" data-qa-title className={classes.title}>
               Images
@@ -263,10 +298,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item className="pt0">
-                <AddNewLink
-                  onClick={this.openForCreate}
-                  label="Add an Image"
-                />
+                <AddNewLink onClick={this.openForCreate} label="Add an Image" />
               </Grid>
             </Grid>
           </Grid>
@@ -274,7 +306,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         <OrderBy data={imagesData} orderBy={'label'} order={'asc'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => (
             <Paginate data={orderedData}>
-              {({ data, count, handlePageChange, handlePageSizeChange, page, pageSize }) => (
+              {({
+                data,
+                count,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize
+              }) => (
                 <>
                   <Paper>
                     <Table aria-label="List of Your Images">
@@ -289,9 +328,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                           >
                             Label
                           </TableSortCell>
-                          <TableCell
-                            data-qa-image-created-header
-                          >
+                          <TableCell data-qa-image-created-header>
                             Created
                           </TableCell>
                           <TableSortCell
@@ -307,17 +344,17 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {
-                          data.map((image, idx) =>
-                            <ImageRow key={idx}
-                              image={image}
-                              onRestore={this.openForRestore}
-                              onDeploy={this.deployNewLinode}
-                              onEdit={this.openForEdit}
-                              onDelete={this.openRemoveDialog}
-                              updateFor={[image]} />
-                          )
-                        }
+                        {data.map((image, idx) => (
+                          <ImageRow
+                            key={idx}
+                            image={image}
+                            onRestore={this.openForRestore}
+                            onDeploy={this.deployNewLinode}
+                            onEdit={this.openForEdit}
+                            onDelete={this.openRemoveDialog}
+                            updateFor={[image]}
+                          />
+                        ))}
                       </TableBody>
                     </Table>
                   </Paper>
@@ -341,9 +378,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           onClose={this.closeRemoveDialog}
           actions={this.getActions}
         >
-          {this.state.removeDialog.error &&
+          {this.state.removeDialog.error && (
             <Notice error text={this.state.removeDialog.error} />
-          }
+          )}
           <Typography>Are you sure you want to remove this image?</Typography>
         </ConfirmationDialog>
       </React.Fragment>
@@ -354,16 +391,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
-        <ErrorState
-          errorText="There was an error retrieving your images. Please reload and try again."
-        />
+        <ErrorState errorText="There was an error retrieving your images. Please reload and try again." />
       </React.Fragment>
     );
-  }
+  };
 
   renderLoading = () => {
-    return (<CircleProgress />);
-  }
+    return <CircleProgress />;
+  };
 
   renderEmpty = () => {
     return (
@@ -374,7 +409,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           copy="Adding a new image is easy. Click below to add an image."
           buttonProps={{
             onClick: this.openForCreate,
-            children: 'Add an Image',
+            children: 'Add an Image'
           }}
         />
         {this.renderImageDrawer()}
@@ -389,12 +424,15 @@ interface WithPrivateImages {
   imagesError?: Linode.ApiFieldError[];
 }
 
-
-const withPrivateImages = connect((state: ApplicationState): WithPrivateImages => ({
-  imagesData: state.__resources.images.entities.filter(i => i.is_public === false),
-  imagesLoading: state.__resources.images.loading,
-  imagesError: state.__resources.images.error,
-}));
+const withPrivateImages = connect(
+  (state: ApplicationState): WithPrivateImages => ({
+    imagesData: state.__resources.images.entities.filter(
+      i => i.is_public === false
+    ),
+    imagesLoading: state.__resources.images.loading,
+    imagesError: state.__resources.images.error
+  })
+);
 
 const styled = withStyles(styles);
 

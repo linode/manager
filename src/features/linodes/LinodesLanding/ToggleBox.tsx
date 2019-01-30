@@ -3,20 +3,24 @@ import ViewModule from '@material-ui/icons/ViewModule';
 import * as React from 'react';
 import { compose } from 'redux';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type CSSClasses =
-  'root'
+  | 'root'
   | 'button'
   | 'buttonActive'
   | 'buttonLeft'
   | 'buttonRight'
   | 'icon';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     margin: theme.spacing.unit,
-    marginRight: -theme.spacing.unit,
+    marginRight: -theme.spacing.unit
   },
   button: {
     borderWidth: 1,
@@ -33,34 +37,34 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     lineHeight: '1.3em',
     color: theme.palette.text.primary,
     '&:focus': {
-      backgroundColor: theme.color.white,
+      backgroundColor: theme.color.white
     },
     '&:hover': {
       backgroundColor: 'transparent',
       '& $icon': {
-        opacity: 1,
-      },
-    },
+        opacity: 1
+      }
+    }
   },
   buttonActive: {
     backgroundColor: theme.color.white,
     '&:hover': {
-      backgroundColor: theme.color.white,
-    },
+      backgroundColor: theme.color.white
+    }
   },
   buttonLeft: {
-    width: 79,
+    width: 79
   },
   buttonRight: {
-    borderLeftWidth: 0,
+    borderLeftWidth: 0
   },
   icon: {
     marginRight: 6,
     width: 18,
     height: 18,
-    opacity: .4,
-    transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-  },
+    opacity: 0.4,
+    transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+  }
 });
 
 interface Props {
@@ -72,43 +76,35 @@ const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-export const ToggleBox: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    classes,
-    handleClick,
-    status,
-  } = props;
+export const ToggleBox: React.StatelessComponent<CombinedProps> = props => {
+  const { classes, handleClick, status } = props;
 
   return (
     <div className={classes.root} data-qa-active-view={props.status}>
       <Button
         onClick={() => handleClick('list')}
         className={`
-            ${!status || status === 'list' && classes.buttonActive}
+            ${!status || (status === 'list' && classes.buttonActive)}
             ${classes.button}
-            ${classes.buttonLeft}`
-        }
+            ${classes.buttonLeft}`}
         data-qa-view="list"
       >
-        <ViewList className={classes.icon}/>
+        <ViewList className={classes.icon} />
         List
-        </Button>
+      </Button>
       <Button
         onClick={() => handleClick('grid')}
         className={`
             ${status === 'grid' && classes.buttonActive}
             ${classes.button}
-            ${classes.buttonRight}`
-        }
+            ${classes.buttonRight}`}
         data-qa-view="grid"
       >
         <ViewModule className={classes.icon} />
         Grid
-        </Button>
+      </Button>
     </div>
   );
 };
 
-export default compose(
-  styled,
-)(ToggleBox);
+export default compose(styled)(ToggleBox);

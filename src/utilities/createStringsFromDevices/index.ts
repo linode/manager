@@ -1,2 +1,2 @@
 import createStringsFromDevices from './createStringsFromDevices';
-export default createStringsFromDevices
+export default createStringsFromDevices;

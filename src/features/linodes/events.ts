@@ -13,7 +13,7 @@ const actionWhitelist = [
   'linode_rebuild',
   'linode_resize',
   'disk_resize',
-  'linode_migrate',
+  'linode_migrate'
 ];
 
 const statusWhitelist = [
@@ -21,16 +21,17 @@ const statusWhitelist = [
   'finished',
   'scheduled',
   'failed',
-  'notification',
+  'notification'
 ];
 
 newLinodeEvents = (time?: moment.Moment) => (e: Linode.Event): boolean => {
-  return e.entity !== null && e.entity.type === 'linode'
-    && statusWhitelist.includes(e.status)
-    && actionWhitelist.includes(e.action)
-    && (!e._initial);
+  return (
+    e.entity !== null &&
+    e.entity.type === 'linode' &&
+    statusWhitelist.includes(e.status) &&
+    actionWhitelist.includes(e.action) &&
+    !e._initial
+  );
 };
 
-export {
-  newLinodeEvents
-}
+export { newLinodeEvents };

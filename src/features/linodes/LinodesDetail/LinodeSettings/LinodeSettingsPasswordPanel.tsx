@@ -2,7 +2,11 @@ import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
@@ -15,8 +19,8 @@ import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -38,50 +42,60 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props
-  & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> {
-
+class LinodeSettingsPasswordPanel extends React.Component<
+  CombinedProps,
+  State
+> {
   state: State = {
     submitting: false,
     value: '',
     disksLoading: true,
-    disks: [],
-  }
+    disks: []
+  };
 
   changeDiskPassword = () => {
     const { diskId, value } = this.state;
     const { linodeId } = this.props;
 
-    if (!diskId) { return; }
-    this.setState(compose(
-      set(lensPath(['submitting']), true),
-      set(lensPath(['success']), undefined),
-      set(lensPath(['errors']), undefined),
-    ));
+    if (!diskId) {
+      return;
+    }
+    this.setState(
+      compose(
+        set(lensPath(['submitting']), true),
+        set(lensPath(['success']), undefined),
+        set(lensPath(['errors']), undefined)
+      )
+    );
 
     changeLinodeDiskPassword(linodeId, diskId, value)
-      .then((linode) => {
-        this.setState(compose(
-          set(lensPath(['success']), `Linode password changed successfully.`),
-          set(lensPath(['submitting']), false),
-          set(lensPath(['value']), ''),
-        ));
+      .then(linode => {
+        this.setState(
+          compose(
+            set(lensPath(['success']), `Linode password changed successfully.`),
+            set(lensPath(['submitting']), false),
+            set(lensPath(['value']), '')
+          )
+        );
       })
-      .catch((error) => {
-        this.setState(compose(
-          set(lensPath(['errors']), error.response.data.errors),
-          set(lensPath(['submitting']), false),
-        ), () => {
-          scrollErrorIntoView('linode-settings-password');
-        });
+      .catch(error => {
+        this.setState(
+          compose(
+            set(lensPath(['errors']), error.response.data.errors),
+            set(lensPath(['submitting']), false)
+          ),
+          () => {
+            scrollErrorIntoView('linode-settings-password');
+          }
+        );
       });
-  }
+  };
 
   handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState(set(lensPath(['value']), e.target.value))
-  }
+    this.setState(set(lensPath(['value']), e.target.value));
+  };
 
   renderExpansionActions = () => {
     const { submitting } = this.state;
@@ -97,8 +111,7 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
           data-qa-password-save
           tooltipText={
             linodeStatus !== 'offline'
-              ?
-              'Your Linode must be fully powered down in order to change your root password'
+              ? 'Your Linode must be fully powered down in order to change your root password'
               : ''
           }
         >
@@ -106,39 +119,52 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
         </Button>
       </ActionsPanel>
     );
-  }
+  };
 
   searchDisks = (value: string = '') => {
     if (this.state.disksLoading === false) {
       this.setState({ disksLoading: true });
     }
 
-    return getLinodeDisks(this.props.linodeId, {}, { label: { '+contains': value } })
-      .then(response => response.data
-        .filter((disk: Linode.Disk) => disk.filesystem !== 'swap')
-        .map(disk => ({
-          value: disk.id,
-          label: disk.label,
-          data: disk,
-        })))
+    return getLinodeDisks(
+      this.props.linodeId,
+      {},
+      { label: { '+contains': value } }
+    )
+      .then(response =>
+        response.data
+          .filter((disk: Linode.Disk) => disk.filesystem !== 'swap')
+          .map(disk => ({
+            value: disk.id,
+            label: disk.label,
+            data: disk
+          }))
+      )
       .then(disks => {
-        this.setState({ disks, disksLoading: false })
+        this.setState({ disks, disksLoading: false });
 
         /** TLDR; If we only have one disk we set that to state after the disks have been set */
         if (disks.length === 1) {
           this.handleDiskSelection(disks[0]);
         }
       })
-      .catch(error => this.setState({ disksError: 'An error occured while searching for disks.', disksLoading: false }))
+      .catch(error =>
+        this.setState({
+          disksError: 'An error occured while searching for disks.',
+          disksLoading: false
+        })
+      );
   };
 
   debouncedSearch = debounce(400, false, this.searchDisks);
 
   onInputChange = (inputValue: string, actionMeta: { action: string }) => {
-    if (actionMeta.action !== 'input-change') { return; }
+    if (actionMeta.action !== 'input-change') {
+      return;
+    }
     this.setState({ disksLoading: true });
     this.debouncedSearch(inputValue);
-  }
+  };
 
   handleDiskSelection = (selected: Item) => {
     if (selected) {
@@ -156,10 +182,13 @@ class LinodeSettingsPasswordPanel extends React.Component<CombinedProps, State> 
 
   getSelectedDisk = (diskId: number) => {
     const { disks } = this.state;
-    const idx = disks.findIndex(disk => disk.value === diskId );
-    if (idx > -1) { return disks[idx]; }
-    else { return null; }
-  }
+    const idx = disks.findIndex(disk => disk.value === diskId);
+    if (idx > -1) {
+      return disks[idx];
+    } else {
+      return null;
+    }
+  };
 
   render() {
     const { diskId, disks, disksError, disksLoading } = this.state;
@@ -210,5 +239,5 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
 export default compose(
   errorBoundary,
-  styled,
+  styled
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

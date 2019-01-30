@@ -13,22 +13,14 @@ interface Props {
 
 class ScratchCodeDialog extends React.PureComponent<Props, {}> {
   render() {
-    const {
-      open,
-      closeDialog,
-      scratchCode
-    } = this.props;
+    const { open, closeDialog, scratchCode } = this.props;
 
     return (
       <ConfirmationDialog
         open={open}
         title={`Scratch Code`}
         onClose={closeDialog}
-        actions={
-          <DialogActions
-            closeDialog={this.props.closeDialog}
-          />
-        }
+        actions={<DialogActions closeDialog={this.props.closeDialog} />}
       >
         <Typography>
           {`This scratch code can be used in place of two-factor authentication in the event
@@ -62,10 +54,11 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
         <Button
           type="secondary"
           onClick={this.props.closeDialog}
-          data-qa-submit>
+          data-qa-submit
+        >
           Got it
-     </Button>
+        </Button>
       </ActionsPanel>
-    )
+    );
   }
 }

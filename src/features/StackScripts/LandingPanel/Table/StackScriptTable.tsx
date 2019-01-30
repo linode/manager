@@ -66,7 +66,7 @@ const StackScriptTable = (props: CombinedProps) => {
           />
         </TableBody>
       </Table>
-      {!loading && !error &&
+      {!loading && !error && (
         <PaginationFooter
           count={count}
           page={page}
@@ -75,9 +75,9 @@ const StackScriptTable = (props: CombinedProps) => {
           handleSizeChange={handlePageSizeChange}
           eventCategory="stackscripts table"
         />
-      }
+      )}
     </React.Fragment>
   );
-}
+};
 
 export default StackScriptTable;

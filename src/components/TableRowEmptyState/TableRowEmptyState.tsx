@@ -1,14 +1,18 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
 
 export interface Props {
@@ -18,13 +22,14 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableRowEmptyState: React.StatelessComponent<CombinedProps> = (props) => {
+const TableRowEmptyState: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
   return (
     <TableRow>
-      <TableCell colSpan={props.colSpan} className={classes.root}>{props.message || 'No items to display.'}</TableCell>
+      <TableCell colSpan={props.colSpan} className={classes.root}>
+        {props.message || 'No items to display.'}
+      </TableCell>
     </TableRow>
-
   );
 };
 

@@ -2,14 +2,18 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { deleteSSHKey } from 'src/services/profile';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -29,7 +33,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   state: State = {
-    submitting: false,
+    submitting: false
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -50,7 +54,9 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
         actions={this.renderConfirmDeleteActions}
         onClose={closeDialog}
       >
-        {error && <Notice error text={`Unable to delete SSH key. Please try again.`} />}
+        {error && (
+          <Notice error text={`Unable to delete SSH key. Please try again.`} />
+        )}
         Are you sure you want to delete SSH key {label}?
       </ConfirmationDialog>
     );
@@ -62,11 +68,7 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
 
     return (
       <ActionsPanel>
-        <Button
-          type="cancel"
-          onClick={closeDialog}
-          data-qa-cancel-delete
-        >
+        <Button type="cancel" onClick={closeDialog} data-qa-cancel-delete>
           Cancel
         </Button>
         <Button
@@ -82,7 +84,9 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    if (!this.props.id) { return; }
+    if (!this.props.id) {
+      return;
+    }
 
     this.setState({ submitting: true, error: undefined });
 
@@ -90,7 +94,7 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
       .then(() => {
         this.setState({ submitting: false }, () => this.props.onSuccess());
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({ submitting: false, error });
       });
   };

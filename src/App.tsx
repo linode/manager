@@ -7,9 +7,16 @@ import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
 import { Action, compose } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
-import { DocumentTitleSegment, withDocumentTitleProvider } from 'src/components/DocumentTitle';
+import {
+  DocumentTitleSegment,
+  withDocumentTitleProvider
+} from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
@@ -34,110 +41,109 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { withNodeBalancerActions, WithNodeBalancerActions } from './store/nodeBalancer/nodeBalancer.containers';
+import {
+  withNodeBalancerActions,
+  WithNodeBalancerActions
+} from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
 
 shim(); // allows for .finally() usage
 
 const Account = DefaultLoader({
-  loader: () => import('src/features/Account'),
+  loader: () => import('src/features/Account')
 });
 
 const LinodesRoutes = DefaultLoader({
-  loader: () => import('src/features/linodes'),
+  loader: () => import('src/features/linodes')
 });
 
 const Volumes = DefaultLoader({
-  loader: () => import('src/features/Volumes'),
+  loader: () => import('src/features/Volumes')
 });
 
 const Domains = DefaultLoader({
-  loader: () => import('src/features/Domains'),
+  loader: () => import('src/features/Domains')
 });
 
 const Images = DefaultLoader({
-  loader: () => import('src/features/Images'),
-})
+  loader: () => import('src/features/Images')
+});
 
 const Profile = DefaultLoader({
-  loader: () => import('src/features/Profile'),
+  loader: () => import('src/features/Profile')
 });
 
 const NodeBalancers = DefaultLoader({
-  loader: () => import('src/features/NodeBalancers'),
+  loader: () => import('src/features/NodeBalancers')
 });
 
 const StackScripts = DefaultLoader({
-  loader: () => import('src/features/StackScripts'),
+  loader: () => import('src/features/StackScripts')
 });
 
 const SupportTickets = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTickets'),
+  loader: () => import('src/features/Support/SupportTickets')
 });
 
 const SupportTicketDetail = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTicketDetail'),
-})
+  loader: () => import('src/features/Support/SupportTicketDetail')
+});
 
 const Longview = DefaultLoader({
-  loader: () => import('src/features/Longview'),
+  loader: () => import('src/features/Longview')
 });
 
 const Managed = DefaultLoader({
-  loader: () => import('src/features/Managed'),
+  loader: () => import('src/features/Managed')
 });
 
 const Dashboard = DefaultLoader({
-  loader: () => import('src/features/Dashboard'),
+  loader: () => import('src/features/Dashboard')
 });
 
 const Help = DefaultLoader({
-  loader: () => import('src/features/Help'),
+  loader: () => import('src/features/Help')
 });
 
 const SupportSearchLanding = DefaultLoader({
-  loader: () => import('src/features/Help/SupportSearchLanding'),
+  loader: () => import('src/features/Help/SupportSearchLanding')
 });
 
 const SearchLanding = DefaultLoader({
-  loader: () => import('src/features/Search'),
+  loader: () => import('src/features/Search')
 });
 
-type ClassNames = 'appFrame'
-  | 'content'
-  | 'wrapper'
-  | 'grid'
-  | 'switchWrapper';
+type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
 
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   appFrame: {
     position: 'relative',
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
-    backgroundColor: theme.bg.main,
+    backgroundColor: theme.bg.main
   },
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 215,
+      marginLeft: 215
     },
     [theme.breakpoints.up('xl')]: {
-      marginLeft: 275,
-    },
+      marginLeft: 275
+    }
   },
   wrapper: {
     padding: theme.spacing.unit * 3,
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing.unit * 2,
       paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
-    },
+      paddingRight: theme.spacing.unit * 2
+    }
   },
   grid: {
     [theme.breakpoints.up('lg')]: {
-      height: '100%',
-    },
+      height: '100%'
+    }
   },
   switchWrapper: {
     flex: 1,
@@ -145,10 +151,10 @@ const styles: StyleRulesCallback = (theme) => ({
     position: 'relative',
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%',
-      },
-    },
-  },
+        maxWidth: '78.8%'
+      }
+    }
+  }
 });
 
 interface Props {
@@ -162,13 +168,12 @@ interface State {
   hasError: boolean;
 }
 
-type CombinedProps =
-  & Props
-  & WithNodeBalancerActions
-  & DispatchProps
-  & StateProps
-  & WithStyles<ClassNames>
-  & InjectedNotistackProps;
+type CombinedProps = Props &
+  WithNodeBalancerActions &
+  DispatchProps &
+  StateProps &
+  WithStyles<ClassNames> &
+  InjectedNotistackProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -178,7 +183,7 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false,
+    hasError: false
   };
 
   componentDidCatch() {
@@ -186,24 +191,27 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   async componentDidMount() {
-    const { actions, nodeBalancerActions: { getAllNodeBalancersWithConfigs } } = this.props;
+    const {
+      actions,
+      nodeBalancerActions: { getAllNodeBalancersWithConfigs }
+    } = this.props;
 
     try {
-      await Promise.all(
-        [
-          actions.requestProfile(),
-          actions.requestDomains(),
-          actions.requestImages(),
-          actions.requestLinodes(),
-          actions.requestNotifications(),
-          actions.requestSettings(),
-          actions.requestTypes(),
-          actions.requestRegions(),
-          actions.requestVolumes(),
-          getAllNodeBalancersWithConfigs(),
-        ]
-      );
-    } catch (error) { /** We choose to do nothing, relying on the Redux error state. */ }
+      await Promise.all([
+        actions.requestProfile(),
+        actions.requestDomains(),
+        actions.requestImages(),
+        actions.requestLinodes(),
+        actions.requestNotifications(),
+        actions.requestSettings(),
+        actions.requestTypes(),
+        actions.requestRegions(),
+        actions.requestVolumes(),
+        getAllNodeBalancersWithConfigs()
+      ]);
+    } catch (error) {
+      /** We choose to do nothing, relying on the Redux error state. */
+    }
 
     /*
      * We want to listen for migration events side-wide
@@ -212,24 +220,27 @@ export class App extends React.Component<CombinedProps, State> {
      * and then update the Linodes in LinodesDetail and LinodesLanding
      */
     this.eventsSub = events$
-      .filter(event => (
-        !event._initial
-        && [
-          'linode_migrate',
-        ].includes(event.action)
-      ))
-      .subscribe((event) => {
+      .filter(
+        event => !event._initial && ['linode_migrate'].includes(event.action)
+      )
+      .subscribe(event => {
         const { entity: migratedLinode } = event;
         if (event.action === 'linode_migrate' && event.status === 'finished') {
-          this.props.enqueueSnackbar(`Linode ${migratedLinode!.label} migrated successfully.`, {
-            variant: 'success'
-          })
+          this.props.enqueueSnackbar(
+            `Linode ${migratedLinode!.label} migrated successfully.`,
+            {
+              variant: 'success'
+            }
+          );
         }
 
         if (event.action === 'linode_migrate' && event.status === 'failed') {
-          this.props.enqueueSnackbar(`Linode ${migratedLinode!.label} migration failed.`, {
-            variant: 'error'
-          });
+          this.props.enqueueSnackbar(
+            `Linode ${migratedLinode!.label} migration failed.`,
+            {
+              variant: 'error'
+            }
+          );
         }
       });
 
@@ -238,28 +249,27 @@ export class App extends React.Component<CombinedProps, State> {
     }
   }
 
-  closeMenu = () => { this.setState({ menuOpen: false }); }
-  openMenu = () => { this.setState({ menuOpen: true }); }
+  closeMenu = () => {
+    this.setState({ menuOpen: false });
+  };
+  openMenu = () => {
+    this.setState({ menuOpen: true });
+  };
 
   toggleMenu = () => {
     this.setState({
-      menuOpen: !this.state.menuOpen,
+      menuOpen: !this.state.menuOpen
     });
-  }
+  };
 
   closeWelcomeBanner = () => {
     this.setState({ welcomeBanner: false });
     notifications.welcome.set('closed');
-  }
+  };
 
   render() {
     const { menuOpen, hasError } = this.state;
-    const {
-      classes,
-      toggleTheme,
-      profileLoading,
-      profileError
-    } = this.props;
+    const { classes, toggleTheme, profileLoading, profileError } = this.props;
 
     if (profileError || hasError) {
       return <TheApplicationIsOnFire />;
@@ -267,14 +277,20 @@ export class App extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <a href="#main-content" className="visually-hidden">Skip to main content</a>
+        <a href="#main-content" className="visually-hidden">
+          Skip to main content
+        </a>
         <DocumentTitleSegment segment="Linode Manager" />
 
-        {profileLoading === false &&
+        {profileLoading === false && (
           <React.Fragment>
             <>
               <div {...themeDataAttr()} className={classes.appFrame}>
-                <SideMenu open={menuOpen} closeMenu={this.closeMenu} toggleTheme={toggleTheme} />
+                <SideMenu
+                  open={menuOpen}
+                  closeMenu={this.closeMenu}
+                  toggleTheme={toggleTheme}
+                />
                 <main className={classes.content}>
                   <TopMenu openSideMenu={this.openMenu} />
                   <div className={classes.wrapper} id="main-content">
@@ -283,18 +299,35 @@ export class App extends React.Component<CombinedProps, State> {
                         <Switch>
                           <Route path="/linodes" component={LinodesRoutes} />
                           <Route path="/volumes" component={Volumes} />
-                          <Route path="/nodebalancers" component={NodeBalancers} />
+                          <Route
+                            path="/nodebalancers"
+                            component={NodeBalancers}
+                          />
                           <Route path="/domains" component={Domains} />
                           <Route exact path="/managed" component={Managed} />
                           <Route exact path="/longview" component={Longview} />
                           <Route exact path="/images" component={Images} />
-                          <Route path="/stackscripts" component={StackScripts} />
+                          <Route
+                            path="/stackscripts"
+                            component={StackScripts}
+                          />
                           <Route path="/account" component={Account} />
-                          <Route exact path="/support/tickets" component={SupportTickets} />
-                          <Route path="/support/tickets/:ticketId" component={SupportTicketDetail} />
+                          <Route
+                            exact
+                            path="/support/tickets"
+                            component={SupportTickets}
+                          />
+                          <Route
+                            path="/support/tickets/:ticketId"
+                            component={SupportTicketDetail}
+                          />
                           <Route path="/profile" component={Profile} />
                           <Route exact path="/support" component={Help} />
-                          <Route exact path="/support/search/" component={SupportSearchLanding} />
+                          <Route
+                            exact
+                            path="/support/search/"
+                            component={SupportSearchLanding}
+                          />
                           <Route path="/dashboard" component={Dashboard} />
                           <Route path="/search" component={SearchLanding} />
                           <Redirect exact from="/" to="/dashboard" />
@@ -303,13 +336,13 @@ export class App extends React.Component<CombinedProps, State> {
                       </Grid>
                     </Grid>
                   </div>
-
                 </main>
                 <Footer />
                 <WelcomeBanner
                   open={this.state.welcomeBanner}
                   onClose={this.closeWelcomeBanner}
-                  data-qa-beta-notice />
+                  data-qa-beta-notice
+                />
                 <ToastNotifications />
                 <DomainCreateDrawer />
                 <VolumeDrawer />
@@ -317,7 +350,7 @@ export class App extends React.Component<CombinedProps, State> {
               </div>
             </>
           </React.Fragment>
-        }
+        )}
       </React.Fragment>
     );
   }
@@ -327,12 +360,12 @@ const themeDataAttr = () => {
   if (themeStorage.get() === 'dark') {
     return {
       'data-qa-theme-dark': true
-    }
+    };
   }
   return {
     'data-qa-theme-light': true
-  }
-}
+  };
+};
 
 interface DispatchProps {
   actions: {
@@ -345,10 +378,12 @@ interface DispatchProps {
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
     requestVolumes: () => Promise<Linode.Volume[]>;
-  },
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
+) => {
   return {
     actions: {
       requestDomains: () => dispatch(requestDomains()),
@@ -379,10 +414,13 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   profileError: state.__resources.profile.error,
   userId: path(['data', 'uid'], state.__resources.profile),
 
-  documentation: state.documentation,
+  documentation: state.documentation
 });
 
-export const connected = connect(mapStateToProps, mapDispatchToProps);
+export const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export const styled = withStyles(styles);
 
@@ -391,5 +429,5 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
-  withNodeBalancerActions,
+  withNodeBalancerActions
 )(App);

@@ -1,32 +1,32 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { MapState } from 'src/store/types';
 import { StackScriptTabs } from '../stackScriptUtils';
 import StackScriptPanelContent from './StackScriptPanelContent';
 
-
 export interface ExtendedLinode extends Linode.Linode {
   heading: string;
   subHeadings: string[];
 }
 
-type ClassNames = 'root'
-  | 'creating'
-  | 'table'
-  | 'link';
+type ClassNames = 'root' | 'creating' | 'table' | 'link';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   table: {
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.color.white
   },
   creating: {
     height: 400,
@@ -34,13 +34,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: 0,
     marginTop: theme.spacing.unit * 2,
     overflowY: 'scroll',
-    '-webkit-appearance': 'none',
+    '-webkit-appearance': 'none'
   },
   link: {
     display: 'block',
     textAlign: 'right',
     marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -49,10 +49,9 @@ interface Props {
   publicImages: Linode.Image[];
 }
 
-type CombinedProps = Props &  StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
-
   mounted: boolean = false;
 
   componentDidMount() {
@@ -65,13 +64,15 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 
   createTabs = StackScriptTabs.map(tab => ({
     title: tab.title,
-    render: () => <StackScriptPanelContent
-      publicImages={this.props.publicImages}
-      currentUser={this.props.username}
-      request={tab.request}
-      key={tab.category + '-tab'}
-      category={tab.category}
-    />
+    render: () => (
+      <StackScriptPanelContent
+        publicImages={this.props.publicImages}
+        currentUser={this.props.username}
+        request={tab.request}
+        key={tab.category + '-tab'}
+        category={tab.category}
+      />
+    )
   }));
 
   render() {
@@ -96,16 +97,21 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, Props> = state => ({
+  username: pathOr('', ['data', 'username'], state.__resources.profile)
 });
 
 const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
+export default compose<
+  Linode.TodoAny,
+  Linode.TodoAny,
+  Linode.TodoAny,
+  Linode.TodoAny
+>(
   connected,
   RenderGuard,
-  styled,
+  styled
 )(SelectStackScriptPanel);

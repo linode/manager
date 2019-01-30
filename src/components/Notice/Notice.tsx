@@ -4,11 +4,16 @@ import Error from 'src/assets/icons/alert.svg';
 import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid, { GridProps } from 'src/components/Grid';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'important'
   | 'inner'
   | 'noticeText'
@@ -22,17 +27,19 @@ type ClassNames = 'root'
   | 'breakWords'
   | 'icon';
 
-const styles: StyleRulesCallback = (theme) => {
-  const { palette: { status } } = theme;
+const styles: StyleRulesCallback = theme => {
+  const {
+    palette: { status }
+  } = theme;
 
   return {
     '@keyframes fadeIn': {
       from: {
-        opacity: 0,
+        opacity: 0
       },
       to: {
-        opacity: 1,
-      },
+        opacity: 1
+      }
     },
     root: {
       marginBottom: theme.spacing.unit * 2,
@@ -41,65 +48,65 @@ const styles: StyleRulesCallback = (theme) => {
       display: 'flex',
       alignItems: 'center',
       '& + .notice': {
-        marginTop: `${theme.spacing.unit}px !important`,
-      },
+        marginTop: `${theme.spacing.unit}px !important`
+      }
     },
     important: {
       backgroundColor: theme.bg.white,
-      padding: theme.spacing.unit * 2,
+      padding: theme.spacing.unit * 2
     },
     inner: {
-      width: '100%',
+      width: '100%'
     },
     breakWords: {
       '& $noticeText': {
-        wordBreak: 'break-all',
-      },
+        wordBreak: 'break-all'
+      }
     },
     noticeText: {
       color: theme.palette.text.primary,
       fontFamily: 'LatoWebBold',
       fontSize: '1rem',
-      lineHeight: 1.2,
+      lineHeight: 1.2
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
       animation: 'fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26,
-      },
+        borderLeftWidth: 26
+      }
     },
     errorList: {
-      borderLeft: `5px solid ${status.errorDark}`,
+      borderLeft: `5px solid ${status.errorDark}`
     },
     warning: {
       borderLeft: `5px solid ${status.warningDark}`,
       animation: 'fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26,
-      },
+        borderLeftWidth: 26
+      }
     },
     warningList: {
-      borderLeft: `5px solid ${status.warningDark}`,
+      borderLeft: `5px solid ${status.warningDark}`
     },
     success: {
       borderLeft: `5px solid ${status.successDark}`,
       animation: 'fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26,
-      },
+        borderLeftWidth: 26
+      }
     },
     successList: {
-      borderLeft: `5px solid ${status.successDark}`,
+      borderLeft: `5px solid ${status.successDark}`
     },
     flag: {
-      marginRight: theme.spacing.unit * 2,
+      marginRight: theme.spacing.unit * 2
     },
     icon: {
       color: 'white',
       marginLeft: -38,
-      marginRight: 18,
-    },
+      marginRight: 18
+    }
   };
 };
 
@@ -123,7 +130,7 @@ interface Props extends GridProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Notice: React.StatelessComponent<CombinedProps> = (props) => {
+const Notice: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     className,
@@ -141,30 +148,35 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
     notificationList,
     onClick,
     spacingTop,
-    spacingBottom,
+    spacingBottom
   } = props;
 
-  const c = html
-    ? (
-      <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
-    )
-    : (
-      <Typography {...typeProps} component="div" onClick={onClick} className={classes.noticeText}>
-        {text && text}
-        {children && children}
-      </Typography>
-    );
+  const c = html ? (
+    <Typography {...typeProps} dangerouslySetInnerHTML={{ __html: html }} />
+  ) : (
+    <Typography
+      {...typeProps}
+      component="div"
+      onClick={onClick}
+      className={classes.noticeText}
+    >
+      {text && text}
+      {children && children}
+    </Typography>
+  );
 
-  const errorScrollClassName = errorGroup ? `error-for-scroll-${errorGroup}` : `error-for-scroll`;
+  const errorScrollClassName = errorGroup
+    ? `error-for-scroll-${errorGroup}`
+    : `error-for-scroll`;
 
-  const dataAttributes = (!props.error)
+  const dataAttributes = !props.error
     ? {
-      'data-qa-notice': true
-    }
+        'data-qa-notice': true
+      }
     : {
-      'data-qa-notice': true,
-      'data-qa-error': true,
-    }
+        'data-qa-notice': true,
+        'data-qa-error': true
+      };
 
   return (
     <Grid
@@ -181,7 +193,7 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
         notice: true,
-        ...(className && { [className]: true }),
+        ...(className && { [className]: true })
       })}
       style={{
         marginTop: spacingTop !== undefined ? spacingTop : 0,
@@ -189,21 +201,16 @@ const Notice: React.StatelessComponent<CombinedProps> = (props) => {
       }}
       {...dataAttributes}
     >
-      {
-        flag &&
+      {flag && (
         <Grid item>
           <Flag className={classes.flag} />
         </Grid>
-      }
-      {important && (
-        success && <Check className={classes.icon} /> ||
-        warning && <Warning className={classes.icon} /> ||
-        error &&  <Error className={classes.icon} />
-        )
-      }
-      <div className={classes.inner}>
-        {c}
-      </div>
+      )}
+      {important &&
+        ((success && <Check className={classes.icon} />) ||
+          (warning && <Warning className={classes.icon} />) ||
+          (error && <Error className={classes.icon} />))}
+      <div className={classes.inner}>{c}</div>
     </Grid>
   );
 };

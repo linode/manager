@@ -10,16 +10,14 @@ interface Props {
   variant: string;
 }
 
-class MyButton extends React.PureComponent<Props>  {
+class MyButton extends React.PureComponent<Props> {
   render() {
     const { variant } = this.props;
     const handleClick = () => {
       // just call the onClick with the provided variant
-      this.props.onClick(variant)
-    }
-    return (
-      <Button onClick={handleClick}>{variant}</Button>
-    )
+      this.props.onClick(variant);
+    };
+    return <Button onClick={handleClick}>{variant}</Button>;
   }
 }
 
@@ -29,18 +27,28 @@ class Example extends React.PureComponent<InjectedNotistackProps, {}> {
     const variants = ['default', 'success', 'warning', 'error', 'info'];
 
     // enqueueSnackbar comes from the notistack library and triggers the toast to appear
-    const showToast = (variant: any) => enqueueSnackbar('Toast message. This will auto destruct after four seconds.', {
-      variant,
-    })
+    const showToast = (variant: any) =>
+      enqueueSnackbar(
+        'Toast message. This will auto destruct after four seconds.',
+        {
+          variant
+        }
+      );
 
     return (
       <React.Fragment>
         {variants.map(eachVariant => {
           // map over each variant and show a button for each
-          return <MyButton key={eachVariant} variant={eachVariant} onClick={showToast} />
+          return (
+            <MyButton
+              key={eachVariant}
+              variant={eachVariant}
+              onClick={showToast}
+            />
+          );
         })}
       </React.Fragment>
-    )
+    );
   }
 }
 

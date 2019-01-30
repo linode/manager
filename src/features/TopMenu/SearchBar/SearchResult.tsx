@@ -1,16 +1,20 @@
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 import MenuItem from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import SearchSuggestion from './SearchSuggestion';
 
 type ClassNames = 'root' | 'item' | 'selectedMenuItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes dash': {
     to: {
-      'stroke-dashoffset': 0,
-    },
+      'stroke-dashoffset': 0
+    }
   },
   root: {
     position: 'absolute',
@@ -19,30 +23,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   item: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
+      stroke: theme.bg.main
     },
     '&:last-item': {
-      border: 0,
-    },
+      border: 0
+    }
   },
   selectedMenuItem: {
     ...theme.animateCircleIcon,
-    backgroundColor: `${theme.bg.offWhite} !important`,
-  },
+    backgroundColor: `${theme.bg.offWhite} !important`
+  }
 });
 
 interface Props extends OptionProps<any> {
   value: number;
   data: any;
- }
+}
 
- type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
-
-const Option: React.StatelessComponent<CombinedProps> = (props) => {
+const Option: React.StatelessComponent<CombinedProps> = props => {
   const suggestion = props.data.data;
   return (
     <MenuItem
@@ -55,8 +58,8 @@ const Option: React.StatelessComponent<CombinedProps> = (props) => {
     >
       <SearchSuggestion {...props} />
     </MenuItem>
-  )
-}
+  );
+};
 const styled = withStyles(styles);
 
 export default styled(Option);

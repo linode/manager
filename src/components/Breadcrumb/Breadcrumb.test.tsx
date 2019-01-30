@@ -9,14 +9,22 @@ describe('Breadcrumb component', () => {
       linkTo="/linodes"
       linkText="Linodes"
       labelTitle="MyTestLinode"
-
-      classes={{root: '', backButton: 'backButton', linkText: '', labelText: '', subtitleLinkText: '', prefixComponentWrapper: ''}}
+      classes={{
+        root: '',
+        backButton: 'backButton',
+        linkText: '',
+        labelText: '',
+        subtitleLinkText: '',
+        prefixComponentWrapper: ''
+      }}
     />
   );
 
   it('contains back icon', () => {
     expect(wrapper.find('WithStyles(IconButton)')).toHaveLength(1);
-    expect(wrapper.find('WithStyles(IconButton)').hasClass('backButton')).toBeTruthy();
+    expect(
+      wrapper.find('WithStyles(IconButton)').hasClass('backButton')
+    ).toBeTruthy();
   });
 
   it('contains link text', () => {
@@ -30,7 +38,7 @@ describe('Breadcrumb component', () => {
   it('renders a prefixComponent wrapper', () => {
     wrapper.setProps({
       labelOptions: { prefixComponent: <React.Fragment /> }
-    })
+    });
     expect(wrapper.find('[data-qa-prefixwrapper]')).toHaveLength(1);
   });
 

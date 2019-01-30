@@ -7,19 +7,17 @@ import inProgressEventForLinode from './inProgressEventForLinode';
 import inProgressEvents from './inProgressEvents';
 import recentEventForLinode from './recentEventForLinode';
 
-
 /** Note: We could simplify this boilerplate if we had a rule that each selector file
  * could contain only one export (the selector itself).
  */
 
- export const initReselectDevtools = () => {
+export const initReselectDevtools = () => {
   registerSelectors({
     entitiesLoading,
     getEntitiesWithGroupsToImport,
     getSearchEntities,
     inProgressEventForLinode,
     inProgressEvents,
-    recentEventForLinode,
+    recentEventForLinode
   });
- }
-
+};

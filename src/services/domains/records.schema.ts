@@ -1,8 +1,7 @@
 import { number, object, string } from 'yup';
 
 const recordBaseSchema = object().shape({
-  name: string()
-    .max(100, 'Record name must be 100 characters or less.'),
+  name: string().max(100, 'Record name must be 100 characters or less.'),
   target: string(),
   priority: number()
     .min(0, 'Priority must be between 0 and 255.')
@@ -15,15 +14,24 @@ const recordBaseSchema = object().shape({
   tag: string()
 });
 
-const validRecordTypes: string[] = ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'TXT', 'SRV', 'PTR', 'CAA'];
+const validRecordTypes: string[] = [
+  'A',
+  'AAAA',
+  'NS',
+  'MX',
+  'CNAME',
+  'TXT',
+  'SRV',
+  'PTR',
+  'CAA'
+];
 
 export const createRecordSchema = recordBaseSchema.shape({
   type: string()
     .required('Type is required.')
-    .oneOf(validRecordTypes),
+    .oneOf(validRecordTypes)
 });
 
 export const updateRecordSchema = recordBaseSchema.shape({
-  type: string()
-    .oneOf(validRecordTypes),
+  type: string().oneOf(validRecordTypes)
 });

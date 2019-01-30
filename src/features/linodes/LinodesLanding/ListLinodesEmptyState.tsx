@@ -3,63 +3,64 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-type CSSClasses = 'root'
-  | 'copy'
-  | 'icon'
-  | 'title';
+type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes scaleIn': {
     from: {
-      transform: 'translateX( -10px ) rotateY( -180deg )',
+      transform: 'translateX( -10px ) rotateY( -180deg )'
     },
     to: {
-      transformOrigin: 'center center',
-    },
+      transformOrigin: 'center center'
+    }
   },
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   root: {
     padding: `${theme.spacing.unit * 2}px 0`,
     [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing.unit * 10}px 0`,
-    },
+      padding: `${theme.spacing.unit * 10}px 0`
+    }
   },
   copy: {
     textAlign: 'center',
-    maxWidth: 390,
+    maxWidth: 390
   },
   icon: {
     animation: 'scaleIn .5s ease-in-out',
     width: 225,
     height: 225,
     '& use': {
-      fill: theme.bg.main,
+      fill: theme.bg.main
     },
     '& .outerCircle': {
       fill: theme.color.absWhite,
-      stroke: theme.bg.offWhite,
+      stroke: theme.bg.offWhite
     },
     '& .insidePath path': {
       opacity: 0,
       animation: 'fadeIn .2s ease-in-out forwards .3s',
-      stroke: theme.palette.primary.main,
-    },
+      stroke: theme.palette.primary.main
+    }
   },
   title: {
     fontFamily: 'LatoWebBold',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
 
 type PropsWithStyles = WithStyles<CSSClasses> & RouteComponentProps<{}>;
@@ -70,22 +71,28 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
 
     return (
       <Grid
-      container
-      spacing={24}
-      alignItems="center"
-      direction="column"
-      justify="center"
-      className={classes.root}
-    >
-        <Grid item xs={12}><LinodeSvg className={classes.icon} /></Grid>
-        <Typography variant="h4" className={classes.title} data-qa-placeholder-title>
+        container
+        spacing={24}
+        alignItems="center"
+        direction="column"
+        justify="center"
+        className={classes.root}
+      >
+        <Grid item xs={12}>
+          <LinodeSvg className={classes.icon} />
+        </Grid>
+        <Typography
+          variant="h4"
+          className={classes.title}
+          data-qa-placeholder-title
+        >
           You don't have any Linodes!
         </Typography>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Typography variant="body1">
-              Host your next project on a Linode. Click the button below to choose a plan and deploy
-              an image.
-        </Typography>
+            Host your next project on a Linode. Click the button below to choose
+            a plan and deploy an image.
+          </Typography>
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
@@ -101,7 +108,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
 }
 const enhanced = compose(
   withRouter,
-  withStyles(styles),
+  withStyles(styles)
 );
 
 export default enhanced(ListLinodesEmptyState);

@@ -1,4 +1,3 @@
-
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
@@ -9,7 +8,6 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { images } from 'src/__data__/images';
 
 describe('StackScriptUpdate', () => {
-
   const component = shallow(
     <StackScriptUpdate
       {...reactRouterProps}
@@ -17,17 +15,19 @@ describe('StackScriptUpdate', () => {
         titleWrapper: '',
         root: '',
         backButton: '',
-        createTitle: '',
+        createTitle: ''
       }}
       username="someguy"
       imagesData={images}
       imagesError={undefined}
       imagesLoading={false}
     />
-  )
+  );
 
   it(`should render a confirmation dialog with the title "Clear StackScript Configuration?"`, () => {
-    const modalTitle = component.find('WithStyles(ConfirmationDialog)').prop('title');
+    const modalTitle = component
+      .find('WithStyles(ConfirmationDialog)')
+      .prop('title');
     expect(modalTitle).toBe('Clear StackScript Configuration?');
   });
 
@@ -36,7 +36,9 @@ describe('StackScriptUpdate', () => {
   });
 
   describe('Breadcrumb', () => {
-    const breadcrumb = component.find('[data-qa-update-stackscript-breadcrumb]');
+    const breadcrumb = component.find(
+      '[data-qa-update-stackscript-breadcrumb]'
+    );
     it('should render', () => {
       expect(breadcrumb).toHaveLength(1);
     });

@@ -14,17 +14,30 @@ interface Props {
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
   linodeStatus: string;
-  openConfigDrawer: (configs: Linode.Config[], fn: (id: number) => void) => void;
-  toggleConfirmation: (bootOption: Linode.BootAction,
-    linodeId: number, linodeLabel: string) => void;
+  openConfigDrawer: (
+    configs: Linode.Config[],
+    fn: (id: number) => void
+  ) => void;
+  toggleConfirmation: (
+    bootOption: Linode.BootAction,
+    linodeId: number,
+    linodeLabel: string
+  ) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   createLinodeActions = () => {
-    const { linodeId, linodeLabel, linodeBackups, linodeStatus,
-      openConfigDrawer, toggleConfirmation, history: { push } } = this.props;
+    const {
+      linodeId,
+      linodeLabel,
+      linodeBackups,
+      linodeStatus,
+      openConfigDrawer,
+      toggleConfirmation,
+      history: { push }
+    } = this.props;
     return (closeMenu: Function): Action[] => {
       const actions = [
         {
@@ -32,73 +45,74 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'Launch Console',
-            })
+              action: 'Launch Console'
+            });
             lishLaunch(linodeId);
             e.preventDefault();
             e.stopPropagation();
-          },
+          }
         },
         {
           title: 'View Graphs',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'View Linode Graphs',
-            })
+              action: 'View Linode Graphs'
+            });
             push(`/linodes/${linodeId}/summary`);
             e.preventDefault();
             e.stopPropagation();
-          },
+          }
         },
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'Navigate to Resize Page',
-            })
+              action: 'Navigate to Resize Page'
+            });
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
-          },
+          }
         },
         {
           title: 'View Backups',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'Navigate to Backups Page',
-            })
+              action: 'Navigate to Backups Page'
+            });
             push(`/linodes/${linodeId}/backup`);
             e.preventDefault();
             e.stopPropagation();
-          },
+          }
         },
         {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'Navigate to Settings Page',
-            })
+              action: 'Navigate to Settings Page'
+            });
             push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
-            e.stopPropagation();          },
-        },
+            e.stopPropagation();
+          }
+        }
       ];
 
       if (linodeStatus === 'offline') {
         actions.unshift({
           title: 'Power On',
-          onClick: (e) => {
+          onClick: e => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'Power On Linode',
-            })
+              action: 'Power On Linode'
+            });
             powerOnLinode(openConfigDrawer, linodeId, linodeLabel);
             closeMenu();
-          },
+          }
         });
       }
 
@@ -109,26 +123,26 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               sendEvent({
                 category: 'Linode Action Menu Item',
-                action: 'Reboot Linode',
-              })
+                action: 'Reboot Linode'
+              });
               e.preventDefault();
               e.stopPropagation();
               toggleConfirmation('reboot', linodeId, linodeLabel);
               closeMenu();
-            },
+            }
           },
           {
             title: 'Power Off',
-            onClick: (e) => {
+            onClick: e => {
               sendEvent({
                 category: 'Linode Action Menu Item',
-                action: 'Power Off Linode',
-              })
+                action: 'Power Off Linode'
+              });
               e.preventDefault();
               e.stopPropagation();
               toggleConfirmation('power_down', linodeId, linodeLabel);
               closeMenu();
-            },
+            }
           }
         );
       }
@@ -139,21 +153,21 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
-              action: 'Enable Backups',
-            })
+              action: 'Enable Backups'
+            });
             push({
               pathname: `/linodes/${linodeId}/backup`,
               state: { enableOnLoad: true }
             });
             e.preventDefault();
             e.stopPropagation();
-          },
-        })
+          }
+        });
       }
 
       return actions;
     };
-  }
+  };
 
   render() {
     return (
@@ -168,8 +182,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
 const toggleOpenActionMenu = () => {
   sendEvent({
     category: 'Linode Action Menu',
-    action: 'Open Action Menu',
-  })
-}
+    action: 'Open Action Menu'
+  });
+};
 
 export default withRouter(LinodeActionMenu);

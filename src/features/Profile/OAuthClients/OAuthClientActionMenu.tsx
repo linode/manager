@@ -15,7 +15,12 @@ interface Props {
   editPayload: EditPayload;
   onDelete: (id: string) => void;
   onReset: (id: string) => void;
-  onEdit: (id: string, label: string, redirect_uri: string, isPublic: boolean) => void;
+  onEdit: (
+    id: string,
+    label: string,
+    redirect_uri: string,
+    isPublic: boolean
+  ) => void;
 }
 
 type CombinedProps = Props;
@@ -24,23 +29,27 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   state = {
     confirmDeleteOpen: false,
     confirmResetOpen: false,
-    createDrawerOpen: false,
+    createDrawerOpen: false
   };
 
   handleDelete = () => {
     const { id, onDelete } = this.props;
-    onDelete(id)
-  }
+    onDelete(id);
+  };
 
   handleResetSecret = () => {
     const { id, onReset } = this.props;
-    onReset(id)
-  }
+    onReset(id);
+  };
 
   handleEdit = () => {
-    const { editPayload: { label, redirect_uri, isPublic }, id, onEdit } = this.props;
-    onEdit(id, label, redirect_uri, isPublic)
-  }
+    const {
+      editPayload: { label, redirect_uri, isPublic },
+      id,
+      onEdit
+    } = this.props;
+    onEdit(id, label, redirect_uri, isPublic);
+  };
 
   toggleConfirmDelete = (v: Boolean) => this.setState({ confirmDeleteOpen: v });
   openConfirmDelete = () => this.toggleConfirmDelete(true);
@@ -66,13 +75,14 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
             destructive
             type="secondary"
             onClick={this.onDeleteConfirm}
-            data-qa-button-confirm>
+            data-qa-button-confirm
+          >
             Delete
           </Button>
         </ActionsPanel>
       </React.Fragment>
     );
-  }
+  };
 
   toggleConfirmReset = (v: Boolean) => this.setState({ confirmResetOpen: v });
   openConfirmReset = () => this.toggleConfirmReset(true);
@@ -81,7 +91,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   onResetConfirm = () => {
     this.toggleConfirmReset(false);
     this.handleResetSecret();
-  }
+  };
 
   resetDialogActions = () => {
     return (
@@ -98,16 +108,16 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
             destructive
             type="secondary"
             onClick={this.onResetConfirm}
-            data-qa-button-confirm>
+            data-qa-button-confirm
+          >
             Reset Secret
           </Button>
         </ActionsPanel>
       </React.Fragment>
     );
-  }
+  };
 
   createLinodeActions = () => {
-
     return (closeMenu: Function): Action[] => {
       const actions = [
         {
@@ -115,27 +125,27 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleEdit();
             closeMenu();
-          },
+          }
         },
         {
           title: 'Reset Secret',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
             this.toggleConfirmReset(true);
-          },
+          }
         },
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
             this.toggleConfirmDelete(true);
-          },
-        },
+          }
+        }
       ];
 
       return actions;
     };
-  }
+  };
 
   render() {
     return (

@@ -4,7 +4,11 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -14,8 +18,8 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -40,7 +44,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     email: '',
     restricted: false,
     errors: [],
-    submitting: false,
+    submitting: false
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -50,13 +54,17 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         email: '',
         restricted: false,
         errors: [],
-        submitting: false,
-      })
+        submitting: false
+      });
     }
   }
 
   onSubmit = () => {
-    const { addUser, onClose, history: { push } } = this.props;
+    const {
+      addUser,
+      onClose,
+      history: { push }
+    } = this.props;
     const { username, email, restricted } = this.state;
     this.setState({ errors: [], submitting: true });
     createUser({ username, email, restricted })
@@ -66,34 +74,38 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         if (!user.restricted) {
           addUser(user);
         } else {
-          push(`/account/users/${username}/permissions`, { newUsername: user.username });
+          push(`/account/users/${username}/permissions`, {
+            newUsername: user.username
+          });
         }
       })
-      .catch((errResponse) => {
-        const errors = pathOr([
-          { reason: 'An unexpected error occured while creating the user.' }
-        ], ['response', 'data', 'errors'], errResponse);
+      .catch(errResponse => {
+        const errors = pathOr(
+          [{ reason: 'An unexpected error occured while creating the user.' }],
+          ['response', 'data', 'errors'],
+          errResponse
+        );
         this.setState({ errors, submitting: false });
-      })
-  }
+      });
+  };
 
   onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      username: e.target.value,
+      username: e.target.value
     });
-  }
+  };
 
   onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      email: e.target.value,
+      email: e.target.value
     });
-  }
+  };
 
   onChangeRestricted = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
-      restricted: !this.state.restricted,
+      restricted: !this.state.restricted
     });
-  }
+  };
 
   render() {
     const { open, onClose } = this.props;
@@ -101,18 +113,13 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorsFor(
       { username: 'Username', email: 'Email' },
-      errors);
+      errors
+    );
     const generalError = hasErrorFor('none');
 
     return (
-      <Drawer
-        open={open}
-        onClose={onClose}
-        title="Add a User"
-      >
-        {generalError &&
-          <Notice error text={generalError} />
-        }
+      <Drawer open={open} onClose={onClose} title="Add a User">
+        {generalError && <Notice error text={generalError} />}
         <TextField
           label="Username"
           value={username}
@@ -133,7 +140,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         <FormControlLabel
           style={{ marginTop: 8 }}
           label={
-            (restricted)
+            restricted
               ? `This user will have limited access to account features.
               This can be changed later.`
               : `This user will have full access to account features.
@@ -162,11 +169,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
           >
             Submit
           </Button>
-          <Button
-            type="cancel"
-            onClick={onClose}
-            data-qa-cancel
-          >
+          <Button type="cancel" onClick={onClose} data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>

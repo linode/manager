@@ -1,6 +1,9 @@
 import { concat } from 'ramda';
 import * as React from 'react';
-import Select, { Item, NoOptionsMessageProps } from 'src/components/EnhancedSelect/Select';
+import Select, {
+  Item,
+  NoOptionsMessageProps
+} from 'src/components/EnhancedSelect/Select';
 import { getTags } from 'src/services/tags';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
@@ -10,8 +13,8 @@ export interface Tag {
 }
 
 export interface State {
-  accountTags: Item[],
-  errors: Linode.ApiFieldError[],
+  accountTags: Item[];
+  errors: Linode.ApiFieldError[];
 }
 
 export interface Props {
@@ -24,48 +27,55 @@ export interface Props {
 
 class TagsInput extends React.Component<Props, State> {
   static defaultProps = {
-    label: "Add Tags" ,
+    label: 'Add Tags',
     name: 'tags'
-  }
-  createTag = (inputValue:string) => {
+  };
+  createTag = (inputValue: string) => {
     const { value, onChange } = this.props;
     const newTag = { value: inputValue, label: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
     if (inputValue.length < 3 || inputValue.length > 25) {
-      this.setState({errors: [{'field': 'label', 'reason': 'Length must be 3-25 characters'}] });
+      this.setState({
+        errors: [{ field: 'label', reason: 'Length must be 3-25 characters' }]
+      });
     } else {
       this.setState({
-        errors: [],
+        errors: []
       });
       onChange(updatedSelectedTags);
     }
-  }
+  };
 
   state: State = {
     accountTags: [],
-    errors: [],
-  }
+    errors: []
+  };
 
   componentDidMount() {
     getTags()
-      .then((response) => {
+      .then(response => {
         const accountTags: Item[] = response.data.map((tag: Tag) => {
-          return { label: tag.label, value: tag.label }
+          return { label: tag.label, value: tag.label };
         });
         this.setState({ accountTags });
       })
-      .catch((errors) => {
-        const defaultError = [{ reason: 'There was an error retrieving your tags.' }];
-        this.setState({errors: defaultError});
-      })
+      .catch(errors => {
+        const defaultError = [
+          { reason: 'There was an error retrieving your tags.' }
+        ];
+        this.setState({ errors: defaultError });
+      });
   }
 
-  getEmptyMessage = (value:NoOptionsMessageProps) => {
+  getEmptyMessage = (value: NoOptionsMessageProps) => {
     const { value: tags } = this.props;
-    if (tags.map(tag => tag.value).includes(value.inputValue)) { return 'This tag is already selected.'}
-    else { return "No results." }
-  }
+    if (tags.map(tag => tag.value).includes(value.inputValue)) {
+      return 'This tag is already selected.';
+    } else {
+      return 'No results.';
+    }
+  };
 
   render() {
     const { tagError, onChange, value, name, label } = this.props;
@@ -78,18 +88,18 @@ class TagsInput extends React.Component<Props, State> {
     return (
       <Select
         name={name}
-        variant='creatable'
+        variant="creatable"
         isMulti={true}
         label={label}
         options={accountTags}
-        placeholder={"Type to choose or create a tag."}
+        placeholder={'Type to choose or create a tag.'}
         errorText={labelError || tagError || generalError}
         value={value}
         onChange={onChange}
         createNew={this.createTag}
         noOptionsMessage={this.getEmptyMessage}
       />
-    )
+    );
   }
 }
 export default TagsInput;

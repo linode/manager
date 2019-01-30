@@ -5,7 +5,7 @@ import {
   StyleRulesCallback,
   Theme,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -18,15 +18,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   footnote: {
     fontSize: 14,
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   link: {
-    textDecoration: 'underline',
+    textDecoration: 'underline'
   },
   icon: {
     display: 'inline-block',
     fontSize: '0.8em',
-    marginLeft: theme.spacing.unit / 3,
+    marginLeft: theme.spacing.unit / 3
   }
 });
 
@@ -37,25 +37,18 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    classes,
-    onChange,
-    networkHelperEnabled,
-  } = props;
+const NetworkHelper: React.StatelessComponent<CombinedProps> = props => {
+  const { classes, onChange, networkHelperEnabled } = props;
 
   return (
     <React.Fragment>
-      <ExpansionPanel
-        heading="Network Helper"
-        defaultExpanded={true}
-      >
+      <ExpansionPanel heading="Network Helper" defaultExpanded={true}>
         <Grid container direction="column" className={classes.root}>
           <Grid item>
             <Typography variant="body1">
               Network Helper automatically deposits a static networking
               configuration into your Linode at boot.
-          </Typography>
+            </Typography>
           </Grid>
           <Grid item container direction="row" alignItems="center">
             <Grid item>
@@ -68,9 +61,10 @@ const NetworkHelper: React.StatelessComponent<CombinedProps> = (props) => {
                     data-qa-toggle-network-helper
                   />
                 }
-                label={networkHelperEnabled
-                  ? "Enabled (default behavior)"
-                  : "Disabled"
+                label={
+                  networkHelperEnabled
+                    ? 'Enabled (default behavior)'
+                    : 'Disabled'
                 }
               />
             </Grid>
