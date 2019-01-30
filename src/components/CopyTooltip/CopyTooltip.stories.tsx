@@ -7,17 +7,14 @@ class Example extends React.Component {
     return (
       <div
         style={{
-          margin:'3.5em',
+          margin: '3.5em'
         }}
       >
         Hello World
-        <CopyTooltip
-          text="Hello World"
-        />
+        <CopyTooltip text="Hello World" />
       </div>
     );
   }
 }
 
-storiesOf('Copy Tooltip', module)
-  .add('Copy Tooltip', () => (<Example />));
+storiesOf('Copy Tooltip', module).add('Copy Tooltip', () => <Example />);

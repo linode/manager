@@ -1,14 +1,18 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 type CombinedProps = WithStyles<ClassNames>;
@@ -18,8 +22,8 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
     {
       title: 'Linode Managed',
       src: 'https://linode.com/docs/platform/linode-managed/',
-      body: `How to configure service monitoring with Linode Managed.`,
-    },
+      body: `How to configure service monitoring with Linode Managed.`
+    }
   ];
 
   render() {
@@ -30,8 +34,12 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
           title="Managed Services"
           copy={`Linode Managed is only available in the Classic Manager`}
           buttonProps={{
-            onClick: () => window.open('https://manager.linode.com/account#managed', '_blank'),
-            children: 'Navigate to Classic Manager',
+            onClick: () =>
+              window.open(
+                'https://manager.linode.com/account#managed',
+                '_blank'
+              ),
+            children: 'Navigate to Classic Manager'
           }}
         />
       </React.Fragment>
@@ -44,4 +52,4 @@ const styled = withStyles(styles);
 export default compose(
   setDocs(ManagedLanding.docs),
   styled
-)(ManagedLanding)
+)(ManagedLanding);

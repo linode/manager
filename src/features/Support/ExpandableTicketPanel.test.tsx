@@ -21,30 +21,34 @@ const classes = {
   hivelyImage: '',
   hivelyContainer: '',
   hivelyLinkIcon: ''
-}
+};
 
 const component = new ExpandableTicketPanel({
   isCurrentUser: false,
-  classes,
-})
+  classes
+});
 
-const recent = moment().subtract(6, 'days').format();
-const old = moment().subtract(3, 'months').format();
+const recent = moment()
+  .subtract(6, 'days')
+  .format();
+const old = moment()
+  .subtract(3, 'months')
+  .format();
 
-describe("shouldRenderHively function", () => {
-  it("should return true if an improperly formatted date is passed", () => {
+describe('shouldRenderHively function', () => {
+  it('should return true if an improperly formatted date is passed', () => {
     expect(component.shouldRenderHively(true, 'blah')).toBeTruthy();
   });
-  it("should return true if the date is now", () => {
+  it('should return true if the date is now', () => {
     expect(component.shouldRenderHively(true, moment().format())).toBeTruthy();
   });
-  it("should return true if the date is within the past 7 days", () => {
+  it('should return true if the date is within the past 7 days', () => {
     expect(component.shouldRenderHively(true, recent)).toBeTruthy();
   });
-  it("should return false for dates older than 7 days", () => {
+  it('should return false for dates older than 7 days', () => {
     expect(component.shouldRenderHively(true, old)).toBeFalsy();
   });
-  it("should return false if the fromLinode parameter is false", () => {
+  it('should return false if the fromLinode parameter is false', () => {
     expect(component.shouldRenderHively(false, recent)).toBeFalsy();
   });
 });

@@ -23,9 +23,8 @@ export const getPersonalAccessTokens = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/profile/tokens`),
-  )
-    .then(response => response.data);
+    setURL(`${API_ROOT}/profile/tokens`)
+  ).then(response => response.data);
 
 /**
  * getPersonalAccessToken
@@ -38,9 +37,8 @@ export const getPersonalAccessTokens = (params?: any, filters?: any) =>
 export const getPersonalAccessToken = (id: number) =>
   Request<Token>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/profile/tokens/${id}`),
-  )
-    .then(response => response.data);
+    setURL(`${API_ROOT}/profile/tokens/${id}`)
+  ).then(response => response.data);
 
 /**
  * createPersonalAccessToken
@@ -63,9 +61,8 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
   Request<Token>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/tokens`),
-    setData(data, createPersonalAccessTokenSchema),
-  )
-    .then(response => response.data);
+    setData(data, createPersonalAccessTokenSchema)
+  ).then(response => response.data);
 
 /**
  * updatePersonalAccessToken
@@ -78,13 +75,15 @@ export const createPersonalAccessToken = (data: TokenRequest) =>
  * @param data.expiry { string } Datetime string to update when the token should expire.
  *
  */
-export const updatePersonalAccessToken = (tokenId: number, data: Partial<TokenRequest>) =>
+export const updatePersonalAccessToken = (
+  tokenId: number,
+  data: Partial<TokenRequest>
+) =>
   Request<Token>(
     setURL(`${API_ROOT}/profile/tokens/${tokenId}`),
     setMethod('PUT'),
-    setData(data, createPersonalAccessTokenSchema),
-  )
-    .then(response => response.data);
+    setData(data, createPersonalAccessTokenSchema)
+  ).then(response => response.data);
 
 /**
  * deletePersonalAccessToken
@@ -97,5 +96,5 @@ export const updatePersonalAccessToken = (tokenId: number, data: Partial<TokenRe
 export const deletePersonalAccessToken = (tokenId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/profile/tokens/${tokenId}`),
-    setMethod('DELETE'),
+    setMethod('DELETE')
   );

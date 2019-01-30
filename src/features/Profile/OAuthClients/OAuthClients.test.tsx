@@ -10,28 +10,28 @@ import { OAuthClients } from './OAuthClients';
 describe('OAuth Clients', () => {
   const mockData: Linode.OAuthClient[] = [
     {
-      "public": false,
-      "id": "test1",
-      "redirect_uri": "http://localhost:3000",
-      "thumbnail_url": 'http://localhost:3000',
-      "label": "test1",
-      "status": "active"
+      public: false,
+      id: 'test1',
+      redirect_uri: 'http://localhost:3000',
+      thumbnail_url: 'http://localhost:3000',
+      label: 'test1',
+      status: 'active'
     },
     {
-      "public": true,
-      "id": "test2",
-      "redirect_uri": "http://localhost:3000",
-      "thumbnail_url": 'http://localhost:3000',
-      "label": "test2",
-      "status": "active"
+      public: true,
+      id: 'test2',
+      redirect_uri: 'http://localhost:3000',
+      thumbnail_url: 'http://localhost:3000',
+      label: 'test2',
+      status: 'active'
     },
     {
-      "public": false,
-      "id": "test3",
-      "redirect_uri": "http://localhost:3000",
-      "thumbnail_url": 'http://localhost:3000',
-      "label": "test3",
-      "status": "active"
+      public: false,
+      id: 'test3',
+      redirect_uri: 'http://localhost:3000',
+      thumbnail_url: 'http://localhost:3000',
+      label: 'test3',
+      status: 'active'
     }
   ];
 
@@ -46,7 +46,7 @@ describe('OAuth Clients', () => {
         clearDocs={clearDocs}
       />
     );
-  })
+  });
 
   it('should have a table header with 5 cells', () => {
     const tableHead = wrapper.find('WithStyles(TableHead)[data-qa-table-head]');
@@ -67,11 +67,33 @@ describe('OAuth Clients', () => {
   });
 
   it('should display label, access, id, and callback URL for a given client', () => {
-    const testRow = wrapper.find('WithStyles(withRouter(TableRow))[data-qa-table-row="test1"]');
-    expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-label]').children().text()).toEqual('test1')
-    expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-access]').children().text()).toEqual('Private')
-    expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-id]').children().text()).toEqual('test1')
-    expect(testRow.find('WithStyles(WrappedTableCell)[data-qa-oauth-callback]').children().text()).toEqual('http://localhost:3000')
+    const testRow = wrapper.find(
+      'WithStyles(withRouter(TableRow))[data-qa-table-row="test1"]'
+    );
+    expect(
+      testRow
+        .find('WithStyles(WrappedTableCell)[data-qa-oauth-label]')
+        .children()
+        .text()
+    ).toEqual('test1');
+    expect(
+      testRow
+        .find('WithStyles(WrappedTableCell)[data-qa-oauth-access]')
+        .children()
+        .text()
+    ).toEqual('Private');
+    expect(
+      testRow
+        .find('WithStyles(WrappedTableCell)[data-qa-oauth-id]')
+        .children()
+        .text()
+    ).toEqual('test1');
+    expect(
+      testRow
+        .find('WithStyles(WrappedTableCell)[data-qa-oauth-callback]')
+        .children()
+        .text()
+    ).toEqual('http://localhost:3000');
   });
 
   it('should display TableRowError if error if state.error is set.', () => {
@@ -81,6 +103,8 @@ describe('OAuth Clients', () => {
 
   it('should display TableEmptyState if done loading and there is no data', () => {
     wrapper.setProps({ loading: false, data: [] });
-    expect(wrapper.find(`WithStyles(TableRowEmptyState)`).exists()).toBeTruthy();
+    expect(
+      wrapper.find(`WithStyles(TableRowEmptyState)`).exists()
+    ).toBeTruthy();
   });
 });

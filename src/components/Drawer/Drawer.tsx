@@ -2,7 +2,11 @@ import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/core/Drawer';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
@@ -10,53 +14,53 @@ interface Props extends DrawerProps {
   title: string;
 }
 
-type ClassNames = 'drawer'
-| 'button'
-| 'drawerHeader'
-| 'drawerContent'
-| 'backDrop';
+type ClassNames =
+  | 'drawer'
+  | 'button'
+  | 'drawerHeader'
+  | 'drawerContent'
+  | 'backDrop';
 
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   paper: {
     width: 300,
     padding: theme.spacing.unit * 2,
     [theme.breakpoints.up('sm')]: {
       width: 480,
-      padding: theme.spacing.unit * 4,
+      padding: theme.spacing.unit * 4
     },
     '& .actionPanel': {
-      marginTop: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 2
     },
     '& .selectionCard': {
       maxWidth: '100%',
-      flexBasis: '100%',
-    },
+      flexBasis: '100%'
+    }
   },
   drawerHeader: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
-  drawerContent: {
-  },
+  drawerContent: {},
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
     padding: 0,
     '& > span': {
-      padding: 2,
+      padding: 2
     },
     '& :hover, & :focus': {
       color: 'white',
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   },
   backDrop: {
-    backgroundColor: theme.color.drawerBackdrop,
-  },
+    backgroundColor: theme.color.drawerBackdrop
+  }
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
+const DDrawer: React.StatelessComponent<CombinedProps> = props => {
   const { title, classes, children, ...rest } = props;
 
   return (
@@ -66,16 +70,17 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
       classes={{ paper: classes.paper }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
-        disableBackdropClick: true,
+        disableBackdropClick: true
       }}
       data-qa-drawer
-      >
+    >
       <Grid
         container
         justify="space-between"
         alignItems="center"
         className={classes.drawerHeader}
-        updateFor={[title]}>
+        updateFor={[title]}
+      >
         <Grid item>
           <Typography role="header" variant="h2" data-qa-drawer-title>
             {title}
@@ -88,7 +93,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = (props) => {
             className={classes.button}
             data-qa-close-drawer
           >
-          <Close />
+            <Close />
           </Button>
         </Grid>
       </Grid>

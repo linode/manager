@@ -3,7 +3,10 @@ import * as React from 'react';
 import paginate from './Pagey';
 
 const mockData: Linode.ResourcePage<any> = {
-  page: 1, pages: 1, results: 0, data: []
+  page: 1,
+  pages: 1,
+  results: 0,
+  data: []
 };
 
 const mockFn = jest.fn(() => Promise.resolve(mockData));
@@ -18,12 +21,18 @@ const setup = (mockRequest: any = mockFn) => {
 };
 
 describe('Paginator 2: Pagement Day', () => {
-
   describe('props', () => {
     const { wrapper } = setup();
 
     const {
-      count, handlePageChange, handlePageSizeChange, loading, page, pageSize, request, onDelete
+      count,
+      handlePageChange,
+      handlePageSizeChange,
+      loading,
+      page,
+      pageSize,
+      request,
+      onDelete
     } = wrapper.props();
 
     it('should provide a count prop', () => {
@@ -61,7 +70,7 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should provide a loading prop', () => {
-      expect(loading).toBeDefined()
+      expect(loading).toBeDefined();
     });
 
     it('should default loading to true', () => {
@@ -87,12 +96,14 @@ describe('Paginator 2: Pagement Day', () => {
        */
       const mockRequest = jest
         .fn(() => Promise.resolve())
-        .mockImplementationOnce((() => Promise.resolve({
-          data: [101],
-          page: 6,
-          pages: 5,
-          results: 101,
-        })));
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            data: [101],
+            page: 6,
+            pages: 5,
+            results: 101
+          })
+        );
 
       const { wrapper } = setup(mockRequest);
       const request = wrapper.prop('request');
@@ -117,9 +128,8 @@ describe('Paginator 2: Pagement Day', () => {
   });
 
   describe('when handlePageChange is called', () => {
-
     it('should update page with provided argument', () => {
-      const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))))
+      const { wrapper } = setup(jest.fn(() => Promise.resolve(mockData)));
 
       const handlePageChange = wrapper.prop('handlePageChange');
 
@@ -131,7 +141,9 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))))
+      const { wrapper, mockRequest } = setup(
+        jest.fn(() => Promise.resolve(mockData))
+      );
 
       const handlePageChange = wrapper.prop('handlePageChange');
 
@@ -144,9 +156,8 @@ describe('Paginator 2: Pagement Day', () => {
   });
 
   describe('when handlePageSizeChange is called', () => {
-
     it('should update pageSize with provided argument', () => {
-      const { wrapper } = setup(jest.fn((() => Promise.resolve(mockData))));
+      const { wrapper } = setup(jest.fn(() => Promise.resolve(mockData)));
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
 
@@ -159,7 +170,9 @@ describe('Paginator 2: Pagement Day', () => {
     });
 
     it('should result in the request being called with updated params', () => {
-      const { wrapper, mockRequest } = setup(jest.fn((() => Promise.resolve(mockData))));
+      const { wrapper, mockRequest } = setup(
+        jest.fn(() => Promise.resolve(mockData))
+      );
 
       const handlePageSizeChange = wrapper.prop('handlePageSizeChange');
 
@@ -169,7 +182,7 @@ describe('Paginator 2: Pagement Day', () => {
 
       expect(mockRequest).toBeCalledWith({}, { page: 1, page_size: 100 }, {});
     });
-  })
+  });
 
   describe('when requesting data', () => {
     describe('and the promise resolves', () => {
@@ -184,7 +197,7 @@ describe('Paginator 2: Pagement Day', () => {
 
       beforeAll(async () => {
         await wrapper.prop('request')();
-        wrapper.update()
+        wrapper.update();
       });
 
       it('should set data to response.data', () => {
@@ -200,7 +213,7 @@ describe('Paginator 2: Pagement Day', () => {
       });
 
       it('should apply the map function to the response.result', async () => {
-        const fn = (numbers: number[]) => numbers.map((n) => n + 1);
+        const fn = (numbers: number[]) => numbers.map(n => n + 1);
         await wrapper.prop('request')(fn);
         wrapper.update();
         expect(wrapper.prop('data')).toEqual([2, 3, 4, 5]);
@@ -212,7 +225,7 @@ describe('Paginator 2: Pagement Day', () => {
 
       beforeAll(async () => {
         await wrapper.prop('request')();
-        wrapper.update()
+        wrapper.update();
       });
 
       it('should set error to rejected value', () => {
@@ -227,7 +240,7 @@ describe('Paginator 2: Pagement Day', () => {
 
     beforeEach(() => {
       mockRequest.mockClear();
-    })
+    });
 
     it('should provide a handleOrderChange handler prop', () => {
       expect(handleOrderChange).toBeDefined();
@@ -237,12 +250,20 @@ describe('Paginator 2: Pagement Day', () => {
     it('should send request with sort by ascending', () => {
       handleOrderChange('label');
 
-      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'asc' })
+      expect(mockRequest).toHaveBeenCalledWith(
+        {},
+        { page: 1, page_size: 25 },
+        { '+order_by': 'label', '+order': 'asc' }
+      );
     });
     it('should send request with sort by descending', () => {
       handleOrderChange('label', 'desc');
 
-      expect(mockRequest).toHaveBeenCalledWith({}, { page: 1, page_size: 25 }, { '+order_by': 'label', '+order': 'desc' })
+      expect(mockRequest).toHaveBeenCalledWith(
+        {},
+        { page: 1, page_size: 25 },
+        { '+order_by': 'label', '+order': 'desc' }
+      );
     });
   });
 });

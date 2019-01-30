@@ -1,6 +1,10 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -12,24 +16,21 @@ export interface ExtendedLinode extends Linode.Linode {
   subHeadings: string[];
 }
 
-type ClassNames =
-  'root'
-  | 'inner'
-  | 'panelBody';
+type ClassNames = 'root' | 'inner' | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   inner: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 2}px 0 0`,
-  },
+    padding: `${theme.spacing.unit * 2}px 0 0`
+  }
 });
 
 interface Props {
@@ -45,13 +46,14 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
-
   renderCard(linode: ExtendedLinode) {
     const { selectedLinodeID, handleSelection } = this.props;
     return (
       <SelectionCard
         key={`selection-card-${linode.id}`}
-        onClick={(e) => { handleSelection(linode); }}
+        onClick={e => {
+          handleSelection(linode);
+        }}
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
         subheadings={linode.subHeadings}
@@ -67,14 +69,12 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
           <Typography role="header" variant="h2" data-qa-select-linode-header>
-            {(!!header) ? header : 'Select Linode'}
+            {!!header ? header : 'Select Linode'}
           </Typography>
           <Typography component="div" className={classes.panelBody}>
             <Grid container>
-              {linodes.map((linode) => {
-                return (
-                  this.renderCard(linode)
-                );
+              {linodes.map(linode => {
+                return this.renderCard(linode);
               })}
             </Grid>
           </Typography>

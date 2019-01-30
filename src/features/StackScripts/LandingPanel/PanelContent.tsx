@@ -1,37 +1,41 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import { compose, pathOr, split } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
-import { deleteStackScript, updateStackScript } from 'src/services/stackscripts';
+import {
+  deleteStackScript,
+  updateStackScript
+} from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
-import { getCommunityStackscripts, getStackScriptsByUser } from '../stackScriptUtils';
+import {
+  getCommunityStackscripts,
+  getStackScriptsByUser
+} from '../stackScriptUtils';
 import DeleteDialog from './Dialogs/DeleteDialog';
 import MakePublicDialog from './Dialogs/MakePublicDialog';
 import StackScriptTable from './Table/StackScriptTable';
 
+type ClassNames = 'root' | 'searchWrapper' | 'searchBar';
 
-
-
-
-type ClassNames = 'root'
-  | 'searchWrapper'
-  | 'searchBar';
-
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   searchWrapper: {
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   searchBar: {
     marginTop: 0,
-    backgroundColor: theme.color.white,
-  },
+    backgroundColor: theme.color.white
+  }
 });
 
-type AcceptedFilters = 'username' | 'description' | 'label'
+type AcceptedFilters = 'username' | 'description' | 'label';
 
 interface Props {
   type: 'own' | 'linode' | 'community';
@@ -44,29 +48,29 @@ interface Dialogs {
 
 interface State {
   searchFilter?: any;
-  dialogs: Dialogs,
+  dialogs: Dialogs;
   selectedStackScriptLabel: string;
   selectedStackScriptID?: number;
   dialogError?: string;
   dialogLoading: boolean;
 }
 
-type CombinedProps = Props
-  & PaginationProps<Linode.StackScript.Response>
-  & StateProps
-  & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  PaginationProps<Linode.StackScript.Response> &
+  StateProps &
+  WithStyles<ClassNames>;
 
 class PanelContent extends React.Component<CombinedProps, State> {
   state: State = {
     searchFilter: undefined,
     dialogs: {
       makePublicOpen: false,
-      deleteOpen: false,
+      deleteOpen: false
     },
     selectedStackScriptLabel: '',
     selectedStackScriptID: undefined,
-    dialogLoading: false,
-  }
+    dialogLoading: false
+  };
 
   componentDidMount() {
     this.props.request();
@@ -81,15 +85,18 @@ class PanelContent extends React.Component<CombinedProps, State> {
      * we can be sure we're searching with a specific filter in mind
      */
     const isAdvancedSearch =
-      (type !== 'linode' && type !== 'own')
-      && (searchTermToLower.includes('username:')
-        || searchTermToLower.includes('label:')
-        || searchTermToLower.includes('description:'))
+      type !== 'linode' &&
+      type !== 'own' &&
+      (searchTermToLower.includes('username:') ||
+        searchTermToLower.includes('label:') ||
+        searchTermToLower.includes('description:'));
 
     if (isAdvancedSearch) {
       /** everything before the colon is the key and after the colon is the search term */
       const [filterKey, advancedSearchTerm] = split(':', searchTermToLower);
-      handleSearch(generateSpecificFilter(filterKey as AcceptedFilters, advancedSearchTerm))
+      handleSearch(
+        generateSpecificFilter(filterKey as AcceptedFilters, advancedSearchTerm)
+      );
     } else {
       /**
        * Otherwise, just generate a catch-all filter for
@@ -103,16 +110,16 @@ class PanelContent extends React.Component<CombinedProps, State> {
       action: 'search',
       label: searchTermToLower
     });
-  }
+  };
 
   closeDialogs = () => {
     this.setState({
       dialogs: {
         makePublicOpen: false,
-        deleteOpen: false,
-      },
-    })
-  }
+        deleteOpen: false
+      }
+    });
+  };
 
   openDeleteDialog = (stackScriptID: number, stackScriptLabel: string) => {
     this.setState({
@@ -120,12 +127,12 @@ class PanelContent extends React.Component<CombinedProps, State> {
       selectedStackScriptLabel: stackScriptLabel,
       dialogs: {
         deleteOpen: true,
-        makePublicOpen: false,
+        makePublicOpen: false
       },
       dialogLoading: false,
-      dialogError: undefined,
-    })
-  }
+      dialogError: undefined
+    });
+  };
 
   openMakePublicDialog = (stackScriptID: number, stackScriptLabel: string) => {
     this.setState({
@@ -133,19 +140,19 @@ class PanelContent extends React.Component<CombinedProps, State> {
       selectedStackScriptLabel: stackScriptLabel,
       dialogs: {
         deleteOpen: false,
-        makePublicOpen: true,
+        makePublicOpen: true
       },
       dialogLoading: false,
-      dialogError: undefined,
-    })
-  }
+      dialogError: undefined
+    });
+  };
 
   deleteStackScript = () => {
     const { selectedStackScriptID } = this.state;
 
     this.setState({
       dialogLoading: true
-    })
+    });
 
     if (!selectedStackScriptID) {
       this.setState({
@@ -163,16 +170,16 @@ class PanelContent extends React.Component<CombinedProps, State> {
         this.setState({
           dialogLoading: false,
           dialogError: 'There was a problem processing your request'
-        })
-      })
-  }
+        });
+      });
+  };
 
   makeStackScriptPublic = () => {
     const { selectedStackScriptID } = this.state;
 
     this.setState({
       dialogLoading: true
-    })
+    });
 
     if (!selectedStackScriptID) {
       this.setState({
@@ -190,9 +197,9 @@ class PanelContent extends React.Component<CombinedProps, State> {
         this.setState({
           dialogLoading: false,
           dialogError: 'There was a problem processing your request'
-        })
-      })
-  }
+        });
+      });
+  };
 
   render() {
     const {
@@ -228,10 +235,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
     };
 
     const {
-      dialogs: {
-        makePublicOpen,
-        deleteOpen
-      },
+      dialogs: { makePublicOpen, deleteOpen },
       selectedStackScriptLabel,
       dialogError,
       dialogLoading
@@ -241,17 +245,19 @@ class PanelContent extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <div className={classes.searchWrapper}>
           <DebouncedSearch
-            placeholderText='Search by Label, Username, or Description'
+            placeholderText="Search by Label, Username, or Description"
             onSearch={this.generateFilterAndTriggerSearch}
             className={classes.searchBar}
             isSearching={searching}
-            toolTipText={type === 'community'
-              ? `Hint: try searching for a specific item by prepending your
+            toolTipText={
+              type === 'community'
+                ? `Hint: try searching for a specific item by prepending your
             search term with "username:", "label:", or "description:"`
-              : ''}
+                : ''
+            }
           />
         </div>
-        {username &&
+        {username && (
           <StackScriptTable
             currentUser={username}
             type={type}
@@ -259,7 +265,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
             triggerMakePublic={this.openMakePublicDialog}
             {...paginationProps}
           />
-        }
+        )}
         <DeleteDialog
           isOpen={deleteOpen}
           handleClose={this.closeDialogs}
@@ -281,56 +287,58 @@ class PanelContent extends React.Component<CombinedProps, State> {
   }
 }
 
-const generateSpecificFilter = (
-  key: AcceptedFilters,
-  searchTerm: string
-) => {
+const generateSpecificFilter = (key: AcceptedFilters, searchTerm: string) => {
   return {
     [key]: {
-      ["+contains"]: searchTerm
+      ['+contains']: searchTerm
     }
-  }
-}
+  };
+};
 
 const generateCatchAllFilter = (searchTerm: string) => {
   return {
-    ["+or"]: [
+    ['+or']: [
       {
-        "label": {
-          ["+contains"]: searchTerm
-        },
+        label: {
+          ['+contains']: searchTerm
+        }
       },
       {
-        "username": {
-          ["+contains"]: searchTerm
-        },
+        username: {
+          ['+contains']: searchTerm
+        }
       },
       {
-        "description": {
-          ["+contains"]: searchTerm
-        },
-      },
-    ],
+        description: {
+          ['+contains']: searchTerm
+        }
+      }
+    ]
   };
-}
+};
 
-const whichRequest = (type: 'linode' | 'own' | 'community', username: string) => {
+const whichRequest = (
+  type: 'linode' | 'own' | 'community',
+  username: string
+) => {
   if (type === 'linode') {
-    return (params: any, filters: any) => getStackScriptsByUser('linode', params, filters)
+    return (params: any, filters: any) =>
+      getStackScriptsByUser('linode', params, filters);
   }
 
   if (type === 'own') {
-    return (params: any, filters: any) => getStackScriptsByUser(username, params, filters)
+    return (params: any, filters: any) =>
+      getStackScriptsByUser(username, params, filters);
+  } else {
+    return (params: any, filters: any) =>
+      getCommunityStackscripts(username, params, filters);
   }
-
-  else {
-    return (params: any, filters: any) => getCommunityStackscripts(username, params, filters)
-  }
-}
+};
 
 const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) =>
-  whichRequest(ownProps.type, ownProps.username)(params, filters)
-    .then(response => response);
+  whichRequest(ownProps.type, ownProps.username)(params, filters).then(
+    response => response
+  );
 
 const paginated = Pagey(updatedRequest);
 
@@ -340,8 +348,8 @@ interface StateProps {
   username: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  username: pathOr('', ['data', 'username'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, Props> = state => ({
+  username: pathOr('', ['data', 'username'], state.__resources.profile)
 });
 
 const connected = connect(mapStateToProps);
@@ -349,7 +357,7 @@ const connected = connect(mapStateToProps);
 const enhanced = compose(
   connected,
   styled,
-  paginated,
-)
+  paginated
+);
 
 export default enhanced(PanelContent);

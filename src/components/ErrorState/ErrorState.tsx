@@ -1,7 +1,11 @@
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
@@ -13,25 +17,25 @@ interface Props {
 
 type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    padding: theme.spacing.unit * 10,
+    padding: theme.spacing.unit * 10
   },
   compact: {
-    padding: theme.spacing.unit * 5,
+    padding: theme.spacing.unit * 5
   },
   cozy: {
     padding: theme.spacing.unit
   },
   iconContainer: {
-    textAlign: 'center',
+    textAlign: 'center'
   },
   icon: {
     marginBottom: theme.spacing.unit * 2,
     color: theme.color.red,
     width: 50,
-    height: 50,
-  },
+    height: 50
+  }
 });
 
 const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
@@ -50,7 +54,12 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
         <div className={props.classes.iconContainer}>
           <ErrorOutline className={props.classes.icon} data-qa-error-icon />
         </div>
-        <Typography style={{ textAlign: 'center' }} role="header" variant="h3" data-qa-error-msg>
+        <Typography
+          style={{ textAlign: 'center' }}
+          role="header"
+          variant="h3"
+          data-qa-error-msg
+        >
           {props.errorText}
         </Typography>
       </Grid>

@@ -1,7 +1,7 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
 
@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'primaryColor' | 'loadingText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: '20px',
     backgroundColor: theme.color.grey2
@@ -36,15 +36,24 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class BarPercent extends React.PureComponent<CombinedProps, {}> {
   render() {
-    const { classes, className, value, max, isFetchingValue, loadingText } = this.props;
+    const {
+      classes,
+      className,
+      value,
+      max,
+      isFetchingValue,
+      loadingText
+    } = this.props;
     return (
       <div className={className}>
         {isFetchingValue && loadingText && (
-          <Typography className={classes.loadingText} variant="h3">{loadingText}</Typography>
+          <Typography className={classes.loadingText} variant="h3">
+            {loadingText}
+          </Typography>
         )}
         <LinearProgress
           value={getPercentage(value, max)}
-          variant={(isFetchingValue ? 'indeterminate' : 'determinate')}
+          variant={isFetchingValue ? 'indeterminate' : 'determinate'}
           classes={{
             root: classes.root,
             barColorPrimary: classes.primaryColor
@@ -55,7 +64,8 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-export const getPercentage = (value: number, max: number) => (value / max) * 100;
+export const getPercentage = (value: number, max: number) =>
+  (value / max) * 100;
 
 const styled = withStyles(styles);
 

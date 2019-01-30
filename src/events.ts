@@ -35,25 +35,23 @@ let inProgress = false;
 export const resetEventsPolling = () => {
   eventRequestDeadline = Date.now() + INTERVAL;
   pollIteration = 1;
-}
+};
 
 export const requestEvents = () => {
   inProgress = true;
-  return store.dispatch(getEvents() as any)
-    .then((events: Linode.Event[]) => {
-      const reversed = events.reverse();
+  return store.dispatch(getEvents() as any).then((events: Linode.Event[]) => {
+    const reversed = events.reverse();
 
-      /**
-       * This feeds the stream for consumers of events$. We're simply pushing the events from the
-       * request response onto the stream one at a time.
-       */
-      reversed
-        .forEach((linodeEvent: Linode.Event) => {
-          events$.next(linodeEvent);
-        });
-      inProgress = false;
+    /**
+     * This feeds the stream for consumers of events$. We're simply pushing the events from the
+     * request response onto the stream one at a time.
+     */
+    reversed.forEach((linodeEvent: Linode.Event) => {
+      events$.next(linodeEvent);
     });
-}
+    inProgress = false;
+  });
+};
 
 setInterval(
   () => {
@@ -72,8 +70,8 @@ setInterval(
 
       if (DISABLE_EVENT_THROTTLE) {
         /*
-        * If throttling is disabled manually set the timeout so tests wait to query the mock data store.
-        */
+         * If throttling is disabled manually set the timeout so tests wait to query the mock data store.
+         */
         eventRequestDeadline = now + 500;
       } else {
         const timeout = INTERVAL * pollIteration;
@@ -85,5 +83,5 @@ setInterval(
     }
   },
   /* the following is the Nyquist rate for the minimum polling interval */
-  (INTERVAL / 2 - 1),
+  INTERVAL / 2 - 1
 );

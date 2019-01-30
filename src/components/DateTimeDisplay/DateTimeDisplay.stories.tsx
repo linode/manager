@@ -12,62 +12,77 @@ interface State {
   cutoff: TimeInterval;
 }
 
-class Example extends React.Component<{},State> {
+class Example extends React.Component<{}, State> {
   state: State = {
     time: moment(),
-    cutoff: 'day',
-  }
+    cutoff: 'day'
+  };
 
   toggleCutoff = (e: React.ChangeEvent<HTMLInputElement>) => {
     const cutoff: TimeInterval = e.target.value as TimeInterval;
     this.setState({ cutoff });
-  }
+  };
 
   render() {
     return (
       <React.Fragment>
-        <p>{'Default display: '}
+        <p>
+          {'Default display: '}
           <DateTimeDisplay
-            value={"2018-07-20T04:23:17"}
+            value={'2018-07-20T04:23:17'}
             timezone={'America/New_York'}
           />
         </p>
-        <p>{'You have been on this page since: '}
+        <p>
+          {'You have been on this page since: '}
           <DateTimeDisplay
             value={this.state.time}
             timezone={'America/New_York'}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'You last checked Slack: '}
+        <p>
+          {'You last checked Slack: '}
           <DateTimeDisplay
-            value={moment().subtract(5,'minutes').format()}
+            value={moment()
+              .subtract(5, 'minutes')
+              .format()}
             timezone={'America/New_York'}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'Last Thursday was: '}
+        <p>
+          {'Last Thursday was: '}
           <DateTimeDisplay
-            value={moment().day(-4).format()}
+            value={moment()
+              .day(-4)
+              .format()}
             timezone={'America/New_York'}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'Three Wednesdays ago was: '}
+        <p>
+          {'Three Wednesdays ago was: '}
           <DateTimeDisplay
-            value={moment().day(-25).format()}
+            value={moment()
+              .day(-25)
+              .format()}
             timezone={'America/New_York'}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'You were so young '}
+        <p>
+          {'You were so young '}
           <DateTimeDisplay
-            value={moment().subtract(11,'months').format()}
+            value={moment()
+              .subtract(11, 'months')
+              .format()}
             timezone={'America/New_York'}
             humanizeCutoff={this.state.cutoff}
           />
         </p>
-        <p>{'Elvis was born: '}
+        <p>
+          {'Elvis was born: '}
           <DateTimeDisplay
             value={moment('1-8-1935').format()}
             timezone={'America/New_York'}
@@ -88,11 +103,8 @@ class Example extends React.Component<{},State> {
           <FormControlLabel value="never" label="never" control={<Radio />} />
         </RadioGroup>
       </React.Fragment>
-    )
+    );
   }
 }
 
-storiesOf('DateTimeDisplay', module)
-  .add('Example', () => (
-    <Example />
-  ));
+storiesOf('DateTimeDisplay', module).add('Example', () => <Example />);

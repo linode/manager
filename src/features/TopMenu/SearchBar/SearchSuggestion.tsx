@@ -18,44 +18,57 @@ interface Props extends OptionProps<any> {
   data: {
     label: string;
     data: SearchSuggestionT;
-  }
+  };
 }
 
 type CombinedProps = Props;
 
 class SearchSuggestion extends React.Component<CombinedProps> {
-  maybeStyleSegment = (text: string, searchText: string, hlClass: string): React.ReactNode => {
-    const idx = text.toLocaleLowerCase().indexOf(searchText.toLocaleLowerCase());
-    if (idx === -1) { return text; }
+  maybeStyleSegment = (
+    text: string,
+    searchText: string,
+    hlClass: string
+  ): React.ReactNode => {
+    const idx = text
+      .toLocaleLowerCase()
+      .indexOf(searchText.toLocaleLowerCase());
+    if (idx === -1) {
+      return text;
+    }
     return (
       <React.Fragment>
         {`${text.substr(0, idx)}`}
-          <span className={hlClass}>{`${text.substr(idx, searchText.length)}`}</span>
+        <span className={hlClass}>{`${text.substr(
+          idx,
+          searchText.length
+        )}`}</span>
         {`${text.slice(idx + searchText.length)}`}
       </React.Fragment>
     );
   };
 
-  renderTags = (tags:string[], selected:boolean) => {
-    if (tags.length === 0) { return; }
-    return tags.map((tag:string) =>
+  renderTags = (tags: string[], selected: boolean) => {
+    if (tags.length === 0) {
+      return;
+    }
+    return tags.map((tag: string) => (
       <Tag
         key={`tag-${tag}`}
         label={tag}
         clickable
         colorVariant={selected ? 'blue' : 'lightBlue'}
-        component={"button" as "div"}
+        component={'button' as 'div'}
         asSuggestion={true}
         className="tag"
         closeMenu={this.props.selectProps.onMenuClose}
       />
-    );
-  }
+    ));
+  };
 
   handleClick = () => {
     const suggestion = this.props.data;
     this.props.selectOption(suggestion);
-  }
+  };
 
   render() {
     const suggestion = this.props.data.data;
@@ -76,31 +89,42 @@ class SearchSuggestion extends React.Component<CombinedProps> {
         {...innerProps}
       >
         <div className={classes.resultContainer}>
-          <div className={`
+          <div
+            className={`
             ${classes.suggestionItem}
             ${classes.suggestionIcon}
-          `}>
+          `}
+          >
             <Icon />
           </div>
-          <div className={`
+          <div
+            className={`
             ${classes.suggestionItem}
             ${classes.suggestionContent}
-          `}>
+          `}
+          >
             <div className={classes.suggestionTitle} data-qa-suggestion-title>
-              {this.maybeStyleSegment(this.props.data.label, suggestion.searchText, classes.highlight)}
+              {this.maybeStyleSegment(
+                this.props.data.label,
+                suggestion.searchText,
+                classes.highlight
+              )}
             </div>
-            <div className={classes.suggestionDescription} data-qa-suggestion-desc>
+            <div
+              className={classes.suggestionDescription}
+              data-qa-suggestion-desc
+            >
               {suggestion.description}
             </div>
           </div>
         </div>
         <div className={classes.tagContainer}>
-            {suggestion.tags && this.renderTags(suggestion.tags, Boolean(this.props.isFocused))}
+          {suggestion.tags &&
+            this.renderTags(suggestion.tags, Boolean(this.props.isFocused))}
         </div>
       </div>
     );
   }
-};
-
+}
 
 export default SearchSuggestion;

@@ -20,14 +20,14 @@ it('renders without crashing', () => {
               pathname: '',
               hash: '',
               search: '',
-              state: {},
+              state: {}
             }}
             classes={{
               appFrame: '',
               content: '',
               wrapper: '',
               grid: '',
-              switchWrapper: '',
+              switchWrapper: ''
             }}
             userId={123456}
             profileLoading={false}
@@ -47,7 +47,7 @@ it('renders without crashing', () => {
           />
         </StaticRouter>
       </Provider>
-    </LinodeThemeWrapper>,
+    </LinodeThemeWrapper>
   );
   expect(component.find('App')).toHaveLength(1);
 });

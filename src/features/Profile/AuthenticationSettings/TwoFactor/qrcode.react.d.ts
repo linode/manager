@@ -1,4 +1,4 @@
-import * as qrcode from 'qrcode.react'; 
+import * as qrcode from 'qrcode.react';
 
 declare module 'qrcode.react' {
   export interface QRCodeProps {

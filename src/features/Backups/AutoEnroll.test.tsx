@@ -10,22 +10,24 @@ const props = {
   error: undefined,
   toggle: jest.fn(),
   classes: {
-    root: '', header: '', icon: '', toggleLabel: '', toggleLabelText: '',
+    root: '',
+    header: '',
+    icon: '',
+    toggleLabel: '',
+    toggleLabelText: ''
   }
-}
+};
 
-const component = shallow(
-  <AutoEnroll {...props} />
-)
+const component = shallow(<AutoEnroll {...props} />);
 
-describe("AutoEnroll display component", () => {
-  it("should render", () => {
+describe('AutoEnroll display component', () => {
+  it('should render', () => {
     expect(component).toBeDefined();
   });
-  it("should render its error prop", () => {
-    component.setProps({ error: "Error"});
-    expect(component.containsMatchingElement(
-      <Notice error text="Error" />
-    )).toBeTruthy();
+  it('should render its error prop', () => {
+    component.setProps({ error: 'Error' });
+    expect(
+      component.containsMatchingElement(<Notice error text="Error" />)
+    ).toBeTruthy();
   });
 });

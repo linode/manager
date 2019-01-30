@@ -1,39 +1,45 @@
 import * as React from 'react';
 import ErrorState from 'src/components/ErrorState';
-import ExpansionPanel, { ExpansionPanelProps } from 'src/components/ExpansionPanel';
+import ExpansionPanel, {
+  ExpansionPanelProps
+} from 'src/components/ExpansionPanel';
 
 /* tslint:disable-next-line */
-export interface Props extends ExpansionPanelProps { }
+export interface Props extends ExpansionPanelProps {}
 
-export default (expansionPanelProps: Props) =>
-  <P extends {}>(Component: React.ComponentType<P>) => {
-    interface State {
-      error?: Error;
-      info?: any;
+export default (expansionPanelProps: Props) => <P extends {}>(
+  Component: React.ComponentType<P>
+) => {
+  interface State {
+    error?: Error;
+    info?: any;
+  }
+
+  type CombinedProps = P;
+
+  class PanelErrorBoundary extends React.Component<CombinedProps, State> {
+    state: State = {};
+    componentDidCatch(error: Error, info: any) {
+      this.setState({ error, info });
     }
 
-    type CombinedProps = P;
+    render() {
+      const { error } = this.state;
 
-    class PanelErrorBoundary extends React.Component<CombinedProps, State> {
-      state: State = {};
-      componentDidCatch(error: Error, info: any) {
-        this.setState({ error, info });
+      if (error) {
+        return (
+          <ExpansionPanel defaultExpanded {...expansionPanelProps}>
+            <ErrorState
+              compact
+              errorText="An error has occured. Please reload and try again."
+            />
+          </ExpansionPanel>
+        );
       }
 
-      render() {
-        const { error } = this.state;
-
-        if (error) {
-          return (
-            <ExpansionPanel defaultExpanded {...expansionPanelProps}>
-              <ErrorState compact errorText="An error has occured. Please reload and try again." />
-            </ExpansionPanel>
-          );
-        }
-
-        return <Component {...this.props} />;
-      }
+      return <Component {...this.props} />;
     }
+  }
 
-    return PanelErrorBoundary;
-  };
+  return PanelErrorBoundary;
+};

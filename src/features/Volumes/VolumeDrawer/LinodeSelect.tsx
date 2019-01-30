@@ -1,15 +1,19 @@
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodes } from 'src/services/linodes';
 import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -30,16 +34,15 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class LinodeSelect extends React.Component<CombinedProps, State> {
-
   mounted: boolean;
 
   static defaultProps = {
-    region: 'none',
+    region: 'none'
   };
 
   state: State = {
     linodes: [],
-    loading: true,
+    loading: true
   };
 
   componentDidMount() {
@@ -60,12 +63,16 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 
   getSelectedLinode = (linodeId?: number) => {
-    if (!linodeId) { return -1; }
+    if (!linodeId) {
+      return -1;
+    }
 
     const { linodes } = this.state;
-    const idx = linodes.findIndex((linode) => Number(linodeId) === Number(linode.value));
+    const idx = linodes.findIndex(
+      linode => Number(linodeId) === Number(linode.value)
+    );
     return idx > -1 ? linodes[idx] : -1;
-  }
+  };
 
   setSelectedLinode = (selected: Item<number>) => {
     if (selected) {
@@ -77,22 +84,23 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
     } else {
       this.props.onChange(-1);
       if (this.mounted) {
-        this.setState({ selectedLinodeId: -1 })
+        this.setState({ selectedLinodeId: -1 });
       }
     }
-  }
+  };
 
   renderLinodeOptions = (linodes: Linode.Linode[]) => {
-    if (!linodes) { return []; }
+    if (!linodes) {
+      return [];
+    }
     return linodes.map((linode: Linode.Linode) => {
-
       return {
         value: linode.id,
         label: linode.label,
         data: { region: linode.region }
-      }
+      };
     });
-  }
+  };
 
   getLinodeFilter = (inputValue: string) => {
     const { region } = this.props;
@@ -100,18 +108,18 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
     if (region && region !== 'none') {
       return {
         label: {
-          '+contains': inputValue,
+          '+contains': inputValue
         },
         region
-      }
+      };
     } else {
       return {
         label: {
-          '+contains': inputValue,
+          '+contains': inputValue
         }
-      }
+      };
     }
-  }
+  };
 
   searchLinodes = (inputValue: string = '') => {
     if (this.mounted) {
@@ -120,7 +128,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
 
     const filterLinodes = this.getLinodeFilter(inputValue);
     getLinodes({}, filterLinodes)
-      .then((response) => {
+      .then(response => {
         const linodes = this.renderLinodeOptions(response.data);
         if (this.mounted) {
           this.setState({ linodes, loading: false });
@@ -130,18 +138,20 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
         if (this.mounted) {
           this.setState({ loading: false });
         }
-      })
-  }
+      });
+  };
 
   onInputChange = (inputValue: string, actionMeta: { action: string }) => {
-    if (actionMeta.action !== 'input-change') { return; }
+    if (actionMeta.action !== 'input-change') {
+      return;
+    }
 
     if (this.mounted) {
       this.setState({ loading: true });
     }
 
     this.debouncedSearch(inputValue);
-  }
+  };
 
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
@@ -164,11 +174,15 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
           onInputChange={this.onInputChange}
           data-qa-select-linode
         />
-        {!error && <FormHelperText data-qa-volume-region>Only Linodes in the selected region are displayed.</FormHelperText>}
+        {!error && (
+          <FormHelperText data-qa-volume-region>
+            Only Linodes in the selected region are displayed.
+          </FormHelperText>
+        )}
       </FormControl>
     );
   }
-};
+}
 
 const styled = withStyles(styles);
 

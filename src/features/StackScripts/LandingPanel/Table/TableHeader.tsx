@@ -1,7 +1,7 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
 
@@ -11,17 +11,15 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
-type ClassNames = 'root'
-  | 'activeDeploys'
-  | 'lastRevision';;
+type ClassNames = 'root' | 'activeDeploys' | 'lastRevision';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   activeDeploys: {
-    minWidth: 140,
+    minWidth: 140
   },
   lastRevision: {
-    minWidth: 130,
+    minWidth: 130
   }
 });
 
@@ -33,13 +31,8 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableHeader: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    sortOrder,
-    handleClick,
-    currentFilter,
-    classes,
-  } = props;
+const TableHeader: React.StatelessComponent<CombinedProps> = props => {
+  const { sortOrder, handleClick, currentFilter, classes } = props;
 
   return (
     <TableHead>

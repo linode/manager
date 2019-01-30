@@ -6,7 +6,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -22,30 +26,33 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { resetEventsPolling } from 'src/events';
 import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import { deleteLinodeConfig, getLinodeConfigs, linodeReboot } from 'src/services/linodes';
+import {
+  deleteLinodeConfig,
+  getLinodeConfigs,
+  linodeReboot
+} from 'src/services/linodes';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 
 type ClassNames = 'root' | 'headline';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   headline: {
     marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-  },
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 interface Props {
   active: boolean;
 }
 
-type CombinedProps =
-  Props
-  & LinodeContext
-  & PaginationProps<Linode.Config>
-  & WithStyles<ClassNames>
-  & InjectedNotistackProps;
+type CombinedProps = Props &
+  LinodeContext &
+  PaginationProps<Linode.Config> &
+  WithStyles<ClassNames> &
+  InjectedNotistackProps;
 
 interface State {
   configDrawer: ConfigDrawerState;
@@ -68,16 +75,16 @@ interface ConfirmDeleteState {
 
 class LinodeConfigs extends React.Component<CombinedProps, State> {
   defaultConfigDrawerState: ConfigDrawerState = {
-    open: false,
+    open: false
   };
 
   state: State = {
     submitting: false,
     confirmDelete: {
       open: false,
-      submitting: false,
+      submitting: false
     },
-    configDrawer: this.defaultConfigDrawerState,
+    configDrawer: this.defaultConfigDrawerState
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
@@ -91,11 +98,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-        >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography role="header" variant="h2" className={classes.headline}>
               Configuration
@@ -140,84 +143,125 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       <Button onClick={onClose} type="cancel" data-qa-cancel-delete>
         Cancel
       </Button>
-      <Button type="secondary" destructive onClick={this.deleteConfig} data-qa-confirm-delete>
+      <Button
+        type="secondary"
+        destructive
+        onClick={this.deleteConfig}
+        data-qa-confirm-delete
+      >
         Delete
       </Button>
     </ActionsPanel>
   );
 
-  resetConfirmConfigDelete = () => this.setConfirmDelete({ open: false, id: undefined })
+  resetConfirmConfigDelete = () =>
+    this.setConfirmDelete({ open: false, id: undefined });
 
-  setConfigDrawer = (obj: Partial<ConfigDrawerState>, fn?: () => void) => this.setState({
-    configDrawer: {
-      ...this.state.configDrawer,
-      ...obj,
-    },
-  }, () => { if (fn) { fn(); } })
+  setConfigDrawer = (obj: Partial<ConfigDrawerState>, fn?: () => void) =>
+    this.setState(
+      {
+        configDrawer: {
+          ...this.state.configDrawer,
+          ...obj
+        }
+      },
+      () => {
+        if (fn) {
+          fn();
+        }
+      }
+    );
 
-  setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) => this.setState({
-    confirmDelete: {
-      ...this.state.confirmDelete,
-      ...obj,
-    },
-  }, () => { if (fn) { fn(); } })
+  setConfirmDelete = (obj: Partial<ConfirmDeleteState>, fn?: () => void) =>
+    this.setState(
+      {
+        confirmDelete: {
+          ...this.state.confirmDelete,
+          ...obj
+        }
+      },
+      () => {
+        if (fn) {
+          fn();
+        }
+      }
+    );
 
   openConfigDrawerForCreation = () => {
     this.setConfigDrawer({
       open: true,
-      linodeConfigId: undefined,
-    })
+      linodeConfigId: undefined
+    });
   };
 
   openForEditing = (config: Linode.Config) => {
     this.setConfigDrawer({
       open: true,
-      linodeConfigId: config.id,
+      linodeConfigId: config.id
     });
-  }
+  };
 
   confirmDelete = (id: number, label: string) => {
     this.setConfirmDelete({ open: true, id, label });
-  }
+  };
 
   handleBoot = (linodeId: number, configId: number, label: string) => {
     linodeReboot(linodeId, configId)
-      .then(() => { resetEventsPolling() })
+      .then(() => {
+        resetEventsPolling();
+      })
       .catch(errorResponse => {
         const errors = pathOr(
-          [{reason: `Error booting ${label}`}],
-          ['response','data','errors'],
+          [{ reason: `Error booting ${label}` }],
+          ['response', 'data', 'errors'],
           errorResponse
-        )
+        );
         errors.map((error: Linode.ApiFieldError) => {
           this.props.enqueueSnackbar(error.reason, {
             variant: 'error'
           });
-        })
+        });
       });
-  }
+  };
 
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
     const { linodeId } = this.props;
-    const { confirmDelete: { id: configId } } = this.state;
-    if (!configId) { return; }
+    const {
+      confirmDelete: { id: configId }
+    } = this.state;
+    if (!configId) {
+      return;
+    }
 
     deleteLinodeConfig(linodeId, configId)
       .then(() => this.props.onDelete())
       .then(() => {
+        this.setConfirmDelete(
+          {
+            submitting: false
+          },
+          () => {
+            this.setConfirmDelete({
+              submitting: false,
+              open: false,
+              id: undefined
+            });
+          }
+        );
+      })
+      .catch(error => {
         this.setConfirmDelete({
           submitting: false,
-        }, () => { this.setConfirmDelete({ submitting: false, open: false, id: undefined }); });
-      })
-      .catch((error) => {
-        this.setConfirmDelete({ submitting: false, open: false, id: undefined });
+          open: false,
+          id: undefined
+        });
         /** @todo move this inside the actual delete modal */
         this.props.enqueueSnackbar(`Unable to delete configuration.`, {
           variant: 'error'
         });
       });
-  }
+  };
 
   linodeConfigsTable = () => {
     return (
@@ -230,7 +274,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             </TableRow>
           </TableHead>
           <TableBody>
-            {this.renderConfigTableContent(this.props.loading, this.props.error, this.props.data)}
+            {this.renderConfigTableContent(
+              this.props.loading,
+              this.props.error,
+              this.props.data
+            )}
           </TableBody>
         </Table>
         <PaginationFooter
@@ -243,19 +291,25 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         />
       </React.Fragment>
     );
-  }
+  };
 
-  renderConfigTableContent = (loading: boolean, error?: Error, data?: Linode.Config[]) => {
+  renderConfigTableContent = (
+    loading: boolean,
+    error?: Error,
+    data?: Linode.Config[]
+  ) => {
     if (error) {
-      return <TableRowError colSpan={2} message={`Unable to load configurations.`} />
+      return (
+        <TableRowError colSpan={2} message={`Unable to load configurations.`} />
+      );
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={2} />
+      return <TableRowLoading colSpan={2} />;
     }
 
     if (!data || data.length === 0) {
-      return <TableRowEmptyState colSpan={2} />
+      return <TableRowEmptyState colSpan={2} />;
     }
 
     return data.map(config => (
@@ -277,7 +331,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const errorBoundary = PanelErrorBoundary({ heading: 'Advanced Configurations' });
+const errorBoundary = PanelErrorBoundary({
+  heading: 'Advanced Configurations'
+});
 
 interface LinodeContext {
   linodeHypervisor: 'kvm' | 'xen';
@@ -287,20 +343,20 @@ interface LinodeContext {
   linodeTotalDisk: number;
   linodeRegion: string;
   linodeStatus: string;
-};
+}
 
-const linodeContext = withLinode<LinodeContext>((context) => ({
+const linodeContext = withLinode<LinodeContext>(context => ({
   linodeHypervisor: context.data!.hypervisor,
   linodeId: context.data!.id,
   linodeLabel: context.data!.label,
   linodeMemory: context.data!.specs.memory,
   linodeTotalDisk: context.data!.specs.disk,
   linodeRegion: context.data!.region,
-  linodeStatus: context.data!.status,
+  linodeStatus: context.data!.status
 }));
 
 const paginated = Pagey((ownProps: LinodeContext, params, filters) => {
-  return getLinodeConfigs(ownProps.linodeId, params, filters)
+  return getLinodeConfigs(ownProps.linodeId, params, filters);
 });
 
 const enhanced = compose<CombinedProps, Props>(

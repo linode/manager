@@ -1,18 +1,21 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 
-type ClassNames = 'root'
-  | 'tableCell';
+type ClassNames = 'root' | 'tableCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tableCell: {
     padding: 17,
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });
 
 export interface Props {
@@ -21,7 +24,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const tableRowLoading: React.StatelessComponent<CombinedProps> = (props) => {
+const tableRowLoading: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
   return (
     <TableRow>

@@ -12,5 +12,5 @@ export {
   WithStyles,
   withStyles,
   withTheme,
-  WithTheme,
+  WithTheme
 } from '@material-ui/core/styles';

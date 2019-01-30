@@ -1,11 +1,10 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import  axios from 'axios';
-import  MockAdapter from 'axios-mock-adapter';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
 
 import { API_ROOT } from '../../constants';
-
 
 import TagsPanel from './TagsPanel';
 
@@ -17,15 +16,12 @@ interface Props {
 
 interface State {
   tags: string[];
-
 }
 
 class TagsPanelDemo extends React.Component<Props, {}> {
-
   state: State = {
     tags: []
   };
-
 
   updateTags = (tags: string[]) => {
     return new Promise<void>(resolve => {
@@ -36,7 +32,7 @@ class TagsPanelDemo extends React.Component<Props, {}> {
         resolve();
       }, 500);
     });
-  }
+  };
 
   componentDidMount() {
     const { tags } = this.props;
@@ -48,27 +44,26 @@ class TagsPanelDemo extends React.Component<Props, {}> {
   render() {
     const { tags } = this.state;
 
-    return (
-      <TagsPanel
-      tags={tags}
-      updateTags={this.updateTags}
-    />
-      );
-    }
+    return <TagsPanel tags={tags} updateTags={this.updateTags} />;
   }
+}
 
 storiesOf('Tags Panel', module)
   .addDecorator(story => {
     const mock = new MockAdapter(axios);
 
     mock.onGet(API_REQUEST).reply(200, {
-      data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({label: tag}))
+      data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({ label: tag }))
     });
     return <div>{story()}</div>;
   })
   .add('Tags panel with tags', () => {
-    return <TagsPanelDemo tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']} />
+    return (
+      <TagsPanelDemo
+        tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']}
+      />
+    );
   })
   .add('Tags panel without tags', () => {
-    return <TagsPanelDemo tags={[]} />
-  })
+    return <TagsPanelDemo tags={[]} />;
+  });

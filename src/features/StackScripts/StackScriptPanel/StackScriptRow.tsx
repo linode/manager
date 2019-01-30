@@ -8,7 +8,11 @@ import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
-import { ClassNames, displayTagsAndShowMore, styles } from '../StackScriptRowHelpers'
+import {
+  ClassNames,
+  displayTagsAndShowMore,
+  styles
+} from '../StackScriptRowHelpers';
 
 export interface Props {
   label: string;
@@ -42,55 +46,55 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
       triggerMakePublic,
       canDelete,
       canEdit,
-      isPublic,
+      isPublic
     } = this.props;
 
-
     const renderLabel = () => {
-
       return (
         <React.Fragment>
           <Link to={`/stackscripts/${stackScriptID}`}>
             <Typography role="header" variant="h3">
-              {stackScriptUsername &&
+              {stackScriptUsername && (
                 <span
-                  className={`${classes.libRadioLabel} ${classes.stackScriptUsername}`}>
+                  className={`${classes.libRadioLabel} ${
+                    classes.stackScriptUsername
+                  }`}
+                >
                   {stackScriptUsername} /&nbsp;
                 </span>
-              }
-              <span
-                className={classes.libRadioLabel}>
-                {label}
-              </span>
+              )}
+              <span className={classes.libRadioLabel}>{label}</span>
             </Typography>
           </Link>
           <Typography variant="body1">{description}</Typography>
         </React.Fragment>
-      )
-    }
+      );
+    };
 
     return (
       <React.Fragment>
         <TableRow data-qa-table-row={label}>
-          <TableCell className={classes.stackScriptCell} data-qa-stackscript-title>
+          <TableCell
+            className={classes.stackScriptCell}
+            data-qa-stackscript-title
+          >
             {renderLabel()}
           </TableCell>
           <TableCell>
-            <Typography
-              role="header"
-              variant="h3"
-              data-qa-stackscript-deploys
-            >
+            <Typography role="header" variant="h3" data-qa-stackscript-deploys>
               {deploymentsActive}
             </Typography>
           </TableCell>
           <TableCell>
-            <Typography role="header" variant="h3" data-qa-stackscript-revision>{updated}</Typography>
+            <Typography role="header" variant="h3" data-qa-stackscript-revision>
+              {updated}
+            </Typography>
           </TableCell>
-          <TableCell className={classes.stackScriptCell} data-qa-stackscript-images>
-            {
-              displayTagsAndShowMore(images)
-            }
+          <TableCell
+            className={classes.stackScriptCell}
+            data-qa-stackscript-images
+          >
+            {displayTagsAndShowMore(images)}
           </TableCell>
           <TableCell>
             <StackScriptsActionMenu
@@ -110,8 +114,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
   }
 }
 
-
 export default recompose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  withStyles(styles),
+  withStyles(styles)
 )(StackScriptRow);

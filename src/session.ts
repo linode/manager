@@ -1,5 +1,10 @@
 import { stringify } from 'querystring';
-import { APP_ROOT, CLIENT_ID, LOGIN_ROOT, OAUTH_TOKEN_REFRESH_TIMEOUT } from 'src/constants';
+import {
+  APP_ROOT,
+  CLIENT_ID,
+  LOGIN_ROOT,
+  OAUTH_TOKEN_REFRESH_TIMEOUT
+} from 'src/constants';
 import store from 'src/store';
 import { setToken } from 'src/store/authentication';
 import { getStorage, setStorage } from 'src/utilities/storage';
@@ -18,13 +23,13 @@ export const start = (oauthToken = '', scopes = '', expires = '') => {
 
   // Add all to state for this (page load) session
   store.dispatch(setToken(oauthToken, scopes));
-}
+};
 
 export const refresh = () => {
   const authToken = getStorage(AUTH_TOKEN);
   const scopes = getStorage(AUTH_SCOPES);
   store.dispatch(setToken(authToken, scopes));
-}
+};
 
 export const expire = () => {
   // Remove these from local storage so if login fails, next time we jump to login sooner.
@@ -32,7 +37,7 @@ export const expire = () => {
   setStorage(AUTH_SCOPES, '');
   setStorage(AUTH_EXPIRE_DATETIME, '');
   store.dispatch(setToken(null, null));
-}
+};
 
 export const initialize = () => {
   const expires = getStorage(AUTH_EXPIRE_DATETIME) || null;
@@ -45,30 +50,34 @@ export const initialize = () => {
   const scopes = getStorage(AUTH_SCOPES) || null;
   // Calling this makes sure AUTH_EXPIRE_DATETIME is always set.
   start(token, scopes, expires);
-}
+};
 
-export const genOAuthEndpoint = (redirectUri: string, scope = '*', nonce: string) => {
+export const genOAuthEndpoint = (
+  redirectUri: string,
+  scope = '*',
+  nonce: string
+) => {
   const query = {
     client_id: CLIENT_ID,
     scope,
     response_type: 'token',
     redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
-    state: nonce,
+    state: nonce
   };
 
   return `${LOGIN_ROOT}/oauth/authorize?${stringify(query)}`;
-}
+};
 
 export const prepareOAuthEndpoint = (redirectUri: string, scope = '*') => {
   const nonce = v4();
   setStorage('authentication/nonce', nonce);
   return genOAuthEndpoint(redirectUri, scope, nonce);
-}
+};
 
 export const redirectToLogin = (path: string, querystring: string) => {
   const redirectUri = `${path}${querystring && `${querystring}`}`;
   window.location.href = prepareOAuthEndpoint(redirectUri);
-}
+};
 
 export const refreshOAuthToken = () => {
   /*
@@ -78,7 +87,7 @@ export const refreshOAuthToken = () => {
    * this comparison once for each refresh attempt.
    */
   const latestRefresh = +getStorage(LATEST_REFRESH);
-  if (Date.now() - latestRefresh < (OAUTH_TOKEN_REFRESH_TIMEOUT - 5000)) {
+  if (Date.now() - latestRefresh < OAUTH_TOKEN_REFRESH_TIMEOUT - 5000) {
     return;
   }
   setStorage(LATEST_REFRESH, Date.now().toString());
@@ -101,7 +110,7 @@ export const refreshOAuthToken = () => {
   setTimeout(() => refresh(), 3000);
   // Remove the iframe after it updates localStorage
   setTimeout(() => iframeContainer.removeChild(iframe), 5000);
-}
+};
 
 export const refreshOAuthOnUserInteraction = () => {
   /*
@@ -125,4 +134,4 @@ export const refreshOAuthOnUserInteraction = () => {
       currentExpiryTime = Date.now() + OAUTH_TOKEN_REFRESH_TIMEOUT;
     }
   });
-}
+};

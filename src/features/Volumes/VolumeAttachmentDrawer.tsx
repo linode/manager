@@ -6,11 +6,17 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
-import withVolumesRequests, { VolumesRequests } from 'src/containers/volumesRequests.container';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
@@ -19,8 +25,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -39,10 +45,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps =
-  & Props
-  & VolumesRequests
-  & WithStyles<ClassNames>;
+type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -50,39 +53,38 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     configs: [],
     selectedLinode: 'none',
     selectedConfig: 'none',
-    errors: [],
+    errors: []
   };
 
   state: State = this.defaultState;
 
   reset = () => {
     this.setState({ ...this.defaultState });
-  }
+  };
 
   updateLinodes = (linodeRegion: string) => {
     /*
      * @todo: We're only getting page 1 here, what if the account has over 100
      * Linodes?
      */
-    getLinodes({ page: 1 }, { region: linodeRegion })
-      .then((response) => {
-        const linodeChoices = response.data.map((linode) => {
-          return [`${linode.id}`, linode.label];
-        });
-        this.setState({ linodes: linodeChoices });
+    getLinodes({ page: 1 }, { region: linodeRegion }).then(response => {
+      const linodeChoices = response.data.map(linode => {
+        return [`${linode.id}`, linode.label];
       });
-  }
+      this.setState({ linodes: linodeChoices });
+    });
+  };
 
   updateConfigs(linodeID: number) {
     getLinodeConfigs(linodeID)
-      .then((response) => {
-        const configChoices = response.data.map((config) => {
+      .then(response => {
+        const configChoices = response.data.map(config => {
           return [`${config.id}`, config.label];
         });
         this.setState({ configs: configChoices });
         if (configChoices.length > 1) {
           this.setState({
-            selectedConfig: configChoices[0][0],
+            selectedConfig: configChoices[0][0]
           });
         }
       })
@@ -97,21 +99,25 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
   changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ selectedLinode: e.target.value });
-    if (e.target.value) { this.updateConfigs(+e.target.value); }
-  }
+    if (e.target.value) {
+      this.updateConfigs(+e.target.value);
+    }
+  };
 
   changeSelectedConfig = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({ selectedConfig: e.target.value });
-  }
+  };
 
   handleClose = () => {
     this.reset();
     this.props.onClose();
-  }
+  };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
-    if (nextProps.linodeRegion
-        && (this.props.linodeRegion !== nextProps.linodeRegion)) {
+    if (
+      nextProps.linodeRegion &&
+      this.props.linodeRegion !== nextProps.linodeRegion
+    ) {
       this.updateLinodes(nextProps.linodeRegion);
     }
     this.setState({ configs: [] });
@@ -121,12 +127,17 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     const { volumeId, attachVolume } = this.props;
     const { selectedLinode, selectedConfig } = this.state;
     if (!selectedLinode || selectedLinode === 'none') {
-      this.setState({ errors: [
-        ...(this.state.errors || []),
-        { field: 'linode_id', reason: 'You must select a Linode' },
-      ]}, () => {
-        scrollErrorIntoView();
-      });
+      this.setState(
+        {
+          errors: [
+            ...(this.state.errors || []),
+            { field: 'linode_id', reason: 'You must select a Linode' }
+          ]
+        },
+        () => {
+          scrollErrorIntoView();
+        }
+      );
       return;
     }
 
@@ -135,25 +146,34 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       linode_id: Number(selectedLinode),
       config_id: Number(selectedConfig) || undefined
     })
-      .then((response) => {
+      .then(response => {
         resetEventsPolling();
         this.handleClose();
       })
-      .catch((error) => {
-        this.setState({ errors: path(['response', 'data', 'errors'], error) }, () => {
-          scrollErrorIntoView();
-        });
+      .catch(error => {
+        this.setState(
+          { errors: path(['response', 'data', 'errors'], error) },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
-  }
+  };
 
   errorResources = {
     linode_id: 'Linode',
-    overwrite: 'Overwrite',
+    overwrite: 'Overwrite'
   };
 
   render() {
     const { open, volumeLabel } = this.props;
-    const { linodes, configs, selectedLinode, selectedConfig, errors } = this.state;
+    const {
+      linodes,
+      configs,
+      selectedLinode,
+      selectedConfig,
+      errors
+    } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
     const linodeError = hasErrorFor('linode_id');
@@ -166,7 +186,6 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         onClose={this.handleClose}
         title={`Attach Volume ${volumeLabel}`}
       >
-
         <LinodeSelect
           linodes={linodes}
           selectedLinode={selectedLinode}
@@ -176,7 +195,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         />
 
         {/* Config Selection */}
-        {configs.length > 1 &&
+        {configs.length > 1 && (
           <FormControl fullWidth>
             <InputLabel
               htmlFor="config"
@@ -192,22 +211,23 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
               inputProps={{ name: 'config', id: 'config' }}
               error={Boolean(configError)}
             >
-              {
-                configs && configs.map((el) => {
-                  return <MenuItem key={el[0]} value={el[0]}>{el[1]}</MenuItem>;
-                })
-              }
+              {configs &&
+                configs.map(el => {
+                  return (
+                    <MenuItem key={el[0]} value={el[0]}>
+                      {el[1]}
+                    </MenuItem>
+                  );
+                })}
             </Select>
-            { Boolean(configError) && <FormHelperText error>{ configError }</FormHelperText> }
+            {Boolean(configError) && (
+              <FormHelperText error>{configError}</FormHelperText>
+            )}
           </FormControl>
-        }
+        )}
 
         <ActionsPanel>
-          <Button
-            type="primary"
-            onClick={this.attachToLinode}
-            data-qa-submit
-          >
+          <Button type="primary" onClick={this.attachToLinode} data-qa-submit>
             Save
           </Button>
           <Button onClick={this.handleClose} data-qa-cancel>

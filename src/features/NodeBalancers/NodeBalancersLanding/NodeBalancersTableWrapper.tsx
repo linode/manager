@@ -1,4 +1,8 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
@@ -8,16 +12,18 @@ import SortableTableHead from './SortableTableHead';
 
 type ClassNames = 'root' | 'paperWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   paperWrapper: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   }
 });
 
 type CombinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
-const NodeBalancersTableWrapper: React.StatelessComponent<CombinedProps> = (props) => {
+const NodeBalancersTableWrapper: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { order, orderBy, handleOrderChange, classes } = props;
 
   return (
@@ -25,7 +31,11 @@ const NodeBalancersTableWrapper: React.StatelessComponent<CombinedProps> = (prop
       <Grid container className="my0">
         <Grid item xs={12} className="py0">
           <Table aria-label="List of NodeBalancers">
-            <SortableTableHead order={order} orderBy={orderBy} handleOrderChange={handleOrderChange} />
+            <SortableTableHead
+              order={order}
+              orderBy={orderBy}
+              handleOrderChange={handleOrderChange}
+            />
             {props.children}
           </Table>
         </Grid>

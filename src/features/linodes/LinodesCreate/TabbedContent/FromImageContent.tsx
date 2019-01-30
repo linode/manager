@@ -5,16 +5,27 @@ import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel, { Disabled } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
-import SelectRegionPanel, { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import SelectRegionPanel, {
+  ExtendedRegion
+} from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
-import userSSHKeyHoc, { State as UserSSHKeyProps } from 'src/features/linodes/userSSHKeyHoc';
-import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
+import userSSHKeyHoc, {
+  State as UserSSHKeyProps
+} from 'src/features/linodes/userSSHKeyHoc';
+import {
+  LinodeActionsProps,
+  withLinodeActions
+} from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -27,14 +38,14 @@ const DEFAULT_IMAGE = 'linode/debian9';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-    },
-  },
+      marginTop: -130
+    }
+  }
 });
 
 interface Notice {
@@ -70,32 +81,37 @@ interface State {
   tags: Tag[];
 }
 
-export type TypeInfo = {
-  title: string,
-  details: string,
-  monthly: number,
-  backupsMonthly: number | null,
-} | undefined;
+export type TypeInfo =
+  | {
+      title: string;
+      details: string;
+      monthly: number;
+      backupsMonthly: number | null;
+    }
+  | undefined;
 
 const errorResources = {
   type: 'A plan selection',
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
-  image: 'Image',
+  image: 'Image'
 };
 
-type CombinedProps =
-  & Props
-  & LinodeActionsProps
-  & UserSSHKeyProps
-  & InjectedNotistackProps
-  & LabelProps
-  & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  LinodeActionsProps &
+  UserSSHKeyProps &
+  InjectedNotistackProps &
+  LabelProps &
+  WithStyles<ClassNames>;
 
 export class FromImageContent extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedImageID: pathOr(DEFAULT_IMAGE, ['history', 'location', 'state', 'selectedImageId'], this.props),
+    selectedImageID: pathOr(
+      DEFAULT_IMAGE,
+      ['history', 'location', 'state', 'selectedImageId'],
+      this.props
+    ),
     selectedTypeID: null,
     selectedRegionID: null,
     password: '',
@@ -103,8 +119,12 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     backups: false,
     privateIP: false,
     isMakingRequest: false,
-    initTab: pathOr(null, ['history', 'location', 'state', 'initTab'], this.props),
-    tags: [],
+    initTab: pathOr(
+      null,
+      ['history', 'location', 'state', 'initTab'],
+      this.props
+    ),
+    tags: []
   };
 
   mounted: boolean = false;
@@ -114,56 +134,61 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     id === this.state.selectedImageID
       ? this.setState({ selectedImageID: null })
       : this.setState({ selectedImageID: id });
-  }
+  };
 
   handleSelectRegion = (id: string) => {
     this.setState({ selectedRegionID: id });
-  }
+  };
 
   handleSelectPlan = (id: string) => {
     this.setState({ selectedTypeID: id });
-  }
+  };
 
   handleChangeTags = (selected: Tag[]) => {
-    this.setState({ tags: selected })
-  }
+    this.setState({ tags: selected });
+  };
 
   handleTypePassword = (value: string) => {
     this.setState({ password: value });
-  }
+  };
 
   handleToggleBackups = () => {
     this.setState({ backups: !this.state.backups });
-  }
+  };
 
   handleTogglePrivateIP = () => {
     this.setState({ privateIP: !this.state.privateIP });
-  }
+  };
 
   getImageInfo = (image: Linode.Image | undefined): Info => {
-    return image && {
-      title: `${image.vendor || image.label}`,
-      details: `${image.vendor ? image.label : ''}`,
-    };
-  }
+    return (
+      image && {
+        title: `${image.vendor || image.label}`,
+        details: `${image.vendor ? image.label : ''}`
+      }
+    );
+  };
 
   label = () => {
-    const { selectedImageID, selectedRegionID } = this.state;;
+    const { selectedImageID, selectedRegionID } = this.state;
     const { getLabel, images } = this.props;
 
     const selectedImage = images.find(img => img.id === selectedImageID);
 
     // Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
-    const image = selectedImage && (selectedImage.is_public
-      ? selectedImage.vendor
-      : selectedImage.label);
-
+    const image =
+      selectedImage &&
+      (selectedImage.is_public ? selectedImage.vendor : selectedImage.label);
 
     return getLabel(image, selectedRegionID);
-  }
+  };
 
   createNewLinode = () => {
-    const { history, userSSHKeys, linodeActions: {createLinode} } = this.props;
+    const {
+      history,
+      userSSHKeys,
+      linodeActions: { createLinode }
+    } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -171,7 +196,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       password,
       backups,
       privateIP,
-      tags,
+      tags
     } = this.state;
 
     this.setState({ isMakingRequest: true });
@@ -183,36 +208,52 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       type: selectedTypeID,
       /* label is optional, pass null instead of empty string to bypass Yup validation. */
       label: label ? label : null,
-      root_pass: password, /* required if image ID is provided */
-      image: selectedImageID, /* optional */
-      backups_enabled: backups, /* optional */
+      root_pass: password /* required if image ID is provided */,
+      image: selectedImageID /* optional */,
+      backups_enabled: backups /* optional */,
       booted: true,
-      authorized_users: userSSHKeys.filter(u => u.selected).map((u) => u.username),
-      tags: tags.map((item: Tag) => item.value),
+      authorized_users: userSSHKeys
+        .filter(u => u.selected)
+        .map(u => u.username),
+      tags: tags.map((item: Tag) => item.value)
     })
       .then((linode: Linode.Linode) => {
-        if (privateIP) { allocatePrivateIP(linode.id); }
+        if (privateIP) {
+          allocatePrivateIP(linode.id);
+        }
 
-        this.props.enqueueSnackbar(`Your Linode ${label} is being created.`, { variant: 'success' });
+        this.props.enqueueSnackbar(`Your Linode ${label} is being created.`, {
+          variant: 'success'
+        });
 
         resetEventsPolling();
         history.push('/linodes');
       })
       .catch((error: any) => {
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
 
-        this.setState(() => ({
-          errors: error.response && error.response.data && error.response.data.errors,
-        }), () => {
-          scrollErrorIntoView();
-        });
+        this.setState(
+          () => ({
+            errors:
+              error.response &&
+              error.response.data &&
+              error.response.data.errors
+          }),
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       })
       .finally(() => {
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
         // regardless of whether request failed or not, change state and enable the submit btn
         this.setState({ isMakingRequest: false });
       });
-  }
+  };
 
   componentWillUnmount() {
     this.mounted = false;
@@ -221,24 +262,47 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    if (!find((image) => image.id === this.state.selectedImageID, this.props.images)) {
+    if (
+      !find(image => image.id === this.state.selectedImageID, this.props.images)
+    ) {
       this.setState({ selectedImageID: null });
     }
   }
 
   render() {
-    const { errors, backups, privateIP, selectedImageID, tags,
-      selectedRegionID, selectedTypeID, password, isMakingRequest, initTab } = this.state;
+    const {
+      errors,
+      backups,
+      privateIP,
+      selectedImageID,
+      tags,
+      selectedRegionID,
+      selectedTypeID,
+      password,
+      isMakingRequest,
+      initTab
+    } = this.state;
 
-
-    const { accountBackups, classes, notice, types, regions, images, getBackupsMonthlyPrice,
-      getRegionInfo, getTypeInfo, updateCustomLabel, userSSHKeys } = this.props;
+    const {
+      accountBackups,
+      classes,
+      notice,
+      types,
+      regions,
+      images,
+      getBackupsMonthlyPrice,
+      getRegionInfo,
+      getTypeInfo,
+      updateCustomLabel,
+      userSSHKeys
+    } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    const imageInfo = this.getImageInfo(this.props.images.find(
-      image => image.id === selectedImageID));
+    const imageInfo = this.getImageInfo(
+      this.props.images.find(image => image.id === selectedImageID)
+    );
 
     const regionInfo = getRegionInfo(selectedRegionID);
 
@@ -251,16 +315,14 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain`}>
-          {notice &&
+          {notice && (
             <Notice
               text={notice.text}
-              error={(notice.level) === 'error'}
-              warning={(notice.level === 'warning')}
+              error={notice.level === 'error'}
+              warning={notice.level === 'warning'}
             />
-          }
-          {generalError &&
-            <Notice text={generalError} error={true} />
-          }
+          )}
+          {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
             images={images}
             handleSelection={this.handleSelectImage}
@@ -289,18 +351,20 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
               label: 'Linode Label',
               value: label || '',
               onChange: updateCustomLabel,
-              errorText: hasErrorFor('label'),
+              errorText: hasErrorFor('label')
             }}
             tagsInputProps={{
               value: tags,
               onChange: this.handleChangeTags,
-              tagError: hasErrorFor('tag'),
+              tagError: hasErrorFor('tag')
             }}
             updateFor={[tags, label, errors]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
-            passwordFieldDisabled={this.props.handleDisablePasswordField(!!selectedImageID)}
+            passwordFieldDisabled={this.props.handleDisablePasswordField(
+              !!selectedImageID
+            )}
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}
@@ -318,55 +382,55 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
-          <Sticky
-            topOffset={-24}
-            disableCompensation>
-            {
-              (props: StickyProps) => {
-                const displaySections = [];
-                if (imageInfo) {
-                  displaySections.push(imageInfo);
-                }
+          <Sticky topOffset={-24} disableCompensation>
+            {(props: StickyProps) => {
+              const displaySections = [];
+              if (imageInfo) {
+                displaySections.push(imageInfo);
+              }
 
-                if (regionInfo) {
-                  displaySections.push({
-                    title: regionInfo.title,
-                    details: regionInfo.details,
-                  });
-                }
+              if (regionInfo) {
+                displaySections.push({
+                  title: regionInfo.title,
+                  details: regionInfo.details
+                });
+              }
 
-                if (typeInfo) {
-                  displaySections.push(typeInfo);
-                }
+              if (typeInfo) {
+                displaySections.push(typeInfo);
+              }
 
-                if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                  displaySections.push(renderBackupsDisplaySection(accountBackups, typeInfo.backupsMonthly));
-                }
-
-                let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-                if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                  calculatedPrice += typeInfo.backupsMonthly;
-                }
-
-                return (
-                  <CheckoutBar
-                    heading={`${label || 'Linode'} Summary`}
-                    calculatedPrice={calculatedPrice}
-                    disabled={isMakingRequest}
-                    onDeploy={this.createNewLinode}
-                    displaySections={displaySections}
-                    {...props}
-                  />
+              if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+                displaySections.push(
+                  renderBackupsDisplaySection(
+                    accountBackups,
+                    typeInfo.backupsMonthly
+                  )
                 );
               }
-            }
+
+              let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
+              if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+                calculatedPrice += typeInfo.backupsMonthly;
+              }
+
+              return (
+                <CheckoutBar
+                  heading={`${label || 'Linode'} Summary`}
+                  calculatedPrice={calculatedPrice}
+                  disabled={isMakingRequest}
+                  onDeploy={this.createNewLinode}
+                  displaySections={displaySections}
+                  {...props}
+                />
+              );
+            }}
           </Sticky>
         </Grid>
       </React.Fragment>
     );
   }
 }
-
 
 const styled = withStyles(styles);
 
@@ -375,7 +439,7 @@ const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   userSSHKeyHoc,
   withLabelGenerator,
-  withLinodeActions,
+  withLinodeActions
 );
 
 export default enhanced(FromImageContent);

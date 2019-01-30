@@ -8,9 +8,9 @@ class Example extends React.Component<{}, { currentPage: number }> {
     this.state = { currentPage: 1 };
   }
 
-  handleClick = (page:number) => {
+  handleClick = (page: number) => {
     this.setState({ currentPage: page });
-  }
+  };
 
   render() {
     return (
@@ -26,7 +26,6 @@ class Example extends React.Component<{}, { currentPage: number }> {
 
 export default Example;
 
-storiesOf('Pagination Controls', module)
-  .add('Interactive example', () => (
-    <Example />
-  ))
+storiesOf('Pagination Controls', module).add('Interactive example', () => (
+  <Example />
+));

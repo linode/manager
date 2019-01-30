@@ -1,15 +1,19 @@
 import { clone } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { setUpCharts } from 'src/utilities/charts';
 
 setUpCharts();
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface DataSet {
@@ -34,43 +38,47 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const chartOptions: any = {
   maintainAspectRatio: false,
   animation: {
-    duration: 0,
+    duration: 0
   },
   legend: {
-    display: false,
+    display: false
   },
   scales: {
-    yAxes: [{
-      gridLines: {
-        borderDash: [3, 6],
-        zeroLineWidth: 1,
-        zeroLineBorderDashOffset: 2,
-      },
-      ticks: {
-        beginAtZero: true,
-        callback(value: number, index: number) {
-          if (value >= 1000000) {
-            return (value / 1000000) + 'M';
-          }
-          if (value >= 1000) {
-            return (value / 1000) + 'K';
-          }
-          return value;
+    yAxes: [
+      {
+        gridLines: {
+          borderDash: [3, 6],
+          zeroLineWidth: 1,
+          zeroLineBorderDashOffset: 2
         },
-      },
-    }],
-    xAxes: [{
-      type: 'time',
-      gridLines: {
-        display: false,
-      },
-      time: {
-        displayFormats: {
-          hour: 'HH:00',
-          minute: 'HH:00',
+        ticks: {
+          beginAtZero: true,
+          callback(value: number, index: number) {
+            if (value >= 1000000) {
+              return value / 1000000 + 'M';
+            }
+            if (value >= 1000) {
+              return value / 1000 + 'K';
+            }
+            return value;
+          }
+        }
+      }
+    ],
+    xAxes: [
+      {
+        type: 'time',
+        gridLines: {
+          display: false
         },
-      },
-    }],
+        time: {
+          displayFormats: {
+            hour: 'HH:00',
+            minute: 'HH:00'
+          }
+        }
+      }
+    ]
   },
   tooltips: {
     cornerRadius: 0,
@@ -80,11 +88,11 @@ const chartOptions: any = {
     titleFontColor: '#606469',
     xPadding: 16,
     yPadding: 10,
-    borderWidth: .5,
+    borderWidth: 0.5,
     borderColor: '#999',
     caretPadding: 10,
-    position: 'nearest',
-  },
+    position: 'nearest'
+  }
 };
 
 const lineOptions: ChartData<any> = {
@@ -93,11 +101,10 @@ const lineOptions: ChartData<any> = {
   borderJoinStyle: 'miter',
   lineTension: 0,
   pointRadius: 0,
-  pointHitRadius: 10,
+  pointHitRadius: 10
 };
 
 class LineGraph extends React.Component<CombinedProps, {}> {
-
   getChartOptions = (suggestedMax?: number) => {
     const finalChartOptions = clone(chartOptions);
     const { showToday } = this.props;
@@ -105,12 +112,12 @@ class LineGraph extends React.Component<CombinedProps, {}> {
     if (showToday) {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
         hour: 'HH:00',
-        minute: 'HH:00',
+        minute: 'HH:00'
       };
     } else {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
         hour: 'MMM DD',
-        minute: 'MMM DD',
+        minute: 'MMM DD'
       };
     }
 
@@ -119,12 +126,12 @@ class LineGraph extends React.Component<CombinedProps, {}> {
     }
 
     return finalChartOptions;
-  }
+  };
 
   formatData = () => {
     const { data } = this.props;
 
-    return data.map((dataSet) => {
+    return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
         acc.push({ t: point[0], y: point[1] });
         return acc;
@@ -134,10 +141,10 @@ class LineGraph extends React.Component<CombinedProps, {}> {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
         data: timeData,
-        ...lineOptions,
+        ...lineOptions
       };
     });
-  }
+  };
 
   render() {
     const { chartHeight, suggestedMax } = this.props;
@@ -146,7 +153,7 @@ class LineGraph extends React.Component<CombinedProps, {}> {
         height={chartHeight || 300}
         options={this.getChartOptions(suggestedMax)}
         data={{
-          datasets: this.formatData(),
+          datasets: this.formatData()
         }}
       />
     );

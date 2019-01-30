@@ -5,7 +5,11 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import IconButton from 'src/components/core/IconButton';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -16,7 +20,8 @@ import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import DocumentationResults, { SearchResult } from './DocumentationResults';
 import HelpResources from './HelpResources';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'backButton'
   | 'searchBar'
   | 'searchBoxInner'
@@ -24,59 +29,64 @@ type ClassNames = 'root'
   | 'searchField'
   | 'searchIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     maxWidth: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    position: 'relative',
+    position: 'relative'
   },
   backButton: {
     margin: '2px 0 0 -16px',
     '& svg': {
       width: 34,
-      height: 34,
-    },
+      height: 34
+    }
   },
   searchBar: {
-    maxWidth: '100%',
+    maxWidth: '100%'
   },
   searchBoxInner: {
     padding: theme.spacing.unit * 3,
     backgroundColor: theme.color.grey2,
     marginTop: 0,
     '& > div': {
-      maxWidth: '100%',
-    },
+      maxWidth: '100%'
+    }
   },
   searchHeading: {
     color: theme.color.black,
     marginBottom: theme.spacing.unit * 2,
-    fontSize: '175%',
+    fontSize: '175%'
   },
   searchField: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   searchIcon: {
     marginRight: 0,
     '& svg': {
-      color: theme.palette.text.primary,
+      color: theme.palette.text.primary
     }
-  },
+  }
 });
 
 interface State {
   query: string;
 }
 
-type CombinedProps = AlgoliaProps & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = AlgoliaProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}>;
 
-export class SupportSearchLanding extends React.Component<CombinedProps, State> {
-  searchIndex:any = null;
+export class SupportSearchLanding extends React.Component<
+  CombinedProps,
+  State
+> {
+  searchIndex: any = null;
   state: State = {
-    query: '',
-  }
+    query: ''
+  };
 
   componentDidMount() {
     this.searchFromParams();
@@ -94,15 +104,15 @@ export class SupportSearchLanding extends React.Component<CombinedProps, State> 
     }
   }
 
-  onInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ query: e.target.value });
     this.props.searchAlgolia(e.target.value);
-  }
+  };
 
   onBackButtonClick = () => {
     const { history } = this.props;
     history.push('/support');
-  }
+  };
 
   render() {
     const { classes, searchEnabled, searchError, searchResults } = this.props;
@@ -123,8 +133,8 @@ export class SupportSearchLanding extends React.Component<CombinedProps, State> 
               </IconButton>
             </Grid>
             <Grid item>
-              <Typography variant="h1" >
-                {query.length > 1 ? `Search results for "${query}"` : "Search"}
+              <Typography variant="h1">
+                {query.length > 1 ? `Search results for "${query}"` : 'Search'}
               </Typography>
             </Grid>
           </Grid>
@@ -140,33 +150,42 @@ export class SupportSearchLanding extends React.Component<CombinedProps, State> 
             disabled={!Boolean(searchEnabled)}
             InputProps={{
               className: classes.searchBar,
-              startAdornment:
+              startAdornment: (
                 <InputAdornment position="end" className={classes.searchIcon}>
                   <Search />
                 </InputAdornment>
+              )
             }}
           />
         </Grid>
         <Grid item>
-          <DocumentationResults sectionTitle="Documentation" results={docs as SearchResult[]} target={DOCS_SEARCH_URL + query} />
+          <DocumentationResults
+            sectionTitle="Documentation"
+            results={docs as SearchResult[]}
+            target={DOCS_SEARCH_URL + query}
+          />
         </Grid>
         <Grid item>
-          <DocumentationResults sectionTitle="Community Posts" results={community as SearchResult[]} target={COMMUNITY_SEARCH_URL + query} />
+          <DocumentationResults
+            sectionTitle="Community Posts"
+            results={community as SearchResult[]}
+            target={COMMUNITY_SEARCH_URL + query}
+          />
         </Grid>
         <Grid container item>
           <HelpResources />
         </Grid>
       </Grid>
-    )
+    );
   }
 }
 
 const styled = withStyles(styles);
-const searchable = withSearch({hitsPerPage: 5, highlight: false});
+const searchable = withSearch({ hitsPerPage: 5, highlight: false });
 const enhanced: any = compose(
   styled,
   searchable,
   withRouter
-)(SupportSearchLanding)
+)(SupportSearchLanding);
 
 export default enhanced;

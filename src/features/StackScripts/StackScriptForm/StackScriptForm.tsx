@@ -7,7 +7,11 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -17,7 +21,8 @@ import TextField from 'src/components/TextField';
 import filterImagesByDeprecationStatus from 'src/utilities/filterImagesByDeprecationStatus';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'backButton'
   | 'titleWrapper'
   | 'createTitle'
@@ -31,72 +36,72 @@ type ClassNames = 'root'
   | 'warning'
   | 'targetTag';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-    root: {
-      padding: theme.spacing.unit * 2,
-    },
-    backButton: {
-      margin: '5px 0 0 -16px',
-      '& svg': {
-        width: 34,
-        height: 34,
-      },
-    },
-    createTitle: {
-      lineHeight: '2.25em'
-    },
-    divider: {
-      margin: `0 0 ${theme.spacing.unit * 2}px 0`,
-      height: 0,
-    },
-    labelField: {
-      '& input': {
-        paddingLeft: 0,
-      },
-    },
-    titleWrapper: {
-      display: 'flex',
-      marginTop: 5,
-    },
-    gridWithTips: {
-      maxWidth: '50%',
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: '100%',
-        width: '100%',
-      },
-    },
-    tips: {
-      marginLeft: theme.spacing.unit * 4,
-      marginTop: `${theme.spacing.unit * 4}px !important`,
-      padding: theme.spacing.unit * 4,
-      backgroundColor: theme.palette.divider,
-      [theme.breakpoints.down('lg')]: {
-        marginLeft: 0,
-      },
-      [theme.breakpoints.down('md')]: {
-        paddingLeft: theme.spacing.unit * 2,
-      },
-    },
-    chipsContainer: {
-      maxWidth: 415,
-    },
-    warning: {
-      marginTop: theme.spacing.unit * 4,
-    },
-    targetTag: {
-      margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`,
-    },
-    scriptTextarea: {
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {
+    padding: theme.spacing.unit * 2
+  },
+  backButton: {
+    margin: '5px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34
+    }
+  },
+  createTitle: {
+    lineHeight: '2.25em'
+  },
+  divider: {
+    margin: `0 0 ${theme.spacing.unit * 2}px 0`,
+    height: 0
+  },
+  labelField: {
+    '& input': {
+      paddingLeft: 0
+    }
+  },
+  titleWrapper: {
+    display: 'flex',
+    marginTop: 5
+  },
+  gridWithTips: {
+    maxWidth: '50%',
+    [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
-      height: 400,
-      '& textarea': {
-        height: '100%',
-      }
+      width: '100%'
+    }
+  },
+  tips: {
+    marginLeft: theme.spacing.unit * 4,
+    marginTop: `${theme.spacing.unit * 4}px !important`,
+    padding: theme.spacing.unit * 4,
+    backgroundColor: theme.palette.divider,
+    [theme.breakpoints.down('lg')]: {
+      marginLeft: 0
     },
-    revisionTextarea: {
-      maxWidth: '100%',
-    },
-  });
+    [theme.breakpoints.down('md')]: {
+      paddingLeft: theme.spacing.unit * 2
+    }
+  },
+  chipsContainer: {
+    maxWidth: 415
+  },
+  warning: {
+    marginTop: theme.spacing.unit * 4
+  },
+  targetTag: {
+    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`
+  },
+  scriptTextarea: {
+    maxWidth: '100%',
+    height: 400,
+    '& textarea': {
+      height: '100%'
+    }
+  },
+  revisionTextarea: {
+    maxWidth: '100%'
+  }
+});
 
 interface TextFieldHandler {
   value: string;
@@ -143,12 +148,21 @@ const errorResources = {
 // exported as a class component, otherwise no display name
 // appears in tests
 export class StackScriptForm extends React.Component<CombinedProps> {
-
   render() {
-
-    const { currentUser, classes, label, revision, description,
-      script, selectImages, errors, onSubmit, onCancel,
-      isSubmitting, images } = this.props;
+    const {
+      currentUser,
+      classes,
+      label,
+      revision,
+      description,
+      script,
+      selectImages,
+      errors,
+      onSubmit,
+      onCancel,
+      isSubmitting,
+      images
+    } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
@@ -159,15 +173,16 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             <Grid item className={classes.gridWithTips}>
               <TextField
                 InputProps={{
-                  startAdornment:
+                  startAdornment: (
                     <InputAdornment position="end">
                       {currentUser} /
-                    </InputAdornment>,
+                    </InputAdornment>
+                  )
                 }}
-                label='StackScript Label'
+                label="StackScript Label"
                 required
                 onChange={label.handler}
-                placeholder='Enter a label'
+                placeholder="Enter a label"
                 value={label.value}
                 errorText={hasErrorFor('label')}
                 tooltipText="Give your StackScript a label"
@@ -192,60 +207,70 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                   required
                 >
                   Target Images
-              </InputLabel>
+                </InputLabel>
                 <Select
                   open={selectImages.open}
                   onOpen={selectImages.onOpen}
                   onClose={selectImages.onClose}
-                  value='none'
+                  value="none"
                   onChange={selectImages.onChange}
                   inputProps={{ name: 'image', id: 'image' }}
-                  tooltipText='Select which images are compatible with this StackScript'
+                  tooltipText="Select which images are compatible with this StackScript"
                   error={Boolean(hasErrorFor('images'))}
                   errorText={hasErrorFor('images')}
                   data-qa-stackscript-target-select
                 >
-                  <MenuItem disabled key="none" value="none">Select Compatible Images</MenuItem>,
-                {filterImagesByDeprecationStatus(images.available, false).map(image =>
-                    <MenuItem
-                      key={image.id}
-                      value={image.id}
-                      data-qa-stackscript-image={image.id}
-                    >
-                      {image.label}
-                    </MenuItem>,
+                  <MenuItem disabled key="none" value="none">
+                    Select Compatible Images
+                  </MenuItem>
+                  ,
+                  {filterImagesByDeprecationStatus(images.available, false).map(
+                    image => (
+                      <MenuItem
+                        key={image.id}
+                        value={image.id}
+                        data-qa-stackscript-image={image.id}
+                      >
+                        {image.label}
+                      </MenuItem>
+                    )
                   )}
-                  <MenuItem disabled key="deprecated" value="deprecated">Older Images</MenuItem>,
-                {filterImagesByDeprecationStatus(images.available, true).map(image =>
-                    <MenuItem
-                      key={image.id}
-                      value={image.id}
-                    >
-                      {image.label}
-                    </MenuItem>,
+                  <MenuItem disabled key="deprecated" value="deprecated">
+                    Older Images
+                  </MenuItem>
+                  ,
+                  {filterImagesByDeprecationStatus(images.available, true).map(
+                    image => (
+                      <MenuItem key={image.id} value={image.id}>
+                        {image.label}
+                      </MenuItem>
+                    )
                   )}
                 </Select>
               </FormControl>
               <div className={classes.chipsContainer}>
-                {images.selected && images.selected.map((selectedImage, index) => {
-                  return (
-                    <Tag
-                      key={selectedImage}
-                      label={stripImageName(selectedImage)}
-                      colorVariant='lightBlue'
-                      onDelete={() => images.handleRemove(selectedImage)}
-                      className={classes.targetTag}
-                    />
-                  )
-                })}
+                {images.selected &&
+                  images.selected.map((selectedImage, index) => {
+                    return (
+                      <Tag
+                        key={selectedImage}
+                        label={stripImageName(selectedImage)}
+                        colorVariant="lightBlue"
+                        onDelete={() => images.handleRemove(selectedImage)}
+                        className={classes.targetTag}
+                      />
+                    );
+                  })}
               </div>
             </Grid>
             <Grid item className={classes.gridWithTips}>
-              <Notice
-                className={classes.tips}
-              >
-                <Typography role="header" variant="title">Tips</Typography>
-                <Typography>There are four default environment variables provided to you:</Typography>
+              <Notice className={classes.tips}>
+                <Typography role="header" variant="title">
+                  Tips
+                </Typography>
+                <Typography>
+                  There are four default environment variables provided to you:
+                </Typography>
                 <ul>
                   <li>LINODE_ID</li>
                   <li>LINODE_LISHUSERNAME</li>
@@ -270,7 +295,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
           />
           <TextField
             label="Revision Note"
-            placeholder='Enter a revision note'
+            placeholder="Enter a revision note"
             onChange={revision.handler}
             value={revision.value}
             InputProps={{ className: classes.revisionTextarea }}
@@ -301,9 +326,9 @@ export class StackScriptForm extends React.Component<CombinedProps> {
 }
 
 /*
-* @TODO Deprecate once we have a reliable way of mapping
-* the slug to the display name
-*/
+ * @TODO Deprecate once we have a reliable way of mapping
+ * the slug to the display name
+ */
 const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
@@ -311,4 +336,3 @@ const stripImageName = (image: string) => {
 const styled = withStyles(styles);
 
 export default styled(StackScriptForm);
-

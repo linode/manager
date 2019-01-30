@@ -7,7 +7,11 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
@@ -21,19 +25,18 @@ import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
 import ScratchDialog from './ScratchCodeDialog';
 
-
-
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'container'
   | 'title'
   | 'visibility'
   | 'showHideText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   container: {
     display: 'flex',
@@ -41,21 +44,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     alignItems: 'center',
     justifyContent: 'left',
     marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   title: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   visibility: {
     color: theme.palette.primary.main,
     padding: 0,
-    border: 0,
+    border: 0
   },
   showHideText: {
     fontSize: '1rem',
     marginLeft: theme.spacing.unit * 2,
-    color: theme.palette.text.primary,
-  },
+    color: theme.palette.text.primary
+  }
 });
 
 interface Props {
@@ -83,7 +86,10 @@ interface State {
   scratchCode: string;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  StateProps &
+  DispatchProps &
+  WithStyles<ClassNames>;
 
 export class TwoFactor extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -98,15 +104,15 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     disableDialog: {
       open: false,
       error: undefined,
-      submitting: false,
+      submitting: false
     },
     scratchCode: ''
-  }
+  };
 
   /*
-  * @todo This logic can be removed when IP Whitelisting (legacy)
-  * has been fully deprecated.
-  */
+   * @todo This logic can be removed when IP Whitelisting (legacy)
+   * has been fully deprecated.
+   */
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     if (prevState.twoFactorEnabled !== this.state.twoFactorEnabled) {
       this.props.clearState();
@@ -117,8 +123,10 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
   }
 
   openDisableDialog = () => {
-    this.setState({ disableDialog: { open: true, error: undefined, submitting: false, } });
-  }
+    this.setState({
+      disableDialog: { open: true, error: undefined, submitting: false }
+    });
+  };
 
   closeDisableDialog = () => {
     this.setState({
@@ -127,64 +135,80 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       disableDialog: {
         error: undefined,
         open: false,
-        submitting: false,
+        submitting: false
       }
     });
-  }
+  };
 
   confirmToken = (scratchCode: string) => {
     this.props.actions.updateProfile({
       ...this.props.profile,
-      two_factor_auth: true,
+      two_factor_auth: true
     });
     this.setState({
-      success: "Two-factor authentication has been enabled.",
+      success: 'Two-factor authentication has been enabled.',
       showQRCode: false,
       twoFactorEnabled: true,
       twoFactorConfirmed: true,
       scratchCode
-    })
-  }
+    });
+  };
 
   disableTFASuccess = () => {
     this.props.actions.updateProfile({
       ...this.props.profile,
-      two_factor_auth: false,
-    })
+      two_factor_auth: false
+    });
     this.setState({
       success: 'Two-factor authentication has been disabled.',
       twoFactorEnabled: false,
-      twoFactorConfirmed: false,
-    })
-  }
+      twoFactorConfirmed: false
+    });
+  };
 
   getToken = () => {
     this.setState({ loading: true });
     return getTFAToken()
-      .then((response) => {
-        this.setState({ secret: response.data.secret, loading: false, errors: undefined })
-      })
-      .catch((error) => {
-        const fallbackError = [{ reason: 'There was an error retrieving your secret key. Please try again.' }];
+      .then(response => {
         this.setState({
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
+          secret: response.data.secret,
           loading: false,
-        }, () => {
-          scrollErrorIntoView();
+          errors: undefined
         });
+      })
+      .catch(error => {
+        const fallbackError = [
+          {
+            reason:
+              'There was an error retrieving your secret key. Please try again.'
+          }
+        ];
+        this.setState(
+          {
+            errors: pathOr(
+              fallbackError,
+              ['response', 'data', 'errors'],
+              error
+            ),
+            loading: false
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
         return Promise.reject('Error');
       });
-  }
+  };
 
   toggleHidden = () => {
     const { showQRCode } = this.state;
     if (!showQRCode) {
       return this.getToken()
-      .then(response => this.setState({showQRCode: !showQRCode}))
-      .catch(err => err)
+        .then(response => this.setState({ showQRCode: !showQRCode }))
+        .catch(err => err);
     }
     return this.setState({ showQRCode: !this.state.showQRCode });
-  }
+  };
 
   toggleTwoFactorEnabled = (toggleEnabled: boolean) => {
     this.setState({ errors: undefined, success: undefined });
@@ -194,14 +218,22 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
       return this.setState({
         twoFactorEnabled: true,
         loading: true,
-        showQRCode: true,
+        showQRCode: true
       });
     }
-  }
+  };
 
   render() {
     const { classes, username } = this.props;
-    const { errors, loading, secret, showQRCode, success, twoFactorEnabled, twoFactorConfirmed } = this.state;
+    const {
+      errors,
+      loading,
+      secret,
+      showQRCode,
+      success,
+      twoFactorEnabled,
+      twoFactorConfirmed
+    } = this.state;
     const hasErrorFor = getAPIErrorFor({}, errors);
     const generalError = hasErrorFor('none');
 
@@ -222,26 +254,26 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                   >
                     Two-Factor Authentication (TFA)
                   </Typography>
-                  {typeof twoFactorConfirmed !== 'undefined' &&
+                  {typeof twoFactorConfirmed !== 'undefined' && (
                     <TwoFactorToggle
                       twoFactorEnabled={twoFactorEnabled || false}
                       onChange={this.toggleTwoFactorEnabled}
                       toggleDisableDialog={toggleDisable2FA}
                       twoFactorConfirmed={twoFactorConfirmed}
                     />
-                  }
-                  <Typography
-                    variant="body1"
-                    data-qa-copy
-                  >
-                    Two-factor authentication increases the security of your Linode account by requiring two different
-                    forms of authentication to log in: your account password and a security token. You can set up a
-                    third party app such as Authy or Google Authenticator to generate these tokens for you.
+                  )}
+                  <Typography variant="body1" data-qa-copy>
+                    Two-factor authentication increases the security of your
+                    Linode account by requiring two different forms of
+                    authentication to log in: your account password and a
+                    security token. You can set up a third party app such as
+                    Authy or Google Authenticator to generate these tokens for
+                    you.
                   </Typography>
-                  {twoFactorEnabled &&
+                  {twoFactorEnabled && (
                     <div className={classes.container}>
-                      {showQRCode
-                        ? <Button
+                      {showQRCode ? (
+                        <Button
                           type="secondary"
                           className={classes.visibility}
                           onClick={this.toggleHidden}
@@ -249,30 +281,40 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                           data-qa-hide-show-code
                         >
                           <SettingsBackupRestore />
-                          <span className={classes.showHideText}>Hide QR Code</span>
+                          <span className={classes.showHideText}>
+                            Hide QR Code
+                          </span>
                         </Button>
-                        : <Button
+                      ) : (
+                        <Button
                           type="secondary"
                           className={classes.visibility}
                           onClick={this.toggleHidden}
                           data-qa-hide-show-code
                         >
                           <SettingsBackupRestore />
-                          <span className={classes.showHideText}>{twoFactorConfirmed ? "Reset two-factor authentication" : "Show QR Code"}</span>
+                          <span className={classes.showHideText}>
+                            {twoFactorConfirmed
+                              ? 'Reset two-factor authentication'
+                              : 'Show QR Code'}
+                          </span>
                         </Button>
-                      }
+                      )}
                     </div>
-                  }
-                  {twoFactorEnabled && showQRCode && username && twoFactorConfirmed !== undefined &&
-                    <EnableTwoFactorForm
-                      secret={secret}
-                      username={username}
-                      loading={loading}
-                      onSuccess={this.confirmToken}
-                      twoFactorConfirmed={twoFactorConfirmed}
-                      toggleDialog={toggleScratchDialog}
-                    />
-                  }
+                  )}
+                  {twoFactorEnabled &&
+                    showQRCode &&
+                    username &&
+                    twoFactorConfirmed !== undefined && (
+                      <EnableTwoFactorForm
+                        secret={secret}
+                        username={username}
+                        loading={loading}
+                        onSuccess={this.confirmToken}
+                        twoFactorConfirmed={twoFactorConfirmed}
+                        toggleDialog={toggleScratchDialog}
+                      />
+                    )}
                 </Paper>
                 <ScratchDialog
                   open={scratchDialogOpen}
@@ -289,7 +331,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
           </ToggleState>
         )}
       </ToggleState>
-    )
+    );
   }
 }
 
@@ -301,25 +343,31 @@ interface StateProps {
   username?: string;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = state => ({
   profile: path(['data'], state.__resources.profile),
   twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
-  username: path(['data', 'username'], state.__resources.profile),
+  username: path(['data', 'username'], state.__resources.profile)
 });
 
 interface DispatchProps {
   actions: {
     updateProfile: (v: Partial<Linode.Profile>) => void;
-  },
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch,
+  ownProps
+) => ({
   actions: {
-    updateProfile: (profile: Linode.Profile) => dispatch(handleUpdate(profile)),
+    updateProfile: (profile: Linode.Profile) => dispatch(handleUpdate(profile))
   }
 });
 
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default compose<CombinedProps, Props>(
   styled,
@@ -344,7 +392,7 @@ class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
     if (!enabled && twoFactorConfirmed) {
       this.props.toggleDisableDialog();
     }
-  }
+  };
 
   render() {
     const { twoFactorEnabled } = this.props;
@@ -352,7 +400,7 @@ class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
     return (
       <FormControl fullWidth>
         <FormControlLabel
-          label={twoFactorEnabled ? "Enabled" : "Disabled"}
+          label={twoFactorEnabled ? 'Enabled' : 'Disabled'}
           control={
             <Toggle
               checked={twoFactorEnabled}
@@ -362,6 +410,6 @@ class TwoFactorToggle extends React.PureComponent<ToggleProps, {}> {
           }
         />
       </FormControl>
-    )
+    );
   }
 }

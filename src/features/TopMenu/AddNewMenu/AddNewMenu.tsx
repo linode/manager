@@ -11,12 +11,17 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
-type CSSClasses = 'wrapper'
+type CSSClasses =
+  | 'wrapper'
   | 'menu'
   | 'button'
   | 'caret'
@@ -24,40 +29,40 @@ type CSSClasses = 'wrapper'
   | 'mobileButton'
   | 'hidden';
 
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   wrapper: {
     [theme.breakpoints.down('sm')]: {
-      flex: 1,
-    },
+      flex: 1
+    }
   },
   menu: {
     [theme.breakpoints.up('md')]: {
-      marginTop: 20,
-    },
+      marginTop: 20
+    }
   },
   button: {
     paddingRight: 22,
     [theme.breakpoints.down('sm')]: {
-      padding: '6px 11px 7px 14px',
-    },
+      padding: '6px 11px 7px 14px'
+    }
   },
   caret: {
     position: 'relative',
     top: 2,
     left: 2,
-    marginLeft: theme.spacing.unit / 2,
+    marginLeft: theme.spacing.unit / 2
   },
   mobileButton: {
-    marginLeft: -theme.spacing.unit,
+    marginLeft: -theme.spacing.unit
   },
   mobileCreate: {
     width: 32,
-    height: 32,
+    height: 32
   },
   hidden: {
     height: 0,
-    padding: 0,
-  },
+    padding: 0
+  }
 });
 
 interface Props {
@@ -68,65 +73,68 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses> & RouteComponentProps<{}> & DispatchProps;
+type CombinedProps = Props &
+  WithStyles<CSSClasses> &
+  RouteComponentProps<{}> &
+  DispatchProps;
 
 const styled = withStyles(styles);
 
 class AddNewMenu extends React.Component<CombinedProps, State> {
   state = {
-    anchorEl: undefined,
+    anchorEl: undefined
   };
 
   items: MenuItems[] = [
     {
       title: 'Linode',
-      onClick: (e) => {
+      onClick: e => {
         this.props.history.push('/linodes/create');
         this.handleClose();
         e.preventDefault();
       },
       body: `High performance SSD Linux servers for all of your infrastructure needs`,
-      ItemIcon: LinodeIcon,
+      ItemIcon: LinodeIcon
     },
     {
       title: 'Volume',
-      onClick: (e) => {
+      onClick: e => {
         this.props.openVolumeDrawerForCreating();
         this.handleClose();
         e.preventDefault();
       },
       body: `Block Storage service allows you to attach additional storage to your Linode`,
-      ItemIcon: VolumeIcon,
+      ItemIcon: VolumeIcon
     },
     {
       title: 'NodeBalancer',
-      onClick: (e) => {
+      onClick: e => {
         this.props.history.push('/nodebalancers/create');
         this.handleClose();
         e.preventDefault();
       },
       body: `Ensure your valuable applications and services are highly-available`,
-      ItemIcon: NodebalancerIcon,
+      ItemIcon: NodebalancerIcon
     },
     {
       title: 'Domain',
-      onClick: (e) => {
+      onClick: e => {
         this.props.openDomainDrawerForCreating();
         this.handleClose();
         e.preventDefault();
       },
       body: `Manage your DNS records using Linode’s high-availability name servers`,
-      ItemIcon: DomainIcon,
-    },
+      ItemIcon: DomainIcon
+    }
   ];
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
-  }
+  };
 
   handleClose = () => {
     this.setState({ anchorEl: undefined });
-  }
+  };
 
   render() {
     const { anchorEl } = this.state;
@@ -142,11 +150,12 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           data-qa-add-new-menu-button
           aria-label="Linode Create"
         >
-          Create {
-            anchorEl
-              ? <KeyboardArrowUp className={classes.caret} />
-              : <KeyboardArrowDown className={classes.caret} />
-          }
+          Create{' '}
+          {anchorEl ? (
+            <KeyboardArrowUp className={classes.caret} />
+          ) : (
+            <KeyboardArrowDown className={classes.caret} />
+          )}
         </Button>
         <Menu
           id="add-new-menu"
@@ -160,16 +169,11 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           className={classes.menu}
         >
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
-          {this.items.map((i, idx) =>
-            <AddNewMenuItem
-              key={idx}
-              index={idx}
-              count={itemsLen}
-              {...i}
-            />)}
+          {this.items.map((i, idx) => (
+            <AddNewMenuItem key={idx} index={idx} count={itemsLen} {...i} />
+          ))}
         </Menu>
       </div>
-
     );
   }
 }
@@ -181,15 +185,19 @@ interface DispatchProps {
   openVolumeDrawerForCreating: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => bindActionCreators(
-  { openDomainDrawerForCreating, openVolumeDrawerForCreating },
-  dispatch,
-);
+const mapDispatchToProps = (dispatch: Dispatch<any>) =>
+  bindActionCreators(
+    { openDomainDrawerForCreating, openVolumeDrawerForCreating },
+    dispatch
+  );
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
 
 export default compose(
   connected,
   withRouter,
-  styled,
+  styled
 )(AddNewMenu);

@@ -1,12 +1,17 @@
 import * as React from 'react';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'labelCol'
   | 'attachmentCol'
   | 'sizeCol'
@@ -14,25 +19,24 @@ type ClassNames = 'root'
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   // styles for /volumes table
-  volumesWrapper: {
-  },
+  volumesWrapper: {},
   // styles for linodes/id/volumes table
   linodeVolumesWrapper: {
     '& $labelCol': {
       width: '20%',
-      minWidth: 200,
+      minWidth: 200
     },
     '& $sizeCol': {
       width: '15%',
-      minWidth: 100,
+      minWidth: 100
     },
     '& $pathCol': {
       width: '55%',
-      minWidth: 350,
-    },
+      minWidth: 350
+    }
   },
   labelCol: {
     width: '15%',
@@ -41,34 +45,44 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   },
   attachmentCol: {
     width: '15%',
-    minWidth: 150,
+    minWidth: 150
   },
   sizeCol: {
     width: '10%',
-    minWidth: 75,
+    minWidth: 75
   },
   pathCol: {
     width: '25%',
-    minWidth: 250,
-  },
+    minWidth: 250
+  }
 });
 
 interface SortableVolumesTableHeaderProps {
   isVolumesLanding: boolean;
 }
 
-type CombinedProps =
-  & WithStyles<ClassNames>
-  & SortableVolumesTableHeaderProps
-  & Omit<OrderByProps, 'data'>;
+type CombinedProps = WithStyles<ClassNames> &
+  SortableVolumesTableHeaderProps &
+  Omit<OrderByProps, 'data'>;
 
-const SortableTableHeader: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, order, orderBy, handleOrderChange, isVolumesLanding } = props;
+const SortableTableHeader: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    classes,
+    order,
+    orderBy,
+    handleOrderChange,
+    isVolumesLanding
+  } = props;
 
   const isActive = (label: string) => label === orderBy;
 
   return (
-    <TableHead data-qa-table-head={order} className={isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper}>
+    <TableHead
+      data-qa-table-head={order}
+      className={
+        isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper
+      }
+    >
       <TableRow>
         <TableSortCell
           className={classes.labelCol}
@@ -80,7 +94,7 @@ const SortableTableHeader: React.StatelessComponent<CombinedProps> = (props) => 
         >
           Label
         </TableSortCell>
-        {isVolumesLanding &&
+        {isVolumesLanding && (
           <TableSortCell
             data-qa-volume-region-header={order}
             active={isActive('region')}
@@ -90,7 +104,7 @@ const SortableTableHeader: React.StatelessComponent<CombinedProps> = (props) => 
           >
             Region
           </TableSortCell>
-        }
+        )}
         <TableSortCell
           className={classes.sizeCol}
           data-qa-volume-size-header={order}
@@ -101,15 +115,11 @@ const SortableTableHeader: React.StatelessComponent<CombinedProps> = (props) => 
         >
           Size
         </TableSortCell>
-        <TableCell className={classes.pathCol}>
-          File System Path
-        </TableCell>
-        {isVolumesLanding &&
-          <TableCell className={classes.attachmentCol}>
-            Attached To
-         </TableCell>
-        }
-         <TableCell />
+        <TableCell className={classes.pathCol}>File System Path</TableCell>
+        {isVolumesLanding && (
+          <TableCell className={classes.attachmentCol}>Attached To</TableCell>
+        )}
+        <TableCell />
       </TableRow>
     </TableHead>
   );

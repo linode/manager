@@ -1,12 +1,26 @@
 import * as moment from 'moment';
-import { addToEvents, findInEvents, getNumUnseenEvents, isCompletedEvent, isInProgressEvent, mostRecentCreated, setDeletedEvents, updateInProgressEvents } from './event.helpers';
+import {
+  addToEvents,
+  findInEvents,
+  getNumUnseenEvents,
+  isCompletedEvent,
+  isInProgressEvent,
+  mostRecentCreated,
+  setDeletedEvents,
+  updateInProgressEvents
+} from './event.helpers';
 import { ExtendedEvent } from './event.reducer';
 
 describe('event.helpers', () => {
   describe('findInEvents', () => {
-    const entity = { id: 1, label: 'something', type: 'whatever', url: 'whoecares' };
+    const entity = {
+      id: 1,
+      label: 'something',
+      type: 'whatever',
+      url: 'whoecares'
+    };
 
-    const event: Pick<Linode.Event, 'entity'> = { entity }
+    const event: Pick<Linode.Event, 'entity'> = { entity };
 
     it('should return index when entity is found', () => {
       const result = findInEvents([event], entity);
@@ -22,12 +36,12 @@ describe('event.helpers', () => {
   describe('getNumUnseenEvents', () => {
     it('should return number of unseen events', () => {
       const events = [
-        { seen: true, },
-        { seen: false, },
-        { seen: false, },
-        { seen: true, },
-        { seen: false, },
-        { seen: true, },
+        { seen: true },
+        { seen: false },
+        { seen: false },
+        { seen: true },
+        { seen: false },
+        { seen: true }
       ];
       const result = getNumUnseenEvents(events);
       expect(result).toBe(3);
@@ -65,14 +79,15 @@ describe('event.helpers', () => {
   describe('mostRecentCreated', () => {
     it('should return the most recent event time', () => {
       expect(
-        mostRecentCreated(new Date(`1970-01-01T00:00:00`).getTime(), { created: `2018-12-03T22:37:20` })
+        mostRecentCreated(new Date(`1970-01-01T00:00:00`).getTime(), {
+          created: `2018-12-03T22:37:20`
+        })
       ).toBe(moment.utc(`2018-12-03T22:37:20`).valueOf());
 
       const recentTime = moment.utc(`2018-12-03T23:37:20`).valueOf();
       expect(
         mostRecentCreated(recentTime, { created: `2018-12-03T22:37:20` })
       ).toBe(recentTime);
-
     });
   });
 
@@ -83,28 +98,38 @@ describe('event.helpers', () => {
           id: 17957944,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:15:45",
-          action: "linode_delete",
+          created: '2018-12-02T23:15:45',
+          action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
-          entity: { "id": 11440645, "label": "linode11440645", "type": "linode", "url": "/v4/linode/instances/11440645" },
-          status: "finished"
+          entity: {
+            id: 11440645,
+            label: 'linode11440645',
+            type: 'linode',
+            url: '/v4/linode/instances/11440645'
+          },
+          status: 'finished'
         },
         {
           id: 17957108,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T22:55:43",
-          action: "linode_boot",
+          created: '2018-12-02T22:55:43',
+          action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
-          entity: { "id": 11440645, "label": "linode11440645", "type": "linode", "url": "/v4/linode/instances/11440645" },
-          status: "finished",
-        },
+          entity: {
+            id: 11440645,
+            label: 'linode11440645',
+            type: 'linode',
+            url: '/v4/linode/instances/11440645'
+          },
+          status: 'finished'
+        }
       ];
 
       const expected: ExtendedEvent[] = [
@@ -112,30 +137,40 @@ describe('event.helpers', () => {
           id: 17957944,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:15:45",
-          action: "linode_delete",
+          created: '2018-12-02T23:15:45',
+          action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
-          entity: { "id": 11440645, "label": "linode11440645", "type": "linode", "url": "/v4/linode/instances/11440645" },
-          status: "finished",
-          _deleted: "2018-12-02T23:15:45",
+          entity: {
+            id: 11440645,
+            label: 'linode11440645',
+            type: 'linode',
+            url: '/v4/linode/instances/11440645'
+          },
+          status: 'finished',
+          _deleted: '2018-12-02T23:15:45'
         },
         {
           id: 17957108,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T22:55:43",
-          action: "linode_boot",
+          created: '2018-12-02T22:55:43',
+          action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
-          entity: { "id": 11440645, "label": "linode11440645", "type": "linode", "url": "/v4/linode/instances/11440645" },
-          status: "finished",
-          _deleted: "2018-12-02T23:15:45",
-        },
+          entity: {
+            id: 11440645,
+            label: 'linode11440645',
+            type: 'linode',
+            url: '/v4/linode/instances/11440645'
+          },
+          status: 'finished',
+          _deleted: '2018-12-02T23:15:45'
+        }
       ];
 
       const result = setDeletedEvents(events);
@@ -150,56 +185,56 @@ describe('event.helpers', () => {
           id: 17957944,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:15:45",
-          action: "linode_delete",
+          created: '2018-12-02T23:15:45',
+          action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "finished"
+          status: 'finished'
         },
         {
           id: 17957718,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:08:38",
-          action: "linode_shutdown",
+          created: '2018-12-02T23:08:38',
+          action: 'linode_shutdown',
           read: false,
           percent_complete: 60,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "started"
+          status: 'started'
         },
         {
           id: 17957108,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T22:55:43",
-          action: "linode_boot",
+          created: '2018-12-02T22:55:43',
+          action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "finished"
-        },
+          status: 'finished'
+        }
       ];
       const events: Linode.Event[] = [
         {
           id: 17957718,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:08:38",
-          action: "linode_shutdown",
+          created: '2018-12-02T23:08:38',
+          action: 'linode_shutdown',
           read: false,
           percent_complete: 70,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "started"
-        },
+          status: 'started'
+        }
       ];
       const result = addToEvents(prevEvents, events);
 
@@ -208,45 +243,45 @@ describe('event.helpers', () => {
           id: 17957944,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:15:45",
-          action: "linode_delete",
+          created: '2018-12-02T23:15:45',
+          action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "finished"
+          status: 'finished'
         },
         {
           id: 17957718,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T23:08:38",
-          action: "linode_shutdown",
+          created: '2018-12-02T23:08:38',
+          action: 'linode_shutdown',
           read: false,
           percent_complete: 70,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "started"
+          status: 'started'
         },
         {
           id: 17957108,
           time_remaining: 0,
           seen: true,
-          created: "2018-12-02T22:55:43",
-          action: "linode_boot",
+          created: '2018-12-02T22:55:43',
+          action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: "coolguymarty",
+          username: 'coolguymarty',
           rate: null,
           entity: null,
-          status: "finished"
-        },
+          status: 'finished'
+        }
       ]);
     });
 
-    describe('when updating an event', () => { });
+    describe('when updating an event', () => {});
   });
 
   describe('updateInProgressEvents', () => {
@@ -254,7 +289,7 @@ describe('event.helpers', () => {
       const inProgressEvents = {};
       const events: Linode.Event[] = [];
       const result = updateInProgressEvents(inProgressEvents, events);
-      expect(result).toEqual({})
+      expect(result).toEqual({});
     });
 
     it('should do nothing if there are no in-progress events', () => {
@@ -262,19 +297,19 @@ describe('event.helpers', () => {
       const events = [
         {
           id: 1,
-          percent_complete: 100,
+          percent_complete: 100
         },
         {
           id: 2,
-          percent_complete: 100,
+          percent_complete: 100
         },
         {
           id: 3,
-          percent_complete: 100,
-        },
+          percent_complete: 100
+        }
       ];
       const result = updateInProgressEvents(inProgressEvents, events);
-      expect(result).toEqual({ '999': true })
+      expect(result).toEqual({ '999': true });
     });
 
     it('should add in-progress events to the Map', () => {
@@ -282,20 +317,20 @@ describe('event.helpers', () => {
       const events = [
         {
           id: 1,
-          percent_complete: 100,
+          percent_complete: 100
         },
         {
           id: 2,
-          percent_complete: 60,
+          percent_complete: 60
         },
         {
           id: 3,
-          percent_complete: 100,
-        },
+          percent_complete: 100
+        }
       ];
       const result = updateInProgressEvents(inProgressEvents, events);
 
-      expect(result).toEqual({ '2': true })
+      expect(result).toEqual({ '2': true });
     });
   });
 });

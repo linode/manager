@@ -3,30 +3,27 @@ import * as React from 'react';
 
 import withLoadingAndError from './withLoadingAndError';
 
-const MyComponent: React.SFC<{}> = (props) => {
-  return (
-    <div />
-  )
-}
+const MyComponent: React.SFC<{}> = props => {
+  return <div />;
+};
 
-const EnhancedComponent = withLoadingAndError(MyComponent)
+const EnhancedComponent = withLoadingAndError(MyComponent);
 
 const component = shallow(<EnhancedComponent />);
 
 describe('withLoadingAndError HOC', () => {
-
   describe('Props are defined', () => {
     it('should have a loading prop', () => {
-      expect(component.props().loading).toBeDefined()
+      expect(component.props().loading).toBeDefined();
     });
     it('should have a setLoadingAndClearErrors prop', () => {
-      expect(component.props().setLoadingAndClearErrors).toBeDefined()
+      expect(component.props().setLoadingAndClearErrors).toBeDefined();
     });
     it('should have a setErrorAndClearLoading prop', () => {
-      expect(component.props().setErrorAndClearLoading).toBeDefined()
+      expect(component.props().setErrorAndClearLoading).toBeDefined();
     });
     it('should have a clearLoadingAndErrors prop', () => {
-      expect(component.props().clearLoadingAndErrors).toBeDefined()
+      expect(component.props().clearLoadingAndErrors).toBeDefined();
     });
   });
 

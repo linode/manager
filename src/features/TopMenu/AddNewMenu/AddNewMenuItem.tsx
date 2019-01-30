@@ -1,20 +1,19 @@
 import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
+type CSSClasses = 'root' | 'content' | 'titleLink' | 'body' | 'iconWrapper';
 
-type CSSClasses = 'root'
-| 'content'
-| 'titleLink'
-| 'body'
-| 'iconWrapper';
-
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   '@keyframes dash': {
     to: {
-      'stroke-dashoffset': 0,
-    },
+      'stroke-dashoffset': 0
+    }
   },
   root: {
     paddingLeft: theme.spacing.unit * 2,
@@ -27,36 +26,36 @@ const styles: StyleRulesCallback = (theme) => ({
     alignItems: 'center',
     transition: 'background-color .2s ease-in-out',
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
+      stroke: theme.bg.main
     },
     '&:hover, &:focus': {
       ...theme.animateCircleIcon,
-      backgroundColor: theme.bg.offWhiteDT,
-    },
+      backgroundColor: theme.bg.offWhiteDT
+    }
   },
   iconWrapper: {
     width: 49,
-    height: 49,
+    height: 49
   },
   content: {
     display: 'flex',
     flexDirection: 'column',
     paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2
   },
   titleLink: {
     textDecoration: 'none',
     color: theme.color.black,
-    fontSize: '1.18rem',
+    fontSize: '1.18rem'
   },
   body: {
     marginTop: 3,
     fontSize: '.9rem',
-    lineHeight: '1.1rem',
-  },
+    lineHeight: '1.1rem'
+  }
 });
 
 export interface MenuItems {
@@ -106,7 +105,6 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
       </React.Fragment>
     );
   }
-
 }
 
 const styled = withStyles(styles);

@@ -5,11 +5,12 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import PaginationControls from './PaginationControls';
 
-const getPreviousPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-previous]`);
-const getNextPageButton = (wrapper: ReactWrapper) => wrapper.find(`WithStyles(PageButton)[data-qa-page-next]`);
+const getPreviousPageButton = (wrapper: ReactWrapper) =>
+  wrapper.find(`WithStyles(PageButton)[data-qa-page-previous]`);
+const getNextPageButton = (wrapper: ReactWrapper) =>
+  wrapper.find(`WithStyles(PageButton)[data-qa-page-next]`);
 const getNumberPageButton = (page: string, wrapper: ReactWrapper) =>
   wrapper.find(`WithStyles(PageButton)[data-qa-page-to=${page}]`);
-
 
 describe('PaginationControls', () => {
   it('should have a previous page button.', () => {
@@ -21,7 +22,7 @@ describe('PaginationControls', () => {
           page={1}
           pageSize={25}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
     const previous = getPreviousPageButton(wrapper);
     expect(previous).toHaveLength(1);
@@ -36,7 +37,7 @@ describe('PaginationControls', () => {
           page={1}
           pageSize={25}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
     const next = getNextPageButton(wrapper);
     expect(next).toHaveLength(1);
@@ -51,7 +52,7 @@ describe('PaginationControls', () => {
           page={1}
           pageSize={25}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
     const previous = getPreviousPageButton(wrapper);
     expect(previous.prop('disabled')).toBeTruthy();
@@ -66,7 +67,7 @@ describe('PaginationControls', () => {
           page={4}
           pageSize={25}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
     const next = getNextPageButton(wrapper);
@@ -82,7 +83,7 @@ describe('PaginationControls', () => {
           page={1}
           pageSize={25}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
     expect(getNumberPageButton('1', wrapper)).toHaveLength(1);
@@ -100,7 +101,7 @@ describe('PaginationControls', () => {
           page={2}
           pageSize={25}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
     expect(getNumberPageButton('2', wrapper).prop('disabled')).toBeTruthy();

@@ -15,7 +15,10 @@ describe('mailto', () => {
 
   it('contains a subject', () => {
     const queryString = parse(mailto.split('?')[1]);
-    expect(queryString).toHaveProperty('Subject', 'Cloud Manager User Feedback');
+    expect(queryString).toHaveProperty(
+      'Subject',
+      'Cloud Manager User Feedback'
+    );
   });
 
   it('contains a body', () => {
@@ -23,11 +26,21 @@ describe('mailto', () => {
     expect(queryString).toHaveProperty('Body', '\n\nmy-user-agent');
   });
 
-  it('doesn\'t include body if user agent is bad input', () => {
-    expect(createMailto('')).toBe('mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback');
-    expect(createMailto(21 as any)).toBe('mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback');
-    expect(createMailto(true as any)).toBe('mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback');
-    expect(createMailto(undefined as any)).toBe('mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback');
-    expect(createMailto(null as any)).toBe('mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback');
+  it("doesn't include body if user agent is bad input", () => {
+    expect(createMailto('')).toBe(
+      'mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback'
+    );
+    expect(createMailto(21 as any)).toBe(
+      'mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback'
+    );
+    expect(createMailto(true as any)).toBe(
+      'mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback'
+    );
+    expect(createMailto(undefined as any)).toBe(
+      'mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback'
+    );
+    expect(createMailto(null as any)).toBe(
+      'mailto:feedback@linode.com?Subject=Cloud%20Manager%20User%20Feedback'
+    );
   });
 });

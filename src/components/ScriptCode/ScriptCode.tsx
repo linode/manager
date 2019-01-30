@@ -1,10 +1,21 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type CSSClasses = 'root' | 'container' | 'table' | 'row' | 'numberCell' | 'codeCell' | 'code';
+type CSSClasses =
+  | 'root'
+  | 'container'
+  | 'table'
+  | 'row'
+  | 'numberCell'
+  | 'codeCell'
+  | 'code';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => {
-  return ({
+const styles: StyleRulesCallback<CSSClasses> = theme => {
+  return {
     root: {},
     container: {
       maxWidth: '100%',
@@ -17,8 +28,7 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       borderCollapse: 'collapse',
       tableLayout: 'fixed'
     },
-    row: {
-    },
+    row: {},
     numberCell: {
       backgroundColor: theme.color.grey2,
       paddingLeft: theme.spacing.unit / 2,
@@ -29,36 +39,31 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => {
       textAlign: 'center',
       color: theme.color.headline,
       userSelect: 'none',
-      width: '35px',
+      width: '35px'
     },
     codeCell: {
       paddingLeft: theme.spacing.unit,
-      paddingRight: theme.spacing.unit,
+      paddingRight: theme.spacing.unit
     },
     code: {
       fontSize: '1em',
       margin: 0,
       color: theme.color.headline,
       whiteSpace: 'pre-wrap',
-      width: '100%',
+      width: '100%'
     }
-  });
+  };
 };
 
 export interface Props {
- script: string;
+  script: string;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
-
 export class ScriptCode extends React.Component<PropsWithStyles, {}> {
-
   render() {
-    const {
-      classes,
-      script,
-    } = this.props;
+    const { classes, script } = this.props;
 
     return (
       <div className={classes.container}>
@@ -67,7 +72,11 @@ export class ScriptCode extends React.Component<PropsWithStyles, {}> {
             {script.split('\n').map((line, counter) => (
               <tr className={classes.row} key={'scriptCodeLine' + counter}>
                 <td className={classes.numberCell}>{counter + 1}</td>
-                <td className={classes.codeCell}><pre className={classes.code} data-qa-script>{line}</pre></td>
+                <td className={classes.codeCell}>
+                  <pre className={classes.code} data-qa-script>
+                    {line}
+                  </pre>
+                </td>
               </tr>
             ))}
             {/* Empty row at the end */}
@@ -78,9 +87,9 @@ export class ScriptCode extends React.Component<PropsWithStyles, {}> {
           </tbody>
         </table>
       </div>
-    )
+    );
   }
-};
+}
 
 const styled = withStyles(styles);
 

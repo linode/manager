@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { ModeSelect } from './ModeSelect';
 
-const classes = { root: '', }
+const classes = { root: '' };
 const modes = [
   {
     label: 'Edit',
@@ -11,18 +11,18 @@ const modes = [
   },
   {
     label: 'Delete',
-    mode: 'delete',
+    mode: 'delete'
   }
-]
+];
 
 const props = {
   classes,
   modes,
   selected: 'edit',
-  onChange: jest.fn(),
-}
+  onChange: jest.fn()
+};
 
-const component = shallow(<ModeSelect {...props} />)
+const component = shallow(<ModeSelect {...props} />);
 
 describe('Component', () => {
   it('should render', () => {

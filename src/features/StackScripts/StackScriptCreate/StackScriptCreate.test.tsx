@@ -15,31 +15,36 @@ describe('StackScriptCreate', () => {
         titleWrapper: '',
         root: '',
         backButton: '',
-        createTitle: '',
+        createTitle: ''
       }}
       imagesData={images}
       imagesLoading={false}
       username="someguy"
       images={{ response: images }}
     />
-  )
+  );
   xit('should render a title that reads "Create New StackScript', () => {
-    const titleText = component.find('WithStyles(Typography)').first().children().text();
+    const titleText = component
+      .find('WithStyles(Typography)')
+      .first()
+      .children()
+      .text();
     expect(titleText).toBe('Create New StackScript');
   });
 
   xit(`should render a confirmation dialog with the
   title "Clear StackScript Configuration?"`, () => {
-      const modalTitle = component.find('WithStyles(ConfirmationDialog)').prop('title');
-      expect(modalTitle).toBe('Clear StackScript Configuration?');
-    });
+    const modalTitle = component
+      .find('WithStyles(ConfirmationDialog)')
+      .prop('title');
+    expect(modalTitle).toBe('Clear StackScript Configuration?');
+  });
 
   xit('should render StackScript Form', () => {
     expect(component.find('WithStyles(StackScriptForm)')).toHaveLength(1);
   });
 
   describe('Back Arrow Icon Button', () => {
-
     xit('should render back array icon button', () => {
       const backIcon = component.find('WithStyles(IconButton)').first();
       expect(backIcon.find('pure(KeyboardArrowLeft)')).toHaveLength(1);
@@ -53,7 +58,9 @@ describe('StackScriptCreate', () => {
   });
 
   describe('Breadcrumb', () => {
-    const breadcrumb = component.find('[data-qa-create-stackscript-breadcrumb]');
+    const breadcrumb = component.find(
+      '[data-qa-create-stackscript-breadcrumb]'
+    );
     it('should render', () => {
       expect(breadcrumb).toHaveLength(1);
     });

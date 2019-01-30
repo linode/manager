@@ -1,54 +1,56 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
-type ClassNames = 'root'
-  | 'border'
-  | 'responsive';
+type ClassNames = 'root' | 'border' | 'responsive';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     overflowX: 'auto',
     '& tbody': {
       transition: [theme.transitions.create('opacity')]
     },
     '& tbody.sorting': {
-      opacity: .5,
+      opacity: 0.5
     }
   },
   responsive: {
     [theme.breakpoints.down('sm')]: {
       '& .emptyCell': {
-        display: 'none',
+        display: 'none'
       },
       '& thead': {
-        display: 'none',
+        display: 'none'
       },
       '& tbody > tr': {
         marginBottom: 0,
         '& > td:first-child': {
           backgroundColor: theme.bg.offWhite,
-          fontFamily: 'LatoWebBold',
-        },
+          fontFamily: 'LatoWebBold'
+        }
       },
       '& tr': {
         display: 'block',
         marginBottom: 20,
-        height: 'auto',
+        height: 'auto'
       },
       '& td': {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        minHeight: 32,
-      },
-    },
+        minHeight: 32
+      }
+    }
   },
   border: {
     border: `1px solid ${theme.palette.divider}`,
-    borderBottom: 0,
-  },
+    borderBottom: 0
+  }
 });
 
 interface Props {
@@ -64,7 +66,6 @@ interface Props {
 type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
 
 class WrappedTable extends React.Component<CombinedProps> {
-
   render() {
     const {
       classes,
@@ -85,7 +86,7 @@ class WrappedTable extends React.Component<CombinedProps> {
           {
             [classes.root]: !noOverflow,
             [classes.responsive]: !(isResponsive === false), // must be explicity set to false
-            [classes.border]: border,
+            [classes.border]: border
           },
           className
         )}
@@ -94,7 +95,9 @@ class WrappedTable extends React.Component<CombinedProps> {
           marginBottom: spacingBottom !== undefined ? spacingBottom : 0
         }}
       >
-        <Table className={tableClass} {...rest}>{this.props.children}</Table>
+        <Table className={tableClass} {...rest}>
+          {this.props.children}
+        </Table>
       </div>
     );
   }

@@ -70,7 +70,6 @@ const withStateAndHandlers = withStateHandlers<
   }
 );
 
-const withLoadingAndError = (Component: any) =>
-  withStateAndHandlers(Component);
+const withLoadingAndError = (Component: any) => withStateAndHandlers(Component);
 
 export default withLoadingAndError;

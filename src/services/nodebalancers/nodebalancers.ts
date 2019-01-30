@@ -1,10 +1,16 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
 
 import {
   NodeBalancerSchema,
-  UpdateNodeBalancerSchema,
+  UpdateNodeBalancerSchema
 } from './nodebalancers.schema';
 import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
 
@@ -29,9 +35,8 @@ export const getNodeBalancers = (params?: any, filters?: any) =>
     setURL(`${API_ROOT}/nodebalancers/`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
-  )
-    .then(response => response.data);
+    setXFilter(filters)
+  ).then(response => response.data);
 
 /**
  * getNodeBalancer
@@ -40,10 +45,11 @@ export const getNodeBalancers = (params?: any, filters?: any) =>
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to retrieve.
  */
-export const getNodeBalancer = (nodeBalancerId: number) => Request<NodeBalancer>(
-  setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
-  setMethod('GET'),
-).then(response => response.data);
+export const getNodeBalancer = (nodeBalancerId: number) =>
+  Request<NodeBalancer>(
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * updateNodeBalancer
@@ -54,11 +60,14 @@ export const getNodeBalancer = (nodeBalancerId: number) => Request<NodeBalancer>
  * @param data { object } The fields to update. Values not included in this
  * parameter will be left unchanged.
  */
-export const updateNodeBalancer = (nodeBalancerId: number, data: Partial<NodeBalancer>) =>
+export const updateNodeBalancer = (
+  nodeBalancerId: number,
+  data: Partial<NodeBalancer>
+) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
     setMethod('PUT'),
-    setData(data, UpdateNodeBalancerSchema),
+    setData(data, UpdateNodeBalancerSchema)
   ).then(response => response.data);
 
 /**
@@ -73,10 +82,9 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
     setData(
       data,
       NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPort,
-    ),
-  )
-    .then(response => response.data);
+      combineNodeBalancerConfigNodeAddressAndPort
+    )
+  ).then(response => response.data);
 
 /**
  * deleteNodeBalancer
@@ -85,10 +93,11 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer to delete.
  */
-export const deleteNodeBalancer = (nodeBalancerId: number) => Request<{}>(
-  setMethod('DELETE'),
-  setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`),
-).then(response => response.data);
+export const deleteNodeBalancer = (nodeBalancerId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}`)
+  ).then(response => response.data);
 
 /**
  * getNodeBalancerStats
@@ -100,6 +109,6 @@ export const deleteNodeBalancer = (nodeBalancerId: number) => Request<{}>(
 export const getNodeBalancerStats = (nodeBalancerId: number) => {
   return Request<NodeBalancerStats>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/stats`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 };

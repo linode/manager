@@ -4,15 +4,19 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -20,7 +24,7 @@ interface Props {
   label?: string;
   redirect_uri?: string;
   public: boolean;
-  errors?: { field: string, reason: string }[];
+  errors?: { field: string; reason: string }[];
   edit?: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -31,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => {
+const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
   const {
     label,
     redirect_uri,
@@ -40,18 +44,22 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
     edit,
     errors,
     onClose,
-    onSubmit,
+    onSubmit
   } = props;
 
   const errorResources = {
     label: 'A label',
-    redirect_uri: 'A callback URL',
+    redirect_uri: 'A callback URL'
   };
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
   return (
-    <Drawer title={`${ edit ? 'Edit' : 'Create'} OAuth App`} open={open} onClose={onClose}>
+    <Drawer
+      title={`${edit ? 'Edit' : 'Create'} OAuth App`}
+      open={open}
+      onClose={onClose}
+    >
       <TextField
         value={label || ''}
         errorText={hasErrorFor('label')}
@@ -80,14 +88,12 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
         />
       </FormControl>
       <ActionsPanel>
-        <Button
-          type="primary"
-          onClick={onSubmit}
-          data-qa-submit
-          >Submit
+        <Button type="primary" onClick={onSubmit} data-qa-submit>
+          Submit
         </Button>
         <Button
-          onClick={onClose} data-qa-cancel
+          onClick={onClose}
+          data-qa-cancel
           type="secondary"
           className="cancel"
         >
@@ -101,7 +107,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = (props) => 
 OAuthCreationDrawer.defaultProps = {
   label: '',
   redirect_uri: '',
-  errors: [],
+  errors: []
 };
 
 const styled = withStyles(styles);

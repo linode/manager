@@ -9,7 +9,10 @@ import 'rxjs/add/operator/filter';
 import TagsPanel from 'src/components/TagsPanel';
 import { lishLaunch } from 'src/features/Lish';
 import { scheduleOrQueueMigration } from 'src/services/linodes';
-import { LinodeActionsProps, withLinodeActions } from 'src/store/linodes/linode.containers';
+import {
+  LinodeActionsProps,
+  withLinodeActions
+} from 'src/store/linodes/linode.containers';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
@@ -37,7 +40,10 @@ interface Props {
   labelInput: LabelInput;
   url: string;
   history: any;
-  openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
+  openConfigDrawer: (
+    config: Linode.Config[],
+    action: (id: number) => void
+  ) => void;
   notifications?: Linode.Notification[];
 }
 
@@ -45,17 +51,16 @@ interface State {
   hasScheduledMigration: boolean;
 }
 
-type CombinedProps =
-  & LinodeActionsProps
-  & Props
-  & StateProps
-  & DispatchProps
-  & InjectedNotistackProps;
+type CombinedProps = LinodeActionsProps &
+  Props &
+  StateProps &
+  DispatchProps &
+  InjectedNotistackProps;
 
 class LinodesDetailHeader extends React.Component<CombinedProps, State> {
   state: State = {
-    hasScheduledMigration: false,
-  }
+    hasScheduledMigration: false
+  };
 
   componentDidMount() {
     const { getNotifications } = this.props.actions;
@@ -66,41 +71,45 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
     const { linodeId, enqueueSnackbar } = this.props;
     const { getNotifications } = this.props.actions;
     scheduleOrQueueMigration(linodeId)
-      .then((_) => {
+      .then(_ => {
         // A 200 response indicates that the operation was successful.
-        const successMessage = type === 'migration_scheduled'
-          ? "Your Linode has been entered into the migration queue."
-          : "Your migration has been scheduled.";
+        const successMessage =
+          type === 'migration_scheduled'
+            ? 'Your Linode has been entered into the migration queue.'
+            : 'Your migration has been scheduled.';
         enqueueSnackbar(successMessage, {
           variant: 'success'
         });
-        getNotifications()
+        getNotifications();
       })
-      .catch((_) => {
+      .catch(_ => {
         // @todo: use new error handling pattern here after merge.
-        enqueueSnackbar("There was an error starting your migration.", {
+        enqueueSnackbar('There was an error starting your migration.', {
           variant: 'error'
         });
-      })
-  }
+      });
+  };
 
   launchLish = () => {
     const { linodeId } = this.props;
     lishLaunch(linodeId);
-  }
+  };
 
   editLabel = (value: string) => {
-    return this.props.labelInput.onEdit(value)
-  }
+    return this.props.labelInput.onEdit(value);
+  };
 
   handleUpdateTags = (tagsList: string[]) => {
-    const { linodeId, linodeUpdate, linodeActions: { updateLinode } } = this.props;
+    const {
+      linodeId,
+      linodeUpdate,
+      linodeActions: { updateLinode }
+    } = this.props;
 
-    return updateLinode({ linodeId, tags: tagsList })
-      .then(() => {
-        linodeUpdate();
-      })
-  }
+    return updateLinode({ linodeId, tags: tagsList }).then(() => {
+      linodeUpdate();
+    });
+  };
 
   render() {
     const {
@@ -115,7 +124,7 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       linodeRegion,
       linodeStatus,
       linodeRecentEvent,
-      linodeConfigs,
+      linodeConfigs
     } = this.props;
 
     return (
@@ -140,13 +149,10 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
             label: labelInput.label,
             errorText: labelInput.errorText,
             onCancel: labelInput.onCancel,
-            onEdit: this.editLabel,
+            onEdit: this.editLabel
           }}
         />
-        <TagsPanel
-          tags={linodeTags}
-          updateTags={this.handleUpdateTags}
-        />
+        <TagsPanel tags={linodeTags} updateTags={this.handleUpdateTags} />
         <TabsAndStatusBarPanel
           url={url}
           history={this.props.history}
@@ -165,27 +171,35 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
 interface DispatchProps {
   actions: {
     getNotifications: () => void;
-  },
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch: ThunkDispatch) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch: ThunkDispatch
+) => {
   return {
     actions: {
-      getNotifications: () => dispatch(requestNotifications()),
+      getNotifications: () => dispatch(requestNotifications())
     }
   };
 };
 
-const filterNotifications = (linodeId: number, notifications: Linode.Notification[] = []) => {
-  return notifications.filter((notification) =>
-    pathOr(0, ['entity', 'id'], notification) === linodeId
-  )
-}
+const filterNotifications = (
+  linodeId: number,
+  notifications: Linode.Notification[] = []
+) => {
+  return notifications.filter(
+    notification => pathOr(0, ['entity', 'id'], notification) === linodeId
+  );
+};
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   notificationsLoading: state.__resources.notifications.loading,
   notificationsError: state.__resources.notifications.error,
   // Only use notifications for this Linode.
-  notifications: filterNotifications(ownProps.linodeId, state.__resources.notifications.data),
+  notifications: filterNotifications(
+    ownProps.linodeId,
+    state.__resources.notifications.data
+  )
 });
 
 interface StateProps {
@@ -194,10 +208,13 @@ interface StateProps {
   notifications?: Linode.Notification[];
 }
 
-export const connected = connect(mapStateToProps, mapDispatchToProps);
+export const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default compose<CombinedProps, Props>(
   connected,
   withSnackbar,
-  withLinodeActions,
+  withLinodeActions
 )(LinodesDetailHeader);

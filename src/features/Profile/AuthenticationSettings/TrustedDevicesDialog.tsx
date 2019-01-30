@@ -1,7 +1,7 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -13,13 +13,14 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import withLoadingAndError, { Props as LoadingAndErrorProps }
-  from 'src/components/withLoadingAndError';
+import withLoadingAndError, {
+  Props as LoadingAndErrorProps
+} from 'src/components/withLoadingAndError';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -29,15 +30,13 @@ interface Props {
   refreshListOfDevices: () => void;
 }
 
-type CombinedProps = Props
-  & LoadingAndErrorProps
-  & WithStyles<ClassNames>;
+type CombinedProps = Props & LoadingAndErrorProps & WithStyles<ClassNames>;
 
 class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
   handleCloseDialog = () => {
     this.props.clearLoadingAndErrors();
     this.props.closeDialog();
-  }
+  };
 
   handleDelete = (deviceId: number) => {
     const {
@@ -55,18 +54,16 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
       })
       .catch(e => {
         const defaultError = 'There was an issue removing this device.';
-        const errorString = pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], e);
-        setErrorAndClearLoading(errorString)
-      })
-  }
+        const errorString = pathOr(
+          defaultError,
+          ['response', 'data', 'errors', 0, 'reason'],
+          e
+        );
+        setErrorAndClearLoading(errorString);
+      });
+  };
   render() {
-    const {
-      open,
-      closeDialog,
-      error,
-      deviceId,
-      loading,
-    } = this.props;
+    const { open, closeDialog, error, deviceId, loading } = this.props;
 
     return (
       <ConfirmationDialog
@@ -108,26 +105,23 @@ interface ActionsProps {
 class DialogActions extends React.PureComponent<ActionsProps, {}> {
   handleSubmit = () => {
     const { handleDelete, deviceId } = this.props;
-    return handleDelete(deviceId)
-  }
+    return handleDelete(deviceId);
+  };
   render() {
-
     return (
       <ActionsPanel>
-        <Button
-          type="cancel"
-          onClick={this.props.closeDialog}
-          data-qa-cancel>
+        <Button type="cancel" onClick={this.props.closeDialog} data-qa-cancel>
           Cancel
-    </Button>
+        </Button>
         <Button
           type="secondary"
           loading={this.props.loading}
           onClick={this.handleSubmit}
-          data-qa-submit>
+          data-qa-submit
+        >
           Untrust Device
-     </Button>
+        </Button>
       </ActionsPanel>
-    )
+    );
   }
 }

@@ -1,21 +1,25 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
 import { transitionText } from 'src/features/linodes/transitions';
 
 type ClassNames = 'root' | 'status';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   status: {
     textTransform: 'capitalize',
-    marginBottom: theme.spacing.unit,
-  },
+    marginBottom: theme.spacing.unit
+  }
 });
 
 interface Props {
@@ -25,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = (props) => {
+const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
   const { classes, status, recentEvent } = props;
   const value = (recentEvent && recentEvent.percent_complete) || 1;
   return (

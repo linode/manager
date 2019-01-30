@@ -1,17 +1,24 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch, withRouter } from 'react-router-dom';
+import {
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter
+} from 'react-router-dom';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 
 const ImagesLanding = DefaultLoader({
-  loader: () => import('./ImagesLanding'),
+  loader: () => import('./ImagesLanding')
 });
 
 type Props = RouteComponentProps<{}>;
 
 class ImagesRoutes extends React.Component<Props> {
   render() {
-    const { match: { path } } = this.props;
+    const {
+      match: { path }
+    } = this.props;
 
     return (
       <Switch>

@@ -10,7 +10,7 @@ export const transitionStatus = [
   'resizing',
   'rebuilding',
   'restoring',
-  'cloning',
+  'cloning'
 ];
 
 export const transitionAction = [
@@ -19,19 +19,23 @@ export const transitionAction = [
   'backups_restore'
 ];
 
-export const linodeInTransition = (status: string, recentEvent?: Linode.Event): boolean => {
+export const linodeInTransition = (
+  status: string,
+  recentEvent?: Linode.Event
+): boolean => {
   return (
-    transitionStatus.includes(status)
-    || (
-      (recentEvent || false)
-      && (transitionAction.includes(recentEvent.action || ''))
-      && recentEvent.percent_complete !== null
-      && recentEvent.percent_complete < 100
-    )
+    transitionStatus.includes(status) ||
+    ((recentEvent || false) &&
+      transitionAction.includes(recentEvent.action || '') &&
+      recentEvent.percent_complete !== null &&
+      recentEvent.percent_complete < 100)
   );
-}
+};
 
-export const transitionText = (status: string, recentEvent?: Linode.Event): string => {
+export const transitionText = (
+  status: string,
+  recentEvent?: Linode.Event
+): string => {
   let event;
   if (recentEvent && transitionAction.includes(recentEvent.action)) {
     event = recentEvent.action.replace('linode_', '').replace('_', ' ');
@@ -39,4 +43,4 @@ export const transitionText = (status: string, recentEvent?: Linode.Event): stri
     event = status.replace('_', ' ');
   }
   return capitalizeAllWords(event);
-}
+};

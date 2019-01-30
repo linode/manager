@@ -1,11 +1,15 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -18,7 +22,13 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LabelField: React.StatelessComponent<CombinedProps> = ({ error, onBlur, onChange, value, name }) => {
+const LabelField: React.StatelessComponent<CombinedProps> = ({
+  error,
+  onBlur,
+  onChange,
+  value,
+  name
+}) => {
   return (
     <TextField
       data-qa-volume-label

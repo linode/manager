@@ -5,7 +5,9 @@ import { ThunkDispatch } from 'redux-thunk';
 import { updateDomain } from 'src/services/domains';
 import { updateLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
-import getEntitiesWithGroupsToImport, { GroupImportProps } from 'src/store/selectors/getEntitiesWithGroupsToImport';
+import getEntitiesWithGroupsToImport, {
+  GroupImportProps
+} from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { ThunkActionCreator } from 'src/store/types';
 import { storage } from 'src/utilities/storage';
 import actionCreatorFactory from 'typescript-fsa';
@@ -65,11 +67,11 @@ interface Reset extends Action {
 type ErrorPayload = TagError[];
 
 export const closeGroupDrawer = (): Close => ({
-  type: CLOSE,
+  type: CLOSE
 });
 
 export const openGroupDrawer = (): Open => ({
-  type: OPEN,
+  type: OPEN
 });
 
 export const handleSuccess = actionCreator<void>(`SUCCESS`);
@@ -81,29 +83,23 @@ export const defaultState: State = {
   open: false,
   errors: [],
   loading: false,
-  success: false,
+  success: false
 };
 
-type ActionTypes =
-  | Open
-  | Close
-  | Error
-  | Success
-  | Update
-  | Reset
+type ActionTypes = Open | Close | Error | Success | Update | Reset;
 
 export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
   switch (action.type) {
     case CLOSE:
       return {
         ...state,
-        open: false,
+        open: false
       };
 
     case OPEN:
       return {
         ...defaultState,
-        open: true,
+        open: true
       };
 
     case ERROR:
@@ -111,23 +107,23 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
         ...state,
         loading: false,
         errors: action.payload
-      }
+      };
 
     case SUCCESS:
       return {
         ...state,
         loading: false,
         errors: [],
-        success: true,
-      }
+        success: true
+      };
 
     case UPDATE:
       return {
         ...state,
         loading: true,
         errors: [],
-        success: false,
-      }
+        success: false
+      };
 
     case RESET:
       return defaultState;
@@ -135,7 +131,7 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
     default:
       return state;
   }
-}
+};
 
 // Async
 
@@ -153,24 +149,31 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
  * }
  */
 export const gatherResponsesAndErrors = (
-  cb: (id: number, data: any) => Promise<Linode.Linode|Linode.Domain>,
+  cb: (id: number, data: any) => Promise<Linode.Linode | Linode.Domain>,
   accumulator: Accumulator<Linode.Linode | Linode.Domain>,
-  entity: GroupImportProps) => {
-    // @todo if the API decides to enforce lowercase tags, remove this lowercasing.
-    return cb(entity.id, {tags: [...entity.tags, entity.group!.toLowerCase()]})
-      .then((updatedEntity) => ({
+  entity: GroupImportProps
+) => {
+  // @todo if the API decides to enforce lowercase tags, remove this lowercasing.
+  return cb(entity.id, { tags: [...entity.tags, entity.group!.toLowerCase()] })
+    .then(updatedEntity => ({
       ...accumulator,
       success: [...accumulator.success, updatedEntity]
-      }))
-      .catch((error) => {
-        const reason = pathOr('Error adding tag.',
-          ['response', 'data', 'errors', 0, 'reason'], error);
-        return {
-          ...accumulator,
-          errors: [...accumulator.errors, { entityId: entity.id, reason, entityLabel: entity.label }]
-        }
-      })
-}
+    }))
+    .catch(error => {
+      const reason = pathOr(
+        'Error adding tag.',
+        ['response', 'data', 'errors', 0, 'reason'],
+        error
+      );
+      return {
+        ...accumulator,
+        errors: [
+          ...accumulator.errors,
+          { entityId: entity.id, reason, entityLabel: entity.label }
+        ]
+      };
+    });
+};
 
 const curriedAccumulator = curry(gatherResponsesAndErrors);
 const domainAccumulator = curriedAccumulator(updateDomain);
@@ -196,40 +199,55 @@ const handleAccumulatedResponsesAndErrors = (
   linodeResponses: Accumulator<Linode.Linode>,
   domainResponses: Accumulator<Linode.Domain>,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action>
-  ) => {
-    const totalErrors = [...linodeResponses.errors, ...domainResponses.errors]
-    if (!isEmpty(totalErrors)) {
-      dispatch(handleError(totalErrors));
-    }
-    else {
-      dispatch(handleSuccess());
-    }
-    return totalErrors;
-    // @todo do we need to update entities in store here? Seems to be currently handled with post-request events
-    // in services
-}
+) => {
+  const totalErrors = [...linodeResponses.errors, ...domainResponses.errors];
+  if (!isEmpty(totalErrors)) {
+    dispatch(handleError(totalErrors));
+  } else {
+    dispatch(handleSuccess());
+  }
+  return totalErrors;
+  // @todo do we need to update entities in store here? Seems to be currently handled with post-request events
+  // in services
+};
 
 type ImportGroupsAsTagsThunk = ThunkActionCreator<void>;
-export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (dispatch, getState) => {
+export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
+  dispatch,
+  getState
+) => {
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
   Bluebird.join(
-    Bluebird.reduce(entities.linodes, linodeAccumulator, { success: [], errors: [] }),
-    Bluebird.reduce(entities.domains, domainAccumulator, { success: [], errors: [] }),
+    Bluebird.reduce(entities.linodes, linodeAccumulator, {
+      success: [],
+      errors: []
+    }),
+    Bluebird.reduce(entities.domains, domainAccumulator, {
+      success: [],
+      errors: []
+    }),
     dispatch,
-    handleAccumulatedResponsesAndErrors,
+    handleAccumulatedResponsesAndErrors
   )
     .then((totalErrors: TagError[]) => {
       if (isEmpty(totalErrors)) {
-        storage.hasImportedGroups.set()
+        storage.hasImportedGroups.set();
       }
     })
-    .catch(() => dispatch(
-      // Errors from individual requests will be accumulated and passed to .then(); hitting
-      // this block indicates something went wrong with .reduce() or .join().
-      // It's unclear under what circumstances this could ever actually fire.
-      handleError([{ entityId: 0, reason: "There was an error importing your display groups." }])
-    ));
-}
+    .catch(() =>
+      dispatch(
+        // Errors from individual requests will be accumulated and passed to .then(); hitting
+        // this block indicates something went wrong with .reduce() or .join().
+        // It's unclear under what circumstances this could ever actually fire.
+        handleError([
+          {
+            entityId: 0,
+            reason: 'There was an error importing your display groups.'
+          }
+        ])
+      )
+    );
+};
 
 export default tagImportDrawer;

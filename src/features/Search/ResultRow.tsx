@@ -4,7 +4,11 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Hidden from 'src/components/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -17,22 +21,23 @@ import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator
 
 import { iconMap } from './utils';
 
-type ClassNames = 'root'
-| 'label'
-| 'icon'
-| 'labelRow'
-| 'resultBody'
-| 'status'
-| 'iconGridCell'
-| 'tag'
-| 'link'
-| 'labelCell'
-| 'iconTableCell'
-| 'regionCell'
-| 'createdCell'
-| 'tagCell';
+type ClassNames =
+  | 'root'
+  | 'label'
+  | 'icon'
+  | 'labelRow'
+  | 'resultBody'
+  | 'status'
+  | 'iconGridCell'
+  | 'tag'
+  | 'link'
+  | 'labelCell'
+  | 'iconTableCell'
+  | 'regionCell'
+  | 'createdCell'
+  | 'tagCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   transition: theme.transitions.create(['background-color']),
   root: {
     paddingTop: '0 !important',
@@ -43,60 +48,59 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       '& $rowContent': {
         background: theme.bg.tableHeader,
         '&:before': {
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.primary.main
         }
       }
-    },
+    }
   },
-  description: {
-  },
+  description: {},
   label: {
-    wordBreak: 'break-all',
+    wordBreak: 'break-all'
   },
   labelCell: {
     width: '100%',
     // Overriding mobile version of TableCell's styles for the label cell only
-    [theme.breakpoints.between('xs','sm')]: {
+    [theme.breakpoints.between('xs', 'sm')]: {
       '& > span:first-child': {
-        display: 'none',
+        display: 'none'
       },
       '& > span:last-child': {
         textAlign: 'left',
         wordBreak: 'normal',
-        marginLeft: 0,
-      },
+        marginLeft: 0
+      }
     },
     [theme.breakpoints.up('md')]: {
       width: '35%',
-      padding: 4,
-    },
+      padding: 4
+    }
   },
   iconTableCell: {
     [theme.breakpoints.up('md')]: {
       width: '4%',
-      padding: 4,
-    },
+      padding: 4
+    }
   },
   regionCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '15%',
-      padding: 4,
-    },
+      padding: 4
+    }
   },
   createdCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '20%',
-      padding: 4,
-    },
+      padding: 4
+    }
   },
   tagCell: {
     width: '100%',
     [theme.breakpoints.up('md')]: {
       width: '30%',
-      padding: 4,
-    },
+      padding: 4
+    }
   },
   icon: {
     position: 'relative',
@@ -104,35 +108,34 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     width: 40,
     height: 40,
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
-    },
+      stroke: theme.bg.main
+    }
   },
   labelRow: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-  resultBody: {
-  },
+  resultBody: {},
   status: {
     marginLeft: theme.spacing.unit / 2,
     position: 'relative',
     top: 0,
-    lineHeight: '0.8rem',
+    lineHeight: '0.8rem'
   },
   iconGridCell: {
     display: 'flex',
     alignItems: 'center',
-    padding: 4,
+    padding: 4
   },
   tag: {
-    margin: theme.spacing.unit / 2,
+    margin: theme.spacing.unit / 2
   },
   link: {
-    display: 'block',
+    display: 'block'
   }
 });
 
@@ -142,9 +145,9 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
+export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, result } = props;
-  const icon = pathOr<string>('default', ['data','icon'], result);
+  const icon = pathOr<string>('default', ['data', 'icon'], result);
   const Icon = iconMap[icon];
   return (
     <TableRow
@@ -157,15 +160,23 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
           <Grid item className={classes.iconGridCell}>
             <Icon className={classes.icon} />
           </Grid>
-          </TableCell>
+        </TableCell>
       </Hidden>
       <TableCell className={classes.labelCell} parentColumn="Label">
         <div className={classes.labelRow}>
-          <Link to={result.data.path} className={classes.link} title={result.label}>
+          <Link
+            to={result.data.path}
+            className={classes.link}
+            title={result.label}
+          >
             <div className={classes.labelRow}>
-              <Typography variant="h3" className={classes.label}>{result.label}</Typography>
-              <div className={classes.status} >
-                {result.data.status && <LinodeStatusIndicator status={result.data.status} />}
+              <Typography variant="h3" className={classes.label}>
+                {result.label}
+              </Typography>
+              <div className={classes.status}>
+                {result.data.status && (
+                  <LinodeStatusIndicator status={result.data.status} />
+                )}
               </div>
             </div>
             <Typography variant="body1">{result.data.description}</Typography>
@@ -173,18 +184,16 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
         </div>
       </TableCell>
       <TableCell className={classes.regionCell} parentColumn="Region">
-        {result.data.region &&
-          <RegionIndicator region={result.data.region} />
-        }
+        {result.data.region && <RegionIndicator region={result.data.region} />}
       </TableCell>
       <TableCell className={classes.createdCell} parentColumn="Created">
-        {result.data.created &&
+        {result.data.created && (
           <React.Fragment>
-            <Typography >
+            <Typography>
               <DateTimeDisplay value={result.data.created} />
             </Typography>
           </React.Fragment>
-        }
+        )}
       </TableCell>
       <TableCell className={classes.tagCell} parentColumn="Tags">
         <Tags tags={result.data.tags} />
@@ -195,8 +204,6 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-)(ResultRow);
+const enhanced = compose<CombinedProps, Props>(styled)(ResultRow);
 
 export default enhanced;

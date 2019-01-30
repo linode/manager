@@ -8,14 +8,14 @@ describe('Security settings (IP whitelisting) form', () => {
   const updateProfile = jest.fn();
 
   const component = shallow(
-      <SecuritySettings
-        classes={{
-          root: '',
-          title: '',
-        }}
-        onSuccess={onSuccess}
-        updateProfile={updateProfile}
-      />
+    <SecuritySettings
+      classes={{
+        root: '',
+        title: ''
+      }}
+      onSuccess={onSuccess}
+      updateProfile={updateProfile}
+    />
   );
 
   it('should render', () => {

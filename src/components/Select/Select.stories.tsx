@@ -17,7 +17,7 @@ class Example extends React.Component<any, State> {
   state = {
     selected: this.props.selected || '',
     error: Boolean(this.props.error),
-    success: Boolean(this.props.success),
+    success: Boolean(this.props.success)
   };
 
   handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -25,9 +25,9 @@ class Example extends React.Component<any, State> {
     this.setState({
       selected: value,
       error: value === 9000,
-      success: value > 9000,
+      success: value > 9000
     });
-  }
+  };
 
   render() {
     const { selected } = this.state;
@@ -35,7 +35,12 @@ class Example extends React.Component<any, State> {
     return (
       <div style={{ marginLeft: '300px', marginTop: '200px' }}>
         <FormControl fullWidth>
-          <InputLabel htmlFor="awesomeness" disableAnimation shrink={true} error={this.state.error}>
+          <InputLabel
+            htmlFor="awesomeness"
+            disableAnimation
+            shrink={true}
+            error={this.state.error}
+          >
             Awesomeness
           </InputLabel>
           <Select
@@ -46,25 +51,28 @@ class Example extends React.Component<any, State> {
             success={this.state.success}
             {...this.props}
           >
-            <MenuItem value=""><em>None</em></MenuItem>
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
             <MenuItem value={1000}>Meh</MenuItem>
             <MenuItem value={2500}>Mediocre</MenuItem>
             <MenuItem value={9000}>9000</MenuItem>
             <MenuItem value={9001}>It's over 9000!</MenuItem>
           </Select>
-          <FormHelperText error={this.state.error}>Here's some action text!</FormHelperText>
+          <FormHelperText error={this.state.error}>
+            Here's some action text!
+          </FormHelperText>
         </FormControl>
       </div>
     );
   }
 }
 
-storiesOf('Select', module)
-  .add('Example', () => (
-    <Grid container style={{ padding: 16 }}>
-      <Grid item xs={12}>
-        <Example />
-        <Example selected={1000} disabled />
-      </Grid>
+storiesOf('Select', module).add('Example', () => (
+  <Grid container style={{ padding: 16 }}>
+    <Grid item xs={12}>
+      <Example />
+      <Example selected={1000} disabled />
     </Grid>
+  </Grid>
 ));

@@ -1,6 +1,10 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -8,15 +12,12 @@ import Table from 'src/components/Table';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
 import SortableVolumesTableHeader from './SortableVolumesTableHeader';
 
-type ClassNames = 'root'
-  | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
+type ClassNames = 'root' | 'volumesWrapper' | 'linodeVolumesWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   // styles for /volumes table
-  volumesWrapper: {
-  },
+  volumesWrapper: {},
   // styles for linodes/id/volumes table
   linodeVolumesWrapper: {}
 });
@@ -31,16 +32,35 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
+const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
   const {
-    classes, orderBy, order, handleOrderChange, data, renderProps,
+    classes,
+    orderBy,
+    order,
+    handleOrderChange,
+    data,
+    renderProps
   } = props;
   return (
     <Paginate data={data} pageSize={25}>
-      {({ data: paginatedData, count, handlePageChange, handlePageSizeChange, page, pageSize }) => (
+      {({
+        data: paginatedData,
+        count,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize
+      }) => (
         <React.Fragment>
           <Paper>
-            <Table aria-label="List of your Volumes" className={renderProps.isVolumesLanding ? classes.volumesWrapper : classes.linodeVolumesWrapper}>
+            <Table
+              aria-label="List of your Volumes"
+              className={
+                renderProps.isVolumesLanding
+                  ? classes.volumesWrapper
+                  : classes.linodeVolumesWrapper
+              }
+            >
               <SortableVolumesTableHeader
                 order={order}
                 orderBy={orderBy}
@@ -48,10 +68,7 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
                 isVolumesLanding={renderProps.isVolumesLanding}
               />
               <TableBody>
-                <RenderVolumeData
-                  data={paginatedData}
-                  {...renderProps}
-                />
+                <RenderVolumeData data={paginatedData} {...renderProps} />
               </TableBody>
             </Table>
           </Paper>
@@ -63,7 +80,6 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = (props) => {
             handleSizeChange={handlePageSizeChange}
             eventCategory="volumes landing"
           />
-
         </React.Fragment>
       )}
     </Paginate>

@@ -1,6 +1,10 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
@@ -8,8 +12,8 @@ import { MonitoringYourServer } from 'src/documentation';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 type CombinedProps = WithStyles<ClassNames>;
@@ -19,9 +23,9 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
     {
       title: 'What is Longview and How to Use it',
       src: 'https://www.linode.com/docs/platform/longview/longview/',
-      body: `This guide shows how to install and use Linode Longview.`,
+      body: `This guide shows how to install and use Linode Longview.`
     },
-    MonitoringYourServer,
+    MonitoringYourServer
   ];
 
   render() {
@@ -32,8 +36,9 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
           title="Longview"
           copy="Keep your Linux systems running smoothly with insights from your system metrics."
           buttonProps={{
-            onClick: () => window.open('https://manager.linode.com/longview', '_blank'),
-            children: 'Navigate to Classic Manager',
+            onClick: () =>
+              window.open('https://manager.linode.com/longview', '_blank'),
+            children: 'Navigate to Classic Manager'
           }}
         />
       </React.Fragment>
@@ -46,4 +51,4 @@ const styled = withStyles(styles);
 export default compose(
   setDocs(LongviewLanding.docs),
   styled
-)(LongviewLanding)
+)(LongviewLanding);

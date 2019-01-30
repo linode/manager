@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type ClassNames = 'root'
-  | 'tableCol1'
-  | 'tableCol2';
+type ClassNames = 'root' | 'tableCol1' | 'tableCol2';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes shine': {
     '0%': {
-      backgroundPosition: -100,
+      backgroundPosition: -100
     },
     '50%': {
-      backgroundPosition: 200,
+      backgroundPosition: 200
     },
     '100%': {
-      backgroundPosition: -100,
-    },
+      backgroundPosition: -100
+    }
   },
   root: {
     display: 'flex',
@@ -32,21 +34,21 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
           ${theme.color.grey2} 70%
         )`,
       backgroundSize: 600,
-      animation: 'shine 2s infinite linear',
-    },
+      animation: 'shine 2s infinite linear'
+    }
   },
   tableCol1: {
     width: '20%',
     minWidth: 100,
     paddingRight: theme.spacing.unit * 3,
     '& .line': {
-      height: 40,
-    },
+      height: 40
+    }
   },
   tableCol2: {
     width: '80%',
-    minWidth: 100,
-  },
+    minWidth: 100
+  }
 });
 
 interface Props {
@@ -56,7 +58,6 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SkeletonScreen extends React.Component<CombinedProps> {
-
   renderSkeleton = () => {
     const { classes, type } = this.props;
     switch (type) {
@@ -71,7 +72,7 @@ class SkeletonScreen extends React.Component<CombinedProps> {
               <div className="line" />
             </div>
           </div>
-        )
+        );
 
       case 'card':
         return false;
@@ -79,9 +80,7 @@ class SkeletonScreen extends React.Component<CombinedProps> {
   };
 
   render() {
-    return (
-      this.renderSkeleton()
-    );
+    return this.renderSkeleton();
   }
 }
 

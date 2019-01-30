@@ -6,15 +6,15 @@ import { images } from 'src/__data__/images';
 import { ImageAndPassword } from './ImageAndPassword';
 
 const props = {
-  classes: { root: ''},
+  classes: { root: '' },
   images,
   imagesLoading: false,
   imageError: undefined,
   onImageChange: jest.fn(),
   password: '',
   onPasswordChange: jest.fn(),
-  userSSHKeys: [],
-}
+  userSSHKeys: []
+};
 
 const component = shallow(<ImageAndPassword {...props} />);
 

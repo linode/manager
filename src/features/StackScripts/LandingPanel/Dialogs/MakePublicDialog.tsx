@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeleteDialog: React.StatelessComponent<CombinedProps> = (props) => {
+const DeleteDialog: React.StatelessComponent<CombinedProps> = props => {
   const {
     isOpen,
     handleClose,
@@ -30,38 +30,36 @@ const DeleteDialog: React.StatelessComponent<CombinedProps> = (props) => {
     return (
       <React.Fragment>
         <ActionsPanel>
-          <Button
-            type="cancel"
-            onClick={handleClose}
-          >
+          <Button type="cancel" onClick={handleClose}>
             Cancel
-        </Button>
+          </Button>
           <Button
             type="secondary"
             destructive
             loading={loading}
-            onClick={triggerMakePublic}>
+            onClick={triggerMakePublic}
+          >
             Yes, make me a star!
-        </Button>
+          </Button>
         </ActionsPanel>
       </React.Fragment>
-    )
-  }
+    );
+  };
   return (
     <ConfirmationDialog
-      title='Woah, just a word of caution...'
+      title="Woah, just a word of caution..."
       open={isOpen}
       actions={renderActions}
       onClose={handleClose}
       error={error}
     >
       <Typography>
-        Are you sure you want to make {stackScriptLabel} public?
-        This action cannot be undone, nor will you be able to delete the StackScript once
+        Are you sure you want to make {stackScriptLabel} public? This action
+        cannot be undone, nor will you be able to delete the StackScript once
         made available to the public.
       </Typography>
     </ConfirmationDialog>
-  )
+  );
 };
 
 export default DeleteDialog;

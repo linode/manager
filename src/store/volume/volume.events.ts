@@ -15,7 +15,7 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
       return handleVolumeUpdate(dispatch, status, id);
 
     case 'volume_clone':
-      return handleVolumeClone(dispatch, status)
+      return handleVolumeClone(dispatch, status);
 
     case 'volume_delete':
       return handleVolumeDelete(dispatch, status, id);
@@ -23,9 +23,13 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
     default:
       return;
   }
-}
+};
 
-const handleVolumeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus, volumeId: number) => {
+const handleVolumeUpdate = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  volumeId: number
+) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -37,9 +41,12 @@ const handleVolumeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     default:
       return;
   }
-}
+};
 
-const handleVolumeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus) => {
+const handleVolumeClone = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus
+) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -54,9 +61,13 @@ const handleVolumeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus) 
     default:
       return;
   }
-}
+};
 
-const handleVolumeDelete = (dispatch: Dispatch<any>, status: Linode.EventStatus, volumeId: number) => {
+const handleVolumeDelete = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  volumeId: number
+) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -69,6 +80,6 @@ const handleVolumeDelete = (dispatch: Dispatch<any>, status: Linode.EventStatus,
       });
       return dispatch(action);
   }
-}
+};
 
 export default volumeEventsHandler;

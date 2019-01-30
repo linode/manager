@@ -15,11 +15,16 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Tags from 'src/components/Tags';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
-import { linodeInTransition, transitionText } from 'src/features/linodes/transitions';
+import {
+  linodeInTransition,
+  transitionText
+} from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
 import { sendEvent } from 'src/utilities/analytics';
 import { typeLabelDetails } from '../presentation';
-import hasMutationAvailable, { HasMutationAvailable } from './hasMutationAvailable';
+import hasMutationAvailable, {
+  HasMutationAvailable
+} from './hasMutationAvailable';
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import styled, { StyleProps } from './LinodeCard.style';
@@ -46,38 +51,42 @@ interface Props {
   mostRecentBackup: string | null;
 
   imageLabel: string;
-  openConfigDrawer: (configs: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
-  toggleConfirmation: (bootOption: Linode.BootAction,
-    linodeId: number, linodeLabel: string) => void;
+  openConfigDrawer: (
+    configs: Linode.Config[],
+    action: LinodeConfigSelectionDrawerCallback
+  ) => void;
+  toggleConfirmation: (
+    bootOption: Linode.BootAction,
+    linodeId: number,
+    linodeLabel: string
+  ) => void;
 }
 
-export type CombinedProps =
-  & Props
-  & WithDisplayType
-  & WithRecentEvent
-  & WithNotifications
-  & HasMutationAvailable
-  & StyleProps;
+export type CombinedProps = Props &
+  WithDisplayType &
+  WithRecentEvent &
+  WithNotifications &
+  HasMutationAvailable &
+  StyleProps;
 
 export class LinodeCard extends React.PureComponent<CombinedProps> {
-
   handleConsoleButtonClick = () => {
     sendEvent({
       category: 'Linode Action Menu Item',
-      action: 'Launch Console',
-    })
+      action: 'Launch Console'
+    });
     const { id } = this.props;
     lishLaunch(id);
-  }
+  };
 
   handleRebootButtonClick = () => {
     sendEvent({
       category: 'Linode Action Menu Item',
-      action: 'Reboot Linode',
-    })
+      action: 'Reboot Linode'
+    });
     const { id, label, toggleConfirmation } = this.props;
     toggleConfirmation('reboot', id, label);
-  }
+  };
 
   render() {
     const {
@@ -100,7 +109,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       mutationAvailable,
       linodeNotifications,
       recentEvent,
-      imageLabel } = this.props;
+      imageLabel
+    } = this.props;
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={label}>
@@ -114,7 +124,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                   flagContainer: classes.flagContainer,
                   flag: classes.flag,
                   cardHeader: classes.cardHeader,
-                  StatusIndicatorWrapper: classes.StatusIndicatorWrapper,
+                  StatusIndicatorWrapper: classes.StatusIndicatorWrapper
                 }}
                 linodeId={id}
                 linodeLabel={label}
@@ -138,19 +148,20 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
             className={`${classes.customeMQ} ${'title'}`}
           />
           <Divider />
-          <CardContent className={`${classes.cardContent} ${classes.customeMQ}`}>
-            {
-              recentEvent && linodeInTransition(status, recentEvent) &&
+          <CardContent
+            className={`${classes.cardContent} ${classes.customeMQ}`}
+          >
+            {recentEvent && linodeInTransition(status, recentEvent) && (
               <ProgressDisplay
                 text={transitionText(status, recentEvent)}
                 progress={recentEvent.percent_complete}
                 classes={{
                   statusProgress: classes.statusProgress,
                   statusText: classes.statusText,
-                  cardSection: classes.cardSection,
+                  cardSection: classes.cardSection
                 }}
               />
-            }
+            )}
             <div className={classes.cardSection} data-qa-linode-summary>
               {`${displayType}: ${typeLabelDetails(memory, disk, vcpus)}`}
             </div>
@@ -196,7 +207,7 @@ export default compose(
   withDisplayType,
   withRecentEvent,
   withNotifications,
-  hasMutationAvailable,
+  hasMutationAvailable
 )(LinodeCard) as React.ComponentType<Props>;
 
 const ProgressDisplay: React.StatelessComponent<{
@@ -207,17 +218,23 @@ const ProgressDisplay: React.StatelessComponent<{
     statusProgress: string;
     statusText: string;
   };
-}> = (props) => {
+}> = props => {
   const { classes, text, progress } = props;
   const displayProgress = progress ? `${progress}%` : ``;
   return (
     <Grid container className={classes.cardSection}>
       <Grid item>
-        <Typography variant="body2" className={classes.statusText}>{text}: {displayProgress}</Typography>
+        <Typography variant="body2" className={classes.statusText}>
+          {text}: {displayProgress}
+        </Typography>
       </Grid>
       <Grid item xs={12} sm={6} lg={6} xl={6}>
         <div className={classes.statusProgress}>
-          {progress ? <LinearProgress value={progress} /> : <LinearProgress variant="indeterminate" />}
+          {progress ? (
+            <LinearProgress value={progress} />
+          ) : (
+            <LinearProgress variant="indeterminate" />
+          )}
         </div>
       </Grid>
     </Grid>
@@ -232,14 +249,21 @@ export const RenderTitle: React.StatelessComponent<{
     flagContainer: string;
     cardHeader: string;
     flag: string;
-  }
+  };
   linodeStatus: Linode.LinodeStatus;
   linodeLabel: string;
   linodeId: number;
   mutationAvailable: boolean;
   linodeNotifications: Linode.Notification[];
-}> = (props) => {
-  const { classes, linodeStatus, linodeLabel, linodeId, mutationAvailable, linodeNotifications } = props;
+}> = props => {
+  const {
+    classes,
+    linodeStatus,
+    linodeLabel,
+    linodeId,
+    mutationAvailable,
+    linodeNotifications
+  } = props;
 
   return (
     <Grid container alignItems="center">
@@ -248,7 +272,12 @@ export const RenderTitle: React.StatelessComponent<{
           <LinodeStatusIndicator status={linodeStatus} />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          <Typography role="header" className={classes.wrapHeader} variant="h3" data-qa-label>
+          <Typography
+            role="header"
+            className={classes.wrapHeader}
+            variant="h3"
+            data-qa-label
+          >
             {linodeLabel}
           </Typography>
         </Grid>
@@ -266,14 +295,14 @@ RenderTitle.displayName = `RenderTitle`;
 
 export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[],
-  classes: any
-}> = (props) => {
+  linodeNotifications: Linode.Notification[];
+  classes: any;
+}> = props => {
   /*
-  * Render either a flag for if the Linode has a notification
-  * or if it has a pending mutation available. Mutations take
-  * precedent over notifications
-  */
+   * Render either a flag for if the Linode has a notification
+   * or if it has a pending mutation available. Mutations take
+   * precedent over notifications
+   */
   const { mutationAvailable, classes, linodeNotifications } = props;
 
   if (mutationAvailable) {
@@ -285,24 +314,24 @@ export const RenderFlag: React.StatelessComponent<{
           </IconButton>
         </Tooltip>
       </Grid>
-    )
+    );
   }
 
   if (linodeNotifications.length > 0) {
     return (
       <>
-        {
-          linodeNotifications.map((notification, idx) => (
-            <Grid key={idx} item className={classes.flagContainer}>
-              <Tooltip title={notification.message}><Flag className={classes.flag} /></Tooltip>
-            </Grid>
-          ))
-        }
+        {linodeNotifications.map((notification, idx) => (
+          <Grid key={idx} item className={classes.flagContainer}>
+            <Tooltip title={notification.message}>
+              <Flag className={classes.flag} />
+            </Tooltip>
+          </Grid>
+        ))}
       </>
-    )
+    );
   }
 
   return null;
-}
+};
 
 RenderFlag.displayName = `RenderFlag`;

@@ -9,8 +9,10 @@ interface Props {
   text?: string;
 }
 
-const MonekyWrench: React.StatelessComponent<Props> = (props) => {
-  throw Error(props.text || 'Oh no! Someone threw a monkey wrench in the works!');
+const MonekyWrench: React.StatelessComponent<Props> = props => {
+  throw Error(
+    props.text || 'Oh no! Someone threw a monkey wrench in the works!'
+  );
 };
 
 export default MonekyWrench;

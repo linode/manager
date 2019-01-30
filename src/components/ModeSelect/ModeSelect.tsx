@@ -1,4 +1,8 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
@@ -6,8 +10,8 @@ import RadioGroup from 'src/components/core/RadioGroup';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 export interface Mode<modes> {
@@ -18,13 +22,16 @@ export interface Mode<modes> {
 interface Props {
   selected: string;
   modes: Mode<any>[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ModeSelect: React.StatelessComponent<CombinedProps> = ({ modes, onChange, selected }) => {
-
+export const ModeSelect: React.StatelessComponent<CombinedProps> = ({
+  modes,
+  onChange,
+  selected
+}) => {
   return (
     <RadioGroup
       aria-label="mode"

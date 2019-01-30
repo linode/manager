@@ -5,28 +5,28 @@ import { compose, onlyUpdateForKeys, withStateHandlers } from 'recompose';
 import Close from '@material-ui/icons/Close';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
-type ClassNames = 'root'
-| 'header'
-| 'section'
-| 'title'
-| 'button'
-| 'icon';
+type ClassNames = 'root' | 'header' | 'section' | 'title' | 'button' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    width: '100%',
+    width: '100%'
   },
   header: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 18
   },
   section: {
     padding: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBottom: `1px solid ${theme.palette.divider}`
   },
   title: {
     background: theme.bg.tableHeader,
@@ -38,11 +38,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     padding: `${theme.spacing.unit}px !important`,
     [theme.breakpoints.down('md')]: {
       justifyContent: 'space-between',
-      alignItems: 'flex-start',
-    },
+      alignItems: 'flex-start'
+    }
   },
   button: {
-    marginTop: '18px',
+    marginTop: '18px'
   },
   icon: {
     position: 'absolute',
@@ -54,7 +54,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     backgroundColor: 'transparent',
     [theme.breakpoints.down('md')]: {
       position: 'relative',
-      top: 3,
+      top: 3
     }
   }
 });
@@ -72,39 +72,53 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) => {
+export const GroupImportCard: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { classes, dismiss, hide, hidden, openImportDrawer } = props;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     hide();
     dismiss();
-  } // @todo needs to be memoized
+  }; // @todo needs to be memoized
 
-  if (hidden) { return null; }
+  if (hidden) {
+    return null;
+  }
   return (
     <DashboardCard>
-      <Paper className={classNames(
-        {
+      <Paper
+        className={classNames({
           [classes.section]: true,
           [classes.title]: true
-        }
-      )}>
-        <Typography className={classes.header} variant="h1" component="h3" data-qa-group-cta-header>
+        })}
+      >
+        <Typography
+          className={classes.header}
+          variant="h1"
+          component="h3"
+          data-qa-group-cta-header
+        >
           Import Display Groups as Tags
         </Typography>
         <div>
           <button
-          className={classes.icon}
-          onClick={handleClick}
-          data-qa-dismiss-cta
-        >
-          <Close />
-        </button></div>
+            className={classes.icon}
+            onClick={handleClick}
+            data-qa-dismiss-cta
+          >
+            <Close />
+          </button>
+        </div>
       </Paper>
       <Paper className={classes.section}>
         <Typography variant="body1" data-qa-group-cta-body>
-        You now have the ability to import your Display Groups from Classic Manager as tags and they will be associated with your Linodes and Domains. This will give you the ability to organize and view your Linodes and Domains by tags. <strong>Your existing tags will not be affected.</strong>
+          You now have the ability to import your Display Groups from Classic
+          Manager as tags and they will be associated with your Linodes and
+          Domains. This will give you the ability to organize and view your
+          Linodes and Domains by tags.{' '}
+          <strong>Your existing tags will not be affected.</strong>
         </Typography>
         <Button
           type="primary"
@@ -119,17 +133,19 @@ export const GroupImportCard: React.StatelessComponent<CombinedProps> = (props) 
   );
 };
 
-GroupImportCard.displayName = "ImportGroupsCard";
+GroupImportCard.displayName = 'ImportGroupsCard';
 
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withStateHandlers({ hidden: false },
+  withStateHandlers(
+    { hidden: false },
     {
       hide: () => () => ({ hidden: true })
-    }),
+    }
+  ),
   onlyUpdateForKeys(['hidden', 'theme'])
-)(GroupImportCard)
+)(GroupImportCard);
 
 export default enhanced;

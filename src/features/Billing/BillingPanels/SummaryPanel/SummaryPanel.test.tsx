@@ -18,7 +18,7 @@ describe('SummaryPanel', () => {
     credit_card: { expiry: '02/2012', last_four: '1234' },
     tax_id: '',
     country: '',
-    balance: 0,
+    balance: 0
   };
 
   const mockClasses = { root: '', expired: '', item: '', address2: '' };
@@ -28,7 +28,10 @@ describe('SummaryPanel', () => {
       loading={false}
       lastUpdated={1}
       classes={mockClasses}
-      data={{ ...account, credit_card: { ...account.credit_card, expiry: '02/2012' } }}
+      data={{
+        ...account,
+        credit_card: { ...account.credit_card, expiry: '02/2012' }
+      }}
     />
   );
 
@@ -37,26 +40,36 @@ describe('SummaryPanel', () => {
       loading={false}
       lastUpdated={1}
       classes={mockClasses}
-      data={{ ...account, credit_card: { ...account.credit_card, expiry: '02/2020' } }}
+      data={{
+        ...account,
+        credit_card: { ...account.credit_card, expiry: '02/2020' }
+      }}
     />
   );
 
   it('should first render a headline of "Summary"', () => {
-    expect(componentExpiredCC.find('WithStyles(Typography)[variant="h2"]')
-      .first().children().text()).toBe('Summary');
+    expect(
+      componentExpiredCC
+        .find('WithStyles(Typography)[variant="h2"]')
+        .first()
+        .children()
+        .text()
+    ).toBe('Summary');
   });
 
   it('should render "Expired" text next to the CC expiration if has an old date', () => {
-    expect(componentExpiredCC.find('span')
-      .filterWhere((n) => {
-        return n.text() === 'Expired'
-      })).toHaveLength(1);
+    expect(
+      componentExpiredCC.find('span').filterWhere(n => {
+        return n.text() === 'Expired';
+      })
+    ).toHaveLength(1);
   });
 
   it('should not render "Expired" text next to the CC expiration if has an future date', () => {
-    expect(componentValidCC.find('span')
-      .filterWhere((n) => {
-        return n.text() === 'Expired'
-      })).toHaveLength(0);
+    expect(
+      componentValidCC.find('span').filterWhere(n => {
+        return n.text() === 'Expired';
+      })
+    ).toHaveLength(0);
   });
 });

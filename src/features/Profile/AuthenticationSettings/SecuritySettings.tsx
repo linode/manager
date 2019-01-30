@@ -3,7 +3,11 @@ import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
@@ -13,16 +17,16 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-    root: {
-      padding: theme.spacing.unit * 3,
-      paddingBottom: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 3,
-    },
-    title: {
-      marginBottom: theme.spacing.unit * 2,
-    },
-  });
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {
+    padding: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2
+  }
+});
 
 interface Props {
   onSuccess: () => void;
@@ -37,57 +41,71 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const L = {
-  ipWhitelistingToggle: lensPath(['ipWhitelistingToggle']),
+  ipWhitelistingToggle: lensPath(['ipWhitelistingToggle'])
 };
 
 export class SecuritySettings extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state: State = {
     errors: undefined,
-    ipWhitelistingToggle: true,
-  }
+    ipWhitelistingToggle: true
+  };
 
-  componentDidMount () {
+  componentDidMount() {
     this.mounted = true;
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.mounted = false;
   }
 
   toggleIpWhitelisting = () => {
-    this.setState(set(L.ipWhitelistingToggle, !this.state.ipWhitelistingToggle), this.onSubmit);
-  }
+    this.setState(
+      set(L.ipWhitelistingToggle, !this.state.ipWhitelistingToggle),
+      this.onSubmit
+    );
+  };
 
   onSubmit = () => {
     const { ipWhitelistingToggle } = this.state;
     const { onSuccess } = this.props;
-    if (ipWhitelistingToggle) { return; }
-    this.setState({ errors: undefined, });
+    if (ipWhitelistingToggle) {
+      return;
+    }
+    this.setState({ errors: undefined });
 
     // This feature can only be disabled.
-    updateProfile({ ip_whitelist_enabled: false, })
-      .then((response) => {
+    updateProfile({ ip_whitelist_enabled: false })
+      .then(response => {
         onSuccess();
         this.props.updateProfile(response);
         if (this.mounted) {
-          this.setState({ errors: undefined, })
+          this.setState({ errors: undefined });
         }
       })
-      .catch((error) => {
-        if (!this.mounted) { return; }
+      .catch(error => {
+        if (!this.mounted) {
+          return;
+        }
         const fallbackError = [{ reason: 'An unexpected error occured.' }];
-        this.setState({
-          errors: pathOr(fallbackError, ['response', 'data', 'errors'], error),
-          ipWhitelistingToggle: true,
-        }, () => {
-          scrollErrorIntoView();
-        })
+        this.setState(
+          {
+            errors: pathOr(
+              fallbackError,
+              ['response', 'data', 'errors'],
+              error
+            ),
+            ipWhitelistingToggle: true
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
   };
 
   render() {
-    const { classes, } = this.props;
+    const { classes } = this.props;
     const { errors, ipWhitelistingToggle } = this.state;
     const hasErrorFor = getAPIErrorFor({}, errors);
     const generalError = hasErrorFor('none');
@@ -104,16 +122,14 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
             IP Whitelisting (Legacy)
           </Typography>
           {generalError && <Notice error text={generalError} />}
-          <Typography
-            variant="body1"
-            data-qa-copy
-          >
-            Logins for your user will only be allowed from whitelisted IPs. This setting is currently deprecated, and cannot be enabled.
-            If you disable this setting, you will not be able to re-enable it.
+          <Typography variant="body1" data-qa-copy>
+            Logins for your user will only be allowed from whitelisted IPs. This
+            setting is currently deprecated, and cannot be enabled. If you
+            disable this setting, you will not be able to re-enable it.
           </Typography>
           <FormControl fullWidth>
             <FormControlLabel
-              label={ipWhitelistingToggle ? "Enabled" : "Disabled"}
+              label={ipWhitelistingToggle ? 'Enabled' : 'Disabled'}
               control={
                 <Toggle
                   checked={ipWhitelistingToggle}
@@ -124,7 +140,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
           </FormControl>
         </Paper>
       </React.Fragment>
-    )
+    );
   }
 }
 

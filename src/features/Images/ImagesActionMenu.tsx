@@ -6,8 +6,8 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   onRestore: (imageID: string) => void;
   onDeploy: (imageID: string) => void;
-  onEdit: (label:string, description:string, imageID:string) => void;
-  onDelete: (label:string, imageID:string) => void;
+  onEdit: (label: string, description: string, imageID: string) => void;
+  onDelete: (label: string, imageID: string) => void;
   image: Linode.Image;
 }
 
@@ -15,13 +15,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 class ImagesActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
-    const {
-      onRestore,
-      onDeploy,
-      onEdit,
-      onDelete,
-      image,
-    } = this.props;
+    const { onRestore, onDeploy, onEdit, onDelete, image } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -31,14 +25,14 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
             onRestore(image.id);
             closeMenu();
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             onDeploy(image.id);
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Edit',
@@ -47,7 +41,7 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
             onEdit(image.label, description, image.id);
             closeMenu();
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Delete',
@@ -55,18 +49,16 @@ class ImagesActionMenu extends React.Component<CombinedProps> {
             onDelete(image.label, image.id);
             closeMenu();
             e.preventDefault();
-          },
-        },
+          }
+        }
       ];
 
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

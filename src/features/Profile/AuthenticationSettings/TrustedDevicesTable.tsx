@@ -1,7 +1,7 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
 
@@ -15,8 +15,8 @@ import TableRowLoading from 'src/components/TableRowLoading';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -33,20 +33,25 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
   triggerDeletion = (deviceId: number) => {
     this.props.setDevice(deviceId);
     this.props.toggleDialog();
-  }
+  };
 
   render() {
     const { loading, error, data } = this.props;
     if (loading) {
-      return <TableRowLoading colSpan={4} />
+      return <TableRowLoading colSpan={4} />;
     }
 
     if (error) {
-      return <TableRowError colSpan={4} message="There was an issue loading your trusted devices." />
+      return (
+        <TableRowError
+          colSpan={4}
+          message="There was an issue loading your trusted devices."
+        />
+      );
     }
 
     if (!data || data.length === 0) {
-      return <TableRowEmpty colSpan={4} />
+      return <TableRowEmpty colSpan={4} />;
     }
 
     return (
@@ -54,9 +59,14 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
         {data.map(eachDevice => {
           return (
             <TableRow key={eachDevice.id}>
-              <TableCell parentColumn="Device">{eachDevice.user_agent}</TableCell>
+              <TableCell parentColumn="Device">
+                {eachDevice.user_agent}
+              </TableCell>
               <TableCell parentColumn="Expires">
-                <DateTimeDisplay value={eachDevice.expiry} humanizeCutoff="month" />
+                <DateTimeDisplay
+                  value={eachDevice.expiry}
+                  humanizeCutoff="month"
+                />
               </TableCell>
               <TableCell>
                 <UntrustButton
@@ -65,7 +75,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
                 />
               </TableCell>
             </TableRow>
-          )
+          );
         })}
       </React.Fragment>
     );
@@ -83,11 +93,11 @@ interface ButtonProps {
 class UntrustButton extends React.PureComponent<ButtonProps, {}> {
   handleDelete = () => {
     const { triggerDeletion, deviceId } = this.props;
-    if (!!deviceId) { triggerDeletion(deviceId) }
-  }
+    if (!!deviceId) {
+      triggerDeletion(deviceId);
+    }
+  };
   render() {
-    return (
-      <Button onClick={this.handleDelete}>Untrust</Button>
-    )
+    return <Button onClick={this.handleDelete}>Untrust</Button>;
   }
 }

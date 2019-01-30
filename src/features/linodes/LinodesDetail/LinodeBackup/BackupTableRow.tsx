@@ -10,32 +10,35 @@ import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 
 interface Props {
   backup: Linode.LinodeBackup;
-  handleRestore: (backup:Linode.LinodeBackup) => void;
-  handleDeploy: (backup:Linode.LinodeBackup) => void;
+  handleRestore: (backup: Linode.LinodeBackup) => void;
+  handleDeploy: (backup: Linode.LinodeBackup) => void;
 }
 
 const typeMap = {
   auto: 'Automatic',
-  snapshot: 'Manual',
+  snapshot: 'Manual'
 };
 
-const BackupTableRow:React.StatelessComponent<Props> = (props) => {
+const BackupTableRow: React.StatelessComponent<Props> = props => {
   const onDeploy = () => {
     props.handleDeploy(props.backup);
-  }
+  };
   const { backup, handleRestore } = props;
   return (
     <TableRow key={backup.id} data-qa-backup>
       <TableCell parentColumn="Date Created">
         {formatBackupDate(backup.created)}
       </TableCell>
-      <TableCell parentColumn="Label" data-qa-backup-name={backup.label || typeMap[backup.type]}>
+      <TableCell
+        parentColumn="Label"
+        data-qa-backup-name={backup.label || typeMap[backup.type]}
+      >
         {backup.label || typeMap[backup.type]}
       </TableCell>
       <TableCell parentColumn="Duration">
-        {moment.duration(
-          moment(backup.finished).diff(moment(backup.created)),
-        ).humanize()}
+        {moment
+          .duration(moment(backup.finished).diff(moment(backup.created)))
+          .humanize()}
       </TableCell>
       <TableCell parentColumn="Disks" data-qa-backup-disks>
         {backup.disks.map((disk, idx) => (
@@ -45,9 +48,7 @@ const BackupTableRow:React.StatelessComponent<Props> = (props) => {
         ))}
       </TableCell>
       <TableCell parentColumn="Space Required" data-qa-space-required>
-        {backup.disks.reduce((acc, disk) => (
-          acc + disk.size
-        ), 0)}MB
+        {backup.disks.reduce((acc, disk) => acc + disk.size, 0)}MB
       </TableCell>
       <TableCell>
         <LinodeBackupActionMenu
@@ -58,6 +59,6 @@ const BackupTableRow:React.StatelessComponent<Props> = (props) => {
       </TableCell>
     </TableRow>
   );
-}
+};
 
 export default BackupTableRow;

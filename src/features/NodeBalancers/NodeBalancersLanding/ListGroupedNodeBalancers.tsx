@@ -1,6 +1,10 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -27,20 +31,23 @@ type ClassNames =
   | 'tagHeader'
   | 'paginationCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  ip: { width: '30%', minWidth: 200, },
-  nameCell: { width: '15%', minWidth: 150, },
-  nodeStatus: { width: '10%', minWidth: 100, },
-  ports: { width: '10%', minWidth: 50, },
-  tagGroup: { flexDirection: 'row-reverse', marginBottom: theme.spacing.unit - 2, },
-  title: { marginBottom: theme.spacing.unit * 2, },
-  transferred: { width: '10%', minWidth: 100, },
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  ip: { width: '30%', minWidth: 200 },
+  nameCell: { width: '15%', minWidth: 150 },
+  nodeStatus: { width: '10%', minWidth: 100 },
+  ports: { width: '10%', minWidth: 50 },
+  tagGroup: {
+    flexDirection: 'row-reverse',
+    marginBottom: theme.spacing.unit - 2
+  },
+  title: { marginBottom: theme.spacing.unit * 2 },
+  transferred: { width: '10%', minWidth: 100 },
   groupContainer: {
     '&:first-of-type': {
       '& $tagHeaderRow > td': {
-        padding: '10px 0',
-      },
-    },
+        padding: '10px 0'
+      }
+    }
   },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
@@ -48,18 +55,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
       padding: '20px 0 10px',
-      borderBottom: 'none',
-    },
+      borderBottom: 'none'
+    }
   },
   tagHeader: {
-    marginBottom: 2,
+    marginBottom: 2
   },
   paginationCell: {
     paddingTop: 2,
     '& div:first-child': {
-      marginTop: 0,
-    },
-  },
+      marginTop: 0
+    }
+  }
 });
 
 interface Props {
@@ -71,17 +78,22 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = (props) => {
+const ListGroupedNodeBalancers: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     classes,
     data,
     orderBy,
     order,
     handleOrderChange,
-    toggleDialog,
+    toggleDialog
   } = props;
 
-  const groupedNodeBalancers = compose(sortGroups, groupByTags)(data);
+  const groupedNodeBalancers = compose(
+    sortGroups,
+    groupByTags
+  )(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
   return (
@@ -90,23 +102,42 @@ const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = (props
         return (
           <React.Fragment key={tag}>
             <Paginate data={nodeBalancers} pageSize={DEFAULT_PAGE_SIZE}>
-              {({ count, data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
-
+              {({
+                count,
+                data: paginatedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize
+              }) => {
                 return (
                   <React.Fragment>
-                    <TableBody className={classes.groupContainer} data-qa-tag-header={tag}>
+                    <TableBody
+                      className={classes.groupContainer}
+                      data-qa-tag-header={tag}
+                    >
                       <TableRow className={classes.tagHeaderRow}>
                         <TableCell colSpan={7}>
-                          <Typography variant="h2" component="h3" className={classes.tagHeader}>
+                          <Typography
+                            variant="h2"
+                            component="h3"
+                            className={classes.tagHeader}
+                          >
                             {tag}
                           </Typography>
                         </TableCell>
                       </TableRow>
-                      <NodeBalancersLandingTableRows toggleDialog={toggleDialog} data={paginatedData} />
+                      <NodeBalancersLandingTableRows
+                        toggleDialog={toggleDialog}
+                        data={paginatedData}
+                      />
                     </TableBody>
-                    {count > DEFAULT_PAGE_SIZE &&
+                    {count > DEFAULT_PAGE_SIZE && (
                       <TableRow>
-                        <TableCell colSpan={7} className={classes.paginationCell}>
+                        <TableCell
+                          colSpan={7}
+                          className={classes.paginationCell}
+                        >
                           <PaginationFooter
                             count={count}
                             page={page}
@@ -117,15 +148,14 @@ const ListGroupedNodeBalancers: React.StatelessComponent<CombinedProps> = (props
                           />
                         </TableCell>
                       </TableRow>
-                    }
+                    )}
                   </React.Fragment>
-                )
+                );
               }}
             </Paginate>
           </React.Fragment>
-        )
-      })
-      }
+        );
+      })}
     </TableWrapper>
   );
 };

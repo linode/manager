@@ -7,35 +7,49 @@ import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { events$ } from 'src/events';
 
-
-class ToastNotifications extends React.PureComponent<InjectedNotistackProps, {}> {
+class ToastNotifications extends React.PureComponent<
+  InjectedNotistackProps,
+  {}
+> {
   subscription: Subscription;
 
   componentDidMount() {
     this.subscription = events$
-      .filter((e) => !e._initial)
+      .filter(e => !e._initial)
       .map(event => {
         const { enqueueSnackbar } = this.props;
 
-        if (event.action === 'volume_detach' && ['finished', 'notification'].includes(event.status)) {
+        if (
+          event.action === 'volume_detach' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
           return enqueueSnackbar(`Volume successfully detached.`, {
             variant: 'success'
-          })
+          });
         }
 
-        if (event.action === 'volume_attach' && ['finished', 'notification'].includes(event.status)) {
+        if (
+          event.action === 'volume_attach' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
           return enqueueSnackbar(`Volume successfully attached.`, {
             variant: 'success'
-          })
+          });
         }
 
-        if (event.action === 'volume_create' && ['finished', 'notification'].includes(event.status)) {
+        if (
+          event.action === 'volume_create' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
           return enqueueSnackbar(`Volume successfully created.`, {
             variant: 'success'
-          })
+          });
         }
 
-        if (event.action === 'volume_delete' && ['finished', 'notification'].includes(event.status)) {
+        if (
+          event.action === 'volume_delete' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
           return enqueueSnackbar(`Volume successfully deleted.`, {
             variant: 'success'
           });
@@ -44,32 +58,39 @@ class ToastNotifications extends React.PureComponent<InjectedNotistackProps, {}>
         if (event.action === 'disk_imagize' && event.status === 'failed') {
           return enqueueSnackbar('There was an error creating an image.', {
             variant: 'error'
-          })
+          });
         }
 
         if (event.action === 'image_delete' && event.status === 'failed') {
           return enqueueSnackbar('There was an error deleting an image.', {
             variant: 'error'
-          })
+          });
         }
 
-        if (event.action === 'disk_imagize' && ['finished', 'notification'].includes(event.status)) {
+        if (
+          event.action === 'disk_imagize' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
           return enqueueSnackbar('Image created successfully.', {
             variant: 'success'
-          })
+          });
         }
 
-        if (event.action === 'image_delete' && ['finished', 'notification'].includes(event.status)) {
+        if (
+          event.action === 'image_delete' &&
+          ['finished', 'notification'].includes(event.status)
+        ) {
           return enqueueSnackbar('Image deleted successfully.', {
             variant: 'success'
-          })
+          });
         }
 
         if (event.action === 'volume_create' && event.status === 'failed') {
           return enqueueSnackbar(
-            `There was an error attaching volume ${event.entity && event.entity.label}.`,
+            `There was an error attaching volume ${event.entity &&
+              event.entity.label}.`,
             { variant: 'error' }
-          )
+          );
         }
 
         return;
@@ -81,7 +102,7 @@ class ToastNotifications extends React.PureComponent<InjectedNotistackProps, {}>
        */
       .filter(Boolean)
       .bufferTime(500)
-      .subscribe((toasts) => {
+      .subscribe(toasts => {
         if (toasts.length === 0) {
           return;
         }

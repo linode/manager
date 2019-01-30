@@ -9,40 +9,61 @@ export const emptyResult = {
   results: 0
 };
 
-export const getStackScriptsByUser = (username: string, params?: any, filter?: any) =>
+export const getStackScriptsByUser = (
+  username: string,
+  params?: any,
+  filter?: any
+) =>
   getStackscripts(params, {
     ...filter,
-    username,
+    username
   });
 
-export const getAccountStackScripts = (currentUser: string, params?: any, filter?: any) =>
+export const getAccountStackScripts = (
+  currentUser: string,
+  params?: any,
+  filter?: any
+) =>
   getUsers().then(response => {
     if (response.data.length === 1) {
-      return Promise.resolve(emptyResult); 
+      return Promise.resolve(emptyResult);
     }
 
     return getStackscripts(params, {
       ...filter,
-      '+and': [{'+or': response.data.reduce((acc, user) => (
-          user.username === currentUser ? acc : [...acc, { username: user.username }]
-        ), [])
-      }],
+      '+and': [
+        {
+          '+or': response.data.reduce(
+            (acc, user) =>
+              user.username === currentUser
+                ? acc
+                : [...acc, { username: user.username }],
+            []
+          )
+        }
+      ]
     });
   });
 
-export const getCommunityStackscripts = (currentUser: string, params?: any, filter?: any) =>
+export const getCommunityStackscripts = (
+  currentUser: string,
+  params?: any,
+  filter?: any
+) =>
   getUsers()
-    .catch((): Promise<Linode.ResourcePage<Linode.User>> => Promise.resolve(emptyResult))
-    .then(response => getStackscripts(params, {
-    ...filter,
-    '+and': response.data.reduce(
-      (acc, user) => ([...acc, { username: { '+neq': user.username } }]),
-      [
-        { username: { '+neq': 'linode' } }
-      ]
-    ),
-  })
-);
+    .catch(
+      (): Promise<Linode.ResourcePage<Linode.User>> =>
+        Promise.resolve(emptyResult)
+    )
+    .then(response =>
+      getStackscripts(params, {
+        ...filter,
+        '+and': response.data.reduce(
+          (acc, user) => [...acc, { username: { '+neq': user.username } }],
+          [{ username: { '+neq': 'linode' } }]
+        )
+      })
+    );
 
 export const StackScriptTabs = [
   {
@@ -64,10 +85,10 @@ export const StackScriptTabs = [
     title: 'Community StackScripts',
     request: getCommunityStackscripts,
     category: 'community'
-  },
+  }
 ];
 
-export type AcceptedFilters = 'username' | 'description' | 'label'
+export type AcceptedFilters = 'username' | 'description' | 'label';
 
 export const generateSpecificFilter = (
   key: AcceptedFilters,
@@ -75,32 +96,32 @@ export const generateSpecificFilter = (
 ) => {
   return {
     [key]: {
-      ["+contains"]: searchTerm
+      ['+contains']: searchTerm
     }
-  }
-}
+  };
+};
 
 export const generateCatchAllFilter = (searchTerm: string) => {
   return {
-    ["+or"]: [
+    ['+or']: [
       {
-        "label": {
-          ["+contains"]: searchTerm
-        },
+        label: {
+          ['+contains']: searchTerm
+        }
       },
       {
-        "username": {
-          ["+contains"]: searchTerm
-        },
+        username: {
+          ['+contains']: searchTerm
+        }
       },
       {
-        "description": {
-          ["+contains"]: searchTerm
-        },
-      },
-    ],
+        description: {
+          ['+contains']: searchTerm
+        }
+      }
+    ]
   };
-}
+};
 
 export const getErrorText = (error: any) => {
   const reason = pathOr('', ['data', 'errors', 0, 'reason'], error);
@@ -109,4 +130,4 @@ export const getErrorText = (error: any) => {
     return 'You are not authorized to view StackScripts for this account.';
   }
   return 'There was an error loading your StackScripts. Please try again later.';
-}
+};

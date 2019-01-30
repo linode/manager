@@ -7,7 +7,7 @@ describe('LongView Landing', () => {
   const component = shallow(
     <LongviewLanding
       classes={{
-        root: '',
+        root: ''
       }}
     />
   );

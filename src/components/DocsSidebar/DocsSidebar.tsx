@@ -1,30 +1,32 @@
 import * as React from 'react';
 import { StickyProps } from 'react-sticky';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import DocComponent, { Doc } from './DocComponent';
 
-type ClassNames = 'root'
-  | 'title'
-  | 'gridItem';
+type ClassNames = 'root' | 'title' | 'gridItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     [theme.breakpoints.down('md')]: {
       position: 'relative !important',
       left: `${theme.spacing.unit}px !important`,
       width: '100%',
-      paddingTop: theme.spacing.unit * 3,
-    },
+      paddingTop: theme.spacing.unit * 3
+    }
   },
   title: {
     fontSize: '1.5rem',
-    color: theme.color.green,
+    color: theme.color.green
   },
   gridItem: {
     [theme.breakpoints.down('md')]: {
-      width: '100%',
+      width: '100%'
     }
   }
 });
@@ -38,7 +40,7 @@ type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
 
 const styled = withStyles(styles);
 
-const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
+const DocsSidebar: React.StatelessComponent<CombinedProps> = props => {
   const { classes, docs, style, isSticky } = props;
 
   if (docs.length === 0) {
@@ -49,27 +51,27 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = (props) =>  {
   if (isSticky) {
     stickyStyles = {
       ...style,
-      paddingTop: 24,
+      paddingTop: 24
     };
   }
 
   return (
     <Grid container item style={stickyStyles} className={classes.root}>
       <Grid item className={classes.gridItem}>
-      <Typography
-        role="header"
-        variant="h2"
-        className={classes.title}
-        data-qa-sidebar-title
-      >
-        Linode Docs
-      </Typography>
-      {
-        docs.map((doc, idx) => <DocComponent key={idx} {...doc} />)
-      }
+        <Typography
+          role="header"
+          variant="h2"
+          className={classes.title}
+          data-qa-sidebar-title
+        >
+          Linode Docs
+        </Typography>
+        {docs.map((doc, idx) => (
+          <DocComponent key={idx} {...doc} />
+        ))}
       </Grid>
     </Grid>
   );
-}
+};
 
 export default styled(DocsSidebar);

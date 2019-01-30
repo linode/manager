@@ -30,9 +30,9 @@ describe('FromImageContent', () => {
       {...mockProps}
       notice={{
         text: 'hello world',
-        level: 'warning' as 'warning' | 'error',
+        level: 'warning' as 'warning' | 'error'
       }}
-    />,
+    />
   );
 
   const component = shallow(
@@ -40,14 +40,14 @@ describe('FromImageContent', () => {
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
       linodes={[]}
-    />,
+    />
   );
 
   const componentWithLinodes = shallow(
     <FromLinodeContent
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
-    />,
+    />
   );
 
   it('should render a notice when passed a Notice prop', () => {
@@ -63,27 +63,42 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectLinode panel', () => {
-    expect(componentWithLinodes
-      .find('WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))')).toHaveLength(1);
-    });
+    expect(
+      componentWithLinodes.find(
+        'WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))'
+      )
+    ).toHaveLength(1);
+  });
 
-    it('should render SelectRegion panel', () => {
-    expect(componentWithLinodes.
-      find('WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))')).toHaveLength(1);
+  it('should render SelectRegion panel', () => {
+    expect(
+      componentWithLinodes.find(
+        'WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))'
+      )
+    ).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(componentWithLinodes
-      .find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')).toHaveLength(1);
+    expect(
+      componentWithLinodes.find(
+        'WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))'
+      )
+    ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(componentWithLinodes
-      .find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')).toHaveLength(1);
+    expect(
+      componentWithLinodes.find(
+        'WithStyles(WithTheme(WithRenderGuard(InfoPanel)))'
+      )
+    ).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(componentWithLinodes
-      .find('WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))')).toHaveLength(1);
+    expect(
+      componentWithLinodes.find(
+        'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
+      )
+    ).toHaveLength(1);
   });
 });
