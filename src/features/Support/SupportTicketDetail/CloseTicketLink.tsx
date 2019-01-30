@@ -6,7 +6,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { closeSupportTicket } from 'src/services/support';
-import scrollToTop from 'src/utilities/scrollToTop';
+import scrollTo from 'src/utilities/scrollTo';
 
 interface Props {
   ticketId: number;
@@ -68,7 +68,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
       .then(() => {
         if (this.mounted) {
           this.setState({ isClosingTicket: false, dialogOpen: false });
-          scrollToTop();
+          scrollTo();
         }
         closeTicketSuccess();
       })
