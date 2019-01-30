@@ -31,13 +31,13 @@ describe('isCreditCardExpired', () => {
       ['09/2019', false],
       ['10/2019', false],
       ['11/2019', false],
-      ['12/2019', false],
-    ].forEach(([ expiration, result]: [ string, boolean ]) => {
+      ['12/2019', false]
+    ].forEach(([expiration, result]: [string, boolean]) => {
       describe(`and a expiration date of ${expiration}`, () => {
         it(`should return ${result}`, () => {
           expect(isCreditCardExpired(expiration)).toBe(result);
         });
       });
-    })
+    });
   });
 });

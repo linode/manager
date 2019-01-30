@@ -6,7 +6,9 @@
 declare module '*.svg';
 declare module '*.png';
 
-declare type Omit<T, K extends keyof any> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
+declare type Omit<T, K extends keyof any> = T extends any
+  ? Pick<T, Exclude<keyof T, K>>
+  : never;
 
 namespace Linode {
   export type TodoAny = any;
@@ -44,14 +46,14 @@ namespace Linode {
     hourly: number;
   }
   export type NotificationType =
-    'migration_scheduled' |
-    'migration_pending' |
-    'reboot_scheduled' |
-    'outage' |
-    'payment_due' |
-    'ticket_important' |
-    'ticket_abuse' |
-    'notice';
+    | 'migration_scheduled'
+    | 'migration_pending'
+    | 'reboot_scheduled'
+    | 'outage'
+    | 'payment_due'
+    | 'ticket_important'
+    | 'ticket_abuse'
+    | 'notice';
 
   export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
@@ -73,54 +75,54 @@ namespace Linode {
   }
 
   export type EventAction =
-    'backups_cancel' |
-    'backups_enable' |
-    'backups_restore' |
-    'disk_create' |
-    'disk_delete' |
-    'disk_duplicate' |
-    'disk_imagize' |
-    'disk_resize' |
-    'domain_create' |
-    'domain_delete' |
-    'domain_record_create' |
-    'domain_record_delete' |
-    'image_delete' |
-    'linode_addip' |
-    'linode_boot' |
-    'linode_clone' |
-    'linode_create' |
-    'linode_delete' |
-    'linode_migrate' |
-    'linode_reboot' |
-    'linode_resize' |
-    'linode_rebuild' |
-    'linode_shutdown' |
-    'linode_snapshot' |
-    'nodebalancer_config_create' |
-    'nodebalancer_config_delete' |
-    'nodebalancer_create' |
-    'nodebalancer_delete' |
-    'password_reset' |
-    'stackscript_create' |
-    'stackscript_delete' |
-    'stackscript_publicize' |
-    'stackscript_revise' |
-    'user_ssh_key_add' |
-    'user_ssh_key_delete' |
-    'volume_create' |
-    'volume_delete' |
-    'volume_detach' |
-    'volume_attach' |
-    'volume_resize' |
-    'volume_clone';
+    | 'backups_cancel'
+    | 'backups_enable'
+    | 'backups_restore'
+    | 'disk_create'
+    | 'disk_delete'
+    | 'disk_duplicate'
+    | 'disk_imagize'
+    | 'disk_resize'
+    | 'domain_create'
+    | 'domain_delete'
+    | 'domain_record_create'
+    | 'domain_record_delete'
+    | 'image_delete'
+    | 'linode_addip'
+    | 'linode_boot'
+    | 'linode_clone'
+    | 'linode_create'
+    | 'linode_delete'
+    | 'linode_migrate'
+    | 'linode_reboot'
+    | 'linode_resize'
+    | 'linode_rebuild'
+    | 'linode_shutdown'
+    | 'linode_snapshot'
+    | 'nodebalancer_config_create'
+    | 'nodebalancer_config_delete'
+    | 'nodebalancer_create'
+    | 'nodebalancer_delete'
+    | 'password_reset'
+    | 'stackscript_create'
+    | 'stackscript_delete'
+    | 'stackscript_publicize'
+    | 'stackscript_revise'
+    | 'user_ssh_key_add'
+    | 'user_ssh_key_delete'
+    | 'volume_create'
+    | 'volume_delete'
+    | 'volume_detach'
+    | 'volume_attach'
+    | 'volume_resize'
+    | 'volume_clone';
 
   export type EventStatus =
-    'scheduled' |
-    'started' |
-    'finished' |
-    'failed' |
-    'notification';
+    | 'scheduled'
+    | 'started'
+    | 'finished'
+    | 'failed'
+    | 'notification';
 
   export interface Event {
     id: number;
@@ -136,10 +138,10 @@ namespace Linode {
     username: string;
     _initial?: boolean;
   }
-/**
- * Represents an event which has an entity. For use with type guards.
- * https://www.typescriptlang.org/docs/handbook/advanced-types.html
- */
+  /**
+   * Represents an event which has an entity. For use with type guards.
+   * https://www.typescriptlang.org/docs/handbook/advanced-types.html
+   */
   export interface EntityEvent extends Event {
     entity: Entity;
   }
@@ -150,8 +152,8 @@ namespace Linode {
   }
 
   export interface PaginationOptions {
-    page?: number,
-    page_size?: number,
+    page?: number;
+    page_size?: number;
   }
 
   export interface SupportTicket {

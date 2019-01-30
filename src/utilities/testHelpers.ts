@@ -9,5 +9,5 @@ createResourcePage = data => ({
   page: 0,
   pages: 0,
   number: 1,
-  results: 0,
+  results: 0
 });

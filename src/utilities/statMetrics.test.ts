@@ -16,7 +16,7 @@ const data = [
   [0, 0.7],
   [0, 1.2],
   [0, 0],
-  [0, 0],
+  [0, 0]
 ];
 
 describe('Stat Metrics', () => {
@@ -25,7 +25,7 @@ describe('Stat Metrics', () => {
   it('returns max', () => {
     expect(metrics.max).toBe(2.98);
     const newData = [...data, [0, 100]];
-    expect(getMetrics(newData).max).toBe(100.00);
+    expect(getMetrics(newData).max).toBe(100.0);
     expect(getMetrics([[0, 0], [0, 0]]).max).toBe(0);
   });
 
@@ -50,10 +50,34 @@ describe('Stat Metrics', () => {
     expect(getMetrics(12 as any)).toEqual(emptyResponse);
     expect(getMetrics('hello' as any)).toEqual(emptyResponse);
     expect(getMetrics({} as any)).toEqual(emptyResponse);
-    expect(getMetrics([[], []] as any)).toEqual({average: 0, last: 0, length: 2, max: 0, total: 0});
-    expect(getMetrics([[], ['hello']] as any)).toEqual({average: 0, last: 0, length: 2, max: 0, total: 0});
-    expect(getMetrics([[], ['hello', 3]] as any)).toEqual({average: 1.5, last: 3, length: 2, max: 3, total: 3});
-    expect(getMetrics([[3, 'hello'], ['hello', 3]] as any)).toEqual({average: 1.5, last: 3, length: 2, max: 3, total: 3});
+    expect(getMetrics([[], []] as any)).toEqual({
+      average: 0,
+      last: 0,
+      length: 2,
+      max: 0,
+      total: 0
+    });
+    expect(getMetrics([[], ['hello']] as any)).toEqual({
+      average: 0,
+      last: 0,
+      length: 2,
+      max: 0,
+      total: 0
+    });
+    expect(getMetrics([[], ['hello', 3]] as any)).toEqual({
+      average: 1.5,
+      last: 3,
+      length: 2,
+      max: 3,
+      total: 3
+    });
+    expect(getMetrics([[3, 'hello'], ['hello', 3]] as any)).toEqual({
+      average: 1.5,
+      last: 3,
+      length: 2,
+      max: 3,
+      total: 3
+    });
   });
 });
 
@@ -63,12 +87,14 @@ describe('total traffic', () => {
     expect(totalTraffic.inTraffic).toBe(5400);
     expect(totalTraffic.outTraffic).toBe(10800);
     expect(totalTraffic.combinedTraffic).toBe(16200);
-    expect(totalTraffic.combinedTraffic).toEqual(totalTraffic.inTraffic + totalTraffic.outTraffic);
+    expect(totalTraffic.combinedTraffic).toEqual(
+      totalTraffic.inTraffic + totalTraffic.outTraffic
+    );
   });
 });
 
 describe('format magnitude', () => {
-  it('doesn\'t add magnitude when 1 < X < 999', () => {
+  it("doesn't add magnitude when 1 < X < 999", () => {
     expect(formatMagnitude('612.12', 'b/s')).toBe('612.12 b/s');
     expect(formatMagnitude(1, 'b/s')).toBe('1.00 b/s');
     expect(formatMagnitude(99, 'b/s')).toBe('99.00 b/s');

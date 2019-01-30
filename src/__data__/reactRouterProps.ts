@@ -2,8 +2,8 @@ const mockLocation = {
   pathname: '/',
   search: '?query=search',
   state: {},
-  hash: '',
-}
+  hash: ''
+};
 
 export const reactRouterProps: any = {
   history: {
@@ -17,7 +17,7 @@ export const reactRouterProps: any = {
     goForward: jest.fn(),
     block: jest.fn(),
     listen: jest.fn(),
-    createHref: jest.fn(),
+    createHref: jest.fn()
   },
   location: mockLocation,
   match: {
@@ -27,4 +27,4 @@ export const reactRouterProps: any = {
     url: 'localhost'
   },
   staticContext: undefined
-}
+};

@@ -1,4 +1,4 @@
-import capitalize, {capitalizeAllWords} from './capitalize';
+import capitalize, { capitalizeAllWords } from './capitalize';
 
 describe('capitalize', () => {
   it('should return capitalized string', () => {
@@ -11,5 +11,3 @@ describe('capitalize', () => {
     expect(capitalizeAllWords('hello world')).toBe('Hello World');
   });
 });
-
-  

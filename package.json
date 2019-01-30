@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.46.0",
+  "version": "0.47.0",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -144,7 +144,10 @@
     }
   },
   "lint-staged": {
-    "*.{ts,tsx}": [ "prettier --write", "git add" ]
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",

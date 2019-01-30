@@ -241,14 +241,16 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: -10, horizontal: 'right' }}
         >
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
-          <MenuItem
-            onClick={this.toggleRebootDialog}
-            className={classes.menuItem}
-            data-qa-set-power="reboot"
-          >
-            <Reload className={`${classes.icon}`} />
-            Reboot
-          </MenuItem>
+          {isRunning && (
+            <MenuItem
+              onClick={this.toggleRebootDialog}
+              className={classes.menuItem}
+              data-qa-set-power="reboot"
+            >
+              <Reload className={`${classes.icon}`} />
+              Reboot
+            </MenuItem>
+          )}
           {isRunning && (
             <MenuItem
               onClick={this.togglePowerDownDialog}
