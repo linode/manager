@@ -1,44 +1,61 @@
-import { AnyAction, Reducer } from "redux";
+import { AnyAction, Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { addEvents, updateEventsAsSeen } from './event.actions';
-import { epoch, getNumUnseenEvents, mostRecentCreated, updateEvents, updateInProgressEvents } from './event.helpers';
+import {
+  epoch,
+  getNumUnseenEvents,
+  mostRecentCreated,
+  updateEvents,
+  updateInProgressEvents
+} from './event.helpers';
 
+export interface ExtendedEvent extends Linode.Event {
+  _deleted?: string;
+  _initial?: boolean;
+}
 
-type State = ApplicationState['events'];
+export interface State {
+  events: ExtendedEvent[];
+  mostRecentEventTime: number;
+  countUnseenEvents: number;
+  inProgressEvents: Record<number, boolean>;
+}
 
 export const defaultState: State = {
   events: [],
   mostRecentEventTime: epoch,
   countUnseenEvents: 0,
-  inProgressEvents: {},
+  inProgressEvents: {}
 };
 
 const reducer: Reducer<State> = (state = defaultState, action: AnyAction) => {
-
   if (isType(action, addEvents)) {
     const { payload: events } = action;
     const {
       events: prevEvents,
       inProgressEvents: prevInProgressEvents,
-      mostRecentEventTime,
+      mostRecentEventTime
     } = state;
     const updatedEvents = updateEvents(prevEvents, events);
 
     return {
       ...state,
       events: updatedEvents,
-      mostRecentEventTime: events.reduce(mostRecentCreated, mostRecentEventTime),
+      mostRecentEventTime: events.reduce(
+        mostRecentCreated,
+        mostRecentEventTime
+      ),
       countUnseenEvents: getNumUnseenEvents(updatedEvents),
-      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events),
+      inProgressEvents: updateInProgressEvents(prevInProgressEvents, events)
     };
   }
 
   if (isType(action, updateEventsAsSeen)) {
     return {
       ...state,
-      events: state.events.map((event) => ({ ...event, seen: true })),
-      countUnseenEvents: 0,
-    }
+      events: state.events.map(event => ({ ...event, seen: true })),
+      countUnseenEvents: 0
+    };
   }
 
   return state;

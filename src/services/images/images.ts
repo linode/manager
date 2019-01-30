@@ -1,7 +1,11 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from 'src/services';
-import store from 'src/store';
-import { addOrUpdateImage, removeImage } from 'src/store/image/image.actions';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from 'src/services';
 import { createImageSchema, updateImageSchema } from './image.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -15,9 +19,8 @@ type Image = Linode.Image;
 export const getImage = (imageId: string) =>
   Request<Image>(
     setURL(`${API_ROOT}/images/${imageId}`),
-    setMethod('GET'),
-  )
-    .then(response => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * Returns a paginated list of Images.
@@ -28,9 +31,8 @@ export const getImages = (params: any = {}, filters: any = {}) =>
     setURL(`${API_ROOT}/images`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
-  )
-    .then(response => response.data);
+    setXFilter(filters)
+  ).then(response => response.data);
 
 /**
  * Create a private gold-master Image from a Linode Disk.
@@ -44,7 +46,6 @@ export const createImage = (
   label?: string,
   description?: string
 ) => {
-
   const data = {
     disk_id: diskId,
     ...(label && { label }),
@@ -55,11 +56,7 @@ export const createImage = (
     setURL(`${API_ROOT}/images`),
     setMethod('POST'),
     setData(data, createImageSchema)
-  ).then((response) => {
-    const { data } = response;
-    store.dispatch(addOrUpdateImage(data))
-    return response;
-  });
+  );
 };
 
 /**
@@ -74,8 +71,6 @@ export const updateImage = (
   label?: string,
   description?: string
 ) => {
-
-
   const data = {
     ...(label && { label }),
     ...(description && { description })
@@ -85,12 +80,7 @@ export const updateImage = (
     setURL(`${API_ROOT}/images/${imageId}`),
     setMethod('PUT'),
     setData(data, updateImageSchema)
-  )
-    .then((response) => {
-      const { data } = response;
-      store.dispatch(addOrUpdateImage(data))
-      return response;
-    });
+  );
 };
 
 /**
@@ -101,10 +91,6 @@ export const updateImage = (
 export const deleteImage = (imageId: string) => {
   return Request<{}>(
     setURL(`${API_ROOT}/images/${imageId}`),
-    setMethod('DELETE'),
-  )
-    .then((response) => {
-      store.dispatch(removeImage(imageId));
-      return response;
-    })
-}
+    setMethod('DELETE')
+  );
+};

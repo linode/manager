@@ -1,12 +1,16 @@
 import * as React from 'react';
 import Drawer from 'src/components/core/Drawer';
 import Hidden from 'src/components/core/Hidden';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import PrimaryNav from 'src/components/PrimaryNav';
 
 type ClassNames = 'menuPaper' | 'menuDocked';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuPaper: {
     height: '100%',
     width: 215,
@@ -14,12 +18,12 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     left: 'inherit',
     boxShadow: 'none',
     [theme.breakpoints.up('xl')]: {
-      width: 275,
-    },
+      width: 275
+    }
   },
   menuDocked: {
-    height: '100%',
-  },
+    height: '100%'
+  }
 });
 
 interface Props {
@@ -43,7 +47,7 @@ class SideMenu extends React.Component<CombinedProps> {
             classes={{ paper: classes.menuPaper }}
             onClose={closeMenu}
             ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
+              keepMounted: true // Better open performance on mobile.
             }}
           >
             <PrimaryNav closeMenu={closeMenu} toggleTheme={toggleTheme} />
@@ -55,7 +59,7 @@ class SideMenu extends React.Component<CombinedProps> {
             open
             classes={{
               paper: classes.menuPaper,
-              docked: classes.menuDocked,
+              docked: classes.menuDocked
             }}
           >
             <PrimaryNav closeMenu={closeMenu} toggleTheme={toggleTheme} />

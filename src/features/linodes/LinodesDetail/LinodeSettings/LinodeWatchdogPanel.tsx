@@ -2,22 +2,29 @@ import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Toggle from 'src/components/Toggle';
-import { updateLinode } from 'src/services/linodes';
+import {
+  LinodeActionsProps,
+  withLinodeActions
+} from 'src/store/linodes/linode.containers';
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   shutDownWatchdog: {
-    margin: `${theme.spacing.unit * 2}px 0`,
-  },
+    margin: `${theme.spacing.unit * 2}px 0`
+  }
 });
 
 interface Props {
@@ -33,33 +40,50 @@ interface State {
   errors?: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  LinodeActionsProps &
+  RouteComponentProps<{}> &
+  WithStyles<ClassNames>;
 
 class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
   state: State = {
     currentStatus: this.props.currentStatus,
     linodeId: this.props.linodeId,
-    submitting: false,
+    submitting: false
   };
 
   toggleWatchdog = (e: React.ChangeEvent<HTMLElement>, value: boolean) => {
+    const {
+      linodeActions: { updateLinode }
+    } = this.props;
     this.setState(setSubmitting(true));
 
-    updateLinode(this.props.linodeId, { watchdog_enabled: value })
-      .then((response) => {
-        this.setState(compose(
-          setSubmitting(false),
-          setSuccess(`Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`),
-          setCurrentStatus(response.watchdog_enabled),
-        ));
+    updateLinode({ linodeId: this.props.linodeId, watchdog_enabled: value })
+      .then(response => {
+        this.setState(
+          compose(
+            setSubmitting(false),
+            setSuccess(
+              `Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`
+            ),
+            setCurrentStatus(response.watchdog_enabled)
+          )
+        );
       })
       .catch(() => {
-        this.setState(compose(
-          setSubmitting(false),
-          setErrors([{ field: 'none', reason: `Unable to ${value ? 'disable' : 'enable'} Watchdog.` }]),
-        ));
+        this.setState(
+          compose(
+            setSubmitting(false),
+            setErrors([
+              {
+                field: 'none',
+                reason: `Unable to ${value ? 'disable' : 'enable'} Watchdog.`
+              }
+            ])
+          )
+        );
       });
-  }
+  };
 
   render() {
     const { currentStatus, submitting, success, errors } = this.state;
@@ -67,17 +91,21 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ExpansionPanel
-          heading="Shutdown Watchdog"
-          data-qa-watchdog-panel
-        >
-          <Grid container alignItems="center" className={classes.shutDownWatchdog}>
-            {
-              (success || errors) &&
+        <ExpansionPanel heading="Shutdown Watchdog" data-qa-watchdog-panel>
+          <Grid
+            container
+            alignItems="center"
+            className={classes.shutDownWatchdog}
+          >
+            {(success || errors) && (
               <Grid item xs={12}>
-                <Notice success={Boolean(success)} error={Boolean(errors)} text={success || errors} />
+                <Notice
+                  success={Boolean(success)}
+                  error={Boolean(errors)}
+                  text={success || errors}
+                />
               </Grid>
-            }
+            )}
             <Grid item xs={12} md={2}>
               <FormControlLabel
                 className="toggleLassie"
@@ -94,10 +122,11 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item xs={12} md={10} lg={8} xl={6}>
               <Typography data-qa-watchdog-desc>
-                Shutdown Watchdog, also known as Lassie, is a Linode Manager feature capable of
-                automatically rebooting your Linode if it powers off unexpectedly. Lassie is not
-                technically an availability monitoring tool, but it can help get your Linode back
-                online fast if it’s accidentally powered off.
+                Shutdown Watchdog, also known as Lassie, is a Linode Manager
+                feature capable of automatically rebooting your Linode if it
+                powers off unexpectedly. Lassie is not technically an
+                availability monitoring tool, but it can help get your Linode
+                back online fast if it’s accidentally powered off.
               </Typography>
             </Grid>
           </Grid>
@@ -111,7 +140,7 @@ const L = {
   currentStatus: lensPath(['currentStatus']),
   error: lensPath(['errors']),
   submitting: lensPath(['submitting']),
-  success: lensPath(['success']),
+  success: lensPath(['success'])
 };
 
 const setCurrentStatus = (v: boolean) => set(L.currentStatus, v);
@@ -130,4 +159,5 @@ export default compose(
   errorBoundary,
   withRouter,
   styled,
+  withLinodeActions
 )(LinodeWatchdogPanel) as React.ComponentType<Props>;

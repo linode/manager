@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -8,7 +12,8 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { Metrics } from 'src/utilities/statMetrics';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'legend'
   | 'red'
   | 'yellow'
@@ -17,48 +22,48 @@ type ClassNames = 'root'
   | 'text'
   | 'tableHeadInner';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     '& *': {
       height: 'auto',
       border: 'none',
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent'
     },
     '& td:first-child': {
-      backgroundColor: 'transparent !important',
+      backgroundColor: 'transparent !important'
     },
     [theme.breakpoints.down('sm')]: {
       '& td': {
-        justifyContent: 'normal',
-      },
-    },
+        justifyContent: 'normal'
+      }
+    }
   },
   tableHeadInner: {
-    paddingBottom: 4,
+    paddingBottom: 4
   },
   red: {
     '&:before': {
-      backgroundColor: theme.color.red,
-    },
+      backgroundColor: theme.color.red
+    }
   },
   yellow: {
     '&:before': {
-      backgroundColor: theme.color.yellow,
-    },
+      backgroundColor: theme.color.yellow
+    }
   },
   blue: {
     '&:before': {
-      backgroundColor: theme.palette.primary.main,
-    },
+      backgroundColor: theme.palette.primary.main
+    }
   },
   green: {
     '&:before': {
-      backgroundColor: theme.color.green,
-    },
+      backgroundColor: theme.color.green
+    }
   },
   legend: {
     [theme.breakpoints.up('md')]: {
-      width: '38%',
+      width: '38%'
     },
     '& > div': {
       display: 'flex',
@@ -68,13 +73,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         display: 'inline-block',
         width: 20,
         height: 20,
-        marginRight: theme.spacing.unit,
-      },
-    },
+        marginRight: theme.spacing.unit
+      }
+    }
   },
   text: {
-    color: theme.color.black,
-  },
+    color: theme.color.black
+  }
 });
 
 interface MetricsDisplayProps {
@@ -88,26 +93,27 @@ interface MetricsDisplayRow {
   data: Metrics;
 }
 
-type CombinedProps = MetricsDisplayProps & WithStyles<ClassNames>
+type CombinedProps = MetricsDisplayProps & WithStyles<ClassNames>;
 
 export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
-
   const rowHeaders = ['Max', 'Avg', 'Last'];
 
   return (
-    <Table aria-label="Linode stats and metrics" className={classes.root}>
+    <Table aria-label="Stats and metrics" className={classes.root}>
       <TableHead>
         <TableRow>
-          <TableCell>
-            {''}
-          </TableCell>
-          {rowHeaders.map((section, idx) =>
-            <TableCell key={idx} data-qa-header-cell className={classes.tableHeadInner}>
+          <TableCell>{''}</TableCell>
+          {rowHeaders.map((section, idx) => (
+            <TableCell
+              key={idx}
+              data-qa-header-cell
+              className={classes.tableHeadInner}
+            >
               <Typography variant="body2" className={classes.text}>
                 {section}
               </Typography>
             </TableCell>
-          )}
+          ))}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -122,13 +128,18 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
                   </div>
                 </TableCell>
                 {metricsBySection(data).map((section, idx) => {
-                  return (<TableCell key={idx} parentColumn={rowHeaders[idx]} data-qa-body-cell>
-                    <Typography variant="body2" className={classes.text}>
-                      {format(section)}
-                    </Typography>
-                  </TableCell>)
-                }
-                )}
+                  return (
+                    <TableCell
+                      key={idx}
+                      parentColumn={rowHeaders[idx]}
+                      data-qa-body-cell
+                    >
+                      <Typography variant="body2" className={classes.text}>
+                        {format(section)}
+                      </Typography>
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             );
           })}
@@ -136,12 +147,15 @@ export const MetricsDisplay = ({ classes, rows }: CombinedProps) => {
       </TableBody>
     </Table>
   );
-}
+};
 
 // Grabs the sections we want (max, average, last) and puts them in an array
 // so we can map through them and create JSX
-export const metricsBySection = (data: Metrics): number[] =>
-  [data.max, data.average, data.last]
+export const metricsBySection = (data: Metrics): number[] => [
+  data.max,
+  data.average,
+  data.last
+];
 
 const styled = withStyles(styles);
 

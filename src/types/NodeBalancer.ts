@@ -10,8 +10,15 @@ namespace Linode {
     created: string;
     updated: string;
     transfer: BalancerTransfer;
-    config?: NodeBalancerConfig[];
     tags: string[];
+  }
+
+  export interface NodeBalancerWithConfigIDs extends NodeBalancer {
+    configs: number[];
+  }
+
+  export interface NodeBalancerWithConfigs extends NodeBalancer {
+    configs: Linode.NodeBalancerConfig[];
   }
 
   export interface NodesStatus {
@@ -19,7 +26,7 @@ namespace Linode {
     down: number;
   }
 
-  export interface BalancerTransfer{
+  export interface BalancerTransfer {
     in: number;
     out: number;
     total: number;
@@ -33,6 +40,8 @@ namespace Linode {
     address: string;
     port?: number;
     weight?: number;
+    nodebalancer_id?: number;
+    config_id?: number;
     mode?: NodeBalancerConfigNodeMode;
     /* for the sake of local operations */
     modifyStatus?: 'new' | 'delete' | 'update';
@@ -63,20 +72,20 @@ namespace Linode {
     modifyStatus?: 'new';
   }
 
-  export interface ExtendedNodeBalancer extends NodeBalancer{
+  export interface ExtendedNodeBalancer extends NodeBalancer {
     up: number;
     down: number;
     ports: number[];
   }
 
-  export interface NodeBalancerStats{
+  export interface NodeBalancerStats {
     title: string;
     data: {
       connections: [number, number][];
       traffic: {
         out: [number, number][];
         in: [number, number][];
-      }
+      };
     };
   }
 }

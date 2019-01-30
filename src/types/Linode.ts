@@ -40,11 +40,29 @@ namespace Linode {
     snapshot?: LinodeBackup;
   }
 
-  export type Window = "Scheduling" | "W0" | "W2" | "W4" | "W8" | "W10" |
-    "W12" | "W14" | "W16" | "W18" | "W20" | "W22";
+  export type Window =
+    | 'Scheduling'
+    | 'W0'
+    | 'W2'
+    | 'W4'
+    | 'W8'
+    | 'W10'
+    | 'W12'
+    | 'W14'
+    | 'W16'
+    | 'W18'
+    | 'W20'
+    | 'W22';
 
-  export type Day = "Scheduling" | "Sunday" | "Monday" | "Tuesday" |
-    "Wednesday" | "Thursday" | "Friday" | "Saturday";
+  export type Day =
+    | 'Scheduling'
+    | 'Sunday'
+    | 'Monday'
+    | 'Tuesday'
+    | 'Wednesday'
+    | 'Thursday'
+    | 'Friday'
+    | 'Saturday';
 
   export interface LinodeBackupSchedule {
     window: Window | null;
@@ -54,8 +72,8 @@ namespace Linode {
   export interface LinodeBackupsResponse {
     automatic: LinodeBackup[];
     snapshot: {
-      current: LinodeBackup | null,
-      in_progress: LinodeBackup | null,
+      current: LinodeBackup | null;
+      in_progress: LinodeBackup | null;
     };
   }
 
@@ -89,7 +107,7 @@ namespace Linode {
   export type LinodeBackupType = 'auto' | 'snapshot';
 
   export type LinodeBackupStatus =
-    'pending'
+    | 'pending'
     | 'running'
     | 'needsPostProcessing'
     | 'successful'
@@ -132,7 +150,7 @@ namespace Linode {
   }
 
   export type LinodeStatus =
-    'offline'
+    | 'offline'
     | 'booting'
     | 'running'
     | 'shutting_down'
@@ -165,7 +183,7 @@ namespace Linode {
     volume_id: null | number;
   }
 
-  export type Filesystem = "raw" | "swap" | "ext3" | "ext4" | "initrd";
+  export type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
 
   export interface Devices {
     sda: null | DiskDevice | VolumeDevice;
@@ -203,7 +221,7 @@ namespace Linode {
     io: {
       io: number[][];
       swap: number[][];
-    }
+    };
     netv4: NetStats;
     netv6: NetStats;
   }

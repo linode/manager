@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
+import withLinodeActions from 'src/__data__/withLinodeActions';
 
 import { FromBackupsContent } from './FromBackupsContent';
 
@@ -22,7 +22,7 @@ const mockProps = {
     actions: {
       addTag: jest.fn(),
       createTag: jest.fn(),
-      getLinodeTagList: jest.fn(),
+      getLinodeTagList: jest.fn()
     }
   },
   enqueueSnackbar: jest.fn(),
@@ -35,7 +35,7 @@ const mockProps = {
 const mockPropsWithNotice = {
   notice: {
     text: 'example text',
-    level: 'warning' as 'warning' | 'error',
+    level: 'warning' as 'warning' | 'error'
   },
   linodes: [],
   accountBackups: false,
@@ -53,7 +53,7 @@ const mockPropsWithNotice = {
     actions: {
       addTag: jest.fn(),
       createTag: jest.fn(),
-      getLinodeTagList: jest.fn(),
+      getLinodeTagList: jest.fn()
     }
   },
   enqueueSnackbar: jest.fn(),
@@ -66,16 +66,18 @@ const mockPropsWithNotice = {
 describe('FromBackupsContent', () => {
   const component = shallow(
     <FromBackupsContent
+      {...withLinodeActions}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
-    />,
+    />
   );
 
   const componentWithNotice = shallow(
     <FromBackupsContent
+      {...withLinodeActions}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockPropsWithNotice}
-    />,
+    />
   );
 
   component.setState({ isGettingBackups: false }); // get rid of loading state
@@ -104,23 +106,41 @@ describe('FromBackupsContent', () => {
     });
 
     it('should render SelectLinode panel', () => {
-      expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))')).toHaveLength(1);
+      expect(
+        component.find(
+          'WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))'
+        )
+      ).toHaveLength(1);
     });
 
     it('should render SelectBackup panel', () => {
-      expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectBackupPanel)))')).toHaveLength(1);
+      expect(
+        component.find(
+          'WithStyles(WithTheme(WithRenderGuard(SelectBackupPanel)))'
+        )
+      ).toHaveLength(1);
     });
 
     it('should render SelectPlan panel', () => {
-      expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')).toHaveLength(1);
+      expect(
+        component.find(
+          'WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))'
+        )
+      ).toHaveLength(1);
     });
 
     it('should render SelectLabel panel', () => {
-      expect(component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')).toHaveLength(1);
+      expect(
+        component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')
+      ).toHaveLength(1);
     });
 
     it('should render SelectAddOns panel', () => {
-      expect(component.find('WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))')).toHaveLength(1);
+      expect(
+        component.find(
+          'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
+        )
+      ).toHaveLength(1);
     });
   });
 });

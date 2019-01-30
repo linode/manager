@@ -1,9 +1,16 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { cloneVolume } from 'src/services/volumes';
 import { CloneVolumeSchema } from 'src/services/volumes/volumes.schema';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
@@ -13,8 +20,8 @@ import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -25,32 +32,43 @@ interface Props {
   volumeRegion: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
 
 const validationScheme = CloneVolumeSchema;
 
 const initialValues = { label: '' };
 
-const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
+const CloneVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    onClose,
+    volumeId,
+    volumeRegion,
+    volumeLabel,
+    volumeSize,
+    cloneVolume
+  } = props;
   return (
     <Formik
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        cloneVolume(volumeId, { label: values.label })
+        cloneVolume({ volumeId, label: values.label })
           .then(response => {
             onClose();
             resetEventsPolling();
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) => setStatus({ generalError });
+            const mapErrorToStatus = (generalError: string) =>
+              setStatus({ generalError });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);
-            handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
-          })
-
+            handleGeneralErrors(
+              mapErrorToStatus,
+              errorResponse,
+              defaultMessage
+            );
+          });
       }}
       initialValues={initialValues}
       render={({
@@ -62,12 +80,17 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
         resetForm,
         status,
         touched,
-        values,
+        values
       }) => {
         return (
           <Form>
             <Typography variant="body2">{`The newly created volume will be an exact clone of ${volumeLabel}. It will have a size of ${volumeSize} GiB and be available in ${volumeRegion}.`}</Typography>
-            {status && <NoticePanel success={status.success} error={status.generalError} />}
+            {status && (
+              <NoticePanel
+                success={status.success}
+                error={status.generalError}
+              />
+            )}
             <LabelField
               error={touched.label ? errors.label : undefined}
               name="label"
@@ -80,7 +103,10 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
             <VolumesActionsPanel
               onSubmit={handleSubmit}
-              onCancel={() => { resetForm(); onClose() }}
+              onCancel={() => {
+                resetForm();
+                onClose();
+              }}
               isSubmitting={isSubmitting}
             />
           </Form>
@@ -92,4 +118,9 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
 
 const styled = withStyles(styles);
 
-export default styled(CloneVolumeForm);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withVolumesRequests
+);
+
+export default enhanced(CloneVolumeForm);

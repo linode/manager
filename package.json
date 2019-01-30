@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.46.0",
+  "version": "0.47.0",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -144,7 +144,10 @@
     }
   },
   "lint-staged": {
-    "*.{ts,tsx}": [ "prettier --write", "git add" ]
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -173,6 +176,7 @@
     "@types/memoizee": "^0.4.2",
     "@types/moment-timezone": "^0.5.4",
     "@types/node": "^9.4.6",
+    "@types/normalizr": "^2.0.18",
     "@types/promise.prototype.finally": "^2.0.2",
     "@types/qrcode.react": "^0.8.0",
     "@types/qs": "^6.5.1",

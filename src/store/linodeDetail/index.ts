@@ -1,14 +1,24 @@
 import { combineReducers } from 'redux';
-import disks, { defaultState as defaultDisksState } from './disks';
-import volumes, { defaultState as defaultVolumesState } from './volumes';
+import disks, {
+  defaultState as defaultDisksState,
+  State as LinodeDisksState
+} from './disks';
+import volumes, {
+  defaultState as defaultVolumesState,
+  State as LinodeVolumesState
+} from './volumes';
 
+export interface State {
+  disks: LinodeDisksState;
+  volumes: LinodeVolumesState;
+}
 
 export const defaultState = {
-  volumes: defaultVolumesState,
   disks: defaultDisksState,
+  volumes: defaultVolumesState
 };
 
 export default combineReducers({
   disks,
-  volumes,
+  volumes
 });

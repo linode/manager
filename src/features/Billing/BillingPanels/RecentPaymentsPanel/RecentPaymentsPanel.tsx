@@ -1,7 +1,11 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -18,25 +22,26 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { reportException } from 'src/exceptionReporting';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { getPayments } from 'src/services/account';
+import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
-interface Props extends PaginationProps<Linode.Payment> { }
+interface Props extends PaginationProps<Linode.Payment> {}
 
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 interface PdfGenerationError {
-  itemId: number | undefined
+  itemId: number | undefined;
 }
 
 interface State {
-  pdfGenerationError: PdfGenerationError
+  pdfGenerationError: PdfGenerationError;
 }
 
 class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
@@ -46,7 +51,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     pdfGenerationError: {
       itemId: undefined
     }
-  }
+  };
 
   componentDidMount() {
     this.mounted = true;
@@ -60,12 +65,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      data,
-      page,
-      pageSize,
-      count,
-    } = this.props;
+    const { data, page, pageSize, count } = this.props;
 
     return (
       <ExpansionPanel onChange={this.handleExpansion} heading="Recent Payments">
@@ -78,11 +78,9 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
               <TableCell />
             </TableRow>
           </TableHead>
-          <TableBody>
-            {this.renderContent()}
-          </TableBody>
+          <TableBody>{this.renderContent()}</TableBody>
         </Table>
-        {data && data.length > 0 &&
+        {data && data.length > 0 && (
           <PaginationFooter
             count={count}
             page={page}
@@ -91,7 +89,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
             handleSizeChange={this.props.handlePageSizeChange}
             eventCategory="recent payments panel"
           />
-        }
+        )}
       </ExpansionPanel>
     );
   }
@@ -100,14 +98,23 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     const { data, error, loading } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={3} />
+      return <TableRowLoading colSpan={3} />;
     }
 
     if (error) {
-      return <TableRowError colSpan={4} message="We were unable to load your payments." />
+      return (
+        <TableRowError
+          colSpan={4}
+          message="We were unable to load your payments."
+        />
+      );
     }
 
-    return data && data.length > 0 ? this.renderItems(data) : <TableRowEmptyState colSpan={3} />
+    return data && data.length > 0 ? (
+      this.renderItems(data)
+    ) : (
+      <TableRowEmptyState colSpan={3} />
+    );
   };
 
   renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
@@ -121,17 +128,13 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     try {
       printPayment(account, item);
     } catch (e) {
-      reportException(
-        Error('Error while generating PDF.'),
-        e
-      );
+      reportException(Error('Error while generating PDF.'), e);
       this.setState({
         pdfGenerationError: {
           itemId: item.id
         }
       });
     }
-
   }
 
   renderRow = (item: Linode.Payment) => {
@@ -140,12 +143,25 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
 
     return (
       <TableRow key={`payment-${item.id}`}>
-        <TableCell parentColumn="Date Created"><DateTimeDisplay value={item.date} /></TableCell>
+        <TableCell parentColumn="Date Created">
+          <DateTimeDisplay value={item.date} />
+        </TableCell>
         <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
         <TableCell parentColumn="Amount">${item.usd}</TableCell>
         <TableCell>
-          {account.data && <a href="#" onClick={() => this.printPayment(account.data as Linode.Account, item)}>Download PDF</a>}
-          {pdfGenerationError.itemId === item.id && <Notice error={true} text="Failed generating PDF." />}
+          {account.data && (
+            <a
+              href="#"
+              onClick={() =>
+                this.printPayment(account.data as Linode.Account, item)
+              }
+            >
+              Download PDF
+            </a>
+          )}
+          {pdfGenerationError.itemId === item.id && (
+            <Notice error={true} text="Failed generating PDF." />
+          )}
         </TableCell>
       </TableRow>
     );
@@ -155,7 +171,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     if (expanded && !this.props.data) {
       this.props.handleOrderChange('date', 'desc');
     }
-  }
+  };
 }
 
 interface S {
@@ -167,21 +183,25 @@ interface StateProps extends S {
 }
 
 const connected = connect(
-  (state: ApplicationState): S => ({account: state.__resources.account}),
-  (dispatch: ThunkDispatch): { requestAccount: () => void; } => ({ requestAccount: () => dispatch(requestAccount()) }));
-
+  (state: ApplicationState): S => ({ account: state.__resources.account }),
+  (dispatch: ThunkDispatch): { requestAccount: () => void } => ({
+    requestAccount: () => dispatch(requestAccount())
+  })
+);
 
 const styled = withStyles(styles);
 
-const updatedRequest = (ownProps: any, params: any) => getPayments(params, { '+order_by': 'date', '+order': 'desc' })
-  .then((response) => response);
+const updatedRequest = (ownProps: any, params: any) =>
+  getPayments(params, { '+order_by': 'date', '+order': 'desc' }).then(
+    response => response
+  );
 
 const paginated = paginate(updatedRequest);
 
 const enhanced = compose(
   connected,
   paginated,
-  styled,
+  styled
 );
 
 export default enhanced(RecentPaymentsPanel);

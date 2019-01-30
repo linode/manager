@@ -16,7 +16,11 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -24,25 +28,36 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
-import PromiseLoader, { PromiseLoaderResponse } from 'src/components/PromiseLoader';
+import PromiseLoader, {
+  PromiseLoaderResponse
+} from 'src/components/PromiseLoader';
 import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
-import { cancelBackups, enableBackups, getLinodeBackups, getType, takeSnapshot } from 'src/services/linodes';
+import {
+  cancelBackups,
+  enableBackups,
+  getLinodeBackups,
+  getType,
+  takeSnapshot
+} from 'src/services/linodes';
+import {
+  LinodeActionsProps,
+  withLinodeActions
+} from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
 import BackupTableRow from './BackupTableRow';
-import { updateBackupsWindow } from './backupUtils';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
-  'paper'
+  | 'paper'
   | 'title'
   | 'subTitle'
   | 'snapshotFormControl'
@@ -50,17 +65,17 @@ type ClassNames =
   | 'chooseTime'
   | 'cancelButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   paper: {
     padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   title: {
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   subTitle: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   snapshotFormControl: {
     display: 'flex',
@@ -69,22 +84,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     flexWrap: 'wrap',
     '& > div': {
       width: 'auto',
-      marginRight: theme.spacing.unit * 2,
-    },
+      marginRight: theme.spacing.unit * 2
+    }
   },
   scheduleAction: {
     padding: 0,
     '& button': {
       marginLeft: 0,
-      marginTop: theme.spacing.unit * 2,
-    },
+      marginTop: theme.spacing.unit * 2
+    }
   },
   chooseTime: {
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing.unit * 2
   },
   cancelButton: {
-    marginBottom: theme.spacing.unit,
-  },
+    marginBottom: theme.spacing.unit
+  }
 });
 
 interface ContextProps {
@@ -122,45 +137,56 @@ interface State {
   enabling: boolean;
 }
 
-type CombinedProps = PreloadedProps
-  & StateProps
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>
-  & ContextProps
-  & InjectedNotistackProps;
+type CombinedProps = PreloadedProps &
+  LinodeActionsProps &
+  StateProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  ContextProps &
+  InjectedNotistackProps;
 
 const evenize = (n: number): number => {
-  if (n === 0) { return n; }
-  return (n % 2 === 0) ? n : n - 1;
+  if (n === 0) {
+    return n;
+  }
+  return n % 2 === 0 ? n : n - 1;
 };
 
-export const aggregateBackups = (backups: Linode.LinodeBackupsResponse): Linode.LinodeBackup[] => {
-  const manualSnapshot = path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
-    ? backups.snapshot.in_progress
-    : backups.snapshot.current;
-  return backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b));
+export const aggregateBackups = (
+  backups: Linode.LinodeBackupsResponse
+): Linode.LinodeBackup[] => {
+  const manualSnapshot =
+    path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
+      ? backups.snapshot.in_progress
+      : backups.snapshot.current;
+  return (
+    backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b))
+  );
 };
 
 export const formatBackupDate = (backupDate: string) => {
-  return moment.utc(backupDate).local().fromNow();
-}
+  return moment
+    .utc(backupDate)
+    .local()
+    .fromNow();
+};
 
 class LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
     snapshotForm: {
-      label: '',
+      label: ''
     },
     settingsForm: {
       window: this.props.backupsSchedule.window || 'Scheduling',
-      day: this.props.backupsSchedule.day || 'Scheduling',
+      day: this.props.backupsSchedule.day || 'Scheduling'
     },
     restoreDrawer: {
       open: false,
-      backupCreated: '',
+      backupCreated: ''
     },
     cancelBackupsAlertOpen: false,
-    enabling: false,
+    enabling: false
   };
 
   windows: string[][] = [];
@@ -173,25 +199,29 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
     this.eventSubscription = events$
-      .filter(e => [
-        'linode_snapshot',
-        'backups_enable',
-        'backups_cancel',
-        'backups_restore',
-      ].includes(e.action))
+      .filter(e =>
+        [
+          'linode_snapshot',
+          'backups_enable',
+          'backups_cancel',
+          'backups_restore'
+        ].includes(e.action)
+      )
       .filter(e => !e._initial && e.status === 'finished')
-      .subscribe((e) => {
+      .subscribe(e => {
         getLinodeBackups(this.props.linodeID)
-          .then((data) => {
+          .then(data => {
             this.setState({ backups: data });
           })
           .catch(() => {
             /* @todo: how do we want to display this error? */
-            this.setState({ enabling: false })
+            this.setState({ enabling: false });
           });
       });
     const { enableOnLoad } = pathOr(false, ['location', 'state'], this.props);
-    if (enableOnLoad && !this.props.backupsEnabled) { this.enableBackups(); }
+    if (enableOnLoad && !this.props.backupsEnabled) {
+      this.enableBackups();
+    }
   }
 
   componentWillUnmount() {
@@ -200,12 +230,15 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }
 
   initWindows(timezone: string) {
-    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour) => {
+    let windows = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22].map(hour => {
       const start = moment.utc({ hour }).tz(timezone);
-      const finish = moment.utc({ hour }).add(moment.duration({ hours: 2 })).tz(timezone);
+      const finish = moment
+        .utc({ hour })
+        .add(moment.duration({ hours: 2 }))
+        .tz(timezone);
       return [
         `${start.format('HH:mm')} - ${finish.format('HH:mm')}`,
-        `W${evenize(+moment.utc({ hour }).format('H'))}`,
+        `W${evenize(+moment.utc({ hour }).format('H'))}`
       ];
     });
 
@@ -230,7 +263,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       ['Wednesday', 'Wednesday'],
       ['Thursday', 'Thursday'],
       ['Friday', 'Friday'],
-      ['Saturday', 'Saturday'],
+      ['Saturday', 'Saturday']
     ];
   }
 
@@ -243,17 +276,19 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         // so we don't reset the enabling state.
         enqueueSnackbar('Backups are being enabled for this Linode', {
           variant: 'info'
-        })
+        });
         resetEventsPolling();
       })
-      .catch((errorResponse) => {
-        getAPIErrorOrDefault(errorResponse)
-          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
-            variant: 'error'
-          }));
+      .catch(errorResponse => {
+        getAPIErrorOrDefault(errorResponse).forEach(
+          (err: Linode.ApiFieldError) =>
+            enqueueSnackbar(err.reason, {
+              variant: 'error'
+            })
+        );
         this.setState({ enabling: false });
       });
-  }
+  };
 
   cancelBackups = () => {
     const { enqueueSnackbar } = this.props;
@@ -264,19 +299,26 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         });
         // Just in case the user immediately disables backups
         // and enabling is still true:
-        this.setState({ enabling: false, })
+        this.setState({ enabling: false });
         resetEventsPolling();
       })
-      .catch((errorResponse) => {
-        getAPIErrorOrDefault(errorResponse, 'There was an error disabling backups')
+      .catch(errorResponse => {
+        getAPIErrorOrDefault(
+          errorResponse,
+          'There was an error disabling backups'
+        )
           /**  @todo move this error to the actual modal */
-          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
-            variant: 'error'
-          }));
+          .forEach((err: Linode.ApiFieldError) =>
+            enqueueSnackbar(err.reason, {
+              variant: 'error'
+            })
+          );
       });
-    if (!this.mounted) { return; }
+    if (!this.mounted) {
+      return;
+    }
     this.setState({ cancelBackupsAlertOpen: false });
-  }
+  };
 
   takeSnapshot = () => {
     const { linodeID, enqueueSnackbar } = this.props;
@@ -289,106 +331,132 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         this.setState({ snapshotForm: { label: '', errors: undefined } });
         resetEventsPolling();
       })
-      .catch((errorResponse) => {
+      .catch(errorResponse => {
         getAPIErrorOrDefault(
           errorResponse,
-          'There was an error taking a snapshot',
-        )
-          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+          'There was an error taking a snapshot'
+        ).forEach((err: Linode.ApiFieldError) =>
+          enqueueSnackbar(err.reason, {
             variant: 'error'
-          }));
+          })
+        );
       });
-  }
+  };
 
   saveSettings = () => {
-    const { linodeID, enqueueSnackbar } = this.props;
+    const {
+      linodeID,
+      enqueueSnackbar,
+      linodeActions: { updateLinode }
+    } = this.props;
     const { settingsForm } = this.state;
 
-    updateBackupsWindow(linodeID, settingsForm.day, settingsForm.window)
+    updateLinode({
+      linodeId: linodeID,
+      backups: {
+        schedule: {
+          day: settingsForm.day,
+          window: settingsForm.window
+        }
+      }
+    })
       .then(() => {
         enqueueSnackbar('Backup settings saved', {
           variant: 'success'
         });
       })
-      .catch((err) => {
-        this.setState({
-          settingsForm: {
-            ...settingsForm,
-            errors: getAPIErrorOrDefault(err),
+      .catch(err => {
+        this.setState(
+          {
+            settingsForm: {
+              ...settingsForm,
+              errors: getAPIErrorOrDefault(err)
+            }
           },
-        }, () => {
-          scrollErrorIntoView();
-        });
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
-  }
+  };
 
   openRestoreDrawer = (backupID: number, backupCreated: string) => {
     this.setState({
-      restoreDrawer:
-        { open: true, backupID, backupCreated },
+      restoreDrawer: { open: true, backupID, backupCreated }
     });
-  }
+  };
 
   closeRestoreDrawer = () => {
-    this.setState({ restoreDrawer: { open: false, backupID: undefined, backupCreated: '' } });
-  }
+    this.setState({
+      restoreDrawer: { open: false, backupID: undefined, backupCreated: '' }
+    });
+  };
 
   handleSelectBackupWindow = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({
-      settingsForm:
-        { ...this.state.settingsForm, window: e.target.value as Linode.Window },
-    })
-  }
+      settingsForm: {
+        ...this.state.settingsForm,
+        window: e.target.value as Linode.Window
+      }
+    });
+  };
 
   handleSelectBackupTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({
-      settingsForm:
-        { ...this.state.settingsForm, day: e.target.value as Linode.Day },
-    })
-  }
+      settingsForm: {
+        ...this.state.settingsForm,
+        day: e.target.value as Linode.Day
+      }
+    });
+  };
 
   handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ snapshotForm: { label: e.target.value } });
-  }
+  };
 
   handleCloseBackupsAlert = () => {
     this.setState({ cancelBackupsAlertOpen: false });
-  }
+  };
 
   handleOpenBackupsAlert = () => {
     this.setState({ cancelBackupsAlertOpen: true });
-  }
+  };
 
   handleDeploy = (backup: Linode.LinodeBackup) => {
     const { history, linodeID } = this.props;
-    history.push('/linodes/create'
-      + `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`);
-  }
+    history.push(
+      '/linodes/create' +
+        `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`
+    );
+  };
 
   handleRestore = (backup: Linode.LinodeBackup) => {
-    this.openRestoreDrawer(
-      backup.id,
-      formatBackupDate(backup.created),
-    )
-  }
+    this.openRestoreDrawer(backup.id, formatBackupDate(backup.created));
+  };
 
   handleRestoreSubmit = () => {
     this.closeRestoreDrawer();
     this.props.enqueueSnackbar('Backup restore started', {
       variant: 'info'
     });
-  }
+  };
 
   Placeholder = (): JSX.Element | null => {
     const { enabling } = this.state;
     const backupsMonthlyPrice = path<number>(
       ['types', 'response', 'addons', 'backups', 'price', 'monthly'],
-      this.props,
+      this.props
     );
 
-    const backupPlaceholderText = backupsMonthlyPrice
-      ? <React.Fragment>Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups for just <strong>${backupsMonthlyPrice} per month</strong>, click below.</React.Fragment>
-      : 'Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups just click below.'
+    const backupPlaceholderText = backupsMonthlyPrice ? (
+      <React.Fragment>
+        Three backup slots are executed and rotated automatically: a daily
+        backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
+        for just <strong>${backupsMonthlyPrice} per month</strong>, click below.
+      </React.Fragment>
+    ) : (
+      'Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups just click below.'
+    );
 
     return (
       <Placeholder
@@ -398,13 +466,17 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         buttonProps={{
           onClick: () => this.enableBackups(),
           children: 'Enable Backups',
-          loading: enabling,
+          loading: enabling
         }}
       />
     );
-  }
+  };
 
-  Table = ({ backups }: { backups: Linode.LinodeBackup[] }): JSX.Element | null => {
+  Table = ({
+    backups
+  }: {
+    backups: Linode.LinodeBackup[];
+  }): JSX.Element | null => {
     const { classes } = this.props;
 
     return (
@@ -422,20 +494,20 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {backups.map((backup: Linode.LinodeBackup, idx: number) =>
+              {backups.map((backup: Linode.LinodeBackup, idx: number) => (
                 <BackupTableRow
                   key={idx}
                   backup={backup}
                   handleDeploy={this.handleDeploy}
                   handleRestore={this.handleRestore}
                 />
-              )}
+              ))}
             </TableBody>
           </Table>
         </Paper>
       </React.Fragment>
     );
-  }
+  };
 
   SnapshotForm = (): JSX.Element | null => {
     const { classes, linodeInTransition } = this.props;
@@ -455,7 +527,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <Typography variant="body1" data-qa-manual-desc>
             You can make a manual backup of your Linode by taking a snapshot.
-            Creating the manual snapshot can take serval minutes, depending on
+            Creating the manual snapshot can take several minutes, depending on
             the size of your Linode and the amount of data you have stored on
             it.
           </Typography>
@@ -467,10 +539,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
             />
-            <Tooltip title={linodeInTransition
-              ? 'This Linode is busy'
-              : ''
-            }>
+            <Tooltip title={linodeInTransition ? 'This Linode is busy' : ''}>
               <div>
                 <Button
                   type="primary"
@@ -482,26 +551,32 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </Button>
               </div>
             </Tooltip>
-            {getErrorFor('none') &&
+            {getErrorFor('none') && (
               <FormHelperText error>{getErrorFor('none')}</FormHelperText>
-            }
+            )}
           </FormControl>
         </Paper>
       </React.Fragment>
     );
-  }
+  };
 
   SettingsForm = (): JSX.Element | null => {
     const { classes } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
-      { day: 'backups.day', window: 'backups.window', schedule: 'backups.schedule.window' },
-      settingsForm.errors);
-    const errorText = getErrorFor('none')
-      || getErrorFor('backups.day')
-      || getErrorFor('backups.window')
-      || getErrorFor('backups.schedule.window')
-      || getErrorFor('backups.schedule.day');
+      {
+        day: 'backups.day',
+        window: 'backups.window',
+        schedule: 'backups.schedule.window'
+      },
+      settingsForm.errors
+    );
+    const errorText =
+      getErrorFor('none') ||
+      getErrorFor('backups.day') ||
+      getErrorFor('backups.window') ||
+      getErrorFor('backups.schedule.window') ||
+      getErrorFor('backups.schedule.day');
 
     return (
       <React.Fragment>
@@ -510,7 +585,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             role="header"
             variant="h2"
             className={classes.subTitle}
-            data-qa-settings-heading>
+            data-qa-settings-heading
+          >
             Settings
           </Typography>
           <Typography variant="body1" data-qa-settings-desc>
@@ -519,9 +595,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             selected day is when the backup is promoted to the weekly slot.
           </Typography>
           <FormControl className={classes.chooseTime}>
-            <InputLabel htmlFor="window">
-              Time of Day
-            </InputLabel>
+            <InputLabel htmlFor="window">Time of Day</InputLabel>
             <Select
               value={settingsForm.window}
               onChange={this.handleSelectBackupWindow}
@@ -534,13 +608,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText>Windows displayed in {this.props.timezone}</FormHelperText>
+            <FormHelperText>
+              Windows displayed in {this.props.timezone}
+            </FormHelperText>
           </FormControl>
 
           <FormControl>
-            <InputLabel htmlFor="day">
-              Day of Week
-            </InputLabel>
+            <InputLabel htmlFor="day">Day of Week</InputLabel>
             <Select
               value={settingsForm.day}
               onChange={this.handleSelectBackupTime}
@@ -555,21 +629,15 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </Select>
           </FormControl>
           <ActionsPanel className={classes.scheduleAction}>
-            <Button
-              type="primary"
-              onClick={this.saveSettings}
-              data-qa-schedule
-            >
+            <Button type="primary" onClick={this.saveSettings} data-qa-schedule>
               Save Schedule
             </Button>
           </ActionsPanel>
-          {errorText &&
-            <FormHelperText error>{errorText}</FormHelperText>
-          }
+          {errorText && <FormHelperText error>{errorText}</FormHelperText>}
         </Paper>
       </React.Fragment>
     );
-  }
+  };
 
   Management = (): JSX.Element | null => {
     const { classes, linodeID, linodeRegion } = this.props;
@@ -586,12 +654,15 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Backups
         </Typography>
-        {backups.length
-          ? <this.Table backups={backups} />
-          : <Paper className={classes.paper} data-qa-backup-description>
-            <Typography>Automatic and manual backups will be listed here</Typography>
+        {backups.length ? (
+          <this.Table backups={backups} />
+        ) : (
+          <Paper className={classes.paper} data-qa-backup-description>
+            <Typography>
+              Automatic and manual backups will be listed here
+            </Typography>
           </Paper>
-        }
+        )}
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
@@ -603,12 +674,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Cancel Backups
         </Button>
-        <Typography
-          variant="body2"
-          data-qa-cancel-desc
-        >
-          Please note that when you cancel backups associated with this
-          Linode, this will remove all existing backups.
+        <Typography variant="body2" data-qa-cancel-desc>
+          Please note that when you cancel backups associated with this Linode,
+          this will remove all existing backups.
         </Typography>
         <RestoreToLinodeDrawer
           open={this.state.restoreDrawer.open}
@@ -625,26 +693,36 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           open={this.state.cancelBackupsAlertOpen}
           onClose={this.handleCloseBackupsAlert}
         >
-          <Typography>Cancelling backups associated with this Linode will delete all existing backups. Are you sure?</Typography>
+          <Typography>
+            Cancelling backups associated with this Linode will delete all
+            existing backups. Are you sure?
+          </Typography>
         </ConfirmationDialog>
       </React.Fragment>
     );
-  }
-
+  };
 
   renderConfirmCancellationActions = () => {
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button type="cancel" onClick={this.handleCloseBackupsAlert} data-qa-cancel-cancel>
+        <Button
+          type="cancel"
+          onClick={this.handleCloseBackupsAlert}
+          data-qa-cancel-cancel
+        >
           Close
         </Button>
-        <Button type="secondary" destructive onClick={this.cancelBackups} data-qa-confirm-cancel>
+        <Button
+          type="secondary"
+          destructive
+          onClick={this.cancelBackups}
+          data-qa-confirm-cancel
+        >
           Cancel Backups
         </Button>
       </ActionsPanel>
     );
-  }
-
+  };
 
   render() {
     const { backupsEnabled, linodeLabel } = this.props;
@@ -652,24 +730,21 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Backups`} />
-        {backupsEnabled
-          ? <this.Management />
-          : <this.Placeholder />
-        }
+        {backupsEnabled ? <this.Management /> : <this.Placeholder />}
       </React.Fragment>
     );
   }
 }
 
 const preloaded = PromiseLoader<ContextProps>({
-  backups: (props) => getLinodeBackups(props.linodeID),
+  backups: props => getLinodeBackups(props.linodeID),
   types: ({ linodeType }) => {
     if (!linodeType) {
       return Promise.resolve(undefined);
     }
 
     return getType(linodeType);
-  },
+  }
 });
 
 const styled = withStyles(styles);
@@ -678,20 +753,20 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile)
 });
 
 const connected = connect(mapStateToProps);
 
-const linodeContext = withLinode((context) => ({
+const linodeContext = withLinode(context => ({
   backupsEnabled: context.data!.backups.enabled,
   backupsSchedule: context.data!.backups.schedule,
   linodeID: context.data!.id,
   linodeInTransition: isLinodeInTransition(context.data!.status),
   linodeLabel: context.data!.label,
   linodeRegion: context.data!.region,
-  linodeType: context.data!.type,
+  linodeType: context.data!.type
 }));
 
 export default compose<CombinedProps, {}>(
@@ -700,5 +775,6 @@ export default compose<CombinedProps, {}>(
   styled as any,
   withRouter,
   connected,
-  withSnackbar
+  withSnackbar,
+  withLinodeActions
 )(LinodeBackup);

@@ -1,10 +1,16 @@
 import * as React from 'react';
 import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
-import CreatableSelect, { Props as CreatableSelectProps } from 'react-select/lib/Creatable';
+import CreatableSelect, {
+  Props as CreatableSelectProps
+} from 'react-select/lib/Creatable';
 import { Props as SelectProps } from 'react-select/lib/Select';
 import { StylesConfig } from 'react-select/lib/styles';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
@@ -17,25 +23,26 @@ import Option from './components/Option';
 import Control from './components/SelectControl';
 import Placeholder from './components/SelectPlaceholder';
 
-type ClassNames = 'root'
-| 'input'
-| 'noOptionsMessage'
-| 'divider'
-| 'suggestionRoot'
-| 'highlight'
-| 'suggestionItem'
-| 'suggestionIcon'
-| 'suggestionTitle'
-| 'suggestionDescription'
-| 'resultContainer'
-| 'tagContainer'
-| 'selectedMenuItem';
+type ClassNames =
+  | 'root'
+  | 'input'
+  | 'noOptionsMessage'
+  | 'divider'
+  | 'suggestionRoot'
+  | 'highlight'
+  | 'suggestionItem'
+  | 'suggestionIcon'
+  | 'suggestionTitle'
+  | 'suggestionDescription'
+  | 'resultContainer'
+  | 'tagContainer'
+  | 'selectedMenuItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes dash': {
     to: {
-      'stroke-dashoffset': 0,
-    },
+      'stroke-dashoffset': 0
+    }
   },
   root: {
     width: '100%',
@@ -47,26 +54,26 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       backgroundColor: theme.bg.white,
       '&:hover': {
         border: `1px dotted #ccc`,
-        cursor: 'text',
+        cursor: 'text'
       },
       '&--is-focused, &--is-focused:hover': {
         border: `1px dotted #999`
-      },
+      }
     },
     '& .react-select__value-container': {
       width: '100%',
       '& > div': {
-        width: '100%',
+        width: '100%'
       },
       '&.react-select__value-container--is-multi': {
         '& > div, & .react-select__input': {
-          width: 'auto',
-        },
-      },
+          width: 'auto'
+        }
+      }
     },
     '& .react-select__input': {
       width: '100%',
-      color: theme.palette.text.primary,
+      color: theme.palette.text.primary
     },
     '& .react-select__menu': {
       margin: '-1px 0 0 0',
@@ -82,7 +89,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
-      backgroundColor: theme.bg.white,
+      backgroundColor: theme.bg.white
     },
     '& .react-select__option': {
       transition: theme.transitions.create(['background-color', 'color']),
@@ -90,30 +97,29 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       backgroundColor: theme.bg.white,
       cursor: 'pointer',
       padding: '12px',
-      fontSize: '0.9rem',
+      fontSize: '0.9rem'
     },
     '& .react-select__option--is-focused': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: 'white'
     },
     '& .react-select__option--is-selected': {
       color: theme.palette.primary.main,
       '&.react-select__option--is-focused': {
-        backgroundColor: theme.bg.white,
-      },
+        backgroundColor: theme.bg.white
+      }
     },
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
-      overflow: 'initial',
+      overflow: 'initial'
     },
     '& .react-select__indicator-separator': {
-      display: 'none',
+      display: 'none'
     },
     '& .react-select__multi-value': {
       borderRadius: 4,
       backgroundColor: theme.bg.lightBlue,
-      alignItems: 'center',
-      
+      alignItems: 'center'
     },
     '& .react-select__multi-value__label': {
       color: theme.palette.text.primary,
@@ -123,7 +129,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       marginBottom: 2,
       marginRight: 4,
       paddingLeft: 6,
-      paddingRight: 0,
+      paddingRight: 0
     },
     '& .react-select__multi-value__remove': {
       backgroundColor: 'transparent',
@@ -137,33 +143,32 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       '& svg': {
         color: theme.palette.text.primary,
         width: 12,
-        height: 12,
+        height: 12
       },
       '&:hover': {
         backgroundColor: theme.palette.primary.main,
         '& svg': {
-          color: 'white',
-        },
-      },
+          color: 'white'
+        }
+      }
     },
-    '& .react-select__dropdown-indicator': {
-    },
+    '& .react-select__dropdown-indicator': {},
     '& [class*="MuiFormHelperText-error"]': {
-      paddingBottom: theme.spacing.unit,
-    },
+      paddingBottom: theme.spacing.unit
+    }
   },
   input: {
     fontSize: '0.9rem',
     padding: 0,
     display: 'flex',
     color: theme.palette.text.primary,
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   noOptionsMessage: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
   },
   divider: {
-    height: theme.spacing.unit * 2,
+    height: theme.spacing.unit * 2
   },
   suggestionRoot: {
     cursor: 'pointer',
@@ -172,40 +177,40 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'space-between',
     borderBottom: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.up('md')]: {
-     display: 'flex',
+      display: 'flex'
     },
     '&:last-child': {
-      borderBottom: 0,
-    },
+      borderBottom: 0
+    }
   },
   highlight: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   suggestionItem: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit
   },
   suggestionIcon: {
     '& svg': {
       width: '40px',
-      height: '40px',
+      height: '40px'
     },
     '& .circle': {
-      fill: theme.bg.offWhiteDT,
+      fill: theme.bg.offWhiteDT
     },
     '& .outerCircle': {
-      stroke: theme.bg.main,
-    },
+      stroke: theme.bg.main
+    }
   },
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
-    wordBreak: 'break-all',
+    wordBreak: 'break-all'
   },
   suggestionDescription: {
     color: theme.color.headline,
     fontSize: '.75rem',
     fontWeight: 600,
-    marginTop: 2,
+    marginTop: 2
   },
   resultContainer: {
     display: 'flex',
@@ -218,7 +223,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     '& > div': {
-      margin: '2px',
+      margin: '2px'
     }
   },
   selectedMenuItem: {
@@ -232,7 +237,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
         color: 'white'
       }
     }
-  },
+  }
 });
 
 export interface Item<T = string | number> {
@@ -247,8 +252,8 @@ export interface GroupType<T> {
 }
 
 export interface SelectState {
-  data: any,
-  isDisabled: boolean,
+  data: any;
+  isDisabled: boolean;
   isFocused: boolean;
   isSelected: boolean;
 }
@@ -282,7 +287,7 @@ export interface EnhancedSelectProps {
   onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
-  loadOptions?: (inputValue: string) => Promise<Item| Item[]> | undefined;
+  loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
   filterOption?: (option: Item, inputValue: string) => boolean | null;
 }
 
@@ -300,21 +305,19 @@ const _components = {
   LoadingIndicator
 };
 
-type CombinedProps = EnhancedSelectProps
-  & WithStyles<ClassNames>
-  & BaseSelectProps
-  & CreatableProps;
+type CombinedProps = EnhancedSelectProps &
+  WithStyles<ClassNames> &
+  BaseSelectProps &
+  CreatableProps;
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
   textFieldProps?: any;
 }
 
-interface CreatableProps extends CreatableSelectProps<any> {
+interface CreatableProps extends CreatableSelectProps<any> {}
 
-}
-
-class Select extends React.PureComponent<CombinedProps,{}> {
+class Select extends React.PureComponent<CombinedProps, {}> {
   render() {
     const {
       classes,
@@ -344,32 +347,33 @@ class Select extends React.PureComponent<CombinedProps,{}> {
     } = this.props;
 
     /*
-    * By default, we use the built-in Option component from React-Select, along with several Material-UI based
-    * components (listed in the _components variable above). To customize the select in a particular instance
-    * (for example, to render more complicated options for search bars), provide the component to use in a prop
-    * Object. Specify the name of the component to override as the object key, with the component to use in its
-    * place as the value. Full list of available components to override is available at
-    * http://react-select.com/components#replaceable-components. As an example, to provide a custom option component, use:
-    * <Select components={{ Option: MyCustomOptionComponent }}.
-    *
-    * The components passed in as props will be merged with the overrides we are already using, with the passed components
-    * taking precedence.
-    */
-    const combinedComponents = {..._components, ...components};
+     * By default, we use the built-in Option component from React-Select, along with several Material-UI based
+     * components (listed in the _components variable above). To customize the select in a particular instance
+     * (for example, to render more complicated options for search bars), provide the component to use in a prop
+     * Object. Specify the name of the component to override as the object key, with the component to use in its
+     * place as the value. Full list of available components to override is available at
+     * http://react-select.com/components#replaceable-components. As an example, to provide a custom option component, use:
+     * <Select components={{ Option: MyCustomOptionComponent }}.
+     *
+     * The components passed in as props will be merged with the overrides we are already using, with the passed components
+     * taking precedence.
+     */
+    const combinedComponents = { ..._components, ...components };
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
     type PossibleProps = BaseSelectProps | CreatableProps | AsyncProps<any>;
-    const BaseSelect: React.ComponentClass<PossibleProps> = variant === 'creatable'
-      ? CreatableSelect
-      : variant === 'async'
+    const BaseSelect: React.ComponentClass<PossibleProps> =
+      variant === 'creatable'
+        ? CreatableSelect
+        : variant === 'async'
         ? Async
         : ReactSelect;
 
     return (
       <BaseSelect
         {...restOfProps}
-        isClearable={isClearable  || true }
+        isClearable={isClearable || true}
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
@@ -388,8 +392,8 @@ class Select extends React.PureComponent<CombinedProps,{}> {
           errorText,
           disabled,
           InputLabelProps: {
-            shrink: true,
-          },
+            shrink: true
+          }
         }}
         value={value}
         onBlur={onBlur}
@@ -410,4 +414,3 @@ class Select extends React.PureComponent<CombinedProps,{}> {
 const styled = withStyles(styles);
 
 export default styled(Select);
-

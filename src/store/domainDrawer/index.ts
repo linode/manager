@@ -1,13 +1,18 @@
 import { Action } from 'redux';
 
 // ACTIONS
-export const OPEN = '@manager/domains/OPEN'
-export const CLOSE = '@manager/domains/CLOSE'
+export const OPEN = '@manager/domains/OPEN';
+export const CLOSE = '@manager/domains/CLOSE';
 export const CREATING = '@manager/domains/CREATING';
 export const CLONING = '@manager/domains/CLONING';
 export const RESET = '@manager/domains/RESET';
 
-type State = DomainDrawerState;
+export interface State {
+  open: boolean;
+  mode: string;
+  cloneId?: number;
+  domain?: string;
+}
 
 interface Creating extends Action {
   type: typeof CREATING;
@@ -29,15 +34,17 @@ interface Reset extends Action {
 type ActionCreator = (...args: any[]) => Action;
 
 // ACTION CREATORS
-export const openForCreating: ActionCreator = (): Creating => ({ type: CREATING });
+export const openForCreating: ActionCreator = (): Creating => ({
+  type: CREATING
+});
 export const openForCloning: ActionCreator = (
   domain: string,
   cloneId: number
-  ): Cloning => ({
-    type: CLONING,
-    domain,
-    cloneId
-  });
+): Cloning => ({
+  type: CLONING,
+  domain,
+  cloneId
+});
 export const closeDrawer: ActionCreator = (): Close => ({ type: CLOSE });
 export const resetDrawer: ActionCreator = (): Reset => ({ type: RESET });
 
@@ -47,16 +54,12 @@ export const defaultState: State = {
   mode: CREATING
 };
 
-type ActionTypes =
-  Creating
-| Cloning
-| Close
-| Reset
+type ActionTypes = Creating | Cloning | Close | Reset;
 
 export default (state: State = defaultState, action: ActionTypes) => {
   switch (action.type) {
     case CREATING:
-      return { mode: CREATING, open: true }
+      return { mode: CREATING, open: true };
 
     case CLONING:
       return {
@@ -64,10 +67,10 @@ export default (state: State = defaultState, action: ActionTypes) => {
         mode: CLONING,
         domain: action.domain,
         cloneId: action.cloneId
-      }
+      };
 
     case CLOSE:
-      return { ...state, open: false, };
+      return { ...state, open: false };
 
     case RESET:
       return defaultState;

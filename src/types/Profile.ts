@@ -15,24 +15,24 @@ namespace Linode {
   }
 
   interface Referrals {
-    code: string,
-    url: string,
-    total: number,
-    completed: number,
-    pending: number,
-    credit: number,
-  };
+    code: string;
+    url: string;
+    total: number;
+    completed: number;
+    pending: number;
+    credit: number;
+  }
 
   export interface Token {
-    id: number,
-    scopes: string,
-    label: string,
-    created: string,
-    token?: string,
-    expiry: string,
-    website?: string,
+    id: number;
+    scopes: string;
+    label: string;
+    created: string;
+    token?: string;
+    expiry: string;
+    website?: string;
     thumbnail_url?: null | string;
-  };
+  }
 
   export interface SSHKey {
     id: number;

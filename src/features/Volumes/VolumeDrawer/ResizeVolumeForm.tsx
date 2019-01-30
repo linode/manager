@@ -1,8 +1,15 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { compose } from 'recompose';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { resizeVolume } from 'src/services/volumes';
 import { ResizeVolumeSchema } from 'src/services/volumes/volumes.schema';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
@@ -12,8 +19,8 @@ import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -24,21 +31,30 @@ interface Props {
   onSuccess: (volumeLabel: string, message?: string) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
 
-const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { volumeId, volumeSize, onClose, volumeLabel, onSuccess } = props;
+const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    volumeId,
+    volumeSize,
+    onClose,
+    volumeLabel,
+    onSuccess,
+    resizeVolume
+  } = props;
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
 
   return (
     <Formik
       validationSchema={validationSchema}
-      onSubmit={(values, { resetForm, setSubmitting, setStatus, setErrors }) => {
-
+      onSubmit={(
+        values,
+        { resetForm, setSubmitting, setStatus, setErrors }
+      ) => {
         setSubmitting(true);
 
-        resizeVolume(volumeId, { size: Number(values.size) })
+        resizeVolume({ volumeId, size: Number(values.size) })
           .then(response => {
             resetForm(initialValues);
             setSubmitting(false);
@@ -47,15 +63,20 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to resize this volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) => setStatus({ generalError });
+            const mapErrorToStatus = (generalError: string) =>
+              setStatus({ generalError });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);
-            handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+            handleGeneralErrors(
+              mapErrorToStatus,
+              errorResponse,
+              defaultMessage
+            );
           });
       }}
       initialValues={initialValues}
-      render={(formikProps) => {
+      render={formikProps => {
         const {
           errors,
           handleBlur,
@@ -64,12 +85,17 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           isSubmitting,
           resetForm,
           status,
-          values,
+          values
         } = formikProps;
 
         return (
           <Form>
-            {status && <NoticePanel success={status.success} error={status.generalError} />}
+            {status && (
+              <NoticePanel
+                success={status.success}
+                error={status.generalError}
+              />
+            )}
 
             <SizeField
               error={errors.size}
@@ -85,7 +111,10 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              onCancel={() => { resetForm(); onClose(); }}
+              onCancel={() => {
+                resetForm();
+                onClose();
+              }}
             />
           </Form>
         );
@@ -94,7 +123,11 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
   );
 };
 
-
 const styled = withStyles(styles);
 
-export default styled(ResizeVolumeForm);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withVolumesRequests
+);
+
+export default enhanced(ResizeVolumeForm);

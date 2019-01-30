@@ -4,12 +4,19 @@
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import withVolumesRequests, {
+  VolumesRequests
+} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { createVolume } from 'src/services/volumes';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { openForAttaching } from 'src/store/volumeDrawer';
 import ConfigSelect from './ConfigSelect';
@@ -18,15 +25,19 @@ import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
-import { handleFieldErrors, handleGeneralErrors, maybeCastToNumber } from './utils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors,
+  maybeCastToNumber
+} from './utils';
 import { modes } from './VolumeDrawer';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root' | 'textWrapper';
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   textWrapper: {
-    marginBottom: 10,
+    marginBottom: 10
   }
 });
 
@@ -35,16 +46,28 @@ interface Props {
   linodeId: number;
   linodeLabel: string;
   linodeRegion: string;
-  onSuccess: (volumeLabel: string, volumePath: string, message?: string) => void;
+  onSuccess: (
+    volumeLabel: string,
+    volumePath: string,
+    message?: string
+  ) => void;
 }
 
-type CombinedProps =
-  & Props
-  & DispatchProps
-  & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  VolumesRequests &
+  DispatchProps &
+  WithStyles<ClassNames>;
 
-const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
-  const { onClose, onSuccess, linodeId, linodeLabel, linodeRegion, actions, } = props;
+const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    onClose,
+    onSuccess,
+    linodeId,
+    linodeLabel,
+    linodeRegion,
+    actions,
+    createVolume
+  } = props;
 
   return (
     <Formik
@@ -63,22 +86,31 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           size: maybeCastToNumber(size),
           linode_id: maybeCastToNumber(linodeId),
           config_id: maybeCastToNumber(configId),
-          tags: tags.map(v => v.value),
+          tags: tags.map(v => v.value)
         })
           .then(({ label: newLabel, filesystem_path }) => {
             resetEventsPolling();
-            onSuccess(newLabel, filesystem_path, `Volume scheduled for creation.`);
+            onSuccess(
+              newLabel,
+              filesystem_path,
+              `Volume scheduled for creation.`
+            );
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) => setStatus({ generalError });
+            const mapErrorToStatus = (generalError: string) =>
+              setStatus({ generalError });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);
-            handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+            handleGeneralErrors(
+              mapErrorToStatus,
+              errorResponse,
+              defaultMessage
+            );
           });
       }}
-      render={(formikProps) => {
+      render={formikProps => {
         const {
           errors,
           handleBlur,
@@ -89,22 +121,42 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
           setFieldValue,
           status,
           touched,
-          values,
+          values
         } = formikProps;
 
         return (
           <Form>
-            {status && <NoticePanel success={status.success} error={status.generalError} />}
+            {status && (
+              <NoticePanel
+                success={status.success}
+                error={status.generalError}
+              />
+            )}
 
-            <ModeSelection mode={modes.CREATING_FOR_LINODE} onChange={() => { actions.switchToAttaching() }} />
+            <ModeSelection
+              mode={modes.CREATING_FOR_LINODE}
+              onChange={() => {
+                actions.switchToAttaching();
+              }}
+            />
 
-            <Typography variant="body1" className={props.classes.textWrapper} data-qa-volume-attach-help style={{ marginTop: 24 }}>
+            <Typography
+              variant="body1"
+              className={props.classes.textWrapper}
+              data-qa-volume-attach-help
+              style={{ marginTop: 24 }}
+            >
               {`This volume will be immediately scheduled for attachment to ${linodeLabel} and available to other Linodes in the ${linodeRegion} data-center.`}
             </Typography>
 
-            <Typography variant="body1" className={props.classes.textWrapper} data-qa-volume-size-help>
-              A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes in size and costs
-              $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.
+            <Typography
+              variant="body1"
+              className={props.classes.textWrapper}
+              data-qa-volume-size-help
+            >
+              A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes
+              in size and costs $0.10/GiB per month. Up to eight volumes can be
+              attached to a single Linode.
             </Typography>
 
             <LabelField
@@ -133,7 +185,13 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             />
 
             <TagsInput
-              tagError={touched.tags ? errors.tags ? 'Unable to tag volume.' : undefined : undefined}
+              tagError={
+                touched.tags
+                  ? errors.tags
+                    ? 'Unable to tag volume.'
+                    : undefined
+                  : undefined
+              }
               name="tags"
               label="Tags"
               onChange={selected => setFieldValue('tags', selected)}
@@ -145,11 +203,15 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = (props) => {
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
-              onCancel={() => { resetForm(); onClose(); }}
+              onCancel={() => {
+                resetForm();
+                onClose();
+              }}
             />
           </Form>
-        )
-      }} />
+        );
+      }}
+    />
   );
 };
 interface FormState {
@@ -167,7 +229,7 @@ const initialValues: FormState = {
   region: 'none',
   linodeId: -1,
   configId: -1,
-  tags: [],
+  tags: []
 };
 
 const styled = withStyles(styles);
@@ -175,15 +237,34 @@ const styled = withStyles(styles);
 interface DispatchProps {
   actions: {
     switchToAttaching: () => void;
-  },
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (dispatch, ownProps) => ({
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
+  dispatch,
+  ownProps
+) => ({
   actions: {
-    switchToAttaching: () => dispatch(openForAttaching(ownProps.linodeId, ownProps.linodeRegion, ownProps.linodeLabel))
-  },
+    switchToAttaching: () =>
+      dispatch(
+        openForAttaching(
+          ownProps.linodeId,
+          ownProps.linodeRegion,
+          ownProps.linodeLabel
+        )
+      )
+  }
 });
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
 
-export default styled(connected(CreateVolumeForm));
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  connected,
+  withVolumesRequests
+)(CreateVolumeForm);
+
+export default enhanced;

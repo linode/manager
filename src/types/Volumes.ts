@@ -14,7 +14,7 @@ namespace Linode {
   }
 
   export type VolumeStatus =
-    'creating'
+    | 'creating'
     | 'active'
     | 'resizing'
     | 'deleting'

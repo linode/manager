@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { ApplicationState } from 'src/store';
 import { deriveDefaultLabel, LabelArgTypes } from './deriveDefaultLabel';
 
 export interface LabelProps {
   customLabel: string;
   updateCustomLabel: (e: any) => void;
-  getLabel: (...args: any[]) => string;}
-
+  getLabel: (...args: any[]) => string;
+}
 
 export interface LabelState {
   customLabel: string;
@@ -24,27 +25,34 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
     state: LabelState = {
       customLabel: '',
       hasUserTypedCustomLabel: false
-    }
+    };
 
     updateCustomLabel = (e: any) => {
-      this.setState({ customLabel: e.target.value, hasUserTypedCustomLabel: true });
-    }
+      this.setState({
+        customLabel: e.target.value,
+        hasUserTypedCustomLabel: true
+      });
+    };
 
     getLabel = (...args: LabelArgTypes[]) => {
       const { hasUserTypedCustomLabel, customLabel } = this.state;
 
       // If a user has typed in the 'label' input field, don't derive a default label name
-      if (hasUserTypedCustomLabel || !args) { return customLabel; }
+      if (hasUserTypedCustomLabel || !args) {
+        return customLabel;
+      }
 
       const defaultLabel = deriveDefaultLabel(...args);
 
       const dedupedLabel = dedupeLabel(defaultLabel, this.props.linodeLabels);
 
       // Final failsafe: in case the derived label doesn't match API requirements
-      if (!testAPIRequirements(dedupedLabel)) { return customLabel; }
+      if (!testAPIRequirements(dedupedLabel)) {
+        return customLabel;
+      }
 
       return dedupedLabel;
-    }
+    };
 
     render() {
       return React.createElement(Component, {
@@ -52,11 +60,11 @@ export const withLabelGenerator = (Component: React.ComponentType<any>) => {
         getLabel: this.getLabel,
         ...this.props,
         ...this.state
-      })
+      });
     }
   }
   return connected(WrappedComponent);
-}
+};
 
 // Connect to Redux state, so that we have access to existing Linode Labels (we may need to dedupe).
 const connected = connect((state: ApplicationState) => ({
@@ -67,14 +75,17 @@ const connected = connect((state: ApplicationState) => ({
 const testAPIRequirements = (label: string) => {
   const linodeLabelRegExp = /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/;
   return linodeLabelRegExp.test(label) && label.length <= 32;
-}
+};
 
 export default withLabelGenerator;
 
 // Utilities
 
 // Searches 'existingLabels' and appends a zero-padded incrementer to the original label
-export const dedupeLabel = (label: string, existingLabels: string[]): string => {
+export const dedupeLabel = (
+  label: string,
+  existingLabels: string[]
+): string => {
   const ZERO_PAD_WIDTH = 3;
 
   let dedupedLabel = label;
@@ -88,7 +99,9 @@ export const dedupeLabel = (label: string, existingLabels: string[]): string => 
 
     // EDGE CASE: if a user has 999 iterations of the same name (arch-us-east-001, arch-us-east-002, ...)
     // just return the original label. They'll get an API error.
-    if (i === 999) { return label; }
+    if (i === 999) {
+      return label;
+    }
   }
   return dedupedLabel;
-}
+};

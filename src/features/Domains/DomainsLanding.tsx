@@ -10,7 +10,11 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -19,129 +23,148 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
-import domainsContainer, { Props as WithDomainsProps } from 'src/containers/domains.container';
+import domainsContainer, {
+  Props as WithDomainsProps
+} from 'src/containers/domains.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
-import { deleteDomain } from 'src/services/domains';
 import { openForCloning, openForCreating } from 'src/store/domainDrawer';
+import {
+  DomainActionsProps,
+  withDomainActions
+} from 'src/store/domains/domains.container';
 import { sendEvent } from 'src/utilities/analytics';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'titleWrapper'
   | 'title'
   | 'domain'
   | 'tagWrapper'
   | 'tagGroup';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   titleWrapper: {
-    flex: 1,
+    flex: 1
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   domain: {
-    width: '60%',
+    width: '60%'
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
     '& [class*="MuiChip"]': {
-      cursor: 'pointer',
-    },
+      cursor: 'pointer'
+    }
   },
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit + 2,
+    marginBottom: theme.spacing.unit + 2
   }
 });
 
 interface State {
   importDrawer: {
-    open: boolean,
-    submitting: boolean,
+    open: boolean;
+    submitting: boolean;
     errors?: Linode.ApiFieldError[];
     domain?: string;
     remote_nameserver?: string;
-  },
+  };
   createDrawer: {
-    open: boolean,
-    mode: 'clone' | 'create',
-    domain?: string,
-    cloneID?: number,
+    open: boolean;
+    mode: 'clone' | 'create';
+    domain?: string;
+    cloneID?: number;
   };
   removeDialog: {
-    open: boolean,
-    domain?: string,
-    domainID?: number,
+    open: boolean;
+    domain?: string;
+    domainID?: number;
   };
 }
 
-type CombinedProps =
-  WithDomainsProps
-  & LocalStorageProps
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>
-  & DispatchProps
-  & InjectedNotistackProps;
+type CombinedProps = WithDomainsProps &
+  DomainActionsProps &
+  LocalStorageProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  DispatchProps &
+  InjectedNotistackProps;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   static eventCategory = `domains landing`;
   state: State = {
     importDrawer: {
       open: false,
-      submitting: false,
+      submitting: false
     },
     createDrawer: {
       open: false,
-      mode: 'create',
+      mode: 'create'
     },
     removeDialog: {
-      open: false,
-    },
+      open: false
+    }
   };
 
-  static docs: Linode.Doc[] = [
-    Domains,
-  ];
+  static docs: Linode.Doc[] = [Domains];
 
   cancelRequest: Function;
 
-  openImportZoneDrawer = () => this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
+  openImportZoneDrawer = () =>
+    this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
 
-  closeImportZoneDrawer = () => this.setState({
-    importDrawer: {
-      open: false,
-      submitting: false,
-      remote_nameserver: undefined,
-      domain: undefined,
-      errors: undefined,
-    }
-  });
+  closeImportZoneDrawer = () =>
+    this.setState({
+      importDrawer: {
+        open: false,
+        submitting: false,
+        remote_nameserver: undefined,
+        domain: undefined,
+        errors: undefined
+      }
+    });
 
   handleSuccess = (domain: Linode.Domain) => {
     if (domain.id) {
       return this.props.history.push(`/domains/${domain.id}`);
     }
-  }
+  };
 
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>Cancel</Button>
-        <Button type="secondary" destructive onClick={this.removeDomain} data-qa-submit>Confirm</Button>
+        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          destructive
+          onClick={this.removeDomain}
+          data-qa-submit
+        >
+          Confirm
+        </Button>
       </ActionsPanel>
-    )
-  }
+    );
+  };
 
   removeDomain = () => {
-    const { removeDialog: { domainID } } = this.state;
-    const { enqueueSnackbar } = this.props;
+    const {
+      removeDialog: { domainID }
+    } = this.state;
+    const { enqueueSnackbar, domainActions } = this.props;
     if (domainID) {
-      deleteDomain(domainID)
+      // @todo: Replace all "domainID" with "domainId"
+      domainActions
+        .deleteDomain({ domainId: domainID })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -150,51 +173,56 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           /** @todo render this error inside the modal */
           enqueueSnackbar('Error when removing domain', {
             variant: 'error'
-          })
+          });
         });
     } else {
       this.closeRemoveDialog();
       enqueueSnackbar('Error when removing domain', {
         variant: 'error'
-      })
+      });
     }
-  }
+  };
 
   openRemoveDialog = (domain: string, domainID: number) => {
     this.setState({
-      removeDialog: { open: true, domain, domainID },
+      removeDialog: { open: true, domain, domainID }
     });
-  }
+  };
 
   closeRemoveDialog = () => {
     const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { ...removeDialog, open: false },
+      removeDialog: { ...removeDialog, open: false }
     });
-  }
+  };
 
   render() {
     const { classes } = this.props;
     const { domainsError, domainsData, domainsLoading } = this.props;
 
     if (domainsLoading) {
-      return <RenderLoading />
+      return <RenderLoading />;
     }
 
     if (domainsError) {
-      return <RenderError />
+      return <RenderError />;
     }
 
     if (domainsData.length === 0) {
-      return <RenderEmpty onClick={this.props.openForCreating} />
+      return <RenderEmpty onClick={this.props.openForCreating} />;
     }
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Domains" />
-        <Grid container justify="space-between" alignItems="flex-end" >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item className={classes.titleWrapper}>
-            <Typography role="header" variant="h1" data-qa-title className={classes.title}>
+            <Typography
+              role="header"
+              variant="h1"
+              data-qa-title
+              className={classes.title}
+            >
               Domains
             </Typography>
           </Grid>
@@ -203,12 +231,15 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
               className={classes.tagGroup}
               control={
                 <Toggle
-                  className={(this.props.groupByTag ? ' checked' : ' unchecked')}
-                  onChange={(e, checked) => this.props.toggleGroupByTag(checked)}
-                  checked={this.props.groupByTag} />
+                  className={this.props.groupByTag ? ' checked' : ' unchecked'}
+                  onChange={(e, checked) =>
+                    this.props.toggleGroupByTag(checked)
                   }
-                  label="Group by Tag:"
-              />
+                  checked={this.props.groupByTag}
+                />
+              }
+              label="Group by Tag:"
+            />
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
@@ -228,7 +259,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-        {/* Duplication starts here. How can we refactor this? */}
+          {/* Duplication starts here. How can we refactor this? */}
           <OrderBy data={domainsData} order={'desc'} orderBy={'domain'}>
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               const props = {
@@ -237,12 +268,14 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                 handleOrderChange,
                 data: orderedData,
                 onClone: this.props.openForCloning,
-                onRemove: this.openRemoveDialog,
+                onRemove: this.openRemoveDialog
               };
 
-              return this.props.groupByTag
-                ? <ListGroupedDomains {...props} />
-                : <ListDomains {...props} />
+              return this.props.groupByTag ? (
+                <ListGroupedDomains {...props} />
+              ) : (
+                <ListDomains {...props} />
+              );
             }}
           </OrderBy>
         </Grid>
@@ -265,20 +298,18 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 }
 
 const RenderLoading: React.StatelessComponent<{}> = () => {
-  return (
-    <CircleProgress />
-  );
+  return <CircleProgress />;
 };
 
 const RenderError: React.StatelessComponent<{}> = () => {
   return (
-    <ErrorState
-      errorText="There was an error retrieving your domains. Please reload and try again."
-    />
+    <ErrorState errorText="There was an error retrieving your domains. Please reload and try again." />
   );
-}
+};
 
-const RenderEmpty: React.StatelessComponent<{ onClick: () => void }> = (props) => {
+const RenderEmpty: React.StatelessComponent<{
+  onClick: () => void;
+}> = props => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
@@ -288,12 +319,12 @@ const RenderEmpty: React.StatelessComponent<{ onClick: () => void }> = (props) =
         icon={DomainIcon}
         buttonProps={{
           onClick: props.onClick,
-          children: 'Add a Domain',
+          children: 'Add a Domain'
         }}
       />
     </React.Fragment>
   );
-}
+};
 
 const styled = withStyles(styles);
 
@@ -313,31 +344,38 @@ interface LocalStorageUpdater {
   [key: string]: (...args: any[]) => Partial<LocalStorageState>;
 }
 
-const withLocalStorage = localStorageContainer<LocalStorageState, LocalStorageUpdater, {}>(
-  (storage) => {
+const withLocalStorage = localStorageContainer<
+  LocalStorageState,
+  LocalStorageUpdater,
+  {}
+>(
+  storage => {
     return {
-      groupByTag: storage.groupDomainsByTag.get(),
-    }
+      groupByTag: storage.groupDomainsByTag.get()
+    };
   },
-  (storage) => ({
-    toggleGroupByTag: (state) => (checked: boolean) => {
+  storage => ({
+    toggleGroupByTag: state => (checked: boolean) => {
       storage.groupDomainsByTag.set(checked ? 'true' : 'false');
 
       sendEvent({
         category: DomainsLanding.eventCategory,
         action: 'group by tag',
-        label: String(checked),
+        label: String(checked)
       });
 
       return {
         ...state,
-        groupByTag: checked,
-      }
-    },
-  }),
+        groupByTag: checked
+      };
+    }
+  })
 );
 
-export const connected = connect(undefined, { openForCreating, openForCloning });
+export const connected = connect(
+  undefined,
+  { openForCreating, openForCloning }
+);
 
 export default compose<CombinedProps, {}>(
   setDocs(DomainsLanding.docs),
@@ -346,5 +384,6 @@ export default compose<CombinedProps, {}>(
   withLocalStorage,
   styled,
   connected,
-  withSnackbar
+  withSnackbar,
+  withDomainActions
 )(DomainsLanding);

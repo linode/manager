@@ -5,12 +5,12 @@ import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
 import StackScript from 'src/components/StackScript';
 import { getStackScript } from 'src/services/stackscripts';
+import { ApplicationState } from 'src/store';
 import { closeStackScriptDrawer } from 'src/store/stackScriptDrawer';
 import { MapState } from 'src/store/types';
 
-
 interface State {
-  stackScript?: Linode.StackScript.Response,
+  stackScript?: Linode.StackScript.Response;
   error: boolean;
   loading: boolean;
 }
@@ -24,11 +24,9 @@ interface StateProps {
   stackScriptId?: number;
 }
 
-type CombinedProps = DispatchProps
-  & StateProps;
+type CombinedProps = DispatchProps & StateProps;
 
 export class StackScriptDrawer extends React.Component<CombinedProps, State> {
-
   state: State = {
     loading: true,
     error: false
@@ -39,45 +37,51 @@ export class StackScriptDrawer extends React.Component<CombinedProps, State> {
     const { stackScriptId: prevStackScriptId } = prevProps;
 
     if (stackScriptId && stackScriptId !== prevStackScriptId) {
-      this.setState({ loading: true, stackScript: undefined  });
+      this.setState({ loading: true, stackScript: undefined });
       getStackScript(stackScriptId)
-      .then(stackScript => {
-        this.setState({ stackScript, loading: false, error: false })
-      })
-      .catch(() => {
-        this.setState({ error: true, loading: false})
-      })
+        .then(stackScript => {
+          this.setState({ stackScript, loading: false, error: false });
+        })
+        .catch(() => {
+          this.setState({ error: true, loading: false });
+        });
     }
   }
 
   render() {
     const { open, closeDrawer } = this.props;
     const { stackScript, error, loading } = this.state;
-    const title = stackScript ? `${stackScript.username} / ${stackScript.label}`: 'StackScript';
+    const title = stackScript
+      ? `${stackScript.username} / ${stackScript.label}`
+      : 'StackScript';
 
     return (
-      <Drawer
-        title={title}
-        open={open}
-        onClose={closeDrawer}
-        >
-          <DrawerContent title={title} error={error} loading={loading}>
-            {stackScript && <StackScript data={stackScript} />}
-          </DrawerContent>
+      <Drawer title={title} open={open} onClose={closeDrawer}>
+        <DrawerContent title={title} error={error} loading={loading}>
+          {stackScript && <StackScript data={stackScript} />}
+        </DrawerContent>
       </Drawer>
     );
   }
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (dispatch, ownProps) => {
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch,
+  ownProps
+) => {
   return {
-    closeDrawer: () => dispatch(closeStackScriptDrawer()),
+    closeDrawer: () => dispatch(closeStackScriptDrawer())
   };
 };
 
-const mapStateToProps: MapState<StateProps, {}> = (state: ApplicationState) => ({
+const mapStateToProps: MapState<StateProps, {}> = (
+  state: ApplicationState
+) => ({
   open: pathOr(false, ['stackScriptDrawer', 'open'], state),
-  stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state),
+  stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StackScriptDrawer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StackScriptDrawer);

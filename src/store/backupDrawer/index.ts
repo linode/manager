@@ -7,11 +7,23 @@ import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions'
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { ThunkActionCreator } from '../types';
 
+export interface BackupError {
+  linodeId: number;
+  reason: string;
+}
 
-// HELPERS
-
-// TYPES
-type State = BackupDrawerState;
+export interface State {
+  open: boolean;
+  enabling: boolean;
+  enableErrors: BackupError[];
+  enableSuccess: boolean;
+  updatedCount: number;
+  autoEnroll: boolean;
+  autoEnrollError?: string;
+  enrolling: boolean;
+  error?: Error | Linode.ApiFieldError[];
+  data?: Linode.Linode[];
+}
 
 interface Accumulator {
   success: Linode.Linode[];
@@ -27,26 +39,34 @@ interface Action {
 type ActionCreator = (...args: any[]) => Action;
 
 // ACTIONS
-export const OPEN = '@manager/backups/OPEN'
-export const CLOSE = '@manager/backups/CLOSE'
-export const ENABLE = '@manager/backups/ENABLE'
-export const ENABLE_SUCCESS = '@manager/backups/ENABLE_SUCCESS'
-export const ENABLE_ERROR = '@manager/backups/ENABLE_ERROR'
-export const RESET_ERRORS = '@manager/backups/RESET_ERRORS'
-export const RESET_SUCCESS = '@manager/backups/RESET_SUCCESS'
-export const AUTO_ENROLL = '@manager/backups/AUTO_ENROLL'
-export const AUTO_ENROLL_SUCCESS = '@manager/backups/AUTO_ENROLL_SUCCESS'
-export const AUTO_ENROLL_ERROR = '@manager/backups/AUTO_ENROLL_ERROR'
-export const AUTO_ENROLL_TOGGLE = '@manager/backups/AUTO_ENROLL_TOGGLE'
+export const OPEN = '@manager/backups/OPEN';
+export const CLOSE = '@manager/backups/CLOSE';
+export const ENABLE = '@manager/backups/ENABLE';
+export const ENABLE_SUCCESS = '@manager/backups/ENABLE_SUCCESS';
+export const ENABLE_ERROR = '@manager/backups/ENABLE_ERROR';
+export const RESET_ERRORS = '@manager/backups/RESET_ERRORS';
+export const RESET_SUCCESS = '@manager/backups/RESET_SUCCESS';
+export const AUTO_ENROLL = '@manager/backups/AUTO_ENROLL';
+export const AUTO_ENROLL_SUCCESS = '@manager/backups/AUTO_ENROLL_SUCCESS';
+export const AUTO_ENROLL_ERROR = '@manager/backups/AUTO_ENROLL_ERROR';
+export const AUTO_ENROLL_TOGGLE = '@manager/backups/AUTO_ENROLL_TOGGLE';
 
 // ACTION CREATORS
 export const handleEnable: ActionCreator = () => ({ type: ENABLE });
 
-export const handleEnableSuccess: ActionCreator = (data: number[]) => ({ type: ENABLE_SUCCESS, data });
+export const handleEnableSuccess: ActionCreator = (data: number[]) => ({
+  type: ENABLE_SUCCESS,
+  data
+});
 
-export const handleEnableError: ActionCreator = (data: Accumulator) => ({ type: ENABLE_ERROR, data });
+export const handleEnableError: ActionCreator = (data: Accumulator) => ({
+  type: ENABLE_ERROR,
+  data
+});
 
-export const handleResetSuccess: ActionCreator = () => ({ type: RESET_SUCCESS });
+export const handleResetSuccess: ActionCreator = () => ({
+  type: RESET_SUCCESS
+});
 
 export const handleResetError: ActionCreator = () => ({ type: RESET_ERRORS });
 
@@ -56,12 +76,18 @@ export const handleClose: ActionCreator = () => ({ type: CLOSE });
 
 export const handleAutoEnroll: ActionCreator = () => ({ type: AUTO_ENROLL });
 
-export const handleAutoEnrollSuccess: ActionCreator = () => ({ type: AUTO_ENROLL_SUCCESS });
+export const handleAutoEnrollSuccess: ActionCreator = () => ({
+  type: AUTO_ENROLL_SUCCESS
+});
 
-export const handleAutoEnrollError: ActionCreator = (error: string) => ({ type: AUTO_ENROLL_ERROR, data: error });
+export const handleAutoEnrollError: ActionCreator = (error: string) => ({
+  type: AUTO_ENROLL_ERROR,
+  data: error
+});
 
-export const handleAutoEnrollToggle: ActionCreator = () => ({ type: AUTO_ENROLL_TOGGLE });
-
+export const handleAutoEnrollToggle: ActionCreator = () => ({
+  type: AUTO_ENROLL_TOGGLE
+});
 
 // DEFAULT STATE
 export const defaultState: State = {
@@ -73,11 +99,14 @@ export const defaultState: State = {
   autoEnroll: false,
   autoEnrollError: undefined,
   enrolling: false,
-  updatedCount: 0,
+  updatedCount: 0
 };
 
 // REDUCER
-const reducer: Reducer<State> = (state: State = defaultState, action: Action) => {
+const reducer: Reducer<State> = (
+  state: State = defaultState,
+  action: Action
+) => {
   switch (action.type) {
     case OPEN:
       return {
@@ -92,10 +121,16 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action) =>
       };
 
     case CLOSE:
-      return { ...state, lastUpdated: Date.now(), open: false, };
+      return { ...state, lastUpdated: Date.now(), open: false };
 
     case ENABLE:
-      return { ...state, enabling: true, enableErrors: [], enableSuccess: false, lastUpdated: Date.now() };
+      return {
+        ...state,
+        enabling: true,
+        enableErrors: [],
+        enableSuccess: false,
+        lastUpdated: Date.now()
+      };
 
     case ENABLE_SUCCESS:
       return {
@@ -104,7 +139,7 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action) =>
         lastUpdated: Date.now(),
         enableSuccess: true,
         data: action.data,
-        updatedCount: action.data.length,
+        updatedCount: action.data.length
       };
 
     case ENABLE_ERROR:
@@ -114,7 +149,7 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action) =>
         lastUpdated: Date.now(),
         enableErrors: action.data.errors,
         updatedCount: action.data.success.length,
-        error: action.error,
+        error: action.error
       };
 
     case RESET_ERRORS:
@@ -122,7 +157,7 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action) =>
         ...state,
         lastUpdated: Date.now(),
         enableErrors: [],
-        error: undefined,
+        error: undefined
       };
 
     case RESET_SUCCESS:
@@ -130,34 +165,34 @@ const reducer: Reducer<State> = (state: State = defaultState, action: Action) =>
         ...state,
         lastUpdated: Date.now(),
         enableSuccess: false,
-        updatedCount: 0,
-      }
+        updatedCount: 0
+      };
 
     case AUTO_ENROLL:
       return {
         ...state,
-        enrolling: true,
-      }
+        enrolling: true
+      };
 
     case AUTO_ENROLL_TOGGLE:
       return {
         ...state,
-        autoEnroll: !state.autoEnroll,
-      }
+        autoEnroll: !state.autoEnroll
+      };
 
     case AUTO_ENROLL_SUCCESS:
       return {
         ...state,
         autoEnrollError: undefined,
-        enrolling: false,
-      }
+        enrolling: false
+      };
 
     case AUTO_ENROLL_ERROR:
       return {
         ...state,
         autoEnrollError: action.data,
-        enrolling: false,
-      }
+        enrolling: false
+      };
 
     default:
       return state;
@@ -179,78 +214,112 @@ export default reducer;
  *  errors: BackupError[] Accumulated errors.
  * }
  */
-export const gatherResponsesAndErrors = (accumulator: Accumulator, linode: Linode.Linode) => {
-  return enableBackups(linode.id).then(() => ({
-    ...accumulator,
-    // This is accurate, since a 200 from the API means that backups were enabled.
-    success: [...accumulator.success, {...linode, backups: { ...linode.backups, enabled: true }}]
-  }))
-    .catch((error) => {
-      const reason = pathOr('Backups could not be enabled for this Linode.',
-        ['response', 'data', 'errors', 0, 'reason'], error);
+export const gatherResponsesAndErrors = (
+  accumulator: Accumulator,
+  linode: Linode.Linode
+) => {
+  return enableBackups(linode.id)
+    .then(() => ({
+      ...accumulator,
+      // This is accurate, since a 200 from the API means that backups were enabled.
+      success: [
+        ...accumulator.success,
+        { ...linode, backups: { ...linode.backups, enabled: true } }
+      ]
+    }))
+    .catch(error => {
+      const reason = pathOr(
+        'Backups could not be enabled for this Linode.',
+        ['response', 'data', 'errors', 0, 'reason'],
+        error
+      );
       return {
         ...accumulator,
         errors: [...accumulator.errors, { linodeId: linode.id, reason }]
-      }
-    })
-}
+      };
+    });
+};
 
 /* This will dispatch an async action that will send a request to enable backups for
-*  each Linode in the list of linodes without backups ('data' in the reducer state).
-*  When complete, it will dispatch appropriate actions to handle the result, depending
-*  on whether or not any errors occurred.
-*/
+ *  each Linode in the list of linodes without backups ('data' in the reducer state).
+ *  When complete, it will dispatch appropriate actions to handle the result, depending
+ *  on whether or not any errors occurred.
+ */
 type EnableAllBackupsThunk = ThunkActionCreator<void>;
-export const enableAllBackups: EnableAllBackupsThunk = () => (dispatch, getState) => {
+export const enableAllBackups: EnableAllBackupsThunk = () => (
+  dispatch,
+  getState
+) => {
   const { entities } = getState().__resources.linodes;
 
-  const linodesWithoutBackups = entities
-    .filter(linode => !linode.backups.enabled)
+  const linodesWithoutBackups = entities.filter(
+    linode => !linode.backups.enabled
+  );
 
   dispatch(handleEnable());
-  Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, { success: [], errors: [] })
+  Bluebird.reduce(linodesWithoutBackups, gatherResponsesAndErrors, {
+    success: [],
+    errors: []
+  })
     .then(response => {
       if (response.errors && !isEmpty(response.errors)) {
         dispatch(handleEnableError(response));
-      }
-      else {
+      } else {
         dispatch(handleEnableSuccess(response.success));
       }
       dispatch(updateMultipleLinodes(response.success));
     })
-    .catch(() => dispatch(
-      handleEnableError([{ linodeId: 0, reason: "There was an error enabling backups." }])
-    ));
-}
+    .catch(() =>
+      dispatch(
+        handleEnableError([
+          { linodeId: 0, reason: 'There was an error enabling backups.' }
+        ])
+      )
+    );
+};
 
 /* Dispatches an async action that will set the backups_enabled account setting.
-*  When complete, it will dispatch appropriate actions to handle the result, including
-* updating state.__resources.accountSettings.data.backups_enabled.
-*/
+ *  When complete, it will dispatch appropriate actions to handle the result, including
+ * updating state.__resources.accountSettings.data.backups_enabled.
+ */
 type EnableAutoEnrollThunk = ThunkActionCreator<void>;
-export const enableAutoEnroll: EnableAutoEnrollThunk = () => (dispatch, getState) => {
+export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
+  dispatch,
+  getState
+) => {
   const state = getState();
   const { backups } = state;
-  const hasBackupsEnabled = pathOr(false,
-    ['__resources', 'accountSettings', 'data', 'backups_enabled'], state);
+  const hasBackupsEnabled = pathOr(
+    false,
+    ['__resources', 'accountSettings', 'data', 'backups_enabled'],
+    state
+  );
   const shouldEnableBackups = Boolean(backups.autoEnroll);
 
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
    */
-  if (hasBackupsEnabled === shouldEnableBackups) { dispatch(enableAllBackups()); return; }
+  if (hasBackupsEnabled === shouldEnableBackups) {
+    dispatch(enableAllBackups());
+    return;
+  }
 
   dispatch(handleAutoEnroll());
   updateAccountSettings({ backups_enabled: shouldEnableBackups })
-    .then((response) => {
+    .then(response => {
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
       // Have to let the rest of the store know that the backups setting has been updated.
       dispatch(handleUpdate(response));
     })
-    .catch((errors) => {
-      const defaultError = "Your account settings could not be updated. Please try again.";
-      const finalError = pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], errors);
+    .catch(errors => {
+      const defaultError =
+        'Your account settings could not be updated. Please try again.';
+      const finalError = pathOr(
+        defaultError,
+        ['response', 'data', 'errors', 0, 'reason'],
+        errors
+      );
       dispatch(handleAutoEnrollError(finalError));
     });
-}
+};

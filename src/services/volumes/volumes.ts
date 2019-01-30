@@ -1,18 +1,41 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
-import { CloneVolumeSchema, CreateVolumeSchema, ResizeVolumeSchema, UpdateVolumeSchema } from './volumes.schema';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
+import {
+  CloneVolumeSchema,
+  CreateVolumeSchema,
+  ResizeVolumeSchema,
+  UpdateVolumeSchema
+} from './volumes.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Volume = Linode.Volume;
 
 export interface VolumeRequestPayload {
-  label: string,
-  size?: number,
-  region?: string,
-  linode_id?: number,
-  config_id?: number,
-  tags?: string[],
-};
+  label: string;
+  size?: number;
+  region?: string;
+  linode_id?: number;
+  config_id?: number;
+  tags?: string[];
+}
+
+export interface AttachVolumePayload {
+  linode_id: number;
+  config_id?: number;
+}
+export interface CloneVolumePayload {
+  label: string;
+}
+
+export interface ResizeVolumePayload {
+  size: number;
+}
 
 /**
  * getVolume
@@ -24,9 +47,8 @@ export interface VolumeRequestPayload {
 export const getVolume = (volumeId: number) =>
   Request<Volume>(
     setURL(`${API_ROOT}/volumes/${volumeId}`),
-    setMethod('GET'),
-  )
-    .then(response => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * getVolumes
@@ -39,9 +61,8 @@ export const getVolumes = (params?: any, filters?: any) =>
     setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
-  )
-    .then(response => response.data);
+    setXFilter(filters)
+  ).then(response => response.data);
 
 /**
  * attachVolume
@@ -55,15 +76,13 @@ export const getVolumes = (params?: any, filters?: any) =>
  * @param payload.config_id { number } The configuration profile to include this volume in.
  *   If this value is not provided, the most recently booted Config profile will be chosen.
  */
-export const attachVolume = (volumeId: number, payload: {
-  linode_id: number,
-  config_id?: number,
-}) => Request<Volume>(
-  setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
-  setMethod('POST'),
-  setData(payload),
-)
-  .then(response => response.data);
+
+export const attachVolume = (volumeId: number, payload: AttachVolumePayload) =>
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
+    setMethod('POST'),
+    setData(payload)
+  ).then(response => response.data);
 
 /**
  * detachVolume
@@ -73,11 +92,11 @@ export const attachVolume = (volumeId: number, payload: {
  * @param volumeId { number } The Volume to be detached.
  *
  */
-export const detachVolume = (volumeId: number) => Request<{}>(
-  setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
-  setMethod('POST'),
-)
-.then(response => response.data);
+export const detachVolume = (volumeId: number) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
+    setMethod('POST')
+  ).then(response => response.data);
 
 /**
  * deleteVolume
@@ -88,11 +107,11 @@ export const detachVolume = (volumeId: number) => Request<{}>(
  * @param volumeId { number } The Volume to be detached.
  *
  */
-export const deleteVolume = (volumeId: number) => Request<{}>(
-  setURL(`${API_ROOT}/volumes/${volumeId}`),
-  setMethod('DELETE'),
-)
-.then(response => response.data);
+export const deleteVolume = (volumeId: number) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/volumes/${volumeId}`),
+    setMethod('DELETE')
+  ).then(response => response.data);
 
 /**
  * cloneVolume
@@ -105,12 +124,12 @@ export const deleteVolume = (volumeId: number) => Request<{}>(
  * @param data { { label: string } } A label to identify the new volume.
  *
  */
-export const cloneVolume = (volumeId: number, data: { label: string }) => Request<{}>(
-  setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
-  setMethod('POST'),
-  setData(data, CloneVolumeSchema),
-)
-.then(response => response.data);
+export const cloneVolume = (volumeId: number, data: CloneVolumePayload) =>
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
+    setMethod('POST'),
+    setData(data, CloneVolumeSchema)
+  ).then(response => response.data);
 
 /**
  * resizeVolume
@@ -121,17 +140,22 @@ export const cloneVolume = (volumeId: number, data: { label: string }) => Reques
  * @param data { { size: number } } The size of the Volume (in GiB).
  *
  */
-export const resizeVolume = (volumeId: number, data: { size: number }) => Request<{}>(
-  setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
-  setMethod('POST'),
+export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) =>
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes/${volumeId}/resize`),
+    setMethod('POST'),
 
-  /**
-   * Unless we require the old size, we wont be able to validate. We know 10 is the
-   * absolute min so it's safe to set here.
-   */
-  setData(data, ResizeVolumeSchema(10)),
-)
-.then(response => response.data);
+    /**
+     * Unless we require the old size, we wont be able to validate. We know 10 is the
+     * absolute min so it's safe to set here.
+     */
+    setData(data, ResizeVolumeSchema(10))
+  ).then(response => response.data);
+
+export interface UpdateVolumeRequest {
+  label: string;
+  tags?: string[];
+}
 
 /**
  * updateVolume
@@ -142,12 +166,12 @@ export const resizeVolume = (volumeId: number, data: { size: number }) => Reques
  * @param data { { label: string; tags: string[] } } The updated label for this Volume.
  *
  */
-export const updateVolume = (volumeId: number, data: { label: string, tags?: string[] }) => Request<Volume>(
-  setURL(`${API_ROOT}/volumes/${volumeId}`),
-  setMethod('PUT'),
-  setData(data, UpdateVolumeSchema),
-)
-.then(response => response.data);
+export const updateVolume = (volumeId: number, data: UpdateVolumeRequest) =>
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes/${volumeId}`),
+    setMethod('PUT'),
+    setData(data, UpdateVolumeSchema)
+  ).then(response => response.data);
 
 /**
  * createVolume
@@ -159,9 +183,9 @@ export const updateVolume = (volumeId: number, data: { label: string, tags?: str
  * to the target Linode.
  *
  */
-export const createVolume = (data: VolumeRequestPayload) => Request<Volume>(
-  setURL(`${API_ROOT}/volumes`),
-  setMethod('POST'),
-  setData(data, CreateVolumeSchema),
-)
-.then(response => response.data);
+export const createVolume = (data: VolumeRequestPayload) =>
+  Request<Volume>(
+    setURL(`${API_ROOT}/volumes`),
+    setMethod('POST'),
+    setData(data, CreateVolumeSchema)
+  ).then(response => response.data);

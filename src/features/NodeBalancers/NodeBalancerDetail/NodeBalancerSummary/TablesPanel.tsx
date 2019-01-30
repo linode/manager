@@ -9,8 +9,15 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
+import MetricsDisplay from 'src/features/linodes/LinodesDetail/LinodeSummary/MetricsDisplay';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
+import {
+  formatBitsPerSecond,
+  formatNumber,
+  getMetrics
+} from 'src/utilities/statMetrics';
 
 type ClassNames =
   | 'chart'
@@ -59,26 +66,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${
         theme.spacing.unit
       }px`,
-      padding: theme.spacing.unit * 2,
-      display: 'flex',
-      flexWrap: 'wrap',
+      padding: 10,
       color: '#777',
+      backgroundColor: theme.bg.offWhiteDT,
+      border: `1px solid ${theme.color.border3}`,
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
-        flexDirection: 'column',
         '& > div': {
           marginBottom: theme.spacing.unit * 2
-        }
-      },
-      '& > div': {
-        display: 'flex',
-        marginRight: theme.spacing.unit * 5,
-        '&:before': {
-          content: '""',
-          display: 'block',
-          width: 20,
-          height: 20,
-          marginRight: theme.spacing.unit
         }
       }
     },
@@ -230,6 +225,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     if (statsError) {
       return <ErrorState errorText={statsError} />;
     }
+    const metrics = getMetrics(data);
+
     return (
       <React.Fragment>
         <Typography role="header" variant="h3" className={classes.header}>
@@ -253,6 +250,22 @@ class TablesPanel extends React.Component<CombinedProps, State> {
                 }
               ]}
             />
+          </div>
+          <div className={classes.bottomLegend}>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <MetricsDisplay
+                  rows={[
+                    {
+                      legendTitle: 'Connections',
+                      legendColor: 'blue',
+                      data: metrics,
+                      format: formatNumber
+                    }
+                  ]}
+                />
+              </Grid>
+            </Grid>
           </div>
         </React.Fragment>
       </React.Fragment>
@@ -299,8 +312,22 @@ class TablesPanel extends React.Component<CombinedProps, State> {
             />
           </div>
           <div className={classes.bottomLegend}>
-            <div className={classes.blue}>Inbound</div>
-            <div className={classes.green}>Outbound</div>
+            <MetricsDisplay
+              rows={[
+                {
+                  legendTitle: 'Inbound',
+                  legendColor: 'blue',
+                  data: getMetrics(trafficIn),
+                  format: formatBitsPerSecond
+                },
+                {
+                  legendTitle: 'Outbound',
+                  legendColor: 'green',
+                  data: getMetrics(trafficOut),
+                  format: formatBitsPerSecond
+                }
+              ]}
+            />
           </div>
         </React.Fragment>
       </React.Fragment>

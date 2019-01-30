@@ -1,22 +1,42 @@
 import { API_ROOT } from 'src/constants';
-
 import Request, { setData, setMethod, setURL } from '../index';
-
-import {
-  nodeBalancerConfigNodeSchema,
-} from './nodebalancers.schema';
+import { nodeBalancerConfigNodeSchema } from './nodebalancers.schema';
 import { mergeAddressAndPort } from './utils';
 
 type Page<T> = Linode.ResourcePage<T>;
-type Node = Linode.NodeBalancerConfigNode;
 
-interface NodePayload {
-  label: string;
+export type NodeBalancerConfigNodeMode = 'accept' | 'reject' | 'drain';
+
+export interface CreateNodeBalancerConfigNode {
   address: string;
-  port?: number;
+  label: string;
+  mode?: NodeBalancerConfigNodeMode;
   weight?: number;
-  mode?: 'accept' | 'reject' | 'drain';
 }
+
+export interface UpdateNodeBalancerConfigNode {
+  address?: string;
+  label?: string;
+  mode?: NodeBalancerConfigNodeMode;
+  weight?: number;
+}
+
+export interface NodeBalancerConfigNode {
+  address: string;
+  config_id: number;
+  id: number;
+  label: string;
+  mode: NodeBalancerConfigNodeMode;
+  nodebalancer_id: number;
+  status: 'Unknown' | 'UP' | 'DOWN';
+  weight: number;
+}
+
+// interface IDontKnowWhatThisIs {
+//   /* for the sake of local operations */
+//   modifyStatus?: 'new' | 'delete' | 'update';
+//   errors?: Linode.ApiFieldError[];
+// }
 
 /**
  * getNodeBalancerConfigNodes
@@ -29,13 +49,14 @@ interface NodePayload {
  */
 export const getNodeBalancerConfigNodes = (
   nodeBalancerId: number,
-  configId: number,
+  configId: number
 ) =>
-  Request<Page<Node>>(
+  Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
-  )
-    .then(response => response.data);
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
+    )
+  ).then(response => response.data);
 
 /**
  * getNodeBalancerConfigNode
@@ -50,13 +71,14 @@ export const getNodeBalancerConfigNodes = (
 export const getNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number,
+  nodeId: number
 ) =>
-  Request<Page<Node>>(
+  Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
-  )
-    .then(response => response.data);
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+    )
+  ).then(response => response.data);
 /**
  * createNodeBalancerConfigNode
  *
@@ -84,18 +106,15 @@ export const getNodeBalancerConfigNode = (
 export const createNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  data: NodePayload,
+  data: CreateNodeBalancerConfigNode
 ) =>
-  Request<Node>(
+  Request<NodeBalancerConfigNode>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
-    setData(
-      data,
-      nodeBalancerConfigNodeSchema,
-      mergeAddressAndPort,
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
     ),
-  )
-    .then(response => response.data);
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+  ).then(response => response.data);
 
 /**
  * createNodeBalancerConfigNode
@@ -124,18 +143,15 @@ export const updateNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
   nodeId: number,
-  data: NodePayload,
+  data: UpdateNodeBalancerConfigNode
 ) =>
-  Request<Node>(
+  Request<NodeBalancerConfigNode>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
-    setData(
-      data,
-      nodeBalancerConfigNodeSchema,
-      mergeAddressAndPort,
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
     ),
-  )
-    .then(response => response.data);
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+  ).then(response => response.data);
 
 /**
  * deleteNodeBalancerConfigNode
@@ -149,10 +165,11 @@ export const updateNodeBalancerConfigNode = (
 export const deleteNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number,
+  nodeId: number
 ) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
-  )
-    .then(response => response.data);
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+    )
+  ).then(response => response.data);

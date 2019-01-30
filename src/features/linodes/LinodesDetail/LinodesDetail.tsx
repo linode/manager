@@ -18,9 +18,18 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
 import { Requestable } from 'src/requestableContext';
-import { getLinode, getLinodeConfigs, getType, startMutation, updateLinode } from 'src/services/linodes';
+import {
+  getLinode,
+  getLinodeConfigs,
+  getType,
+  startMutation
+} from 'src/services/linodes';
 import { _getLinodeDisks } from 'src/store/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/linodeDetail/volumes';
+import {
+  LinodeActionsProps,
+  withLinodeActions
+} from 'src/store/linodes/linode.containers';
 import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -58,18 +67,23 @@ interface State {
     linode: Requestable<Linode.Linode>;
   };
   configDrawer: ConfigDrawerState;
-  labelInput: { label: string; errorText: string; };
+  labelInput: { label: string; errorText: string };
   showPendingMutation: boolean;
   mutateInfo: MutateInfo | null;
-  mutateDrawer: MutateDrawer
+  mutateDrawer: MutateDrawer;
   currentNetworkOut: number | null;
 }
 
-interface MatchProps { linodeId?: string };
+interface MatchProps {
+  linodeId?: string;
+}
 
 type RouteProps = RouteComponentProps<MatchProps>;
 
-type CombinedProps = DispatchProps & RouteProps & InjectedNotistackProps;
+type CombinedProps = LinodeActionsProps &
+  DispatchProps &
+  RouteProps &
+  InjectedNotistackProps;
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
@@ -78,23 +92,53 @@ const linodeLens = lensPath(['context', 'linode']);
 const L = {
   configs: {
     configs: configsLens,
-    data: compose(configsLens, lensPath(['data'])) as Lens,
-    errors: compose(configsLens, lensPath(['errors'])) as Lens,
-    lastUpdated: compose(configsLens, lensPath(['lastUpdated'])) as Lens,
-    loading: compose(configsLens, lensPath(['loading'])) as Lens,
+    data: compose(
+      configsLens,
+      lensPath(['data'])
+    ) as Lens,
+    errors: compose(
+      configsLens,
+      lensPath(['errors'])
+    ) as Lens,
+    lastUpdated: compose(
+      configsLens,
+      lensPath(['lastUpdated'])
+    ) as Lens,
+    loading: compose(
+      configsLens,
+      lensPath(['loading'])
+    ) as Lens
   },
   labelInput: {
-    errorText: compose(labelInputLens, lensPath(['errorText'])) as Lens,
-    label: compose(labelInputLens, lensPath(['label'])) as Lens,
-    labelInput: labelInputLens,
+    errorText: compose(
+      labelInputLens,
+      lensPath(['errorText'])
+    ) as Lens,
+    label: compose(
+      labelInputLens,
+      lensPath(['label'])
+    ) as Lens,
+    labelInput: labelInputLens
   },
   linode: {
-    data: compose(linodeLens, lensPath(['data'])) as Lens,
-    errors: compose(linodeLens, lensPath(['errors'])) as Lens,
-    lastUpdated: compose(linodeLens, lensPath(['lastUpdated'])) as Lens,
+    data: compose(
+      linodeLens,
+      lensPath(['data'])
+    ) as Lens,
+    errors: compose(
+      linodeLens,
+      lensPath(['errors'])
+    ) as Lens,
+    lastUpdated: compose(
+      linodeLens,
+      lensPath(['lastUpdated'])
+    ) as Lens,
     linode: linodeLens,
-    loading: compose(linodeLens, lensPath(['loading'])) as Lens,
-  },
+    loading: compose(
+      linodeLens,
+      lensPath(['loading'])
+    ) as Lens
+  }
 };
 
 type StateSetter = <S>(v: S) => S;
@@ -114,7 +158,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       configs: [],
       error: undefined,
       open: false,
-      selected: undefined,
+      selected: undefined
     },
     context: {
       configs: {
@@ -128,11 +172,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               this.composeState(
                 set(L.configs.loading, false),
                 set(L.configs.data, data),
-                set(L.configs.lastUpdated, Date.now()),
+                set(L.configs.lastUpdated, Date.now())
               );
               return data;
             })
-            .catch((r) => {
+            .catch(r => {
               this.composeState(
                 set(L.configs.lastUpdated, Date.now()),
                 set(L.configs.loading, false),
@@ -140,14 +184,14 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               );
             });
         },
-        update: (updater) => {
+        update: updater => {
           const { data: configs } = this.state.context.configs;
-          if (!configs) { return }
+          if (!configs) {
+            return;
+          }
 
-          this.composeState(
-            set(L.configs.data, updater(configs)),
-          );
-        },
+          this.composeState(set(L.configs.data, updater(configs)));
+        }
       },
       linode: {
         lastUpdated: 0,
@@ -161,11 +205,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 set(L.labelInput.label, data.label),
                 set(L.linode.loading, false),
                 set(L.linode.data, { ...data, recentEvent }),
-                set(L.linode.lastUpdated, Date.now()),
+                set(L.linode.lastUpdated, Date.now())
               );
               return data;
             })
-            .catch((r) => {
+            .catch(r => {
               this.composeState(
                 set(L.linode.lastUpdated, Date.now()),
                 set(L.linode.loading, false),
@@ -173,46 +217,57 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
               );
             });
         },
-        update: (updater) => {
+        update: updater => {
           const { data: linode } = this.state.context.linode;
-          if (!linode) { return }
+          if (!linode) {
+            return;
+          }
 
           const updatedLinode = updater(linode);
 
           this.composeState(
             set(L.linode.data, updatedLinode),
-            set(L.labelInput.label, updatedLinode.label),
+            set(L.labelInput.label, updatedLinode.label)
           );
-        },
-      },
+        }
+      }
     },
     labelInput: {
       label: '',
-      errorText: '',
+      errorText: ''
     },
     showPendingMutation: false,
     mutateInfo: null,
     mutateDrawer: {
       open: false,
       loading: false,
-      error: '',
+      error: ''
     },
-    currentNetworkOut: null,
+    currentNetworkOut: null
   };
 
   composeState = (...fns: StateSetter[]) =>
-    this.setState((state) => fns.reverse().reduce((result, current) => current(result), state));
+    this.setState(state =>
+      fns.reverse().reduce((result, current) => current(result), state)
+    );
 
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     const { location } = this.props;
     const { location: nextLocation } = nextProps;
 
-    return haveAnyBeenModified<State>(
-      this.state,
-      nextState,
-      ['context', 'configDrawer', 'labelInput', 'mutateDrawer', 'showPendingMutation'],
-    )
-      || haveAnyBeenModified<Location>(location, nextLocation, ['pathname', 'search']);
+    return (
+      haveAnyBeenModified<State>(this.state, nextState, [
+        'context',
+        'configDrawer',
+        'labelInput',
+        'mutateDrawer',
+        'showPendingMutation'
+      ]) ||
+      haveAnyBeenModified<Location>(location, nextLocation, [
+        'pathname',
+        'search'
+      ])
+    );
   }
 
   componentWillUnmount() {
@@ -222,25 +277,25 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { context: { linode: { data: linode } } } = this.state;
+    const {
+      context: {
+        linode: { data: linode }
+      }
+    } = this.state;
 
     /*
-    * /linodes/instances/types/type has a "successor" property
-    * that will have a non-null value if this Linode has an upgrade
-    * available
-    */
-    if (!!linode
-      && prevState.context.linode.data !== linode
-      && linode.type) {
-
+     * /linodes/instances/types/type has a "successor" property
+     * that will have a non-null value if this Linode has an upgrade
+     * available
+     */
+    if (!!linode && prevState.context.linode.data !== linode && linode.type) {
       getType(linode.type)
         .then((currentType: Linode.LinodeType) => {
-
           const typeIsDeprecated = currentType.successor !== null;
           /*
-          * Now that we know the type is deprecated, get the successor's new
-          * specs so we can show the user what exactly is getting upgraded
-          */
+           * Now that we know the type is deprecated, get the successor's new
+           * specs so we can show the user what exactly is getting upgraded
+           */
           if (!!currentType.successor && typeIsDeprecated) {
             getType(currentType.successor!)
               .then((successorData: Linode.LinodeType) => {
@@ -250,19 +305,35 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   currentNetworkOut: currentType.network_out,
                   // data is only relevant if the upgrade data is different from the current type's data
                   mutateInfo: {
-                    vcpus: (successorData.vcpus !== currentType.vcpus) ? successorData.vcpus : null,
-                    network_out: (successorData.network_out !== currentType.network_out) ? successorData.network_out : null,
-                    disk: (successorData.disk !== currentType.disk) ? successorData.disk : null,
-                    transfer: (successorData.transfer !== currentType.transfer) ? successorData.transfer : null,
-                    memory: (successorData.memory !== currentType.memory) ? successorData.memory : null,
+                    vcpus:
+                      successorData.vcpus !== currentType.vcpus
+                        ? successorData.vcpus
+                        : null,
+                    network_out:
+                      successorData.network_out !== currentType.network_out
+                        ? successorData.network_out
+                        : null,
+                    disk:
+                      successorData.disk !== currentType.disk
+                        ? successorData.disk
+                        : null,
+                    transfer:
+                      successorData.transfer !== currentType.transfer
+                        ? successorData.transfer
+                        : null,
+                    memory:
+                      successorData.memory !== currentType.memory
+                        ? successorData.memory
+                        : null
                   }
                 });
               })
               // no action needed. Worse case scenario, the user doesn't
               // see the notice
               .catch((e: Error) => e);
-          } else { // type is not deprecated
-            this.setState({ showPendingMutation: false })
+          } else {
+            // type is not deprecated
+            this.setState({ showPendingMutation: false });
           }
         })
         // no action needed. Worse case scenario, the user doesn't
@@ -274,21 +345,28 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   componentDidMount() {
     this.mounted = true;
 
-    const { context: { configs, linode } } = this.state;
+    const {
+      context: { configs, linode }
+    } = this.state;
     const mountTime = moment().subtract(5, 'seconds');
-    const { actions, match: { params: { linodeId } } } = this.props;
+    const {
+      actions,
+      match: {
+        params: { linodeId }
+      }
+    } = this.props;
 
     this.diskResizeSubscription = events$
-      .filter((e) => !e._initial)
+      .filter(e => !e._initial)
       .filter(pathEq(['entity', 'id'], Number(linodeId)))
-      .filter((e) => e.status === 'finished' && e.action === 'disk_resize')
-      .subscribe((e) => actions.getLinodeDisks())
+      .filter(e => e.status === 'finished' && e.action === 'disk_resize')
+      .subscribe(e => actions.getLinodeDisks());
 
     this.eventsSubscription = events$
       .filter(pathEq(['entity', 'id'], Number(linodeId)))
       .filter(newLinodeEvents(mountTime))
       .debounce(() => Observable.timer(1000))
-      .subscribe((linodeEvent) => {
+      .subscribe(linodeEvent => {
         configs.request();
         actions.getLinodeDisks();
         actions.getLinodeVolumes();
@@ -297,16 +375,18 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
 
     /** Get events which are related to volumes and this Linode */
     this.volumeEventsSubscription = events$
-      .filter(e => [
-        'volume_attach',
-        'volume_clone',
-        'volume_create',
-        'volume_delete',
-        'volume_detach',
-        'volume_resize',
-      ].includes(e.action))
+      .filter(e =>
+        [
+          'volume_attach',
+          'volume_clone',
+          'volume_create',
+          'volume_delete',
+          'volume_detach',
+          'volume_resize'
+        ].includes(e.action)
+      )
       .filter(e => !e._initial)
-      .subscribe((v) => {
+      .subscribe(v => {
         actions.getLinodeVolumes();
       });
 
@@ -315,16 +395,19 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     linode.request();
   }
 
-  openConfigDrawer = (configs: Linode.Config[], action: (id: number) => void) => {
+  openConfigDrawer = (
+    configs: Linode.Config[],
+    action: (id: number) => void
+  ) => {
     this.setState({
       configDrawer: {
         action,
         configs,
         open: true,
-        selected: configs[0].id,
-      },
+        selected: configs[0].id
+      }
     });
-  }
+  };
 
   closeConfigDrawer = () => {
     this.setState({
@@ -333,19 +416,19 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         configs: [],
         error: undefined,
         open: false,
-        selected: undefined,
-      },
+        selected: undefined
+      }
     });
-  }
+  };
 
   selectConfig = (id: number) => {
     this.setState(prevState => ({
       configDrawer: {
         ...prevState.configDrawer,
-        selected: id,
-      },
+        selected: id
+      }
     }));
-  }
+  };
 
   submitConfigChoice = () => {
     const { action, selected } = this.state.configDrawer;
@@ -353,32 +436,42 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       action(selected);
       this.closeConfigDrawer();
     }
-  }
+  };
 
   // @TODO add support for multiple error messages
   // (Currently, including multiple error strings
   // breaks the layout)
   updateLabel = (label: string) => {
+    const {
+      linodeActions: { updateLinode }
+    } = this.props;
     const { data: linode } = this.state.context.linode;
     /** "!" is okay because linode being undefined is being handled by render() */
-    return updateLinode(linode!.id, { label })
-      .then((linodeResponse) => {
+    return updateLinode({ linodeId: linode!.id, label })
+      .then(linodeResponse => {
         this.composeState(
           set(L.linode.data, linodeResponse),
           set(L.labelInput.label, linodeResponse.label),
-          set(L.labelInput.errorText, undefined),
+          set(L.labelInput.errorText, undefined)
         );
       })
-      .catch((err) => {
-        const errors: Linode.ApiFieldError[] = pathOr([], ['response', 'data', 'errors'], err);
+      .catch(err => {
+        const errors: Linode.ApiFieldError[] = pathOr(
+          [],
+          ['response', 'data', 'errors'],
+          err
+        );
         const errorStrings: string[] = errors.map(e => e.reason);
         /** "!" is okay because linode being undefined is being handled by render() */
-        this.setState({ labelInput: { label: linode!.label, errorText: errorStrings[0] } }, () => {
-          scrollErrorIntoView();
-        });
-        return Promise.reject(errorStrings[0])
+        this.setState(
+          { labelInput: { label: linode!.label, errorText: errorStrings[0] } },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+        return Promise.reject(errorStrings[0]);
       });
-  }
+  };
 
   cancelUpdate = () => {
     /** @todo figure out why this logic was here in the first place */
@@ -387,37 +480,40 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     const { labelInput } = this.state;
     this.setState({ labelInput: { ...labelInput, errorText: '' } });
     // this.forceUpdate();
-  }
+  };
 
   openMutateDrawer = () => {
     this.setState({ mutateDrawer: { ...this.state.mutateDrawer, open: true } });
-  }
+  };
 
   closeMutateDrawer = () => {
     this.setState({
       mutateDrawer: {
         ...this.state.mutateDrawer,
         open: false,
-        error: '',
+        error: ''
       }
     });
-  }
+  };
 
   initMutation = () => {
-    const { mutateDrawer, context: { linode } } = this.state;
+    const {
+      mutateDrawer,
+      context: { linode }
+    } = this.state;
 
     this.setState({
       mutateDrawer: {
         ...mutateDrawer,
         loading: true,
-        error: '',
+        error: ''
       }
-    })
+    });
     /*
-    * It's okay to disregard the possiblity of linode
-    * being undefined. The upgrade message won't appear unless
-    * it's defined
-    */
+     * It's okay to disregard the possiblity of linode
+     * being undefined. The upgrade message won't appear unless
+     * it's defined
+     */
     startMutation(linode.data!.id)
       .then(() => {
         linode.request();
@@ -426,29 +522,32 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
             ...mutateDrawer,
             open: false,
             error: '',
-            loading: false,
-          },
+            loading: false
+          }
         });
         this.props.enqueueSnackbar('Linode upgrade has been initiated.', {
           variant: 'info'
         });
       })
-      .catch((errors) => {
+      .catch(errors => {
         this.setState({
           mutateDrawer: {
             ...mutateDrawer,
             loading: false,
-            error: pathOr('Mutation could not be initiated.',
+            error: pathOr(
+              'Mutation could not be initiated.',
               ['response', 'data', 'errors', 0, 'reason'],
               errors
             )
           }
-        })
+        });
       });
-  }
+  };
 
   render() {
-    const { match: { url } } = this.props;
+    const {
+      match: { url }
+    } = this.props;
     const {
       labelInput,
       configDrawer,
@@ -458,19 +557,16 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
         linode: {
           data: linode,
           lastUpdated: linodeLastUpdated,
-          errors: linodeErrors,
+          errors: linodeErrors
         },
-        configs: {
-          data: configs,
-          lastUpdated: configsLastUpdated,
-        },
-      },
+        configs: { data: configs, lastUpdated: configsLastUpdated }
+      }
     } = this.state;
 
     const initialLoad = linodeLastUpdated === 0 || configsLastUpdated === 0;
 
     if (initialLoad) {
-      return <CircleProgress />
+      return <CircleProgress />;
     }
 
     if (!linode) {
@@ -478,10 +574,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
 
     if (linodeErrors) {
-      reportException(
-        Error('Error while loading Linode.'),
-        linodeErrors,
-      )
+      reportException(Error('Error while loading Linode.'), linodeErrors);
       return <ErrorState errorText="Error while loading Linode." />;
     }
 
@@ -503,7 +596,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                       label: labelInput.label,
                       errorText: labelInput.errorText,
                       onCancel: this.cancelUpdate,
-                      onEdit: this.updateLabel,
+                      onEdit: this.updateLabel
                     }}
                     linodeId={linode.id}
                     linodeLabel={linode.label}
@@ -526,7 +619,7 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                     selected={String(configDrawer.selected)}
                     error={configDrawer.error}
                   />
-                  {this.state.showPendingMutation && linode &&
+                  {this.state.showPendingMutation && linode && (
                     <MutateDrawer
                       linodeId={linode.id}
                       open={mutateDrawer.open}
@@ -539,11 +632,11 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                         transfer: linode.specs.transfer,
                         disk: linode.specs.disk,
                         memory: linode.specs.memory,
-                        network_out: this.state.currentNetworkOut,
+                        network_out: this.state.currentNetworkOut
                       }}
                       initMutation={this.initMutation}
                     />
-                  }
+                  )}
                 </React.Fragment>
               </LinodeProvider>
             </>
@@ -554,39 +647,57 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const reloadable = reloadableWithRouter<CombinedProps, MatchProps>((routePropsOld, routePropsNew) => {
-  return routePropsOld.match.params.linodeId !== routePropsNew.match.params.linodeId;
-});
+const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
+  (routePropsOld, routePropsNew) => {
+    return (
+      routePropsOld.match.params.linodeId !==
+      routePropsNew.match.params.linodeId
+    );
+  }
+);
 
 interface DispatchProps {
   actions: {
     getLinodeVolumes: () => void;
     getLinodeDisks: () => void;
-  },
+  };
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (dispatch: ThunkDispatch, ownProps) => {
-  const { match: { params: { linodeId } } } = ownProps;
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (
+  dispatch: ThunkDispatch,
+  ownProps
+) => {
+  const {
+    match: {
+      params: { linodeId }
+    }
+  } = ownProps;
 
   return {
     actions: {
-      getLinodeVolumes: typeof linodeId === 'string'
-        ? () => dispatch(_getLinodeVolumes(+linodeId))
-        : () => null,
-      getLinodeDisks: typeof linodeId === 'string'
-        ? () => dispatch(_getLinodeDisks(+linodeId))
-        : () => null,
-    },
+      getLinodeVolumes:
+        typeof linodeId === 'string'
+          ? () => dispatch(_getLinodeVolumes(+linodeId))
+          : () => null,
+      getLinodeDisks:
+        typeof linodeId === 'string'
+          ? () => dispatch(_getLinodeDisks(+linodeId))
+          : () => null
+    }
   };
 };
 
-const connected = connect(undefined, mapDispatchToProps);
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
 
 const enhanced = compose(
   connected,
   reloadable,
   LinodeDetailErrorBoundary,
-  withSnackbar
+  withSnackbar,
+  withLinodeActions
 );
 
 export default enhanced(LinodeDetail);

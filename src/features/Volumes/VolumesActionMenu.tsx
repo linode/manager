@@ -5,36 +5,24 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onShowConfig: (volumeLabel: string, volumePath: string) => void;
-  onEdit: (
-    volumeId: number,
-    volumeLabel: string,
-    volumeTags: string[],
-  ) => void;
-  onResize: (
-    volumeId: number,
-    volumeSize: number,
-    volumeLabel: string,
-  ) => void;
+  onEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
+  onResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
   onClone: (
-    volumeID: number,
+    volumeId: number,
     label: string,
     size: number,
-    regionID: string,
+    regionID: string
   ) => void;
   attached: boolean;
-  onAttach: (
-    volumeID: number,
-    label: string,
-    linodeRegion: string,
-  ) => void;
-  onDetach: (volumeID: number) => void;
+  onAttach: (volumeId: number, label: string, linodeRegion: string) => void;
+  onDetach: (volumeId: number) => void;
   poweredOff: boolean;
-  onDelete: (volumeID: number) => void;
+  onDelete: (volumeId: number) => void;
   filesystemPath: string;
   label: string;
   linodeLabel: string;
   regionID: string;
-  volumeID: number;
+  volumeId: number;
   volumeTags: string[];
   size: number;
 }
@@ -45,70 +33,40 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
   handleShowConfig = () => {
     const { onShowConfig, label, filesystemPath } = this.props;
     onShowConfig(label, filesystemPath);
-  }
+  };
 
   handleOpenEdit = () => {
-    const {
-      volumeID,
-      label,
-      volumeTags,
-      onEdit
-    } = this.props;
-    onEdit(volumeID, label, volumeTags)
-  }
+    const { volumeId, label, volumeTags, onEdit } = this.props;
+    onEdit(volumeId, label, volumeTags);
+  };
 
   handleResize = () => {
-    const {
-      volumeID,
-      size,
-      label,
-      onResize,
-    } = this.props;
-    onResize(volumeID, size, label)
-  }
+    const { volumeId, size, label, onResize } = this.props;
+    onResize(volumeId, size, label);
+  };
 
   handleClone = () => {
-    const {
-      volumeID,
-      label,
-      size,
-      regionID,
-      onClone
-    } = this.props;
-    onClone(volumeID, label, size, regionID)
-  }
+    const { volumeId, label, size, regionID, onClone } = this.props;
+    onClone(volumeId, label, size, regionID);
+  };
 
   handleAttach = () => {
-    const {
-      volumeID,
-      label,
-      regionID,
-      onAttach
-    } = this.props;
-    onAttach(volumeID, label, regionID);
-  }
+    const { volumeId, label, regionID, onAttach } = this.props;
+    onAttach(volumeId, label, regionID);
+  };
 
   handleDetach = () => {
-    const {
-      volumeID,
-      onDetach
-    } = this.props;
-    onDetach(volumeID);
-  }
+    const { volumeId, onDetach } = this.props;
+    onDetach(volumeId);
+  };
 
   handleDelete = () => {
-    const {
-      volumeID,
-      onDelete
-    } = this.props;
-    onDelete(volumeID);
-  }
+    const { volumeId, onDelete } = this.props;
+    onDelete(volumeId);
+  };
 
   createActions = () => {
-    const {
-      attached,
-      poweredOff,
-    } = this.props;
+    const { attached, poweredOff } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -118,7 +76,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             this.handleShowConfig();
             closeMenu();
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Edit Volume',
@@ -126,7 +84,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             this.handleOpenEdit();
             closeMenu();
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Resize',
@@ -134,7 +92,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             this.handleResize();
             closeMenu();
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Clone',
@@ -142,8 +100,8 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             this.handleClone();
             closeMenu();
             e.preventDefault();
-          },
-        },
+          }
+        }
       ];
 
       if (!attached) {
@@ -153,7 +111,7 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             this.handleAttach();
             closeMenu();
             e.preventDefault();
-          },
+          }
         });
       } else {
         actions.push({
@@ -162,29 +120,27 @@ class VolumesActionMenu extends React.Component<CombinedProps> {
             this.handleDetach();
             closeMenu();
             e.preventDefault();
-          },
+          }
         });
       }
 
-      if ((!attached) || poweredOff) {
+      if (!attached || poweredOff) {
         actions.push({
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleDelete();
             closeMenu();
             e.preventDefault();
-          },
+          }
         });
       }
 
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

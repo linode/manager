@@ -11,23 +11,52 @@ describe('LinodeSummary', () => {
       linodeId={1234}
       linodeData={linodes[0]}
       volumesData={[]}
-      classes={{ chart: '', leftLegend: '', bottomLegend: '', graphControls: '', graphTitle: '', totalTraffic: ''}}
+      classes={{
+        chart: '',
+        leftLegend: '',
+        bottomLegend: '',
+        graphControls: '',
+        graphTitle: '',
+        totalTraffic: ''
+      }}
       typesData={[]}
     />
   );
 
   it('should include "Last 24 Hours" as the first option', () => {
-    expect(wrapper.find('WithStyles(MenuItem)').at(0).children().text()).toBe('Last 24 Hours');
-    expect(wrapper.find('WithStyles(MenuItem)').at(0).props().value).toBe('24');
+    expect(
+      wrapper
+        .find('WithStyles(MenuItem)')
+        .at(0)
+        .children()
+        .text()
+    ).toBe('Last 24 Hours');
+    expect(
+      wrapper
+        .find('WithStyles(MenuItem)')
+        .at(0)
+        .props().value
+    ).toBe('24');
   });
 
   it('should include "Last 30 Days" as the second option', () => {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
 
-    const paddedCurrentMonth = currentMonth.toString().padStart(2, '0')
+    const paddedCurrentMonth = currentMonth.toString().padStart(2, '0');
 
-    expect(wrapper.find('WithStyles(MenuItem)').at(1).children().text()).toBe('Last 30 Days');
-    expect(wrapper.find('WithStyles(MenuItem)').at(1).props().value).toBe(`${currentYear} ${paddedCurrentMonth}`);
+    expect(
+      wrapper
+        .find('WithStyles(MenuItem)')
+        .at(1)
+        .children()
+        .text()
+    ).toBe('Last 30 Days');
+    expect(
+      wrapper
+        .find('WithStyles(MenuItem)')
+        .at(1)
+        .props().value
+    ).toBe(`${currentYear} ${paddedCurrentMonth}`);
   });
 });

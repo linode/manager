@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
+import { ExtendedEvent } from './event.reducer';
 
 type Event = ExtendedEvent;
 
@@ -15,25 +16,29 @@ export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
  * entities {Linode.Entity[]}
  * entity {null | Linode.Entity}
  */
-export const findInEvents = (events: Pick<Event, 'entity'>[], entity: null | Partial<Linode.Entity> = {}) =>
-  findIndex((e) => equals(e.entity, entity), events);
+export const findInEvents = (
+  events: Pick<Event, 'entity'>[],
+  entity: null | Partial<Linode.Entity> = {}
+) => findIndex(e => equals(e.entity, entity), events);
 
 export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
-  const deletions = events
-    .reduce((result: Event[], event) => {
-      const { entity, action, status } = event;
+  const deletions = events.reduce((result: Event[], event) => {
+    const { entity, action, status } = event;
 
-      if (!entity) {
-        return result;
-      }
+    if (!entity) {
+      return result;
+    }
 
-      if (!action.includes(`_delete`) || !['finished', 'notification'].includes(status)) {
-        return result;
-      }
+    if (
+      !action.includes(`_delete`) ||
+      !['finished', 'notification'].includes(status)
+    ) {
+      return result;
+    }
 
-      return [event, ...result];
-    }, []);
+    return [event, ...result];
+  }, []);
 
   /** If there are no deletions to process, just return the events. */
   if (deletions.length === 0) {
@@ -41,14 +46,13 @@ export const setDeletedEvents = (events: Event[]) => {
   }
 
   /** Map events to either deleted or not. */
-  return events.map((e) => {
+  return events.map(e => {
     const indexOfFoundEvent = findInEvents(deletions, e.entity);
 
     return indexOfFoundEvent > -1
-      ? ({ ...e, _deleted: deletions[indexOfFoundEvent].created })
-      : e
-  }
-  );
+      ? { ...e, _deleted: deletions[indexOfFoundEvent].created }
+      : e;
+  });
 };
 
 export const updateEvents = compose(
@@ -61,21 +65,28 @@ export const updateEvents = compose(
     updateRight<Event[], Event[]>((prevEvents, events) => take(100, events)),
 
     /** Marked events "_deleted". */
-    updateRight<Event[], Event[]>((prevEvents, events) => setDeletedEvents(events)),
+    updateRight<Event[], Event[]>((prevEvents, events) =>
+      setDeletedEvents(events)
+    ),
 
     /** Add events to the list. */
-    updateRight<Event[], Event[]>((prevEvents, events) => addToEvents(prevEvents, events)),
+    updateRight<Event[], Event[]>((prevEvents, events) =>
+      addToEvents(prevEvents, events)
+    )
   ),
 
   /** Convert the arguments to a tuple so we can use updateRight. */
-  (prevEvents: Event[], events: Event[]) => [prevEvents, events],
+  (prevEvents: Event[], events: Event[]) => [prevEvents, events]
 );
 
 /**
  * Compare the latestTime with the given Linode's created time and return the most recent.
  *
  */
-export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'created'>) => {
+export const mostRecentCreated = (
+  latestTime: number,
+  current: Pick<Event, 'created'>
+) => {
   const time: number = moment.utc(current.created).valueOf(); // Unix time (milliseconds)
   return latestTime > time ? latestTime : time;
 };
@@ -86,8 +97,8 @@ export const mostRecentCreated = (latestTime: number, current: Pick<Event, 'crea
  *
  * I know this could be much more generic, but I cant get the typing right.
  */
-export const addToEvents = (prevArr: Event[], arr: Event[]) => arr
-  .reduceRight((updatedArray, el) => {
+export const addToEvents = (prevArr: Event[], arr: Event[]) =>
+  arr.reduceRight((updatedArray, el) => {
     /**
      * We need to update in place to maintain the correct timeline of events. Update in-place
      * by finding the index then updating at that index.
@@ -96,13 +107,20 @@ export const addToEvents = (prevArr: Event[], arr: Event[]) => arr
     return indexOfFoundEvent > -1
       ? update(indexOfFoundEvent, el, updatedArray)
       : [el, ...updatedArray];
-  }, prevArr)
+  }, prevArr);
 
-export const isInProgressEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete < 100;
+export const isInProgressEvent = ({
+  percent_complete
+}: Pick<Event, 'percent_complete'>) =>
+  percent_complete !== null && percent_complete < 100;
 
-export const isCompletedEvent = ({ percent_complete }: Pick<Event, 'percent_complete'>) => percent_complete !== null && percent_complete === 100;
+export const isCompletedEvent = ({
+  percent_complete
+}: Pick<Event, 'percent_complete'>) =>
+  percent_complete !== null && percent_complete === 100;
 
-export const isEntityEvent = (e: Linode.Event): e is Linode.EntityEvent => Boolean(e.entity);
+export const isEntityEvent = (e: Linode.Event): e is Linode.EntityEvent =>
+  Boolean(e.entity);
 
 /**
  * Iterate through new events.
@@ -113,7 +131,7 @@ export const isEntityEvent = (e: Linode.Event): e is Linode.EntityEvent => Boole
  */
 export const updateInProgressEvents = (
   inProgressEvents: Record<number, boolean>,
-  event: Pick<Event, 'percent_complete' | 'id'>[],
+  event: Pick<Event, 'percent_complete' | 'id'>[]
 ) => {
   return event.reduce((result, e) => {
     const key = String(e.id);
@@ -122,9 +140,9 @@ export const updateInProgressEvents = (
       return omit([key], result);
     }
 
-    return isInProgressEvent(e) ? { ...result, [key]: true } : result
+    return isInProgressEvent(e) ? { ...result, [key]: true } : result;
   }, inProgressEvents);
-}
+};
 
 export const getNumUnseenEvents = (events: Pick<Event, 'seen'>[]) =>
-  events.reduce((result, event) => event.seen ? result : result + 1, 0);
+  events.reduce((result, event) => (event.seen ? result : result + 1), 0);

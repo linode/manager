@@ -1,7 +1,11 @@
 import { API_ROOT } from 'src/constants';
-import store from 'src/store';
-import { upsertLinode } from 'src/store/linodes/linodes.actions';
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
 import { CreateLinodeSchema, UpdateLinodeSchema } from './linode.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -35,7 +39,7 @@ export interface CreateLinodeRequest {
 export const getLinode = (linodeId: number) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
-    setMethod('GET'),
+    setMethod('GET')
   );
 
 /**
@@ -48,7 +52,7 @@ export const getLinode = (linodeId: number) =>
 export const getLinodeLishToken = (linodeId: number) =>
   Request<{ lish_token: string }>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/lish_token`),
-    setMethod('POST'),
+    setMethod('POST')
   );
 
 /**
@@ -59,14 +63,17 @@ export const getLinodeLishToken = (linodeId: number) =>
  *
  * @param linodeId { number } The id of the Linode.
  */
-export const getLinodeVolumes = (linodeId: number, params: any = {}, filter: any = {}) =>
+export const getLinodeVolumes = (
+  linodeId: number,
+  params: any = {},
+  filter: any = {}
+) =>
   Request<Page<Linode.Volume>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/volumes`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params),
-  )
-    .then(response => response.data);
+    setParams(params)
+  ).then(response => response.data);
 
 /**
  * getLinodes
@@ -80,9 +87,8 @@ export const getLinodes = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/linode/instances/`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params),
-  )
-    .then(response => response.data);
+    setParams(params)
+  ).then(response => response.data);
 
 /**
  * createLinode
@@ -98,9 +104,8 @@ export const createLinode = (data: CreateLinodeRequest) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances`),
     setMethod('POST'),
-    setData(data, CreateLinodeSchema),
-  )
-    .then(response => response.data);
+    setData(data, CreateLinodeSchema)
+  ).then(response => response.data);
 
 /**
  * updateLinode
@@ -115,13 +120,8 @@ export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
   Request<Linode>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
     setMethod('PUT'),
-    setData(values, UpdateLinodeSchema),
-  )
-    .then(response => response.data)
-    .then(linode => {
-      store.dispatch(upsertLinode(linode))
-      return linode;
-    });
+    setData(values, UpdateLinodeSchema)
+  ).then(response => response.data);
 
 /**
  * deleteLinode
@@ -133,5 +133,5 @@ export const updateLinode = (linodeId: number, values: Partial<Linode>) =>
 export const deleteLinode = (linodeId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}`),
-    setMethod('DELETE'),
+    setMethod('DELETE')
   );

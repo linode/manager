@@ -18,6 +18,6 @@ const NotFound = (props: Props) => {
       className={props.className}
     />
   );
-}
+};
 
 export default NotFound;

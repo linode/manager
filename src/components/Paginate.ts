@@ -1,9 +1,14 @@
 import { clamp, slice } from 'ramda';
 import * as React from 'react';
+import scrollToTop from 'src/utilities/scrollToTop';
 
-const createDiplayPage = <T extends any>(page: number, pageSize: number) => (list: T[]): T[] => {
+const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
+  list: T[]
+): T[] => {
   const count = list.length;
-  if (count === 0) { return list; }
+  if (count === 0) {
+    return list;
+  }
 
   const pages = Math.ceil(count / pageSize);
   const currentPage = clamp(1, pages, page);
@@ -35,10 +40,13 @@ interface Props {
 export default class Paginate extends React.Component<Props, State> {
   state: State = {
     page: this.props.page || 1,
-    pageSize: this.props.pageSize || 25,
+    pageSize: this.props.pageSize || 25
   };
 
-  handlePageChange = (page: number) => this.setState({ page });
+  handlePageChange = (page: number) => {
+    scrollToTop();
+    this.setState({ page });
+  };
 
   handlePageSizeChange = (pageSize: number) => this.setState({ pageSize });
 
@@ -51,7 +59,7 @@ export default class Paginate extends React.Component<Props, State> {
       handlePageChange: this.handlePageChange,
       handlePageSizeChange: this.handlePageSizeChange,
       data: view(this.props.data),
-      count: this.props.data.length,
+      count: this.props.data.length
     };
 
     return this.props.children(props);
