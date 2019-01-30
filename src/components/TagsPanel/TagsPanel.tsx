@@ -37,8 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexWrap: 'wrap'
   },
   tag: {
-    position: 'relative',
-    top: theme.spacing.unit,
+    marginTop: theme.spacing.unit / 2,
     marginRight: theme.spacing.unit,
     [theme.breakpoints.down('xs')]: {
       marginRight: 16
@@ -46,13 +45,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   addButtonWrapper: {
     width: '100%',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    marginTop: 15,
+    marginBottom: 17
   },
   addButton: {
     padding: 0,
     position: 'relative',
-    top: theme.spacing.unit / 2,
+    top: 2,
     '& svg': {
       marginRight: theme.spacing.unit
     },
@@ -65,12 +64,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   selectTag: {
     marginTop: theme.spacing.unit,
-    // height: '48px',
     width: '100%',
     position: 'relative',
     zIndex: 3,
     animation: 'fadeIn .3s ease-in-out forwards',
-    border: '1px solid #ccc',
+    maxWidth: 275,
     '& > div > div': {
       marginTop: 0
     },
@@ -80,10 +78,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       flexWrap: 'wrap-reverse'
     },
     '& .input': {
-      minHeight: 'auto',
-      border: 0,
-      backgroundColor: 'transparent',
-      boxShadow: 'none',
       '& p': {
         fontSize: '.9rem',
         color: theme.color.grey1,
@@ -110,7 +104,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       backgroundColor: 'transparent'
     },
     '& .react-select__value-container': {
-      maxWidth: 415,
       padding: '6px'
     }
   }
@@ -335,6 +328,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             autoFocus
             className={classes.selectTag}
             blurInputOnSelect={false}
+            menuIsOpen={true}
           />
         ) : (
           <div className={classes.addButtonWrapper}>
