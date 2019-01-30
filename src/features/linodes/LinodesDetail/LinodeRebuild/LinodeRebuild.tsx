@@ -7,7 +7,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -21,30 +25,26 @@ import { withLinode } from '../context';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
-type ClassNames = 'root'
- | 'title'
- | 'intro'
- | 'imageControl'
- | 'image';
+type ClassNames = 'root' | 'title' | 'intro' | 'imageControl' | 'image';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   intro: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   imageControl: {
-    display: 'flex',
+    display: 'flex'
   },
   image: {
     display: 'flex',
-    flexWrap: 'wrap',
-  },
+    flexWrap: 'wrap'
+  }
 });
 
 interface Props {
@@ -62,16 +62,15 @@ interface State {
   password?: string;
 }
 
-type CombinedProps =
-  & Props
-  & ContextProps
-  & WithStyles<ClassNames>
-  & InjectedNotistackProps;
+type CombinedProps = Props &
+  ContextProps &
+  WithStyles<ClassNames> &
+  InjectedNotistackProps;
 
 class LinodeRebuild extends React.Component<CombinedProps, State> {
   state: State = {
     errors: []
-  }
+  };
 
   handleImageSelect = (selectedItem: Item<string> | null) => {
     if (isNil(selectedItem)) {
@@ -79,7 +78,7 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({ selected: selectedItem!.value, errors: [] });
-  }
+  };
 
   onSubmit = () => {
     const { linodeId, enqueueSnackbar } = this.props;
@@ -105,31 +104,36 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
       return;
     }
 
-    rebuildLinode(
-      linodeId,
-      { image: selected,
-        root_pass: password,
-        authorized_users: this.props.userSSHKeys.filter(u => u.selected).map((u) => u.username)
-      },
-    )
-      .then((response) => {
+    rebuildLinode(linodeId, {
+      image: selected,
+      root_pass: password,
+      authorized_users: this.props.userSSHKeys
+        .filter(u => u.selected)
+        .map(u => u.username)
+    })
+      .then(response => {
         resetEventsPolling();
-        this.setState({ errors: undefined, selected: undefined, password: undefined });
+        this.setState({
+          errors: undefined,
+          selected: undefined,
+          password: undefined
+        });
         enqueueSnackbar('Linode rebuild started.', {
           variant: 'info'
         });
       })
-      .catch((errorResponse) => {
+      .catch(errorResponse => {
         pathOr(
           [{ reason: 'There was an issue rebuilding your Linode' }],
           ['response', 'data', 'errors'],
           errorResponse
-        )
-          .forEach((err: Linode.ApiFieldError) => enqueueSnackbar(err.reason, {
+        ).forEach((err: Linode.ApiFieldError) =>
+          enqueueSnackbar(err.reason, {
             variant: 'error'
-          }));
+          })
+        );
       });
-  }
+  };
 
   onPasswordChange = (value: string) => this.setState({ password: value });
 
@@ -154,10 +158,10 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             Rebuild
           </Typography>
           <Typography className={classes.intro} data-qa-rebuild-desc>
-            If you can't rescue an existing disk, it's time to rebuild your Linode.
-            There are a couple of different ways you can do this:
-            either restore from a backup or start over with a fresh Linux
-            distribution. Rebuilding will destroy all data.
+            If you can't rescue an existing disk, it's time to rebuild your
+            Linode. There are a couple of different ways you can do this: either
+            restore from a backup or start over with a fresh Linux distribution.
+            Rebuilding will destroy all data.
           </Typography>
           <ImageAndPassword
             imageFieldError={imageFieldError}
@@ -185,9 +189,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode((context) => ({
+const linodeContext = withLinode(context => ({
   linodeId: context.data!.id,
-  linodeLabel: context.data!.label,
+  linodeLabel: context.data!.label
 }));
 
 export default compose<CombinedProps, Props>(
@@ -195,7 +199,5 @@ export default compose<CombinedProps, Props>(
   SectionErrorBoundary,
   styled,
   userSSHKeyHoc,
-  withSnackbar,
+  withSnackbar
 )(LinodeRebuild);
-
-

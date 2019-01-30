@@ -17,14 +17,14 @@ describe('LinodeResize', () => {
         root: '',
         title: '',
         subTitle: '',
-        currentPlanContainer: '',
+        currentPlanContainer: ''
       }}
       linodeId={12}
       linodeType={null}
       currentTypesData={mockTypes}
       deprecatedTypesData={mockTypes}
       linodeLabel=""
-    />,
+    />
   );
 
   it('should render the currently selected plan as a card', () => {
@@ -37,7 +37,7 @@ describe('LinodeResize', () => {
             root: '',
             title: '',
             subTitle: '',
-            currentPlanContainer: '',
+            currentPlanContainer: ''
           }}
           linodeId={12}
           linodeType={null}
@@ -45,11 +45,12 @@ describe('LinodeResize', () => {
           deprecatedTypesData={mockTypes}
           linodeLabel=""
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
-    const currentSelectionCard =
-      componentWithTheme.find('div [data-qa-select-card-heading="No Assigned Plan"]');
+    const currentSelectionCard = componentWithTheme.find(
+      'div [data-qa-select-card-heading="No Assigned Plan"]'
+    );
 
     expect(currentSelectionCard.exists()).toBeTruthy();
     expect(currentSelectionCard.length).toEqual(1);
@@ -67,7 +68,7 @@ describe('LinodeResize', () => {
                 root: '',
                 title: '',
                 subTitle: '',
-                currentPlanContainer: '',
+                currentPlanContainer: ''
               }}
               linodeId={12}
               linodeType={null}
@@ -75,11 +76,12 @@ describe('LinodeResize', () => {
               deprecatedTypesData={mockTypes}
               linodeLabel=""
             />
-          </LinodeThemeWrapper>,
+          </LinodeThemeWrapper>
         );
 
-        const currentSelectionCard =
-          componentWithTheme.find('div [data-qa-select-card-heading="No Assigned Plan"]');
+        const currentSelectionCard = componentWithTheme.find(
+          'div [data-qa-select-card-heading="No Assigned Plan"]'
+        );
 
         expect(currentSelectionCard.exists()).toBeTruthy();
         expect(currentSelectionCard.length).toEqual(1);
@@ -99,7 +101,7 @@ describe('LinodeResize', () => {
                 root: '',
                 title: '',
                 subTitle: '',
-                currentPlanContainer: '',
+                currentPlanContainer: ''
               }}
               linodeId={12}
               linodeType={'_something_unexpected_'}
@@ -107,11 +109,12 @@ describe('LinodeResize', () => {
               deprecatedTypesData={mockTypes}
               linodeLabel=""
             />
-          </LinodeThemeWrapper>,
+          </LinodeThemeWrapper>
         );
 
-        const currentSelectionCard =
-          componentWithTheme.find('div [data-qa-select-card-heading="Unknown Plan"]');
+        const currentSelectionCard = componentWithTheme.find(
+          'div [data-qa-select-card-heading="Unknown Plan"]'
+        );
 
         expect(currentSelectionCard.exists()).toBeTruthy();
         expect(currentSelectionCard.length).toEqual(1);
@@ -123,12 +126,11 @@ describe('LinodeResize', () => {
     component.setState({ selectedId: 'selected' });
     const submitBtn = component.find('[data-qa-submit]');
     expect(submitBtn.prop('disabled')).toBeFalsy();
-  })
+  });
 
   it('submit button should be disabled if no plan is selected', () => {
     component.setState({ selectedId: '' });
     const submitBtn = component.find('[data-qa-submit]');
     expect(submitBtn.prop('disabled')).toBeTruthy();
-  })
-
+  });
 });

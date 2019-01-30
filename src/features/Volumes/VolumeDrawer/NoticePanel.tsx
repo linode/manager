@@ -1,11 +1,15 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -15,7 +19,10 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NoticePanel: React.StatelessComponent<CombinedProps> = ({ success, error }) => {
+const NoticePanel: React.StatelessComponent<CombinedProps> = ({
+  success,
+  error
+}) => {
   return (
     <>
       {success && <Notice success>{success}</Notice>}

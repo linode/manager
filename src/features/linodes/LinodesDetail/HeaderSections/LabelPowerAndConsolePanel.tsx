@@ -2,44 +2,53 @@ import { last } from 'ramda';
 import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LinodePowerControl from '../LinodePowerControl';
 
-type ClassNames = 'root' | 'titleWrapper' | 'backButton' | 'cta' | 'launchButton';
+type ClassNames =
+  | 'root'
+  | 'titleWrapper'
+  | 'backButton'
+  | 'cta'
+  | 'launchButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   titleWrapper: {
     display: 'flex',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 5
   },
   backButton: {
     margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
-      height: 34,
-    },
+      height: 34
+    }
   },
   cta: {
     marginTop: theme.spacing.unit,
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',
-      flexBasis: '100%',
-    },
+      flexBasis: '100%'
+    }
   },
   launchButton: {
     padding: '12px 28px 14px 0',
     '&:hover': {
       backgroundColor: 'transparent',
-      textDecoration: 'underline',
+      textDecoration: 'underline'
     },
     '&:focus > span:first-child': {
-      outline: '1px dotted #999',
+      outline: '1px dotted #999'
     }
-  },
+  }
 });
 
 interface ReducedLinode {
@@ -59,26 +68,28 @@ interface LabelInput {
 interface Props {
   launchLish: () => void;
   linode: ReducedLinode;
-  openConfigDrawer: (config: Linode.Config[], action: (id: number) => void) => void;
+  openConfigDrawer: (
+    config: Linode.Config[],
+    action: (id: number) => void
+  ) => void;
   labelInput: LabelInput;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (props) => {
+const LabelPowerAndConsolePanel: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { classes, linode, launchLish, openConfigDrawer, labelInput } = props;
 
   const getLabelLink = (): string | undefined => {
     return last(location.pathname.split('/')) !== 'summary'
       ? 'summary'
       : undefined;
-  }
+  };
 
   return (
-    <Grid
-      container
-      justify="space-between"
-    >
+    <Grid container justify="space-between">
       <Grid item className={classes.titleWrapper}>
         <Breadcrumb
           linkTo="/linodes"
@@ -99,9 +110,9 @@ const LabelPowerAndConsolePanel: React.StatelessComponent<CombinedProps> = (prop
           data-qa-launch-console
           disableFocusRipple={true}
           disableRipple={true}
-          >
+        >
           Launch Console
-    </Button>
+        </Button>
         <LinodePowerControl
           status={linode.status}
           recentEvent={linode.recentEvent}

@@ -17,7 +17,7 @@ describe('Email change form', () => {
       }}
       classes={{
         root: '',
-        title: '',
+        title: ''
       }}
     />
   );

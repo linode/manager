@@ -1,9 +1,14 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'icon'
   | 'hasNoNotifications'
   | 'isMinor'
@@ -11,16 +16,16 @@ type ClassNames = 'root'
   | 'isCritical'
   | 'smaller';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginRight: - theme.spacing.unit,
+    marginRight: -theme.spacing.unit,
     position: 'relative',
     [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing.unit
     },
     '&.active $icon': {
-      backgroundColor: theme.palette.text.primary,
-    },
+      backgroundColor: theme.palette.text.primary
+    }
   },
   icon: {
     position: 'relative',
@@ -38,23 +43,22 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     justifyContent: 'center',
     lineHeight: 1.1,
     '&:hover': {
-      backgroundColor: theme.palette.text.primary,
-    },
+      backgroundColor: theme.palette.text.primary
+    }
   },
   isCritical: {
-    backgroundColor: theme.palette.status.errorDark,
+    backgroundColor: theme.palette.status.errorDark
   },
   isMajor: {
-    backgroundColor: theme.palette.status.warningDark,
+    backgroundColor: theme.palette.status.warningDark
   },
   isMinor: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main
   },
   smaller: {
-    fontSize: 15,
+    fontSize: 15
   },
-  hasNoNotifications: {
-  },
+  hasNoNotifications: {}
 });
 
 interface Props {
@@ -71,7 +75,7 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
   onClick,
   className,
   severity,
-  notifications,
+  notifications
 }) => {
   return (
     <IconButton
@@ -79,15 +83,16 @@ const userNotificationButton: React.StatelessComponent<CombinedProps> = ({
       className={`${classes.root} ${className}`}
       aria-label="User Notifications"
     >
-      <div className={
-        classNames({
+      <div
+        className={classNames({
           [classes.icon]: true,
           [classes.hasNoNotifications]: severity === null,
           [classes.isMinor]: severity === 'minor',
           [classes.isMajor]: severity === 'major',
           [classes.isCritical]: severity === 'critical',
-          [classes.smaller]: notifications.length > 9,
-        })}>
+          [classes.smaller]: notifications.length > 9
+        })}
+      >
         {notifications.length <= 9 ? notifications.length : '9+'}
       </div>
     </IconButton>

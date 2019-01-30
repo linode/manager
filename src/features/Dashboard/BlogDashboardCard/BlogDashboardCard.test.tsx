@@ -18,9 +18,7 @@ const mockData: BlogItem[] = [
 
 describe('BlogDashboardCard', () => {
   const wrapper = shallow(
-    <BlogDashboardCard
-      classes={{ root: '', itemTitle: '' }}
-    />
+    <BlogDashboardCard classes={{ root: '', itemTitle: '' }} />
   );
 
   wrapper.setState({
@@ -33,17 +31,46 @@ describe('BlogDashboardCard', () => {
   });
 
   it('renders links with correct href value', () => {
-    expect(wrapper.find('[data-qa-blog-post]').at(0).prop('href')).toBe(mockData[0].link);
+    expect(
+      wrapper
+        .find('[data-qa-blog-post]')
+        .at(0)
+        .prop('href')
+    ).toBe(mockData[0].link);
   });
 
   it('decodes HTML encoded symbols in the description', () => {
-    expect(wrapper.find('[data-qa-post-desc]').at(0).childAt(0).text()).toBe('Apostrophe ’');
-    expect(wrapper.find('[data-qa-post-desc]').at(1).childAt(0).text()).toBe('Right quotation mark ”');
+    expect(
+      wrapper
+        .find('[data-qa-post-desc]')
+        .at(0)
+        .childAt(0)
+        .text()
+    ).toBe('Apostrophe ’');
+    expect(
+      wrapper
+        .find('[data-qa-post-desc]')
+        .at(1)
+        .childAt(0)
+        .text()
+    ).toBe('Right quotation mark ”');
   });
 
   it('decodes HTML encoded symbols in the title', () => {
-    expect(wrapper.find('[data-qa-blog-post]').at(0).childAt(0).text()).toBe('Blog post…');
-    expect(wrapper.find('[data-qa-blog-post]').at(1).childAt(0).text()).toBe('Blog Post—');
+    expect(
+      wrapper
+        .find('[data-qa-blog-post]')
+        .at(0)
+        .childAt(0)
+        .text()
+    ).toBe('Blog post…');
+    expect(
+      wrapper
+        .find('[data-qa-blog-post]')
+        .at(1)
+        .childAt(0)
+        .text()
+    ).toBe('Blog Post—');
   });
 
   it('does not render anything if there are no items', () => {

@@ -36,7 +36,7 @@ class VncDisplay extends React.PureComponent<Props> {
     scale: 1,
     width: 1280,
     height: 720,
-    url: '',
+    url: ''
   };
 
   rfb: any;
@@ -53,7 +53,7 @@ class VncDisplay extends React.PureComponent<Props> {
       this.sizeInterval = window.setInterval(() => {
         const width = +(this.canvas.getAttribute('width') || 1024);
         const height = +(this.canvas.getAttribute('height') || 768);
-        if (onResize && ((width !== lastWidth) || (height !== lastHeight))) {
+        if (onResize && (width !== lastWidth || height !== lastHeight)) {
           lastWidth = width;
           lastHeight = height;
           onResize(width, height);
@@ -94,16 +94,13 @@ class VncDisplay extends React.PureComponent<Props> {
       return;
     }
 
-    const options = Object.assign(omit([
-      'name',
-      'connectTimeout',
-      'url',
-      'width',
-      'height'
-    ], this.props), {
-      encrypt: this.props.url.startsWith('wss:') || this.props.encrypt,
-      target: this.canvas,
-    });
+    const options = Object.assign(
+      omit(['name', 'connectTimeout', 'url', 'width', 'height'], this.props),
+      {
+        encrypt: this.props.url.startsWith('wss:') || this.props.encrypt,
+        target: this.canvas
+      }
+    );
 
     this.rfb = new RFB(options);
     this.rfb.connect(this.props.url);
@@ -130,7 +127,7 @@ class VncDisplay extends React.PureComponent<Props> {
 
   getCanvas = (el: HTMLCanvasElement) => {
     this.canvas = el;
-  }
+  };
 
   render() {
     return (
@@ -138,8 +135,9 @@ class VncDisplay extends React.PureComponent<Props> {
         style={this.props.style}
         ref={this.getCanvas}
         onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave} />
-    )
+        onMouseLeave={this.handleMouseLeave}
+      />
+    );
   }
 }
 

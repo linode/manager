@@ -2,13 +2,19 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'header'
   | 'icon'
   | 'toggleLabel'
@@ -17,7 +23,7 @@ type ClassNames = 'root'
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.offWhite,
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit
   },
   header: {
     marginBottom: theme.spacing.unit,
@@ -25,13 +31,13 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   icon: {
     display: 'inline-block',
-    fontSize: '0.8em',
+    fontSize: '0.8em'
   },
   toggleLabel: {
     display: 'flex',
     alignItems: 'flex-start',
     marginLeft: 0,
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   toggleLabelText: {
     marginTop: 12
@@ -46,15 +52,15 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
+export const AutoEnroll: React.StatelessComponent<CombinedProps> = props => {
   const { classes, enabled, error, toggle } = props;
   return (
     <Paper className={classes.root}>
-      {error &&
+      {error && (
         <Grid item>
           <Notice error text={error} />
         </Grid>
-      }
+      )}
       <Grid container direction="row" wrap="nowrap">
         <Grid item>
           <FormControlLabel
@@ -68,20 +74,19 @@ export const AutoEnroll: React.StatelessComponent<CombinedProps> = (props) => {
             }
             label={
               <div className={classes.toggleLabelText}>
-                <Typography className={classes.header} >
+                <Typography className={classes.header}>
                   Auto Enroll All New Linodes in Backups
                 </Typography>
-                <Typography variant="body1" >
-                  {
-                    `Enroll all future Linodes in backups. Your account will be billed
-                    the additional hourly rate noted on the `
-                  }
-                  <a data-qa-backups-price href="https://www.linode.com/backups"
+                <Typography variant="body1">
+                  {`Enroll all future Linodes in backups. Your account will be billed
+                    the additional hourly rate noted on the `}
+                  <a
+                    data-qa-backups-price
+                    href="https://www.linode.com/backups"
                     target="_blank"
                   >
                     Backups pricing page <OpenInNew className={classes.icon} />.
                   </a>
-
                 </Typography>
               </div>
             }

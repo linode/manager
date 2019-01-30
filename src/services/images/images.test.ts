@@ -2,12 +2,20 @@ import { AxiosRequestConfig } from 'axios';
 
 import { API_ROOT } from 'src/constants';
 
-import { createImage, deleteImage, getImage, getImages, updateImage } from './images';
+import {
+  createImage,
+  deleteImage,
+  getImage,
+  getImages,
+  updateImage
+} from './images';
 
-const mockFn = jest.fn((config: AxiosRequestConfig) => Promise.resolve({data: config}));
+const mockFn = jest.fn((config: AxiosRequestConfig) =>
+  Promise.resolve({ data: config })
+);
 
 jest.mock('axios', () => ({
-  default: (config:AxiosRequestConfig) => mockFn(config),
+  default: (config: AxiosRequestConfig) => mockFn(config)
 }));
 
 describe('images', () => {
@@ -38,7 +46,7 @@ describe('images', () => {
         url: `${API_ROOT}/images`,
         params: {
           page: 1,
-          pageSize: 25,
+          pageSize: 25
         }
       });
       mockFn.mockClear();
@@ -101,7 +109,7 @@ describe('images', () => {
     it('should fail when label does not match schema', async () => {
       try {
         await createImage(1234, 'my-image@');
-      } catch(err) {;
+      } catch (err) {
         expect(err).toBeDefined();
       }
       expect(mockFn).not.toHaveBeenCalled();
@@ -147,7 +155,7 @@ describe('images', () => {
     it('should fail when label does not match schema', async () => {
       try {
         await updateImage('private/1234', 'my-image@');
-      } catch(err) {;
+      } catch (err) {
         expect(err).toBeDefined();
       }
       expect(mockFn).not.toHaveBeenCalled();
@@ -160,7 +168,7 @@ describe('images', () => {
       expect(mockFn).toHaveBeenLastCalledWith({
         method: 'DELETE',
         url: `${API_ROOT}/images/private/1234`
-      })
+      });
     });
   });
 });

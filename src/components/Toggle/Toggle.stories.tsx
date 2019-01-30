@@ -8,22 +8,17 @@ class Example extends React.Component<{}, { value?: string }> {
 
   handleChange = (e: React.ChangeEvent<HTMLFormElement>, value: string) => {
     this.setState(() => ({ value }));
-  }
+  };
 
   render() {
     return (
       <FormControlLabel
         className="toggleLabel"
-        control={
-          <Toggle />
-        }
+        control={<Toggle />}
         label="Example Label"
       />
     );
   }
 }
 
-storiesOf('Toggle', module)
-  .add('Interactive', () => (
-    <Example />
-  ));
+storiesOf('Toggle', module).add('Interactive', () => <Example />);

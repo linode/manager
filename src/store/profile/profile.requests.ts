@@ -2,17 +2,19 @@ import { getMyGrants, getProfile } from 'src/services/profile';
 import { ThunkActionCreator } from 'src/store/types';
 import { getProfileActions } from './profile.actions';
 
-const maybeRequestGrants: (response: Linode.Profile) => Promise<Linode.Profile>
-  = (profile) => {
-    if (profile.restricted === false) {
-      return Promise.resolve(profile);
-    }
+const maybeRequestGrants: (
+  response: Linode.Profile
+) => Promise<Linode.Profile> = profile => {
+  if (profile.restricted === false) {
+    return Promise.resolve(profile);
+  }
 
-    return getMyGrants()
-      .then(grants => ({ ...profile, grants }));
-  };
+  return getMyGrants().then(grants => ({ ...profile, grants }));
+};
 
-export const requestProfile: ThunkActionCreator<Promise<Linode.Profile>> = () => (dispatch) => {
+export const requestProfile: ThunkActionCreator<
+  Promise<Linode.Profile>
+> = () => dispatch => {
   const { started, done, failed } = getProfileActions;
 
   dispatch(started());
@@ -20,11 +22,11 @@ export const requestProfile: ThunkActionCreator<Promise<Linode.Profile>> = () =>
   return getProfile()
     .then(response => response.data)
     .then(maybeRequestGrants)
-    .then((response) => {
+    .then(response => {
       dispatch(done({ result: response }));
       return response;
     })
-    .catch((error) => {
+    .catch(error => {
       dispatch(failed({ error }));
       return error;
     });

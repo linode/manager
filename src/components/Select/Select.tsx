@@ -6,56 +6,61 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Input, { InputProps } from 'src/components/core/Input';
 import { MenuProps } from 'src/components/core/Menu';
 import Select, { SelectProps } from 'src/components/core/Select';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
-type ClassNames = 'inputSucess'
+type ClassNames =
+  | 'inputSucess'
   | 'inputError'
   | 'textError'
   | 'helpWrapper'
   | 'helpWrapperSelectField'
   | 'pagination';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   inputError: {
     borderColor: `${theme.color.red} !important`,
     '&[class*="focused"]': {
-      borderColor: theme.color.red,
-    },
+      borderColor: theme.color.red
+    }
   },
   textError: {
     marginTop: theme.spacing.unit,
     color: theme.color.red,
     fontSize: '0.8571428571428571rem',
     minHeight: '1em',
-    lineHeight: '1em',
+    lineHeight: '1em'
   },
   inputSucess: {
     borderColor: `${theme.color.green} !important`,
     '&[class*="focused"]': {
-      borderColor: theme.color.green,
+      borderColor: theme.color.green
     },
     '& + p': {
-      color: theme.color.green,
-    },
+      color: theme.color.green
+    }
   },
   helpWrapper: {
     display: 'flex',
-    alignItems: 'flex-end',
+    alignItems: 'flex-end'
   },
   helpWrapperSelectField: {
     width: 415,
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
+      width: '100%'
+    }
   },
   pagination: {
     minHeight: 40,
     '& [role="button"]': {
       padding: '3px 32px 3px 16px',
-      minHeight: 40,
-    },
-  },
+      minHeight: 40
+    }
+  }
 });
 
 interface Props extends SelectProps {
@@ -80,7 +85,6 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   pagination,
   ...props
 }) => {
-
   const errorScrollClassName = errorGroup
     ? `error-for-scroll-${errorGroup}`
     : `error-for-scroll`;
@@ -91,19 +95,17 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     transformOrigin: { vertical: 'top', horizontal: 'left' },
     MenuListProps: { className: 'selectMenuList' },
     PaperProps: {
-      className: classNames(
-        'selectMenuDropdown',
-        {
-          [classes.inputSucess]: success === true,
-          [classes.inputError]: error === true,
-        })
+      className: classNames('selectMenuDropdown', {
+        [classes.inputSucess]: success === true,
+        [classes.inputError]: error === true
+      })
     },
-    TransitionComponent: Fade,
+    TransitionComponent: Fade
   };
 
   const inputProps: InputProps = {
     disableUnderline: true,
-    fullWidth: true,
+    fullWidth: true
   };
 
   const c = classNames({
@@ -111,14 +113,16 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     [classes.inputError]: error === true,
     [errorScrollClassName]: !!errorText && !!errorScrollClassName,
     [classes.helpWrapperSelectField]: Boolean(tooltipText),
-    [classes.pagination]: Boolean(pagination),
+    [classes.pagination]: Boolean(pagination)
   });
 
   return (
     <React.Fragment>
-      <div className={classNames({
-        [classes.helpWrapper]: Boolean(tooltipText),
-      })}>
+      <div
+        className={classNames({
+          [classes.helpWrapper]: Boolean(tooltipText)
+        })}
+      >
         <Select
           open={props.open}
           className={c}
@@ -132,7 +136,11 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
         </Select>
         {tooltipText && <HelpIcon text={tooltipText} />}
       </div>
-      {errorText && <FormHelperText className={classes.textError}>{errorText}</FormHelperText>}
+      {errorText && (
+        <FormHelperText className={classes.textError}>
+          {errorText}
+        </FormHelperText>
+      )}
     </React.Fragment>
   );
 };

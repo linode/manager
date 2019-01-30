@@ -22,7 +22,7 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
             history.push(`/nodebalancers/${nodeBalancerId}/summary`);
             e.preventDefault();
             closeMenu();
-          },
+          }
         },
         {
           title: 'Configurations',
@@ -30,7 +30,7 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
             history.push(`/nodebalancers/${nodeBalancerId}/configurations`);
             e.preventDefault();
             closeMenu();
-          },
+          }
         },
         {
           title: 'Settings',
@@ -38,7 +38,7 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
             history.push(`/nodebalancers/${nodeBalancerId}/settings`);
             e.preventDefault();
             closeMenu();
-          },
+          }
         },
         {
           title: 'Delete',
@@ -46,17 +46,15 @@ class NodeBalancerActionMenu extends React.Component<CombinedProps> {
             e.preventDefault();
             toggleDialog(nodeBalancerId);
             closeMenu();
-          },
-        },
+          }
+        }
       ];
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createLinodeActions()} />
-    );
+    return <ActionMenu createActions={this.createLinodeActions()} />;
   }
 }
 

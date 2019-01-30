@@ -16,7 +16,7 @@ const createMailto = (userAgent: string): string => {
   }
 
   if (body) {
-    const encodedBody = encodeURIComponent(`\n${body}`)
+    const encodedBody = encodeURIComponent(`\n${body}`);
     mailto += `&Body=${encodedBody}`;
   }
 

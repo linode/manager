@@ -4,19 +4,23 @@ import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
 import DialogTitle from 'src/components/core/DialogTitle';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'actions';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   error: {
     color: '#C44742',
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   actions: {
-    justifyContent: 'flex-end',
-  },
+    justifyContent: 'flex-end'
+  }
 });
 
 interface Props extends DialogProps {
@@ -27,28 +31,24 @@ interface Props extends DialogProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ConfirmationDialog: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    title,
-    classes,
-    children,
-    actions,
-    error,
-    ...dialogProps
-  } = props;
+const ConfirmationDialog: React.StatelessComponent<CombinedProps> = props => {
+  const { title, classes, children, actions, error, ...dialogProps } = props;
   return (
-    <Dialog
-      {...dialogProps}
-      disableBackdropClick={true}
-    >
-      <DialogTitle id="alert-dialog-title" data-qa-dialog-title className="dialog-title">{title}</DialogTitle>
+    <Dialog {...dialogProps} disableBackdropClick={true}>
+      <DialogTitle
+        id="alert-dialog-title"
+        data-qa-dialog-title
+        className="dialog-title"
+      >
+        {title}
+      </DialogTitle>
       <DialogContent data-qa-dialog-content className="dialog-content">
         {children}
-        {error &&
+        {error && (
           <DialogContentText className={`${classes.error} error-for-scroll`}>
             {error}
           </DialogContentText>
-        }
+        )}
       </DialogContent>
       <DialogActions className={classes.actions}>
         {actions && typeof actions === 'function'

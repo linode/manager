@@ -7,10 +7,14 @@ export const GTM_ID = process.env.REACT_APP_GTM_ID;
 export const isProduction = process.env.NODE_ENV === PRODUCTION;
 export const isTest = process.env.REACT_APP_TEST_ENVIRONMENT === 'true';
 
-export const APP_ROOT = process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
-export const LOGIN_ROOT = process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
-export const API_ROOT = process.env.REACT_APP_API_ROOT || 'https://api.lindev.local';
-export const LISH_ROOT = process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
+export const APP_ROOT =
+  process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
+export const LOGIN_ROOT =
+  process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
+export const API_ROOT =
+  process.env.REACT_APP_API_ROOT || 'https://api.lindev.local';
+export const LISH_ROOT =
+  process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
@@ -21,10 +25,13 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
 export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
-export const COMMUNITY_SEARCH_URL = 'https://linode.com/community/questions/search?query=';
+export const COMMUNITY_SEARCH_URL =
+  'https://linode.com/community/questions/search?query=';
 
-export const ALGOLIA_APPLICATION_ID = process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
-export const ALGOLIA_SEARCH_KEY = process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+export const ALGOLIA_APPLICATION_ID =
+  process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
+export const ALGOLIA_SEARCH_KEY =
+  process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
@@ -51,7 +58,7 @@ export const ZONES = {
   'ap-northeast-1a': 'tokyo',
   'ap-northeast-1b': 'shinagawa1',
   'ap-south': 'singapore',
-  'ap-south-1a': 'singapore',
+  'ap-south-1a': 'singapore'
 };
 
 export const dcDisplayNames = {
@@ -70,7 +77,7 @@ export const dcDisplayNames = {
   'eu-west': 'London, UK',
   'ap-south': 'Singapore, SG',
   'eu-central': 'Frankfurt, DE',
-  'ap-northeast': 'Tokyo 2, JP',
+  'ap-northeast': 'Tokyo 2, JP'
 };
 
 export const dcDisplayCountry = {
@@ -89,5 +96,5 @@ export const dcDisplayCountry = {
   'eu-west': 'UK',
   'ap-south': 'SG',
   'eu-central': 'DE',
-  'ap-northeast': 'JP',
+  'ap-northeast': 'JP'
 };

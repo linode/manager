@@ -18,8 +18,8 @@ describe('AddNewMenuItem', () => {
           ItemIcon={LinodeIcon}
           onClick={jest.fn()}
         />
-      </LinodeThemeWrapper>,
-     );
+      </LinodeThemeWrapper>
+    );
   });
 
   it('should not render a divider if not the last item', () => {
@@ -33,7 +33,7 @@ describe('AddNewMenuItem', () => {
           ItemIcon={LinodeIcon}
           onClick={jest.fn()}
         />
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
     expect(result.find('WithStyles(Divider)')).toHaveLength(0);

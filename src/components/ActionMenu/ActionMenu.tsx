@@ -2,7 +2,11 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 
 export interface Action {
@@ -12,17 +16,13 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-type CSSClasses = 'root'
-  | 'item'
-  | 'button'
-  | 'actionSingleLink'
-  | 'hidden';
+type CSSClasses = 'root' | 'item' | 'button' | 'actionSingleLink' | 'hidden';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-end'
   },
   item: {
     paddingLeft: theme.spacing.unit * 2,
@@ -38,29 +38,29 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     `,
     '&:hover, &:focus': {
       backgroundColor: theme.palette.primary.main,
-      color: '#fff',
-    },
+      color: '#fff'
+    }
   },
   button: {
     width: 26,
     padding: 0,
     '& svg': {
-      fontSize: '28px',
+      fontSize: '28px'
     },
     '&[aria-expanded="true"] .kebob': {
-      fill: theme.palette.primary.dark,
-    },
+      fill: theme.palette.primary.dark
+    }
   },
   actionSingleLink: {
     marginRight: theme.spacing.unit,
     whiteSpace: 'nowrap',
     float: 'right',
-    fontFamily: 'LatoWebBold',
+    fontFamily: 'LatoWebBold'
   },
   hidden: {
     height: 0,
-    padding: 0,
-  },
+    padding: 0
+  }
 });
 
 interface Props {
@@ -78,12 +78,12 @@ type CombinedProps = Props & WithStyles<CSSClasses>;
 export class ActionMenu extends React.Component<CombinedProps, State> {
   state = {
     actions: [],
-    anchorEl: undefined,
+    anchorEl: undefined
   };
 
   generateActions(createActions: Linode.TodoAny) {
     this.setState({
-      actions: createActions(this.handleClose),
+      actions: createActions(this.handleClose)
     });
   }
 
@@ -98,19 +98,23 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
   }
 
   handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (this.props.toggleOpenCallback) { this.props.toggleOpenCallback() };
+    if (this.props.toggleOpenCallback) {
+      this.props.toggleOpenCallback();
+    }
     this.setState({ anchorEl: event.currentTarget });
-  }
+  };
 
   handleClose = () => {
     this.setState({ anchorEl: undefined });
-  }
+  };
 
   render() {
     const { classes } = this.props;
     const { actions, anchorEl } = this.state;
 
-    if (typeof actions === 'undefined') { return null; }
+    if (typeof actions === 'undefined') {
+      return null;
+    }
 
     return (
       <div className={classes.root}>
@@ -123,7 +127,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
           data-qa-action-menu
         >
           <MoreHoriz type="primary" className="kebob" />
-        </IconButton >
+        </IconButton>
         <Menu
           id="action-menu"
           anchorEl={anchorEl}
@@ -134,7 +138,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
           onClose={this.handleClose}
         >
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
-          {(actions as Action[]).map((a, idx) =>
+          {(actions as Action[]).map((a, idx) => (
             <MenuItem
               key={idx}
               onClick={a.onClick}
@@ -144,10 +148,10 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
               tooltip={a.tooltip}
             >
               {a.title}
-            </MenuItem>,
-          )}
+            </MenuItem>
+          ))}
         </Menu>
-      </div >
+      </div>
     );
   }
 }

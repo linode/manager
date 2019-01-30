@@ -9,7 +9,11 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormGroup from 'src/components/core/FormGroup';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
@@ -19,27 +23,36 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import DeviceSelection, { ExtendedDisk, ExtendedVolume } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { createLinodeConfig, getLinodeConfig, getLinodeDisks, getLinodeKernels, updateLinodeConfig } from 'src/services/linodes';
+import DeviceSelection, {
+  ExtendedDisk,
+  ExtendedVolume
+} from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import {
+  createLinodeConfig,
+  getLinodeConfig,
+  getLinodeDisks,
+  getLinodeKernels,
+  updateLinodeConfig
+} from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
-import createDevicesFromStrings, { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
+import createDevicesFromStrings, {
+  DevicesAsStrings
+} from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import { getAll, getAllFromEntity } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root'
-  | 'section'
-  | 'divider';
+type ClassNames = 'root' | 'section' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   section: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   divider: {
     margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`,
-  },
+    width: `calc(100% - ${theme.spacing.unit * 2}px)`
+  }
 });
 
 interface Helpers {
@@ -69,23 +82,23 @@ interface Props {
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
-  linodeConfigId?: number
+  linodeConfigId?: number;
   onClose: () => void;
   onSuccess: () => void;
 }
 
 interface State {
   loading: {
-    kernels: boolean,
-    config: boolean,
-  },
+    kernels: boolean;
+    config: boolean;
+  };
   kernels: Linode.Kernel[];
   errors?: Error | Linode.ApiFieldError[];
   fields: EditableFields;
   availableDevices: {
     volumes: ExtendedVolume[];
     disks: ExtendedDisk[];
-  }
+  };
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -98,43 +111,45 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: {
       kernels: false,
-      config: false,
+      config: false
     },
     kernels: [],
     availableDevices: {
       disks: [],
-      volumes: [],
+      volumes: []
     },
-    fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory),
+    fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory)
   };
 
-  static defaultFieldsValues: (maxMemory: number) => EditableFields =
-    (maxMemory) => ({
-      comments: '',
-      devices: {},
-      helpers: {
-        devtmpfs_automount: true,
-        distro: true,
-        modules_dep: true,
-        network: true,
-        updatedb_disabled: true,
-      },
-      kernel: 'linode/latest-64bit',
-      label: '',
-      memory_limit: maxMemory,
-      root_device: '/dev/sda',
-      run_level: 'default',
-      useCustomRoot: false,
-      virt_mode: 'paravirt',
-    });
+  static defaultFieldsValues: (
+    maxMemory: number
+  ) => EditableFields = maxMemory => ({
+    comments: '',
+    devices: {},
+    helpers: {
+      devtmpfs_automount: true,
+      distro: true,
+      modules_dep: true,
+      network: true,
+      updatedb_disabled: true
+    },
+    kernel: 'linode/latest-64bit',
+    label: '',
+    memory_limit: maxMemory,
+    root_device: '/dev/sda',
+    run_level: 'default',
+    useCustomRoot: false,
+    virt_mode: 'paravirt'
+  });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     const { linodeId, linodeConfigId, linodeHypervisor } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
-
       /** Reset the form to the default create state. */
-      this.setState({ fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory) })
+      this.setState({
+        fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory)
+      });
 
       if (this.state.errors) {
         this.setState({ errors: undefined });
@@ -148,7 +163,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         this.requestKernels(linodeHypervisor);
       }
 
-      this.getAvailableDevices()
+      this.getAvailableDevices();
 
       if (linodeConfigId !== undefined) {
         this.setState({ loading: { ...this.state.loading, config: true } });
@@ -158,7 +173,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             this.setState({
               loading: {
                 ...this.state.loading,
-                config: false,
+                config: false
               },
               fields: {
                 useCustomRoot: isUsingCustomRoot(config.root_device),
@@ -166,16 +181,22 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 devices: createStringsFromDevices(config.devices),
                 kernel: config.kernel,
                 comments: config.comments,
-                memory_limit: config.memory_limit === 0 ? this.props.maxMemory : config.memory_limit,
+                memory_limit:
+                  config.memory_limit === 0
+                    ? this.props.maxMemory
+                    : config.memory_limit,
                 run_level: config.run_level,
                 virt_mode: config.virt_mode,
                 helpers: config.helpers,
-                root_device: config.root_device,
-              },
+                root_device: config.root_device
+              }
             });
           })
           .catch(error => {
-            this.setState({ errors: Error(), loading: { ...this.state.loading, config: false } })
+            this.setState({
+              errors: Error(),
+              loading: { ...this.state.loading, config: false }
+            });
           });
       }
       /**
@@ -191,7 +212,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     const loading = Object.values(this.state.loading).some(v => v === true);
 
     return (
-      <Drawer title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`} open={open} onClose={onClose}>
+      <Drawer
+        title={`${linodeConfigId ? 'Edit' : 'Add'} Linode Configuration`}
+        open={open}
+        onClose={onClose}
+      >
         <Grid container direction="row">
           {this.renderContent(errors, loading)}
         </Grid>
@@ -199,7 +224,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderContent = (errors: Error | Linode.ApiFieldError[] = [], loading: boolean) => {
+  renderContent = (
+    errors: Error | Linode.ApiFieldError[] = [],
+    loading: boolean
+  ) => {
     if (errors instanceof Error) {
       return this.renderErrorState();
     }
@@ -209,11 +237,13 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     }
 
     return this.renderForm(errors);
-  }
+  };
 
-  renderLoading = () => < CircleProgress />
+  renderLoading = () => <CircleProgress />;
 
-  renderErrorState = () => <ErrorState errorText="Unable to loading configurations." />;
+  renderErrorState = () => (
+    <ErrorState errorText="Unable to loading configurations." />
+  );
 
   renderForm = (errors?: Linode.ApiFieldError[]) => {
     const { onClose, maxMemory, classes } = this.props;
@@ -230,37 +260,39 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         run_level,
         virt_mode,
         helpers,
-        root_device,
-      },
+        root_device
+      }
     } = this.state;
 
-    const errorFor = getAPIErrorsFor({
-      label: 'label',
-      kernel: 'kernel',
-      comments: 'comments',
-      memory_limit: 'memory limit',
-      run_level: 'run level',
-      virt_mode: 'virtualization mode',
-      root_device: 'root device',
-    }, errors);
+    const errorFor = getAPIErrorsFor(
+      {
+        label: 'label',
+        kernel: 'kernel',
+        comments: 'comments',
+        memory_limit: 'memory limit',
+        run_level: 'run level',
+        virt_mode: 'virtualization mode',
+        root_device: 'root device'
+      },
+      errors
+    );
 
     const generalError = errorFor('none');
 
     return (
       <React.Fragment>
-        {generalError && <Notice error errorGroup="linode-config-drawer" text={generalError} />}
+        {generalError && (
+          <Notice error errorGroup="linode-config-drawer" text={generalError} />
+        )}
         <Grid
           item
           xs={12}
           className={classes.section}
-          updateFor={[
-            errorFor('label'),
-            errorFor('comments'),
-            label,
-            comments
-          ]}
+          updateFor={[errorFor('label'), errorFor('comments'), label, comments]}
         >
-          <Typography role="header" variant="h3">Label and Comments</Typography>
+          <Typography role="header" variant="h3">
+            Label and Comments
+          </Typography>
           <TextField
             label="Label"
             required
@@ -284,12 +316,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Divider className={classes.divider} />
 
         <Grid item xs={12} className={classes.section} updateFor={[virt_mode]}>
-          <Typography role="header" variant="h3">Virtual Machine</Typography>
-          <FormControl component={"fieldset" as "div"}>
-            <FormLabel
-              htmlFor="virt_mode"
-              component="label"
-            >
+          <Typography role="header" variant="h3">
+            Virtual Machine
+          </Typography>
+          <FormControl component={'fieldset' as 'div'}>
+            <FormLabel htmlFor="virt_mode" component="label">
               VM Mode
             </FormLabel>
             <RadioGroup
@@ -298,8 +329,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               value={virt_mode}
               onChange={this.handleChangeVirtMode}
             >
-              <FormControlLabel value="paravirt" label="Paravirtulization" control={<Radio />} />
-              <FormControlLabel value="fullvirt" label="Full-virtulization" control={<Radio />} />
+              <FormControlLabel
+                value="paravirt"
+                label="Paravirtulization"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="fullvirt"
+                label="Full-virtulization"
+                control={<Radio />}
+              />
             </RadioGroup>
           </FormControl>
         </Grid>
@@ -307,7 +346,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Divider className={classes.divider} />
 
         <Grid
-          item xs={12}
+          item
+          xs={12}
           className={classes.section}
           updateFor={[
             kernel,
@@ -317,8 +357,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             errorFor('memory_limit')
           ]}
         >
-          <Typography role="header" variant="h3">Boot Settings</Typography>
-          {kernels &&
+          <Typography role="header" variant="h3">
+            Boot Settings
+          </Typography>
+          {kernels && (
             <TextField
               label="Kernel"
               select={true}
@@ -327,35 +369,50 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
             >
-              <MenuItem value="none" disabled><em>Select a Kernel</em></MenuItem>
-              {
-                kernels.map(eachKernel =>
-                  <MenuItem
-                    // Can't use ID for key until DBA-162 is closed.
-                    key={`${eachKernel.id}-${eachKernel.label}`}
-                    value={eachKernel.id}
-                  >
-                    {eachKernel.label}
-                  </MenuItem>)
-              }
-            </TextField>}
+              <MenuItem value="none" disabled>
+                <em>Select a Kernel</em>
+              </MenuItem>
+              {kernels.map(eachKernel => (
+                <MenuItem
+                  // Can't use ID for key until DBA-162 is closed.
+                  key={`${eachKernel.id}-${eachKernel.label}`}
+                  value={eachKernel.id}
+                >
+                  {eachKernel.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
 
-          <FormControl updateFor={[run_level]} fullWidth component={"fieldset" as "div"}>
-            <FormLabel
-              htmlFor="run_level"
-              component="label"
-            >
+          <FormControl
+            updateFor={[run_level]}
+            fullWidth
+            component={'fieldset' as 'div'}
+          >
+            <FormLabel htmlFor="run_level" component="label">
               Run Level
-              </FormLabel>
+            </FormLabel>
             <RadioGroup
               aria-label="run_level"
               name="run_level"
               value={run_level}
               onChange={this.handleChangeRunLevel}
             >
-              <FormControlLabel value="default" label="Run Default Level" control={<Radio />} />
-              <FormControlLabel value="single" label="Single user mode" control={<Radio />} />
-              <FormControlLabel value="binbash" label="init=/bin/bash" control={<Radio />} />
+              <FormControlLabel
+                value="default"
+                label="Run Default Level"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="single"
+                label="Single user mode"
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="binbash"
+                label="init=/bin/bash"
+                control={<Radio />}
+              />
             </RadioGroup>
           </FormControl>
 
@@ -372,7 +429,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Divider className={classes.divider} />
 
         <Grid item xs={12} className={classes.section}>
-          <Typography role="header" variant="h3">Block Device Assignment</Typography>
+          <Typography role="header" variant="h3">
+            Block Device Assignment
+          </Typography>
           <DeviceSelection
             slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
             devices={availableDevices}
@@ -403,8 +462,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               errorText={errorFor('root_device')}
               errorGroup="linode-config-drawer"
             >
-              {
-                !useCustomRoot &&
+              {!useCustomRoot &&
                 [
                   '/dev/sda',
                   '/dev/sdb',
@@ -413,9 +471,12 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   '/dev/sde',
                   '/dev/sdf',
                   '/dev/sdg',
-                  '/dev/sdh',
-                ].map(path => <MenuItem key={path} value={path}>{path}</MenuItem>)
-              }
+                  '/dev/sdh'
+                ].map(path => (
+                  <MenuItem key={path} value={path}>
+                    {path}
+                  </MenuItem>
+                ))}
             </TextField>
           </FormControl>
         </Grid>
@@ -423,7 +484,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Divider className={classes.divider} />
 
         <Grid item xs={12} className={classes.section}>
-          <Typography role="header" variant="h3">Filesystem/Boot Helpers</Typography>
+          <Typography role="header" variant="h3">
+            Filesystem/Boot Helpers
+          </Typography>
           <FormControl
             updateFor={[
               helpers.distro,
@@ -433,7 +496,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               helpers.network
             ]}
             fullWidth
-            component={"fieldset" as "div"}
+            component={'fieldset' as 'div'}
           >
             <FormGroup>
               <FormControlLabel
@@ -490,81 +553,107 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <ActionsPanel>
-            <Button onClick={this.onSubmit} type="primary">Submit</Button>
-            <Button
-              type="secondary"
-              className="cancel"
-              onClick={onClose}
-            >
+            <Button onClick={this.onSubmit} type="primary">
+              Submit
+            </Button>
+            <Button type="secondary" className="cancel" onClick={onClose}>
               Cancel
-              </Button>
+            </Button>
           </ActionsPanel>
         </Grid>
       </React.Fragment>
     );
   };
 
-  isOpening = (prevState: boolean, currentState: boolean) => prevState === false && currentState === true;
+  isOpening = (prevState: boolean, currentState: boolean) =>
+    prevState === false && currentState === true;
 
   getAvailableDevices = () => {
     const { linodeId, linodeRegion } = this.props;
     /** Get all volumes for usage in the block device assignment. */
     getAllVolumes()
-      .then(({ data: volumes }) => volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
-        /**
-         * This is a combination of filter and map. Filter out irrelevant volumes, and update
-         * volumes with the special _id property.
-         */
-        const isAttachedToLinode = volume.linode_id === linodeId;
-        const isUnattached = volume.linode_id === null;
-        const isInRegion = volume.region === linodeRegion;
+      .then(({ data: volumes }) =>
+        volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
+          /**
+           * This is a combination of filter and map. Filter out irrelevant volumes, and update
+           * volumes with the special _id property.
+           */
+          const isAttachedToLinode = volume.linode_id === linodeId;
+          const isUnattached = volume.linode_id === null;
+          const isInRegion = volume.region === linodeRegion;
 
-        if (isAttachedToLinode || (isUnattached && isInRegion)) {
-          const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
+          if (isAttachedToLinode || (isUnattached && isInRegion)) {
+            const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
 
-          return [...result, extendedVolume];
-        }
+            return [...result, extendedVolume];
+          }
 
-        return result;
-      }, []))
+          return result;
+        }, [])
+      )
       .then((volumes: ExtendedVolume[]) =>
-        this.setState({ availableDevices: { ...this.state.availableDevices, volumes } }))
+        this.setState({
+          availableDevices: { ...this.state.availableDevices, volumes }
+        })
+      )
       .catch(console.error);
 
     /** Get all Linode disks for usage in the block device assignment. */
     getAllLinodeDisks(linodeId)
-      .then(disks => disks.map((disk: Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` })))
-      .then(disks => this.setState({ availableDevices: { ...this.state.availableDevices, disks } }))
+      .then(disks =>
+        disks.map((disk: Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` }))
+      )
+      .then(disks =>
+        this.setState({
+          availableDevices: { ...this.state.availableDevices, disks }
+        })
+      )
       .catch(console.error);
-  }
+  };
 
   onSubmit = () => {
     const { linodeId, linodeConfigId } = this.props;
 
     /** Editing */
     if (linodeConfigId) {
-      return updateLinodeConfig(linodeId, linodeConfigId, this.convertStateToData(this.state.fields))
-        .then((_) => {
+      return updateLinodeConfig(
+        linodeId,
+        linodeConfigId,
+        this.convertStateToData(this.state.fields)
+      )
+        .then(_ => {
           this.props.onClose();
           this.props.onSuccess();
         })
-        .catch((error) => {
+        .catch(error => {
           this.setState({
-            errors: pathOr([{ reason: 'Unable to update config. Please try again.' }], ['response', 'data', 'errors'], error)
-          })
-        })
+            errors: pathOr(
+              [{ reason: 'Unable to update config. Please try again.' }],
+              ['response', 'data', 'errors'],
+              error
+            )
+          });
+        });
     }
 
     /** Creating */
-    return createLinodeConfig(linodeId, this.convertStateToData(this.state.fields))
+    return createLinodeConfig(
+      linodeId,
+      this.convertStateToData(this.state.fields)
+    )
       .then(response => {
         this.props.onClose();
         this.props.onSuccess();
       })
       .catch(error =>
         this.setState({
-          errors: pathOr([{ reason: 'Unable to create config. Please try again.' }], ['response', 'data', 'errors'], error),
-        }))
+          errors: pathOr(
+            [{ reason: 'Unable to create config. Please try again.' }],
+            ['response', 'data', 'errors'],
+            error
+          )
+        })
+      );
   };
 
   convertStateToData = (state: EditableFields) => {
@@ -577,7 +666,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       run_level,
       virt_mode,
       helpers,
-      root_device,
+      root_device
     } = state;
 
     return {
@@ -589,28 +678,38 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       run_level,
       virt_mode,
       helpers,
-      root_device,
-    }
+      root_device
+    };
   };
 
   /** Helper to update a slice of state.  */
   updateField = (field: Partial<EditableFields>) =>
-    this.setState({ fields: { ...this.state.fields, ...field } })
+    this.setState({ fields: { ...this.state.fields, ...field } });
 
   handleAuthConfigureNetworkHelper = (e: any, result: boolean) =>
-    this.updateField({ helpers: { ...this.state.fields.helpers, network: result } });
+    this.updateField({
+      helpers: { ...this.state.fields.helpers, network: result }
+    });
 
   handleToggleAutoMountHelper = (e: any, result: boolean) =>
-    this.updateField({ helpers: { ...this.state.fields.helpers, devtmpfs_automount: result } });
+    this.updateField({
+      helpers: { ...this.state.fields.helpers, devtmpfs_automount: result }
+    });
 
   handleToggleModulesDepHelper = (e: any, result: boolean) =>
-    this.updateField({ helpers: { ...this.state.fields.helpers, modules_dep: result } });
+    this.updateField({
+      helpers: { ...this.state.fields.helpers, modules_dep: result }
+    });
 
   handleToggleUpdateDBHelper = (e: any, result: boolean) =>
-    this.updateField({ helpers: { ...this.state.fields.helpers, updatedb_disabled: result } });
+    this.updateField({
+      helpers: { ...this.state.fields.helpers, updatedb_disabled: result }
+    });
 
   handleToggleDistroHelper = (e: any, result: boolean) =>
-    this.updateField({ helpers: { ...this.state.fields.helpers, distro: result } });
+    this.updateField({
+      helpers: { ...this.state.fields.helpers, distro: result }
+    });
 
   handleRootDeviceChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ root_device: e.target.value || '' });
@@ -619,13 +718,17 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     this.updateField({ useCustomRoot });
 
   handleDevicesChanges = (slot: string, value: string) =>
-    this.updateField({ devices: { ...this.state.fields.devices, [slot]: value } });
+    this.updateField({
+      devices: { ...this.state.fields.devices, [slot]: value }
+    });
 
   handleMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ memory_limit: e.target.valueAsNumber || 0 });
 
-  handleChangeRunLevel = (e: any, run_level: 'binbash' | 'default' | 'single') =>
-    this.updateField({ run_level });
+  handleChangeRunLevel = (
+    e: any,
+    run_level: 'binbash' | 'default' | 'single'
+  ) => this.updateField({ run_level });
 
   handleChangeVirtMode = (e: any, virt_mode: 'fullvirt' | 'paravirt') =>
     this.updateField({ virt_mode });
@@ -646,14 +749,18 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       .then(({ data: kernels }) => {
         this.setState({
           kernels,
-          loading: { ...this.state.loading, kernels: false },
-        })
+          loading: { ...this.state.loading, kernels: false }
+        });
       })
       .catch(error => {
         this.setState({
           loading: { ...this.state.loading, kernels: false },
-          errors: pathOr([{ reason: 'Unable to load kernels.' }], ['response', 'data', 'errors'], error),
-        })
+          errors: pathOr(
+            [{ reason: 'Unable to load kernels.' }],
+            ['response', 'data', 'errors'],
+            error
+          )
+        });
       });
   };
 }
@@ -662,13 +769,14 @@ const styled = withStyles(styles);
 
 export default styled(LinodeConfigDrawer);
 
-const isUsingCustomRoot = (value: string) => [
-  '/dev/sda',
-  '/dev/sdb',
-  '/dev/sdc',
-  '/dev/sdd',
-  '/dev/sde',
-  '/dev/sdf',
-  '/dev/sdg',
-  '/dev/sdh',
-].includes(value) === false
+const isUsingCustomRoot = (value: string) =>
+  [
+    '/dev/sda',
+    '/dev/sdb',
+    '/dev/sdc',
+    '/dev/sdd',
+    '/dev/sde',
+    '/dev/sdf',
+    '/dev/sdg',
+    '/dev/sdh'
+  ].includes(value) === false;

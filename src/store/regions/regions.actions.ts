@@ -4,9 +4,15 @@ import { ThunkActionCreator } from '../types';
 
 const actionCreator = actionCreatorFactory(`@@manager/regions`);
 
-export const regionsRequestActions = actionCreator.async<void, Linode.Region[], Linode.ApiFieldError[]>(`request`);
+export const regionsRequestActions = actionCreator.async<
+  void,
+  Linode.Region[],
+  Linode.ApiFieldError[]
+>(`request`);
 
-export const requestRegions: ThunkActionCreator<Promise<Linode.Region[]>> = () => (dispatch) => {
+export const requestRegions: ThunkActionCreator<
+  Promise<Linode.Region[]>
+> = () => dispatch => {
   dispatch(regionsRequestActions.started());
 
   return getRegions()
@@ -14,8 +20,8 @@ export const requestRegions: ThunkActionCreator<Promise<Linode.Region[]>> = () =
       dispatch(regionsRequestActions.done({ result: data }));
       return data;
     })
-    .catch((error) => {
+    .catch(error => {
       dispatch(regionsRequestActions.failed({ error }));
       return error;
     });
-}
+};

@@ -8,8 +8,15 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import TableWrapper from './TableWrapper';
 
 interface Props {
-  openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
-  toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
+  openConfigDrawer: (
+    c: Linode.Config[],
+    action: LinodeConfigSelectionDrawerCallback
+  ) => void;
+  toggleConfirmation: (
+    bootOption: Linode.BootAction,
+    linodeId: number,
+    linodeLabel: string
+  ) => void;
   display: 'grid' | 'list';
   component: any;
   data: Linode.Linode[];
@@ -17,7 +24,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
+const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
   const {
     data,
     display,
@@ -30,34 +37,36 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
 
   return (
     <Paginate data={data} pageSize={25}>
-      {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize }) => {
+      {({
+        data: paginatedData,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize
+      }) => {
         const componentProps = {
           ...rest,
           data: paginatedData,
           pageSize,
           page,
           handlePageSizeChange,
-          handlePageChange,
+          handlePageChange
         };
         const tableWrapperProps = {
           handleOrderChange,
           order,
-          orderBy,
-        }
+          orderBy
+        };
         return (
           <React.Fragment>
-            {
-              display === 'list' &&
+            {display === 'list' && (
               <TableWrapper {...tableWrapperProps}>
                 <TableBody>
                   <Component showHead {...componentProps} />
                 </TableBody>
               </TableWrapper>
-            }
-            {
-              display === 'grid' &&
-              <Component showHead {...componentProps} />
-            }
+            )}
+            {display === 'grid' && <Component showHead {...componentProps} />}
             <Grid item xs={12}>
               {
                 <PaginationFooter
@@ -71,10 +80,10 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = (props) => {
               }
             </Grid>
           </React.Fragment>
-        )
+        );
       }}
     </Paginate>
-  )
+  );
 };
 
 export default DisplayLinodes;

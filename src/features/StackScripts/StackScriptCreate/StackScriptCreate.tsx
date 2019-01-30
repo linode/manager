@@ -7,7 +7,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -22,19 +26,16 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root'
-  | 'backButton'
-  | 'titleWrapper'
-  | 'createTitle';
+type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'createTitle';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   backButton: {
     margin: '5px 0 0 -16px',
     '& svg': {
       width: 34,
-      height: 34,
-    },
+      height: 34
+    }
   },
   createTitle: {
     lineHeight: '2.25em'
@@ -44,8 +45,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: 5,
     marginBottom: 20,
     alignItems: 'center',
-    wordBreak: 'break-all',
-  },
+    wordBreak: 'break-all'
+  }
 });
 
 interface State {
@@ -60,11 +61,11 @@ interface State {
   dialogOpen: boolean;
 }
 
-type CombinedProps = StateProps
-  & WithImagesProps
-  & SetDocsProps
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>;
+type CombinedProps = StateProps &
+  WithImagesProps &
+  SetDocsProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}>;
 
 const errorResources = {
   label: 'A label',
@@ -82,12 +83,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     script: '',
     revisionNote: '',
     isSubmitting: false,
-    dialogOpen: false,
+    dialogOpen: false
   };
 
-  static docs = [
-    StackScripts,
-  ];
+  static docs = [StackScripts];
 
   mounted: boolean = false;
 
@@ -101,41 +100,41 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ labelText: e.target.value });
-  }
+  };
 
   handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ descriptionText: e.target.value });
-  }
+  };
 
   handleOpenSelect = () => {
     this.setState({ imageSelectOpen: true });
-  }
+  };
 
   handleCloseSelect = () => {
     this.setState({ imageSelectOpen: false });
-  }
+  };
 
   handleRemoveImage = (id: string) => {
     const { selectedImages } = this.state;
     this.setState({
-      selectedImages: selectedImages.filter((imageId) => imageId !== id),
+      selectedImages: selectedImages.filter(imageId => imageId !== id)
     });
-  }
+  };
 
   handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({
-      selectedImages: [...this.state.selectedImages, e.target.value],
-    })
+      selectedImages: [...this.state.selectedImages, e.target.value]
+    });
     this.setState({ imageSelectOpen: true });
-  }
+  };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ script: e.target.value });
-  }
+  };
 
   handleChangeRevisionNote = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ revisionNote: e.target.value });
-  }
+  };
 
   resetAllFields = () => {
     this.handleCloseDialog();
@@ -144,12 +143,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       labelText: '',
       selectedImages: [],
       descriptionText: '',
-      revisionNote: '',
-    })
-  }
+      revisionNote: ''
+    });
+  };
 
   handleCreateStackScript = () => {
-    const { script, labelText, selectedImages, descriptionText, revisionNote } = this.state;
+    const {
+      script,
+      labelText,
+      selectedImages,
+      descriptionText,
+      revisionNote
+    } = this.state;
 
     const { history } = this.props;
 
@@ -159,40 +164,51 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       images: selectedImages,
       description: descriptionText,
       is_public: false,
-      rev_note: revisionNote,
-    }
+      rev_note: revisionNote
+    };
 
-    if (!this.mounted) { return; }
+    if (!this.mounted) {
+      return;
+    }
     this.setState({ isSubmitting: true });
 
     createStackScript(payload)
       .then((stackScript: Linode.StackScript.Response) => {
-        if (!this.mounted) { return; }
+        if (!this.mounted) {
+          return;
+        }
         this.setState({ isSubmitting: false });
-        history.push(
-          '/stackscripts',
-          { successMessage: `${stackScript.label} successfully created` }
-        );
-      })
-      .catch(error => {
-        if (!this.mounted) { return; }
-
-        this.setState(() => ({
-          isSubmitting: false,
-          errors: error.response && error.response.data && error.response.data.errors,
-        }), () => {
-          scrollErrorIntoView();
+        history.push('/stackscripts', {
+          successMessage: `${stackScript.label} successfully created`
         });
       })
-  }
+      .catch(error => {
+        if (!this.mounted) {
+          return;
+        }
+
+        this.setState(
+          () => ({
+            isSubmitting: false,
+            errors:
+              error.response &&
+              error.response.data &&
+              error.response.data.errors
+          }),
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+      });
+  };
 
   handleOpenDialog = () => {
-    this.setState({ dialogOpen: true })
-  }
+    this.setState({ dialogOpen: true });
+  };
 
   handleCloseDialog = () => {
-    this.setState({ dialogOpen: false })
-  }
+    this.setState({ dialogOpen: false });
+  };
 
   renderDialogActions = () => {
     return (
@@ -213,8 +229,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           Reset
         </Button>
       </ActionsPanel>
-    )
-  }
+    );
+  };
 
   renderCancelStackScriptDialog = () => {
     const { dialogOpen } = this.state;
@@ -226,10 +242,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         actions={this.renderDialogActions}
         onClose={this.handleCloseDialog}
       >
-        <Typography>Are you sure you want to reset your StackScript configuration?</Typography>
+        <Typography>
+          Are you sure you want to reset your StackScript configuration?
+        </Typography>
       </ConfirmationDialog>
-    )
-  }
+    );
+  };
 
   render() {
     const { classes, username } = this.props;
@@ -240,28 +258,26 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       descriptionText,
       revisionNote,
       errors,
-      isSubmitting,
+      isSubmitting
     } = this.state;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    const availableImages = this.props.imagesData.filter((image) =>
-      !this.state.selectedImages.includes(image.id))
+    const availableImages = this.props.imagesData.filter(
+      image => !this.state.selectedImages.includes(image.id)
+    );
 
     if (!username) {
-      return <ErrorState errorText="An error has occurred. Please try again." />
+      return (
+        <ErrorState errorText="An error has occurred. Please try again." />
+      );
     }
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create New StackScript" />
-        {generalError &&
-          <Notice error text={generalError} />
-        }
-        <Grid
-          container
-          justify="space-between"
-        >
+        {generalError && <Notice error text={generalError} />}
+        <Grid container justify="space-between">
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
               linkTo="/stackscripts"
@@ -314,8 +330,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 interface StateProps {
   username?: string;
 }
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
-  username: path(['data', 'username'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  username: path(['data', 'username'], state.__resources.profile)
 });
 
 const connected = connect(mapStateToProps);
@@ -323,7 +339,7 @@ const connected = connect(mapStateToProps);
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Linode.Image[]
+  imagesData: Linode.Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
@@ -338,7 +354,7 @@ const enhanced = compose<CombinedProps, {}>(
   })),
   styled,
   withRouter,
-  connected,
+  connected
 );
 
-export default enhanced(StackScriptCreate)
+export default enhanced(StackScriptCreate);

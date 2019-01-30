@@ -2,15 +2,19 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ListItem from 'src/components/core/ListItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface MutateInfo {
@@ -72,12 +76,14 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         },
         disk: {
           label: 'Storage',
-          newAmount: props.mutateInfo.disk !== null
-            ? props.mutateInfo.disk / 1024
-            : props.mutateInfo.disk,
-          currentAmount: props.currentTypeInfo.disk !== null
-            ? props.currentTypeInfo.disk / 1024
-            : props.currentTypeInfo.disk,
+          newAmount:
+            props.mutateInfo.disk !== null
+              ? props.mutateInfo.disk / 1024
+              : props.mutateInfo.disk,
+          currentAmount:
+            props.currentTypeInfo.disk !== null
+              ? props.currentTypeInfo.disk / 1024
+              : props.currentTypeInfo.disk,
           unit: 'GB'
         },
         transfer: {
@@ -97,27 +103,19 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const {
-      open,
-      handleClose,
-      loading,
-      error,
-    } = this.props;
+    const { open, handleClose, loading, error } = this.props;
 
     const { extendedUpgradeInfo } = this.state;
 
     return (
-      <Drawer
-        open={open}
-        onClose={handleClose}
-        title="Free Upgrade Available"
-      >
-        {error &&
-          <Notice error text={error} />
-        }
-        <Typography>This Linode has pending upgrades. The resouces that are affected include:</Typography>
+      <Drawer open={open} onClose={handleClose} title="Free Upgrade Available">
+        {error && <Notice error text={error} />}
+        <Typography>
+          This Linode has pending upgrades. The resouces that are affected
+          include:
+        </Typography>
         <ul className="nonMUI-list">
-          {Object.keys(extendedUpgradeInfo).map((newSpec) => {
+          {Object.keys(extendedUpgradeInfo).map(newSpec => {
             const {
               label,
               currentAmount,
@@ -131,21 +129,33 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             return (
               <ListItem key={label}>
                 <Typography>
-                  {label} goes from {currentAmount} {unit} to <strong>{newAmount} {unit}</strong>
+                  {label} goes from {currentAmount} {unit} to{' '}
+                  <strong>
+                    {newAmount} {unit}
+                  </strong>
                 </Typography>
               </ListItem>
-            )
+            );
           })}
         </ul>
-        <Typography variant="h2" style={{ marginTop: 32, marginBottom: 16 }}>How it Works</Typography>
-        <Typography>After entering the upgrade queue, the following will occur:</Typography>
+        <Typography variant="h2" style={{ marginTop: 32, marginBottom: 16 }}>
+          How it Works
+        </Typography>
+        <Typography>
+          After entering the upgrade queue, the following will occur:
+        </Typography>
         <ol className="nonMUI-list">
           <ListItem>Wait your turn in the upgrade queue.</ListItem>
-          <ListItem>Your Linode will be shut down and its disk images will be migrated.</ListItem>
-          <ListItem>Your Linode will be upgraded and booted (if it was previously running).</ListItem>
+          <ListItem>
+            Your Linode will be shut down and its disk images will be migrated.
+          </ListItem>
+          <ListItem>
+            Your Linode will be upgraded and booted (if it was previously
+            running).
+          </ListItem>
           <Typography variant="body1" style={{ marginTop: 16 }}>
-            After the migration completes, you can take advantage of the new resources
-            by resizing your disk images.
+            After the migration completes, you can take advantage of the new
+            resources by resizing your disk images.
           </Typography>
         </ol>
         <ActionsPanel style={{ marginTop: 32 }}>
@@ -159,11 +169,14 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           </Button>
         </ActionsPanel>
         {/*
-        * Show when the relevant docs exist
-        */}
+         * Show when the relevant docs exist
+         */}
         <Typography style={{ display: 'none' }}>
           {`Need help? Refer to the `}
-          <a href="google.com" target="_blank">supporting documentation</a>.
+          <a href="google.com" target="_blank">
+            supporting documentation
+          </a>
+          .
         </Typography>
       </Drawer>
     );

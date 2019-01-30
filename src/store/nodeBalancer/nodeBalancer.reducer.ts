@@ -1,8 +1,21 @@
-import { Reducer } from "redux";
+import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
-import { isType } from "typescript-fsa";
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from "../store.helpers";
-import { createNodeBalancersActions, deleteNodeBalancerActions, getAllNodeBalancersActions, getNodeBalancerWithConfigsActions, updateNodeBalancersActions } from './nodeBalancer.actions';
+import { isType } from 'typescript-fsa';
+import {
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart
+} from '../store.helpers';
+import {
+  createNodeBalancersActions,
+  deleteNodeBalancerActions,
+  getAllNodeBalancersActions,
+  getNodeBalancerWithConfigsActions,
+  updateNodeBalancersActions
+} from './nodeBalancer.actions';
 
 export type State = MappedEntityState<Linode.NodeBalancer>;
 
@@ -21,7 +34,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       return {
         ...state,
         loading: false,
-        lastUpdated: Date.now(),
+        lastUpdated: Date.now()
       };
     }
 
@@ -30,7 +43,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, getAllNodeBalancersActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state)
+    return onError(error, state);
   }
 
   /** Create */
@@ -41,7 +54,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onCreateOrUpdate(result, state);
   }
 
-
   /** Update */
   if (isType(action, updateNodeBalancersActions.done)) {
     const { result } = action.payload;
@@ -51,13 +63,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   /** Delete */
   if (isType(action, deleteNodeBalancerActions.done)) {
-    const { params: { nodeBalancerId } } = action.payload;
+    const {
+      params: { nodeBalancerId }
+    } = action.payload;
 
     return onDeleteSuccess(nodeBalancerId, state);
   }
 
   /** Add */
-  if(isType(action, getNodeBalancerWithConfigsActions.done)){
+  if (isType(action, getNodeBalancerWithConfigsActions.done)) {
     const { result } = action.payload;
 
     return onCreateOrUpdate(result, state);

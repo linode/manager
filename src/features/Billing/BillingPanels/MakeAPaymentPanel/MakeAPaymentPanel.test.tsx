@@ -1,14 +1,17 @@
-import { isAllowedUSDAmount, shouldEnablePaypalButton } from './MakeAPaymentPanel';
+import {
+  isAllowedUSDAmount,
+  shouldEnablePaypalButton
+} from './MakeAPaymentPanel';
 
 describe('Make a Payment Panel', () => {
   it('should return false for invalid USD amount', () => {
     expect(isAllowedUSDAmount(0)).toBeFalsy();
-    expect(isAllowedUSDAmount(501)).toBeFalsy();    
+    expect(isAllowedUSDAmount(501)).toBeFalsy();
   });
 
   it('should return true for valid USD amount', () => {
     expect(isAllowedUSDAmount(5)).toBeTruthy();
-    expect(isAllowedUSDAmount(455)).toBeTruthy();    
+    expect(isAllowedUSDAmount(455)).toBeTruthy();
   });
 
   it('should disable paypal button when invalid USD amount or no input', () => {

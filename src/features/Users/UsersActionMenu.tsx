@@ -5,7 +5,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { MapState } from 'src/store/types';
 
-
 interface Props {
   username: string;
   onDelete: (username: string) => void;
@@ -19,7 +18,7 @@ class UsersActionMenu extends React.Component<CombinedProps> {
       onDelete,
       username,
       profileUsername,
-      history: { push },
+      history: { push }
     } = this.props;
 
     return (closeMenu: Function): Action[] => {
@@ -28,17 +27,17 @@ class UsersActionMenu extends React.Component<CombinedProps> {
           title: 'User Profile',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
-            push(`/account/users/${username}`)
+            push(`/account/users/${username}`);
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'User Permissions',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
-            push(`/account/users/${username}/permissions`)
+            push(`/account/users/${username}/permissions`);
             e.preventDefault();
-          },
+          }
         },
         {
           disabled: username === profileUsername,
@@ -48,20 +47,19 @@ class UsersActionMenu extends React.Component<CombinedProps> {
             closeMenu();
             e.preventDefault();
           },
-          tooltip: username === profileUsername
-            ? 'You can\'t delete the currently active user.'
-            : undefined,
-        },
+          tooltip:
+            username === profileUsername
+              ? "You can't delete the currently active user."
+              : undefined
+        }
       ];
 
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 interface StateProps {
@@ -69,7 +67,7 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
+  profileUsername: path(['data', 'username'], state.__resources.profile)
 });
 
 export const connected = connect(mapStateToProps);

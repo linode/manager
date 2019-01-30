@@ -11,16 +11,16 @@ interface State {
 type Props = TextFieldProps & {
   required?: boolean;
   tooltipText?: string;
- }
+};
 
 class HideShowText extends React.Component<Props, State> {
   state = {
-    hidden: true,
+    hidden: true
   };
 
   toggleHidden = () => {
     this.setState({ hidden: !this.state.hidden });
-  }
+  };
 
   render() {
     const { hidden } = this.state;
@@ -33,9 +33,17 @@ class HideShowText extends React.Component<Props, State> {
         type={hidden ? 'password' : 'text'}
         required={required}
         InputProps={{
-          startAdornment: hidden
-            ? <Visibility onClick={this.toggleHidden} style={{ marginLeft: 14 }} />
-            : <VisibilityOff onClick={this.toggleHidden} style={{ marginLeft: 14 }} />,
+          startAdornment: hidden ? (
+            <Visibility
+              onClick={this.toggleHidden}
+              style={{ marginLeft: 14 }}
+            />
+          ) : (
+            <VisibilityOff
+              onClick={this.toggleHidden}
+              style={{ marginLeft: 14 }}
+            />
+          )
         }}
       />
     );

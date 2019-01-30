@@ -2,7 +2,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import IconButton from 'src/components/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
@@ -10,24 +14,20 @@ import UserEventsMenu from './UserEventsMenu';
 import UserMenu from './UserMenu';
 import UserNotificationsMenu from './UserNotificationsMenu';
 
-type ClassNames = 'root'
-  | 'flex'
-  | 'appBar'
-  | 'toolbar'
-  | 'navIconHide';
+type ClassNames = 'root' | 'flex' | 'appBar' | 'toolbar' | 'navIconHide';
 
-  const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.primary
   },
   flex: {
-    flex: 1,
+    flex: 1
   },
   appBar: {
     color: theme.palette.text.primary,
     backgroundColor: theme.bg.white,
     position: 'relative',
-    paddingRight: '0 !important',
+    paddingRight: '0 !important'
   },
   toolbar: {
     minHeight: 64,
@@ -36,21 +36,21 @@ type ClassNames = 'root'
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
       paddingLeft: theme.spacing.unit * 3,
-      paddingRight: theme.spacing.unit * 3,
-    },
+      paddingRight: theme.spacing.unit * 3
+    }
   },
   navIconHide: {
     '& > span': {
-      justifyContent: 'flex-start',
+      justifyContent: 'flex-start'
     },
     '& svg': {
       width: 32,
-      height: 32,
+      height: 32
     },
     [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
+      display: 'none'
+    }
+  }
 });
 
 interface Props {

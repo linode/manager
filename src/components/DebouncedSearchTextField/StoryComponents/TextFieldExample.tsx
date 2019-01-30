@@ -16,24 +16,23 @@ interface State {
 class Example extends React.Component<Props, State> {
   state: State = {
     list: this.props.list,
-    isSearching: false,
-  }
+    isSearching: false
+  };
 
   handleSearch = (value: string) => {
     this.setState({ isSearching: true });
     action('searching')(value);
-    setTimeout(
-      () => {
-        const filteredList = this.props.list.filter(eachVal => eachVal.includes(value.toLowerCase()));
-        action('result')(filteredList);
-        this.setState({
-          list: filteredList,
-          isSearching: false,
-        });
-      },
-      800
-    )
-  }
+    setTimeout(() => {
+      const filteredList = this.props.list.filter(eachVal =>
+        eachVal.includes(value.toLowerCase())
+      );
+      action('result')(filteredList);
+      this.setState({
+        list: filteredList,
+        isSearching: false
+      });
+    }, 800);
+  };
 
   render() {
     return (
@@ -45,12 +44,16 @@ class Example extends React.Component<Props, State> {
         />
         <ul>
           {this.state.list.map((eachThing: string) => {
-            return <li key={eachThing} data-qa-list-item>{eachThing}</li>
+            return (
+              <li key={eachThing} data-qa-list-item>
+                {eachThing}
+              </li>
+            );
           })}
         </ul>
       </React.Fragment>
     );
   }
-};
+}
 
 export default Example;

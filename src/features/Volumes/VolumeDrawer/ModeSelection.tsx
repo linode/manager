@@ -1,4 +1,8 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
@@ -6,12 +10,12 @@ import RadioGroup from 'src/components/core/RadioGroup';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
     '& span': {
-      fontSize: '1rem',
-    },
+      fontSize: '1rem'
+    }
   }
 });
 
@@ -23,8 +27,11 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ mode, onChange, classes }) => {
-
+const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({
+  mode,
+  onChange,
+  classes
+}) => {
   return (
     <RadioGroup
       aria-label="mode"
@@ -33,8 +40,20 @@ const DrawerModeSelection: React.StatelessComponent<CombinedProps> = ({ mode, on
       onChange={onChange}
       data-qa-mode-radio-group
     >
-      <FormControlLabel className={classes.label} value="creating_for_linode" label="Create and Attach Volume" control={<Radio />} data-qa-radio="Create and Attach Volume"/>
-      <FormControlLabel className={classes.label} value="attaching" label="Attach Existing Volume" control={<Radio />} data-qa-radio="Attach Existing Volume"/>
+      <FormControlLabel
+        className={classes.label}
+        value="creating_for_linode"
+        label="Create and Attach Volume"
+        control={<Radio />}
+        data-qa-radio="Create and Attach Volume"
+      />
+      <FormControlLabel
+        className={classes.label}
+        value="attaching"
+        label="Attach Existing Volume"
+        control={<Radio />}
+        data-qa-radio="Attach Existing Volume"
+      />
     </RadioGroup>
   );
 };

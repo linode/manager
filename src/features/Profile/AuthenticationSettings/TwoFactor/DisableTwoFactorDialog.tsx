@@ -1,7 +1,7 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -13,13 +13,14 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import withLoadingAndError, { Props as LoadingAndErrorProps }
-  from 'src/components/withLoadingAndError';
+import withLoadingAndError, {
+  Props as LoadingAndErrorProps
+} from 'src/components/withLoadingAndError';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -28,15 +29,13 @@ interface Props {
   onSuccess: () => void;
 }
 
-type CombinedProps = Props
-  & LoadingAndErrorProps
-  & WithStyles<ClassNames>;
+type CombinedProps = Props & LoadingAndErrorProps & WithStyles<ClassNames>;
 
 class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
   handleCloseDialog = () => {
     this.props.clearLoadingAndErrors();
     this.props.closeDialog();
-  }
+  };
 
   handleDisableTFA = (deviceId: number) => {
     const {
@@ -54,17 +53,16 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
       })
       .catch(e => {
         const defaultError = 'There was an error disabling TFA.';
-        const errorString = pathOr(defaultError, ['response', 'data', 'errors', 0, 'reason'], e);
-        setErrorAndClearLoading(errorString)
-      })
-  }
+        const errorString = pathOr(
+          defaultError,
+          ['response', 'data', 'errors', 0, 'reason'],
+          e
+        );
+        setErrorAndClearLoading(errorString);
+      });
+  };
   render() {
-    const {
-      open,
-      closeDialog,
-      error,
-      loading,
-    } = this.props;
+    const { open, closeDialog, error, loading } = this.props;
 
     return (
       <ConfirmationDialog
@@ -105,19 +103,14 @@ interface ActionsProps {
 class DialogActions extends React.PureComponent<ActionsProps, {}> {
   handleSubmit = () => {
     const { handleDisable, deviceId } = this.props;
-    return handleDisable(deviceId)
-  }
+    return handleDisable(deviceId);
+  };
   render() {
-
     return (
       <ActionsPanel>
-        <Button
-          onClick={this.props.closeDialog}
-          type="cancel"
-          data-qa-cancel
-        >
+        <Button onClick={this.props.closeDialog} type="cancel" data-qa-cancel>
           Cancel
-      </Button>
+        </Button>
         <Button
           type="secondary"
           destructive
@@ -126,9 +119,8 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
           data-qa-submit
         >
           Disable Two-factor Authenitcation
-      </Button>
+        </Button>
       </ActionsPanel>
-
-    )
+    );
   }
 }

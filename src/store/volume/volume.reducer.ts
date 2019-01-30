@@ -2,64 +2,80 @@ import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { createDefaultState, onCreateOrUpdate, onDeleteSuccess, onError, onGetAllSuccess, onStart } from '../store.helpers';
-import { createVolumeActions, deleteVolumeActions, getAllVolumesActions, getOneVolumeActions, updateVolumeActions } from './volume.actions';
+import {
+  createDefaultState,
+  onCreateOrUpdate,
+  onDeleteSuccess,
+  onError,
+  onGetAllSuccess,
+  onStart
+} from '../store.helpers';
+import {
+  createVolumeActions,
+  deleteVolumeActions,
+  getAllVolumesActions,
+  getOneVolumeActions,
+  updateVolumeActions
+} from './volume.actions';
 
 export type State = MappedEntityState<Linode.Volume>;
 
 export const defaultState: State = createDefaultState<Linode.Volume>();
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
-
   /*
-  * Create Volume
-  **/
+   * Create Volume
+   **/
   if (isType(action, createVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate(result, state)
+    return onCreateOrUpdate(result, state);
   }
   if (isType(action, createVolumeActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state)
+    return onError(error, state);
   }
 
   /*
-  * Update Volume
-  **/
+   * Update Volume
+   **/
   if (isType(action, updateVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate(result, state)
+    return onCreateOrUpdate(result, state);
   }
   if (isType(action, updateVolumeActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state)
+    return onError(error, state);
   }
 
   /*
-  * Delete Volume
-  **/
+   * Delete Volume
+   **/
   if (isType(action, deleteVolumeActions.done)) {
     const { params } = action.payload;
-    return onDeleteSuccess<Linode.Volume>(params.volumeId, state)
+    return onDeleteSuccess<Linode.Volume>(params.volumeId, state);
   }
   if (isType(action, deleteVolumeActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state)
+    return onError(error, state);
   }
 
   /*
-  * Get One Volume
-  */
+   * Get One Volume
+   */
   if (isType(action, getOneVolumeActions.done)) {
     const { result } = action.payload;
     return onCreateOrUpdate(result, state);
   }
 
   /*
-  * Get All Volumes
-  **/
+   * Get All Volumes
+   **/
   if (isType(action, getAllVolumesActions.started)) {
-    const shouldSetLoading = pathOr(true, ['payload', 'shouldSetLoading'], action);
+    const shouldSetLoading = pathOr(
+      true,
+      ['payload', 'shouldSetLoading'],
+      action
+    );
     if (shouldSetLoading) {
       return onStart(state);
     }
@@ -70,10 +86,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
   if (isType(action, getAllVolumesActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state)
+    return onError(error, state);
   }
 
   return state;
-}
+};
 
 export default reducer;

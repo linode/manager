@@ -28,20 +28,20 @@ const props = {
   result: searchbarResult1,
   redirect: jest.fn(),
   classes
-}
+};
 
-const component = shallow(
-  <ResultRow {...props} />
-)
+const component = shallow(<ResultRow {...props} />);
 
-describe("ResultRow component", () => {
-  it("should render", () => {
+describe('ResultRow component', () => {
+  it('should render', () => {
     expect(component).toBeDefined();
   });
-  it("should render tags if any", () => {
+  it('should render tags if any', () => {
     component.setProps({ result: searchbarResult2 });
-    expect(component.containsMatchingElement(
-      <Tags tags={searchbarResult2.data.tags} />
-    )).toBeTruthy();
+    expect(
+      component.containsMatchingElement(
+        <Tags tags={searchbarResult2.data.tags} />
+      )
+    ).toBeTruthy();
   });
 });

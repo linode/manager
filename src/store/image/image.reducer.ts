@@ -1,8 +1,14 @@
-import { Reducer } from "redux";
+import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { addOrUpdateImage, getImagesFailure, getImagesRequest, getImagesSuccess, removeImage } from './image.actions';
+import {
+  addOrUpdateImage,
+  getImagesFailure,
+  getImagesRequest,
+  getImagesSuccess,
+  removeImage
+} from './image.actions';
 
 /**
  * State
@@ -14,18 +20,17 @@ export const defaultState: State = {
   results: [],
   error: undefined,
   loading: true,
-  lastUpdated: 0,
+  lastUpdated: 0
 };
 
 /**
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-
   if (isType(action, getImagesRequest)) {
     return {
       ...state,
-      loading: true,
+      loading: true
     };
   }
 
@@ -47,7 +52,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      error: payload,
+      error: payload
     };
   }
 
@@ -58,13 +63,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
      * to both potentials.
      * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
      */
-    const id = typeof payload === 'string' ? payload : `private/${payload}`
-    const updated = state.entities.filter((image) => image.id !== id);
+    const id = typeof payload === 'string' ? payload : `private/${payload}`;
+    const updated = state.entities.filter(image => image.id !== id);
 
     return {
       ...state,
       entities: updated,
-      results: updated.map((i) => i.id),
+      results: updated.map(i => i.id)
     };
   }
 
@@ -74,8 +79,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       entities: updated,
-      results: updated.map((i) => i.id),
-    }
+      results: updated.map(i => i.id)
+    };
   }
 
   return state;

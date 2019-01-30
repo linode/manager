@@ -1,22 +1,31 @@
 import * as React from 'react';
 import Minus from 'src/assets/icons/minus-square.svg';
 import Plus from 'src/assets/icons/plus-square.svg';
-import ExpansionPanel, { ExpansionPanelProps } from 'src/components/core/ExpansionPanel';
-import ExpansionPanelDetails, { ExpansionPanelDetailsProps } from 'src/components/core/ExpansionPanelDetails';
-import ExpansionPanelSummary, { ExpansionPanelSummaryProps } from 'src/components/core/ExpansionPanelSummary';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import ExpansionPanel, {
+  ExpansionPanelProps
+} from 'src/components/core/ExpansionPanel';
+import ExpansionPanelDetails, {
+  ExpansionPanelDetailsProps
+} from 'src/components/core/ExpansionPanelDetails';
+import ExpansionPanelSummary, {
+  ExpansionPanelSummaryProps
+} from 'src/components/core/ExpansionPanelSummary';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import Notice from '../Notice';
 
-type ClassNames = 'root'
-  | 'success'
-  | 'warning'
-  | 'error';
+type ClassNames = 'root' | 'success' | 'warning' | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  const { palette: { status } } = theme;
+const styles: StyleRulesCallback<ClassNames> = theme => {
+  const {
+    palette: { status }
+  } = theme;
   return {
     root: {},
     success: {
@@ -24,37 +33,37 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       '&:hover, &:focus': {
         backgroundColor: status.successDark,
         '& h3, & svg': {
-          color: theme.color.white,
-        },
+          color: theme.color.white
+        }
       },
       '& svg': {
-        color: theme.palette.text.primary,
-      },
+        color: theme.palette.text.primary
+      }
     },
     warning: {
       backgroundColor: status.warning,
       '&:hover, &:focus': {
         backgroundColor: status.warningDark,
         '& h3': {
-          color: theme.color.headline,
-        },
+          color: theme.color.headline
+        }
       },
       '& svg': {
-        color: theme.palette.text.primary,
-      },
+        color: theme.palette.text.primary
+      }
     },
     error: {
       backgroundColor: status.error,
       '&:hover, &:focus': {
         backgroundColor: status.errorDark,
         '& h3, & svg': {
-          color: 'white',
-        },
+          color: 'white'
+        }
       },
       '& svg': {
-        color: theme.palette.text.primary,
-      },
-    },
+        color: theme.palette.text.primary
+      }
+    }
   };
 };
 
@@ -77,7 +86,7 @@ class EExpansionPanel extends React.Component<CombinedProps> {
 
   handleClick = (e: React.MouseEvent<any>) => {
     this.setState({ open: !this.state.open });
-  }
+  };
 
   render() {
     const {
@@ -86,7 +95,10 @@ class EExpansionPanel extends React.Component<CombinedProps> {
       detailProps,
       headingProps,
       actions,
-      success, warning, error, loading,
+      success,
+      warning,
+      error,
+      loading,
       ...expansionPanelProps
     } = this.props;
 
@@ -115,19 +127,20 @@ class EExpansionPanel extends React.Component<CombinedProps> {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
           <Grid container>
-            {
-              notice &&
+            {notice && (
               <Grid item xs={12} data-qa-notice>
                 <Notice
                   text={notice}
-                  {...(success && { success: true })}
-                  {...(warning && { warning: true })}
-                  {...(error && { error: true })}
+                  {...success && { success: true }}
+                  {...warning && { warning: true }}
+                  {...error && { error: true }}
                   spacingBottom={0}
                 />
               </Grid>
-            }
-            <Grid item xs={12} data-qa-grid-item>{this.props.children}</Grid>
+            )}
+            <Grid item xs={12} data-qa-grid-item>
+              {this.props.children}
+            </Grid>
           </Grid>
         </ExpansionPanelDetails>
         {actions && actions(expansionPanelProps)}

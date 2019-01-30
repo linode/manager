@@ -8,7 +8,11 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import HelpIcon from 'src/components/HelpIcon';
@@ -22,27 +26,27 @@ import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
 type ClassNames = 'root' | 'inner' | 'field' | 'deleteRoot' | 'topMargin';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
     marginTop: theme.spacing.unit,
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.color.white
   },
   deleteRoot: {
     flexGrow: 1,
     width: '100%',
     marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.color.white,
+    backgroundColor: theme.color.white
   },
   inner: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   field: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   topMargin: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   }
 });
 
@@ -63,25 +67,24 @@ interface State {
   userDeleteError: boolean;
 }
 
-type CombinedProps =
-  & Props
-  & InjectedNotistackProps
-  & StateProps
-  & WithStyles<ClassNames>
-  & RouteComponentProps<{}>;
+type CombinedProps = Props &
+  InjectedNotistackProps &
+  StateProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}>;
 
 class UserProfile extends React.Component<CombinedProps> {
   state: State = {
     deleteConfirmDialogOpen: false,
     toDeleteUsername: this.props.username,
-    userDeleteError: false,
+    userDeleteError: false
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (this.props.username && !prevProps.username) {
       this.setState({
-        toDeleteUsername: this.props.username,
-      })
+        toDeleteUsername: this.props.username
+      });
     }
   }
 
@@ -97,17 +100,17 @@ class UserProfile extends React.Component<CombinedProps> {
       success,
       errors
     } = this.props;
-    const hasErrorFor = getAPIErrorsFor({ username: "Username" }, errors)
+    const hasErrorFor = getAPIErrorsFor({ username: 'Username' }, errors);
     const generalError = hasErrorFor('none');
     return (
       <Paper className={classes.root}>
         <div className={classes.inner}>
-          {success &&
+          {success && (
             <Notice success>User Profile updated successfully</Notice>
-          }
-          {generalError &&
+          )}
+          {generalError && (
             <Notice error>Error when updating user profile</Notice>
-          }
+          )}
           <Typography variant="h2" data-qa-profile-header>
             User Profile
           </Typography>
@@ -135,49 +138,50 @@ class UserProfile extends React.Component<CombinedProps> {
             >
               Save
             </Button>
-            <Button
-              type="cancel"
-              onClick={reset}
-              data-qa-cancel
-            >
+            <Button type="cancel" onClick={reset} data-qa-cancel>
               Cancel
             </Button>
           </ActionsPanel>
         </div>
       </Paper>
-    )
-  }
+    );
+  };
 
   onDeleteConfirm = (username: string) => {
-    const { history: { push } } = this.props;
+    const {
+      history: { push }
+    } = this.props;
     this.setState({
       userDeleteError: false,
-      deleteConfirmDialogOpen: false,
+      deleteConfirmDialogOpen: false
     });
     deleteUser(username)
       .then(() => {
-        this.props.enqueueSnackbar(`User ${username} has been deleted successfully.`, { variant: 'success' });
+        this.props.enqueueSnackbar(
+          `User ${username} has been deleted successfully.`,
+          { variant: 'success' }
+        );
         push(`/account/users`, { deletedUsername: username });
       })
       .catch(() => {
         this.setState({
-          userDeleteError: true,
-        })
+          userDeleteError: true
+        });
         scrollErrorIntoView();
       });
-  }
+  };
 
   onDelete = () => {
     this.setState({
-      deleteConfirmDialogOpen: true,
-    })
-  }
+      deleteConfirmDialogOpen: true
+    });
+  };
 
   onDeleteCancel = () => {
     this.setState({
-      deleteConfirmDialogOpen: false,
+      deleteConfirmDialogOpen: false
     });
-  }
+  };
 
   renderDeleteSection() {
     const { classes, profileUsername } = this.props;
@@ -188,13 +192,13 @@ class UserProfile extends React.Component<CombinedProps> {
           <Typography variant="h2" data-qa-delete-user-header>
             Delete User
           </Typography>
-          {userDeleteError &&
+          {userDeleteError && (
             <Notice
               className={classes.topMargin}
               error
               text="Error when deleting user, please try again later"
             />
-          }
+          )}
           <Button
             disabled={profileUsername === toDeleteUsername}
             className={classes.topMargin}
@@ -205,18 +209,18 @@ class UserProfile extends React.Component<CombinedProps> {
           >
             Delete
           </Button>
-          {profileUsername === toDeleteUsername &&
+          {profileUsername === toDeleteUsername && (
             <HelpIcon
               className={classes.topMargin}
               text="You can't delete the currently active user"
             />
-          }
+          )}
           <Typography className={classes.topMargin} variant="body1">
             The user will be deleted permanently.
           </Typography>
         </div>
       </Paper>
-    )
+    );
   }
 
   render() {
@@ -225,22 +229,21 @@ class UserProfile extends React.Component<CombinedProps> {
 
     return (
       <React.Fragment>
-        {username !== undefined
-          ? (
-            <React.Fragment>
-              <DocumentTitleSegment segment={`${username} - Profile`} />
-              {this.renderProfileSection()}
-              {this.renderDeleteSection()}
-              <UserDeleteConfirmationDialog
-                username={toDeleteUsername || ''}
-                open={deleteConfirmDialogOpen}
-                onDelete={this.onDeleteConfirm}
-                onCancel={this.onDeleteCancel}
-              />
-            </React.Fragment>
-          )
-          : <CircleProgress />
-        }
+        {username !== undefined ? (
+          <React.Fragment>
+            <DocumentTitleSegment segment={`${username} - Profile`} />
+            {this.renderProfileSection()}
+            {this.renderDeleteSection()}
+            <UserDeleteConfirmationDialog
+              username={toDeleteUsername || ''}
+              open={deleteConfirmDialogOpen}
+              onDelete={this.onDeleteConfirm}
+              onCancel={this.onDeleteCancel}
+            />
+          </React.Fragment>
+        ) : (
+          <CircleProgress />
+        )}
       </React.Fragment>
     );
   }
@@ -250,8 +253,8 @@ interface StateProps {
   profileUsername?: string;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state) => ({
-  profileUsername: path(['data', 'username'], state.__resources.profile),
+const mapStateToProps: MapState<StateProps, Props> = state => ({
+  profileUsername: path(['data', 'username'], state.__resources.profile)
 });
 
 export const connected = connect(mapStateToProps);
@@ -262,7 +265,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withRouter,
   connected,
-  withSnackbar,
+  withSnackbar
 );
 
 export default enhanced(UserProfile);

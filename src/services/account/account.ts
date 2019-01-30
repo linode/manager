@@ -1,7 +1,10 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from 'src/services';
 
-import { updateAccountSchema, UpdateAccountSettingsSchema } from './account.schema';
+import {
+  updateAccountSchema,
+  UpdateAccountSettingsSchema
+} from './account.schema';
 
 /**
  * getAccountInfo
@@ -11,11 +14,9 @@ import { updateAccountSchema, UpdateAccountSettingsSchema } from './account.sche
  *
  */
 export const getAccountInfo = () =>
-  Request<Linode.Account>(
-    setURL(`${API_ROOT}/account`),
-    setMethod('GET'),
-  )
-  .then(response => response.data);
+  Request<Linode.Account>(setURL(`${API_ROOT}/account`), setMethod('GET')).then(
+    response => response.data
+  );
 
 /**
  * updateAccountInfo
@@ -27,9 +28,8 @@ export const updateAccountInfo = (data: Partial<Linode.Account>) =>
   Request<Linode.Account>(
     setURL(`${API_ROOT}/account`),
     setMethod('PUT'),
-    setData(data, updateAccountSchema),
-  )
-  .then(response => response.data);
+    setData(data, updateAccountSchema)
+  ).then(response => response.data);
 
 /**
  * getNetworkUtilization
@@ -40,9 +40,8 @@ export const updateAccountInfo = (data: Partial<Linode.Account>) =>
 export const getNetworkUtilization = () =>
   Request<Linode.NetworkUtilization>(
     setURL(`${API_ROOT}/account/transfer`),
-    setMethod('GET'),
-  )
-  .then(response => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * getAccountSettings
@@ -54,8 +53,7 @@ export const getAccountSettings = () =>
   Request<Linode.AccountSettings>(
     setURL(`${API_ROOT}/account/settings`),
     setMethod('GET')
-  )
-  .then(response => response.data);
+  ).then(response => response.data);
 
 /**
  * updateAccountSettings
@@ -64,9 +62,8 @@ export const getAccountSettings = () =>
  *
  */
 export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) =>
-Request<Linode.AccountSettings>(
-  setURL(`${API_ROOT}/account/settings`),
-  setMethod('PUT'),
-  setData(data, UpdateAccountSettingsSchema)
-)
-.then(response => response.data);
+  Request<Linode.AccountSettings>(
+    setURL(`${API_ROOT}/account/settings`),
+    setMethod('PUT'),
+    setData(data, UpdateAccountSettingsSchema)
+  ).then(response => response.data);

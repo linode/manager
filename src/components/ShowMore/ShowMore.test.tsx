@@ -6,22 +6,20 @@ import { ShowMore } from './ShowMore';
 
 const mockRender = jest.fn();
 const classes = {
-  chip: '', label: '', popover: '', link: ''
-}
+  chip: '',
+  label: '',
+  popover: '',
+  link: ''
+};
 
 const props = {
   classes,
   items: ['a', 'b'],
   render: mockRender
-}
+};
 
 describe('ShowMore', () => {
-
-  const wrapper = shallow(
-      <ShowMore
-        {...props}
-      />
-  );
+  const wrapper = shallow(<ShowMore {...props} />);
 
   it('should call provided render function with items.', () => {
     expect(mockRender).toHaveBeenCalledWith(['a', 'b']);

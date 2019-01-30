@@ -9,15 +9,19 @@ export interface DomainActionsProps {
     createDomain: (payload: CreateDomainPayload) => Promise<Linode.Domain>;
     updateDomain: (params: UpdateDomainParams) => Promise<Linode.Domain>;
     deleteDomain: (domainId: DomainId) => Promise<{}>;
-  }
+  };
 }
 
-export const withDomainActions = connect(undefined, (dispatch: ThunkDispatch) => ({
-  domainActions: {
-    createDomain: (payload: CreateDomainPayload) => dispatch(createDomain(payload)),
-    updateDomain: (params: DomainId) => dispatch(updateDomain(params)),
-    deleteDomain: (domainId: DomainId) => dispatch(deleteDomain(domainId)),
-  }
-}));
+export const withDomainActions = connect(
+  undefined,
+  (dispatch: ThunkDispatch) => ({
+    domainActions: {
+      createDomain: (payload: CreateDomainPayload) =>
+        dispatch(createDomain(payload)),
+      updateDomain: (params: DomainId) => dispatch(updateDomain(params)),
+      deleteDomain: (domainId: DomainId) => dispatch(deleteDomain(domainId))
+    }
+  })
+);
 
-export default withDomainActions
+export default withDomainActions;

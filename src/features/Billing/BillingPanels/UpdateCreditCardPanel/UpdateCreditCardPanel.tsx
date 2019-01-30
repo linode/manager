@@ -4,7 +4,11 @@ import NumberFormat from 'react-number-format';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -16,7 +20,8 @@ import { saveCreditCard } from 'src/services/account';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'expired'
   | 'currentCCTitle'
   | 'currentccContainer'
@@ -24,28 +29,28 @@ type ClassNames = 'root'
   | 'cardNumber'
   | 'fullWidthMobile';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   expired: {
-    color: theme.color.red,
+    color: theme.color.red
   },
   currentccContainer: {
-    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 4}px`,
+    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 4}px`
   },
   newccContainer: {
-    padding: `${theme.spacing.unit}px 0 0`,
+    padding: `${theme.spacing.unit}px 0 0`
   },
   currentCCTitle: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   cardNumber: {
-    minWidth: 225,
+    minWidth: 225
   },
   fullWidthMobile: {
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
-    },
-  },
+      width: '100%'
+    }
+  }
 });
 
 interface AccountContextProps {
@@ -53,7 +58,7 @@ interface AccountContextProps {
   accountErrors: Linode.ApiFieldError[];
   expiry: string;
   last_four: string;
-  updateAccount: (update: (a: Linode.Account) => Linode.Account) => void,
+  updateAccount: (update: (a: Linode.Account) => Linode.Account) => void;
 }
 
 interface State {
@@ -72,22 +77,24 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     card_number: '',
     expiry_month: 1,
     expiry_year: UpdateCreditCardPanel.currentYear,
-    submitting: false,
+    submitting: false
   };
 
   static currentYear = new Date().getFullYear();
 
   handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ card_number: e.target.value ? take(19, e.target.value) : '' });
-  }
+    this.setState({
+      card_number: e.target.value ? take(19, e.target.value) : ''
+    });
+  };
 
   handleExpiryMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({ expiry_month: +e.target.value });
-  }
+  };
 
   handleExpiryYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.setState({ expiry_year: +e.target.value });
-  }
+  };
 
   submitForm = () => {
     const { card_number, expiry_month, expiry_year } = this.state;
@@ -96,37 +103,41 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
     saveCreditCard({ card_number, expiry_month, expiry_year })
       .then(() => {
-        this.props.updateAccount((account) => ({
+        this.props.updateAccount(account => ({
           ...account,
           credit_card: {
             last_four: takeLast(4, card_number),
             expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`
           }
-
-        }))
+        }));
         this.setState({
           card_number: '',
           expiry_month: 1,
           expiry_year: UpdateCreditCardPanel.currentYear,
           submitting: false,
-          success: true,
-        })
+          success: true
+        });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           submitting: false,
-          errors: pathOr([{ reason: 'Unable to update credit card.' }], ['response', 'data', 'errors'], error),
-        })
-      })
+          errors: pathOr(
+            [{ reason: 'Unable to update credit card.' }],
+            ['response', 'data', 'errors'],
+            error
+          )
+        });
+      });
   };
 
-  resetForm = () => this.setState({
-    card_number: '',
-    errors: undefined,
-    expiry_month: 1,
-    expiry_year: UpdateCreditCardPanel.currentYear,
-    success: undefined,
-  });
+  resetForm = () =>
+    this.setState({
+      card_number: '',
+      errors: undefined,
+      expiry_month: 1,
+      expiry_year: UpdateCreditCardPanel.currentYear,
+      success: undefined
+    });
 
   creditCardField = (props: any) => {
     const { inputRef, onChange, ...other } = props;
@@ -138,63 +149,81 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
         onValueChange={values => {
           onChange({
             target: {
-              value: values.value,
-            },
+              value: values.value
+            }
           });
         }}
         format="#### #### #### #######"
       />
     );
-  }
+  };
 
   render() {
     const { classes, last_four, expiry } = this.props;
     const { errors, success } = this.state;
-    const hasErrorFor = getAPIErrorFor({
-      card_number: 'card number',
-      expiry_month: 'expiration month',
-      expiry_year: 'expiration year',
-    }, errors)
+    const hasErrorFor = getAPIErrorFor(
+      {
+        card_number: 'card number',
+        expiry_month: 'expiration month',
+        expiry_year: 'expiration year'
+      },
+      errors
+    );
     const generalError = hasErrorFor('none');
 
     return (
-      <ExpansionPanel
-        heading="Update Credit Card"
-        actions={this.renderActions}
-      >
+      <ExpansionPanel heading="Update Credit Card" actions={this.renderActions}>
         <Grid container>
-          {last_four && <Grid item xs={12}>
-            <div className={classes.currentccContainer}>
-              <Typography role="header" variant="h2" className={classes.currentCCTitle}>Current Credit Card</Typography>
-              <Grid container>
-                <Grid item>
-                  <Typography style={{ marginRight: 8 }}>
-                    {`xxxx-xxxx-xxxx-${last_four}`}
-                  </Typography>
+          {last_four && (
+            <Grid item xs={12}>
+              <div className={classes.currentccContainer}>
+                <Typography
+                  role="header"
+                  variant="h2"
+                  className={classes.currentCCTitle}
+                >
+                  Current Credit Card
+                </Typography>
+                <Grid container>
+                  <Grid item>
+                    <Typography style={{ marginRight: 8 }}>
+                      {`xxxx-xxxx-xxxx-${last_four}`}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography>
+                      Exp Date:&nbsp;
+                      {expiry}
+                      {isCreditCardExpired(expiry) && (
+                        <span className={classes.expired}>{` Expired`}</span>
+                      )}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item>
-                  <Typography>
-                    Exp Date:&nbsp;
-                    {expiry}
-                    {isCreditCardExpired(expiry) &&
-                      <span className={classes.expired}>{` Expired`}</span>
-                    }
-                  </Typography>
-                </Grid>
-              </Grid>
-            </div>
-            <Divider />
-          </Grid>}
+              </div>
+              <Divider />
+            </Grid>
+          )}
           <Grid item xs={12}>
             <div className={classes.newccContainer}>
-              <Typography role="header" variant="h2">New Credit Card</Typography>
-              {generalError && <Notice error spacingTop={24} spacingBottom={8}>{generalError}</Notice>}
-              {success && <Notice success spacingTop={24} spacingBottom={8}>Credit card successfully updated.</Notice>}
+              <Typography role="header" variant="h2">
+                New Credit Card
+              </Typography>
+              {generalError && (
+                <Notice error spacingTop={24} spacingBottom={8}>
+                  {generalError}
+                </Notice>
+              )}
+              {success && (
+                <Notice success spacingTop={24} spacingBottom={8}>
+                  Credit card successfully updated.
+                </Notice>
+              )}
               <Grid container>
                 <Grid item xs={12}>
                   <TextField
                     required
-                    label='New Card Number'
+                    label="New Card Number"
                     value={this.state.card_number}
                     onChange={this.handleCardNumberChange}
                     errorText={hasErrorFor('card_number')}
@@ -209,7 +238,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                   <TextField
                     required
                     select
-                    label='Expiration Month'
+                    label="Expiration Month"
                     value={this.state.expiry_month}
                     onChange={this.handleExpiryMonthChange}
                     errorText={hasErrorFor('expiry_month')}
@@ -222,7 +251,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                   <TextField
                     required
                     select
-                    label='Expiration Year'
+                    label="Expiration Year"
                     value={this.state.expiry_year}
                     onChange={this.handleExpiryYearChange}
                     errorText={hasErrorFor('expiry_year')}
@@ -241,8 +270,16 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   renderActions = () => {
     return (
       <ActionsPanel>
-        <Button type="primary" onClick={this.submitForm} loading={this.state.submitting}>Save</Button>
-        <Button type="cancel" onClick={this.resetForm}>Cancel</Button>
+        <Button
+          type="primary"
+          onClick={this.submitForm}
+          loading={this.state.submitting}
+        >
+          Save
+        </Button>
+        <Button type="cancel" onClick={this.resetForm}>
+          Cancel
+        </Button>
       </ActionsPanel>
     );
   };
@@ -250,11 +287,17 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   static yearMenuItems = range(
     UpdateCreditCardPanel.currentYear,
     UpdateCreditCardPanel.currentYear + 20
-  )
-    .map((v: number) => <MenuItem key={v} value={v}>{v}</MenuItem>)
+  ).map((v: number) => (
+    <MenuItem key={v} value={v}>
+      {v}
+    </MenuItem>
+  ));
 
-  static monthMenuItems = range(1, 13)
-    .map((v: number) => <MenuItem key={v} value={v}>{String(v).padStart(2, '0')}</MenuItem>)
+  static monthMenuItems = range(1, 13).map((v: number) => (
+    <MenuItem key={v} value={v}>
+      {String(v).padStart(2, '0')}
+    </MenuItem>
+  ));
 }
 
 const styled = withStyles(styles);
@@ -266,16 +309,19 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
       accountErrors: errors,
       expiry: data.credit_card.expiry,
       last_four: data.credit_card.last_four,
-      updateAccount: update,
-    }
+      updateAccount: update
+    };
   }
 
   return {
     accountLoading: loading,
-    accountErrors: errors,
-  }
+    accountErrors: errors
+  };
 });
 
-const enhanced = compose(styled, accountContext)
+const enhanced = compose(
+  styled,
+  accountContext
+);
 
 export default enhanced(UpdateCreditCardPanel) as React.ComponentType<{}>;

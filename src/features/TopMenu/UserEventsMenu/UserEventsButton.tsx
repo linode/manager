@@ -1,21 +1,22 @@
 import * as React from 'react';
 import NotificationIcon from 'src/assets/icons/bell.svg';
 import IconButton from 'src/components/core/IconButton';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type ClassNames = 'root'
-  | 'icon'
-  | 'new'
-  | 'count';
+type ClassNames = 'root' | 'icon' | 'new' | 'count';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
     from: {
-      opacity: 0,
+      opacity: 0
     },
     to: {
-      opacity: 1,
-    },
+      opacity: 1
+    }
   },
   root: {
     marginRight: 6,
@@ -24,25 +25,25 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     opacity: 1,
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing.unit * 2,
+      marginLeft: theme.spacing.unit * 2
     },
     '&:hover': {
       '& $icon': {
-        fill: theme.palette.primary.main,
-      },
+        fill: theme.palette.primary.main
+      }
     },
     '&.active': {
       '& $icon': {
-        fill: theme.palette.primary.dark,
-      },
+        fill: theme.palette.primary.dark
+      }
     },
     '&[disabled]': {
-      opacity: .3,
-    },
+      opacity: 0.3
+    }
   },
   icon: {
     transition: theme.transitions.create(['fill']),
-    fill: '#999',
+    fill: '#999'
   },
   new: {
     animation: 'fadeIn 225ms ease-in-out',
@@ -55,7 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     top: 0,
     right: 2,
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   count: {
     color: 'white',
@@ -64,8 +65,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     fontSize: '.7rem',
     lineHeight: 0,
     position: 'relative',
-    top: -1,
-  },
+    top: -1
+  }
 });
 
 interface Props {
@@ -82,9 +83,8 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
   count,
   onClick,
   disabled,
-  className,
+  className
 }) => {
-
   return (
     <IconButton
       onClick={onClick}
@@ -93,18 +93,19 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
       aria-label="User Events"
     >
       <NotificationIcon className={classes.icon} />
-      {count && count > 0
-        ? <div className={classes.new}>
-            <span className={classes.count}>{count}</span>
-          </div>
-        : ''
-      }
+      {count && count > 0 ? (
+        <div className={classes.new}>
+          <span className={classes.count}>{count}</span>
+        </div>
+      ) : (
+        ''
+      )}
     </IconButton>
   );
 };
 
 UserEventsButton.defaultProps = {
-  disabled: false,
+  disabled: false
 };
 
 const styled = withStyles(styles);

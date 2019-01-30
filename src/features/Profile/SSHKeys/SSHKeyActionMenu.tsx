@@ -22,18 +22,16 @@ class SSHKeyActionMenu extends React.Component<CombinedProps> {
             onDelete(id, label);
             closeMenu();
             e.preventDefault();
-          },
-        },
+          }
+        }
       ];
 
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

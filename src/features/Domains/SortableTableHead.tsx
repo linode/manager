@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
@@ -8,18 +12,16 @@ import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-  },
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
   label: {
-    paddingLeft: 65,
+    paddingLeft: 65
   }
 });
 
 type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
-
-const SortableTableHead: React.StatelessComponent<combinedProps> = (props) => {
+const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
   const { order, orderBy, handleOrderChange, classes } = props;
 
   const isActive = (label: string) => label === orderBy;
@@ -28,7 +30,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = (props) => {
     <TableHead data-qa-table-head={order}>
       <TableRow>
         <TableSortCell
-          label='domain'
+          label="domain"
           direction={order}
           active={isActive('domain')}
           handleClick={handleOrderChange}
@@ -38,7 +40,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = (props) => {
           Domain
         </TableSortCell>
         <TableSortCell
-          label='type'
+          label="type"
           direction={order}
           active={isActive('type')}
           handleClick={handleOrderChange}

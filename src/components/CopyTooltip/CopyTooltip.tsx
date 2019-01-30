@@ -1,9 +1,12 @@
-
 import FileCopy from '@material-ui/icons/FileCopy';
 import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 interface Props {
   text: string;
@@ -15,22 +18,20 @@ interface State {
   copied: boolean;
 }
 
-type CSSClasses =  'root'
-| 'copied'
-| 'standAlone';
+type CSSClasses = 'root' | 'copied' | 'standAlone';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes popUp': {
     from: {
       opacity: 0,
       top: -10,
-      transform: 'scale(.1)',
+      transform: 'scale(.1)'
     },
     to: {
       opacity: 1,
       top: -45,
-      transform: 'scale(1)',
-    },
+      transform: 'scale(1)'
+    }
   },
   root: {
     position: 'relative',
@@ -44,14 +45,14 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
       margin: 0,
       position: 'relative',
       width: 16,
-      height: 16,
+      height: 16
     },
     '&:hover': {
       backgroundColor: theme.color.grey1,
       '& svg': {
-        color: theme.color.white,
-      },
-    },
+        color: theme.color.white
+      }
+    }
   },
   copied: {
     fontSize: '.85rem',
@@ -62,30 +63,30 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     position: 'absolute',
     boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     transition: 'opacity .5s ease-in-out',
-    animation: 'popUp 200ms ease-in-out forwards',
+    animation: 'popUp 200ms ease-in-out forwards'
   },
   standAlone: {
     marginLeft: theme.spacing.unit,
     '& svg': {
-      width: 14,
-    },
-  },
+      width: 14
+    }
+  }
 });
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class CopyTooltip extends React.Component<CombinedProps, State> {
   state = {
-    copied: false,
+    copied: false
   };
 
   clickIcon = () => {
     this.setState({
-      copied: true,
+      copied: true
     });
     window.setTimeout(() => this.setState({ copied: false }), 1500);
     copy(this.props.text);
-  }
+  };
 
   render() {
     const { classes, text, className, standAlone } = this.props;
@@ -97,14 +98,16 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
         title={text}
         onClick={this.clickIcon}
         href="javascript:void(0)"
-        className={classNames(
-          className,
-          {
+        className={classNames(className, {
           [classes.root]: true,
-          [classes.standAlone]: standAlone,
+          [classes.standAlone]: standAlone
         })}
       >
-        {copied && <span className={classes.copied} data-qa-copied>copied</span>}
+        {copied && (
+          <span className={classes.copied} data-qa-copied>
+            copied
+          </span>
+        )}
         <FileCopy />
       </a>
     );

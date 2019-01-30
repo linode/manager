@@ -26,9 +26,9 @@ describe('StackScriptCreate', () => {
       images={{
         available: images,
         selected: [],
-        handleRemove: jest.fn(),
+        handleRemove: jest.fn()
       }}
-      currentUser='mmckenna'
+      currentUser="mmckenna"
       label={{
         value: '',
         handler: jest.fn()

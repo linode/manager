@@ -12,10 +12,22 @@ const nodeBalancerEventHandler: EventHandler = (event, dispatch, getState) => {
 
   switch (action) {
     case 'nodebalancer_create':
-      return handleNodeBalancerCreate(dispatch, id, action, status, __resources);
+      return handleNodeBalancerCreate(
+        dispatch,
+        id,
+        action,
+        status,
+        __resources
+      );
 
     case 'nodebalancer_delete':
-      return handleNodeBalancerDelete(dispatch, id, action, status, __resources);
+      return handleNodeBalancerDelete(
+        dispatch,
+        id,
+        action,
+        status,
+        __resources
+      );
   }
 };
 
@@ -26,10 +38,16 @@ type NodeBalancerActionHandler = (
   id: number,
   action: Linode.EventAction,
   status: Linode.EventStatus,
-  resourceState: ApplicationState['__resources'],
+  resourceState: ApplicationState['__resources']
 ) => void;
 
-const handleNodeBalancerCreate: NodeBalancerActionHandler = (dispatch, nodeBalancerId, action, status, resourceState) => {
+const handleNodeBalancerCreate: NodeBalancerActionHandler = (
+  dispatch,
+  nodeBalancerId,
+  action,
+  status,
+  resourceState
+) => {
   switch (status) {
     case 'failed':
       return;
@@ -39,7 +57,9 @@ const handleNodeBalancerCreate: NodeBalancerActionHandler = (dispatch, nodeBalan
     case 'started':
     case 'notification':
     default:
-      const { nodeBalancers: { itemsById: nodeBalancers } } = resourceState;
+      const {
+        nodeBalancers: { itemsById: nodeBalancers }
+      } = resourceState;
 
       /** If we already have it, don't request it. */
       if (nodeBalancers[nodeBalancerId]) {
@@ -51,7 +71,13 @@ const handleNodeBalancerCreate: NodeBalancerActionHandler = (dispatch, nodeBalan
   }
 };
 
-const handleNodeBalancerDelete: NodeBalancerActionHandler = (dispatch, nodeBalancerId, action, status, resourceState) => {
+const handleNodeBalancerDelete: NodeBalancerActionHandler = (
+  dispatch,
+  nodeBalancerId,
+  action,
+  status,
+  resourceState
+) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -59,12 +85,10 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (dispatch, nodeBalan
     case 'scheduled':
     case 'started':
     default:
-
-
       /** Delete NodeBalancer and all configs owned by the NodeBalancer. */
       const {
         nodeBalancers: { itemsById: nodeBalancers },
-        nodeBalancerConfigs: { itemsById: nodeBalancerConfigs },
+        nodeBalancerConfigs: { itemsById: nodeBalancerConfigs }
       } = resourceState;
 
       /** If it's already out of state, don't bother trying to delete. */
@@ -74,15 +98,19 @@ const handleNodeBalancerDelete: NodeBalancerActionHandler = (dispatch, nodeBalan
 
       const configsArray = Object.values(nodeBalancerConfigs) || [];
 
-      const configsToDelete = configsArray
-        .reduce((result, { nodebalancer_id, id }) =>
-          nodebalancer_id === nodeBalancerId
-            ? [...result, id]
-            : result,
-          []);
+      const configsToDelete = configsArray.reduce(
+        (result, { nodebalancer_id, id }) =>
+          nodebalancer_id === nodeBalancerId ? [...result, id] : result,
+        []
+      );
 
       dispatch(removeNodeBalancerConfigs(configsToDelete));
-      dispatch(deleteNodeBalancerActions.done({ params: { nodeBalancerId }, result: {} }));
+      dispatch(
+        deleteNodeBalancerActions.done({
+          params: { nodeBalancerId },
+          result: {}
+        })
+      );
       return;
   }
 };

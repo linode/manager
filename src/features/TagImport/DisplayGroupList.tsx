@@ -1,21 +1,25 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper'
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import Paper from 'src/components/core/Paper';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'groupBox' | 'groupItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     background: theme.bg.tableHeader,
     padding: theme.spacing.unit * 2
   },
   groupBox: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   groupItem: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit
   }
 });
 
@@ -26,18 +30,20 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props) => {
+export const DisplayGroupList: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { classes, entity, groups } = props;
 
-  if (isEmpty(groups)) { return null; }
+  if (isEmpty(groups)) {
+    return null;
+  }
 
   return (
     <Paper className={classes.root}>
-      <Typography variant="h3">
-        {entity} Groups to Import
-      </Typography>
+      <Typography variant="h3">{entity} Groups to Import</Typography>
       <div className={classes.groupBox}>
-        {groups.map((group:string, idx: number) =>
+        {groups.map((group: string, idx: number) => (
           <Typography
             key={`${entity}-group-item-${idx}`}
             className={classes.groupItem}
@@ -45,7 +51,7 @@ export const DisplayGroupList: React.StatelessComponent<CombinedProps> = (props)
           >
             - {group}
           </Typography>
-        )}
+        ))}
       </div>
     </Paper>
   );

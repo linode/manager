@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import truncateText from 'src/utilities/truncateText';
 
@@ -9,32 +13,28 @@ export interface Doc {
   body: string;
 }
 
-type CSSClasses = 'root'
-| 'title'
-| 'titleLink'
-| 'body';
+type CSSClasses = 'root' | 'title' | 'titleLink' | 'body';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   title: {},
   titleLink: {
     color: theme.color.headline,
     textDecoration: 'underline',
     '&:hover': {
-      color: theme.color.black,
-    },
+      color: theme.color.black
+    }
   },
   body: {
-    marginTop: theme.spacing.unit,
-  },
+    marginTop: theme.spacing.unit
+  }
 });
 
 type PropsWithStyles = Doc & WithStyles<CSSClasses>;
 
 class DocComponent extends React.PureComponent<PropsWithStyles> {
-
   body = () => {
     const { body } = this.props;
     return truncateText(body, 200);
@@ -47,7 +47,9 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
       <React.Fragment>
         <div className={classes.root} data-qa-doc={title}>
           <Typography role="header" variant="h3" className={classes.title}>
-            <a href={src} target="_blank" className={classes.titleLink}>{title}</a>
+            <a href={src} target="_blank" className={classes.titleLink}>
+              {title}
+            </a>
           </Typography>
           <Typography variant="body2" className={classes.body}>
             {this.body()}

@@ -14,7 +14,10 @@ describe('isPathOneOf', () => {
   });
 
   it('should return true when path is not one of', () => {
-    const result = isPathOneOf(['/volumes', '/linodes', '/images'], '/linodes/1234');
+    const result = isPathOneOf(
+      ['/volumes', '/linodes', '/images'],
+      '/linodes/1234'
+    );
     expect(result).toBe(true);
   });
 });

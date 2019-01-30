@@ -15,25 +15,30 @@ const CLEAR = '@@manager/documentation/CLEAR';
 const SET = '@@manager/documentation/SET';
 
 export const clearDocs = (): ClearType => ({
-  type: CLEAR,
+  type: CLEAR
 });
 
 export const setDocs = (docs: Linode.Doc[]): SetType => ({
   type: SET,
-  payload: docs,
+  payload: docs
 });
 
 export const defaultState: Linode.Doc[] = [];
 
-const documentation: Reducer<State> = (state = defaultState, action: ClearType | SetType) => {
+const documentation: Reducer<State> = (
+  state = defaultState,
+  action: ClearType | SetType
+) => {
   switch (action.type) {
-    case CLEAR: return [];
+    case CLEAR:
+      return [];
 
-    case SET: return action.payload;
+    case SET:
+      return action.payload;
 
     default:
       return state;
   }
-}
+};
 
 export default documentation;

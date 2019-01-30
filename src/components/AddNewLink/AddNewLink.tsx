@@ -14,7 +14,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const AddNewLink: React.StatelessComponent<CombinedProps> = (props) => {
+const AddNewLink: React.StatelessComponent<CombinedProps> = props => {
   const { onClick, label, display, disabled, left, className } = props;
   return (
     <IconTextLink

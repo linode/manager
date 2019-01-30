@@ -1,15 +1,19 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
 import Tag from 'src/components/Tag';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    backgroundColor: 'transparent',
-  },
+    backgroundColor: 'transparent'
+  }
 });
 
 interface Props {
@@ -18,17 +22,17 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeRowTags: React.StatelessComponent<CombinedProps> = (props) => {
+const LinodeRowTags: React.StatelessComponent<CombinedProps> = props => {
   const { tags, classes } = props;
   return (
     <Paper className={classes.root}>
-      {tags.map((tag, idx) =>
+      {tags.map((tag, idx) => (
         <Tag
           key={`linode-row-tag-item-${idx}`}
-          colorVariant='lightBlue'
+          colorVariant="lightBlue"
           label={tag}
         />
-      )}
+      ))}
     </Paper>
   );
 };

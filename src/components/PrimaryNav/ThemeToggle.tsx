@@ -1,19 +1,24 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles, WithTheme } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles,
+  WithTheme
+} from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
-export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+export const styles: StyleRulesCallback<ClassNames> = theme => ({
   switchText: {
     color: '#777',
     fontSize: '.8rem',
     transition: theme.transitions.create(['color']),
     '&.active': {
       transition: theme.transitions.create(['color']),
-      color: '#C9CACB',
-    },
+      color: '#C9CACB'
+    }
   },
   switchWrapper: {
     padding: '16px 40px 0 34px',
@@ -21,17 +26,17 @@ export const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     marginTop: 'auto',
     width: 'calc(100% - 20px)',
     justifyContent: 'center',
-    display: 'flex',
+    display: 'flex'
   },
   toggle: {
     '& > span:last-child': {
       backgroundColor: '#f4f4f4 !important',
-      opacity: `0.38 !important`,
+      opacity: `0.38 !important`
     },
     '&.darkTheme .square': {
-      fill: '#444 !important',
-    },
-  },
+      fill: '#444 !important'
+    }
+  }
 });
 
 interface Props {
@@ -40,7 +45,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
-export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
+export const ThemeToggle: React.StatelessComponent<CombinedProps> = props => {
   const { classes, toggleTheme, theme } = props;
   const { name: themeName } = theme;
 
@@ -49,7 +54,7 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: themeName === 'lightTheme',
+          active: themeName === 'lightTheme'
         })}
       >
         Light
@@ -59,14 +64,14 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
         checked={themeName !== 'lightTheme'}
         className={classNames({
           [classes.toggle]: true,
-          [themeName]: true,
+          [themeName]: true
         })}
         aria-label="Switch Theme"
       />
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: themeName === 'darkTheme',
+          active: themeName === 'darkTheme'
         })}
         style={{ marginLeft: 4 }}
       >
@@ -79,4 +84,3 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = (props) => {
 const styled = withStyles(styles, { withTheme: true });
 
 export default styled(ThemeToggle);
-

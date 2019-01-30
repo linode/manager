@@ -1,4 +1,4 @@
-import { Reducer } from "redux";
+import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { getLinodeTypesActions } from './linodeType.actions';
@@ -10,15 +10,14 @@ export const defaultState: State = {
   results: [],
   error: undefined,
   loading: true,
-  lastUpdated: 0,
+  lastUpdated: 0
 };
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
-
   if (isType(action, getLinodeTypesActions.started)) {
     return {
       ...state,
-      loading: true,
+      loading: true
     };
   }
 
@@ -40,7 +39,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      error,
+      error
     };
   }
 

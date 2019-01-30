@@ -1,21 +1,25 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { formatRegion } from 'src/utilities';
 
-type CSSClasses =  'regionIndicator';
+type CSSClasses = 'regionIndicator';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   regionIndicator: {
     alignItems: 'center',
-    whiteSpace: 'nowrap',
-  },
+    whiteSpace: 'nowrap'
+  }
 });
 
 interface Props {
   region: string;
 }
 
-class RegionIndicator extends React.Component<Props & WithStyles<CSSClasses> > {
+class RegionIndicator extends React.Component<Props & WithStyles<CSSClasses>> {
   render() {
     const { classes, region } = this.props;
 

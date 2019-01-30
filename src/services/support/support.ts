@@ -2,7 +2,13 @@ import { createReplySchema, createSupportTicketSchema } from './support.schema';
 
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type SupportTicket = Linode.SupportTicket;
@@ -37,8 +43,8 @@ export const getTickets = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter),
-  )
+    setXFilter(filter)
+  );
 
 /**
  * getTicket
@@ -50,11 +56,11 @@ export const getTickets = (params?: any, filter?: any) =>
  * @param filter { Object } JSON object to be sent as the X-Filter header
  *
  */
-export const getTicket = (ticketID:number) =>
+export const getTicket = (ticketID: number) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets/${ticketID}`),
-    setMethod('GET'),
-  ).then((response) => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * getTicketReplies
@@ -68,13 +74,17 @@ export const getTicket = (ticketID:number) =>
  *
  *
  */
-export const getTicketReplies = (ticketId:number, params?: any, filter?: any) =>
+export const getTicketReplies = (
+  ticketId: number,
+  params?: any,
+  filter?: any
+) =>
   Request<Page<Linode.SupportReply>>(
     setURL(`${API_ROOT}/support/tickets/${ticketId}/replies`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter),
-  ).then((response) => response.data);
+    setXFilter(filter)
+  ).then(response => response.data);
 
 /**
  * createSupportTicket
@@ -90,8 +100,8 @@ export const createSupportTicket = (data: TicketRequest) =>
   Request<SupportTicket>(
     setURL(`${API_ROOT}/support/tickets`),
     setMethod('POST'),
-    setData(data, createSupportTicketSchema),
-  ).then(response => response.data)
+    setData(data, createSupportTicketSchema)
+  ).then(response => response.data);
 
 /**
  * closeSupportTicket
@@ -105,9 +115,9 @@ export const createSupportTicket = (data: TicketRequest) =>
  */
 export const closeSupportTicket = (ticketId: number) =>
   Request<{}>(
-  setURL(`${API_ROOT}/support/tickets/${ticketId}/close`),
-  setMethod('POST'),
-).then(response => response.data);
+    setURL(`${API_ROOT}/support/tickets/${ticketId}/close`),
+    setMethod('POST')
+  ).then(response => response.data);
 
 /**
  * createReply
@@ -124,8 +134,8 @@ export const createReply = (data: ReplyRequest) =>
   Request<Linode.SupportReply>(
     setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
     setMethod('POST'),
-    setData(data, createReplySchema),
-).then(response => response.data)
+    setData(data, createReplySchema)
+  ).then(response => response.data);
 
 /**
  * uploadAttachment
@@ -138,7 +148,7 @@ export const createReply = (data: ReplyRequest) =>
  */
 export const uploadAttachment = (ticketId: number, formData: FormData) =>
   Request<{}>(
-  setURL(`${API_ROOT}/support/tickets/${ticketId}/attachments`),
-  setMethod('POST'),
-  setData(formData),
-).then(response => response.data);
+    setURL(`${API_ROOT}/support/tickets/${ticketId}/attachments`),
+    setMethod('POST'),
+    setData(formData)
+  ).then(response => response.data);
