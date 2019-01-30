@@ -701,7 +701,9 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                         return (
                           <>
                             <Paper>
-                              <Table aria-label="List of Domains MX Records">
+                              <Table
+                                aria-label={`List of Domains ${type.title}`}
+                              >
                                 <TableHead>
                                   <TableRow>
                                     {type.columns.length > 0 &&
