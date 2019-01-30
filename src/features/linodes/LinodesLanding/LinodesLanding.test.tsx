@@ -33,12 +33,11 @@ describe('ListLinodes', () => {
             backupsCTA={false}
           />
         </StaticRouter>
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
   });
 
   it.skip('renders an empty state with no linodes', () => {
-
     const component = shallow(
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
@@ -61,7 +60,7 @@ describe('ListLinodes', () => {
             backupsCTA={false}
           />
         </StaticRouter>
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
     const emptyState = component.find('ListLinodesEmptyState');
@@ -93,7 +92,7 @@ describe('ListLinodes', () => {
             backupsCTA={false}
           />
         </StaticRouter>
-      </LinodeThemeWrapper>,
+      </LinodeThemeWrapper>
     );
 
     const kabobButton = component.find('MoreHoriz').first();

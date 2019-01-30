@@ -12,10 +12,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
-    const {
-      onView,
-      onEdit,
-    } = this.props;
+    const { onView, onEdit } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -25,31 +22,27 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
             onView();
             closeMenu();
             e.preventDefault();
-          },
-        },
+          }
+        }
       ];
 
       if (onEdit) {
-        actions.push(
-          {
-            title: 'Edit RDNS',
-            onClick: (e: React.MouseEvent<HTMLElement>) => {
-              onEdit();
-              closeMenu();
-              e.preventDefault();
-            },
-          },
-        );
+        actions.push({
+          title: 'Edit RDNS',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onEdit();
+            closeMenu();
+            e.preventDefault();
+          }
+        });
       }
 
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

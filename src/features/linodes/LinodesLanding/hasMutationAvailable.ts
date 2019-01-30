@@ -12,16 +12,19 @@ const hasMutation = (type?: null | Linode.LinodeType) => {
   }
 
   return !!type.successor;
-}
+};
 
-const mapStateToProps: MapState<HasMutationAvailable, { linodeType: string }> = (state, ownProps) => {
+const mapStateToProps: MapState<
+  HasMutationAvailable,
+  { linodeType: string }
+> = (state, ownProps) => {
   const { linodeType } = ownProps;
   const { entities, results } = state.__resources.types;
   const type = getLinodeType(entities, results, linodeType);
 
-  return ({
-    mutationAvailable: hasMutation(type),
-  })
+  return {
+    mutationAvailable: hasMutation(type)
+  };
 };
 
 export default connect(mapStateToProps);

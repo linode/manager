@@ -32,38 +32,37 @@ class DomainRecordActionMenu extends React.Component<CombinedProps> {
   handleEdit = () => {
     const { editPayload, onEdit } = this.props;
     onEdit(editPayload);
-  }
+  };
 
   handleDelete = () => {
     const { deleteData } = this.props;
     deleteData!.onDelete(deleteData!.recordID);
-  }
-  
-  createActions = () => (closeMenu: Function): Action[] => compose<Action[], Action[], Action[]>(
-    when(
-      () => has('deleteData', this.props),
+  };
+
+  createActions = () => (closeMenu: Function): Action[] =>
+    compose<Action[], Action[], Action[]>(
+      when(
+        () => has('deleteData', this.props),
+        append({
+          title: 'Delete',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            this.handleDelete();
+            closeMenu();
+            e.preventDefault();
+          }
+        })
+      ),
       append({
-        title: 'Delete',
+        title: 'Edit',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          this.handleDelete();
+          this.handleEdit();
           closeMenu();
           e.preventDefault();
-        },
-      }),
-    ),
-    append({
-      title: 'Edit',
-      onClick: (e: React.MouseEvent<HTMLElement>) => {
-        this.handleEdit();
-        closeMenu();
-        e.preventDefault();
-      },
-    }),
-  )([])
+        }
+      })
+    )([]);
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

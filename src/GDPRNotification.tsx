@@ -1,13 +1,17 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -18,7 +22,11 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
-  actions = () => <Button onClick={this.props.onClose} type="primary">Dismiss</Button>;
+  actions = () => (
+    <Button onClick={this.props.onClose} type="primary">
+      Dismiss
+    </Button>
+  );
 
   render() {
     return (
@@ -28,8 +36,16 @@ class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
         onClose={this.props.onClose}
         title="Privacy Policy Update"
       >
-        <Typography style={{ marginBottom: 8 }}><strong>We've updated our policies.</strong></Typography>
-        <Typography>You must agree to the terms at <a href='https://manager.linode.com/account/policy'>https://manager.linode.com/account/policy</a> to permanently dismiss this window.</Typography>
+        <Typography style={{ marginBottom: 8 }}>
+          <strong>We've updated our policies.</strong>
+        </Typography>
+        <Typography>
+          You must agree to the terms at{' '}
+          <a href="https://manager.linode.com/account/policy">
+            https://manager.linode.com/account/policy
+          </a>{' '}
+          to permanently dismiss this window.
+        </Typography>
       </ConfirmationDialog>
     );
   }

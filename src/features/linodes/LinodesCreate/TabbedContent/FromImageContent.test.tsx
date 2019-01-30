@@ -21,7 +21,7 @@ const mockProps = {
     actions: {
       addTag: jest.fn(),
       createTag: jest.fn(),
-      getLinodeTagList: jest.fn(),
+      getLinodeTagList: jest.fn()
     }
   },
   enqueueSnackbar: jest.fn(),
@@ -40,9 +40,9 @@ describe('FromImageContent', () => {
       {...mockProps}
       notice={{
         text: 'hello world',
-        level: 'warning' as 'warning' | 'error',
+        level: 'warning' as 'warning' | 'error'
       }}
-    />,
+    />
   );
 
   const component = shallow<FromImageContent>(
@@ -51,7 +51,7 @@ describe('FromImageContent', () => {
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
-    />,
+    />
   );
 
   const componentWithImages = shallow<FromImageContent>(
@@ -60,19 +60,21 @@ describe('FromImageContent', () => {
       handleDisablePasswordField={jest.fn()}
       classes={{ root: '', main: '', sidebar: '' }}
       {...mockProps}
-      images={[{
-        id: 'linode/debian9',
-        label: '',
-        description: null,
-        created: '',
-        type: '',
-        is_public: true,
-        size: 1,
-        created_by: null,
-        vendor: null,
-        deprecated: false }
+      images={[
+        {
+          id: 'linode/debian9',
+          label: '',
+          description: null,
+          created: '',
+          type: '',
+          is_public: true,
+          size: 1,
+          created_by: null,
+          vendor: null,
+          deprecated: false
+        }
       ]}
-    />,
+    />
   );
 
   it('should default to Debian 9 as the selected image', () => {
@@ -92,26 +94,42 @@ describe('FromImageContent', () => {
   });
 
   it('should render SelectImage panel', () => {
-    expect(component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')).toHaveLength(1);
+    expect(
+      component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')
+    ).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
-    expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))')).toHaveLength(1);
+    expect(
+      component.find(
+        'WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))'
+      )
+    ).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
-    expect(component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')).toHaveLength(1);
+    expect(
+      component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')
+    ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
-    expect(component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')).toHaveLength(1);
+    expect(
+      component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')
+    ).toHaveLength(1);
   });
 
   it('should render SelectPassword panel', () => {
-    expect(component.find('WithStyles(WithTheme(WithRenderGuard(AccessPanel)))')).toHaveLength(1);
+    expect(
+      component.find('WithStyles(WithTheme(WithRenderGuard(AccessPanel)))')
+    ).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
-    expect(component.find('WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))')).toHaveLength(1);
+    expect(
+      component.find(
+        'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
+      )
+    ).toHaveLength(1);
   });
 });

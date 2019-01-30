@@ -1,6 +1,10 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -11,12 +15,12 @@ import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   loadingWrapper: {
     border: 0,
-    paddingTop: 100,
-  },
+    paddingTop: 100
+  }
 });
 
 export interface Props {
@@ -30,14 +34,10 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SelectStackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    onSelect,
-    selectedId,
-    data,
-    isSorting,
-    classes,
-  } = props;
+const SelectStackScriptsSection: React.StatelessComponent<
+  CombinedProps
+> = props => {
+  const { onSelect, selectedId, data, isSorting, classes } = props;
 
   const selectStackScript = (s: Linode.StackScript.Response) => (
     <StackScriptSelectionRow
@@ -53,23 +53,25 @@ const SelectStackScriptsSection: React.StatelessComponent<CombinedProps> = (prop
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
     />
-  )
+  );
 
   return (
     <TableBody>
-      {!isSorting
-        ? data && data
-          .map(selectStackScript)
-        : <TableRow>
+      {!isSorting ? (
+        data && data.map(selectStackScript)
+      ) : (
+        <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
-            <CircleProgress noTopMargin/>
+            <CircleProgress noTopMargin />
           </TableCell>
         </TableRow>
-      }
+      )}
     </TableBody>
   );
 };
 
 const styled = withStyles(styles);
 
-export default styled(SelectStackScriptsSection) as React.StatelessComponent<Props>;
+export default styled(SelectStackScriptsSection) as React.StatelessComponent<
+  Props
+>;

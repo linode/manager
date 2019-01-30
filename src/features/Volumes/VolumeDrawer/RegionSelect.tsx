@@ -3,16 +3,22 @@ import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import Select from 'src/components/Select';
-import regionsContainer, { DefaultProps as WithRegions } from 'src/containers/regions.container';
+import regionsContainer, {
+  DefaultProps as WithRegions
+} from 'src/containers/regions.container';
 import { formatRegion } from 'src/utilities';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -25,40 +31,35 @@ interface Props {
 
 type CombinedProps = Props & WithRegions & WithStyles<ClassNames>;
 
-const RegionSelect: React.StatelessComponent<CombinedProps> = (props) => {
-  const {
-    error,
-    onChange,
-    onBlur,
-    regionsData,
-    value,
-    name,
-  } = props;
+const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
+  const { error, onChange, onBlur, regionsData, value, name } = props;
 
   return (
     <FormControl fullWidth>
-      <InputLabel htmlFor="region" disableAnimation shrink={true} >
+      <InputLabel htmlFor="region" disableAnimation shrink={true}>
         Region
       </InputLabel>
       <Select
         value={value}
         name={name}
-        placeholder='All Regions'
+        placeholder="All Regions"
         onChange={onChange}
         onBlur={onBlur}
         inputProps={{ name: 'region', id: 'region' }}
         data-qa-select-region
       >
-        <MenuItem key="none" value="none">All Regions</MenuItem>
-        {regionsData.map(eachRegion =>
-          (<MenuItem
+        <MenuItem key="none" value="none">
+          All Regions
+        </MenuItem>
+        {regionsData.map(eachRegion => (
+          <MenuItem
             key={eachRegion.id}
             value={eachRegion.id}
             data-qa-attach-to-region={eachRegion.id}
           >
             {formatRegion('' + eachRegion.id)}
-          </MenuItem>)
-        )}
+          </MenuItem>
+        ))}
       </Select>
       {error && <FormHelperText error>{error}</FormHelperText>}
     </FormControl>
@@ -71,7 +72,7 @@ const withRegions = regionsContainer();
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withRegions,
-)
+  withRegions
+);
 
 export default enhanced(RegionSelect);

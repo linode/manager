@@ -1,6 +1,10 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -11,12 +15,12 @@ import StackScriptRow from './StackScriptRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   loadingWrapper: {
     border: 0,
-    paddingTop: 100,
-  },
+    paddingTop: 100
+  }
 });
 
 export interface Props {
@@ -30,7 +34,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => {
+const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
   const {
     data,
     isSorting,
@@ -40,7 +44,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = (props) => 
     triggerMakePublic
   } = props;
 
-const listStackScript = (s: Linode.StackScript.Response) => (
+  const listStackScript = (s: Linode.StackScript.Response) => (
     <StackScriptRow
       key={s.id}
       label={s.label}
@@ -56,41 +60,41 @@ const listStackScript = (s: Linode.StackScript.Response) => (
       canDelete={canDelete(s.username, s.is_public)}
       canEdit={canEdit(s.username)}
     />
-  )
+  );
 
   /*
-  * We can only delete a stackscript if it's ours
-  * and it's not publicly available
-  */
+   * We can only delete a stackscript if it's ours
+   * and it's not publicly available
+   */
   const canDelete = (stackScriptUser: string, stackScriptIsPublic: boolean) => {
     if (stackScriptUser === currentUser && !stackScriptIsPublic) {
       return true;
     }
     return false;
-  }
+  };
 
   /*
-  * We can only edit a stackscript if it's ours
-  * it doesn't matter if it's public or not
-  */
+   * We can only edit a stackscript if it's ours
+   * it doesn't matter if it's public or not
+   */
   const canEdit = (stackScriptUser: string) => {
     if (stackScriptUser === currentUser) {
       return true;
     }
     return false;
-  }
+  };
 
   return (
     <TableBody>
-      {!isSorting
-        ? data && data
-          .map(listStackScript)
-        : <TableRow>
+      {!isSorting ? (
+        data && data.map(listStackScript)
+      ) : (
+        <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
-            <CircleProgress noTopMargin/>
+            <CircleProgress noTopMargin />
           </TableCell>
         </TableRow>
-      }
+      )}
     </TableBody>
   );
 };

@@ -7,7 +7,10 @@ export const createImageSchema = object().shape({
   label: string()
     .notRequired()
     .max(50, 'Length must be 50 characters or less.')
-    .matches(/^[a-zA-Z0-9,.?\-_\s']+$/, 'Image labels cannot contain special characters.'),
+    .matches(
+      /^[a-zA-Z0-9,.?\-_\s']+$/,
+      'Image labels cannot contain special characters.'
+    ),
   description: string()
     .notRequired()
     .min(1)
@@ -18,7 +21,10 @@ export const updateImageSchema = object().shape({
   label: string()
     .notRequired()
     .max(50, 'Length must be 50 characters or less.')
-    .matches(/^[a-zA-Z0-9,.?\-_\s']+$/, 'Image labels cannot contain special characters.'),
+    .matches(
+      /^[a-zA-Z0-9,.?\-_\s']+$/,
+      'Image labels cannot contain special characters.'
+    ),
   description: string()
     .notRequired()
     .max(65000, 'Length must be 65000 characters or less.')

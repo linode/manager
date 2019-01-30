@@ -17,17 +17,24 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
   handleEdit = () => {
     const { config, onEdit } = this.props;
     onEdit(config);
-  }
+  };
 
   handleDelete = () => {
-    const { config: { id, label }, onDelete } = this.props;
-    onDelete(id, label)
-  }
+    const {
+      config: { id, label },
+      onDelete
+    } = this.props;
+    onDelete(id, label);
+  };
 
   handleBoot = () => {
-    const { config: { id, label }, linodeId, onBoot } = this.props;
+    const {
+      config: { id, label },
+      linodeId,
+      onBoot
+    } = this.props;
     onBoot(linodeId, id, label);
-  }
+  };
 
   createConfigActions = () => (closeMenu: Function): Action[] => {
     const actions = [
@@ -37,7 +44,7 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleBoot();
           closeMenu();
-        },
+        }
       },
       {
         title: 'Edit',
@@ -45,7 +52,7 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleEdit();
           closeMenu();
-        },
+        }
       },
       {
         title: 'Delete',
@@ -53,17 +60,15 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleDelete();
           closeMenu();
-        },
-      },
+        }
+      }
     ];
 
     return actions;
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createConfigActions()} />
-    );
+    return <ActionMenu createActions={this.createConfigActions()} />;
   }
 }
 

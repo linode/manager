@@ -1,2 +1,2 @@
 import LinodesDashboardCard from './LinodesDashboardCard';
-export default LinodesDashboardCard
+export default LinodesDashboardCard;

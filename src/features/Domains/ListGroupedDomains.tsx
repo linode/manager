@@ -1,7 +1,10 @@
-
 import { compose } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -14,13 +17,19 @@ import TableWrapper from './DomainsTableWrapper';
 
 const DEFAULT_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell' | 'groupContainer';
+type ClassNames =
+  | 'root'
+  | 'tagGridRow'
+  | 'tagHeaderRow'
+  | 'tagHeader'
+  | 'tagHeaderOuter'
+  | 'paginationCell'
+  | 'groupContainer';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-  },
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
   tagGridRow: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
@@ -28,27 +37,26 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
       padding: '20px 0 10px',
-      borderBottom: 'none',
-    },
+      borderBottom: 'none'
+    }
   },
   groupContainer: {
     '&:first-of-type': {
       '& $tagHeaderRow > td': {
-        padding: '10px 0',
-      },
-    },
+        padding: '10px 0'
+      }
+    }
   },
   tagHeader: {
-    marginBottom: 2,
+    marginBottom: 2
   },
-  tagHeaderOuter: {
-  },
+  tagHeaderOuter: {},
   paginationCell: {
     paddingTop: 2,
     '& div:first-child': {
-      marginTop: 0,
-    },
-  },
+      marginTop: 0
+    }
+  }
 });
 interface Props {
   data: Linode.Domain[];
@@ -61,10 +69,21 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
-  const { data, onClone, onRemove, order, handleOrderChange, orderBy, classes } = props;
+const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    data,
+    onClone,
+    onRemove,
+    order,
+    handleOrderChange,
+    orderBy,
+    classes
+  } = props;
 
-  const groupedDomains = compose(sortGroups, groupByTags)(data);
+  const groupedDomains = compose(
+    sortGroups,
+    groupByTags
+  )(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
   return (
@@ -73,47 +92,67 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = (props) => {
         return (
           <React.Fragment key={tag}>
             <Paginate data={domains} pageSize={DEFAULT_PAGE_SIZE}>
-              {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
-
+              {({
+                data: paginatedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+                count
+              }) => {
                 return (
                   <React.Fragment>
-                    <TableBody className={classes.groupContainer} data-qa-tag-header={tag}>
+                    <TableBody
+                      className={classes.groupContainer}
+                      data-qa-tag-header={tag}
+                    >
                       <TableRow className={classes.tagHeaderRow}>
                         <TableCell colSpan={7}>
-                          <Typography variant="h2" component="h3" className={classes.tagHeader}>
+                          <Typography
+                            variant="h2"
+                            component="h3"
+                            className={classes.tagHeader}
+                          >
                             {tag}
                           </Typography>
                         </TableCell>
                       </TableRow>
-                      {paginatedData.map((domain) => <DomainTableRow
-                        key={domain.domain}
-                        domain={domain.domain}
-                        id={domain.id}
-                        onClone={onClone}
-                        onRemove={onRemove}
-                        tags={domain.tags}
-                        type={domain.type}
-                        status={domain.status}
-                      />)}
-                      {count > DEFAULT_PAGE_SIZE && <TableRow>
-                        <TableCell colSpan={7} className={classes.paginationCell}>
-                          <PaginationFooter
-                            count={count}
-                            handlePageChange={handlePageChange}
-                            handleSizeChange={handlePageSizeChange}
-                            pageSize={pageSize}
-                            page={page}
-                            eventCategory={'domains landing'}
-                          />
-                        </TableCell>
-                      </TableRow>}
+                      {paginatedData.map(domain => (
+                        <DomainTableRow
+                          key={domain.domain}
+                          domain={domain.domain}
+                          id={domain.id}
+                          onClone={onClone}
+                          onRemove={onRemove}
+                          tags={domain.tags}
+                          type={domain.type}
+                          status={domain.status}
+                        />
+                      ))}
+                      {count > DEFAULT_PAGE_SIZE && (
+                        <TableRow>
+                          <TableCell
+                            colSpan={7}
+                            className={classes.paginationCell}
+                          >
+                            <PaginationFooter
+                              count={count}
+                              handlePageChange={handlePageChange}
+                              handleSizeChange={handlePageSizeChange}
+                              pageSize={pageSize}
+                              page={page}
+                              eventCategory={'domains landing'}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </React.Fragment>
-                )
+                );
               }}
             </Paginate>
           </React.Fragment>
-        )
+        );
       })}
     </TableWrapper>
   );

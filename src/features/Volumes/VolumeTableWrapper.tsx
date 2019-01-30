@@ -1,4 +1,8 @@
-import { StyleRulesCallback, withStyles, WithStyles } from '@material-ui/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from '@material-ui/core/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
@@ -8,10 +12,10 @@ import SortableVolumesTableHeader from './SortableVolumesTableHeader';
 
 type ClassNames = 'root' | 'paperWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   paperWrapper: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   }
 });
 
@@ -19,13 +23,18 @@ interface VolumeTableWrapperProps {
   isVolumesLanding: boolean;
 }
 
-type CombinedProps =
-  & Omit<OrderByProps, 'data'>
-  & VolumeTableWrapperProps
-  & WithStyles<ClassNames>;
+type CombinedProps = Omit<OrderByProps, 'data'> &
+  VolumeTableWrapperProps &
+  WithStyles<ClassNames>;
 
-const DomainsTableWrapper: React.StatelessComponent<CombinedProps> = (props) => {
-  const { order, orderBy, handleOrderChange, classes, isVolumesLanding } = props;
+const DomainsTableWrapper: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    order,
+    orderBy,
+    handleOrderChange,
+    classes,
+    isVolumesLanding
+  } = props;
 
   return (
     <Paper className={classes.paperWrapper}>

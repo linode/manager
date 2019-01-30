@@ -1,6 +1,9 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../index';
-import { createNodeBalancerConfigSchema, UpdateNodeBalancerConfigSchema } from './nodebalancers.schema';
+import {
+  createNodeBalancerConfigSchema,
+  UpdateNodeBalancerConfigSchema
+} from './nodebalancers.schema';
 import { combineConfigNodeAddressAndPort } from './utils';
 
 type Page<T> = Linode.ResourcePage<T>;
@@ -11,15 +14,15 @@ type Page<T> = Linode.ResourcePage<T>;
 export interface NodeBalancerConfigFields {
   id?: number;
   algorithm?: 'roundrobin' | 'leastconn' | 'source';
-  check_attempts?: number; /** 1..30 */
+  check_attempts?: number /** 1..30 */;
   check_body?: string;
   check_interval?: number;
   check_passive?: boolean;
   check_path?: string;
-  check_timeout?: number; /** 1..30 */
+  check_timeout?: number /** 1..30 */;
   check?: 'none' | 'connection' | 'http' | 'http_body';
   cipher_suite?: 'recommended' | 'legacy';
-  port?: number; /** 1..65535 */
+  port?: number /** 1..65535 */;
   protocol?: 'http' | 'https' | 'tcp';
   ssl_cert?: string;
   ssl_key?: string;
@@ -45,7 +48,7 @@ export interface CreateNodeBalancerConfig {
 }
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface UpdateNodeBalancerConfig extends CreateNodeBalancerConfig  { }
+export interface UpdateNodeBalancerConfig extends CreateNodeBalancerConfig {}
 
 export interface NodeBalancerConfig {
   algorithm: 'roundrobin' | 'leastconn' | 'source';
@@ -82,7 +85,7 @@ export interface NodeBalancerConfig {
 export const getNodeBalancerConfigs = (nodeBalancerId: number) =>
   Request<Page<NodeBalancerConfig>>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 
 /**
@@ -92,10 +95,13 @@ export const getNodeBalancerConfigs = (nodeBalancerId: number) =>
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer associated with the config.
  */
-export const getNodeBalancerConfig = (nodeBalancerId: number, configId: number) =>
+export const getNodeBalancerConfig = (
+  nodeBalancerId: number,
+  configId: number
+) =>
   Request<Page<NodeBalancerConfig>>(
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 
 /**
@@ -106,17 +112,19 @@ export const getNodeBalancerConfig = (nodeBalancerId: number, configId: number) 
  *
  * @param nodeBalancerId { number } The NodeBalancer to receive the new config.
  */
-export const createNodeBalancerConfig = (nodeBalancerId: number, data: CreateNodeBalancerConfig) =>
+export const createNodeBalancerConfig = (
+  nodeBalancerId: number,
+  data: CreateNodeBalancerConfig
+) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPort,
-    ),
-  )
-    .then(response => response.data);
+      combineConfigNodeAddressAndPort
+    )
+  ).then(response => response.data);
 
 /**
  * updateNodeBalancerConfig
@@ -126,13 +134,16 @@ export const createNodeBalancerConfig = (nodeBalancerId: number, data: CreateNod
  * @param nodeBalancerId { number } The ID of the NodeBalancer associated with the config.
  * @param configId { number } The ID of the configuration profile to be updated
  */
-export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: number, data: UpdateNodeBalancerConfig) =>
+export const updateNodeBalancerConfig = (
+  nodeBalancerId: number,
+  configId: number,
+  data: UpdateNodeBalancerConfig
+) =>
   Request<NodeBalancerConfig>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
-    setData(data, UpdateNodeBalancerConfigSchema),
-  )
-    .then(response => response.data);
+    setData(data, UpdateNodeBalancerConfigSchema)
+  ).then(response => response.data);
 
 /**
  * deleteNodeBalancerConfig
@@ -142,9 +153,11 @@ export const updateNodeBalancerConfig = (nodeBalancerId: number, configId: numbe
  * @param nodeBalancerId { number } The ID of the NodeBalancer associated with the config.
  * @param configId { number } The ID of the configuration profile to be deleted.
  */
-export const deleteNodeBalancerConfig = (nodeBalancerId: number, configId: number) =>
+export const deleteNodeBalancerConfig = (
+  nodeBalancerId: number,
+  configId: number
+) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`),
-  )
-    .then(response => response.data);
+    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}`)
+  ).then(response => response.data);

@@ -2,30 +2,30 @@ import { compose, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 import { MapState } from 'src/store/types';
 
-type ClassNames = 'root'
-  | 'results'
-  | 'title'
-  | 'copyField';
+type ClassNames = 'root' | 'results' | 'title' | 'copyField';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
-  title: {
-  },
+  title: {},
   results: {
-    margin: `${theme.spacing.unit * 2}px 0`,
+    margin: `${theme.spacing.unit * 2}px 0`
   },
   copyField: {
-    marginTop: theme.spacing.unit,
-  },
+    marginTop: theme.spacing.unit
+  }
 });
 
 type CombinedProps = StateProps & WithStyles<ClassNames>;
@@ -40,7 +40,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
       total,
       completed,
       pending,
-      credit,
+      credit
     } = this.props;
 
     return (
@@ -55,28 +55,46 @@ class Referrals extends React.Component<CombinedProps, {}> {
               data-qa-title
             >
               Referrals
-          </Typography>
+            </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography>Referrals reward you when you refer people to Linode. If someone signs up using your referral code, you'll receive a credit of $20.00, so long as the person you referred remains an active customer for 90 days.</Typography>
+            <Typography>
+              Referrals reward you when you refer people to Linode. If someone
+              signs up using your referral code, you'll receive a credit of
+              $20.00, so long as the person you referred remains an active
+              customer for 90 days.
+            </Typography>
           </Grid>
-          {
-            profileLoading
-              ? (<div />)
-              : (
-                <React.Fragment>
-                  <Grid item>
-                    <Typography role="header" variant="h3" className={classes.results}>
-                      You have {total} total referrals: {completed} completed (${credit} ) and {pending} pending.
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <CopyableTextField value={code} label='Referral Code' className={classes.copyField} expand />
-                    <CopyableTextField value={url} label='Referral URL' className={classes.copyField} expand />
-                  </Grid>
-                </React.Fragment>
-              )
-          }
+          {profileLoading ? (
+            <div />
+          ) : (
+            <React.Fragment>
+              <Grid item>
+                <Typography
+                  role="header"
+                  variant="h3"
+                  className={classes.results}
+                >
+                  You have {total} total referrals: {completed} completed ($
+                  {credit} ) and {pending} pending.
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <CopyableTextField
+                  value={code}
+                  label="Referral Code"
+                  className={classes.copyField}
+                  expand
+                />
+                <CopyableTextField
+                  value={url}
+                  label="Referral URL"
+                  className={classes.copyField}
+                  expand
+                />
+              </Grid>
+            </React.Fragment>
+          )}
         </Grid>
       </Paper>
     );
@@ -95,7 +113,7 @@ interface StateProps {
   credit?: number;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => {
+const mapStateToProps: MapState<StateProps, {}> = state => {
   const { profile } = state.__resources;
 
   return {
@@ -105,15 +123,15 @@ const mapStateToProps: MapState<StateProps, {}> = (state) => {
     total: path(['data', 'referrals', 'total'], profile),
     completed: path(['data', 'referrals', 'completed'], profile),
     pending: path(['data', 'referrals', 'pending'], profile),
-    credit: path(['data', 'referrals', 'credit'], profile),
+    credit: path(['data', 'referrals', 'credit'], profile)
   };
-}
+};
 
 const connected = connect(mapStateToProps);
 
 const enhanced = compose(
   styled,
-  connected,
+  connected
 );
 
 export default enhanced(Referrals);

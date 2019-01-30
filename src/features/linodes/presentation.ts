@@ -2,30 +2,39 @@ import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 
 export const titlecase = (string: string): string => {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
-}
+};
 
 export const formatRegion = (region: string) => {
   const country = dcDisplayCountry[region];
   const city = dcDisplayNames[region];
   return `${country || ''} ${city || ''}`;
-}
+};
 
-export const typeLabelLong = (label: string, memory: number, disk: number, cpus: number) => {
+export const typeLabelLong = (
+  label: string,
+  memory: number,
+  disk: number,
+  cpus: number
+) => {
   return `${label}: ${typeLabelDetails(memory, disk, cpus)}`;
-}
+};
 
-export const typeLabelDetails = (memory: number, disk: number, cpus: number) => {
+export const typeLabelDetails = (
+  memory: number,
+  disk: number,
+  cpus: number
+) => {
   const memG = memory / 1024;
   const diskG = disk / 1024;
   return `${cpus} CPU, ${diskG}G Storage, ${memG}G RAM`;
-}
+};
 
 export const displayType = (
   linodeTypeId: null | string,
-  types: Pick<Linode.LinodeType, 'id' | 'label'>[],
+  types: Pick<Linode.LinodeType, 'id' | 'label'>[]
 ): string => {
   const plans = [
-    ...types,
+    ...types
     /** Legacy Types */
     // { id: 'standard-1', label: 'Linode 4GB (pending upgrade)' },
     // { id: 'standard-2', label: 'Linode 6GB (pending upgrade)' },
@@ -99,4 +108,4 @@ export const displayType = (
   }
 
   return 'Unknown Plan';
-}
+};

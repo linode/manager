@@ -21,9 +21,7 @@ type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 type SortOrder = 'asc' | 'desc';
 
-type APIFilters = 'label'
-  | 'deployments_active'
-  | 'updated'
+type APIFilters = 'label' | 'deployments_active' | 'updated';
 
 interface FilterInfo {
   apiFilter: APIFilters | null;
@@ -52,14 +50,16 @@ export interface State {
 type CombinedProps = StyleProps & any;
 
 interface HelperFunctions {
-  getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any
+  getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
   getNext: (e?: any) => void;
 }
 
 export type StateProps = HelperFunctions & State;
 
 /* tslint:disable-next-line */
-const withStackScriptBase = (isSelecting: boolean) => (Component: React.ComponentType<StateProps>) => {
+const withStackScriptBase = (isSelecting: boolean) => (
+  Component: React.ComponentType<StateProps>
+) => {
   class EnhancedComponent extends React.Component<CombinedProps, State> {
     static displayName = `WithStackScriptBase(${getDisplayName(Component)})`;
 
@@ -74,15 +74,18 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
       getMoreStackScriptsFailed: false,
       sortOrder: 'asc',
       currentFilterType: null,
-      currentFilter: { ['+order_by']: 'deployments_active', ['+order']: 'desc' },
+      currentFilter: {
+        ['+order_by']: 'deployments_active',
+        ['+order']: 'desc'
+      },
       currentSearchFilter: {},
       isSorting: false,
       error: undefined,
       fieldError: undefined,
       isSearching: false,
       didSearch: false,
-      successMessage: '',
-    }
+      successMessage: ''
+    };
 
     componentDidMount() {
       this.mounted = true;
@@ -93,47 +96,56 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
       this.mounted = false;
     }
 
-    getDataAtPage = (page: number,
+    getDataAtPage = (
+      page: number,
       filter: any = this.state.currentFilter,
-      isSorting: boolean = false) => {
+      isSorting: boolean = false
+    ) => {
       const { currentUser, category, request } = this.props;
       this.setState({ gettingMoreStackScripts: true, isSorting });
 
-      const filteredUser = (category === 'linode') ? 'linode' : currentUser;
+      const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
-      return request(
-        filteredUser,
-        { page, page_size: 50 },
-        filter)
+      return request(filteredUser, { page, page_size: 50 }, filter)
         .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
-          if (!this.mounted) { return; }
+          if (!this.mounted) {
+            return;
+          }
 
           /*
-          * if we have no results at all or if we've loaded all available results
-          */
-          if (!response.data.length || response.data.length === response.results) {
+           * if we have no results at all or if we've loaded all available results
+           */
+          if (
+            !response.data.length ||
+            response.data.length === response.results
+          ) {
             this.setState({ allStackScriptsLoaded: true });
           }
 
           /*
-          * if we're sorting, just return the requested data, since we're
-          * scrolling the user to the top and resetting the data
-          */
-          const newData = isSorting ? response.data : [...this.state.listOfStackScripts, ...response.data];
+           * if we're sorting, just return the requested data, since we're
+           * scrolling the user to the top and resetting the data
+           */
+          const newData = isSorting
+            ? response.data
+            : [...this.state.listOfStackScripts, ...response.data];
 
           /*
-          * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
-          * basically, if the result set after filtering out StackScripts with
-          * deprecated distos is 0, request the next page with the same filter.
-          */
-          const newDataWithoutDeprecatedDistros =
-            newData.filter(stackScript => this.hasNonDeprecatedImages(stackScript.images));
+           * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
+           * basically, if the result set after filtering out StackScripts with
+           * deprecated distos is 0, request the next page with the same filter.
+           */
+          const newDataWithoutDeprecatedDistros = newData.filter(stackScript =>
+            this.hasNonDeprecatedImages(stackScript.images)
+          );
 
           // we have to make sure both the original data set
           // AND the filtered data set is 0 before we request the next page automatically
-          if (isSorting
-            && (newData.length !== 0
-              && newDataWithoutDeprecatedDistros.length === 0)) {
+          if (
+            isSorting &&
+            (newData.length !== 0 &&
+              newDataWithoutDeprecatedDistros.length === 0)
+          ) {
             this.getNext();
             return;
           }
@@ -142,24 +154,37 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
             gettingMoreStackScripts: false,
             loading: false,
             isSorting: false,
-            getMoreStackScriptsFailed: false,
+            getMoreStackScriptsFailed: false
           });
           return newDataWithoutDeprecatedDistros;
         })
         .catch((e: any) => {
-          if (!this.mounted) { return; }
-          if (page > 1) { this.setState({ getMoreStackScriptsFailed: true }) }
-          this.setState({ error: e.response, loading: false, gettingMoreStackScripts: false });
+          if (!this.mounted) {
+            return;
+          }
+          if (page > 1) {
+            this.setState({ getMoreStackScriptsFailed: true });
+          }
+          this.setState({
+            error: e.response,
+            loading: false,
+            gettingMoreStackScripts: false
+          });
         });
-    }
+    };
 
     getNext = (e?: any) => {
-      if (!this.mounted) { return; }
-      this.setState(
-        { currentPage: this.state.currentPage + 1 },
-        () => this.getDataAtPage(this.state.currentPage, this.state.currentFilter, this.state.isSorting),
+      if (!this.mounted) {
+        return;
+      }
+      this.setState({ currentPage: this.state.currentPage + 1 }, () =>
+        this.getDataAtPage(
+          this.state.currentPage,
+          this.state.currentFilter,
+          this.state.isSorting
+        )
       );
-    }
+    };
 
     hasNonDeprecatedImages = (stackScriptImages: string[]) => {
       const { publicImages } = this.props;
@@ -171,60 +196,67 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
         }
       }
       return false;
-    }
+    };
 
     generateFilterInfo = (value: CurrentFilter): FilterInfo => {
       switch (value) {
         case 'label':
           return {
             apiFilter: 'label',
-            currentFilter: 'label',
-          }
+            currentFilter: 'label'
+          };
         case 'deploys':
           return {
             apiFilter: 'deployments_active',
-            currentFilter: 'deploys',
-          }
+            currentFilter: 'deploys'
+          };
         case 'revision':
           return {
             apiFilter: 'updated',
             currentFilter: 'revision'
-          }
+          };
         default:
           return {
             apiFilter: null,
-            currentFilter: null,
-          }
+            currentFilter: null
+          };
       }
-    }
+    };
 
     handleClickTableHeader = (value: string) => {
       const { currentSearchFilter, sortOrder } = this.state;
 
-      const nextSortOrder = (sortOrder === 'asc') ? 'desc' : 'asc';
+      const nextSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
       const targetFilter = value as CurrentFilter;
       const filterInfo = this.generateFilterInfo(targetFilter);
 
       /*
-      * If a search filter is applied, persist the search terms
-      * when we sort the table results
-      */
-      const filterWithSearch = (!!Object.keys(currentSearchFilter).length)
-        ? { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder, ...currentSearchFilter }
-        : { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder }
+       * If a search filter is applied, persist the search terms
+       * when we sort the table results
+       */
+      const filterWithSearch = !!Object.keys(currentSearchFilter).length
+        ? {
+            ['+order_by']: filterInfo.apiFilter,
+            ['+order']: sortOrder,
+            ...currentSearchFilter
+          }
+        : { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder };
 
       this.getDataAtPage(1, filterWithSearch, true);
       this.setState({
         sortOrder: nextSortOrder,
         currentFilterType: filterInfo.currentFilter,
-        currentFilter: { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder },
+        currentFilter: {
+          ['+order_by']: filterInfo.apiFilter,
+          ['+order']: sortOrder
+        }
       });
-    }
+    };
 
     handleSearch = (value: string) => {
       const { currentFilter } = this.state;
       const { category, currentUser, request } = this.props;
-      const filteredUser = (category === 'linode') ? 'linode' : currentUser;
+      const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
       const lowerCaseValue = value.toLowerCase().trim();
 
@@ -234,11 +266,11 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
        * only allow for advanced search if we're on the community
        * stackscripts tab
        */
-      if (category === 'community' &&
-        (
-          lowerCaseValue.includes('username:')
-          || lowerCaseValue.includes('label:')
-          || lowerCaseValue.includes('description:'))
+      if (
+        category === 'community' &&
+        (lowerCaseValue.includes('username:') ||
+          lowerCaseValue.includes('label:') ||
+          lowerCaseValue.includes('description:'))
       ) {
         /**
          * In this case, we have a search term that looks similar to the
@@ -253,18 +285,21 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
         const filterKey = lowerCaseValue.substr(0, indexOfColon);
         // everything after the colon is the term we want to search for
         const searchTerm = lowerCaseValue.substr(indexOfColon + 1);
-        filter = generateSpecificFilter(filterKey as AcceptedFilters, searchTerm)
+        filter = generateSpecificFilter(
+          filterKey as AcceptedFilters,
+          searchTerm
+        );
       } else {
         /**
          * Otherwise, just generate a catch-all filter for
          * username, description, and label
          */
-        filter = generateCatchAllFilter(lowerCaseValue)
+        filter = generateCatchAllFilter(lowerCaseValue);
       }
 
       this.setState({
         isSearching: true, // wether to show the loading spinner in search bar
-        didSearch: true, // table will show default empty state unless didSearch is true
+        didSearch: true // table will show default empty state unless didSearch is true
       });
 
       sendEvent({
@@ -279,29 +314,36 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
         { ...filter, ...currentFilter }
       )
         .then((response: any) => {
-          if (!this.mounted) { return; }
-          this.setState({ listOfStackScripts: response.data, isSearching: false });
+          if (!this.mounted) {
+            return;
+          }
+          this.setState({
+            listOfStackScripts: response.data,
+            isSearching: false
+          });
           /*
-          * If we're searching for search result, prevent the user
-          * from loading more stackscripts
-          */
+           * If we're searching for search result, prevent the user
+           * from loading more stackscripts
+           */
           if (value) {
             this.setState({
               allStackScriptsLoaded: true,
-              currentSearchFilter: filter,
+              currentSearchFilter: filter
             });
           } else {
             this.setState({
               allStackScriptsLoaded: false,
-              currentSearchFilter: [],
+              currentSearchFilter: []
             });
           }
         })
         .catch((e: any) => {
-          if (!this.mounted) { return; }
-          this.setState({ error: e, isSearching: false })
+          if (!this.mounted) {
+            return;
+          }
+          this.setState({ error: e, isSearching: false });
         });
-    }
+    };
 
     render() {
       const {
@@ -316,7 +358,7 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
         sortOrder,
         allStackScriptsLoaded,
         gettingMoreStackScripts,
-        getMoreStackScriptsFailed,
+        getMoreStackScriptsFailed
       } = this.state;
 
       const { classes } = this.props;
@@ -324,11 +366,9 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
       if (error) {
         return (
           <div style={{ overflow: 'hidden' }}>
-            <ErrorState
-              errorText={getErrorText(error)}
-            />
+            <ErrorState errorText={getErrorText(error)} />
           </div>
-        )
+        );
       }
 
       if (this.state.loading) {
@@ -337,39 +377,41 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
 
       return (
         <React.Fragment>
-          {fieldError && fieldError.reason &&
+          {fieldError && fieldError.reason && (
             <Notice text={fieldError.reason} error />
-          }
-          {successMessage &&
-            <Notice text={successMessage} success />
-          }
+          )}
+          {successMessage && <Notice text={successMessage} success />}
           {/*
-              * We only want to show this empty state on the initial GET StackScripts request
-              * If the user is searching and 0 results come back, we just want to show
-              * an empty table, rather than showing a message indicating no StackScripts exist
-              */}
-          {!didSearch && listOfStackScripts && listOfStackScripts.length === 0
-            ? <div className={classes.emptyState} data-qa-stackscript-empty-msg>
+           * We only want to show this empty state on the initial GET StackScripts request
+           * If the user is searching and 0 results come back, we just want to show
+           * an empty table, rather than showing a message indicating no StackScripts exist
+           */}
+          {!didSearch &&
+          listOfStackScripts &&
+          listOfStackScripts.length === 0 ? (
+            <div className={classes.emptyState} data-qa-stackscript-empty-msg>
               You do not have any StackScripts to select from. You must first
-                <Link to="/stackscripts/create"> create one.</Link>
+              <Link to="/stackscripts/create"> create one.</Link>
             </div>
-            : <React.Fragment>
+          ) : (
+            <React.Fragment>
               <div className={classes.searchWrapper}>
                 <DebouncedSearch
-                  placeholderText='Search by Label, Username, or Description'
+                  placeholderText="Search by Label, Username, or Description"
                   onSearch={this.handleSearch}
                   className={classes.searchBar}
                   isSearching={isSearching}
-                /** uncomment when we upgrade to MUI v3 */
-                // toolTipText={`Hint: try searching for a specific item by prepending your
-                // search term with "username:", "label:", or "description:"`}
+                  /** uncomment when we upgrade to MUI v3 */
+                  // toolTipText={`Hint: try searching for a specific item by prepending your
+                  // search term with "username:", "label:", or "description:"`}
                 />
               </div>
               <Table
                 isResponsive={false}
                 aria-label="List of StackScripts"
                 noOverflow={true}
-                tableClass={classes.table}>
+                tableClass={classes.table}
+              >
                 <StackScriptTableHead
                   handleClickTableHeader={this.handleClickTableHeader}
                   sortOrder={sortOrder}
@@ -384,39 +426,40 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
                 />
               </Table>
               {/*
-                  * show loading indicator if we're getting more stackscripts
-                  * and if we're not showing the "get more stackscripts" button
-                  */}
-              {gettingMoreStackScripts && !isSorting &&
-                <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}><CircleProgress mini /></div>
-              }
+               * show loading indicator if we're getting more stackscripts
+               * and if we're not showing the "get more stackscripts" button
+               */}
+              {gettingMoreStackScripts && !isSorting && (
+                <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}>
+                  <CircleProgress mini />
+                </div>
+              )}
             </React.Fragment>
-          }
+          )}
           {/*
-              * if we're sorting, or if we already loaded all results
-              * or if we're in the middle of getting more results, don't render
-              * the lazy load trigger
-              */}
-          {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts &&
+           * if we're sorting, or if we already loaded all results
+           * or if we're in the middle of getting more results, don't render
+           * the lazy load trigger
+           */}
+          {!isSorting && !allStackScriptsLoaded && !gettingMoreStackScripts && (
             <div style={{ textAlign: 'center' }}>
               {/*
-                  * If the lazy-load failed (marked by the catch in getNext),
-                  * show the "Show more StackScripts button
-                  * Otherwise, try to lazy load some more dang stackscripts
-                  */}
-              {(!getMoreStackScriptsFailed)
-                ? <Waypoint
-                  onEnter={this.getNext}
-                >
+               * If the lazy-load failed (marked by the catch in getNext),
+               * show the "Show more StackScripts button
+               * Otherwise, try to lazy load some more dang stackscripts
+               */}
+              {!getMoreStackScriptsFailed ? (
+                <Waypoint onEnter={this.getNext}>
                   {/*
-                      * The reason for this empty div is that there was some wonkiness when
-                      * scrolling to the waypoint with trackpads. For some reason, the Waypoint
-                      * would never be scrolled into view no matter how much you scrolled on the
-                      * trackpad. Especially finicky at zoomed in browser sizes
-                      */}
+                   * The reason for this empty div is that there was some wonkiness when
+                   * scrolling to the waypoint with trackpads. For some reason, the Waypoint
+                   * would never be scrolled into view no matter how much you scrolled on the
+                   * trackpad. Especially finicky at zoomed in browser sizes
+                   */}
                   <div style={{ minHeight: '150px' }} />
                 </Waypoint>
-                : <Button
+              ) : (
+                <Button
                   title="Show More StackScripts"
                   onClick={this.getNext}
                   value="Show More"
@@ -425,17 +468,17 @@ const withStackScriptBase = (isSelecting: boolean) => (Component: React.Componen
                   style={{ margin: '32px 0 32px 0' }}
                 >
                   Show More StackScripts
-                    </Button>
-              }
+                </Button>
+              )}
             </div>
-          }
+          )}
         </React.Fragment>
       );
     }
-  };
+  }
 
-  return withStyles(EnhancedComponent)
-}
+  return withStyles(EnhancedComponent);
+};
 
 const getDisplayName = (Component: React.ComponentType) =>
   Component.displayName || Component.name || 'Component';

@@ -17,9 +17,7 @@ const wrapper = <T extends {}>(Component: React.ComponentType) => {
 
     render() {
       if (this.state.error) {
-        return (
-          <ErrorState errorText="" />
-        );
+        return <ErrorState errorText="" />;
       }
 
       return <Component {...this.props} />;

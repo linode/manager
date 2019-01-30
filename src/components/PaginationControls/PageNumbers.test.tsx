@@ -6,13 +6,13 @@ window.matchMedia = jest.fn().mockImplementation(query => {
     media: query,
     onchange: null,
     addListener: jest.fn(),
-    removeListener: jest.fn(),
+    removeListener: jest.fn()
   };
 });
 
 describe('pageNumbersToRender', () => {
   it('should return pages 1 through 5', () => {
-    const page3 = pageNumbersToRender(3, 100)
+    const page3 = pageNumbersToRender(3, 100);
     const page4 = pageNumbersToRender(4, 105);
     const page0 = pageNumbersToRender(0, 10045);
 
@@ -36,6 +36,6 @@ describe('pageNumbersToRender', () => {
     const page93 = pageNumbersToRender(93, 10000);
 
     expect(page82).toEqual([80, 81, 82, 83, 84]);
-    expect(page93).toEqual([91, 92, 93, 94, 95])
+    expect(page93).toEqual([91, 92, 93, 94, 95]);
   });
 });

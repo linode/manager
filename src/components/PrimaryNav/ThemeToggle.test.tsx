@@ -7,7 +7,7 @@ describe('ThemeToggle', () => {
   const mockClasses = {
     switchText: '',
     switchWrapper: '',
-    toggle: '',
+    toggle: ''
   };
 
   it('should render', () => {

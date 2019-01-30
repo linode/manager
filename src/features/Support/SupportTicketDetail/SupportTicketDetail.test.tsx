@@ -21,26 +21,24 @@ const classes = {
   attachmentPaper: '',
   attachmentRow: '',
   attachmentIcon: ''
-}
+};
 
 describe('Support Ticket Detail', () => {
   let wrapper: ShallowWrapper;
   beforeEach(() => {
     wrapper = shallow(
-      <SupportTicketDetail
-        {...reactRouterProps}
-        classes={classes}
-      />
+      <SupportTicketDetail {...reactRouterProps} classes={classes} />
     );
   });
   describe('render', () => {
     it('renders a CircleProgress component when loading', () => {
       wrapper.setState({ loading: true });
-      expect(wrapper.find('WithStyles(circleProgressComponent)')).toHaveLength(1);
+      expect(wrapper.find('WithStyles(circleProgressComponent)')).toHaveLength(
+        1
+      );
     });
 
     it('renders an ErrorState when there are errors', () => {
-
       wrapper.setState({ loading: false, errors: 'ERROR' });
       expect(wrapper.find('WithStyles(ErrorState)')).toHaveLength(1);
     });
@@ -67,11 +65,11 @@ describe('Support Ticket Detail', () => {
 
     it('contains linkTo prop when closed', () => {
       wrapper.setState({
-        ticket: {...supportTicket, status: 'closed'}, loading: false
+        ticket: { ...supportTicket, status: 'closed' },
+        loading: false
       });
       breadcrumbProps = wrapper.find('[data-qa-breadcrumb]').props();
       expect(breadcrumbProps.linkTo).toEqual({
-
         pathname: '/support/tickets',
         state: { openFromRedirect: false }
       });

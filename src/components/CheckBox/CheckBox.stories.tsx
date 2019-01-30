@@ -6,41 +6,34 @@ class InteractiveCheckboxes extends React.Component {
   state = {
     checkedDefault: false,
     checkedWarning: false,
-    checkedError: false,
+    checkedError: false
   };
 
   handleDefaultClick = () => {
-    this.setState({ checkedDefault: !this.state.checkedDefault })
-  }
+    this.setState({ checkedDefault: !this.state.checkedDefault });
+  };
 
   handleWarningClick = () => {
-    this.setState({ checkedWarning: !this.state.checkedWarning })
-  }
+    this.setState({ checkedWarning: !this.state.checkedWarning });
+  };
 
   handleErrorClick = () => {
-    this.setState({ checkedError: !this.state.checkedError })
-  }
+    this.setState({ checkedError: !this.state.checkedError });
+  };
 
   render() {
     return (
       <React.Fragment>
-        <CheckBox
-          disabled
-          checked={false}
-          onChange={this.handleDefaultClick}
-        />
+        <CheckBox disabled checked={false} onChange={this.handleDefaultClick} />
         <span style={{ marginLeft: '8px' }} />
-        <CheckBox
-          disabled
-          checked={true}
-          onChange={this.handleDefaultClick}
-        />
+        <CheckBox disabled checked={true} onChange={this.handleDefaultClick} />
         <span style={{ marginLeft: '8px' }} />
         <CheckBox
           checked={this.state.checkedDefault}
           onChange={this.handleDefaultClick}
         />
-        <br /><br />
+        <br />
+        <br />
         <CheckBox
           variant="warning"
           disabled
@@ -60,7 +53,8 @@ class InteractiveCheckboxes extends React.Component {
           checked={this.state.checkedWarning}
           onChange={this.handleWarningClick}
         />
-        <br /><br />
+        <br />
+        <br />
         <CheckBox
           variant="error"
           disabled
@@ -85,7 +79,6 @@ class InteractiveCheckboxes extends React.Component {
   }
 }
 
-storiesOf('CheckBox', module)
-.add('Interactive', () => (
+storiesOf('CheckBox', module).add('Interactive', () => (
   <InteractiveCheckboxes />
 ));

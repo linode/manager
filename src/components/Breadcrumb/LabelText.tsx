@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'labelTitle' | 'labelSubtitle' | 'underlineOnHover';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   labelTitle: {
     padding: '0 10px',
-    lineHeight: '1.5rem',
+    lineHeight: '1.5rem'
   },
   labelSubtitle: {
     margin: '8px 0 0 10px'
@@ -17,8 +21,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
   underlineOnHover: {
     '&:hover, &:focus': {
       textDecoration: 'underline',
-      color: theme.color.black,
-    },
+      color: theme.color.black
+    }
   }
 });
 
@@ -30,7 +34,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const LabelText: React.StatelessComponent<CombinedProps> = (props) => {
+export const LabelText: React.StatelessComponent<CombinedProps> = props => {
   const { classes, title, subtitle, titleLink } = props;
 
   const labelTitle = (
@@ -45,17 +49,23 @@ export const LabelText: React.StatelessComponent<CombinedProps> = (props) => {
   );
 
   return (
-    <div style={{display: 'block'}}>
-      {titleLink
-        ? <Link to={titleLink!} data-qa-label-link>
-            <span className={classes.underlineOnHover}>{labelTitle}</span>
-          </Link>
-        :  labelTitle}
-      {subtitle &&
-        <Typography variant="body1" className={classes.labelSubtitle} data-qa-label-subtitle>
+    <div style={{ display: 'block' }}>
+      {titleLink ? (
+        <Link to={titleLink!} data-qa-label-link>
+          <span className={classes.underlineOnHover}>{labelTitle}</span>
+        </Link>
+      ) : (
+        labelTitle
+      )}
+      {subtitle && (
+        <Typography
+          variant="body1"
+          className={classes.labelSubtitle}
+          data-qa-label-subtitle
+        >
           {subtitle}
         </Typography>
-      }
+      )}
     </div>
   );
 };

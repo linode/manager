@@ -38,7 +38,6 @@ export interface NodeBalancerConfigNode {
 //   errors?: Linode.ApiFieldError[];
 // }
 
-
 /**
  * getNodeBalancerConfigNodes
  *
@@ -50,13 +49,14 @@ export interface NodeBalancerConfigNode {
  */
 export const getNodeBalancerConfigNodes = (
   nodeBalancerId: number,
-  configId: number,
+  configId: number
 ) =>
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
-  )
-    .then(response => response.data);
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
+    )
+  ).then(response => response.data);
 
 /**
  * getNodeBalancerConfigNode
@@ -71,13 +71,14 @@ export const getNodeBalancerConfigNodes = (
 export const getNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number,
+  nodeId: number
 ) =>
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
-  )
-    .then(response => response.data);
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+    )
+  ).then(response => response.data);
 /**
  * createNodeBalancerConfigNode
  *
@@ -105,18 +106,15 @@ export const getNodeBalancerConfigNode = (
 export const createNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  data: CreateNodeBalancerConfigNode,
+  data: CreateNodeBalancerConfigNode
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('POST'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`),
-    setData(
-      data,
-      nodeBalancerConfigNodeSchema,
-      mergeAddressAndPort,
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes`
     ),
-  )
-    .then(response => response.data);
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+  ).then(response => response.data);
 
 /**
  * createNodeBalancerConfigNode
@@ -145,18 +143,15 @@ export const updateNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
   nodeId: number,
-  data: UpdateNodeBalancerConfigNode,
+  data: UpdateNodeBalancerConfigNode
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
-    setData(
-      data,
-      nodeBalancerConfigNodeSchema,
-      mergeAddressAndPort,
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
     ),
-  )
-    .then(response => response.data);
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+  ).then(response => response.data);
 
 /**
  * deleteNodeBalancerConfigNode
@@ -170,10 +165,11 @@ export const updateNodeBalancerConfigNode = (
 export const deleteNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number,
+  nodeId: number
 ) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`),
-  )
-    .then(response => response.data);
+    setURL(
+      `${API_ROOT}/nodebalancers/${nodeBalancerId}/configs/${configId}/nodes/${nodeId}`
+    )
+  ).then(response => response.data);

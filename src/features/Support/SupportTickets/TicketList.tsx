@@ -2,7 +2,11 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -22,8 +26,8 @@ interface Props extends PaginationProps<Linode.SupportTicket> {
   newTicket?: Linode.SupportTicket;
 }
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 type ClassNames = 'root';
@@ -40,7 +44,7 @@ class TicketList extends React.Component<CombinedProps, {}> {
 
   componentDidUpdate(prevProps: Props, prevState: {}) {
     if (prevProps.filterStatus !== this.props.filterStatus) {
-      this.props.handlePageChange(1)
+      this.props.handlePageChange(1);
     }
     if (prevProps.newTicket !== this.props.newTicket) {
       this.props.request();
@@ -51,7 +55,7 @@ class TicketList extends React.Component<CombinedProps, {}> {
     this.mounted = false;
   }
 
-  getLinkTargets = (entity:any) => {
+  getLinkTargets = (entity: any) => {
     switch (entity.type) {
       case 'linode':
         return `/linodes/${entity.id}`;
@@ -66,45 +70,71 @@ class TicketList extends React.Component<CombinedProps, {}> {
       default:
         return '';
     }
-  }
+  };
 
   renderContent = () => {
     const { data: tickets, error, loading } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={12} />
+      return <TableRowLoading colSpan={12} />;
     }
 
     if (error) {
-      return <TableRowError colSpan={6} message="We were unable to load your support tickets." />
+      return (
+        <TableRowError
+          colSpan={6}
+          message="We were unable to load your support tickets."
+        />
+      );
     }
 
-    return tickets && tickets.length > 0 ? this.renderTickets(tickets) : <TableRowEmptyState colSpan={6} />
+    return tickets && tickets.length > 0 ? (
+      this.renderTickets(tickets)
+    ) : (
+      <TableRowEmptyState colSpan={6} />
+    );
   };
 
-  renderTickets = (tickets: Linode.SupportTicket[]) => tickets.map(this.renderRow);
+  renderTickets = (tickets: Linode.SupportTicket[]) =>
+    tickets.map(this.renderRow);
 
   renderEntityLink = (ticket: Linode.SupportTicket) => {
-    return ticket.entity
-      ? <Link to={this.getLinkTargets(ticket.entity)} className="secondaryLink">{ticket.entity.label}</Link>
-      : null
-  }
+    return ticket.entity ? (
+      <Link to={this.getLinkTargets(ticket.entity)} className="secondaryLink">
+        {ticket.entity.label}
+      </Link>
+    ) : null;
+  };
 
   renderRow = (ticket: Linode.SupportTicket) => {
     return (
-      <TableRow data-qa-support-ticket={ticket.id} key={`ticket-${ticket.id}`} rowLink={`/support/tickets/${ticket.id}`}>
-        <TableCell parentColumn="Subject" data-qa-support-subject><Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link></TableCell>
-        <TableCell parentColumn="Ticket ID" data-qa-support-id>{ticket.id}</TableCell>
-        <TableCell parentColumn="Regarding" data-qa-support-entity>{this.renderEntityLink(ticket)}</TableCell>
-        <TableCell parentColumn="Date Created" data-qa-support-date><DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} /></TableCell>
-        <TableCell parentColumn="Last Updated" data-qa-support-updated><DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} /></TableCell>
+      <TableRow
+        data-qa-support-ticket={ticket.id}
+        key={`ticket-${ticket.id}`}
+        rowLink={`/support/tickets/${ticket.id}`}
+      >
+        <TableCell parentColumn="Subject" data-qa-support-subject>
+          <Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link>
+        </TableCell>
+        <TableCell parentColumn="Ticket ID" data-qa-support-id>
+          {ticket.id}
+        </TableCell>
+        <TableCell parentColumn="Regarding" data-qa-support-entity>
+          {this.renderEntityLink(ticket)}
+        </TableCell>
+        <TableCell parentColumn="Date Created" data-qa-support-date>
+          <DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} />
+        </TableCell>
+        <TableCell parentColumn="Last Updated" data-qa-support-updated>
+          <DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} />
+        </TableCell>
         <TableCell />
       </TableRow>
     );
   };
 
   render() {
-    const { count, page, pageSize, } = this.props;
+    const { count, page, pageSize } = this.props;
 
     return (
       <React.Fragment>
@@ -112,17 +142,26 @@ class TicketList extends React.Component<CombinedProps, {}> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
-                <TableCell data-qa-support-subject-header style={{ minWidth: 200 }}>Subject</TableCell>
+                <TableCell
+                  data-qa-support-subject-header
+                  style={{ minWidth: 200 }}
+                >
+                  Subject
+                </TableCell>
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>
-                <TableCell data-qa-support-regarding-header>Regarding</TableCell>
-                <TableCell data-qa-support-date-header noWrap>Date Created</TableCell>
-                <TableCell data-qa-support-updated-header noWrap>Last Updated</TableCell>
+                <TableCell data-qa-support-regarding-header>
+                  Regarding
+                </TableCell>
+                <TableCell data-qa-support-date-header noWrap>
+                  Date Created
+                </TableCell>
+                <TableCell data-qa-support-updated-header noWrap>
+                  Last Updated
+                </TableCell>
                 <TableCell />
               </TableRow>
             </TableHead>
-            <TableBody>
-              {this.renderContent()}
-            </TableBody>
+            <TableBody>{this.renderContent()}</TableBody>
           </Table>
           <PaginationFooter
             count={count}
@@ -140,9 +179,10 @@ class TicketList extends React.Component<CombinedProps, {}> {
 }
 
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
-  return getTicketsPage(params, filters, ownProps.filterStatus)
-    .then(response => response)
-}
+  return getTicketsPage(params, filters, ownProps.filterStatus).then(
+    response => response
+  );
+};
 
 const paginated = Pagey(updatedRequest);
 
@@ -151,4 +191,4 @@ const styled = withStyles(styles);
 export default compose(
   paginated,
   styled
-)(TicketList)
+)(TicketList);

@@ -4,15 +4,20 @@ import * as React from 'react';
 import { images } from 'src/__data__/images';
 import Select from 'src/components/EnhancedSelect/Select';
 
-import { getImagesOptions, groupImages, groupNameMap, ImageSelect } from './ImageSelect';
+import {
+  getImagesOptions,
+  groupImages,
+  groupNameMap,
+  ImageSelect
+} from './ImageSelect';
 
 const props = {
-  classes: { root: '', icon: '', selectContainer: ''},
+  classes: { root: '', icon: '', selectContainer: '' },
   images,
-  onSelect: jest.fn(),
-}
+  onSelect: jest.fn()
+};
 
-const component = shallow(<ImageSelect {...props} />)
+const component = shallow(<ImageSelect {...props} />);
 
 const privateImage1 = {
   deprecated: false,
@@ -25,7 +30,7 @@ const privateImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const privateImage2 = {
@@ -39,7 +44,7 @@ const privateImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const deprecatedImage1 = {
@@ -53,7 +58,7 @@ const deprecatedImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const deprecatedImage2 = {
@@ -67,7 +72,7 @@ const deprecatedImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const recommendedImage1 = {
@@ -81,7 +86,7 @@ const recommendedImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const recommendedImage2 = {
@@ -95,7 +100,7 @@ const recommendedImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const deletedImage1 = {
@@ -109,7 +114,7 @@ const deletedImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 const deletedImage2 = {
@@ -123,28 +128,26 @@ const deletedImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: '',
+  created: ''
 };
 
 describe('ImageSelect', () => {
   describe('groupImages method', () => {
     it("should return a group of the user's private images", () => {
-
       const result = groupImages([privateImage1, privateImage2]);
 
       const expected = {
-        images: [privateImage1, privateImage2],
+        images: [privateImage1, privateImage2]
       };
 
       expect(result).toEqual(expected);
     });
 
     it('should return group deprecated images', () => {
-
       const result = groupImages([deprecatedImage1, deprecatedImage2]);
 
       const expected = {
-        older: [deprecatedImage1, deprecatedImage2],
+        older: [deprecatedImage1, deprecatedImage2]
       };
 
       expect(result).toEqual(expected);
@@ -155,52 +158,60 @@ describe('ImageSelect', () => {
       const result = groupImages(_images);
 
       const expected = {
-        recommended: _images,
+        recommended: _images
       };
 
       expect(result).toEqual(expected);
     });
 
     it('should return group deleted images', () => {
-
       const result = groupImages([deletedImage1, deletedImage2]);
 
       const expected = {
-        deleted: [deletedImage1, deletedImage2],
+        deleted: [deletedImage1, deletedImage2]
       };
 
       expect(result).toEqual(expected);
     });
   });
-  describe("getImagesOptions function" ,() => {
-    it("should return a list of GroupType", () => {
+  describe('getImagesOptions function', () => {
+    it('should return a list of GroupType', () => {
       const items = getImagesOptions([recommendedImage1, recommendedImage2]);
       expect(items[0]).toHaveProperty('label', groupNameMap.recommended);
       expect(items[0].options).toHaveLength(2);
     });
-    it("should handle multiple groups", () => {
-      const items = getImagesOptions([recommendedImage1, recommendedImage2, privateImage1, deletedImage1]);
+    it('should handle multiple groups', () => {
+      const items = getImagesOptions([
+        recommendedImage1,
+        recommendedImage2,
+        privateImage1,
+        deletedImage1
+      ]);
       expect(items).toHaveLength(3);
       const deleted = items.find(item => item.label === groupNameMap.deleted);
       expect(deleted!.options).toHaveLength(1);
     });
-    it("should properly format GroupType options as RS Item type", () => {
+    it('should properly format GroupType options as RS Item type', () => {
       const category = getImagesOptions([recommendedImage1])[0];
       const option = category.options[0];
       expect(option).toHaveProperty('label', recommendedImage1.label);
       expect(option).toHaveProperty('value', recommendedImage1.id);
-    })
-    it("should handle empty input", () => {
+    });
+    it('should handle empty input', () => {
       expect(getImagesOptions([])).toEqual([]);
     });
   });
-  describe("ImageSelect component", () => {
-    it("should render", () => {
+  describe('ImageSelect component', () => {
+    it('should render', () => {
       expect(component).toBeDefined();
     });
-    it("should display an error", () => {
-      component.setProps({ imageError: 'An error'});
-      expect(component.containsMatchingElement(<Select onChange={props.onSelect} errorText={'An error'}  />)).toBeTruthy()
+    it('should display an error', () => {
+      component.setProps({ imageError: 'An error' });
+      expect(
+        component.containsMatchingElement(
+          <Select onChange={props.onSelect} errorText={'An error'} />
+        )
+      ).toBeTruthy();
     });
   });
 });

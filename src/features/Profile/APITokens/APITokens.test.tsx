@@ -11,12 +11,15 @@ describe('APITokens', () => {
     const pats = [
       {
         created: '2018-04-09T20:00:00',
-        expiry: moment.utc().subtract(1, 'day').format(),
+        expiry: moment
+          .utc()
+          .subtract(1, 'day')
+          .format(),
         id: 1,
         token: 'aa588915b6368b80',
         scopes: 'account:read_write',
-        label: 'test-1',
-      },
+        label: 'test-1'
+      }
     ];
 
     const component = shallow<APITokenTable>(
@@ -28,7 +31,7 @@ describe('APITokens', () => {
           paper: '',
           labelCell: '',
           typeCell: '',
-          createdCell: '',
+          createdCell: ''
         }}
         title="Personal Access Tokens"
         type="Personal Access Token"
@@ -39,14 +42,14 @@ describe('APITokens', () => {
     /* Skipping until we can figure out how to call instance methods on nested component */
     it.skip('create token submit form should return false if label is blank', () => {
       (component.instance() as APITokenTable).createToken('*');
-      const errorsExist = (!!component.state().form.errors);
+      const errorsExist = !!component.state().form.errors;
       expect(errorsExist).toBeTruthy();
     });
 
     /* Skipping until we can figure out how to call instance methods on nested component */
     it.skip('edit token submit form should return false if label is blank', () => {
       (component.instance() as APITokenTable).editToken();
-      const errorsExist = (!!component.state().form.errors);
+      const errorsExist = !!component.state().form.errors;
       expect(errorsExist).toBeTruthy();
     });
 
@@ -58,19 +61,19 @@ describe('APITokens', () => {
           errors: undefined, // important that we reset the errors here after the previous tests
           values: {
             ...component.state().form.values,
-            label: 'test label',
-          },
-        },
+            label: 'test label'
+          }
+        }
       });
       (component.instance() as APITokenTable).createToken('*');
-      const errorsExist = (!!component.state().form.errors);
+      const errorsExist = !!component.state().form.errors;
       expect(errorsExist).toBeFalsy();
     });
 
     /* Skipping until we can figure out how to call instance methods on nested component */
     it.skip('edit token submit form should return no error state if label exists', () => {
       (component.instance() as APITokenTable).editToken();
-      const errorsExist = (!!component.state().form.errors);
+      const errorsExist = !!component.state().form.errors;
       expect(errorsExist).toBeFalsy();
     });
   });

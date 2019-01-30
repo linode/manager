@@ -6,7 +6,7 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { NodeBalancersLanding } from './NodeBalancersLanding';
 
 describe.skip('NodeBalancers', () => {
-    const component = mount(
+  const component = mount(
     <StaticRouter context={{}}>
       <LinodeThemeWrapper>
         <NodeBalancersLanding
@@ -26,23 +26,23 @@ describe.skip('NodeBalancers', () => {
             transferred: '',
             ports: '',
             ip: '',
-            tagGroup: '',
+            tagGroup: ''
           }}
         />
       </LinodeThemeWrapper>
-    </StaticRouter>,
+    </StaticRouter>
   );
 
   it('should render 7 columns', () => {
     const numOfColumns = component
       .find('WithStyles(TableHead)')
-      .find('WithStyles(TableCell)')
-      .length;
+      .find('WithStyles(TableCell)').length;
     expect(numOfColumns).toBe(7);
   });
 
   it.skip('should render a Kabob menu', () => {
-    const kabobMenu = component.find('withRouter(NodeBalancerActionMenu)')
+    const kabobMenu = component
+      .find('withRouter(NodeBalancerActionMenu)')
       .first();
     expect(kabobMenu).toHaveLength(1);
   });

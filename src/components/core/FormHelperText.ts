@@ -1,4 +1,6 @@
-import FormHelperText, { FormHelperTextProps as _FormHelperTextProps } from '@material-ui/core/FormHelperText';
+import FormHelperText, {
+  FormHelperTextProps as _FormHelperTextProps
+} from '@material-ui/core/FormHelperText';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface FormHelperTextProps extends _FormHelperTextProps {}

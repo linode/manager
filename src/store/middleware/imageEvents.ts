@@ -7,7 +7,7 @@ const imageEventsHandler: EventHandler = (event, dispatch) => {
 
   switch (action) {
     case 'image_delete':
-    return dispatch(removeImage(event.entity.id));
+      return dispatch(removeImage(event.entity.id));
 
     /**
      * I don't love this, but we dont have a choice. disk_imagize entity is the Linode

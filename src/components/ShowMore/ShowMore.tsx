@@ -2,14 +2,15 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type CSSClasses =  'chip'
-  | 'label'
-  | 'popover'
-  | 'link';
+type CSSClasses = 'chip' | 'label' | 'popover' | 'link';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   chip: {
     position: 'relative',
     marginLeft: theme.spacing.unit / 2,
@@ -20,21 +21,21 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     lineHeight: 1,
     '&:hover, &.active': {
       backgroundColor: theme.palette.primary.main,
-      color: 'white',
+      color: 'white'
     },
     '&:focus': {
       backgroundColor: theme.bg.lightBlue,
-      outline: '1px dotted #999',
-    },
+      outline: '1px dotted #999'
+    }
   },
   label: {
     paddingLeft: 6,
-    paddingRight: 6,
+    paddingRight: 6
   },
   link: {
     color: `${theme.color.blueDTwhite} !important`,
-    '&:hover' : {
-      textDecoration: 'underline',
+    '&:hover': {
+      textDecoration: 'underline'
     }
   },
   popover: {
@@ -43,9 +44,9 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     overflow: 'visible',
     padding: theme.spacing.unit,
     [theme.breakpoints.down('xs')]: {
-      maxWidth: 285,
-    },
-  },
+      maxWidth: 285
+    }
+  }
 });
 
 interface Props<T> {
@@ -54,22 +55,24 @@ interface Props<T> {
   chipProps?: ChipProps;
 }
 
-export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasses> > {
+export class ShowMore<T> extends React.Component<
+  Props<T> & WithStyles<CSSClasses>
+> {
   state = {
-    anchorEl: undefined,
+    anchorEl: undefined
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     this.setState({
-      anchorEl: event.currentTarget,
+      anchorEl: event.currentTarget
     });
-  }
+  };
 
   handleClose = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     this.setState({ anchorEl: undefined });
-  }
+  };
 
   render() {
     const { classes, render, items, chipProps } = this.props;
@@ -81,16 +84,16 @@ export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasse
           className={classNames(
             {
               [classes.chip]: true,
-              'active': anchorEl,
+              active: anchorEl
             },
-            'chip',
+            'chip'
           )}
           label={`+${items.length}`}
           classes={{ label: classes.label }}
           onClick={this.handleClick}
           {...chipProps}
           data-qa-show-more-chip
-          component={"button" as "div"}
+          component={'button' as 'div'}
           clickable
         />
 
@@ -101,11 +104,11 @@ export class ShowMore<T> extends React.Component<Props<T> & WithStyles<CSSClasse
           onClose={this.handleClose}
           anchorOrigin={{
             vertical: 28,
-            horizontal: 'left',
+            horizontal: 'left'
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'left'
           }}
         >
           {render(items)}

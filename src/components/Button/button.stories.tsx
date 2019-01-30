@@ -5,54 +5,82 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import { default as MDivider } from 'src/components/core/Divider';
 
-const Divider = () => <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />;
+const Divider = () => (
+  <MDivider style={{ marginBottom: '8px', marginTop: '8px' }} />
+);
 
 storiesOf('Button', module)
   .add('Types', () => (
     <React.Fragment>
-      <Button type="primary" data-qa-button="primary">Primary</Button>
+      <Button type="primary" data-qa-button="primary">
+        Primary
+      </Button>
       <Divider />
-      <Button type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Button type="secondary" data-qa-button="secondary">
+        Secondary
+      </Button>
       <Divider />
-      <Button type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Button type="cancel" data-qa-button="cancel">
+        Cancel
+      </Button>
       <Divider />
-      <Button type="remove" data-qa-button="remove"/>
+      <Button type="remove" data-qa-button="remove" />
       <Divider />
     </React.Fragment>
   ))
   .add('Disabled', () => (
     <React.Fragment>
-      <Button disabled type="primary" data-qa-button="primary">Primary</Button>
+      <Button disabled type="primary" data-qa-button="primary">
+        Primary
+      </Button>
       <Divider />
-      <Button disabled type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Button disabled type="secondary" data-qa-button="secondary">
+        Secondary
+      </Button>
       <Divider />
-      <Button disabled type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Button disabled type="cancel" data-qa-button="cancel">
+        Cancel
+      </Button>
       <Divider />
     </React.Fragment>
   ))
   .add('Loading', () => (
     <React.Fragment>
-      <Button loading type="primary" data-qa-button="primary">Primary</Button>
+      <Button loading type="primary" data-qa-button="primary">
+        Primary
+      </Button>
       <Divider />
-      <Button loading type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Button loading type="secondary" data-qa-button="secondary">
+        Secondary
+      </Button>
       <Divider />
-      <Button loading type="cancel" data-qa-button="cancel">Cancel</Button>
+      <Button loading type="cancel" data-qa-button="cancel">
+        Cancel
+      </Button>
       <Divider />
     </React.Fragment>
   ))
   .add('Destructive', () => (
     <React.Fragment>
-      <Button destructive type="primary" data-qa-button="primary">Primary</Button>
+      <Button destructive type="primary" data-qa-button="primary">
+        Primary
+      </Button>
       <Divider />
-      <Button destructive type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Button destructive type="secondary" data-qa-button="secondary">
+        Secondary
+      </Button>
       <Divider />
     </React.Fragment>
   ))
   .add('Loading Destructive', () => (
     <React.Fragment>
-      <Button loading destructive type="primary" data-qa-button="primary">Primary</Button>
+      <Button loading destructive type="primary" data-qa-button="primary">
+        Primary
+      </Button>
       <Divider />
-      <Button loading destructive type="secondary" data-qa-button="secondary">Secondary</Button>
+      <Button loading destructive type="secondary" data-qa-button="secondary">
+        Secondary
+      </Button>
       <Divider />
     </React.Fragment>
   ))
@@ -64,7 +92,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown"
       >
         Primary Dropdown
-      <KeyboardArrowDown className="caret" />
+        <KeyboardArrowDown className="caret" />
       </Button>
       <Divider />
       <Button
@@ -73,7 +101,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown"
       >
         Primary Dropdown Active
-      <KeyboardArrowUp className="caret" />
+        <KeyboardArrowUp className="caret" />
       </Button>
       <Divider />
       <Button
@@ -83,7 +111,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown"
       >
         Primary Dropdown
-      <KeyboardArrowDown className="caret" />
+        <KeyboardArrowDown className="caret" />
       </Button>
     </React.Fragment>
   ))
@@ -95,7 +123,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown-secondary"
       >
         Secondary Dropdown
-    <KeyboardArrowDown className="caret" />
+        <KeyboardArrowDown className="caret" />
       </Button>
       <Divider />
       <Button
@@ -104,7 +132,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown-secondary"
       >
         Secondary Dropdown Active
-    <KeyboardArrowUp className="caret" />
+        <KeyboardArrowUp className="caret" />
       </Button>
       <Divider />
       <Button
@@ -114,7 +142,7 @@ storiesOf('Button', module)
         data-qa-button="dropdown-secondary"
       >
         Secondary Dropdown
-    <KeyboardArrowDown className="caret" />
+        <KeyboardArrowDown className="caret" />
       </Button>
     </React.Fragment>
   ));

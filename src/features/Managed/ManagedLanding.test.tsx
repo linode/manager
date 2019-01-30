@@ -7,7 +7,7 @@ describe('Managed Landing', () => {
   const component = shallow(
     <ManagedLanding
       classes={{
-        root: '',
+        root: ''
       }}
     />
   );

@@ -5,19 +5,15 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   backup: Linode.LinodeBackup;
-  onRestore: (backup:Linode.LinodeBackup) => void;
-  onDeploy: (backup:Linode.LinodeBackup) => void;
+  onRestore: (backup: Linode.LinodeBackup) => void;
+  onDeploy: (backup: Linode.LinodeBackup) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeBackupActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
-    const {
-      backup,
-      onRestore,
-      onDeploy,
-    } = this.props;
+    const { backup, onRestore, onDeploy } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -27,7 +23,7 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
             onRestore(backup);
             closeMenu();
             e.preventDefault();
-          },
+          }
         },
         {
           title: 'Deploy New Linode',
@@ -35,17 +31,15 @@ class LinodeBackupActionMenu extends React.Component<CombinedProps> {
             onDeploy(backup);
             closeMenu();
             e.preventDefault();
-          },
-        },
+          }
+        }
       ];
       return actions;
     };
-  }
+  };
 
   render() {
-    return (
-      <ActionMenu createActions={this.createActions()} />
-    );
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

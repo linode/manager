@@ -15,7 +15,7 @@ describe('AuthenticationWrapper', () => {
   it('redirects when logged out and hitting /linodes', () => {
     const location = {
       pathname: '/linodes',
-      search: '',
+      search: ''
     };
 
     mount(
@@ -28,16 +28,16 @@ describe('AuthenticationWrapper', () => {
           location={location}
           history={mockHistory}
         />
-      </StaticRouter>,
+      </StaticRouter>
     );
 
     expect(expect(mockRedirect.mock.calls.length).toBe(1));
   });
 
-  it('doesn\'t redirect when logged out and hitting /oauth/callback', () => {
+  it("doesn't redirect when logged out and hitting /oauth/callback", () => {
     const location = {
       pathname: '/oauth/callback',
-      search: '?returnTo=/linodes&code=123456',
+      search: '?returnTo=/linodes&code=123456'
     };
 
     mount(
@@ -52,16 +52,16 @@ describe('AuthenticationWrapper', () => {
         >
           Hello
         </AuthenticationWrapper>
-      </StaticRouter>,
+      </StaticRouter>
     );
 
     expect(expect(mockRedirect.mock.calls.length).toBe(0));
   });
 
-  it('doesn\'t redirect when authenticated', () => {
+  it("doesn't redirect when authenticated", () => {
     const location = {
       pathname: '/linodes',
-      search: '',
+      search: ''
     };
 
     mount(
@@ -76,7 +76,7 @@ describe('AuthenticationWrapper', () => {
         >
           Hello
         </AuthenticationWrapper>
-      </StaticRouter>,
+      </StaticRouter>
     );
 
     expect(expect(mockRedirect.mock.calls.length).toBe(0));

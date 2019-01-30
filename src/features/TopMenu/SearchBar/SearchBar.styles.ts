@@ -1,4 +1,8 @@
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames =
   | 'root'
@@ -7,13 +11,13 @@ type ClassNames =
   | 'textfieldContainer'
   | 'textfield'
   | 'input'
-  | 'icon'
+  | 'icon';
 
 export type StyleProps = WithStyles<ClassNames>;
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    position: 'relative', /* for search results */
+    position: 'relative' /* for search results */,
     height: 50,
     flex: 1,
     display: 'flex',
@@ -35,18 +39,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       '&.active': {
         visibility: 'visible',
         opacity: 1,
-        zIndex: 3,
-      },
+        zIndex: 3
+      }
     },
     [theme.breakpoints.down('xs')]: {
-      width: '100%',
+      width: '100%'
     },
     '& .react-select__menu-list': {
       padding: 0,
-      overflowX: 'hidden',
+      overflowX: 'hidden'
     },
     '& .react-select__control': {
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent'
     },
     '& .react-select__value-container': {
       overflow: 'hidden',
@@ -55,51 +59,51 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
       }
     },
     '& .react-select__indicators': {
-      display: 'none',
+      display: 'none'
     },
     '& .react-select__menu': {
       marginTop: 12,
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
       maxHeight: 325,
       overflowY: 'auto',
-      border: 0,
+      border: 0
     }
   },
   navIconHide: {
     '& > span': {
-      justifyContent: 'flex-end',
+      justifyContent: 'flex-end'
     },
     '& svg': {
       width: 32,
-      height: 32,
+      height: 32
     },
     [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
+      display: 'none'
+    }
   },
   close: {
     '& > span': {
-      padding: 2,
+      padding: 2
     },
     '&:hover, &:focus': {
-      color: theme.palette.primary.main,
-    },
+      color: theme.palette.primary.main
+    }
   },
   icon: {
     color: '#c9cacb',
-    fontSize: '2rem',
+    fontSize: '2rem'
   },
   textfieldContainer: {
     width: '100%',
-    [theme.breakpoints.down('sm')]: {},
+    [theme.breakpoints.down('sm')]: {}
   },
   textfield: {
     margin: 0,
     flex: 1,
     minHeight: 'initial',
     '& input:focus': {
-      outline: '1px dotted #606469',
-    },
+      outline: '1px dotted #606469'
+    }
   },
   input: {
     maxWidth: '100%',
@@ -108,9 +112,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& input': {
       transition: theme.transitions.create(['opacity']),
       fontSize: '1.0em',
-      [theme.breakpoints.down('sm')]: {},
-    },
-  },
+      [theme.breakpoints.down('sm')]: {}
+    }
+  }
 });
 
 export default withStyles(styles);

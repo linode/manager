@@ -1,13 +1,17 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 type CombinedProps = WithStyles<ClassNames>;
@@ -16,10 +20,13 @@ interface State {
   panelOpen: boolean;
 }
 
-class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, State> {
+class LinodeAdvancedConfigurationsPanel extends React.Component<
+  CombinedProps,
+  State
+> {
   state: State = {
-    panelOpen: false,
-  }
+    panelOpen: false
+  };
 
   handlePanelChange = (e: React.ChangeEvent<{}>, open: boolean) => {
     this.setState({ panelOpen: open });
@@ -30,7 +37,10 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<CombinedProps, S
     return (
       <React.Fragment>
         {
-          <ExpansionPanel heading="Advanced Configurations" onChange={this.handlePanelChange}>
+          <ExpansionPanel
+            heading="Advanced Configurations"
+            onChange={this.handlePanelChange}
+          >
             <LinodeConfigs active={panelOpen} />
             <LinodeDisks active={panelOpen} />
           </ExpansionPanel>

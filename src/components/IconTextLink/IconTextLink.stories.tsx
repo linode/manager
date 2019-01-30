@@ -5,13 +5,13 @@ import IconTextLink from './IconTextLink';
 
 class InteractiveIconTextLink extends React.Component {
   state = {
-    active: false,
+    active: false
   };
 
   handleClick = () => {
     alert('thanks for clicking!');
     this.setState({ active: true });
-  }
+  };
 
   render() {
     return (
@@ -23,7 +23,8 @@ class InteractiveIconTextLink extends React.Component {
           text="Add an object"
           title="Link title"
         />
-        <br /><br />
+        <br />
+        <br />
         <IconTextLink
           disabled
           SideIcon={PlusSquare}
@@ -36,7 +37,6 @@ class InteractiveIconTextLink extends React.Component {
   }
 }
 
-storiesOf('IconTextLink', module)
-.add('Interactive', () => (
+storiesOf('IconTextLink', module).add('Interactive', () => (
   <InteractiveIconTextLink />
 ));

@@ -9,7 +9,11 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -17,7 +21,8 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'inner'
   | 'divider'
   | 'backendIPAction'
@@ -26,24 +31,23 @@ type ClassNames = 'root'
   | 'suggestionItem'
   | 'selectedSuggestionItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-  },
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
   inner: {},
   divider: {
     marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   backendIPAction: {
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     marginTop: theme.spacing.unit * 2,
     [theme.breakpoints.down('xs')]: {
-      marginLeft: -32,
-    },
+      marginLeft: -32
+    }
   },
   suggestionsParent: {
-    position: 'relative',
+    position: 'relative'
   },
   suggestions: {
     position: 'absolute',
@@ -56,23 +60,23 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     overflowY: 'auto',
     width: '100%',
     maxWidth: 415,
-    zIndex: 2,
+    zIndex: 2
   },
   suggestionItem: {
     borderBottom: `1px solid ${theme.palette.divider}`,
     color: theme.palette.text.primary,
     '&:hover, &:focus': {
       backgroundColor: `${theme.palette.primary.main} !important`,
-      color: `white !important`,
+      color: `white !important`
     },
     '&:last-item': {
-      border: 0,
-    },
+      border: 0
+    }
   },
   selectedSuggestionItem: {
     backgroundColor: `${theme.palette.primary.main} !important`,
-    color: '#fff !important',
-  },
+    color: '#fff !important'
+  }
 });
 
 const styled = withStyles(styles);
@@ -144,52 +148,56 @@ interface State {
 }
 
 class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
-
-
   state: State = {
-    currentNodeAddressIndex: null,
-  }
-
-  static defaultProps: Partial<Props> = {
+    currentNodeAddressIndex: null
   };
 
-  onAlgorithmChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onAlgorithmChange(e.target.value)
+  static defaultProps: Partial<Props> = {};
 
-  onCheckPassiveChange = (e: React.ChangeEvent<HTMLInputElement>, value: boolean) =>
-    this.props.onCheckPassiveChange(value)
+  onAlgorithmChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    this.props.onAlgorithmChange(e.target.value);
+
+  onCheckPassiveChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    value: boolean
+  ) => this.props.onCheckPassiveChange(value);
 
   onCheckBodyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onCheckBodyChange(e.target.value)
+    this.props.onCheckBodyChange(e.target.value);
 
   onCheckPathChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onCheckPathChange(e.target.value)
+    this.props.onCheckPathChange(e.target.value);
 
   onHealthCheckAttemptsChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onHealthCheckAttemptsChange(e.target.value)
+    this.props.onHealthCheckAttemptsChange(e.target.value);
 
   onHealthCheckIntervalChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onHealthCheckIntervalChange(e.target.value)
+    this.props.onHealthCheckIntervalChange(e.target.value);
 
   onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onHealthCheckTimeoutChange(e.target.value)
+    this.props.onHealthCheckTimeoutChange(e.target.value);
 
   onHealthCheckTypeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onHealthCheckTypeChange(e.target.value)
+    this.props.onHealthCheckTypeChange(e.target.value);
 
   onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onPortChange(e.target.value)
+    this.props.onPortChange(e.target.value);
 
   onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onPrivateKeyChange(e.target.value)
+    this.props.onPrivateKeyChange(e.target.value);
 
   onProtocolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { healthCheckType } = this.props;
-    const { target: { value: protocol } } = e;
+    const {
+      target: { value: protocol }
+    } = e;
 
     this.props.onProtocolChange(e.target.value);
 
-    if (protocol === 'tcp' && (healthCheckType === 'http' || healthCheckType === 'http_body')) {
+    if (
+      protocol === 'tcp' &&
+      (healthCheckType === 'http' || healthCheckType === 'http_body')
+    ) {
       this.props.onHealthCheckTypeChange('connection');
     }
     if (protocol === 'http' && healthCheckType === 'connection') {
@@ -198,75 +206,62 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     if (protocol === 'https' && healthCheckType === 'connection') {
       this.props.onHealthCheckTypeChange('http');
     }
-  }
+  };
 
   onSessionStickinessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onSessionStickinessChange(e.target.value)
+    this.props.onSessionStickinessChange(e.target.value);
 
   onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onSslCertificateChange(e.target.value)
+    this.props.onSslCertificateChange(e.target.value);
 
   onNodeLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     if (nodeIdx) {
-      this.props.onNodeLabelChange(
-        +nodeIdx,
-        e.target.value,
-      );
+      this.props.onNodeLabelChange(+nodeIdx, e.target.value);
     }
-  }
+  };
 
   onNodeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     if (nodeIdx) {
-      this.props.onNodeAddressChange(
-        +nodeIdx,
-        e.target.value,
-      );
+      this.props.onNodeAddressChange(+nodeIdx, e.target.value);
     }
-  }
+  };
 
   onNodePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     if (nodeIdx) {
-      this.props.onNodePortChange(
-        +nodeIdx,
-        e.target.value,
-      );
+      this.props.onNodePortChange(+nodeIdx, e.target.value);
     }
-  }
+  };
 
   onNodeWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     if (nodeIdx) {
-      this.props.onNodeWeightChange(
-        +nodeIdx,
-        e.target.value,
-      );
+      this.props.onNodeWeightChange(+nodeIdx, e.target.value);
     }
-  }
+  };
 
   onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     if (nodeIdx) {
-      this.props.onNodeModeChange!(
-        +nodeIdx,
-        e.target.value,
-      );
+      this.props.onNodeModeChange!(+nodeIdx, e.target.value);
     }
-  }
+  };
 
   addNode = (e: React.MouseEvent<HTMLElement>) => {
     this.props.addNode();
-  }
+  };
 
   removeNode = (e: React.MouseEvent<HTMLElement>) => {
-    const nodeIdx: string | null = e.currentTarget.getAttribute('data-node-idx');
+    const nodeIdx: string | null = e.currentTarget.getAttribute(
+      'data-node-idx'
+    );
     const { removeNode } = this.props;
     if (removeNode && nodeIdx) {
       return removeNode(+nodeIdx);
     }
-  }
+  };
 
   onSave = this.props.onSave;
 
@@ -275,25 +270,22 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   handleSelectSuggestion = (selection: string) => {
     const { currentNodeAddressIndex } = this.state;
     if (currentNodeAddressIndex) {
-      this.props.onNodeAddressChange(
-        +currentNodeAddressIndex,
-        selection,
-      );
+      this.props.onNodeAddressChange(+currentNodeAddressIndex, selection);
     }
-  }
+  };
 
   handleFocusAddressField = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
     // this is necesssary because when we select a suggested
     // ip address, it needs to know what index we're looking at.
     this.setState({ currentNodeAddressIndex: nodeIdx });
-  }
+  };
 
   renderSearchSuggestion = (
     linode: Linode.Linode,
     index: number,
     highlightedIndex: number | null,
-    itemProps: any,
+    itemProps: any
   ) => {
     const isHighlighted = highlightedIndex === index;
     const { classes } = this.props;
@@ -316,10 +308,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
           </React.Fragment>
         }
       </MenuItem>
-    )
-  }
+    );
+  };
 
-  downshiftStateReducer = (state: DownshiftState, changes: StateChangeOptions) => {
+  downshiftStateReducer = (
+    state: DownshiftState,
+    changes: StateChangeOptions
+  ) => {
     switch (changes.type) {
       // basically, don't clear the field value when we leave the field
       case Downshift.stateChangeTypes.blurInput:
@@ -327,12 +322,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
         return {
           ...changes,
           inputValue: state.inputValue || '',
-          isOpen: false,
-        }
-        default:
-          return changes;
+          isOpen: false
+        };
+      default:
+        return changes;
     }
-  }
+  };
 
   render() {
     const {
@@ -355,27 +350,30 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       protocol,
       sessionStickiness,
       sslCertificate,
-      submitting,
+      submitting
     } = this.props;
 
-    const hasErrorFor = getAPIErrorFor({
-      algorithm: 'Algorithm',
-      check_attempts: 'Check attempts',
-      check_body: 'Check body',
-      check_interval: 'Check interval',
-      check_passive: 'Passive check',
-      check_path: 'Check path',
-      check_timeout: 'Check timeout',
-      check: 'Check type',
-      cipher_suite: 'Cipher suite',
-      configs: 'configs',
-      port: 'Port',
-      protocol: 'Protocol',
-      ssl_cert: 'SSL certificate',
-      ssl_key: 'SSL private key',
-      stickiness: 'Session stickiness',
-      nodes: 'Nodes',
-    }, errors);
+    const hasErrorFor = getAPIErrorFor(
+      {
+        algorithm: 'Algorithm',
+        check_attempts: 'Check attempts',
+        check_body: 'Check body',
+        check_interval: 'Check interval',
+        check_passive: 'Passive check',
+        check_path: 'Check path',
+        check_timeout: 'Check timeout',
+        check: 'Check type',
+        cipher_suite: 'Cipher suite',
+        configs: 'configs',
+        port: 'Port',
+        protocol: 'Protocol',
+        ssl_cert: 'SSL certificate',
+        ssl_key: 'SSL private key',
+        stickiness: 'Session stickiness',
+        nodes: 'Nodes'
+      },
+      errors
+    );
 
     return (
       <Grid item xs={12}>
@@ -387,7 +385,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 protocol,
                 hasErrorFor('port'),
                 hasErrorFor('protocol'),
-                configIdx,
+                configIdx
               ]}
               container
             >
@@ -408,7 +406,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port') || hasErrorFor('configs')}
-                  errorGroup={forEdit ? `${configIdx}`: undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-port
                 />
               </Grid>
@@ -419,33 +417,23 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
-                  errorGroup={forEdit ? `${configIdx}`: undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-protocol-select
                 >
-                  <MenuItem
-                    value="tcp"
-                    data-qa-option="tcp"
-                  >
+                  <MenuItem value="tcp" data-qa-option="tcp">
                     TCP
                   </MenuItem>
-                  <MenuItem
-                    value="http"
-                    data-qa-option="http"
-                  >
+                  <MenuItem value="http" data-qa-option="http">
                     HTTP
                   </MenuItem>
-                  <MenuItem
-                    value="https"
-                    data-qa-option="https"
-                  >
+                  <MenuItem value="https" data-qa-option="https">
                     HTTPS
                   </MenuItem>
                 </TextField>
               </Grid>
             </Grid>
 
-            {
-              protocol === 'https' &&
+            {protocol === 'https' && (
               <Grid
                 updateFor={[
                   sslCertificate,
@@ -453,7 +441,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   hasErrorFor('ssl_cert'),
                   privateKey,
                   hasErrorFor('ssl_key'),
-                  configIdx,
+                  configIdx
                 ]}
                 container
               >
@@ -466,7 +454,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onChange={this.onSslCertificateChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_cert')}
-                    errorGroup={forEdit ? `${configIdx}`: undefined}
+                    errorGroup={forEdit ? `${configIdx}` : undefined}
                     data-qa-cert-field
                   />
                 </Grid>
@@ -479,19 +467,15 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     onChange={this.onPrivateKeyChange}
                     required={protocol === 'https'}
                     errorText={hasErrorFor('ssl_key')}
-                    errorGroup={forEdit ? `${configIdx}`: undefined}
+                    errorGroup={forEdit ? `${configIdx}` : undefined}
                     data-qa-private-key-field
                   />
                 </Grid>
               </Grid>
-            }
+            )}
 
             <Grid
-              updateFor={[
-                algorithm,
-                hasErrorFor('algorithm'),
-                configIdx,
-              ]}
+              updateFor={[algorithm, hasErrorFor('algorithm'), configIdx]}
               container
             >
               <Grid item xs={12} md={4}>
@@ -501,7 +485,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
-                  errorGroup={forEdit ? `${configIdx}`: undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-algorithm-select
                 >
                   <MenuItem value="roundrobin" data-qa-option="roundrobin">
@@ -521,7 +505,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               updateFor={[
                 sessionStickiness,
                 hasErrorFor('stickiness'),
-                configIdx,
+                configIdx
               ]}
               container
             >
@@ -532,25 +516,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   select
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
-                  errorGroup={forEdit ? `${configIdx}`: undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-session-stickiness-select
                 >
-                  <MenuItem
-                    value="none"
-                    data-qa-option="none"
-                  >
+                  <MenuItem value="none" data-qa-option="none">
                     None
                   </MenuItem>
-                  <MenuItem
-                    value="table"
-                    data-qa-option="table"
-                  >
+                  <MenuItem value="table" data-qa-option="table">
                     Table
                   </MenuItem>
-                  <MenuItem
-                    value="http_cookie"
-                    data-qa-option="http_cookie"
-                  >
+                  <MenuItem value="http_cookie" data-qa-option="http_cookie">
                     HTTP Cookie
                   </MenuItem>
                 </TextField>
@@ -579,7 +554,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   protocol,
                   healthCheckType,
                   hasErrorFor('check'),
-                  configIdx,
+                  configIdx
                 ]}
                 item
                 xs={12}
@@ -591,7 +566,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     select
                     onChange={this.onHealthCheckTypeChange}
                     errorText={hasErrorFor('check')}
-                    errorGroup={forEdit ? `${configIdx}`: undefined}
+                    errorGroup={forEdit ? `${configIdx}` : undefined}
                     data-qa-active-check-select
                   >
                     <MenuItem value="none">None</MenuItem>
@@ -602,30 +577,23 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       TCP Connection
                     </MenuItem>
 
-                    <MenuItem
-                      value="http"
-                      disabled={protocol === 'tcp'}
-                    >
+                    <MenuItem value="http" disabled={protocol === 'tcp'}>
                       HTTP Status
-                      </MenuItem>
+                    </MenuItem>
 
-                    <MenuItem
-                      value="http_body"
-                      disabled={protocol === 'tcp'}
-                    >
+                    <MenuItem value="http_body" disabled={protocol === 'tcp'}>
                       HTTP Body
                     </MenuItem>
                   </TextField>
                 </Grid>
               </Grid>
-              {
-                healthCheckType !== 'none' &&
+              {healthCheckType !== 'none' && (
                 <React.Fragment>
                   <Grid
                     updateFor={[
                       healthCheckInterval,
                       hasErrorFor('check_interval'),
-                      configIdx,
+                      configIdx
                     ]}
                     item
                     xs={12}
@@ -636,15 +604,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Interval"
                       InputProps={{
                         'aria-label': 'Active Health Check Interval',
-                        endAdornment:
-                        <InputAdornment position="end">
-                          seconds
-                        </InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            seconds
+                          </InputAdornment>
+                        )
                       }}
                       value={healthCheckInterval}
                       onChange={this.onHealthCheckIntervalChange}
                       errorText={hasErrorFor('check_interval')}
-                      errorGroup={forEdit ? `${configIdx}`: undefined}
+                      errorGroup={forEdit ? `${configIdx}` : undefined}
                       data-qa-active-check-interval
                     />
                   </Grid>
@@ -652,7 +621,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     updateFor={[
                       healthCheckTimeout,
                       hasErrorFor('check_timeout'),
-                      configIdx,
+                      configIdx
                     ]}
                     item
                     xs={12}
@@ -663,15 +632,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Timeout"
                       InputProps={{
                         'aria-label': 'Active Health Check Timeout',
-                        endAdornment:
-                        <InputAdornment position="end">
-                          seconds
-                        </InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            seconds
+                          </InputAdornment>
+                        )
                       }}
                       value={healthCheckTimeout}
                       onChange={this.onHealthCheckTimeoutChange}
                       errorText={hasErrorFor('check_timeout')}
-                      errorGroup={forEdit ? `${configIdx}`: undefined}
+                      errorGroup={forEdit ? `${configIdx}` : undefined}
                       data-qa-active-check-timeout
                     />
                   </Grid>
@@ -679,7 +649,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     updateFor={[
                       healthCheckAttempts,
                       hasErrorFor('check_attempts'),
-                      configIdx,
+                      configIdx
                     ]}
                     item
                     xs={12}
@@ -691,21 +661,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       value={healthCheckAttempts}
                       onChange={this.onHealthCheckAttemptsChange}
                       errorText={hasErrorFor('check_attempts')}
-                      errorGroup={forEdit ? `${configIdx}`: undefined}
+                      errorGroup={forEdit ? `${configIdx}` : undefined}
                       InputProps={{
-                        'aria-label': 'Active Health Check Attempts',
+                        'aria-label': 'Active Health Check Attempts'
                       }}
                       data-qa-active-check-attempts
                     />
                   </Grid>
-                  {
-                    ['http', 'http_body'].includes(healthCheckType) &&
+                  {['http', 'http_body'].includes(healthCheckType) && (
                     <Grid
                       updateFor={[
                         checkPath,
                         healthCheckType,
                         hasErrorFor('check_path'),
-                        configIdx,
+                        configIdx
                       ]}
                       item
                       xs={12}
@@ -715,20 +684,21 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         label="Check HTTP Path"
                         value={checkPath || ''}
                         onChange={this.onCheckPathChange}
-                        required={['http', 'http_body'].includes(healthCheckType)}
+                        required={['http', 'http_body'].includes(
+                          healthCheckType
+                        )}
                         errorText={hasErrorFor('check_path')}
-                        errorGroup={forEdit ? `${configIdx}`: undefined}
+                        errorGroup={forEdit ? `${configIdx}` : undefined}
                       />
                     </Grid>
-                  }
-                  {
-                    healthCheckType === 'http_body' &&
+                  )}
+                  {healthCheckType === 'http_body' && (
                     <Grid
                       updateFor={[
                         checkBody,
                         healthCheckType,
                         hasErrorFor('check_body'),
-                        configIdx,
+                        configIdx
                       ]}
                       item
                       xs={12}
@@ -740,12 +710,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         onChange={this.onCheckBodyChange}
                         required={healthCheckType === 'http_body'}
                         errorText={hasErrorFor('check_body')}
-                        errorGroup={forEdit ? `${configIdx}`: undefined}
+                        errorGroup={forEdit ? `${configIdx}` : undefined}
                       />
                     </Grid>
-                  }
+                  )}
                 </React.Fragment>
-              }
+              )}
               <Grid
                 updateFor={[]} // never update after initial render
                 item
@@ -755,10 +725,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid
-              updateFor={[checkPassive]}
-              container
-            >
+            <Grid updateFor={[checkPassive]} container>
               <Grid item xs={12}>
                 <Typography
                   role="header"
@@ -785,14 +752,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid
-              updateFor={[
-                nodes,
-                errors,
-                nodeMessage,
-              ]}
-              container
-            >
+            <Grid updateFor={[nodes, errors, nodeMessage]} container>
               <Grid item xs={12}>
                 <Grid
                   updateFor={[nodeMessage]}
@@ -800,12 +760,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   item
                   xs={12}
                 >
-                  {nodeMessage &&
-                    <Notice
-                      text={nodeMessage}
-                      success
-                    />
-                  }
+                  {nodeMessage && <Notice text={nodeMessage} success />}
                 </Grid>
                 <Typography
                   role="header"
@@ -814,109 +769,129 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 >
                   Backend Nodes
                 </Typography>
-                {hasErrorFor('nodes') &&
+                {hasErrorFor('nodes') && (
                   <FormHelperText error>{hasErrorFor('nodes')}</FormHelperText>
-                }
+                )}
               </Grid>
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
-                {
-                  nodes && nodes.map((node, idx) => {
+                {nodes &&
+                  nodes.map((node, idx) => {
                     if (node.modifyStatus === 'delete') {
                       /* This node has been marked for deletion, don't display it */
                       return null;
                     }
 
-                    const nodesHasErrorFor = getAPIErrorFor({
-                      label: 'label',
-                      address: 'address',
-                      weight: 'weight',
-                      port: 'port',
-                      mode: 'mode',
-                    }, node.errors);
+                    const nodesHasErrorFor = getAPIErrorFor(
+                      {
+                        label: 'label',
+                        address: 'address',
+                        weight: 'weight',
+                        port: 'port',
+                        mode: 'mode'
+                      },
+                      node.errors
+                    );
 
                     return (
                       <Grid
                         key={idx}
-                        updateFor={[
-                          nodes.length,
-                          node,
-                          errors,
-                          configIdx,
-                        ]}
+                        updateFor={[nodes.length, node, errors, configIdx]}
                         container
                         data-qa-node
                       >
-                        {idx !== 0 &&
+                        {idx !== 0 && (
                           <Grid item xs={12}>
                             <Divider style={{ marginTop: forEdit ? 8 : 24 }} />
                           </Grid>
-                        }
-                        <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2} className="py0">
+                        )}
+                        <Grid
+                          item
+                          xs={12}
+                          sm={forEdit ? 4 : 3}
+                          xl={2}
+                          className="py0"
+                        >
                           <TextField
                             label="Label"
                             value={node.label}
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeLabelChange}
                             errorText={nodesHasErrorFor('label')}
-                            errorGroup={forEdit ? `${configIdx}`: undefined}
+                            errorGroup={forEdit ? `${configIdx}` : undefined}
                             data-qa-backend-ip-label
                           />
                         </Grid>
-                        <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2} className="py0">
+                        <Grid
+                          item
+                          xs={12}
+                          sm={forEdit ? 4 : 3}
+                          xl={2}
+                          className="py0"
+                        >
                           <Downshift
                             onSelect={this.handleSelectSuggestion}
                             stateReducer={this.downshiftStateReducer}
                           >
-                            {
-                              ({
-                                getInputProps,
-                                getItemProps,
-                                isOpen,
-                                inputValue,
-                                highlightedIndex,
-                                openMenu
-                              }) => {
-                                return (
-                                  <div className={classes.suggestionsParent}>
-                                    <TextField
-                                      {...getInputProps({
-                                        onChange: this.onNodeAddressChange,
-                                        placeholder: 'Enter IP Address',
-                                        value: node.address,
-                                        onFocus: e => {
-                                          openMenu();
-                                          this.handleFocusAddressField(e)
-                                        },
-                                      })}
-                                      label="IP Address"
-                                      inputProps={{ 'data-node-idx': idx }}
-                                      errorText={nodesHasErrorFor('address')}
-                                      errorGroup={`${configIdx}`}
-                                      data-qa-backend-ip-address
-                                    />
-                                    {isOpen &&
-                                      <Paper className={classes.suggestions}>
+                            {({
+                              getInputProps,
+                              getItemProps,
+                              isOpen,
+                              inputValue,
+                              highlightedIndex,
+                              openMenu
+                            }) => {
+                              return (
+                                <div className={classes.suggestionsParent}>
+                                  <TextField
+                                    {...getInputProps({
+                                      onChange: this.onNodeAddressChange,
+                                      placeholder: 'Enter IP Address',
+                                      value: node.address,
+                                      onFocus: e => {
+                                        openMenu();
+                                        this.handleFocusAddressField(e);
+                                      }
+                                    })}
+                                    label="IP Address"
+                                    inputProps={{ 'data-node-idx': idx }}
+                                    errorText={nodesHasErrorFor('address')}
+                                    errorGroup={`${configIdx}`}
+                                    data-qa-backend-ip-address
+                                  />
+                                  {isOpen && (
+                                    <Paper className={classes.suggestions}>
                                       {/*
-                                      * Do not change from this.props.linodesWithPrivateIPS
-                                      * For some reason, referencing the destructured element
-                                      * was returning an empty array, while this.props
-                                      * is returning what we want
-                                      */}
-                                      {this.props.linodesWithPrivateIPs
-                                        && this.props.linodesWithPrivateIPs
-                                        // filter out the linodes that don't match what we're typing
-                                        // filter by private ip and label
+                                       * Do not change from this.props.linodesWithPrivateIPS
+                                       * For some reason, referencing the destructured element
+                                       * was returning an empty array, while this.props
+                                       * is returning what we want
+                                       */}
+                                      {this.props.linodesWithPrivateIPs &&
+                                        this.props.linodesWithPrivateIPs
+                                          // filter out the linodes that don't match what we're typing
+                                          // filter by private ip and label
                                           .filter((linode: Linode.Linode) => {
                                             /*
-                                            * Show all results if we have nothing entered
-                                            */
+                                             * Show all results if we have nothing entered
+                                             */
                                             if (!inputValue) {
                                               return true;
                                             }
                                             const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-                                            const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
-                                            return linode.label.toLowerCase().includes(inputValue.toLowerCase())
-                                              || privateIP!.includes(inputValue.toLowerCase())
+                                            const privateIP = linode.ipv4.find(
+                                              ipv4 =>
+                                                !!ipv4.match(privateIPRegex)
+                                            );
+                                            return (
+                                              linode.label
+                                                .toLowerCase()
+                                                .includes(
+                                                  inputValue.toLowerCase()
+                                                ) ||
+                                              privateIP!.includes(
+                                                inputValue.toLowerCase()
+                                              )
+                                            );
                                           })
                                           // limit the results to 5. we don't want too
                                           // many in the suggestions
@@ -927,19 +902,23 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                               linode,
                                               index,
                                               highlightedIndex,
-                                              getItemProps,
-                                            )
-                                          })
-                                        }
-                                      </Paper>
-                                    }
-                                  </div>
-                                )
-                              }
-                            }
+                                              getItemProps
+                                            );
+                                          })}
+                                    </Paper>
+                                  )}
+                                </div>
+                              );
+                            }}
                           </Downshift>
                         </Grid>
-                        <Grid item xs={12} sm={forEdit ? 4 : 2} xl={2} className="py0">
+                        <Grid
+                          item
+                          xs={12}
+                          sm={forEdit ? 4 : 2}
+                          xl={2}
+                          className="py0"
+                        >
                           <TextField
                             type="number"
                             label="Port"
@@ -947,12 +926,18 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodePortChange}
                             errorText={nodesHasErrorFor('port')}
-                            errorGroup={forEdit ? `${configIdx}`: undefined}
+                            errorGroup={forEdit ? `${configIdx}` : undefined}
                             data-qa-backend-ip-port
                             style={{ minWidth: 'auto' }}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={forEdit ? 4 : 2} xl={2} className="py0">
+                        <Grid
+                          item
+                          xs={12}
+                          sm={forEdit ? 4 : 2}
+                          xl={2}
+                          className="py0"
+                        >
                           <TextField
                             type="number"
                             label="Weight"
@@ -960,12 +945,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                             inputProps={{ 'data-node-idx': idx }}
                             onChange={this.onNodeWeightChange}
                             errorText={nodesHasErrorFor('weight')}
-                            errorGroup={forEdit ? `${configIdx}`: undefined}
+                            errorGroup={forEdit ? `${configIdx}` : undefined}
                             data-qa-backend-ip-weight
                             style={{ minWidth: 'auto' }}
                           />
                         </Grid>
-                        {forEdit &&
+                        {forEdit && (
                           <Grid item xs={12} sm={4} xl={2} className="py0">
                             <TextField
                               label="Mode"
@@ -976,86 +961,61 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               errorText={nodesHasErrorFor('mode')}
                               data-qa-backend-ip-mode
                             >
-                              <MenuItem
-                                value="accept"
-                                data-node-idx={idx}
-                              >
+                              <MenuItem value="accept" data-node-idx={idx}>
                                 Accept
                               </MenuItem>
-                              <MenuItem
-                                value="reject"
-                                data-node-idx={idx}
-                              >
+                              <MenuItem value="reject" data-node-idx={idx}>
                                 Reject
                               </MenuItem>
-                              <MenuItem
-                                value="drain"
-                                data-node-idx={idx}
-                              >
+                              <MenuItem value="drain" data-node-idx={idx}>
                                 Drain
                               </MenuItem>
                             </TextField>
                           </Grid>
-                        }
+                        )}
                         <ActionsPanel className={classes.backendIPAction}>
-                          {(forEdit || idx !== 0) &&
+                          {(forEdit || idx !== 0) && (
                             <Button
                               type="remove"
                               data-node-idx={idx}
                               onClick={this.removeNode}
                               data-qa-remove-node
                             />
-                          }
+                          )}
                         </ActionsPanel>
                       </Grid>
                     );
-                  })
-                }
+                  })}
                 <Grid
                   item
                   xs={12}
                   updateFor={[]}
                   // is the Save/Delete ActionsPanel showing?
-                  style={(forEdit || configIdx !== 0) ?
-                    { marginTop: 16, marginBottom: -24 } :
-                    { marginTop: 16 }
+                  style={
+                    forEdit || configIdx !== 0
+                      ? { marginTop: 16, marginBottom: -24 }
+                      : { marginTop: 16 }
                   }
                 >
-                  <AddNewLink
-                    label="Add a Node"
-                    onClick={this.addNode}
-                    left
-                  />
+                  <AddNewLink label="Add a Node" onClick={this.addNode} left />
                 </Grid>
               </Grid>
             </Grid>
 
-            {(forEdit || configIdx !== 0) &&
+            {(forEdit || configIdx !== 0) && (
               <React.Fragment>
-                <Grid
-                  updateFor={[]}
-                  item xs={12}
-                >
+                <Grid updateFor={[]} item xs={12}>
                   <Divider className={classes.divider} />
                 </Grid>
                 <Grid
-                  updateFor={[
-                    submitting,
-                  ]}
+                  updateFor={[submitting]}
                   container
                   justify="space-between"
                   alignItems="center"
                 >
-                  <Grid
-                    item
-                    style={
-                      forEdit
-                        ? {}
-                        : { marginTop: 8 }
-                    }
-                  >
+                  <Grid item style={forEdit ? {} : { marginTop: 8 }}>
                     <ActionsPanel style={{ padding: 0 }}>
-                      {forEdit &&
+                      {forEdit && (
                         <Button
                           type="primary"
                           onClick={this.onSave}
@@ -1064,8 +1024,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         >
                           Save
                         </Button>
-                      }
-                      {(forEdit || configIdx !== 0) &&
+                      )}
+                      {(forEdit || configIdx !== 0) && (
                         <Button
                           onClick={this.onDelete}
                           type="secondary"
@@ -1074,13 +1034,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         >
                           Delete
                         </Button>
-                      }
+                      )}
                     </ActionsPanel>
                   </Grid>
                 </Grid>
               </React.Fragment>
-          }
-        </div>
+            )}
+          </div>
         </Paper>
       </Grid>
     );

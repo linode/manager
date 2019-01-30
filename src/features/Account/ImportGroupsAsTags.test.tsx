@@ -2,16 +2,14 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { ImportGroupsAsTags } from './ImportGroupsAsTags';
 
-const classes = { root: '', helperText: ''};
+const classes = { root: '', helperText: '' };
 
 const props = {
   classes,
-  openDrawer: jest.fn(),
-}
+  openDrawer: jest.fn()
+};
 
-const component = shallow(
-  <ImportGroupsAsTags {...props} />
-)
+const component = shallow(<ImportGroupsAsTags {...props} />);
 
 describe('Component', () => {
   it('should render', () => {

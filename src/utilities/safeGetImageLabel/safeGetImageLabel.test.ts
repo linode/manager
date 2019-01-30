@@ -4,7 +4,7 @@ import { safeGetImageLabel } from './safeGetImageLabel';
 describe('safeGetImageLabel', () => {
   it('should return "No Image" if no slug provided', () => {
     expect(safeGetImageLabel(images, null)).toBe('No Image');
-  })
+  });
 
   it('should return "Unknown Image" if the slug does not exist in the image data', () => {
     expect(safeGetImageLabel(images, 'duhhhhhhhhhh')).toBe('Unknown Image');

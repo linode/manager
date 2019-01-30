@@ -1,14 +1,17 @@
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
-import { deleteLinode, requestLinodeForStore, updateLinode } from './linodes.actions';
+import {
+  deleteLinode,
+  requestLinodeForStore,
+  updateLinode
+} from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, status } = event;
   const { id } = entity;
 
   switch (action) {
-
     /** Update Linode */
     case 'linode_migrate':
     case 'linode_reboot':
@@ -38,7 +41,11 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
 
 export default linodeEventsHandler;
 
-const handleLinodeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number) => {
+const handleLinodeClone = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number
+) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -48,7 +55,7 @@ const handleLinodeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, 
     case 'started':
       const action = updateLinode({
         id,
-        update: (existing) => ({ ...existing, status: 'cloning' }),
+        update: existing => ({ ...existing, status: 'cloning' })
       });
 
       return dispatch(action);
@@ -58,7 +65,11 @@ const handleLinodeClone = (dispatch: Dispatch<any>, status: Linode.EventStatus, 
   }
 };
 
-const handleLinodeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number) => {
+const handleLinodeUpdate = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number
+) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -72,8 +83,13 @@ const handleLinodeUpdate = (dispatch: Dispatch<any>, status: Linode.EventStatus,
   }
 };
 
-const handleLinodeDelete = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number, state: ApplicationState) => {
-  const found = state.__resources.linodes.results.find((i) => i === id);
+const handleLinodeDelete = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number,
+  state: ApplicationState
+) => {
+  const found = state.__resources.linodes.results.find(i => i === id);
 
   if (!found) {
     return;
@@ -90,10 +106,15 @@ const handleLinodeDelete = (dispatch: Dispatch<any>, status: Linode.EventStatus,
     default:
       return;
   }
-}
+};
 
-const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatus, id: number, state: ApplicationState) => {
-  const found = state.__resources.linodes.results.find((i) => i === id);
+const handleLinodeCreation = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number,
+  state: ApplicationState
+) => {
+  const found = state.__resources.linodes.results.find(i => i === id);
 
   if (found) {
     return;
@@ -110,4 +131,4 @@ const handleLinodeCreation = (dispatch: Dispatch<any>, status: Linode.EventStatu
     default:
       return;
   }
-}
+};

@@ -6,14 +6,14 @@ import { regionsRequestActions } from './regions.actions';
 /**
  * State
  */
-export type State = EntityState<Linode.Region> ;
+export type State = EntityState<Linode.Region>;
 
 export const defaultState: State = {
   results: [],
   entities: [],
   loading: true,
   lastUpdated: 0,
-  error: undefined,
+  error: undefined
 };
 
 /**
@@ -21,11 +21,10 @@ export const defaultState: State = {
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, regionsRequestActions.started)) {
-
     return {
       ...state,
-      loading: true,
-    }
+      loading: true
+    };
   }
 
   if (isType(action, regionsRequestActions.done)) {
@@ -36,8 +35,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       loading: false,
       lastUpdated: Date.now(),
       entities: result,
-      results: result.map((r) => r.id),
-    }
+      results: result.map(r => r.id)
+    };
   }
 
   if (isType(action, regionsRequestActions.failed)) {
@@ -46,8 +45,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      error,
-    }
+      error
+    };
   }
 
   return state;

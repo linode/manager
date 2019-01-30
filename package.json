@@ -108,7 +108,7 @@
   },
   "scripts": {
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
-    "format": "NODE_PATH=./ prettier src/**/*.{ts,tsx} --write",
+    "format": "prettier 'src/**/*.{ts,tsx}' --write",
     "compare": "./scripts/jira-changelog.sh",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/src:/src/src manager test",

@@ -10,33 +10,33 @@ class Example extends React.Component {
 
   toggleDrawer = (v: boolean) => (e: React.MouseEvent<any>) => {
     this.setState({ open: v });
-  }
+  };
 
   render() {
     return (
       <React.Fragment>
-        <Button onClick={this.toggleDrawer(true)} data-qa-toggle-drawer>Click</Button>
-        <Drawer title="My Drawer" open={this.state.open} onClose={this.toggleDrawer(false)} >
-          This is some test copy which acts as content for this Drawer component.
-          It's very interesting and you should read all of it. This text has to be sufficiently
-          long to test that it doesn't expand the drawer to an unreasonable width.
+        <Button onClick={this.toggleDrawer(true)} data-qa-toggle-drawer>
+          Click
+        </Button>
+        <Drawer
+          title="My Drawer"
+          open={this.state.open}
+          onClose={this.toggleDrawer(false)}
+        >
+          This is some test copy which acts as content for this Drawer
+          component. It's very interesting and you should read all of it. This
+          text has to be sufficiently long to test that it doesn't expand the
+          drawer to an unreasonable width.
           <TextField
             label="Input Some Text"
             placeholder="This is a placeholder"
             data-qa-text-field
           />
           <ActionsPanel>
-            <Button
-              type="primary"
-              data-qa-save
-            >
+            <Button type="primary" data-qa-save>
               Save
             </Button>
-            <Button
-              type="secondary"
-              className="cancel"
-              data-qa-cancel
-            >
+            <Button type="secondary" className="cancel" data-qa-cancel>
               Cancel
             </Button>
           </ActionsPanel>
@@ -46,7 +46,4 @@ class Example extends React.Component {
   }
 }
 
-storiesOf('Drawer', module)
-  .add('Example', () => (
-    <Example />
-  ));
+storiesOf('Drawer', module).add('Example', () => <Example />);

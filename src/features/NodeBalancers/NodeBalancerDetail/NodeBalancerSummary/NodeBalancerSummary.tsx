@@ -1,14 +1,20 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import NodeBalancerCreationErrors, { ConfigOrNodeErrorResponse } from './NodeBalancerCreationErrors';
+import NodeBalancerCreationErrors, {
+  ConfigOrNodeErrorResponse
+} from './NodeBalancerCreationErrors';
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -18,7 +24,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = (props) => {
+const NodeBalancerSummary: React.StatelessComponent<CombinedProps> = props => {
   const { nodeBalancer, errorResponses } = props;
   return (
     <React.Fragment>

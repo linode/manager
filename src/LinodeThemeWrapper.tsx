@@ -11,17 +11,17 @@ interface Props {
   children: RenderChildren | React.ReactNode;
 }
 
-const themes = { light, dark }
+const themes = { light, dark };
 
 class LinodeThemeWrapper extends React.Component<Props, State> {
   state: State = {
-    themeChoice: 'light',
+    themeChoice: 'light'
   };
 
   componentDidUpdate() {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
-    }, 500)
+    }, 500);
   }
 
   componentDidMount() {
@@ -41,7 +41,7 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
       this.setState({ themeChoice: 'light' });
       themeStorage.set('light');
     }
-  }
+  };
 
   render() {
     const { children } = this.props;
@@ -55,7 +55,9 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
     );
   }
 }
-const isRenderChildren = (c: RenderChildren | React.ReactNode): c is RenderChildren => {
+const isRenderChildren = (
+  c: RenderChildren | React.ReactNode
+): c is RenderChildren => {
   return typeof c === 'function';
 };
 

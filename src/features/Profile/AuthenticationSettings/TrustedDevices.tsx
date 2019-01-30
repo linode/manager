@@ -1,10 +1,15 @@
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles,
+  WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
-import { compose, lifecycle, StateHandlerMap, withStateHandlers } from 'recompose';
+import {
+  compose,
+  lifecycle,
+  StateHandlerMap,
+  withStateHandlers
+} from 'recompose';
 
 import { getTrustedDevices } from 'src/services/profile';
 
@@ -24,26 +29,26 @@ import TrustedDevicesTable from './TrustedDevicesTable';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
   },
   title: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   }
 });
 
-type CombinedProps = PaginationProps<Linode.Device>
-  & WithStyles<ClassNames>
-  & StateUpdaters
-  & DialogState;
+type CombinedProps = PaginationProps<Linode.Device> &
+  WithStyles<ClassNames> &
+  StateUpdaters &
+  DialogState;
 
 class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
   refreshList = () => {
     this.props.onDelete();
-  }
+  };
 
   render() {
     const {
@@ -62,7 +67,6 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
     return (
       <ToggleState>
         {({ open: dialogOpen, toggle: toggleDialog }) => (
-
           <Paper className={classes.root}>
             <Typography
               role="header"
@@ -71,7 +75,7 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
               data-qa-title
             >
               Trusted Devices
-        </Typography>
+            </Typography>
             <Table>
               <TableHead>
                 <TableRow>
@@ -89,7 +93,7 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
                   setDevice={setSelectedDevice}
                 />
               </TableBody>
-              {devices && devices.length > 0 &&
+              {devices && devices.length > 0 && (
                 <PaginationFooter
                   count={count}
                   page={page}
@@ -98,7 +102,7 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
                   handleSizeChange={handlePageSizeChange}
                   eventCategory="Trusted Devices Panel"
                 />
-              }
+              )}
             </Table>
             <Dialog
               open={dialogOpen}
@@ -113,10 +117,9 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const paginated = Pagey(
-  (ownProps: {}, params: any, filter: any) => getTrustedDevices(params, filter)
-    .then(response => response)
-)
+const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
+  getTrustedDevices(params, filter).then(response => response)
+);
 
 const styled = withStyles(styles);
 
@@ -125,7 +128,7 @@ const withRequestOnMount = lifecycle<PaginationProps<Linode.Device>, {}>({
     /** initial request for trusted devices, ordered by which ones expire first */
     this.props.handleOrderChange('expiry', 'asc');
   }
-})
+});
 
 export interface DialogState {
   selectedDeviceId?: number;
@@ -135,26 +138,26 @@ export interface StateUpdaters {
   setSelectedDevice: (deviceId: number) => void;
 }
 
-type StateAndStateUpdaters = StateHandlerMap<DialogState> &
-  StateUpdaters;
+type StateAndStateUpdaters = StateHandlerMap<DialogState> & StateUpdaters;
 
 const withDialogHandlers = withStateHandlers<
   DialogState,
   StateAndStateUpdaters,
   {}
-  >(
-    {
-      selectedDeviceId: undefined
-    }, {
-      setSelectedDevice: () => (deviceId: number) => ({
-        selectedDeviceId: deviceId
-      })
-    }
-  )
+>(
+  {
+    selectedDeviceId: undefined
+  },
+  {
+    setSelectedDevice: () => (deviceId: number) => ({
+      selectedDeviceId: deviceId
+    })
+  }
+);
 
 export default compose<CombinedProps, {}>(
   withDialogHandlers,
   paginated,
   withRequestOnMount,
-  styled,
+  styled
 )(TrustedDevices);

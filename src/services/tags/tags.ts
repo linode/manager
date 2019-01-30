@@ -1,6 +1,12 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 
@@ -18,21 +24,17 @@ export const getTags = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/tags`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter),
-  )
-    .then(response => response.data);
+    setXFilter(filter)
+  ).then(response => response.data);
 
 export const createTag = (data: TagRequest) =>
   Request<Tag>(
     setURL(`${API_ROOT}/tags`),
     setMethod('POST'),
-    setData(data),
-  )
-    .then(response => response.data)
+    setData(data)
+  ).then(response => response.data);
 
 export const deleteTag = (label: string) =>
-  Request<Tag>(
-    setURL(`${API_ROOT}/tags/${label}`),
-    setMethod('DELETE'),
-  )
-    .then(response => response.data)
+  Request<Tag>(setURL(`${API_ROOT}/tags/${label}`), setMethod('DELETE')).then(
+    response => response.data
+  );

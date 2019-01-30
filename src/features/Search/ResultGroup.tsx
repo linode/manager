@@ -3,10 +3,14 @@ import * as React from 'react';
 
 import { compose, withStateHandlers } from 'recompose';
 
-import Button from 'src/components/Button'
+import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -19,32 +23,32 @@ import capitalize from 'src/utilities/capitalize';
 
 import ResultRow from './ResultRow';
 
-type ClassNames = 'root'
-| 'entityHeadingWrapper'
-| 'entityHeading'
-| 'button'
-| 'emptyCell'
-| 'headerCell';
+type ClassNames =
+  | 'root'
+  | 'entityHeadingWrapper'
+  | 'entityHeading'
+  | 'button'
+  | 'emptyCell'
+  | 'headerCell';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginBottom: 20,
+    marginBottom: 20
   },
-  entityHeadingWrapper: {
-  },
+  entityHeadingWrapper: {},
   entityHeading: {
-    marginBottom: 10,
+    marginBottom: 10
   },
   button: {
     marginTop: theme.spacing.unit,
     width: '10%'
   },
   emptyCell: {
-    padding: 0,
+    padding: 0
   },
   headerCell: {
-    padding: '10px 4px',
-  },
+    padding: '10px 4px'
+  }
 });
 
 interface Props {
@@ -59,25 +63,35 @@ interface HandlerProps {
 
 type CombinedProps = Props & HandlerProps & WithStyles<ClassNames>;
 
-export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
+export const ResultGroup: React.StatelessComponent<CombinedProps> = props => {
   const { entity, classes, groupSize, results, toggle, showMore } = props;
 
-  if (isEmpty(results)) { return null; }
+  if (isEmpty(results)) {
+    return null;
+  }
 
-  const [initial, hidden] = (results.length > groupSize)
-    ? splitAt(groupSize, results) : [results, []];
+  const [initial, hidden] =
+    results.length > groupSize ? splitAt(groupSize, results) : [results, []];
 
   return (
     <Grid item className={classes.root}>
       <div className={classes.entityHeadingWrapper}>
-        <Typography variant="h2" data-qa-entity-header={entity} className={classes.entityHeading}>{capitalize(entity)}</Typography>
+        <Typography
+          variant="h2"
+          data-qa-entity-header={entity}
+          className={classes.entityHeading}
+        >
+          {capitalize(entity)}
+        </Typography>
       </div>
       <Paper>
         <Table aria-label="Search Results">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.emptyCell}/>
-              <Hidden smDown><TableCell className={classes.emptyCell}/></Hidden>
+              <TableCell className={classes.emptyCell} />
+              <Hidden smDown>
+                <TableCell className={classes.emptyCell} />
+              </Hidden>
               <TableCell className={classes.headerCell}>Label</TableCell>
               <TableCell className={classes.headerCell}>Region</TableCell>
               <TableCell className={classes.headerCell}>Created</TableCell>
@@ -85,27 +99,34 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {initial.map((result, idx: number) =>
-              <ResultRow key={idx} result={result} data-qa-result-row-component/>)
-            }
+            {initial.map((result, idx: number) => (
+              <ResultRow
+                key={idx}
+                result={result}
+                data-qa-result-row-component
+              />
+            ))}
             {showMore &&
-            hidden.map((result, idx: number) =>
-              <ResultRow key={idx} result={result} data-qa-result-row-component/>
-            )
-            }
+              hidden.map((result, idx: number) => (
+                <ResultRow
+                  key={idx}
+                  result={result}
+                  data-qa-result-row-component
+                />
+              ))}
           </TableBody>
         </Table>
       </Paper>
-      {!isEmpty(hidden) &&
+      {!isEmpty(hidden) && (
         <Button
           type="primary"
           onClick={toggle}
           className={classes.button}
           data-qa-show-more-toggle
         >
-          {showMore ? "Show Less" : "Show All"}
+          {showMore ? 'Show Less' : 'Show All'}
         </Button>
-      }
+      )}
     </Grid>
   );
 };
@@ -116,7 +137,7 @@ const handlers = withStateHandlers(
   {
     toggle: ({ showMore }) => () => ({ showMore: !showMore })
   }
-)
+);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,

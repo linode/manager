@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeleteDialog: React.StatelessComponent<CombinedProps> = (props) => {
+const DeleteDialog: React.StatelessComponent<CombinedProps> = props => {
   const {
     isOpen,
     handleClose,
@@ -30,23 +30,21 @@ const DeleteDialog: React.StatelessComponent<CombinedProps> = (props) => {
     return (
       <React.Fragment>
         <ActionsPanel>
-          <Button
-            type="cancel"
-            onClick={handleClose}
-          >
+          <Button type="cancel" onClick={handleClose}>
             Cancel
-        </Button>
+          </Button>
           <Button
             type="secondary"
             destructive
             loading={loading}
-            onClick={triggerDeleteStackScript}>
+            onClick={triggerDeleteStackScript}
+          >
             Delete
-        </Button>
+          </Button>
         </ActionsPanel>
       </React.Fragment>
-    )
-  }
+    );
+  };
   return (
     <ConfirmationDialog
       title={`Delete ${stackScriptLabel}?`}
@@ -55,11 +53,9 @@ const DeleteDialog: React.StatelessComponent<CombinedProps> = (props) => {
       onClose={handleClose}
       error={error}
     >
-      <Typography>
-        Are you sure you want to delete this StackScript?
-      </Typography>
+      <Typography>Are you sure you want to delete this StackScript?</Typography>
     </ConfirmationDialog>
-  )
+  );
 };
 
 export default DeleteDialog;

@@ -7,29 +7,35 @@ import ExpansionPanel from './ExpansionPanel';
 class AsyncContentExample extends React.Component {
   state = {
     loading: false,
-    data: '',
-  }
+    data: ''
+  };
 
   handleToggleExpand = (e: any, expanded: boolean) => {
     if (expanded && !this.state.data) {
       this.setState({ loading: true });
-      const myPromise = () => new Promise((resolve) => setTimeout(() => resolve(), 2000));
+      const myPromise = () =>
+        new Promise(resolve => setTimeout(() => resolve(), 2000));
       myPromise().then(() =>
         this.setState({
           data: 'Your patience has been rewarded',
-          loading: false,
-        }))
+          loading: false
+        })
+      );
     }
-  }
+  };
 
   renderContent = () => {
     if (this.state.loading) {
-      return <div style={{ textAlign: 'center', padding: '1em' }}>Loading...</div>
+      return (
+        <div style={{ textAlign: 'center', padding: '1em' }}>Loading...</div>
+      );
     }
     return (
-      <div style={{ textAlign: 'center', padding: '1em' }}>{this.state.data}</div>
-    )
-  }
+      <div style={{ textAlign: 'center', padding: '1em' }}>
+        {this.state.data}
+      </div>
+    );
+  };
 
   render() {
     return (
@@ -121,12 +127,9 @@ const renderActions = () => {
   return (
     <ActionsPanel>
       <Button type="primary">Save</Button>
-      <Button
-        type="secondary"
-        className="cancel"
-      >
+      <Button type="secondary" className="cancel">
         Cancel
-    </Button>
+      </Button>
     </ActionsPanel>
-  )
-}
+  );
+};

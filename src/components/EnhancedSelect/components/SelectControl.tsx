@@ -8,16 +8,23 @@ interface SelectProps {
   props: any;
 }
 
-const inputComponent: React.StatelessComponent<SelectProps> = ({ inputRef, ...props }) => {
+const inputComponent: React.StatelessComponent<SelectProps> = ({
+  inputRef,
+  ...props
+}) => {
   return <div ref={inputRef} {...props} />;
-}
+};
 
-interface Props extends ControlProps<any> { }
+interface Props extends ControlProps<any> {}
 
-const SelectControl: React.StatelessComponent<Props> = (props) => {
+const SelectControl: React.StatelessComponent<Props> = props => {
   return (
     <TextField
-      data-qa-enhanced-select={props.selectProps.value ? props.selectProps.value.label : props.selectProps.placeholder}
+      data-qa-enhanced-select={
+        props.selectProps.value
+          ? props.selectProps.value.label
+          : props.selectProps.placeholder
+      }
       fullWidth
       InputProps={{
         inputComponent,
@@ -25,12 +32,12 @@ const SelectControl: React.StatelessComponent<Props> = (props) => {
           className: props.selectProps.classes.input,
           inputRef: props.innerRef,
           children: props.children,
-          ...props.innerProps,
-        },
+          ...props.innerProps
+        }
       }}
       {...props.selectProps.textFieldProps}
     />
   );
-}
+};
 
 export default SelectControl;

@@ -8,18 +8,18 @@ const truncateText = (text: string, totalNumOfChars: number) => {
   // plus 4 to accomodate for the ' ...'
   if (text.length > totalNumOfChars + 4) {
     const beginningText = text.substring(0, totalNumOfChars + 1);
-    const charsAfterMax = text.substring(totalNumOfChars + 1)
+    const charsAfterMax = text.substring(totalNumOfChars + 1);
     const result = [beginningText];
     /*
-    * Now we that we have the inital text, we want to ensure that we're ending
-    * at the end of a word rather than at the middle, so we want to find
-    * the first occurance of whitespace and end the string there
-    */
+     * Now we that we have the inital text, we want to ensure that we're ending
+     * at the end of a word rather than at the middle, so we want to find
+     * the first occurance of whitespace and end the string there
+     */
     for (const letter of charsAfterMax) {
       /*
-      * A space means we're at the end of the word
-      * so break out of this loop
-      */
+       * A space means we're at the end of the word
+       * so break out of this loop
+       */
       if (letter.match(/\W/)) {
         break;
       }
@@ -28,6 +28,6 @@ const truncateText = (text: string, totalNumOfChars: number) => {
     return `${result.join('')} ...`;
   }
   return text;
-}
+};
 
 export default truncateText;

@@ -1,37 +1,40 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
-import { aggregateBackups, formatBackupDate } from 'src/features/linodes/LinodesDetail/LinodeBackup';
+import {
+  aggregateBackups,
+  formatBackupDate
+} from 'src/features/linodes/LinodesDetail/LinodeBackup';
 
-type ClassNames =
-'root'
-| 'inner'
-| 'panelBody'
-| 'wrapper';
+type ClassNames = 'root' | 'inner' | 'panelBody' | 'wrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 3
   },
   inner: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   panelBody: {
     width: '100%',
-    padding: `${theme.spacing.unit * 2}px 0 0`,
+    padding: `${theme.spacing.unit * 2}px 0 0`
   },
   wrapper: {
     padding: theme.spacing.unit,
-    minHeight: 120,
-  },
+    minHeight: 120
+  }
 });
 
 interface BackupInfo {
@@ -57,9 +60,8 @@ type StyledProps = Props & WithStyles<ClassNames>;
 type CombinedProps = StyledProps;
 
 class SelectBackupPanel extends React.Component<CombinedProps, State> {
-
   state: State = {
-    backups: [],
+    backups: []
   };
 
   componentDidMount() {
@@ -79,36 +81,45 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       // a component higher to only pass the backups for the selected Linode
       this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
     }
-    if (prevProps.selectedBackupID !== this.props.selectedBackupID
-      || prevState.backups !== this.state.backups) {
+    if (
+      prevProps.selectedBackupID !== this.props.selectedBackupID ||
+      prevState.backups !== this.state.backups
+    ) {
       this.updateBackupInfo();
     }
   }
 
   updateBackupInfo() {
-    const selectedBackup = this.state.backups && this.state.backups.filter(backup =>
-      backup.id === Number(this.props.selectedBackupID),
-    )[0];
+    const selectedBackup =
+      this.state.backups &&
+      this.state.backups.filter(
+        backup => backup.id === Number(this.props.selectedBackupID)
+      )[0];
     if (selectedBackup) {
       const backupInfo_ = this.getBackupInfo(selectedBackup);
       const backupInfo = {
         title: backupInfo_.infoName,
-        details: backupInfo_.subheading,
+        details: backupInfo_.subheading
       };
       this.props.handleChangeBackupInfo(backupInfo);
     }
   }
 
   getBackupInfo(backup: Linode.LinodeBackup) {
-    const heading = backup.label ? backup.label : backup.type === 'auto' ? 'Automatic' : 'Snapshot';
+    const heading = backup.label
+      ? backup.label
+      : backup.type === 'auto'
+      ? 'Automatic'
+      : 'Snapshot';
     const subheading = formatBackupDate(backup.created);
-    const infoName = heading === 'Automatic'
-      ? 'From automatic backup'
-      : `From backup ${heading}`;
+    const infoName =
+      heading === 'Automatic'
+        ? 'From automatic backup'
+        : `From backup ${heading}`;
     return {
       heading,
       subheading,
-      infoName,
+      infoName
     };
   }
 
@@ -119,10 +130,10 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       <SelectionCard
         key={backup.id}
         checked={backup.id === Number(selectedBackupID)}
-        onClick={(e) => {
+        onClick={e => {
           const backupInfo = {
             title: backupInfo_.infoName,
-            details: backupInfo_.subheading,
+            details: backupInfo_.subheading
           };
           this.props.handleChangeBackup(backup.id);
           this.props.handleChangeBackupInfo(backupInfo);
@@ -145,27 +156,23 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
             Select Backup
           </Typography>
           <Grid container alignItems="center" className={classes.wrapper}>
-            {selectedLinodeID
-              ? <React.Fragment>
-                {backups!.length !== 0
-                  ? <Typography component="div" className={classes.panelBody}>
+            {selectedLinodeID ? (
+              <React.Fragment>
+                {backups!.length !== 0 ? (
+                  <Typography component="div" className={classes.panelBody}>
                     <Grid container>
-                      {backups!.map((backup) => {
-                        return (
-                          this.renderCard(backup)
-                        );
+                      {backups!.map(backup => {
+                        return this.renderCard(backup);
                       })}
                     </Grid>
                   </Typography>
-                  : <Typography variant="body1">
-                    No backup available
-                          </Typography>
-                }
+                ) : (
+                  <Typography variant="body1">No backup available</Typography>
+                )}
               </React.Fragment>
-              : <Typography variant="body1">
-                First, select a Linode
-                    </Typography>
-            }
+            ) : (
+              <Typography variant="body1">First, select a Linode</Typography>
+            )}
           </Grid>
         </div>
       </Paper>
