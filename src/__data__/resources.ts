@@ -36,6 +36,5 @@ export default {
     lastUpdated: 0,
     results: [],
     entities: []
-  },
-
-}
+  }
+};

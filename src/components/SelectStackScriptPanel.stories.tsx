@@ -39,5 +39,5 @@
 // }
 
 // storiesOf('SelectStackScriptPanel', module)
-//   
+//
 //   .add('Example', () => (<InteractiveExample />));

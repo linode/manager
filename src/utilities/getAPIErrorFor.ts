@@ -1,6 +1,6 @@
 export default (
   errorMap: { [index: string]: string },
-  arr: Linode.ApiFieldError[] = [],
+  arr: Linode.ApiFieldError[] = []
 ) => (field: string): undefined | string => {
   let err;
 
@@ -14,5 +14,7 @@ export default (
     return;
   }
 
-  return err.field ? err.reason.replace(err.field, errorMap[err.field]) : err.reason;
+  return err.field
+    ? err.reason.replace(err.field, errorMap[err.field])
+    : err.reason;
 };

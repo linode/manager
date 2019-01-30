@@ -1,7 +1,11 @@
 type Tag = string;
-interface Tagged { tags: Tag[] };
-interface Grouped { group: string };
-export type GroupedBy<T> = [string, T[]][]
+interface Tagged {
+  tags: Tag[];
+}
+interface Grouped {
+  group: string;
+}
+export type GroupedBy<T> = [string, T[]][];
 
 /** The key on which we will store entities without tags. */
 export const NONE = `No Tags`;
@@ -13,11 +17,14 @@ const addTo = <T>(list: T[] = [], i: T) => [...list, i];
  * If an entity has no tags, push it onto the none record, otherwise iterate over its
  * tags pushing the entity onto the the appropriate record.
  */
-const reduceEntitiesToTags = <T extends Tagged>(obj: Record<string, T[]>, entity: T): Record<string, T[]> => {
+const reduceEntitiesToTags = <T extends Tagged>(
+  obj: Record<string, T[]>,
+  entity: T
+): Record<string, T[]> => {
   const { tags } = entity;
 
   return tags.length === 0
-    ? { ...obj, [NONE]: addTo(obj[NONE], entity), }
+    ? { ...obj, [NONE]: addTo(obj[NONE], entity) }
     : entity.tags.reduce(addToArrayAtKey(entity), obj);
 };
 
@@ -25,23 +32,26 @@ const reduceEntitiesToTags = <T extends Tagged>(obj: Record<string, T[]>, entity
 const addToArrayAtKey = <T>(value: T) => (obj: any, key: string) => {
   return {
     ...obj,
-    [key]: addTo(obj[key], value),
+    [key]: addTo(obj[key], value)
   };
 };
 
 /** Create a group map based on tags. */
 export const groupByTags = <T extends Tagged>(arr: T[]): GroupedBy<T> => {
-  const map = arr.reduce(reduceEntitiesToTags, {})
+  const map = arr.reduce(reduceEntitiesToTags, {});
 
   return Object.entries(map);
-}
+};
 
 /** Just in case... */
-const reduceEntitiesToGroup = <T extends Grouped>(obj: Record<string, T[]>, entity: T): Record<string, T[]> => {
+const reduceEntitiesToGroup = <T extends Grouped>(
+  obj: Record<string, T[]>,
+  entity: T
+): Record<string, T[]> => {
   const { group } = entity;
 
   return !group || group === ''
-    ? { ...obj, [NONE]: addTo(obj[NONE], entity), }
+    ? { ...obj, [NONE]: addTo(obj[NONE], entity) }
     : { ...obj, [group]: addTo(obj[group], entity) };
 };
 
@@ -67,14 +77,15 @@ export const sortGroups = (groups: GroupedBy<any>) => {
   }
 
   if (typeof foundUntaggedIndex === 'undefined') {
-    return groups
-    .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1);
+    return groups.sort(([firstTag], [secondTag]) =>
+      firstTag > secondTag ? 0 : -1
+    );
   }
 
   return [
     groups[foundUntaggedIndex],
     ...groups
       .filter(([tag]) => tag !== NONE)
-      .sort(([firstTag], [secondTag]) => firstTag > secondTag ? 0 : -1),
+      .sort(([firstTag], [secondTag]) => (firstTag > secondTag ? 0 : -1))
   ];
 };

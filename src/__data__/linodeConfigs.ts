@@ -1,12 +1,12 @@
 export const linodeConfigs: Linode.Config[] = [
   {
-    created: "2018-06-26T16:04:28",
+    created: '2018-06-26T16:04:28',
     memory_limit: 0,
-    updated: "2018-06-26T16:04:28",
-    comments: "",
-    virt_mode: "paravirt",
+    updated: '2018-06-26T16:04:28',
+    comments: '',
+    virt_mode: 'paravirt',
     id: 9859511,
-    run_level: "default",
+    run_level: 'default',
     helpers: {
       distro: true,
       network: true,
@@ -14,8 +14,8 @@ export const linodeConfigs: Linode.Config[] = [
       devtmpfs_automount: true,
       updatedb_disabled: true
     },
-    root_device: "/dev/sda",
-    label: "My Arch Linux Disk Profile",
+    root_device: '/dev/sda',
+    label: 'My Arch Linux Disk Profile',
     initrd: null,
     devices: {
       sdc: {
@@ -36,6 +36,6 @@ export const linodeConfigs: Linode.Config[] = [
       sdg: null,
       sde: null
     },
-    kernel: "linode/grub2"
+    kernel: 'linode/grub2'
   }
-]
+];

@@ -9,7 +9,8 @@ namespace Linode {
     updated: string;
   }
 
-  export type DiskStatus = 'offline'
+  export type DiskStatus =
+    | 'offline'
     | 'booting'
     | 'running'
     | 'shutting_down'
@@ -19,9 +20,5 @@ namespace Linode {
     | 'migrating'
     | 'ready';
 
-  export type DiskFilesystem = 'raw'
-    | 'swap'
-    | 'ext3'
-    | 'ext4'
-    | 'initrd';
+  export type DiskFilesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
 }

@@ -7,7 +7,7 @@ import { logout } from 'src/store/authentication';
 import { Logout } from './Logout';
 
 jest.mock('src/session', () => ({
-  expire: jest.fn(),
+  expire: jest.fn()
 }));
 jest.mock('src/store/authentication');
 

@@ -8,4 +8,3 @@ const stripImageName = (images: (string | null)[]) => {
 };
 
 export default stripImageName;
-  

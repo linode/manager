@@ -1,25 +1,36 @@
-export const collectBackups = ({ automatic, snapshot }: Linode.LinodeBackupsResponse) => [
-  ...automatic,
-  snapshot.current,
-  snapshot.in_progress,
-].filter(Boolean);
+export const collectBackups = ({
+  automatic,
+  snapshot
+}: Linode.LinodeBackupsResponse) =>
+  [...automatic, snapshot.current, snapshot.in_progress].filter(Boolean);
 
-export const mostRecentFromResponse: (r: Linode.LinodeBackupsResponse) => null | string = (response) => {
+export const mostRecentFromResponse: (
+  r: Linode.LinodeBackupsResponse
+) => null | string = response => {
+  return (
+    collectBackups(response)
+      /** Filter unsuccessful/in-progress backups */
+      .filter((backup: Linode.LinodeBackup) => backup.status === 'successful')
 
-  return collectBackups(response)
+      /** Just make sure the backup isnt null somehow. */
+      .filter(
+        (backup: Linode.LinodeBackup) => typeof backup.finished === 'string'
+      )
 
-    /** Filter unsuccessful/in-progress backups */
-    .filter((backup: Linode.LinodeBackup) => backup.status === 'successful')
+      /** Return the highest value date. */
+      .reduce(
+        (result: undefined | string, { finished }: Linode.LinodeBackup) => {
+          if (result === undefined) {
+            return finished;
+          }
 
-    /** Just make sure the backup isnt null somehow. */
-    .filter((backup: Linode.LinodeBackup) => typeof backup.finished === 'string')
+          if (new Date(finished) > new Date(result)) {
+            return finished;
+          }
 
-    /** Return the highest value date. */
-    .reduce((result: undefined | string, { finished }: Linode.LinodeBackup) => {
-      if (result === undefined) { return finished; }
-
-      if (new Date(finished) > new Date(result)) { return finished; }
-
-      return result;
-    }, null) || null;
+          return result;
+        },
+        null
+      ) || null
+  );
 };
