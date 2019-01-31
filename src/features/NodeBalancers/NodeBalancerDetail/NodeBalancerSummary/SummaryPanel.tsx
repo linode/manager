@@ -14,9 +14,18 @@ import { formatRegion } from 'src/utilities';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import { NodeBalancerConsumer } from '../context';
 
-type ClassNames = 'IPgrouping' | 'nodeTransfer';
+type ClassNames =
+  | 'NBsummarySection'
+  | 'IPgrouping'
+  | 'nodeTransfer'
+  | 'hostName';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
+  NBsummarySection: {
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing.unit * 6
+    }
+  },
   IPgrouping: {
     margin: '-2px 0 0 2px',
     display: 'flex',
@@ -24,6 +33,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   nodeTransfer: {
     marginTop: 12
+  },
+  hostName: {
+    wordBreak: 'break-word'
   }
 });
 
@@ -41,7 +53,11 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
       {({ updateTags }) => {
         return (
           <div className={classes.root}>
-            <Paper className={classes.summarySection}>
+            <Paper
+              className={`${classes.summarySection} ${
+                classes.NBsummarySection
+              }`}
+            >
               <Typography
                 role="header"
                 variant="h3"
@@ -70,7 +86,11 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
                 </Typography>
               </div>
               <div className={classes.section}>
-                <Typography variant="body1" data-qa-hostname>
+                <Typography
+                  variant="body1"
+                  className={classes.hostName}
+                  data-qa-hostname
+                >
                   <strong>Host Name: </strong>
                   {nodeBalancer.hostname}
                 </Typography>
