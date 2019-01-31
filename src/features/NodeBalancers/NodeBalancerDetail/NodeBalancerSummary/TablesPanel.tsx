@@ -1,12 +1,14 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExtendedExpansionPanel from 'src/components/ExtendedExpansionPanel';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/features/linodes/LinodesDetail/LinodeSummary/MetricsDisplay';
@@ -28,6 +30,8 @@ type ClassNames =
   | 'red'
   | 'yellow'
   | 'header'
+  | 'title'
+  | 'panel'
   | 'graphWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => {
@@ -35,8 +39,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     header: {
       padding: theme.spacing.unit * 2
     },
+    panel: {
+      padding: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 2
+    },
     graphWrapper: {
       marginTop: theme.spacing.unit * 2
+    },
+    title: {
+      marginBottom: theme.spacing.unit * 2
     },
     chart: {
       position: 'relative',
@@ -113,6 +124,19 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const statsFetchInterval = 30000;
 
+const loading = () => (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: 300
+    }}
+  >
+    <CircleProgress mini />
+  </div>
+);
+
 class TablesPanel extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
   mounted: boolean = false;
@@ -180,6 +204,13 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
+    this.setState({ loadingStats: true });
+    this.getStats();
+
+    this.statsInterval = window.setInterval(
+      () => this.getStats(),
+      statsFetchInterval
+    );
   }
 
   componentWillUnmount() {
@@ -187,10 +218,20 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     window.clearInterval(this.statsInterval as number);
   }
 
-  renderConnectionsChart = () => {
+  renderConnectionsChart = (
+    statsError: string | undefined,
+    loadingStats: boolean
+  ) => {
     const { classes } = this.props;
     const { stats } = this.state;
     const data = pathOr([[]], ['data', 'connections'], stats);
+
+    if (loadingStats) {
+      return loading();
+    }
+    if (statsError) {
+      return <ErrorState errorText={statsError} />;
+    }
     const metrics = getMetrics(data);
 
     return (
@@ -238,12 +279,21 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderTrafficChart = () => {
+  renderTrafficChart = (
+    statsError: string | undefined,
+    loadingStats: boolean
+  ) => {
     const { classes } = this.props;
     const { stats } = this.state;
     const trafficIn = pathOr([[]], ['data', 'traffic', 'in'], stats);
     const trafficOut = pathOr([[]], ['data', 'traffic', 'out'], stats);
 
+    if (loadingStats) {
+      return loading();
+    }
+    if (statsError) {
+      return <ErrorState errorText={statsError} />;
+    }
     return (
       <React.Fragment>
         <Typography role="header" variant="h3" className={classes.header}>
@@ -306,23 +356,12 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               Graphs
             </Typography>
           </div>
-
-          <ExtendedExpansionPanel
-            renderMainContent={this.renderConnectionsChart}
-            heading={'Connections'}
-            error={statsError}
-            loading={loadingStats}
-            onChange={this.handleToggleExpand}
-          />
-
-          <ExtendedExpansionPanel
-            className={classes.graphWrapper}
-            heading={'Traffic'}
-            renderMainContent={this.renderTrafficChart}
-            error={statsError}
-            loading={loadingStats}
-            onChange={this.handleToggleExpand}
-          />
+          <Paper className={classes.panel}>
+            {this.renderConnectionsChart(statsError, loadingStats)}
+          </Paper>
+          <Paper className={classes.panel}>
+            {this.renderTrafficChart(statsError, loadingStats)}
+          </Paper>
         </React.Fragment>
       </React.Fragment>
     );
