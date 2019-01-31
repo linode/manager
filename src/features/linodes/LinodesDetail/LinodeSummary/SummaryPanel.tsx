@@ -9,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
+import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import {
@@ -18,48 +19,9 @@ import {
 import { formatRegion } from 'src/utilities';
 import { withLinode } from '../context';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'summarySection'
-  | 'section'
-  | 'region'
-  | 'volumeLink'
-  | 'regionInner';
+type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit
-    },
-    [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing.unit,
-      paddingRight: 0
-    }
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  summarySection: {
-    padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 3
-  },
-  section: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing.unit,
-    ...theme.typography.body1,
-    '& .dif': {
-      position: 'relative',
-      paddingRight: 35,
-      width: 'auto',
-      '& .chip': {
-        position: 'absolute',
-        top: '-4px',
-        right: 0
-      }
-    }
-  },
   region: {
     [theme.breakpoints.between('sm', 'md')]: {
       flexBasis: '100%',
@@ -98,6 +60,7 @@ type CombinedProps = Props &
   LinodeContextProps &
   LinodeActionsProps &
   WithImage &
+  StyleProps &
   WithStyles<ClassNames>;
 
 class SummaryPanel extends React.Component<CombinedProps> {
@@ -193,7 +156,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles(styles);
+const localStyles = withStyles(styles);
 
 interface WithImage {
   image?: Linode.Image;
@@ -221,6 +184,7 @@ const linodeContext = withLinode(context => ({
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
+  localStyles,
   linodeContext,
   withLinodeActions,
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
