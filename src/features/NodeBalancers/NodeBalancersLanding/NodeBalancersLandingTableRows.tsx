@@ -104,7 +104,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
             </TableCell>
             <TableCell parentColumn="Ports" data-qa-ports>
               {configs.map(({ port, id }, i) => (
-                <React.Fragment>
+                <React.Fragment key={id}>
                   <Link
                     to={`/nodebalancers/${
                       nodeBalancer.id
