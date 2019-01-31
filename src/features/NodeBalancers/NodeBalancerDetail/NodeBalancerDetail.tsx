@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { last, pathOr } from 'ramda';
+import { any, last, pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -124,7 +124,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     value: number
   ) => {
     const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
+    const routeName = this.tabs[value].routeNames[0];
     history.push(`${routeName}`);
   };
 
@@ -204,17 +204,26 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   ];
 
   tabs = [
-    { routeName: `${this.props.match.url}/summary`, title: 'Summary' },
     {
-      routeName: `${this.props.match.url}/configurations`,
+      routeNames: [`${this.props.match.url}/summary`],
+      title: 'Summary'
+    },
+    {
+      routeNames: [
+        `${this.props.match.url}/configurations`,
+        `${this.props.match.url}/configurations/:configId`
+      ],
       title: 'Configurations'
     },
-    { routeName: `${this.props.match.url}/settings`, title: 'Settings' }
+    {
+      routeNames: [`${this.props.match.url}/settings`],
+      title: 'Settings'
+    }
   ];
 
   render() {
     const matches = (p: string) =>
-      Boolean(matchPath(p, { path: this.props.location.pathname }));
+      Boolean(matchPath(this.props.location.pathname, { path: p }));
     const {
       match: { path, url },
       classes
@@ -267,7 +276,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         />
         <AppBar position="static" color="default">
           <Tabs
-            value={this.tabs.findIndex(tab => matches(tab.routeName))}
+            value={this.tabs.findIndex(tab => any(matches)(tab.routeNames))}
             onChange={this.handleTabChange}
             indicatorColor="primary"
             textColor="primary"
