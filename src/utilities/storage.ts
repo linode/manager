@@ -30,6 +30,7 @@ const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const GROUP_DOMAINS = `GROUP_DOMAINS`;
 const GROUP_NODEBALANCERS = `GROUP_NODEBALANCERS`;
 const GROUP_VOLUMES = `GROUP_VOLUMES`;
+const BACKUPSCTA_DISMISSED = 'CtaDismissed';
 
 type Theme = 'dark' | 'light';
 type Beta = 'open' | 'closed';
@@ -77,6 +78,10 @@ export interface Storage {
     set: (v: 'true' | 'false') => void;
   };
   groupVolumesByTag: {
+    get: () => boolean;
+    set: (v: 'true' | 'false') => void;
+  };
+  CtaDismissed: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
   };
@@ -133,6 +138,10 @@ export const storage: Storage = {
   groupVolumesByTag: {
     get: () => getStorage(GROUP_VOLUMES),
     set: v => setStorage(GROUP_VOLUMES, v)
+  },
+  CtaDismissed: {
+    get: () => getStorage(BACKUPSCTA_DISMISSED),
+    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
   }
 };
 
