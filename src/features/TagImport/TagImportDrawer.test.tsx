@@ -70,6 +70,33 @@ describe('TagImportDrawer', () => {
     wrapper.setProps({ success: true });
     expect(sendEvent).toHaveBeenCalled();
   });
+
+  it('should send a GA event with the number of Linodes and Domains with imported tags', () => {
+    wrapper.setProps({ success: true });
+    expect(sendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        label: 'Linodes: 3; Domains: 2'
+      })
+    );
+  });
+
+  it('should send a GA event with category of "Dashboard"', () => {
+    wrapper.setProps({ success: true });
+    expect(sendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        category: 'dashboard'
+      })
+    );
+  });
+
+  it('should send a GA event with action of "import display groups"', () => {
+    wrapper.setProps({ success: true });
+    expect(sendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'import display groups'
+      })
+    );
+  });
 });
 
 describe('GA Label Creator', () => {
