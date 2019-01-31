@@ -72,7 +72,7 @@ interface Props {
 
 interface MatchProps {
   nodeBalancerId?: string;
-  configIdx?: string;
+  configId?: string;
 }
 type RouteProps = RouteComponentProps<MatchProps>;
 
@@ -947,9 +947,9 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const lensTo = lensFrom(['configs', idx]);
 
     // Check whether config is expended based on the URL
-    const expandedConfigIdx = this.props.match.params.configIdx;
-    const isExpanded = expandedConfigIdx
-      ? parseInt(expandedConfigIdx, 10) === idx
+    const expandedConfigId = this.props.match.params.configId;
+    const isExpanded = expandedConfigId
+      ? parseInt(expandedConfigId, 10) === config.id
       : false;
 
     const L = {

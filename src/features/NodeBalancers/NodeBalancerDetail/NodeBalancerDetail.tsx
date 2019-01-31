@@ -317,7 +317,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             )}
           />
           <Route
-            path={`${path}/configurations/:configIdx`}
+            path={`${path}/configurations/:configId`}
             render={() => (
               <NodeBalancerConfigurations
                 nodeBalancerLabel={nodeBalancer.label}
