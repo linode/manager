@@ -15,7 +15,7 @@ export const createSupportTicketSchema = object({
   linode_id: number(),
   longviewclient_id: number(),
   nodebalancer_id: number(),
-  volume_id: number(),
+  volume_id: number()
 });
 
 export const createReplySchema = object({

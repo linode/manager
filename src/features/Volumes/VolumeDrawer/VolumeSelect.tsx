@@ -1,15 +1,19 @@
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getVolumes } from 'src/services/volumes';
 import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -30,10 +34,9 @@ interface State {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class VolumeSelect extends React.Component<CombinedProps, State> {
-
   state: State = {
     volumes: [],
-    loading: true,
+    loading: true
   };
 
   componentDidMount() {
@@ -48,12 +51,16 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
   }
 
   getSelectedVolume = (linodeId?: number) => {
-    if (!linodeId) { return -1; }
+    if (!linodeId) {
+      return -1;
+    }
 
     const { volumes } = this.state;
-    const idx = volumes.findIndex((linode) => Number(linodeId) === Number(linode.value));
+    const idx = volumes.findIndex(
+      linode => Number(linodeId) === Number(linode.value)
+    );
     return idx > -1 ? volumes[idx] : -1;
-  }
+  };
 
   setSelectedVolume = (selected: Item<number>) => {
     if (selected) {
@@ -62,20 +69,22 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
       this.props.onChange(value);
     } else {
       this.props.onChange(-1);
-      this.setState({ selectedVolumeId: -1 })
+      this.setState({ selectedVolumeId: -1 });
     }
-  }
+  };
 
   renderLinodeOptions = (volumes: Linode.Volume[]) => {
-    if (!volumes) { return []; }
+    if (!volumes) {
+      return [];
+    }
     return volumes.map(volume => ({
       value: volume.id,
       label: volume.label,
       data: {
         region: volume.region
-      },
+      }
     }));
-  }
+  };
 
   getVolumeFilter = (inputValue: string) => {
     const { region } = this.props;
@@ -83,18 +92,18 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     if (region && region !== 'none') {
       return {
         label: {
-          '+contains': inputValue,
+          '+contains': inputValue
         },
         region
-      }
+      };
     } else {
       return {
         label: {
-          '+contains': inputValue,
+          '+contains': inputValue
         }
-      }
+      };
     }
-  }
+  };
 
   searchVolumes = (inputValue: string = '') => {
     this.setState({ loading: true });
@@ -102,26 +111,30 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     const filterVolumes = this.getVolumeFilter(inputValue);
 
     getVolumes({}, filterVolumes)
-      .then((response) => {
-        return ({
+      .then(response => {
+        return {
           ...response,
-          data: response.data.filter((v) => v.region === this.props.region && v.linode_id === null)
-        })
+          data: response.data.filter(
+            v => v.region === this.props.region && v.linode_id === null
+          )
+        };
       })
-      .then((response) => {
+      .then(response => {
         const volumes = this.renderLinodeOptions(response.data);
         this.setState({ volumes, loading: false });
       })
       .catch(() => {
         this.setState({ loading: false });
-      })
-  }
+      });
+  };
 
   onInputChange = (inputValue: string, actionMeta: { action: string }) => {
-    if (actionMeta.action !== 'input-change') { return; }
+    if (actionMeta.action !== 'input-change') {
+      return;
+    }
     this.setState({ loading: true });
     this.debouncedSearch(inputValue);
-  }
+  };
 
   debouncedSearch = debounce(400, false, this.searchVolumes);
 
@@ -143,11 +156,15 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
           onChange={this.setSelectedVolume}
           onInputChange={this.onInputChange}
         />
-        {!error && <FormHelperText data-qa-volume-region>Only volumes in this Linode's region are displayed.</FormHelperText>}
+        {!error && (
+          <FormHelperText data-qa-volume-region>
+            Only volumes in this Linode's region are displayed.
+          </FormHelperText>
+        )}
       </FormControl>
     );
   }
-};
+}
 
 const styled = withStyles(styles);
 

@@ -16,7 +16,9 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) => {
+const StackScriptActionMenu: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     stackScriptID,
     stackScriptUsername,
@@ -26,7 +28,7 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
     stackScriptLabel,
     canDelete,
     canEdit,
-    isPublic,
+    isPublic
   } = props;
 
   const createActions = () => {
@@ -35,56 +37,50 @@ const StackScriptActionMenu: React.StatelessComponent<CombinedProps> = (props) =
         {
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/linodes/create?type=fromStackScript` +
-            `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`);
+            history.push(
+              `/linodes/create?type=fromStackScript` +
+                `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`
+            );
             e.preventDefault();
-          },
-        },
+          }
+        }
       ];
 
       if (canDelete) {
-        actions.push(
-          {
-            title: 'Delete',
-            onClick: (e) => {
-              closeMenu();
-              triggerDelete(stackScriptID, stackScriptLabel);
-            },
-          },
-        );
+        actions.push({
+          title: 'Delete',
+          onClick: e => {
+            closeMenu();
+            triggerDelete(stackScriptID, stackScriptLabel);
+          }
+        });
       }
 
       if (canEdit) {
-        actions.push(
-          {
-            title: 'Edit',
-            onClick: (e: React.MouseEvent<HTMLElement>) => {
-              history.push(`/stackscripts/${stackScriptID}/edit`);
-              e.preventDefault();
-            },
-          },
-        );
+        actions.push({
+          title: 'Edit',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/stackscripts/${stackScriptID}/edit`);
+            e.preventDefault();
+          }
+        });
       }
 
       if (canEdit && !isPublic) {
-        actions.push(
-          {
-            title: 'Make StackScript Public',
-            onClick: (e: React.MouseEvent<HTMLElement>) => {
-              // open a modal here as well
-              closeMenu();
-              triggerMakePublic(stackScriptID, stackScriptLabel)
-            },
+        actions.push({
+          title: 'Make StackScript Public',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            // open a modal here as well
+            closeMenu();
+            triggerMakePublic(stackScriptID, stackScriptLabel);
           }
-        );
+        });
       }
 
       return actions;
     };
-  }
-  return (
-    <ActionMenu createActions={createActions()} />
-  );
+  };
+  return <ActionMenu createActions={createActions()} />;
 };
 
 export default withRouter(StackScriptActionMenu);

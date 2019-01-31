@@ -1,7 +1,11 @@
 import { remove } from 'ramda';
 import * as React from 'react';
 
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 import AttachFile from '@material-ui/icons/AttachFile';
 
@@ -9,26 +13,25 @@ import Button from 'src/components/Button';
 
 import AttachFileListItem from './AttachFileListItem';
 
-type ClassNames = 'root'
-| 'attachFileButton';
+type ClassNames = 'root' | 'attachFileButton';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   attachFileButton: {
     paddingLeft: 14,
     paddingRight: 20,
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2,
-  },
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 export interface FileAttachment {
-  name: string,
-  file: File,
+  name: string;
+  file: File;
   /* Used to keep track of initial upload status */
-  uploading: boolean,
+  uploading: boolean;
   /* Used to ensure that the file doesn't get uploaded again */
-  uploaded: boolean,
+  uploaded: boolean;
   /* Each file needs to keep track of its own errors because each request hits the same endpoint */
   errors?: Linode.ApiFieldError[];
 }
@@ -49,7 +52,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
     if (this.inputRef.current) {
       this.inputRef.current.click();
     }
-  }
+  };
 
   removeFile = (fileIdx: number) => {
     const { files, updateFiles } = this.props;
@@ -59,14 +62,14 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
     }
     // Send the updated file list to the parent component's state
     updateFiles(newFiles);
-  }
+  };
 
   selectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.props.handleFileSelected(e);
     if (this.inputRef.current) {
       this.inputRef.current.value = '';
     }
-  }
+  };
 
   render() {
     const { classes, files, inlineDisplay } = this.props;
@@ -101,7 +104,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
       </React.Fragment>
     );
   }
-};
+}
 
 const styled = withStyles(styles);
 

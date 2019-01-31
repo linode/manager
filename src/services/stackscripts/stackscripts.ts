@@ -4,10 +4,13 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter,
+  setXFilter
 } from '../index';
 
-import { stackScriptSchema, updateStackScriptSchema } from './stackscripts.schema';
+import {
+  stackScriptSchema,
+  updateStackScriptSchema
+} from './stackscripts.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
 type StackScript = Linode.StackScript.Response;
@@ -30,9 +33,8 @@ export const getStackscripts = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter),
-  )
-    .then(response => response.data);
+    setXFilter(filter)
+  ).then(response => response.data);
 
 /**
  * Returns all of the information about a specified StackScript, including the contents of the script.
@@ -42,9 +44,8 @@ export const getStackscripts = (params?: any, filter?: any) =>
 export const getStackScript = (stackscriptId: number) =>
   Request<StackScript>(
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
-    setMethod('GET'),
-  )
-    .then(response => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * Creates a StackScript in your Account.
@@ -65,8 +66,7 @@ export const createStackScript = (payload: StackScriptPayload) =>
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('POST'),
     setData(payload, stackScriptSchema)
-  )
-    .then(response => response.data);
+  ).then(response => response.data);
 
 /**
  * Updates a StackScript.
@@ -83,13 +83,15 @@ export const createStackScript = (payload: StackScriptPayload) =>
  * @param payload.rev_note { string } This field allows you to add notes for the set of revisions
  * made to this StackScript.
  */
-export const updateStackScript = (stackscriptId: number, payload: Partial<StackScriptPayload>) =>
+export const updateStackScript = (
+  stackscriptId: number,
+  payload: Partial<StackScriptPayload>
+) =>
   Request<StackScript>(
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
     setMethod('PUT'),
     setData(payload, updateStackScriptSchema)
-  )
-    .then(response => response.data);
+  ).then(response => response.data);
 
 /**
  * Deletes a private StackScript you have permission to read_write. You cannot delete a public StackScript.
@@ -99,6 +101,5 @@ export const updateStackScript = (stackscriptId: number, payload: Partial<StackS
 export const deleteStackScript = (stackscriptId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/stackscripts/${stackscriptId}`),
-    setMethod('DELETE'),
-  )
-    .then(response => response.data);
+    setMethod('DELETE')
+  ).then(response => response.data);

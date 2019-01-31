@@ -1,16 +1,26 @@
 import * as React from 'react';
-import {compose} from 'recompose';
-import StackScriptBase, { StateProps } from '../StackScriptBase/StackScriptBase';
+import { compose } from 'recompose';
+import StackScriptBase, {
+  StateProps
+} from '../StackScriptBase/StackScriptBase';
 import SelectStackScriptsSection from './SelectStackScriptsSection';
 
 interface Props {
-  onSelect: (id: number, label: string, username: string, images: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]) => void;
+  onSelect: (
+    id: number,
+    label: string,
+    username: string,
+    images: string[],
+    userDefinedFields: Linode.StackScript.UserDefinedField[]
+  ) => void;
   resetStackScriptSelection: () => void;
   publicImages: Linode.Image[];
   currentUser: string;
-  request: (username: string, params?: any, filter?: any) =>
-    Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  request: (
+    username: string,
+    params?: any,
+    filter?: any
+  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   category: string;
 }
 
@@ -20,10 +30,13 @@ interface State {
   selected?: number;
 }
 
-class SelectStackScriptPanelContent extends React.Component<CombinedProps, State> {
+class SelectStackScriptPanelContent extends React.Component<
+  CombinedProps,
+  State
+> {
   state: State = {
     selected: undefined
-  }
+  };
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
     this.props.onSelect(
@@ -31,27 +44,28 @@ class SelectStackScriptPanelContent extends React.Component<CombinedProps, State
       stackscript.label,
       stackscript.username,
       stackscript.images,
-      stackscript.user_defined_fields,
+      stackscript.user_defined_fields
     );
     this.setState({ selected: stackscript.id });
-  }
-
+  };
 
   render() {
     const { selected } = this.state;
     const { listOfStackScripts } = this.props;
 
-    return <SelectStackScriptsSection
-      selectedId={selected}
-      onSelect={this.handleSelectStackScript}
-      isSorting={this.props.isSorting}
-      data={listOfStackScripts}
-      publicImages={this.props.publicImages}
-      currentUser={this.props.currentUser}
-    />
+    return (
+      <SelectStackScriptsSection
+        selectedId={selected}
+        onSelect={this.handleSelectStackScript}
+        isSorting={this.props.isSorting}
+        data={listOfStackScripts}
+        publicImages={this.props.publicImages}
+        currentUser={this.props.currentUser}
+      />
+    );
   }
 }
 
-export default compose<CombinedProps, Props>(
-  StackScriptBase(true)
-)(SelectStackScriptPanelContent);
+export default compose<CombinedProps, Props>(StackScriptBase(true))(
+  SelectStackScriptPanelContent
+);

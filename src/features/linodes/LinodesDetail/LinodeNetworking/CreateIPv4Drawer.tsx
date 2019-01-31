@@ -2,7 +2,11 @@ import { path } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -13,8 +17,8 @@ import substituteLink from 'src/utilities/substituteLink';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -33,31 +37,34 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   state: State = {
-    forPublic: this.props.forPublic,
+    forPublic: this.props.forPublic
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       errors: undefined,
-      forPublic: nextProps.forPublic,
+      forPublic: nextProps.forPublic
     });
   }
 
   create = () => {
     const { onClose, linodeID } = this.props;
     // Only IPv4 addresses can currently be allocated.
-    allocateIPAddress(linodeID, { type: "ipv4", public: this.state.forPublic })
-      .then((_) => {
+    allocateIPAddress(linodeID, { type: 'ipv4', public: this.state.forPublic })
+      .then(_ => {
         onClose();
       })
-      .catch((errResponse) => {
-        this.setState({
-          errors: path(['response', 'data', 'errors'], errResponse),
-        }, () => {
-          scrollErrorIntoView();
-        });
+      .catch(errResponse => {
+        this.setState(
+          {
+            errors: path(['response', 'data', 'errors'], errResponse)
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
-  }
+  };
 
   getCopy(): string {
     const publicCopy = `Public IP addresses, over and above the one included
@@ -87,22 +94,19 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
           <Typography variant="body1" data-qa-service-notice>
             {this.getCopy()}
           </Typography>
-          {hasErrorFor('none') &&
+          {hasErrorFor('none') && (
             <div style={{ marginTop: 24 }}>
-              <Notice
-                error
-                data-qa-notice
-              >
-                {substituteLink(hasErrorFor('none') || '', 'support ticket', '/support')}
+              <Notice error data-qa-notice>
+                {substituteLink(
+                  hasErrorFor('none') || '',
+                  'support ticket',
+                  '/support'
+                )}
               </Notice>
             </div>
-          }
+          )}
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button
-              type="primary"
-              onClick={this.create}
-              data-qa-submit
-            >
+            <Button type="primary" onClick={this.create} data-qa-submit>
               Allocate
             </Button>
             <Button

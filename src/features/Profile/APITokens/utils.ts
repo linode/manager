@@ -10,14 +10,10 @@ export const perms = [
   'longview',
   'nodebalancers',
   'stackscripts',
-  'volumes',
+  'volumes'
 ];
 
-export const inverseLevelMap = [
-  'none',
-  'read_only',
-  'read_write',
-];
+export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
 export const levelMap = {
   none: 0,
@@ -26,10 +22,13 @@ export const levelMap = {
   view: 1,
   modify: 2,
   create: 2,
-  delete: 2,
+  delete: 2
 };
 
-const defaultScopeMap: Record<string, 0> = perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
+const defaultScopeMap: Record<string, 0> = perms.reduce(
+  (obj, key) => ({ ...obj, [key]: 0 }),
+  {}
+);
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
@@ -55,20 +54,17 @@ const defaultScopeMap: Record<string, 0> = perms.reduce((obj, key) => ({ ...obj,
  */
 
 export const scopeStringToPermTuples = (scopes: string): Permission[] => {
-
   if (scopes === '*') {
     return perms.map(perm => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes
-    .split(',')
-    .reduce((map, scopeStr) => {
-      const [perm, level] = scopeStr.split(':');
-      return {
-        ...map,
-        [perm]: levelMap[level],
-      };
-    }, defaultScopeMap);
+  const scopeMap = scopes.split(',').reduce((map, scopeStr) => {
+    const [perm, level] = scopeStr.split(':');
+    return {
+      ...map,
+      [perm]: levelMap[level]
+    };
+  }, defaultScopeMap);
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -82,58 +78,63 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
    * So read above in Andrews comments about the deprecated levels.
    */
   const deprecatedPermissionsMap: Record<string, string[]> = {
-    account: ['tokens', 'clients', 'users', 'tickets', 'managed'],
+    account: ['tokens', 'clients', 'users', 'tickets', 'managed']
   };
 
-  const combinedScopeMap = Object
-    .entries(deprecatedPermissionsMap)
-    .reduce((map: Record<string, number>, [parentPermissionName, deprecatedPermissions]) => {
+  const combinedScopeMap = Object.entries(deprecatedPermissionsMap).reduce(
+    (
+      map: Record<string, number>,
+      [parentPermissionName, deprecatedPermissions]
+    ) => {
+      const maxLevel = deprecatedPermissions.reduce(
+        (level: number, deprecatedPermission: string) => {
+          const deprecatedPermissionLevel = map[deprecatedPermission];
 
-      const maxLevel = deprecatedPermissions.reduce((level: number, deprecatedPermission: string) => {
-        const deprecatedPermissionLevel = map[deprecatedPermission];
-
-        return deprecatedPermissionLevel
-          ? Math.max(level, deprecatedPermissionLevel)
-          : level;
-      }, map[parentPermissionName]);
+          return deprecatedPermissionLevel
+            ? Math.max(level, deprecatedPermissionLevel)
+            : level;
+        },
+        map[parentPermissionName]
+      );
 
       return { ...map, [parentPermissionName]: maxLevel };
-    }, scopeMap);
+    },
+    scopeMap
+  );
 
-  const permTuples = perms
-    .reduce((tups: Permission[], permName: string): Permission[] => {
-      const tup = [
-        permName,
-        combinedScopeMap[permName],
-      ] as Permission;
+  const permTuples = perms.reduce(
+    (tups: Permission[], permName: string): Permission[] => {
+      const tup = [permName, combinedScopeMap[permName]] as Permission;
       return [...tups, tup];
-    }, []);
+    },
+    []
+  );
 
   return permTuples;
-}
+};
 
 export const allMaxPerm = (scopeTups: Permission[]): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
 
-  return scopeTups
-    .reduce((acc: boolean, [key, value]: Permission) => value === levelMap.read_write && acc, true);
-}
+  return scopeTups.reduce(
+    (acc: boolean, [key, value]: Permission) =>
+      value === levelMap.read_write && acc,
+    true
+  );
+};
 
 export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
   if (allMaxPerm(scopeTups)) {
     return '*';
   }
-  const joinedTups = scopeTups.reduce(
-    (acc, [key, value]) => {
-      const level = inverseLevelMap[value];
-      if (level !== 'none') {
-        return [...acc, [key, level].join(':')];
-      }
-      return [...acc];
-    },
-    [],
-  );
+  const joinedTups = scopeTups.reduce((acc, [key, value]) => {
+    const level = inverseLevelMap[value];
+    if (level !== 'none') {
+      return [...acc, [key, level].join(':')];
+    }
+    return [...acc];
+  }, []);
   return joinedTups.join(',');
-}
+};

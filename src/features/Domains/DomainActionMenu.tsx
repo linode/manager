@@ -13,18 +13,18 @@ type CombinedProps = RouteComponentProps<any> & Props;
 
 class LinodeActionMenu extends React.Component<CombinedProps> {
   goToDomain = () => {
-    this.props.history.push(`/domains/${this.props.id}`)
-  }
+    this.props.history.push(`/domains/${this.props.id}`);
+  };
 
   handleRemove = () => {
     const { domain, id, onRemove } = this.props;
-    onRemove(domain, id)
-  }
+    onRemove(domain, id);
+  };
 
   handleClone = () => {
     const { domain, id, onClone } = this.props;
-    onClone(domain, id)
-  }
+    onClone(domain, id);
+  };
 
   createActions = () => (closeMenu: Function): Action[] => {
     return [
@@ -34,7 +34,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           this.goToDomain();
           closeMenu();
           e.preventDefault();
-        },
+        }
       },
       {
         title: 'Check Zone',
@@ -42,7 +42,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        },
+        }
       },
       {
         title: 'Zone File',
@@ -50,7 +50,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           closeMenu();
           e.preventDefault();
-        },
+        }
       },
       {
         title: 'Clone',
@@ -58,7 +58,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           this.handleClone();
           closeMenu();
           e.preventDefault();
-        },
+        }
       },
       {
         title: 'Remove',
@@ -66,13 +66,13 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           this.handleRemove();
           closeMenu();
           e.preventDefault();
-        },
-      },
+        }
+      }
     ];
-  }
+  };
 
   render() {
-    return (<ActionMenu createActions={this.createActions()} />);
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

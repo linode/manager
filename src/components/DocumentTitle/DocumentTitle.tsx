@@ -6,10 +6,12 @@ interface DocumentTitleSegmentsContext {
   removeSegment: (segment: string) => void;
 }
 
-const documentTitleSegments = React.createContext<DocumentTitleSegmentsContext>({
-  appendSegment: () => null,
-  removeSegment: () => null,
-})
+const documentTitleSegments = React.createContext<DocumentTitleSegmentsContext>(
+  {
+    appendSegment: () => null,
+    removeSegment: () => null
+  }
+);
 
 const DocumentTitleSegmentsProvider = documentTitleSegments.Provider;
 
@@ -19,7 +21,9 @@ interface Props {
   segment: string;
 }
 
-class InnerDocumentTitleSegment extends React.Component<Props & DocumentTitleSegmentsContext> {
+class InnerDocumentTitleSegment extends React.Component<
+  Props & DocumentTitleSegmentsContext
+> {
   componentDidMount() {
     this.props.appendSegment(this.props.segment);
   }
@@ -48,20 +52,25 @@ export class DocumentTitleSegment extends React.Component<Props> {
           <InnerDocumentTitleSegment segment={this.props.segment} {...value} />
         )}
       </DocumentTitleSegmentsConsumer>
-    )
+    );
   }
 }
 
 /* tslint:disable-next-line */
-export function withDocumentTitleProvider<P> (Component: React.ComponentType<P>) {
-  return class DocumentTitleProviderManager extends React.Component<P, DocumentTitleSegmentsContext> {
+export function withDocumentTitleProvider<P>(
+  Component: React.ComponentType<P>
+) {
+  return class DocumentTitleProviderManager extends React.Component<
+    P,
+    DocumentTitleSegmentsContext
+  > {
     /* Make this a class property to avoid race conditions with setState */
     titleSegments: string[] = [];
 
     state: DocumentTitleSegmentsContext = {
       appendSegment: (segment: string) => {
         this.titleSegments = [...this.titleSegments, segment];
-        this.updateDocumentTitle()
+        this.updateDocumentTitle();
       },
 
       removeSegment: (segment: string) => {
@@ -69,12 +78,12 @@ export function withDocumentTitleProvider<P> (Component: React.ComponentType<P>)
         this.titleSegments.splice(targetIdx, 1);
         this.updateDocumentTitle();
       }
-    }
-  
+    };
+
     updateDocumentTitle = () => {
       const newTitle = reverse(this.titleSegments).join(' | ');
       document.title = newTitle;
-    }
+    };
 
     render() {
       return (
@@ -83,5 +92,5 @@ export function withDocumentTitleProvider<P> (Component: React.ComponentType<P>)
         </DocumentTitleSegmentsProvider>
       );
     }
-  }
+  };
 }

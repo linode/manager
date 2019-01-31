@@ -12,8 +12,8 @@ const list = [
   'chairs',
   'speakers',
   'ecumenical council number two'
-]
+];
 
 storiesOf('Debounced Search', module)
-  .add('Text Field', () => (<TextFieldExample list={list} />))
-  .add('Select Field', () => (<SelectExample list={list} />));
+  .add('Text Field', () => <TextFieldExample list={list} />)
+  .add('Select Field', () => <SelectExample list={list} />);

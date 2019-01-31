@@ -11,7 +11,7 @@ describe('Support Tickets Landing', () => {
       classes={{ root: '', title: '', titleWrapper: '' }}
       {...reactRouterProps}
     />
-  )
+  );
 
   it('title of page should read "Customer Support"', () => {
     const titleText = component.find('[data-qa-breadcrumb]').prop('labelTitle');

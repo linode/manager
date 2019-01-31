@@ -1,6 +1,10 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import * as zxcvbn from 'zxcvbn';
@@ -11,7 +15,7 @@ type Props = TextFieldProps & {
   value?: string;
   required?: boolean;
   disabledReason?: string;
-}
+};
 
 interface State {
   strength: null | 0 | 1 | 2 | 3;
@@ -19,27 +23,27 @@ interface State {
 
 type ClassNames = 'container' | 'strengthIndicator';
 
-const styles: StyleRulesCallback = (theme) => ({
+const styles: StyleRulesCallback = theme => ({
   container: {
     position: 'relative',
     marginBottom: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit / 2,
+    paddingBottom: theme.spacing.unit / 2
   },
   strengthIndicator: {
     position: 'absolute',
     width: '100%',
     bottom: 0,
     [theme.breakpoints.down('xs')]: {
-      maxWidth: '100%',
-    },
-  },
+      maxWidth: '100%'
+    }
+  }
 });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class PasswordInput extends React.Component<CombinedProps, State> {
   state: State = {
-    strength: maybeStrength(this.props.value),
+    strength: maybeStrength(this.props.value)
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
@@ -50,9 +54,11 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value: string = e.currentTarget.value;
 
-    if (this.props.onChange) { this.props.onChange(e) }
+    if (this.props.onChange) {
+      this.props.onChange(e);
+    }
     this.setState({ strength: maybeStrength(value) });
-  }
+  };
 
   render() {
     const { strength } = this.state;
@@ -60,9 +66,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
 
     return (
       <Grid container className={classes.container}>
-        <Grid
-          item xs={12}
-        >
+        <Grid item xs={12}>
           <HideShowText
             {...rest}
             tooltipText={disabledReason}
@@ -82,20 +86,17 @@ class PasswordInput extends React.Component<CombinedProps, State> {
   }
 }
 
-
-
 const maybeStrength = (value?: string) => {
   if (!value || isEmpty(value)) {
-    return null
-  }
-  else {
+    return null;
+  } else {
     const score = zxcvbn(value).score;
-    if(score === 4){
+    if (score === 4) {
       return 3;
     }
     return score;
   }
-}
+};
 
 const styled = withStyles(styles);
 

@@ -5,10 +5,12 @@ import { clearDocs, setDocs } from 'src/store/documentation';
 
 export type SetDocsProps = DispatchProps;
 
-const setDocsHOC = (docs: Linode.Doc[]) =>
-<OriginalProps extends {}>(Component: React.ComponentType<OriginalProps>) => {
-  class SetDocumentation extends React.Component<OriginalProps & DispatchProps> {
-
+const setDocsHOC = (docs: Linode.Doc[]) => <OriginalProps extends {}>(
+  Component: React.ComponentType<OriginalProps>
+) => {
+  class SetDocumentation extends React.Component<
+    OriginalProps & DispatchProps
+  > {
     componentDidMount() {
       this.props.setDocs(docs);
     }
@@ -22,7 +24,10 @@ const setDocsHOC = (docs: Linode.Doc[]) =>
     }
   }
 
-  const connected = connect(undefined, mapDispatchToProps);
+  const connected = connect(
+    undefined,
+    mapDispatchToProps
+  );
 
   return connected(SetDocumentation);
 };
@@ -32,7 +37,9 @@ interface DispatchProps {
   clearDocs: typeof clearDocs;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, SetDocsProps> = (dispatch) =>
-  bindActionCreators({ setDocs, clearDocs }, dispatch);
+const mapDispatchToProps: MapDispatchToProps<
+  DispatchProps,
+  SetDocsProps
+> = dispatch => bindActionCreators({ setDocs, clearDocs }, dispatch);
 
 export default setDocsHOC;

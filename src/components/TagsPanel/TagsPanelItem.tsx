@@ -1,13 +1,17 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tag, { TagProps } from 'src/components/Tag';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props extends TagProps {
@@ -28,15 +32,19 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
     /*
      * checking loading prop to prevent user from clicking the button repeatedly
      */
-    if (!onDelete || this.props.loading) { return }
-    onDelete(this.props.tagLabel)
-  }
+    if (!onDelete || this.props.loading) {
+      return;
+    }
+    onDelete(this.props.tagLabel);
+  };
 
   renderIcon = () => {
-    return (!this.props.loading)
-      ? <Close data-qa-delete-tag />
-      : <CircleProgress mini tag />
-  }
+    return !this.props.loading ? (
+      <Close data-qa-delete-tag />
+    ) : (
+      <CircleProgress mini tag />
+    );
+  };
 
   render() {
     const { tagLabel, loading, ...restOfProps } = this.props;
@@ -45,7 +53,7 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
         {...restOfProps}
         deleteIcon={this.renderIcon()}
         onDelete={this.handleDelete}
-        component={"button" as "div"}
+        component={'button' as 'div'}
         colorVariant="lightBlue"
       />
     );

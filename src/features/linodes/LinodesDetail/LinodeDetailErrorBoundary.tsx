@@ -2,7 +2,6 @@ import * as React from 'react';
 import ErrorState from 'src/components/ErrorState';
 import { reportException } from 'src/exceptionReporting';
 
-
 interface State {
   error?: Error;
   info?: any;
@@ -28,7 +27,5 @@ export default <T extends {}>(Component: React.ComponentType) => {
     }
   }
 
-
   return LinodeDetailErrorBoundary;
 };
-

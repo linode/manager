@@ -2,10 +2,15 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'resultsContainer'
   | 'noResultsContainer'
   | 'moreResults'
@@ -15,54 +20,54 @@ type ClassNames = 'root'
   | 'link'
   | 'searchItem';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
+const styles: StyleRulesCallback<ClassNames> = theme => {
   // const { palette: { status } } = theme;
   return {
     root: {},
     resultsContainer: {
       '& em': {
-        fontStyle: 'normal',
-      },
+        fontStyle: 'normal'
+      }
     },
     noResultsContainer: {
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
     },
     moreResults: {
       fontSize: '1rem',
       fontWeight: 'bold',
-      marginTop: theme.spacing.unit * 2,
+      marginTop: theme.spacing.unit * 2
     },
     icon: {
       color: '#3683DC',
       fontSize: '0.8rem',
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing.unit
     },
     header: {
       marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit * 2
     },
     label: {
-      color: '#3683DC',
+      color: '#3683DC'
     },
     link: {
-      display: 'inline-block',
+      display: 'inline-block'
     },
     searchItem: {
       position: 'initial',
       backgroundColor: theme.color.white,
       borderBottom: `1px solid ${theme.palette.divider}`,
       '&:hover': {
-        backgroundColor: theme.bg.offWhite,
+        backgroundColor: theme.bg.offWhite
       }
-    },
-  }
+    }
+  };
 };
 
 export interface SearchResult {
   data: {
     source: string;
     href: string;
-  }
+  };
   label: string;
 }
 
@@ -74,10 +79,10 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) => {
+const DocumentationResults: React.StatelessComponent<CombinedProps> = props => {
   const { classes, results, sectionTitle, target } = props;
   const renderResults = () => {
-    return results.map((result:SearchResult, idx:number) =>
+    return results.map((result: SearchResult, idx: number) => (
       <ListItem
         className={classes.searchItem}
         key={idx}
@@ -86,26 +91,34 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
         onClick={() => window.open(result.data.href, '_newtab')}
         tabIndex={1}
       >
-        <Typography variant="body1" className={classes.label} data-qa-search-result>
+        <Typography
+          variant="body1"
+          className={classes.label}
+          data-qa-search-result
+        >
           {result.label}
           <OpenInNew className={classes.icon} />
         </Typography>
       </ListItem>
-    )
-  }
+    ));
+  };
 
   const renderEmptyState = () => {
-    return(
+    return (
       <Paper className={classes.noResultsContainer}>
         <Typography variant="body1">No results</Typography>
       </Paper>
-    )
-  }
+    );
+  };
 
   return (
     <div className={classes.root}>
-      <Typography variant="h1" className={classes.header} data-qa-results={sectionTitle}>
-        { `Most Relevant ${sectionTitle}` }
+      <Typography
+        variant="h1"
+        className={classes.header}
+        data-qa-results={sectionTitle}
+      >
+        {`Most Relevant ${sectionTitle}`}
       </Typography>
       <Paper>
         <nav role="menu">
@@ -113,10 +126,16 @@ const DocumentationResults: React.StatelessComponent<CombinedProps> = (props) =>
         </nav>
       </Paper>
       <Typography variant="body2" className={classes.moreResults}>
-        <a href={target} className={classes.link} data-qa-view-more={sectionTitle}>View more {sectionTitle}</a>
+        <a
+          href={target}
+          className={classes.link}
+          data-qa-view-more={sectionTitle}
+        >
+          View more {sectionTitle}
+        </a>
       </Typography>
     </div>
-  )
-}
+  );
+};
 
 export default withStyles(styles)(DocumentationResults);

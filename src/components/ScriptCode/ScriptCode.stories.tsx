@@ -104,9 +104,9 @@ def main():
         proc = subprocess.Popen(bashCommand, shell=True)
 	pythonlib.end()
 if __name__ == "__main__":
-	sys.exit(main())`
+	sys.exit(main())`;
 
-storiesOf('ScriptCode', module)
-  .add('ScriptCode with some stackScript code', () => (
-    <ScriptCode script={code} />
-  ))
+storiesOf('ScriptCode', module).add(
+  'ScriptCode with some stackScript code',
+  () => <ScriptCode script={code} />
+);

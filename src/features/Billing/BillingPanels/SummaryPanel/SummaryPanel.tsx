@@ -2,39 +2,40 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
-type ClassNames = 'root'
-  | 'expired'
-  | 'item'
-  | 'address2';
+type ClassNames = 'root' | 'expired' | 'item' | 'address2';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2
   },
   expired: {
-    color: theme.color.red,
+    color: theme.color.red
   },
   item: {
     marginBottom: theme.spacing.unit,
-    ...theme.typography.body1,
+    ...theme.typography.body1
   },
   address2: {
     marginTop: -15,
-    paddingLeft: theme.spacing.unit * 7.5,
+    paddingLeft: theme.spacing.unit * 7.5
   }
 });
 
 interface AccountContextProps {
-  loading: boolean,
-  errors?: Linode.ApiFieldError[],
-  lastUpdated: number,
+  loading: boolean;
+  errors?: Linode.ApiFieldError[];
+  lastUpdated: number;
   data?: Linode.Account;
 }
 
@@ -54,15 +55,13 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           </Grid>
           <Grid item xs={12}>
             <Grid container>
-              {
-                loading && lastUpdated === 0
+              {loading && lastUpdated === 0
                 ? this.loading()
                 : errors
-                  ? this.error()
-                  : data
-                    ? this.info()
-                    : null
-              }
+                ? this.error()
+                : data
+                ? this.info()
+                : null}
             </Grid>
           </Grid>
         </Grid>
@@ -71,19 +70,17 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
   }
 
   loading = () => {
-    return (
-      <CircleProgress noTopMargin />
-    );
-  }
+    return <CircleProgress noTopMargin />;
+  };
 
   error = () => {
-    return (
-      <ErrorState compact errorText="Unable to load account details." />
-    );
-  }
+    return <ErrorState compact errorText="Unable to load account details." />;
+  };
 
   info = () => {
-    if (!this.props.data) { return; }
+    if (!this.props.data) {
+      return;
+    }
 
     const {
       data: {
@@ -94,15 +91,12 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         address_2,
         email,
         phone,
-        credit_card: {
-          expiry,
-          last_four,
-        },
+        credit_card: { expiry, last_four },
         city,
         state,
-        zip,
+        zip
       },
-      classes,
+      classes
     } = this.props;
 
     return (
@@ -130,7 +124,9 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
                   {!(address_1 || address_2 || city || state || zip) && 'None'}
                   <span>{address_1}</span>
                   <div>{address_2}</div>
-                  <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
+                  <div>{`${city} ${city &&
+                    state &&
+                    ', '} ${state} ${zip}`}</div>
                 </div>
               </div>
             </Grid>
@@ -153,25 +149,19 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               <Grid item xs={12}>
                 <Typography role="header" variant="h3">
                   Billing Information
-                  </Typography>
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <div className={classes.item} data-qa-contact-cc>
                   <strong>Credit Card: </strong>
-                  {(last_four)
-                    ? `xxxx-xxxx-xxxx-${last_four}`
-                    : 'None'
-                  }
+                  {last_four ? `xxxx-xxxx-xxxx-${last_four}` : 'None'}
                 </div>
                 <div className={classes.item} data-qa-contact-cc-exp-date>
                   <strong>Expiration Date: </strong>
-                  {(expiry)
-                    ? `${expiry} `
-                    : 'None'
-                  }
-                  {expiry && isCreditCardExpired(expiry) &&
+                  {expiry ? `${expiry} ` : 'None'}
+                  {expiry && isCreditCardExpired(expiry) && (
                     <span className={classes.expired}>Expired</span>
-                  }
+                  )}
                 </div>
               </Grid>
             </Grid>
@@ -179,18 +169,23 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         </Grid>
       </React.Fragment>
     );
-  }
+  };
 }
 
 const styled = withStyles(styles);
 
-const accountContext = withAccount(({ data, errors, loading, lastUpdated }) => ({
-  errors,
-  lastUpdated,
-  loading,
-  data,
-}));
+const accountContext = withAccount(
+  ({ data, errors, loading, lastUpdated }) => ({
+    errors,
+    lastUpdated,
+    loading,
+    data
+  })
+);
 
-const enhanced = compose(styled, accountContext);
+const enhanced = compose(
+  styled,
+  accountContext
+);
 
 export default enhanced(SummaryPanel) as React.ComponentType<{}>;

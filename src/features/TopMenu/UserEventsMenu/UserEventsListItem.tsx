@@ -1,17 +1,19 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root'
-  | 'title'
-  | 'content'
-  | 'unread'
-  | 'pointer';
+type ClassNames = 'root' | 'title' | 'content' | 'unread' | 'pointer';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => {
-  const { palette: { status } } = theme;
+const styles: StyleRulesCallback<ClassNames> = theme => {
+  const {
+    palette: { status }
+  } = theme;
 
   return {
     root: {
@@ -23,31 +25,31 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => {
       transition: theme.transitions.create(['border-color', 'opacity']),
       outline: 0,
       '&:hover, &:focus': {
-        backgroundColor: theme.bg.main,
-      },
+        backgroundColor: theme.bg.main
+      }
     },
     title: {
-      marginBottom: theme.spacing.unit / 2,
+      marginBottom: theme.spacing.unit / 2
     },
     content: {
-      ...theme.typography.body1,
+      ...theme.typography.body1
     },
     unread: {
       backgroundColor: theme.bg.main,
-      opacity: 1,
+      opacity: 1
     },
     warning: {
-      borderLeftColor: status.warningDark,
+      borderLeftColor: status.warningDark
     },
     success: {
-      borderLeftColor: status.successDark,
+      borderLeftColor: status.successDark
     },
     pointer: {
       '& > h3': {
         lineHeight: '1.2',
-        textDecoration: 'underline',
-      },
-    },
+        textDecoration: 'underline'
+      }
+    }
   };
 };
 
@@ -62,20 +64,23 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userEventsListItem: React.StatelessComponent<CombinedProps> = (props) => {
+const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
   const { classes, title, content, warning, success, error, onClick } = props;
   return (
-    <ListItem className={classNames({
+    <ListItem
+      className={classNames({
         [classes.root]: true,
         [classes.unread]: error || warning || success,
-        [classes.pointer]: Boolean(onClick),
+        [classes.pointer]: Boolean(onClick)
       })}
       component="li"
       tabIndex={1}
       onClick={onClick}
       button={Boolean(onClick)}
     >
-      <Typography role="header" variant="h3" className={classes.title}>{title}</Typography>
+      <Typography role="header" variant="h3" className={classes.title}>
+        {title}
+      </Typography>
       {content && <div className={classes.content}>{content}</div>}
     </ListItem>
   );

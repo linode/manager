@@ -3,7 +3,11 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
@@ -13,8 +17,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -35,40 +39,43 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     rdns: this.props.rdns,
-    address: this.props.address,
+    address: this.props.address
   };
 
   errorResources = {
-    rdns: 'RDNS',
+    rdns: 'RDNS'
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       rdns: nextProps.rdns,
       address: nextProps.address,
-      errors: undefined,
+      errors: undefined
     });
   }
 
   save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
-    updateIP(address!, (!rdns || rdns === '') ? null : rdns)
-      .then((ipAddress) => {
+    updateIP(address!, !rdns || rdns === '' ? null : rdns)
+      .then(ipAddress => {
         onClose();
       })
-      .catch((errResponse) => {
-        this.setState({
-          errors: path(['response', 'data', 'errors'], errResponse),
-        }, () => {
-          scrollErrorIntoView();
-        });
+      .catch(errResponse => {
+        this.setState(
+          {
+            errors: path(['response', 'data', 'errors'], errResponse)
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       });
-  }
+  };
 
   handleChangeDomain = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ rdns: e.target.value });
-  }
+  };
 
   render() {
     const { open, onClose } = this.props;
@@ -77,11 +84,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
 
     return (
-      <Drawer
-        open={open}
-        onClose={onClose}
-        title={`Edit Reverse DNS`}
-      >
+      <Drawer open={open} onClose={onClose} title={`Edit Reverse DNS`}>
         <React.Fragment>
           <TextField
             placeholder="Enter a domain name"
@@ -94,18 +97,14 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
             Leave this field blank to reset RDNS
           </Typography>
 
-          { hasErrorFor('none') &&
+          {hasErrorFor('none') && (
             <FormHelperText error style={{ marginTop: 16 }} data-qa-error>
-              { hasErrorFor('none') }
+              {hasErrorFor('none')}
             </FormHelperText>
-          }
+          )}
 
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button
-              type="primary"
-              onClick={this.save}
-              data-qa-submit
-            >
+            <Button type="primary" onClick={this.save} data-qa-submit>
               Save
             </Button>
             <Button

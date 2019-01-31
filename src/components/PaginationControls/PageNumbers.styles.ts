@@ -21,14 +21,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       justifyContent: 'center',
       minWidth: 27,
       height: 30,
-      minHeight: 30,
+      minHeight: 30
     },
     [theme.breakpoints.up('sm')]: {
       display: 'inline-block',
       textAlign: 'center',
       minWidth: 40,
-      height: 40,
-    },
+      height: 40
+    }
   },
   ellipsesInner: {
     fontSize: '1.2rem',
@@ -36,9 +36,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     top: -5,
     lineHeight: 0,
     [theme.breakpoints.up('sm')]: {
-      top: 0,
+      top: 0
     }
-  },
+  }
 });
 
 export type StyleProps = WithStyles<ClassNames>;

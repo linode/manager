@@ -1,13 +1,17 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 export interface Props {
@@ -17,13 +21,13 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const TableRowError: React.StatelessComponent<CombinedProps> = (props) => {
+const TableRowError: React.StatelessComponent<CombinedProps> = props => {
   return (
     <TableRow>
-    <TableCell colSpan={props.colSpan}>
-      <ErrorState errorText={props.message} compact />
-    </TableCell>
-  </TableRow>
+      <TableCell colSpan={props.colSpan}>
+        <ErrorState errorText={props.message} compact />
+      </TableCell>
+    </TableRow>
   );
 };
 

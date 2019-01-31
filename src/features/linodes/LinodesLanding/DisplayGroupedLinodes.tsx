@@ -1,7 +1,10 @@
-
 import { compose } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -16,13 +19,19 @@ import TableWrapper from './TableWrapper';
 
 const DEFAULT_PAGE_SIZE = 25;
 
-type ClassNames = 'root' | 'tagGridRow' | 'tagHeaderRow' | 'tagHeader' | 'tagHeaderOuter' | 'paginationCell' | 'groupContainer';
+type ClassNames =
+  | 'root'
+  | 'tagGridRow'
+  | 'tagHeaderRow'
+  | 'tagHeader'
+  | 'tagHeaderOuter'
+  | 'paginationCell'
+  | 'groupContainer';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {
-  },
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
   tagGridRow: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
@@ -30,32 +39,38 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
       padding: '20px 0 10px',
-      borderBottom: 'none',
-    },
+      borderBottom: 'none'
+    }
   },
   groupContainer: {
     '&:first-of-type': {
       '& $tagHeaderRow > td': {
-        padding: '10px 0',
-      },
-    },
+        padding: '10px 0'
+      }
+    }
   },
   tagHeader: {
-    marginBottom: 2,
+    marginBottom: 2
   },
-  tagHeaderOuter: {
-  },
+  tagHeaderOuter: {},
   paginationCell: {
     paddingTop: 2,
     '& div:first-child': {
-      marginTop: 0,
-    },
-  },
+      marginTop: 0
+    }
+  }
 });
 
 interface Props {
-  openConfigDrawer: (c: Linode.Config[], action: LinodeConfigSelectionDrawerCallback) => void;
-  toggleConfirmation: (bootOption: Linode.BootAction, linodeId: number, linodeLabel: string) => void;
+  openConfigDrawer: (
+    c: Linode.Config[],
+    action: LinodeConfigSelectionDrawerCallback
+  ) => void;
+  toggleConfirmation: (
+    bootOption: Linode.BootAction,
+    linodeId: number,
+    linodeLabel: string
+  ) => void;
   display: 'grid' | 'list';
   component: any;
   data: Linode.Linode[];
@@ -63,7 +78,9 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
 
-const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) => {
+const DisplayGroupedLinodes: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     data,
     display,
@@ -75,7 +92,10 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
     ...rest
   } = props;
 
-  const orderedGroupedLinodes = compose(sortGroups, groupByTags)(data);
+  const orderedGroupedLinodes = compose(
+    sortGroups,
+    groupByTags
+  )(data);
   const tableWrapperProps = { handleOrderChange, order, orderBy };
 
   if (display === 'grid') {
@@ -83,16 +103,33 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
       <>
         {orderedGroupedLinodes.map(([tag, linodes]) => {
           return (
-            <div key={tag} className={classes.tagGridRow} data-qa-tag-header={tag}>
+            <div
+              key={tag}
+              className={classes.tagGridRow}
+              data-qa-tag-header={tag}
+            >
               <Grid container>
                 <Grid item xs={12}>
                   <div className={classes.tagHeaderOuter}>
-                    <Typography variant="h2" component="h3" className={classes.tagHeader}>{tag}</Typography>
+                    <Typography
+                      variant="h2"
+                      component="h3"
+                      className={classes.tagHeader}
+                    >
+                      {tag}
+                    </Typography>
                   </div>
                 </Grid>
               </Grid>
               <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
-                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
+                {({
+                  data: paginatedData,
+                  handlePageChange,
+                  handlePageSizeChange,
+                  page,
+                  pageSize,
+                  count
+                }) => {
                   const finalProps = {
                     ...rest,
                     data: paginatedData,
@@ -102,7 +139,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                     handlePageChange,
                     handleOrderChange,
                     order,
-                    orderBy,
+                    orderBy
                   };
                   return (
                     <React.Fragment>
@@ -118,11 +155,11 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
                         />
                       </Grid>
                     </React.Fragment>
-                  )
+                  );
                 }}
               </Paginate>
             </div>
-          )
+          );
         })}
       </>
     );
@@ -135,38 +172,67 @@ const DisplayGroupedLinodes: React.StatelessComponent<CombinedProps> = (props) =
           return (
             <React.Fragment key={tag}>
               <Paginate data={linodes} pageSize={DEFAULT_PAGE_SIZE}>
-                {({ data: paginatedData, handlePageChange, handlePageSizeChange, page, pageSize, count }) => {
-                  const finalProps = { ...rest, data: paginatedData, pageSize, page, handlePageSizeChange, handlePageChange, handleOrderChange, order, orderBy, };
+                {({
+                  data: paginatedData,
+                  handlePageChange,
+                  handlePageSizeChange,
+                  page,
+                  pageSize,
+                  count
+                }) => {
+                  const finalProps = {
+                    ...rest,
+                    data: paginatedData,
+                    pageSize,
+                    page,
+                    handlePageSizeChange,
+                    handlePageChange,
+                    handleOrderChange,
+                    order,
+                    orderBy
+                  };
                   return (
                     <React.Fragment>
-                      <TableBody className={classes.groupContainer} data-qa-tag-header={tag}>
+                      <TableBody
+                        className={classes.groupContainer}
+                        data-qa-tag-header={tag}
+                      >
                         <TableRow className={classes.tagHeaderRow}>
                           <TableCell colSpan={7}>
-                            <Typography variant="h2" component="h3" className={classes.tagHeader}>
+                            <Typography
+                              variant="h2"
+                              component="h3"
+                              className={classes.tagHeader}
+                            >
                               {tag}
                             </Typography>
                           </TableCell>
                         </TableRow>
                         <Component {...finalProps} />
-                        {count > DEFAULT_PAGE_SIZE && <TableRow>
-                          <TableCell colSpan={7} className={classes.paginationCell}>
-                            <PaginationFooter
-                              count={count}
-                              handlePageChange={handlePageChange}
-                              handleSizeChange={handlePageSizeChange}
-                              pageSize={pageSize}
-                              page={page}
-                              eventCategory={'linodes landing'}
-                            />
-                          </TableCell>
-                        </TableRow>}
+                        {count > DEFAULT_PAGE_SIZE && (
+                          <TableRow>
+                            <TableCell
+                              colSpan={7}
+                              className={classes.paginationCell}
+                            >
+                              <PaginationFooter
+                                count={count}
+                                handlePageChange={handlePageChange}
+                                handleSizeChange={handlePageSizeChange}
+                                pageSize={pageSize}
+                                page={page}
+                                eventCategory={'linodes landing'}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )}
                       </TableBody>
                     </React.Fragment>
-                  )
+                  );
                 }}
               </Paginate>
             </React.Fragment>
-          )
+          );
         })}
       </TableWrapper>
     );

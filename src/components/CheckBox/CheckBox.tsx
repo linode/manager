@@ -3,66 +3,65 @@ import * as React from 'react';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import Checkbox, { CheckboxProps } from 'src/components/core/Checkbox';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
-type CSSClasses =
-  'root'
-  | 'checked'
-  | 'disabled'
-  | 'warning'
-  | 'error';
+type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     color: '#ccc',
     transition: theme.transitions.create(['color']),
     '& .defaultFill': {
-      transition: theme.transitions.create(['fill']),
+      transition: theme.transitions.create(['fill'])
     },
     '&:hover': {
       color: theme.palette.primary.main,
       fill: theme.color.white,
       '& .defaultFill': {
-        fill: theme.color.white,
-      },
+        fill: theme.color.white
+      }
     },
     '&:hover$warning': {
-      color: '#ffd322',
+      color: '#ffd322'
     },
     '&:hover$error': {
-      color: '#cf1f1f',
-    },
+      color: '#cf1f1f'
+    }
   },
   checked: {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   warning: {
     color: theme.palette.status.warningDark,
     '& .defaultFill': {
-      fill: theme.palette.status.warning,
+      fill: theme.palette.status.warning
     },
     '&$checked': {
-      color: theme.palette.status.warningDark,
-    },
+      color: theme.palette.status.warningDark
+    }
   },
   error: {
     color: theme.palette.status.errorDark,
     '& .defaultFill': {
-      fill: theme.palette.status.error,
+      fill: theme.palette.status.error
     },
     '&$checked': {
-      color: theme.palette.status.errorDark,
-    },
+      color: theme.palette.status.errorDark
+    }
   },
   disabled: {
     color: '#ccc !important',
     fill: `${theme.bg.main} !important`,
     pointerEvents: 'none',
     '& .defaultFill': {
-      opacity: .5,
-      fill: `${theme.bg.main}`,
-    },
-  },
+      opacity: 0.5,
+      fill: `${theme.bg.main}`
+    }
+  }
 });
 
 interface Props extends CheckboxProps {
@@ -71,7 +70,7 @@ interface Props extends CheckboxProps {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
+const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
   const { classes, ...rest } = props;
 
   const classnames = classNames({
@@ -79,7 +78,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
     [classes.disabled]: props.disabled === true,
     [classes.checked]: Boolean(props.checked),
     [classes.warning]: props.variant === 'warning',
-    [classes.error]: props.variant === 'error',
+    [classes.error]: props.variant === 'error'
   });
 
   return (
@@ -89,7 +88,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = (props) => {
       icon={<CheckboxIcon />}
       checkedIcon={<CheckboxCheckedIcon />}
       data-qa-checked={props.checked}
-      { ...rest }
+      {...rest}
     />
   );
 };

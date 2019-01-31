@@ -14,8 +14,8 @@ export interface State {
 export default (Component: React.ComponentType<any>) => {
   class WrappedComponent extends React.PureComponent<StateProps, State> {
     state = {
-      userSSHKeys: [],
-    }
+      userSSHKeys: []
+    };
 
     mounted: boolean = false;
 
@@ -26,26 +26,38 @@ export default (Component: React.ComponentType<any>) => {
     componentDidMount() {
       this.mounted = true;
       const { username, userEmailAddress } = this.props;
-      if (!username || !userEmailAddress) { return; }
+      if (!username || !userEmailAddress) {
+        return;
+      }
 
       getSSHKeys()
-        .then((response) => {
-          const keys = response.data
-          if (!this.mounted || !keys || keys.length === 0) { return; }
+        .then(response => {
+          const keys = response.data;
+          if (!this.mounted || !keys || keys.length === 0) {
+            return;
+          }
 
           this.setState({
             userSSHKeys: [
               ...this.state.userSSHKeys,
-              this.createUserObject(username, userEmailAddress, keys.map(k => k.label)),
-            ],
-          })
+              this.createUserObject(
+                username,
+                userEmailAddress,
+                keys.map(k => k.label)
+              )
+            ]
+          });
         })
-        .catch(() => { /* We don't need to do anything here, we just don't add the keys. */});
+        .catch(() => {
+          /* We don't need to do anything here, we just don't add the keys. */
+        });
 
       getUsers()
-        .then((response) => {
+        .then(response => {
           const users = response.data;
-          if (!this.mounted || !users || users.length === 0) { return; }
+          if (!this.mounted || !users || users.length === 0) {
+            return;
+          }
 
           this.setState({
             userSSHKeys: [
@@ -53,7 +65,8 @@ export default (Component: React.ComponentType<any>) => {
               ...users.reduce((cleanedUsers, user) => {
                 const keys = user.ssh_keys;
                 if (
-                  !keys || keys.length === 0 ||
+                  !keys ||
+                  keys.length === 0 ||
                   /** We don't want the current user added again. */
                   user.username === this.props.username
                 ) {
@@ -62,46 +75,54 @@ export default (Component: React.ComponentType<any>) => {
 
                 return [
                   ...cleanedUsers,
-                  this.createUserObject(user.username, user.email, keys),
+                  this.createUserObject(user.username, user.email, keys)
                 ];
               }, [])
-            ],
-          })
+            ]
+          });
         })
-        .catch(() => { /* We don't need to do anything here, we just don't add the keys. */});
+        .catch(() => {
+          /* We don't need to do anything here, we just don't add the keys. */
+        });
     }
 
     render() {
       return React.createElement(Component, {
         ...this.props,
-        ...this.state,
+        ...this.state
       });
     }
 
-    toggleSSHUserKeys = (username: string, result: boolean) => this.setState((state) => ({
-      ...state,
-      userSSHKeys: state.userSSHKeys.map((user) => (username === user.username) ? { ...user, selected: result } : user)
-    }));
+    toggleSSHUserKeys = (username: string, result: boolean) =>
+      this.setState(state => ({
+        ...state,
+        userSSHKeys: state.userSSHKeys.map(user =>
+          username === user.username ? { ...user, selected: result } : user
+        )
+      }));
 
     createUserObject = (username: string, email: string, keys: string[]) => ({
       keys,
       username,
-      gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(email)}?d=mp&s=24`,
+      gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(
+        email
+      )}?d=mp&s=24`,
       selected: false,
-      onSSHKeyChange: (_: any, result: boolean) => this.toggleSSHUserKeys(username, result),
-    })
+      onSSHKeyChange: (_: any, result: boolean) =>
+        this.toggleSSHUserKeys(username, result)
+    });
   }
 
   return connected(WrappedComponent);
-}
+};
 
 interface StateProps {
   username?: string;
   userEmailAddress?: string;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = (state) => ({
+const mapStateToProps: MapState<StateProps, {}> = state => ({
   username: path<string>(['data', 'username'], state.__resources.profile),
-  userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
+  userEmailAddress: path<string>(['data', 'email'], state.__resources.profile)
 });
-const connected = connect(mapStateToProps)
+const connected = connect(mapStateToProps);

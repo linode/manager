@@ -1,12 +1,17 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
-type ClassNames = 'root'
+type ClassNames =
+  | 'root'
   | 'stackscriptLabel'
   | 'stackscriptTitles'
   | 'deploys'
@@ -14,25 +19,25 @@ type ClassNames = 'root'
   | 'tr'
   | 'tableHead';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   stackscriptLabel: {
-    width: 84,
+    width: 84
   },
   stackscriptTitles: {
     width: '45%',
-    minWidth: 200,
+    minWidth: 200
   },
   deploys: {
     width: '15%',
-    minWidth: 140,
+    minWidth: 140
   },
   revisions: {
     width: '15%',
-    minWidth: 150,
+    minWidth: 150
   },
   tr: {
-    height: 48,
+    height: 48
   },
   tableHead: {
     position: 'sticky',
@@ -41,8 +46,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme) => ({
     paddingTop: 0,
     paddingBottom: 0,
     height: 48,
-    zIndex: 5,
-  },
+    zIndex: 5
+  }
 });
 
 type SortOrder = 'asc' | 'desc';
@@ -68,31 +73,34 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
       sortOrder
     } = this.props;
 
-    const Cell: React.ComponentType<any> = (!!handleClickTableHeader && sortOrder)
-      ? TableSortCell
-      : TableCell;
+    const Cell: React.ComponentType<any> =
+      !!handleClickTableHeader && sortOrder ? TableSortCell : TableCell;
 
-    const maybeAddSortingProps = (orderBy: string) => (!!handleClickTableHeader && sortOrder) ? {
-      direction: sortOrder,
-      active: currentFilterType === orderBy,
-      label: orderBy,
-      handleClick: handleClickTableHeader
-    } : {};
+    const maybeAddSortingProps = (orderBy: string) =>
+      !!handleClickTableHeader && sortOrder
+        ? {
+            direction: sortOrder,
+            active: currentFilterType === orderBy,
+            label: orderBy,
+            handleClick: handleClickTableHeader
+          }
+        : {};
 
     return (
       <TableHead>
         <TableRow className={classes.tr}>
-          {!!isSelecting &&
+          {!!isSelecting && (
             <TableCell
               className={classNames({
                 [classes.tableHead]: true,
-                [classes.stackscriptLabel]: true,
-              })} />
-          }
+                [classes.stackscriptLabel]: true
+              })}
+            />
+          )}
           <Cell
             className={classNames({
               [classes.tableHead]: true,
-              [classes.stackscriptTitles]: true,
+              [classes.stackscriptTitles]: true
             })}
             data-qa-stackscript-table-header
             {...maybeAddSortingProps('label')}
@@ -102,7 +110,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           <Cell
             className={classNames({
               [classes.tableHead]: true,
-              [classes.deploys]: true,
+              [classes.deploys]: true
             })}
             data-qa-stackscript-active-deploy-header
             {...maybeAddSortingProps('deploys')}
@@ -112,7 +120,7 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           <Cell
             className={classNames({
               [classes.tableHead]: true,
-              [classes.revisions]: true,
+              [classes.revisions]: true
             })}
             data-qa-stackscript-revision-header
             {...maybeAddSortingProps('revision')}
@@ -124,14 +132,15 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             data-qa-stackscript-compatible-images
           >
             Compatible Images
-    </TableCell>
-          {!isSelecting &&
+          </TableCell>
+          {!isSelecting && (
             <TableCell
               className={classNames({
                 [classes.tableHead]: true,
-                [classes.stackscriptLabel]: true,
-              })} />
-          }
+                [classes.stackscriptLabel]: true
+              })}
+            />
+          )}
         </TableRow>
       </TableHead>
     );

@@ -12,7 +12,7 @@ describe('API Token Drawer', () => {
         accessCell: '',
         noneCell: '',
         readOnlyCell: '',
-        readWritecell: '',
+        readWritecell: ''
       }}
       open={true}
       mode="create"
@@ -20,17 +20,19 @@ describe('API Token Drawer', () => {
       onChange={jest.fn()}
       onCreate={jest.fn()}
       onEdit={jest.fn()}
-    />,
+    />
   );
 
   it('scope permissions should be the same if "select all" radio is clicked', () => {
-    const selectAllBtn = component
-      .find('WithStyles(LinodeRadioControl)[value="1"][name="Select All"]');
+    const selectAllBtn = component.find(
+      'WithStyles(LinodeRadioControl)[value="1"][name="Select All"]'
+    );
     // "value" could not be found on "currentTarget,"
     // so we needed to manually make inject that value
     selectAllBtn.simulate('change', { currentTarget: { value: '2' } });
-    const allScopesIndenticalToSelectAll =
-      component.state().scopes.every((scope: [string, number]) => {
+    const allScopesIndenticalToSelectAll = component
+      .state()
+      .scopes.every((scope: [string, number]) => {
         // the selectAll value that was selected was 2, so all the scopes should be 2
         return scope[1] === 2;
       });

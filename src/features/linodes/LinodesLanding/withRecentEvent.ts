@@ -6,9 +6,11 @@ export interface WithRecentEvent {
   recentEvent?: Linode.Event;
 }
 
-const mapStateToProps: MapState<WithRecentEvent, { id: number }>
-  = (state, props) => ({
-    recentEvent: recentEventForLinode(props.id)(state)
-  });
+const mapStateToProps: MapState<WithRecentEvent, { id: number }> = (
+  state,
+  props
+) => ({
+  recentEvent: recentEventForLinode(props.id)(state)
+});
 
 export default connect(mapStateToProps);

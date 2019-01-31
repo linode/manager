@@ -20,9 +20,8 @@ export type FilterParams = any;
 export type PaginatedRequest<T = {}> = (
   ownProps?: any,
   p?: PaginationParams,
-  f?: FilterParams,
+  f?: FilterParams
 ) => Promise<Linode.ResourcePage<T>>;
-
 
 export type HandleOrderChange = (key: string, order?: Order) => void;
 
@@ -30,7 +29,7 @@ export type Order = 'asc' | 'desc';
 
 export type OrderBy = undefined | string;
 
-interface State<T={}> {
+interface State<T = {}> {
   count: number;
   error?: Error;
   loading: boolean;
@@ -48,7 +47,7 @@ interface State<T={}> {
 export interface PaginationProps<T> extends State<T> {
   handlePageChange: (v: number, showSpinner?: boolean) => void;
   handlePageSizeChange: (v: number) => void;
-  request: <U={}>(update?: (v: T[]) => U) => Promise<void>;
+  request: <U = {}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: HandleOrderChange;
   handleSearch: (newFilter: any) => void;
   onDelete: () => void;
@@ -56,7 +55,9 @@ export interface PaginationProps<T> extends State<T> {
 
 const asc: 'asc' = 'asc';
 
-export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<any>) => {
+export default (requestFn: PaginatedRequest) => (
+  Component: React.ComponentType<any>
+) => {
   return class WrappedComponent extends React.PureComponent<any, State> {
     state: State = {
       count: 0,
@@ -68,8 +69,8 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
       orderBy: undefined,
       order: asc,
       filter: {},
-      searching: false,
-    }
+      searching: false
+    };
 
     private onDelete = () => {
       const { page, data } = this.state;
@@ -105,8 +106,12 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         filters['+order_by'] = this.state.orderBy;
         filters['+order'] = this.state.order;
       }
-      return requestFn(this.props, { page: this.state.page, page_size: this.state.pageSize }, filters)
-        .then((response) => {
+      return requestFn(
+        this.props,
+        { page: this.state.page, page_size: this.state.pageSize },
+        filters
+      )
+        .then(response => {
           this.setState({
             count: response.results,
             page: response.page,
@@ -115,32 +120,42 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
             loading: false,
             error: undefined,
             isSorting: false,
-            searching: false,
+            searching: false
           });
         })
-        .catch((response) => {
+        .catch(response => {
           this.setState({ loading: false, error: response });
         });
     };
 
     public handlePageSizeChange = (pageSize: number) => {
-      this.setState({ pageSize, page: 1 }, () => { this.request() });
+      this.setState({ pageSize, page: 1 }, () => {
+        this.request();
+      });
     };
 
     public handlePageChange = (page: number) => {
       /**
        * change the page, make the request
        */
-      this.setState({ page }, () => { this.request() })
+      this.setState({ page }, () => {
+        this.request();
+      });
     };
 
-    public handleOrderChange = (orderBy: string, order: Order = 'asc', page: number = 1) => {
-      this.setState({ orderBy, order, page, isSorting: true }, () => this.request());
+    public handleOrderChange = (
+      orderBy: string,
+      order: Order = 'asc',
+      page: number = 1
+    ) => {
+      this.setState({ orderBy, order, page, isSorting: true }, () =>
+        this.request()
+      );
     };
 
     public handleSearch = (filter: any) => {
       this.setState({ filter, page: 1, searching: true }, () => this.request());
-    }
+    };
 
     public render() {
       return React.createElement(Component, {
@@ -151,8 +166,8 @@ export default (requestFn: PaginatedRequest) => (Component: React.ComponentType<
         request: this.request,
         handleOrderChange: this.handleOrderChange,
         handleSearch: this.handleSearch,
-        onDelete: this.onDelete,
+        onDelete: this.onDelete
       });
     }
-  }
-}
+  };
+};

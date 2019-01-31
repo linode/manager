@@ -1,21 +1,25 @@
 import * as QRCode from 'qrcode.react';
 import { compose } from 'ramda';
 import * as React from 'react';
-import { StyleRulesCallback, WithStyles, withStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  WithStyles,
+  withStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
 type ClassNames = 'root' | 'instructions' | 'qrcode';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   instructions: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2
   },
   qrcode: {
     margin: `${theme.spacing.unit * 2}px 0`,
-    border: `5px solid #fff`,
+    border: `5px solid #fff`
   }
 });
 
@@ -26,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
+const QRCodeForm: React.StatelessComponent<CombinedProps> = props => {
   const { classes, secret, secretLink } = props;
   return (
     <React.Fragment>
@@ -53,17 +57,14 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = (props) => {
       >
         If your TFA app does not have a scanner, you can use this secret key:
       </Typography>
-      <CopyableTextField
-        className={classes.root}
-        value={secret}
-      />
+      <CopyableTextField className={classes.root} value={secret} />
     </React.Fragment>
   );
-}
+};
 
 const styled = withStyles(styles);
 
 export default compose<any, any, any>(
   styled,
   RenderGuard
-  )(QRCodeForm);
+)(QRCodeForm);

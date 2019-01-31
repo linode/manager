@@ -2,13 +2,17 @@ import * as React from 'react';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface ErrorResponse {
@@ -25,31 +29,33 @@ interface NodeErrorResponse extends ErrorResponse {
 
 export type ConfigOrNodeErrorResponse = ConfigErrorResponse | NodeErrorResponse;
 
-interface Props { errors?: ConfigOrNodeErrorResponse[]; }
+interface Props {
+  errors?: ConfigOrNodeErrorResponse[];
+}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const NodeBalancerCreationError: React.StatelessComponent<CombinedProps> = (props) => {
+const NodeBalancerCreationError: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { errors } = props;
 
-  return (!errors || errors.length === 0)
-    ? null
-    : (
-      <React.Fragment>
-        {errors.map((errResponse, idx) => {
-          const message = isNodeError(errResponse)
-            ? `Unable to create node ${errResponse.config.label}.`
-            : `Unable to create config for port ${errResponse.config.port}.`;
+  return !errors || errors.length === 0 ? null : (
+    <React.Fragment>
+      {errors.map((errResponse, idx) => {
+        const message = isNodeError(errResponse)
+          ? `Unable to create node ${errResponse.config.label}.`
+          : `Unable to create config for port ${errResponse.config.port}.`;
 
-          return (
-            <Notice key={idx} error typeProps={{ component: 'div' }}>
-              {message}
-              {maybeListReason(errResponse.errors)}
-            </Notice>
-          );
-        })}
-      </React.Fragment>
-    );
+        return (
+          <Notice key={idx} error typeProps={{ component: 'div' }}>
+            {message}
+            {maybeListReason(errResponse.errors)}
+          </Notice>
+        );
+      })}
+    </React.Fragment>
+  );
 };
 
 const styled = withStyles(styles);

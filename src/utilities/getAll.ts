@@ -90,6 +90,50 @@ export const getAll: <T>(
   );
 };
 
+export const getAllWithArguments: <T>(
+  getter: GetFunction
+) => (
+  args: any[],
+  params?: any,
+  filter?: any
+) => Promise<GetAllData<T[]>> = getter => (args = [], params, filter) => {
+  const pagination = { ...params, page_size: 100 };
+
+  return getter(...args, pagination, filter).then(
+    ({ data: firstPageData, page, pages, results }) => {
+      // If we only have one page, return it.
+      if (page === pages) {
+        return {
+          data: firstPageData,
+          results
+        };
+      }
+
+      // Create an iterable list of the remaining pages.
+      const remainingPages = range(page + 1, pages + 1);
+
+      //
+      return (
+        Bluebird.map(remainingPages, nextPage =>
+          getter(...args, { ...pagination, page: nextPage }, filter).then(
+            response => response.data
+          )
+        )
+          /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
+          .then(resultPages => {
+            const combinedData = resultPages.reduce((result, nextPage) => {
+              return [...result, ...nextPage];
+            }, firstPageData);
+            return {
+              data: combinedData,
+              results
+            };
+          })
+      );
+    }
+  );
+};
+
 export const getAllFromEntity: (
   getter: GetFromEntity
 ) => (params?: any, filter?: any) => Promise<any> = getter => (

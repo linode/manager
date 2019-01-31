@@ -5,7 +5,12 @@ import { compose, withStateHandlers } from 'recompose';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 
-import { StyleRulesCallback, Theme, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -18,8 +23,8 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   attachmentPaperWrapper: {
-    overflowX: 'auto',
-  },
+    overflowX: 'auto'
+  }
 });
 
 interface ToggleProps {
@@ -45,13 +50,17 @@ export const addIconsToAttachments = (attachments: string[] = []) => {
       }
     }
     return <InsertDriveFile key={idx} />;
-  })
-}
+  });
+};
 
-export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (props) => {
+export const TicketAttachmentList: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { attachments, classes, showMoreAttachments, toggle } = props;
 
-  if (isEmpty(attachments)) { return null; }
+  if (isEmpty(attachments)) {
+    return null;
+  }
   // create an array of icons to use
   const icons = addIconsToAttachments(attachments);
 
@@ -61,23 +70,31 @@ export const TicketAttachmentList: React.StatelessComponent<CombinedProps> = (pr
         <Typography variant="h3">Attachments</Typography>
       </Grid>
       <Grid item xs={12} className={classes.attachmentPaperWrapper}>
-        <TicketAttachmentRow attachments={slice(0, 5, attachments)} icons={icons} />
-        {
-          (attachments.length > 5) &&
-          <div onClick={toggle} style={{ display: 'inline-block' }} data-qa-attachment-toggle >
+        <TicketAttachmentRow
+          attachments={slice(0, 5, attachments)}
+          icons={icons}
+        />
+        {attachments.length > 5 && (
+          <div
+            onClick={toggle}
+            style={{ display: 'inline-block' }}
+            data-qa-attachment-toggle
+          >
             <ShowMoreExpansion
-              name={!showMoreAttachments
-                ? "Show More Files"
-                : "Show Less Files"
+              name={
+                !showMoreAttachments ? 'Show More Files' : 'Show Less Files'
               }
             >
-              <TicketAttachmentRow attachments={slice(5, Infinity, attachments)} icons={icons} />
+              <TicketAttachmentRow
+                attachments={slice(5, Infinity, attachments)}
+                icons={icons}
+              />
             </ShowMoreExpansion>
           </div>
-        }
+        )}
       </Grid>
     </Grid>
-  )
+  );
 };
 
 const styled = withStyles(styles);
@@ -87,7 +104,9 @@ const enhanced = compose<CombinedProps, Props>(
   withStateHandlers(
     { showMoreAttachments: false },
     {
-      toggle: ({ showMoreAttachments }) => () => ({ showMoreAttachments: !showMoreAttachments})
+      toggle: ({ showMoreAttachments }) => () => ({
+        showMoreAttachments: !showMoreAttachments
+      })
     }
   )
 )(TicketAttachmentList);

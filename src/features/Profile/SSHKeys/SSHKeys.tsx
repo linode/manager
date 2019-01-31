@@ -3,7 +3,11 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -25,8 +29,8 @@ import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface SSHKey {
@@ -36,7 +40,7 @@ interface SSHKey {
   created: string;
 }
 
-interface Props extends PaginationProps<ExtendedSSHKey> { }
+interface Props extends PaginationProps<ExtendedSSHKey> {}
 
 interface ConnectedProps {
   timezone: string;
@@ -46,13 +50,13 @@ type ExtendedSSHKey = SSHKey & { fingerprint: string };
 
 interface State {
   confirmDelete: {
-    open: boolean,
-    id?: number,
-    label?: string,
+    open: boolean;
+    id?: number;
+    label?: string;
   };
   creationDrawer: {
     open: boolean;
-  },
+  };
 }
 
 type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
@@ -62,10 +66,10 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     confirmDelete: {
       open: false,
       id: undefined,
-      label: undefined,
+      label: undefined
     },
     creationDrawer: {
-      open: false,
+      open: false
     }
   };
 
@@ -74,9 +78,10 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
       body: `Public key authentication provides SSH users with the convenience of logging in to
       their Linodes without entering their passwords. SSH keys are also more secure than passwords,
       because the private key used to secure the connection is never shared.`,
-      src: 'https://linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/',
-      title: 'Use Public Key Authentication with SSH',
-    },
+      src:
+        'https://linode.com/docs/security/authentication/use-public-key-authentication-with-ssh/',
+      title: 'Use Public Key Authentication with SSH'
+    }
   ];
 
   componentDidMount() {
@@ -99,9 +104,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
                 <TableCell />
               </TableRow>
             </TableHead>
-            <TableBody>
-              {this.renderContent()}
-            </TableBody>
+            <TableBody>{this.renderContent()}</TableBody>
           </Table>
         </Paper>
         <PaginationFooter
@@ -148,37 +151,40 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 
   headerAction = () => {
     return (
-      <AddNewLink label='Add a SSH Key' onClick={this.openCreationDrawer} />
+      <AddNewLink label="Add a SSH Key" onClick={this.openCreationDrawer} />
     );
   };
 
   static renderLoading = () => {
-    return (
-      <TableRowLoading colSpan={4} />
-    );
+    return <TableRowLoading colSpan={4} />;
   };
 
   static renderEmptyState = () => {
-    return (
-      <TableRowEmptyState colSpan={4} />
-    );
+    return <TableRowEmptyState colSpan={4} />;
   };
 
   static renderError = (e: Error) => {
     return (
-      <TableRowError colSpan={4} message={`Unable to load SSH keys. Please try again.`} />
+      <TableRowError
+        colSpan={4}
+        message={`Unable to load SSH keys. Please try again.`}
+      />
     );
   };
 
   renderData = (keys: ExtendedSSHKey[]) => {
-    return keys.map(key =>
+    return keys.map(key => (
       <TableRow data-qa-content-row={key.label} key={key.id}>
         <TableCell parentColumn="Label">{key.label}</TableCell>
         <TableCell parentColumn="Key" data-qa-public-key>
           <Typography variant="body1">{key.ssh_key.slice(0, 26)}</Typography>
-          <Typography variant="body1">Fingerprint: {key.fingerprint}</Typography>
+          <Typography variant="body1">
+            Fingerprint: {key.fingerprint}
+          </Typography>
         </TableCell>
-        <TableCell parentColumn="Created" data-qa-key-created>{key.created}</TableCell>
+        <TableCell parentColumn="Created" data-qa-key-created>
+          {key.created}
+        </TableCell>
         <TableCell>
           <SSHKeyActionMenu
             id={key.id}
@@ -187,7 +193,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
           />
         </TableCell>
       </TableRow>
-    );
+    ));
   };
 
   displayConfirmDeleteDialog = (id: number, label: string) => {
@@ -195,17 +201,19 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 
   handleCancelDeletion = () => {
-    this.setState(
-      (prevState) => ({ confirmDelete: { ...prevState.confirmDelete, open: false } }),
-    );
+    this.setState(prevState => ({
+      confirmDelete: { ...prevState.confirmDelete, open: false }
+    }));
   };
 
   handleSuccessfulDeletion = () => {
     this.setState(
-      (prevState) => ({ confirmDelete: { ...prevState.confirmDelete, open: false } }),
-      () => this.props.request(),
-    )
-  }
+      prevState => ({
+        confirmDelete: { ...prevState.confirmDelete, open: false }
+      }),
+      () => this.props.request()
+    );
+  };
 
   handleSuccessfulCreation = () => {
     this.closeCreationDrawer();
@@ -221,20 +229,21 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 }
 
-const updateResponseData = (keys: Linode.SSHKey[]) => keys.map((key) => ({
-  ...key,
-  fingerprint: fingerprint(key.ssh_key),
-  created: moment.utc(key.created).fromNow(),
-}));
+const updateResponseData = (keys: Linode.SSHKey[]) =>
+  keys.map(key => ({
+    ...key,
+    fingerprint: fingerprint(key.ssh_key),
+    created: moment.utc(key.created).fromNow()
+  }));
 
 const styled = withStyles(styles);
 
 const documented = setDocs(SSHKeys.docs);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) => getSSHKeys(params, filters)
-  .then((response) => ({
+const updatedRequest = (ownProps: any, params: any, filters: any) =>
+  getSSHKeys(params, filters).then(response => ({
     ...response,
-    data: updateResponseData(response.data),
+    data: updateResponseData(response.data)
   }));
 
 const paginated = paginate(updatedRequest);
@@ -242,8 +251,7 @@ const paginated = paginate(updatedRequest);
 const enhanced = compose<any, any, any, any>(
   paginated,
   styled,
-  documented,
+  documented
 );
 
 export default enhanced(SSHKeys);
-

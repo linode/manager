@@ -4,11 +4,7 @@ import { StackScriptDrawer } from './StackScriptDrawer';
 
 describe('StackScripts Drawer', () => {
   const component = shallow(
-    <StackScriptDrawer
-      open={false}
-      stackScriptId={5}
-      closeDrawer={jest.fn()}
-    />
+    <StackScriptDrawer open={false} stackScriptId={5} closeDrawer={jest.fn()} />
   );
 
   it('should render DrawerContent component', () => {

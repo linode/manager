@@ -4,7 +4,6 @@ import { light } from 'src/themes';
 import { CombinedProps, LinodeRow, RenderFlag } from './LinodeRow';
 
 describe('LinodeRow', () => {
-
   const mockClasses = {
     actionCell: '',
     actionInner: '',
@@ -36,13 +35,13 @@ describe('LinodeRow', () => {
     id: 8675309,
     backups: {
       enabled: false,
-      schedule: { day: 'Friday', window: 'W0' },
+      schedule: { day: 'Friday', window: 'W0' }
     },
     image: null,
     memory: 0,
     vcpus: 0,
     disk: 0,
-    mostRecentBackup: null,
+    mostRecentBackup: null
   };
 
   const mockNotification: Linode.Notification = {
@@ -52,7 +51,7 @@ describe('LinodeRow', () => {
       label: 'my-linode',
       id: 8675309
     },
-    label: 'Here\'s a notification!',
+    label: "Here's a notification!",
     message: 'Something something... whatever.',
     severity: 'major',
     when: null,
@@ -65,7 +64,9 @@ describe('LinodeRow', () => {
   });
 
   it('should have a RenderFlag component', () => {
-    const wrapper = shallow(<LinodeRow {...mockProps} linodeNotifications={[mockNotification]} />);
+    const wrapper = shallow(
+      <LinodeRow {...mockProps} linodeNotifications={[mockNotification]} />
+    );
     expect(wrapper.find('RenderFlag')).toHaveLength(1);
   });
 
@@ -75,14 +76,14 @@ describe('LinodeRow', () => {
         <RenderFlag
           mutationAvailable={false}
           linodeNotifications={[mockNotification]}
-          classes={{ flag: '', }}
+          classes={{ flag: '' }}
         />
       );
 
       const Tooltip = wrapper.find('WithStyles(Tooltip)');
 
       expect(Tooltip).toHaveLength(1);
-      expect(Tooltip.props()).toHaveProperty('title', mockNotification.message)
+      expect(Tooltip.props()).toHaveProperty('title', mockNotification.message);
     });
   });
 });

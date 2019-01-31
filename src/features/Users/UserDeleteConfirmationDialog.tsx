@@ -2,12 +2,16 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
-  root: {},
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {}
 });
 
 interface Props {
@@ -19,8 +23,10 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, {}> {
-
+class UserDeleteConfirmationDialog extends React.PureComponent<
+  CombinedProps,
+  {}
+> {
   deleteUser = () => this.props.onDelete(this.props.username);
 
   render() {
@@ -31,7 +37,9 @@ class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, {}
         actions={this.renderActionsPanel}
         open={this.props.open}
       >
-      {`User ${this.props.username} will be permanently deleted. Are you sure?`}
+        {`User ${
+          this.props.username
+        } will be permanently deleted. Are you sure?`}
       </ConfirmationDialog>
     );
   }
@@ -55,11 +63,10 @@ class UserDeleteConfirmationDialog extends React.PureComponent<CombinedProps, {}
           Delete
         </Button>
       </ActionsPanel>
-    )
-  }
+    );
+  };
 }
 
 const styled = withStyles(styles);
-
 
 export default styled(UserDeleteConfirmationDialog);

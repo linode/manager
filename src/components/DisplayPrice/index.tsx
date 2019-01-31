@@ -1,3 +1,3 @@
 import DisplayPrice, { displayPrice } from './DisplayPrice';
-export { displayPrice }
+export { displayPrice };
 export default DisplayPrice;

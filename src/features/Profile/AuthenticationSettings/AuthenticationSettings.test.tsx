@@ -15,10 +15,9 @@ describe('Authentication settings profile tab', () => {
       actions={{
         updateProfile: update
       }}
-
       classes={{
         root: '',
-        title: '',
+        title: ''
       }}
     />
   );

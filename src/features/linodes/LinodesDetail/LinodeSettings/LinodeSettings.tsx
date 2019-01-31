@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ConfigsConsumer, LinodeConsumer } from '../context';
@@ -12,32 +16,38 @@ import LinodeWatchdogPanel from './LinodeWatchdogPanel';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = (theme) => ({
+const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2,
-  },
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
 type CombinedProps = WithStyles<ClassNames>;
 
-const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
+const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
 
   return (
     <LinodeConsumer>
-      {(linodeContext) => {
+      {linodeContext => {
         return (
           <ConfigsConsumer>
-            {(configsContext) => {
+            {configsContext => {
               const { data: linode } = linodeContext;
               const { data: configs } = configsContext;
 
-              if (!linode) { return null; }
-              if (!configs) { return null; }
+              if (!linode) {
+                return null;
+              }
+              if (!configs) {
+                return null;
+              }
               return (
                 <React.Fragment>
-                  <DocumentTitleSegment segment={`${linodeContext.data!.label} - Settings`} />
+                  <DocumentTitleSegment
+                    segment={`${linodeContext.data!.label} - Settings`}
+                  />
                   <Typography
                     role="header"
                     variant="h2"
@@ -62,11 +72,9 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = (props) => {
                     currentStatus={linode.watchdog_enabled}
                   />
                   <LinodeAdvancedConfigurationsPanel />
-                  <LinodeSettingsDeletePanel
-                    linodeId={linode.id}
-                  />
+                  <LinodeSettingsDeletePanel linodeId={linode.id} />
                 </React.Fragment>
-              )
+              );
             }}
           </ConfigsConsumer>
         );

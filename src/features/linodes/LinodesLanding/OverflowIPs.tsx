@@ -1,41 +1,45 @@
 import * as React from 'react';
 import Chip from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import IPAddress from './IPAddress';
 
-type CSSClasses =  'chip' | 'label' | 'popover';
+type CSSClasses = 'chip' | 'label' | 'popover';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   chip: {
     height: theme.typography.body1.fontSize,
-    marginLeft: theme.spacing.unit / 2,
+    marginLeft: theme.spacing.unit / 2
   },
   label: {
     paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
+    paddingRight: theme.spacing.unit
   },
   popover: {
-    padding: theme.spacing.unit * 2,
-  },
+    padding: theme.spacing.unit * 2
+  }
 });
 
 interface Props {
   ips: string[];
 }
 
-class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses> > {
+class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses>> {
   state = {
-    anchorEl: undefined,
+    anchorEl: undefined
   };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
-  }
+  };
 
   handleClose = () => {
     this.setState({ anchorEl: undefined });
-  }
+  };
 
   render() {
     const { classes, ips } = this.props;
@@ -56,18 +60,18 @@ class OverflowIPs extends React.Component<Props & WithStyles<CSSClasses> > {
           onClose={this.handleClose}
           anchorOrigin={{
             vertical: 18,
-            horizontal: 'left',
+            horizontal: 'left'
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'left'
           }}
         >
-          {ips.map(ip =>
+          {ips.map(ip => (
             <div key={ip}>
-              <IPAddress ips={[ip]}/>
-            </div>,
-          )}
+              <IPAddress ips={[ip]} />
+            </div>
+          ))}
         </Popover>
       </React.Fragment>
     );

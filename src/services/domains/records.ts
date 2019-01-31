@@ -1,12 +1,6 @@
 import { API_ROOT } from 'src/constants';
 
-import Request,
-{
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-} from '../index';
+import Request, { setData, setMethod, setParams, setURL } from '../index';
 
 import { createRecordSchema, updateRecordSchema } from './records.schema';
 
@@ -23,9 +17,8 @@ export const getDomainRecords = (domainId: number, params?: any) =>
   Request<Page<DomainRecord>>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setParams(params),
-    setMethod('GET'),
-  )
-    .then(response => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * View a single Record on this Domain.
@@ -36,9 +29,8 @@ export const getDomainRecords = (domainId: number, params?: any) =>
 export const getDomainRecord = (domainId: number, recordId: number) =>
   Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
-    setMethod('GET'),
-  )
-    .then(response => response.data);
+    setMethod('GET')
+  ).then(response => response.data);
 
 /**
  * Adds a new Domain Record to the zonefile this Domain represents.
@@ -46,13 +38,15 @@ export const getDomainRecord = (domainId: number, recordId: number) =>
  * @param domainId { number } The ID of the Domain we are accessing Records for.
  * @param data { object } Options for type, name, etc.
  */
-export const createDomainRecord = (domainId: number, data: Partial<DomainRecord>) =>
+export const createDomainRecord = (
+  domainId: number,
+  data: Partial<DomainRecord>
+) =>
   Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${domainId}/records`),
     setMethod('POST'),
-    setData(data, createRecordSchema),
-  )
-    .then(response => response.data);
+    setData(data, createRecordSchema)
+  ).then(response => response.data);
 
 /**
  * Updates a single Record on this Domain.
@@ -64,13 +58,13 @@ export const createDomainRecord = (domainId: number, data: Partial<DomainRecord>
 export const updateDomainRecord = (
   domainId: number,
   recordId: number,
-  data: Partial<DomainRecord>,
-  ) => Request<DomainRecord>(
+  data: Partial<DomainRecord>
+) =>
+  Request<DomainRecord>(
     setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('PUT'),
-    setData(data, updateRecordSchema),
-  )
-    .then(response => response.data);
+    setData(data, updateRecordSchema)
+  ).then(response => response.data);
 
 /**
  * Deletes a Record on this Domain..
@@ -81,6 +75,5 @@ export const updateDomainRecord = (
 export const deleteDomainRecord = (domainID: number, recordId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
-    setMethod('DELETE'),
-  )
-    .then(response => response.data);
+    setMethod('DELETE')
+  ).then(response => response.data);

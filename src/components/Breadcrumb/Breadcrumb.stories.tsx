@@ -11,17 +11,17 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
   state = {
     linkTo: '/linodes',
     linkText: 'Linodes',
-    text: 'Editable text!',
-  }
+    text: 'Editable text!'
+  };
 
   onEdit = (value: string) => {
     this.setState({ text: value });
-    return Promise.resolve('hello world')
-  }
+    return Promise.resolve('hello world');
+  };
 
   onCancel = () => {
     this.forceUpdate();
-  }
+  };
 
   render() {
     return (
@@ -39,7 +39,7 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
           }}
         />
       </React.Fragment>
-    )
+    );
   }
 }
 
@@ -54,8 +54,8 @@ storiesOf('Breadcrumb', module)
         />
       </div>
     </StaticRouter>
-
-  )).add('Static text with label link', () => (
+  ))
+  .add('Static text with label link', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Breadcrumb
@@ -63,12 +63,13 @@ storiesOf('Breadcrumb', module)
           linkText="Linodes"
           labelTitle="Static text"
           labelOptions={{
-            linkTo: "/summary"
+            linkTo: '/summary'
           }}
         />
       </div>
     </StaticRouter>
-  )).add('Static text with subtitle', () => (
+  ))
+  .add('Static text with subtitle', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Breadcrumb
@@ -76,12 +77,13 @@ storiesOf('Breadcrumb', module)
           linkText="Linodes"
           labelTitle="Static text"
           labelOptions={{
-            subtitle: "A label subtitle"
+            subtitle: 'A label subtitle'
           }}
         />
       </div>
     </StaticRouter>
-  )).add('Static text with link, subtitle', () => (
+  ))
+  .add('Static text with link, subtitle', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Breadcrumb
@@ -89,13 +91,14 @@ storiesOf('Breadcrumb', module)
           linkText="Linodes"
           labelTitle="Static text"
           labelOptions={{
-            linkTo: "/summary",
-            subtitle: "A label subtitle"
+            linkTo: '/summary',
+            subtitle: 'A label subtitle'
           }}
         />
       </div>
     </StaticRouter>
-  )).add('Static text with user avatar', () => (
+  ))
+  .add('Static text with user avatar', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <Breadcrumb
@@ -103,28 +106,34 @@ storiesOf('Breadcrumb', module)
           linkText="Linodes"
           labelTitle="Static text"
           labelOptions={{
-            prefixComponent: <UserIcon style={{
-              margin: '0 8px 0 -4px',
-              color: '#606469',
-              borderRadius: '50%',
-              width: '46px',
-              height: '46px',
-              animation: 'fadeIn 150ms linear forwards',
-            }} />
+            prefixComponent: (
+              <UserIcon
+                style={{
+                  margin: '0 8px 0 -4px',
+                  color: '#606469',
+                  borderRadius: '50%',
+                  width: '46px',
+                  height: '46px',
+                  animation: 'fadeIn 150ms linear forwards'
+                }}
+              />
+            )
           }}
         />
       </div>
     </StaticRouter>
-)).add('Editable text', () => (
+  ))
+  .add('Editable text', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <InteractiveEditableBreadcrumb />
       </div>
     </StaticRouter>
-  )).add('Editable text with label link', () => (
+  ))
+  .add('Editable text with label link', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <InteractiveEditableBreadcrumb labelLink="/summary"/>
+        <InteractiveEditableBreadcrumb labelLink="/summary" />
       </div>
     </StaticRouter>
   ));

@@ -7,7 +7,10 @@ interface RenderProps {
 interface ToggleStateProps {
   children: (p: RenderProps) => React.ReactNode;
 }
-class ToggleState extends React.PureComponent<ToggleStateProps, { open: boolean }> {
+class ToggleState extends React.PureComponent<
+  ToggleStateProps,
+  { open: boolean }
+> {
   state = { open: false };
 
   toggle = () => this.setState({ open: !this.state.open });

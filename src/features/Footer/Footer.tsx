@@ -1,26 +1,28 @@
 import * as React from 'react';
-import { StyleRulesCallback, withStyles, WithStyles } from 'src/components/core/styles';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import createMailto from './createMailto';
 
-type CSSClasses = 'container'
-  | 'link'
-  | 'version';
+type CSSClasses = 'container' | 'link' | 'version';
 
-const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
+const styles: StyleRulesCallback<CSSClasses> = theme => ({
   container: {
     width: '100%',
     backgroundColor: theme.bg.main,
     margin: 0,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: 215,
+      paddingLeft: 215
     },
     [theme.breakpoints.up('xl')]: {
-      paddingLeft: 275,
-    },
+      paddingLeft: 275
+    }
   },
   version: {
-    flex: 1,
+    flex: 1
   },
   link: {
     color: theme.palette.text.primary,
@@ -28,13 +30,13 @@ const styles: StyleRulesCallback<CSSClasses> = (theme) => ({
     textDecoration: 'underline',
     transition: theme.transitions.create('color'),
     '&:hover, &:focus': {
-      color: theme.color.black,
+      color: theme.color.black
     },
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing.unit,
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing.unit
     }
-  },
+  }
 });
 
 const styled = withStyles(styles);
@@ -73,16 +75,18 @@ export class Footer extends React.PureComponent<CombinedProps> {
 
   renderVersion = (className: string) => {
     const { VERSION } = process.env;
-    if (!VERSION) { return null; }
+    if (!VERSION) {
+      return null;
+    }
 
     return (
-    <a
-      className={className}
-      href={`https://github.com/linode/manager/releases/tag/v${VERSION}`}
-      target="_blank"
-    >
-      v{VERSION}
-    </a>
+      <a
+        className={className}
+        href={`https://github.com/linode/manager/releases/tag/v${VERSION}`}
+        target="_blank"
+      >
+        v{VERSION}
+      </a>
     );
   };
 }

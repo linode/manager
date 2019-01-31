@@ -5,8 +5,8 @@ import EditableText from './EditableText';
 class InteractiveEditableText extends React.Component {
   mounted: boolean = false;
   state = {
-    text: 'Edit me!',
-  }
+    text: 'Edit me!'
+  };
 
   componentWillUnmount() {
     this.mounted = false;
@@ -18,12 +18,12 @@ class InteractiveEditableText extends React.Component {
 
   editText = (value: string) => {
     this.setState({ text: value });
-    return Promise.resolve('hello world')
-  }
+    return Promise.resolve('hello world');
+  };
 
   cancelEdit = () => {
     this.forceUpdate();
-  }
+  };
 
   render() {
     return (
@@ -35,11 +35,10 @@ class InteractiveEditableText extends React.Component {
           onCancel={this.cancelEdit}
         />
       </React.Fragment>
-    )
+    );
   }
 }
 
-storiesOf('Editable Text', module)
-.add('Headline & Title', () => (
+storiesOf('Editable Text', module).add('Headline & Title', () => (
   <InteractiveEditableText />
 ));

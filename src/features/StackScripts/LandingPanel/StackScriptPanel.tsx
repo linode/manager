@@ -9,44 +9,24 @@ const StackScriptPanel = (props: {}) => {
     {
       title: 'My StackScripts',
       render: () => {
-        return (
-          <PanelContent
-            type='own'
-            key={0}
-          />
-        )
-      },
+        return <PanelContent type="own" key={0} />;
+      }
     },
     {
       title: 'Linode StackScripts',
       render: () => {
-        return (
-          <PanelContent
-            type='linode'
-            key={1}
-          />
-        )
-      },
+        return <PanelContent type="linode" key={1} />;
+      }
     },
     {
       title: 'Community StackScripts',
       render: () => {
-        return (
-          <PanelContent
-            type='community'
-            key={2}
-          />
-        )
-      },
-    },
+        return <PanelContent type="community" key={2} />;
+      }
+    }
   ];
 
-  return (
-    <TabbedPanel
-      header=""
-      tabs={tabs}
-    />
-  );
-}
+  return <TabbedPanel header="" tabs={tabs} />;
+};
 
 export default StackScriptPanel;

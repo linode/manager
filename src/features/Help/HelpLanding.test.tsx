@@ -5,12 +5,12 @@ import { HelpLanding } from './HelpLanding';
 
 describe('Help Landing', () => {
   const component = shallow(
-    <HelpLanding 
+    <HelpLanding
       classes={{
-        root: '',
+        root: ''
       }}
     />
-  )
+  );
   xit('should render search panel', () => {
     expect(component.find('WithStyles(SearchPanel)')).toHaveLength(1);
   });
