@@ -283,7 +283,10 @@ const themeDefaults: ThemeOptions = {
         }
       },
       text: {
-        padding: '9px 28px 11px'
+        padding: '9px 28px 11px',
+        '&:hover': {
+          color: primaryColors.light
+        }
       },
       flat: {
         '&.cancel:hover': {

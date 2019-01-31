@@ -150,6 +150,11 @@ export const dark = createTheme({
           color: primaryColors.text
         }
       },
+      text: {
+        '&:hover': {
+          backgroundColor: 'transparent'
+        }
+      },
       containedPrimary: {
         '&:hover, &:focus': {
           backgroundColor: primaryColors.light
