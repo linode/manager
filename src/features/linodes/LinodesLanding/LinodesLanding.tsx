@@ -55,6 +55,7 @@ interface State {
   selectedLinodeId: number | null;
   selectedLinodeLabel: string;
   groupByTag: boolean;
+  CtaDismissed: boolean;
 }
 
 interface Params {
@@ -89,7 +90,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     bootOption: null,
     selectedLinodeId: null,
     selectedLinodeLabel: '',
-    groupByTag: false
+    groupByTag: false,
+    CtaDismissed: storage.CtaDismissed.get()
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -188,6 +190,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({ powerAlertOpen: false });
   };
 
+  dismissCTA = () => {
+    this.setState({
+      CtaDismissed: true
+    });
+    storage.CtaDismissed.set('true');
+  };
+
   render() {
     const {
       imagesError,
@@ -247,7 +256,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       <Grid container>
         <Grid
           item
-          className={`${backupsCTA ? 'mlMain' : ''}`}
+          className={`${
+            backupsCTA && !storage.CtaDismissed.get() ? 'mlMain' : ''
+          }`}
           xs={!backupsCTA && 12}
         >
           <Grid container>
@@ -325,9 +336,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             </ConfirmationDialog>
           </Grid>
         </Grid>
-        {backupsCTA && (
+        {backupsCTA && !storage.CtaDismissed.get() && (
           <Grid item className="mlSidebar py0">
-            <BackupsCTA />
+            <BackupsCTA dismissed={this.dismissCTA} />
           </Grid>
         )}
       </Grid>

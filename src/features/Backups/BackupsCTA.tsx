@@ -14,7 +14,11 @@ import Grid from 'src/components/Grid';
 import { handleOpen } from 'src/store/backupDrawer';
 import { MapState } from 'src/store/types';
 
-type ClassNames = 'root' | 'container' | 'button';
+type ClassNames = 'root' | 'container' | 'buttonsContainer' | 'dismiss';
+
+interface Props {
+  dismissed: () => void;
+}
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -30,19 +34,28 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
       alignItems: 'center'
     }
   },
-  button: {
-    marginTop: theme.spacing.unit
+  buttonsContainer: {
+    marginTop: theme.spacing.unit * 2
+  },
+  dismiss: {
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
+    minWidth: 'auto'
   }
 });
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps &
+  Props &
+  DispatchProps &
+  WithStyles<ClassNames>;
 
 const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     linodesWithoutBackups,
     managed,
-    actions: { openBackupsDrawer }
+    actions: { openBackupsDrawer },
+    dismissed
   } = props;
 
   if (managed || (linodesWithoutBackups && isEmpty(linodesWithoutBackups))) {
@@ -60,14 +73,21 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
             We've got your back! Enable now to protect all existing Linodes.
           </Typography>
         </Grid>
-        <Grid item>
+        <Grid item className={classes.buttonsContainer}>
           <Button
             data-qa-backup-existing
             type="primary"
-            className={classes.button}
             onClick={openBackupsDrawer}
           >
             Enable Now
+          </Button>
+          <Button
+            data-qa-backup-existing
+            variant="text"
+            className={classes.dismiss}
+            onClick={dismissed}
+          >
+            Dismiss
           </Button>
         </Grid>
       </Grid>
