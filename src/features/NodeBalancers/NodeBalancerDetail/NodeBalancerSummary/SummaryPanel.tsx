@@ -50,7 +50,6 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
               >
                 NodeBalancer Details
               </Typography>
-              <TagsPanel tags={nodeBalancer.tags} updateTags={updateTags} />
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-ports>
                   <strong>Ports: </strong>{' '}
@@ -100,6 +99,18 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
                   )}
                 </div>
               </div>
+            </Paper>
+
+            <Paper className={classes.summarySection}>
+              <Typography
+                role="header"
+                variant="h3"
+                className={classes.title}
+                data-qa-title
+              >
+                Tags
+              </Typography>
+              <TagsPanel tags={nodeBalancer.tags} updateTags={updateTags} />
             </Paper>
           </div>
         );
