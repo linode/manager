@@ -40,6 +40,7 @@ setUpCharts();
 type ClassNames =
   | 'main'
   | 'sidebar'
+  | 'headerWrapper'
   | 'chart'
   | 'leftLegend'
   | 'bottomLegend'
@@ -58,6 +59,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       [theme.breakpoints.up('md')]: {
         order: 2
       }
+    },
+    headerWrapper: {
+      marginTop: theme.spacing.unit,
+      marginBottom: theme.spacing.unit * 2
     },
     chart: {
       position: 'relative',
@@ -97,8 +102,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       marginRight: theme.spacing.unit * 2
     },
     graphControls: {
-      marginTop: theme.spacing.unit / 2,
-      marginBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2,
       display: 'flex',
       alignItems: 'center'
     },
@@ -658,30 +661,48 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
         <Grid container>
           <Grid item xs={12} md={3} className={classes.sidebar}>
-            <SummaryPanel volumes={volumes} typesLongLabel={longLabel} />
+            <SummaryPanel volumes={volumes} />
           </Grid>
           <Grid item xs={12} md={9} className={classes.main}>
-            <div className={classes.graphControls}>
-              <Typography
-                role="header"
-                variant="h2"
-                className={classes.graphTitle}
-              >
-                Graphs
-              </Typography>
-              <FormControl style={{ marginTop: 0 }}>
-                <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                  Select Time Range
-                </InputLabel>
-                <Select
-                  value={rangeSelection}
-                  onChange={this.handleChartRangeChange}
-                  inputProps={{ name: 'chartRange', id: 'chartRange' }}
+            <Grid
+              container
+              justify="space-between"
+              alignItems="center"
+              className={classes.headerWrapper}
+            >
+              <Grid item>
+                <Typography
+                  role="header"
+                  variant="h2"
+                  className={classes.graphTitle}
                 >
-                  {this.rangeSelectOptions}
-                </Select>
-              </FormControl>
-            </div>
+                  {longLabel}
+                </Typography>
+              </Grid>
+              <Grid item className="py0">
+                <div className={classes.graphControls}>
+                  <Typography
+                    role="header"
+                    variant="h3"
+                    className={classes.graphTitle}
+                  >
+                    Graphs
+                  </Typography>
+                  <FormControl style={{ marginTop: 0 }}>
+                    <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                      Select Time Range
+                    </InputLabel>
+                    <Select
+                      value={rangeSelection}
+                      onChange={this.handleChartRangeChange}
+                      inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                    >
+                      {this.rangeSelectOptions}
+                    </Select>
+                  </FormControl>
+                </div>
+              </Grid>
+            </Grid>
 
             <StatsPanel
               title="CPU Usage"

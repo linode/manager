@@ -14,6 +14,7 @@ describe('LinodeSummary', () => {
       classes={{
         main: '',
         sidebar: '',
+        headerWrapper: '',
         chart: '',
         leftLegend: '',
         bottomLegend: '',
