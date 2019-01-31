@@ -36,6 +36,7 @@ import {
   TagError
 } from 'src/store/tagImportDrawer';
 import { ThunkDispatch } from 'src/store/types';
+import { sendEvent } from 'src/utilities/analytics';
 import { sortAlphabetically } from 'src/utilities/sort-by';
 import { storage } from 'src/utilities/storage';
 import DisplayGroupList from './DisplayGroupList';
@@ -173,14 +174,31 @@ const connected = connect(
 
 const styled = withStyles(styles);
 
-const withUpdates = lifecycle({
+// Create Label for GA event. Contains the number of Linodes and Domains
+// with groups that have been imported. Example: "Linodes: 3; Domains: 0"
+export const createLabel = (numLinodes: number, numDomains: number) => {
+  // Arbitrary set upper limit – just in case.
+  const numLinodesDisplay = numLinodes < 10000 ? String(numLinodes) : '9999+';
+  const numDomainsDisplay = numDomains < 10000 ? String(numDomains) : '9999+';
+
+  return `Linodes: ${numLinodesDisplay}; Domains: ${numDomainsDisplay}`;
+};
+
+export const withUpdates = lifecycle({
   componentDidUpdate(prevProps: CombinedProps) {
     const {
       actions: { close },
       success,
-      enqueueSnackbar
+      enqueueSnackbar,
+      entitiesWithGroupsToImport: { linodes, domains }
     } = this.props;
     if (!prevProps.success && success) {
+      sendEvent({
+        category: 'dashboard',
+        action: 'import display groups',
+        label: createLabel(linodes.length, domains.length)
+      });
+
       enqueueSnackbar('Your display groups have been imported successfully.', {
         variant: 'success'
       });

@@ -1,9 +1,16 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { domains, linodes } from 'src/__data__/groupImports';
-
-import { getGroupImportList, TagImportDrawer } from './TagImportDrawer';
+import { sendEvent } from 'src/utilities/analytics';
+import {
+  createLabel,
+  getGroupImportList,
+  TagImportDrawer,
+  withUpdates
+} from './TagImportDrawer';
+jest.mock('src/utilities/analytics', () => ({
+  sendEvent: jest.fn()
+}));
 
 const props = {
   actions: {
@@ -20,7 +27,9 @@ const props = {
   classes: { root: '' }
 };
 
-const component = shallow(<TagImportDrawer {...props} />);
+const EnhancedComponent = withUpdates(TagImportDrawer);
+const wrapper = shallow(<EnhancedComponent {...props} />);
+const component = wrapper.dive();
 
 const errors = [
   { reason: 'hello', entityId: 123, entityLabel: 'entity1' },
@@ -55,5 +64,25 @@ describe('TagImportDrawer', () => {
       component.find('[data-qa-cancel]').simulate('click');
       expect(props.actions.close).toHaveBeenCalled();
     });
+  });
+
+  it('should send a GA event on success', () => {
+    wrapper.setProps({ success: true });
+    expect(sendEvent).toHaveBeenCalled();
+  });
+});
+
+describe('GA Label Creator', () => {
+  it('should return the number of Linodes and number of Domains', () => {
+    expect(createLabel(0, 3)).toBe('Linodes: 0; Domains: 3');
+    expect(createLabel(0, 0)).toBe('Linodes: 0; Domains: 0');
+    expect(createLabel(8, 123)).toBe('Linodes: 8; Domains: 123');
+  });
+
+  it('should clamp values if num > 9999', () => {
+    expect(createLabel(1, 10000)).toBe('Linodes: 1; Domains: 9999+');
+    expect(createLabel(99999999, 99999999)).toBe(
+      'Linodes: 9999+; Domains: 9999+'
+    );
   });
 });
