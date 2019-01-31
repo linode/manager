@@ -11,7 +11,8 @@ export type StyleProps = WithStyles<ClassNames>;
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit
+      paddingLeft: theme.spacing.unit,
+      paddingTop: theme.spacing.unit
     },
     [theme.breakpoints.up('lg')]: {
       padding: theme.spacing.unit,
