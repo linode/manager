@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     }
   },
   buttonsContainer: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit
   },
   dismiss: {
     paddingLeft: theme.spacing.unit * 2,
