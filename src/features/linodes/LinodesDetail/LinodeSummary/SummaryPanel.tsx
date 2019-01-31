@@ -53,7 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   volumes: Linode.Volume[];
-  typesLongLabel: string;
 }
 
 type CombinedProps = Props &
@@ -87,7 +86,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
     const {
       classes,
       volumes,
-      typesLongLabel,
       linodeTags,
       linodeId,
       linodeRegion,
@@ -107,7 +105,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
             Linode Details
           </Typography>
           <div className={classes.section}>{this.renderImage()}</div>
-          <div className={classes.section}>{<span>{typesLongLabel}</span>}</div>
           <div className={classes.section} data-qa-volumes={volumes.length}>
             Volumes:&#160;
             <Link
