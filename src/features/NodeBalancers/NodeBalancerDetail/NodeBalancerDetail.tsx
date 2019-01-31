@@ -25,7 +25,6 @@ import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
 import TabLink from 'src/components/TabLink';
-import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   getNodeBalancer,
@@ -277,10 +276,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               />
             </Grid>
           </Grid>
-          <TagsPanel
-            tags={nodeBalancer.tags || []}
-            updateTags={this.updateTags}
-          />
           <AppBar position="static" color="default">
             <Tabs
               value={this.tabs.findIndex(tab => any(matches)(tab.routeNames))}
