@@ -52,26 +52,26 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
               </Typography>
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-ports>
-                  <strong>Ports: </strong>{' '}
+                  <strong>Ports: </strong>
                   {nodeBalancer.ports.length === 0 && 'None'}
                   {nodeBalancer.ports.join(', ')}
                 </Typography>
               </div>
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-node-status>
-                  <strong>Node Status:</strong>{' '}
+                  <strong>Node Status: </strong>
                   {`${nodeBalancer.up} up, ${nodeBalancer.down} down`}
                 </Typography>
               </div>
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-transferred>
-                  <strong>Transferred:</strong>{' '}
+                  <strong>Transferred: </strong>
                   {convertMegabytesTo(nodeBalancer.transfer.total)}
                 </Typography>
               </div>
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-hostname>
-                  <strong>Host Name:</strong>
+                  <strong>Host Name: </strong>
                   {nodeBalancer.hostname}
                 </Typography>
               </div>
