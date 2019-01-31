@@ -77,9 +77,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       }
     },
     graphControls: {
-      margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      [theme.breakpoints.up('md')]: {
+        margin: `${theme.spacing.unit * 2}px 0`
+      }
     },
     blue: {
       '&:before': {
