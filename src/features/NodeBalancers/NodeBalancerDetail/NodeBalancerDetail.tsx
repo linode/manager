@@ -24,7 +24,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
-import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   getNodeBalancer,
@@ -290,9 +289,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   key={tab.title}
                   label={tab.title}
                   data-qa-tab={tab.title}
-                  component={() => (
-                    <TabLink to={tab.routeName} title={tab.title} />
-                  )}
                 />
               ))}
             </Tabs>
