@@ -42,4 +42,16 @@ describe('filterMatched method', () => {
     expect(filterMatched('tags', 'TAG', ['tag1', 'tag2', 'tag3'])).toBeFalsy();
     expect(filterMatched('tags', 'TAG', [])).toBeFalsy();
   });
+
+  it('should find entities by IP', () => {
+    expect(
+      filterMatched(
+        '3023::4502',
+        'TAG',
+        ['tag1', 'tag2', 'tag3'],
+        ['2222::3023::4502']
+      )
+    ).toBeTruthy();
+    expect(filterMatched('tags', 'TAG', [], ['2222::3021::4502'])).toBeFalsy();
+  });
 });
