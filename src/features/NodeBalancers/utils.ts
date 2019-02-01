@@ -15,7 +15,7 @@ export const clampNumericString = (low: number, hi: number) =>
     defaultNumeric(0)
   );
 
-export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNode => ({
+export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNodeFields => ({
   label: '',
   address: '',
   port: 80,
@@ -45,7 +45,7 @@ export const createNewNodeBalancerConfig = (
   modifyStatus: 'new'
 });
 
-export const nodeForRequest = (node: Linode.NodeBalancerConfigNode) => ({
+export const nodeForRequest = (node: Linode.NodeBalancerConfigNodeFields) => ({
   label: node.label,
   address: node.address,
   port: node.port,
@@ -136,8 +136,8 @@ export const transformConfigsForRequest = (
    Does not modify in-place, returns a deep clone of the Nodes */
 export const transformConfigNodesForRequest = (
   nodes: Linode.NodeBalancerConfigNode[]
-): Linode.NodeBalancerConfigNode[] => {
-  return nodes.map((node: Linode.NodeBalancerConfigNode) =>
+): Linode.NodeBalancerConfigNodeFields[] => {
+  return nodes.map((node: Linode.NodeBalancerConfigNodeFields) =>
     nodeForRequest(node)
   );
 };
