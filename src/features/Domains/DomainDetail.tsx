@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -16,6 +17,7 @@ import {
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -24,6 +26,7 @@ import PromiseLoader, {
 } from 'src/components/PromiseLoader/PromiseLoader';
 import TabLink from 'src/components/TabLink';
 import TagsPanel from 'src/components/TagsPanel';
+import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getDomain, getDomainRecords } from 'src/services/domains';
 import {
@@ -46,27 +49,35 @@ interface PreloadedProps {
   records: PromiseLoaderResponse<Linode.DomainRecord>;
 }
 
-type ClassNames = 'root' | 'titleWrapper' | 'backButton';
+type ClassNames = 'main' | 'sidebar' | 'domainSidebar' | 'titleWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  main: {
+    [theme.breakpoints.up('md')]: {
+      order: 1
+    }
+  },
+  sidebar: {
+    [theme.breakpoints.up('md')]: {
+      order: 2
+    }
+  },
+  domainSidebar: {
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing.unit * 4
+    }
+  },
   titleWrapper: {
     display: 'flex',
     alignItems: 'center',
     wordBreak: 'break-all'
-  },
-  backButton: {
-    margin: '2px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
   }
 });
 
 type CombinedProps = DomainActionsProps &
   RouteProps &
   PreloadedProps &
+  StyleProps &
   WithStyles<ClassNames>;
 
 const preloaded = PromiseLoader<CombinedProps>({
@@ -186,13 +197,36 @@ class DomainDetail extends React.Component<CombinedProps, State> {
 
   renderDomainRecords = () => {
     const { domain, records } = this.state;
+    const { classes } = this.props;
     return (
-      <DomainRecords
-        domain={domain}
-        domainRecords={records}
-        updateRecords={this.updateRecords}
-        updateDomain={this.updateDomain}
-      />
+      <Grid container>
+        <Grid
+          item
+          xs={12}
+          md={3}
+          className={`${classes.sidebar} ${classes.domainSidebar}`}
+        >
+          <Paper className={classes.summarySection}>
+            <Typography
+              role="header"
+              variant="h3"
+              className={classes.title}
+              data-qa-title
+            >
+              Tags
+            </Typography>
+            <TagsPanel tags={domain.tags} updateTags={this.handleUpdateTags} />
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={9} className={classes.main}>
+          <DomainRecords
+            domain={domain}
+            domainRecords={records}
+            updateRecords={this.updateRecords}
+            updateDomain={this.updateDomain}
+          />
+        </Grid>
+      </Grid>
     );
   };
 
@@ -237,7 +271,6 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <AppBar position="static" color="default">
-          <TagsPanel tags={domain.tags} updateTags={this.handleUpdateTags} />
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
             onChange={this.handleTabChange}
@@ -281,7 +314,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
+const localStyles = withStyles(styles);
 const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   (routePropsOld, routePropsNew) => {
     return (
@@ -291,9 +324,10 @@ const reloaded = reloadableWithRouter<PreloadedProps, { domainId?: number }>(
   }
 );
 
-export default compose<any, any, any, any, any, any>(
+export default compose<any, any, any, any, any, any, any>(
   setDocs(DomainDetail.docs),
   reloaded,
+  localStyles,
   styled,
   preloaded,
   withDomainActions
