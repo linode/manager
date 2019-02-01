@@ -1,5 +1,3 @@
-import { or } from 'ramda';
-
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -40,12 +38,29 @@ export const getMatchingTags = (tags: string[], query: string): string[] => {
   );
 };
 
-export const filterMatched = (query: string, label: string, tags: string[]) => {
+export const getMatchingIps = (
+  ips: string[] | undefined,
+  query: string
+): string[] => {
+  if (!ips) {
+    return [];
+  }
+  return ips.filter((ip: string) => ip.includes(query));
+};
+
+export const filterMatched = (
+  query: string,
+  label: string,
+  tags: string[],
+  ips?: string[],
+  linode?: Linode.Linode
+) => {
   const matchingTags = getMatchingTags(tags, query);
-  const bool = or(
-    label.toLowerCase().includes(query.toLowerCase()),
-    matchingTags.length > 0
-  );
+  const matchingIps = getMatchingIps(ips, query);
+  const bool =
+    label.toLowerCase().includes(query.toLowerCase()) ||
+    matchingTags.length > 0 ||
+    matchingIps.length > 0;
   return bool;
 };
 
@@ -56,7 +71,9 @@ export const searchLinodes = (
   images: Linode.Image[]
 ) =>
   linodes
-    .filter(linode => filterMatched(query, linode.label, linode.tags))
+    .filter(linode =>
+      filterMatched(query, linode.label, linode.tags, linode.ipv4, linode)
+    )
     .map(linode => ({
       label: linode.label,
       value: linode.id,
@@ -162,6 +179,7 @@ export const searchAll = (
   query: string,
   typesData: Linode.LinodeType[] = []
 ) => {
+  console.log(_linodes);
   const linodes = searchLinodes(_linodes, query, typesData, _images);
   const volumes = searchVolumes(_volumes, query);
   const nodebalancers = searchNodeBalancers(_nodebalancers, query);

@@ -14,6 +14,25 @@ export interface SearchResults {
 
 type State = ApplicationState['__resources'];
 
+export const getLinodeIps = (linode: Linode.Linode): string[] => {
+  const { ipv4, ipv6 } = linode;
+  return ipv4.concat([ipv6]);
+};
+
+export const getDomainIps = (domain: Linode.Domain): string[] => {
+  return domain.master_ips;
+};
+
+export const getNodebalIps = (nodebal: Linode.NodeBalancer): string[] => {
+  const { ipv4, ipv6 } = nodebal;
+  const ips: string[] = [ipv4];
+
+  if (ipv6) {
+    ips.push(ipv6);
+  }
+  return ips;
+};
+
 const formatLinode = (
   linode: Linode.Linode,
   types: Linode.LinodeType[],
@@ -36,7 +55,8 @@ const formatLinode = (
     searchText: '', // @todo update this, either here or in the consumer. Probably in the consumer.
     created: linode.created,
     region: linode.region,
-    status: linode.status
+    status: linode.status,
+    ips: getLinodeIps(linode)
   }
 });
 
@@ -80,7 +100,8 @@ const domainToItem = (domain: Linode.Domain) => ({
     description: domain.description || domain.status,
     icon: 'DomainIcon',
     path: `/domains/${domain.id}`,
-    searchText: ''
+    searchText: '',
+    ips: getDomainIps(domain)
   }
 });
 
@@ -93,7 +114,8 @@ const nodeBalToItem = (nodebal: Linode.NodeBalancer) => ({
     icon: 'NodebalIcon',
     path: `/nodebalancers/${nodebal.id}`,
     searchText: '',
-    created: nodebal.created
+    created: nodebal.created,
+    ips: getNodebalIps(nodebal)
   }
 });
 
