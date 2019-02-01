@@ -88,6 +88,17 @@ export const TagImportDrawer: React.StatelessComponent<
     open
   } = props;
 
+  const handleSubmit = () => {
+    // Send event to GA
+    sendEvent({
+      category: 'dashboard',
+      action: 'import display groups',
+      label: createLabel(linodes.length, domains.length)
+    });
+    // Add tags to entities (Redux action)
+    update();
+  };
+
   const linodeGroups = getGroupImportList(linodes);
   const domainGroups = getGroupImportList(domains);
   return (
@@ -121,7 +132,7 @@ export const TagImportDrawer: React.StatelessComponent<
         <Grid item>
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
-              onClick={update}
+              onClick={handleSubmit}
               loading={loading}
               type="primary"
               data-qa-submit
@@ -155,7 +166,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   };
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
   dispatch: ThunkDispatch,
   ownProps
 ) => {
@@ -189,16 +200,9 @@ export const withUpdates = lifecycle({
     const {
       actions: { close },
       success,
-      enqueueSnackbar,
-      entitiesWithGroupsToImport: { linodes, domains }
+      enqueueSnackbar
     } = this.props;
     if (!prevProps.success && success) {
-      sendEvent({
-        category: 'dashboard',
-        action: 'import display groups',
-        label: createLabel(linodes.length, domains.length)
-      });
-
       enqueueSnackbar('Your display groups have been imported successfully.', {
         variant: 'success'
       });

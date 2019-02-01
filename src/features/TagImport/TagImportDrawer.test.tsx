@@ -67,12 +67,12 @@ describe('TagImportDrawer', () => {
   });
 
   it('should send a GA event on success', () => {
-    wrapper.setProps({ success: true });
+    component.find('[data-qa-submit]').simulate('click');
     expect(sendEvent).toHaveBeenCalled();
   });
 
   it('should send a GA event with the number of Linodes and Domains with imported tags', () => {
-    wrapper.setProps({ success: true });
+    component.find('[data-qa-submit]').simulate('click');
     expect(sendEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         label: 'Linodes: 3; Domains: 2'
@@ -81,7 +81,7 @@ describe('TagImportDrawer', () => {
   });
 
   it('should send a GA event with category of "Dashboard"', () => {
-    wrapper.setProps({ success: true });
+    component.find('[data-qa-submit]').simulate('click');
     expect(sendEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         category: 'dashboard'
@@ -90,7 +90,7 @@ describe('TagImportDrawer', () => {
   });
 
   it('should send a GA event with action of "import display groups"', () => {
-    wrapper.setProps({ success: true });
+    component.find('[data-qa-submit]').simulate('click');
     expect(sendEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         action: 'import display groups'
