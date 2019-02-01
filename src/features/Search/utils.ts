@@ -179,7 +179,6 @@ export const searchAll = (
   query: string,
   typesData: Linode.LinodeType[] = []
 ) => {
-  console.log(_linodes);
   const linodes = searchLinodes(_linodes, query, typesData, _images);
   const volumes = searchVolumes(_volumes, query);
   const nodebalancers = searchNodeBalancers(_nodebalancers, query);
