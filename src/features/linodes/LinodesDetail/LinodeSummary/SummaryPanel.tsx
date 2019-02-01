@@ -22,6 +22,10 @@ import { withLinode } from '../context';
 type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
+  title: {},
+  summarySection: {},
+  section: {},
   region: {
     [theme.breakpoints.between('sm', 'md')]: {
       flexBasis: '100%',

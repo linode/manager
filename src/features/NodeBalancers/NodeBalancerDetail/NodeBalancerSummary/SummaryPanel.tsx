@@ -21,6 +21,10 @@ type ClassNames =
   | 'hostName';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
+  title: {},
+  summarySection: {},
+  section: {},
   NBsummarySection: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing.unit * 6
