@@ -33,8 +33,6 @@ describe('Account Landing', () => {
   });
 
   it('should render Summary Panel', () => {
-    expect(
-      component.find('WithStyles(WithConfigs(SummaryPanel))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-summary-panel]')).toHaveLength(1);
   });
 });
