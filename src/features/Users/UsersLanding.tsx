@@ -235,12 +235,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Users" />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ marginTop: 8 }}
-        >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography
               role="header"
