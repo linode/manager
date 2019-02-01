@@ -1002,11 +1002,11 @@ const themeDefaults: ThemeOptions = {
         }
       },
       labelContainer: {
-        paddingLeft: 9,
-        paddingRight: 9,
+        paddingLeft: 0,
+        paddingRight: 0,
         [breakpoints.up('md')]: {
-          paddingLeft: 18,
-          paddingRight: 18
+          paddingLeft: 0,
+          paddingRight: 0
         }
       },
       textColorPrimary: {
