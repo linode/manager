@@ -17,6 +17,10 @@ import { withAccount } from '../../context';
 type ClassNames = 'expired' | 'balance' | 'positive' | 'negative';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
+  title: {},
+  summarySection: {},
+  section: {},
   expired: {
     color: theme.color.red
   },
@@ -96,8 +100,6 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         ? `$${Math.abs(balance).toFixed(2)}`
         : '';
 
-    console.log(balance);
-
     return (
       <React.Fragment>
         <Paper className={classes.summarySection}>
@@ -125,7 +127,6 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
             </div>
           </div>
-
           <div className={classes.section} data-qa-contact-email>
             <strong>Email:&nbsp;</strong>
             {email}
@@ -154,7 +155,6 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               {balance < 0 && ` (credit)`}
             </Typography>
           </div>
-
           <div className={classes.section} data-qa-contact-cc>
             <strong>Credit Card: </strong>
             {last_four ? `xxxx-xxxx-xxxx-${last_four}` : 'None'}
