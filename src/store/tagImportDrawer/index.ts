@@ -1,10 +1,10 @@
 import * as Bluebird from 'bluebird';
-import { curry, isEmpty, pathOr } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import { Action } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import { updateDomain } from 'src/services/domains';
-import { updateLinode } from 'src/services/linodes';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
+import { updateDomain } from 'src/store/domains/domains.requests';
+import { updateLinode } from 'src/store/linodes/linode.requests';
 import getEntitiesWithGroupsToImport, {
   GroupImportProps
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
@@ -136,7 +136,10 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
 // Async
 
 /**
- * gatherResponsesAndErrors
+ * createAccumulator
+ *
+ * This function returns an accumulator that gathers responses and errors,
+ * injecting an entity type and dispatch so that we can dispatch appropriate actions
  *
  * This magic is needed to accumulate errors from any failed requests, since
  * we need to import display groups for each entity individually. The final response
@@ -148,18 +151,29 @@ export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
  *  errors: TagError[] Accumulated errors.
  * }
  */
-export const gatherResponsesAndErrors = (
-  cb: (id: number, data: any) => Promise<Linode.Linode | Linode.Domain>,
-  accumulator: Accumulator<Linode.Linode | Linode.Domain>,
-  entity: GroupImportProps
-) => {
+const createAccumulator = <T extends Linode.Linode | Linode.Domain>(
+  entityType: 'linode' | 'domain',
+  dispatch: ThunkDispatch<ApplicationState, undefined, Action>
+) => (accumulator: Accumulator<T>, entity: GroupImportProps) => {
   // @todo if the API decides to enforce lowercase tags, remove this lowercasing.
-  return cb(entity.id, { tags: [...entity.tags, entity.group!.toLowerCase()] })
-    .then(updatedEntity => ({
+  const tags = [...entity.tags, entity.group!.toLowerCase()];
+
+  const action: ThunkAction<
+    Promise<Linode.Linode | Linode.Domain>,
+    ApplicationState,
+    undefined,
+    Action
+  > =
+    entityType === 'linode'
+      ? updateLinode({ linodeId: entity.id, tags })
+      : updateDomain({ domainId: entity.id, tags });
+
+  return dispatch(action)
+    .then((updatedEntity: T) => ({
       ...accumulator,
       success: [...accumulator.success, updatedEntity]
     }))
-    .catch(error => {
+    .catch((error: any) => {
       const reason = pathOr(
         'Error adding tag.',
         ['response', 'data', 'errors', 0, 'reason'],
@@ -174,10 +188,6 @@ export const gatherResponsesAndErrors = (
       };
     });
 };
-
-const curriedAccumulator = curry(gatherResponsesAndErrors);
-const domainAccumulator = curriedAccumulator(updateDomain);
-const linodeAccumulator = curriedAccumulator(updateLinode);
 
 /**
  *  handleAccumulatedResponsesAndErrors
@@ -218,6 +228,16 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
 ) => {
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
+
+  const linodeAccumulator = createAccumulator<Linode.Linode>(
+    'linode',
+    dispatch
+  );
+  const domainAccumulator = createAccumulator<Linode.Domain>(
+    'domain',
+    dispatch
+  );
+
   Bluebird.join(
     Bluebird.reduce(entities.linodes, linodeAccumulator, {
       success: [],
