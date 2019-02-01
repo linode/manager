@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   heading: {
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
   }
 });
