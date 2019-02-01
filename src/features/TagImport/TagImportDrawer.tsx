@@ -166,7 +166,7 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
   };
 };
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, CombinedProps> = (
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch,
   ownProps
 ) => {
