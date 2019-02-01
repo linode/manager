@@ -10,7 +10,9 @@ describe('Account Landing', () => {
     <BillingDetail
       classes={{
         root: '',
-        heading: ''
+        heading: '',
+        main: '',
+        sidebar: ''
       }}
       setDocs={jest.fn()}
       clearDocs={jest.fn()}

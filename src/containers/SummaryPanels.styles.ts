@@ -27,8 +27,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: theme.spacing.unit * 3
   },
   section: {
-    display: 'flex',
-    alignItems: 'center',
     marginBottom: theme.spacing.unit,
     ...theme.typography.body1,
     '& .dif': {

@@ -21,7 +21,16 @@ describe('SummaryPanel', () => {
     balance: 0
   };
 
-  const mockClasses = { root: '', expired: '', item: '', address2: '' };
+  const mockClasses = {
+    root: '',
+    title: '',
+    summarySection: '',
+    section: '',
+    expired: '',
+    balance: '',
+    positive: '',
+    negative: ''
+  };
 
   const componentExpiredCC = shallow(
     <SummaryPanel
@@ -32,6 +41,8 @@ describe('SummaryPanel', () => {
         ...account,
         credit_card: { ...account.credit_card, expiry: '02/2012' }
       }}
+      accountLoading={false}
+      balance={0}
     />
   );
 
@@ -44,6 +55,8 @@ describe('SummaryPanel', () => {
         ...account,
         credit_card: { ...account.credit_card, expiry: '02/2020' }
       }}
+      accountLoading={false}
+      balance={0}
     />
   );
 
