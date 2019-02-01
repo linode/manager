@@ -60,16 +60,6 @@ describe('SummaryPanel', () => {
     />
   );
 
-  it('should first render a headline of "Summary"', () => {
-    expect(
-      componentExpiredCC
-        .find('WithStyles(Typography)[variant="h2"]')
-        .first()
-        .children()
-        .text()
-    ).toBe('Summary');
-  });
-
   it('should render "Expired" text next to the CC expiration if has an old date', () => {
     expect(
       componentExpiredCC.find('span').filterWhere(n => {

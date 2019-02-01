@@ -130,7 +130,7 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
           </Typography>
           <Grid container>
             <Grid item xs={12} md={3} className={classes.sidebar}>
-              <SummaryPanel />
+              <SummaryPanel data-qa-summary-panel />
             </Grid>
             <Grid item xs={12} md={9} className={classes.main}>
               <UpdateContactInformationPanel />
