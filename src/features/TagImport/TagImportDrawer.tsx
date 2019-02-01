@@ -93,7 +93,8 @@ export const TagImportDrawer: React.StatelessComponent<
     sendEvent({
       category: 'dashboard',
       action: 'import display groups',
-      label: createLabel(linodes.length, domains.length)
+      label: createLabel(linodes.length, domains.length),
+      value: linodes.length + domains.length
     });
     // Add tags to entities (Redux action)
     update();

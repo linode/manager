@@ -89,6 +89,15 @@ describe('TagImportDrawer', () => {
     );
   });
 
+  it('should send a GA event with value of number of Linodes + number of Domains', () => {
+    component.find('[data-qa-submit]').simulate('click');
+    expect(sendEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        value: 5
+      })
+    );
+  });
+
   it('should send a GA event with action of "import display groups"', () => {
     component.find('[data-qa-submit]').simulate('click');
     expect(sendEvent).toHaveBeenCalledWith(
