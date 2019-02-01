@@ -39,7 +39,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         right: 0
       }
     }
-  }
+  },
+  main: {},
+  sidebar: {},
+  domainSidebar: {},
+  titleWrapper: {}
 });
 
 export default withStyles(styles);
