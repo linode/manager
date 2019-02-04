@@ -91,7 +91,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     selectedLinodeId: null,
     selectedLinodeLabel: '',
     groupByTag: false,
-    CtaDismissed: storage.CtaDismissed.get()
+    CtaDismissed: storage.BackupsCtaDismissed.get()
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
@@ -194,7 +194,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       CtaDismissed: true
     });
-    storage.CtaDismissed.set('true');
+    storage.BackupsCtaDismissed.set('true');
   };
 
   render() {
@@ -257,9 +257,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         <Grid
           item
           className={`${
-            backupsCTA && !storage.CtaDismissed.get() ? 'mlMain' : ''
+            backupsCTA && !storage.BackupsCtaDismissed.get() ? 'mlMain' : ''
           }`}
-          xs={!backupsCTA && 12}
+          xs={
+            !backupsCTA ||
+            (backupsCTA && storage.BackupsCtaDismissed.get() && 12)
+          }
         >
           <Grid container>
             <DocumentTitleSegment segment="Linodes" />
@@ -336,7 +339,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             </ConfirmationDialog>
           </Grid>
         </Grid>
-        {backupsCTA && !storage.CtaDismissed.get() && (
+        {backupsCTA && !storage.BackupsCtaDismissed.get() && (
           <Grid item className="mlSidebar py0">
             <BackupsCTA dismissed={this.dismissCTA} />
           </Grid>
