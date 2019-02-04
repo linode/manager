@@ -812,7 +812,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 )}
               </Grid>
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
-                <Grid container className="pooooooo">
+                <Grid container>
                   {nodes &&
                     nodes.map((node, idx) => {
                       if (node.modifyStatus === 'delete') {
