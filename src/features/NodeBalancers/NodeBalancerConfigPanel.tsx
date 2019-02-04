@@ -815,7 +815,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     );
 
                     return (
-                      <React.Fragment key={idx}>
+                      <React.Fragment key={`nb-node-${idx}`}>
                         <Grid
                           updateFor={[nodes.length, node, errors, configIdx]}
                           item
