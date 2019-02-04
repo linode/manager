@@ -21,6 +21,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   title: {},
   summarySection: {},
   section: {},
+  main: {},
+  sidebar: {},
+  domainSidebar: {},
+  titleWrapper: {},
   expired: {
     color: theme.color.red
   },
