@@ -35,7 +35,8 @@ type ClassNames =
   | 'chip-unknown'
   | 'selectedSuggestionItem'
   | 'statusHeader'
-  | 'statusChip';
+  | 'statusChip'
+  | 'passiveChecks';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -47,9 +48,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   backendIPAction: {
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
-    // marginTop: theme.spacing.unit * 2,
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: -32
+    [theme.breakpoints.down('md')]: {
+      marginLeft: -32,
+      marginTop: -theme.spacing.unit * 2
     }
   },
   suggestionsParent: {
@@ -94,11 +95,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.palette.text.primary
   },
   statusHeader: {
-    ...theme!.overrides!.MuiFormLabel!.root
+    fontSize: '.9rem',
+    color: theme.color.label
   },
   statusChip: {
     marginTop: theme.spacing.unit,
     color: 'white'
+  },
+  passiveChecks: {
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -379,7 +384,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     );
 
     return (
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={4} xl={2}>
         <Grid container>
           <Grid
             updateFor={[]} // never update after initial render
@@ -556,7 +561,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   renderPassiveCheck() {
-    const { checkPassive } = this.props;
+    const { checkPassive, classes } = this.props;
 
     return (
       <Grid item xs={12} md={6}>
@@ -572,6 +577,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel
+              className={classes.passiveChecks}
               control={
                 <Toggle
                   checked={checkPassive}
@@ -844,7 +850,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               </Grid>
                             )}
                             <Grid container>
-                              <Grid item xs={6} sm={4} xl={2}>
+                              <Grid item xs={6} sm={4} lg={2}>
                                 <TextField
                                   label="Label"
                                   value={node.label}
@@ -859,7 +865,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 />
                               </Grid>
                               {node.status && (
-                                <Grid item xs={6} sm={4} xl={2}>
+                                <Grid item xs={6} sm={4} lg={2}>
                                   <Typography
                                     role="header"
                                     variant="h3"
@@ -882,7 +888,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               )}
                             </Grid>
                           </Grid>
-                          <Grid item>
+                          <Grid item xs={12}>
                             <Grid
                               key={idx}
                               updateFor={[
@@ -894,7 +900,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               container
                               data-qa-node
                             >
-                              <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2}>
+                              <Grid item xs={12} sm={forEdit ? 3 : 3} lg={2}>
                                 <Downshift
                                   onSelect={this.handleSelectSuggestion}
                                   stateReducer={this.downshiftStateReducer}
@@ -990,7 +996,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   }}
                                 </Downshift>
                               </Grid>
-                              <Grid item xs={6} sm={4} xl={2}>
+                              <Grid item xs={6} sm={3} lg={2}>
                                 <TextField
                                   type="number"
                                   label="Port"
@@ -1005,7 +1011,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   small
                                 />
                               </Grid>
-                              <Grid item xs={6} sm={4} xl={2}>
+                              <Grid item xs={6} sm={3} lg={2}>
                                 <TextField
                                   type="number"
                                   label="Weight"
@@ -1021,7 +1027,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 />
                               </Grid>
                               {forEdit && (
-                                <Grid item xs={6} sm={4} xl={2}>
+                                <Grid item xs={6} sm={3} lg={2}>
                                   <TextField
                                     label="Mode"
                                     value={node.mode}
