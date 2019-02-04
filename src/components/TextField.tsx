@@ -36,7 +36,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     maxWidth: '100%'
   },
   small: {
-    minHeight: 'auto'
+    minHeight: 'auto',
+    marginTop: 0,
+    '& input': {
+      padding: theme.spacing.unit
+    }
   },
   selectSmall: {
     padding: `0 ${theme.spacing.unit}px`,

@@ -39,13 +39,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   inner: {},
   divider: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   backendIPAction: {
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
-    marginTop: theme.spacing.unit * 2,
+    // marginTop: theme.spacing.unit * 2,
     [theme.breakpoints.down('xs')]: {
       marginLeft: -32
     }
@@ -653,6 +653,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('port') || hasErrorFor('configs')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-port
+                  small
                 />
               </Grid>
               <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -664,6 +665,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('protocol')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-protocol-select
+                  small
                 >
                   <MenuItem value="tcp" data-qa-option="tcp">
                     TCP
@@ -700,6 +702,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       errorText={hasErrorFor('ssl_cert')}
                       errorGroup={forEdit ? `${configIdx}` : undefined}
                       data-qa-cert-field
+                      small
                     />
                   </Grid>
                   <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -713,6 +716,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       errorText={hasErrorFor('ssl_key')}
                       errorGroup={forEdit ? `${configIdx}` : undefined}
                       data-qa-private-key-field
+                      small
                     />
                   </Grid>
                 </Grid>
@@ -727,6 +731,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('algorithm')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-algorithm-select
+                  small
                 >
                   <MenuItem value="roundrobin" data-qa-option="roundrobin">
                     Round Robin
@@ -749,6 +754,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('stickiness')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-session-stickiness-select
+                  small
                 >
                   <MenuItem value="none" data-qa-option="none">
                     None
@@ -775,12 +781,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             <Grid updateFor={[nodes, errors, nodeMessage]} container>
               <Grid item xs={12}>
-                <Grid
-                  updateFor={[nodeMessage]}
-                  style={{ marginBottom: 16 }}
-                  item
-                  xs={12}
-                >
+                <Grid updateFor={[nodeMessage]} item xs={12}>
                   {nodeMessage && <Notice text={nodeMessage} success />}
                 </Grid>
                 <Typography
@@ -814,11 +815,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     );
 
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={idx}>
                         <Grid
-                          key={idx}
                           updateFor={[nodes.length, node, errors, configIdx]}
-                          container
+                          item
                           data-qa-node
                         >
                           {idx !== 0 && (
@@ -828,35 +828,40 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               />
                             </Grid>
                           )}
-                          <Grid item xs={6} sm={4} xl={2} className="py0">
-                            <TextField
-                              label="Label"
-                              value={node.label}
-                              inputProps={{ 'data-node-idx': idx }}
-                              onChange={this.onNodeLabelChange}
-                              errorText={nodesHasErrorFor('label')}
-                              errorGroup={forEdit ? `${configIdx}` : undefined}
-                              data-qa-backend-ip-label
-                            />
-                          </Grid>
-                          {node.status && (
-                            <Grid item xs={6} sm={4} xl={2} className="py0">
-                              <Typography
-                                role="header"
-                                variant="h3"
-                                data-qa-active-checks-header
-                              >
-                                Status
-                                <div>
-                                  <Chip
-                                    color="primary"
-                                    className={classes[`chip${node.status}`]}
-                                    label={node.status}
-                                  />
-                                </div>
-                              </Typography>
+                          <Grid container>
+                            <Grid item xs={6} sm={4} xl={2}>
+                              <TextField
+                                label="Label"
+                                value={node.label}
+                                inputProps={{ 'data-node-idx': idx }}
+                                onChange={this.onNodeLabelChange}
+                                errorText={nodesHasErrorFor('label')}
+                                errorGroup={
+                                  forEdit ? `${configIdx}` : undefined
+                                }
+                                data-qa-backend-ip-label
+                                small
+                              />
                             </Grid>
-                          )}
+                            {node.status && (
+                              <Grid item xs={6} sm={4} xl={2}>
+                                <Typography
+                                  role="header"
+                                  variant="h3"
+                                  data-qa-active-checks-header
+                                >
+                                  Status
+                                  <div>
+                                    <Chip
+                                      color="primary"
+                                      className={classes[`chip${node.status}`]}
+                                      label={node.status}
+                                    />
+                                  </div>
+                                </Typography>
+                              </Grid>
+                            )}
+                          </Grid>
                         </Grid>
                         <Grid
                           key={idx}
@@ -864,13 +869,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           container
                           data-qa-node
                         >
-                          <Grid
-                            item
-                            xs={12}
-                            sm={forEdit ? 4 : 3}
-                            xl={2}
-                            className="py0"
-                          >
+                          <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2}>
                             <Downshift
                               onSelect={this.handleSelectSuggestion}
                               stateReducer={this.downshiftStateReducer}
@@ -900,6 +899,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                       errorText={nodesHasErrorFor('address')}
                                       errorGroup={`${configIdx}`}
                                       data-qa-backend-ip-address
+                                      small
                                     />
                                     {isOpen && (
                                       <Paper className={classes.suggestions}>
@@ -955,7 +955,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               }}
                             </Downshift>
                           </Grid>
-                          <Grid item xs={6} sm={4} xl={2} className="py0">
+                          <Grid item xs={6} sm={4} xl={2}>
                             <TextField
                               type="number"
                               label="Port"
@@ -965,10 +965,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               errorText={nodesHasErrorFor('port')}
                               errorGroup={forEdit ? `${configIdx}` : undefined}
                               data-qa-backend-ip-port
-                              style={{ minWidth: 'auto' }}
+                              small
                             />
                           </Grid>
-                          <Grid item xs={6} sm={4} xl={2} className="py0">
+                          <Grid item xs={6} sm={4} xl={2}>
                             <TextField
                               type="number"
                               label="Weight"
@@ -978,11 +978,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               errorText={nodesHasErrorFor('weight')}
                               errorGroup={forEdit ? `${configIdx}` : undefined}
                               data-qa-backend-ip-weight
-                              style={{ minWidth: 'auto' }}
+                              small
                             />
                           </Grid>
                           {forEdit && (
-                            <Grid item xs={6} sm={4} xl={2} className="py0">
+                            <Grid item xs={6} sm={4} xl={2}>
                               <TextField
                                 label="Mode"
                                 value={node.mode}
@@ -991,6 +991,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 onChange={this.onNodeModeChange}
                                 errorText={nodesHasErrorFor('mode')}
                                 data-qa-backend-ip-mode
+                                small
                               >
                                 <MenuItem value="accept" data-node-idx={idx}>
                                   Accept

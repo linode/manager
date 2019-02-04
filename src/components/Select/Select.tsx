@@ -63,15 +63,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   small: {
-    padding: `0 ${theme.spacing.unit}px`,
     minHeight: 'auto',
-    minWidth: 'auto'
+    '& [role="button"]': {
+      padding: `0 ${theme.spacing.unit}px`,
+      minHeight: 'auto',
+      minWidth: 'auto'
+    }
   }
 });
-
-interface SelectInputProps extends InputProps {
-  small: boolean;
-}
 
 interface Props extends SelectProps {
   tooltipText?: string;
@@ -80,9 +79,10 @@ interface Props extends SelectProps {
   errorText?: string;
   errorGroup?: string;
   pagination?: boolean;
+  small?: boolean;
 }
 
-type CombinedProps = Props & SelectInputProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SSelect: React.StatelessComponent<CombinedProps> = ({
   children,
@@ -93,6 +93,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   errorText,
   errorGroup,
   pagination,
+  className,
   small,
   ...props
 }) => {
@@ -114,10 +115,9 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     TransitionComponent: Fade
   };
 
-  const inputProps: SelectInputProps = {
+  const inputProps: InputProps = {
     disableUnderline: true,
-    fullWidth: true,
-    small: false
+    fullWidth: true
   };
 
   const c = classNames({
@@ -125,7 +125,8 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     [classes.inputError]: error === true,
     [errorScrollClassName]: !!errorText && !!errorScrollClassName,
     [classes.helpWrapperSelectField]: Boolean(tooltipText),
-    [classes.pagination]: Boolean(pagination)
+    [classes.pagination]: Boolean(pagination),
+    [classes.small]: small
   });
 
   return (
@@ -139,14 +140,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
           open={props.open}
           className={c}
           MenuProps={menuProps}
-          input={
-            <Input
-              {...inputProps}
-              className={classNames({
-                [classes.small]: small
-              })}
-            />
-          }
+          input={<Input {...inputProps} />}
           {...props}
           IconComponent={KeyboardArrowDown}
           data-qa-select
