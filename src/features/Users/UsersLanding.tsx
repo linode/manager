@@ -239,7 +239,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <Typography
               role="header"
-              variant="h1"
+              variant="h2"
               data-qa-title
               className={classes.title}
             >
