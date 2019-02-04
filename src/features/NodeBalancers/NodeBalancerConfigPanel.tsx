@@ -399,6 +399,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errorText={hasErrorFor('check')}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-active-check-select
+                small
               >
                 <MenuItem value="none">None</MenuItem>
                 <MenuItem

@@ -19,7 +19,8 @@ type ClassNames =
   | 'textError'
   | 'helpWrapper'
   | 'helpWrapperSelectField'
-  | 'pagination';
+  | 'pagination'
+  | 'small';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   inputError: {
@@ -60,8 +61,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       padding: '3px 32px 3px 16px',
       minHeight: 40
     }
+  },
+  small: {
+    padding: `0 ${theme.spacing.unit}px`,
+    minHeight: 'auto',
+    minWidth: 'auto'
   }
 });
+
+interface SelectInputProps extends InputProps {
+  small: boolean;
+}
 
 interface Props extends SelectProps {
   tooltipText?: string;
@@ -72,7 +82,7 @@ interface Props extends SelectProps {
   pagination?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & SelectInputProps & WithStyles<ClassNames>;
 
 const SSelect: React.StatelessComponent<CombinedProps> = ({
   children,
@@ -83,6 +93,7 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   errorText,
   errorGroup,
   pagination,
+  small,
   ...props
 }) => {
   const errorScrollClassName = errorGroup
@@ -103,9 +114,10 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     TransitionComponent: Fade
   };
 
-  const inputProps: InputProps = {
+  const inputProps: SelectInputProps = {
     disableUnderline: true,
-    fullWidth: true
+    fullWidth: true,
+    small: false
   };
 
   const c = classNames({
@@ -127,7 +139,14 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
           open={props.open}
           className={c}
           MenuProps={menuProps}
-          input={<Input {...inputProps} />}
+          input={
+            <Input
+              {...inputProps}
+              className={classNames({
+                [classes.small]: small
+              })}
+            />
+          }
           {...props}
           IconComponent={KeyboardArrowDown}
           data-qa-select

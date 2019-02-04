@@ -12,7 +12,13 @@ import {
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
 
-type ClassNames = 'root' | 'helpWrapper' | 'helpWrapperTextField' | 'expand';
+type ClassNames =
+  | 'root'
+  | 'helpWrapper'
+  | 'helpWrapperTextField'
+  | 'expand'
+  | 'small'
+  | 'selectSmall';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -28,6 +34,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   expand: {
     maxWidth: '100%'
+  },
+  small: {
+    minHeight: 'auto'
+  },
+  selectSmall: {
+    padding: `0 ${theme.spacing.unit}px`,
+    minHeight: 'auto',
+    minWidth: 'auto'
   }
 });
 
@@ -39,6 +53,7 @@ export type Props = TextFieldProps & {
   className?: any;
   [index: string]: any;
   expand?: boolean;
+  small?: boolean;
 };
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
@@ -74,6 +89,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       theme,
       className,
       expand,
+      small,
       ...textFieldProps
     } = this.props;
 
@@ -114,7 +130,10 @@ class LinodeTextField extends React.Component<CombinedProps> {
             disableUnderline: true,
             className: classNames(
               'input',
-              { [classes.expand]: expand },
+              {
+                [classes.expand]: expand,
+                [classes.small]: small
+              },
               className
             ),
             ...finalProps.InputProps
@@ -127,11 +146,17 @@ class LinodeTextField extends React.Component<CombinedProps> {
               transformOrigin: { vertical: 'top', horizontal: 'left' },
               MenuListProps: { className: 'selectMenuList' },
               PaperProps: { className: 'selectMenuDropdown' }
+            },
+            inputProps: {
+              className: classNames({
+                [classes.selectSmall]: small
+              })
             }
           }}
           className={classNames(
             {
-              [classes.helpWrapperTextField]: Boolean(tooltipText)
+              [classes.helpWrapperTextField]: Boolean(tooltipText),
+              [classes.small]: small
             },
             className
           )}
