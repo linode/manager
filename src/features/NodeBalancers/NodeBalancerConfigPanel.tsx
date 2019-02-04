@@ -50,7 +50,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginLeft: -theme.spacing.unit,
     [theme.breakpoints.down('md')]: {
       marginLeft: -32,
-      marginTop: -theme.spacing.unit * 2
+      marginTop: -theme.spacing.unit
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 0
     }
   },
   suggestionsParent: {
@@ -850,7 +853,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               </Grid>
                             )}
                             <Grid container>
-                              <Grid item xs={6} sm={4} lg={2}>
+                              <Grid
+                                item
+                                xs={6}
+                                sm={forEdit ? 4 : 6}
+                                lg={forEdit ? 2 : 4}
+                              >
                                 <TextField
                                   label="Label"
                                   value={node.label}
@@ -900,7 +908,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               container
                               data-qa-node
                             >
-                              <Grid item xs={12} sm={forEdit ? 3 : 3} lg={2}>
+                              <Grid
+                                item
+                                xs={12}
+                                sm={forEdit ? 3 : 3}
+                                lg={forEdit ? 2 : 4}
+                              >
                                 <Downshift
                                   onSelect={this.handleSelectSuggestion}
                                   stateReducer={this.downshiftStateReducer}
