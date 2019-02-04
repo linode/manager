@@ -12,7 +12,7 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     position: 'absolute',
-    left: '16px',
+    left: '10px',
     wordWrap: 'normal',
     whiteSpace: 'nowrap',
     overflow: 'hidden',

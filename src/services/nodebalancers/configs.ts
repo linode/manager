@@ -27,7 +27,7 @@ export interface NodeBalancerConfigFields {
   ssl_cert?: string;
   ssl_key?: string;
   stickiness?: 'none' | 'table' | 'http_cookie';
-  nodes: Linode.NodeBalancerConfigNode[];
+  nodes: Linode.NodeBalancerConfigNodeFields[];
 }
 
 export interface CreateNodeBalancerConfig {

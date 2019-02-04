@@ -166,7 +166,8 @@ const themeDefaults: ThemeOptions = {
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
     toggleActive: '#606469',
     diskSpaceBorder: '#f4f4f4',
-    drawerBackdrop: 'rgba(255, 255, 255, 0.5)'
+    drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
+    label: '#555'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
@@ -782,8 +783,8 @@ const themeDefaults: ThemeOptions = {
           boxSizing: 'content-box',
           padding: 4,
           '& li': {
-            paddingLeft: 12,
-            paddingRight: 12
+            paddingLeft: 10,
+            paddingRight: 10
           },
           [breakpoints.down('xs')]: {
             minWidth: 200
@@ -838,7 +839,7 @@ const themeDefaults: ThemeOptions = {
             opacity: '.5'
           }
         },
-        padding: '6px 32px 5px 16px',
+        padding: '6px 32px 5px 12px',
         color: primaryColors.text,
         backgroundColor: '#fff',
         lineHeight: 2.3,
