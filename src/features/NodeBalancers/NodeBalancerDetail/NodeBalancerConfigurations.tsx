@@ -963,7 +963,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
     return (
       <ExpansionPanel
-        key={idx}
+        key={`nb-config-${idx}`}
         updateFor={[
           idx,
           config,
