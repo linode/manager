@@ -33,7 +33,9 @@ type ClassNames =
   | 'chip-UP'
   | 'chip-DOWN'
   | 'chip-unknown'
-  | 'selectedSuggestionItem';
+  | 'selectedSuggestionItem'
+  | 'statusHeader'
+  | 'statusChip';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -82,13 +84,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: '#fff !important'
   },
   'chip-UP': {
-    backgroundColor: 'green'
+    backgroundColor: theme.color.green
   },
   'chip-DOWN': {
-    backgroundColor: 'red'
+    backgroundColor: theme.color.red
   },
   'chip-unknown': {
-    backgroundColor: 'gray'
+    backgroundColor: 'gray',
+    color: theme.palette.text.primary
+  },
+  statusHeader: {
+    ...theme!.overrides!.MuiFormLabel!.root
+  },
+  statusChip: {
+    marginTop: theme.spacing.unit,
+    color: 'white'
   }
 });
 
@@ -796,241 +806,282 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 )}
               </Grid>
               <Grid item xs={12} style={{ paddingBottom: 24 }}>
-                {nodes &&
-                  nodes.map((node, idx) => {
-                    if (node.modifyStatus === 'delete') {
-                      /* This node has been marked for deletion, don't display it */
-                      return null;
-                    }
+                <Grid container className="pooooooo">
+                  {nodes &&
+                    nodes.map((node, idx) => {
+                      if (node.modifyStatus === 'delete') {
+                        /* This node has been marked for deletion, don't display it */
+                        return null;
+                      }
 
-                    const nodesHasErrorFor = getAPIErrorFor(
-                      {
-                        label: 'label',
-                        address: 'address',
-                        weight: 'weight',
-                        port: 'port',
-                        mode: 'mode'
-                      },
-                      node.errors
-                    );
+                      const nodesHasErrorFor = getAPIErrorFor(
+                        {
+                          label: 'label',
+                          address: 'address',
+                          weight: 'weight',
+                          port: 'port',
+                          mode: 'mode'
+                        },
+                        node.errors
+                      );
 
-                    return (
-                      <React.Fragment key={`nb-node-${idx}`}>
-                        <Grid
-                          updateFor={[nodes.length, node, errors, configIdx]}
-                          item
-                          data-qa-node
-                        >
-                          {idx !== 0 && (
-                            <Grid item xs={12}>
-                              <Divider
-                                style={{ marginTop: forEdit ? 8 : 24 }}
-                              />
-                            </Grid>
-                          )}
-                          <Grid container>
-                            <Grid item xs={6} sm={4} xl={2}>
-                              <TextField
-                                label="Label"
-                                value={node.label}
-                                inputProps={{ 'data-node-idx': idx }}
-                                onChange={this.onNodeLabelChange}
-                                errorText={nodesHasErrorFor('label')}
-                                errorGroup={
-                                  forEdit ? `${configIdx}` : undefined
-                                }
-                                data-qa-backend-ip-label
-                                small
-                              />
-                            </Grid>
-                            {node.status && (
-                              <Grid item xs={6} sm={4} xl={2}>
-                                <Typography
-                                  role="header"
-                                  variant="h3"
-                                  data-qa-active-checks-header
-                                >
-                                  Status
-                                  <div>
-                                    <Chip
-                                      color="primary"
-                                      className={classes[`chip${node.status}`]}
-                                      label={node.status}
-                                    />
-                                  </div>
-                                </Typography>
+                      return (
+                        <React.Fragment key={`nb-node-${idx}`}>
+                          <Grid
+                            updateFor={[nodes.length, node, errors, configIdx]}
+                            item
+                            data-qa-node
+                            xs={12}
+                          >
+                            {idx !== 0 && (
+                              <Grid item xs={12}>
+                                <Divider
+                                  style={{
+                                    marginTop: forEdit ? 8 : 24,
+                                    marginBottom: 24
+                                  }}
+                                />
                               </Grid>
                             )}
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          key={idx}
-                          updateFor={[nodes.length, node, errors, configIdx]}
-                          container
-                          data-qa-node
-                        >
-                          <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2}>
-                            <Downshift
-                              onSelect={this.handleSelectSuggestion}
-                              stateReducer={this.downshiftStateReducer}
-                            >
-                              {({
-                                getInputProps,
-                                getItemProps,
-                                isOpen,
-                                inputValue,
-                                highlightedIndex,
-                                openMenu
-                              }) => {
-                                return (
-                                  <div className={classes.suggestionsParent}>
-                                    <TextField
-                                      {...getInputProps({
-                                        onChange: this.onNodeAddressChange,
-                                        placeholder: 'Enter IP Address',
-                                        value: node.address,
-                                        onFocus: e => {
-                                          openMenu();
-                                          this.handleFocusAddressField(e);
-                                        }
-                                      })}
-                                      label="IP Address"
-                                      inputProps={{ 'data-node-idx': idx }}
-                                      errorText={nodesHasErrorFor('address')}
-                                      errorGroup={`${configIdx}`}
-                                      data-qa-backend-ip-address
-                                      small
-                                    />
-                                    {isOpen && (
-                                      <Paper className={classes.suggestions}>
-                                        {/*
-                                         * Do not change from this.props.linodesWithPrivateIPS
-                                         * For some reason, referencing the destructured element
-                                         * was returning an empty array, while this.props
-                                         * is returning what we want
-                                         */}
-                                        {this.props.linodesWithPrivateIPs &&
-                                          this.props.linodesWithPrivateIPs
-                                            // filter out the linodes that don't match what we're typing
-                                            // filter by private ip and label
-                                            .filter((linode: Linode.Linode) => {
-                                              /*
-                                               * Show all results if we have nothing entered
-                                               */
-                                              if (!inputValue) {
-                                                return true;
-                                              }
-                                              const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-                                              const privateIP = linode.ipv4.find(
-                                                ipv4 =>
-                                                  !!ipv4.match(privateIPRegex)
-                                              );
-                                              return (
-                                                linode.label
-                                                  .toLowerCase()
-                                                  .includes(
-                                                    inputValue.toLowerCase()
-                                                  ) ||
-                                                privateIP!.includes(
-                                                  inputValue.toLowerCase()
-                                                )
-                                              );
-                                            })
-                                            // limit the results to 5. we don't want too
-                                            // many in the suggestions
-                                            .splice(0, 10)
-                                            // finally map over the results and render the suggestion
-                                            .map((linode, index) => {
-                                              return this.renderSearchSuggestion(
-                                                linode,
-                                                index,
-                                                highlightedIndex,
-                                                getItemProps
-                                              );
-                                            })}
-                                      </Paper>
-                                    )}
-                                  </div>
-                                );
-                              }}
-                            </Downshift>
-                          </Grid>
-                          <Grid item xs={6} sm={4} xl={2}>
-                            <TextField
-                              type="number"
-                              label="Port"
-                              value={node.port}
-                              inputProps={{ 'data-node-idx': idx }}
-                              onChange={this.onNodePortChange}
-                              errorText={nodesHasErrorFor('port')}
-                              errorGroup={forEdit ? `${configIdx}` : undefined}
-                              data-qa-backend-ip-port
-                              small
-                            />
-                          </Grid>
-                          <Grid item xs={6} sm={4} xl={2}>
-                            <TextField
-                              type="number"
-                              label="Weight"
-                              value={node.weight}
-                              inputProps={{ 'data-node-idx': idx }}
-                              onChange={this.onNodeWeightChange}
-                              errorText={nodesHasErrorFor('weight')}
-                              errorGroup={forEdit ? `${configIdx}` : undefined}
-                              data-qa-backend-ip-weight
-                              small
-                            />
-                          </Grid>
-                          {forEdit && (
-                            <Grid item xs={6} sm={4} xl={2}>
-                              <TextField
-                                label="Mode"
-                                value={node.mode}
-                                select
-                                inputProps={{ 'data-node-idx': idx }}
-                                onChange={this.onNodeModeChange}
-                                errorText={nodesHasErrorFor('mode')}
-                                data-qa-backend-ip-mode
-                                small
-                              >
-                                <MenuItem value="accept" data-node-idx={idx}>
-                                  Accept
-                                </MenuItem>
-                                <MenuItem value="reject" data-node-idx={idx}>
-                                  Reject
-                                </MenuItem>
-                                <MenuItem value="drain" data-node-idx={idx}>
-                                  Drain
-                                </MenuItem>
-                              </TextField>
+                            <Grid container>
+                              <Grid item xs={6} sm={4} xl={2}>
+                                <TextField
+                                  label="Label"
+                                  value={node.label}
+                                  inputProps={{ 'data-node-idx': idx }}
+                                  onChange={this.onNodeLabelChange}
+                                  errorText={nodesHasErrorFor('label')}
+                                  errorGroup={
+                                    forEdit ? `${configIdx}` : undefined
+                                  }
+                                  data-qa-backend-ip-label
+                                  small
+                                />
+                              </Grid>
+                              {node.status && (
+                                <Grid item xs={6} sm={4} xl={2}>
+                                  <Typography
+                                    role="header"
+                                    variant="h3"
+                                    data-qa-active-checks-header
+                                    className={classes.statusHeader}
+                                  >
+                                    Status
+                                    <div>
+                                      <Chip
+                                        className={`
+                                          ${classes.statusChip}
+                                          ${classes[`chip-${node.status}`]}
+                                        `}
+                                        label={node.status}
+                                        component="div"
+                                      />
+                                    </div>
+                                  </Typography>
+                                </Grid>
+                              )}
                             </Grid>
-                          )}
-                          <ActionsPanel className={classes.backendIPAction}>
-                            {(forEdit || idx !== 0) && (
-                              <Button
-                                type="remove"
-                                data-node-idx={idx}
-                                onClick={this.removeNode}
-                                data-qa-remove-node
-                              />
-                            )}
-                          </ActionsPanel>
-                        </Grid>
-                      </React.Fragment>
-                    );
-                  })}
-                <Grid
-                  item
-                  xs={12}
-                  updateFor={[]}
-                  // is the Save/Delete ActionsPanel showing?
-                  style={
-                    forEdit || configIdx !== 0
-                      ? { marginTop: 16, marginBottom: -24 }
-                      : { marginTop: 16 }
-                  }
-                >
-                  <AddNewLink label="Add a Node" onClick={this.addNode} left />
+                          </Grid>
+                          <Grid item>
+                            <Grid
+                              key={idx}
+                              updateFor={[
+                                nodes.length,
+                                node,
+                                errors,
+                                configIdx
+                              ]}
+                              container
+                              data-qa-node
+                            >
+                              <Grid item xs={12} sm={forEdit ? 4 : 3} xl={2}>
+                                <Downshift
+                                  onSelect={this.handleSelectSuggestion}
+                                  stateReducer={this.downshiftStateReducer}
+                                >
+                                  {({
+                                    getInputProps,
+                                    getItemProps,
+                                    isOpen,
+                                    inputValue,
+                                    highlightedIndex,
+                                    openMenu
+                                  }) => {
+                                    return (
+                                      <div
+                                        className={classes.suggestionsParent}
+                                      >
+                                        <TextField
+                                          {...getInputProps({
+                                            onChange: this.onNodeAddressChange,
+                                            placeholder: 'Enter IP Address',
+                                            value: node.address,
+                                            onFocus: e => {
+                                              openMenu();
+                                              this.handleFocusAddressField(e);
+                                            }
+                                          })}
+                                          label="IP Address"
+                                          inputProps={{ 'data-node-idx': idx }}
+                                          errorText={nodesHasErrorFor(
+                                            'address'
+                                          )}
+                                          errorGroup={`${configIdx}`}
+                                          data-qa-backend-ip-address
+                                          small
+                                        />
+                                        {isOpen && (
+                                          <Paper
+                                            className={classes.suggestions}
+                                          >
+                                            {/*
+                                             * Do not change from this.props.linodesWithPrivateIPS
+                                             * For some reason, referencing the destructured element
+                                             * was returning an empty array, while this.props
+                                             * is returning what we want
+                                             */}
+                                            {this.props.linodesWithPrivateIPs &&
+                                              this.props.linodesWithPrivateIPs
+                                                // filter out the linodes that don't match what we're typing
+                                                // filter by private ip and label
+                                                .filter(
+                                                  (linode: Linode.Linode) => {
+                                                    /*
+                                                     * Show all results if we have nothing entered
+                                                     */
+                                                    if (!inputValue) {
+                                                      return true;
+                                                    }
+                                                    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
+                                                    const privateIP = linode.ipv4.find(
+                                                      ipv4 =>
+                                                        !!ipv4.match(
+                                                          privateIPRegex
+                                                        )
+                                                    );
+                                                    return (
+                                                      linode.label
+                                                        .toLowerCase()
+                                                        .includes(
+                                                          inputValue.toLowerCase()
+                                                        ) ||
+                                                      privateIP!.includes(
+                                                        inputValue.toLowerCase()
+                                                      )
+                                                    );
+                                                  }
+                                                )
+                                                // limit the results to 5. we don't want too
+                                                // many in the suggestions
+                                                .splice(0, 10)
+                                                // finally map over the results and render the suggestion
+                                                .map((linode, index) => {
+                                                  return this.renderSearchSuggestion(
+                                                    linode,
+                                                    index,
+                                                    highlightedIndex,
+                                                    getItemProps
+                                                  );
+                                                })}
+                                          </Paper>
+                                        )}
+                                      </div>
+                                    );
+                                  }}
+                                </Downshift>
+                              </Grid>
+                              <Grid item xs={6} sm={4} xl={2}>
+                                <TextField
+                                  type="number"
+                                  label="Port"
+                                  value={node.port}
+                                  inputProps={{ 'data-node-idx': idx }}
+                                  onChange={this.onNodePortChange}
+                                  errorText={nodesHasErrorFor('port')}
+                                  errorGroup={
+                                    forEdit ? `${configIdx}` : undefined
+                                  }
+                                  data-qa-backend-ip-port
+                                  small
+                                />
+                              </Grid>
+                              <Grid item xs={6} sm={4} xl={2}>
+                                <TextField
+                                  type="number"
+                                  label="Weight"
+                                  value={node.weight}
+                                  inputProps={{ 'data-node-idx': idx }}
+                                  onChange={this.onNodeWeightChange}
+                                  errorText={nodesHasErrorFor('weight')}
+                                  errorGroup={
+                                    forEdit ? `${configIdx}` : undefined
+                                  }
+                                  data-qa-backend-ip-weight
+                                  small
+                                />
+                              </Grid>
+                              {forEdit && (
+                                <Grid item xs={6} sm={4} xl={2}>
+                                  <TextField
+                                    label="Mode"
+                                    value={node.mode}
+                                    select
+                                    inputProps={{ 'data-node-idx': idx }}
+                                    onChange={this.onNodeModeChange}
+                                    errorText={nodesHasErrorFor('mode')}
+                                    data-qa-backend-ip-mode
+                                    small
+                                  >
+                                    <MenuItem
+                                      value="accept"
+                                      data-node-idx={idx}
+                                    >
+                                      Accept
+                                    </MenuItem>
+                                    <MenuItem
+                                      value="reject"
+                                      data-node-idx={idx}
+                                    >
+                                      Reject
+                                    </MenuItem>
+                                    <MenuItem value="drain" data-node-idx={idx}>
+                                      Drain
+                                    </MenuItem>
+                                  </TextField>
+                                </Grid>
+                              )}
+                              <ActionsPanel className={classes.backendIPAction}>
+                                {(forEdit || idx !== 0) && (
+                                  <Button
+                                    type="remove"
+                                    data-node-idx={idx}
+                                    onClick={this.removeNode}
+                                    data-qa-remove-node
+                                  />
+                                )}
+                              </ActionsPanel>
+                            </Grid>
+                          </Grid>
+                        </React.Fragment>
+                      );
+                    })}
+                  <Grid
+                    item
+                    xs={12}
+                    updateFor={[]}
+                    // is the Save/Delete ActionsPanel showing?
+                    style={
+                      forEdit || configIdx !== 0
+                        ? { marginTop: 0, marginBottom: -16 }
+                        : { marginTop: 16 }
+                    }
+                  >
+                    <AddNewLink
+                      label="Add a Node"
+                      onClick={this.addNode}
+                      left
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -1046,7 +1097,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   justify="space-between"
                   alignItems="center"
                 >
-                  <Grid item style={forEdit ? {} : { marginTop: 8 }}>
+                  <Grid item style={{ marginTop: 16 }} className="py0">
                     <ActionsPanel style={{ padding: 0 }}>
                       {forEdit && (
                         <Button
