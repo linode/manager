@@ -33,7 +33,7 @@ class Example extends React.Component<any, State> {
     const { selected } = this.state;
 
     return (
-      <div style={{ marginLeft: '300px', marginTop: '200px' }}>
+      <div style={{ marginLeft: '50px', marginTop: '20px' }}>
         <FormControl fullWidth>
           <InputLabel
             htmlFor="awesomeness"
@@ -73,6 +73,7 @@ storiesOf('Select', module).add('Example', () => (
     <Grid item xs={12}>
       <Example />
       <Example selected={1000} disabled />
+      <Example small />
     </Grid>
   </Grid>
 ));

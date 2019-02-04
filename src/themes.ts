@@ -85,7 +85,8 @@ export const dark = createTheme({
     tableHeaderText: '#fff',
     toggleActive: '#444',
     diskSpaceBorder: '#222222',
-    drawerBackdrop: 'rgba(0, 0, 0, 0.5)'
+    drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
+    label: '#C9CACB'
   },
   animateCircleIcon: {
     ...iconCircleAnimation

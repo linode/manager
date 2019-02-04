@@ -171,6 +171,13 @@ class Example extends React.Component<{}, State> {
           value={valueAsync}
           onChange={this.handleChangeAsync}
         />
+        <Select
+          loadOptions={this.loadOptions}
+          label="Small Select"
+          value={valueAsync}
+          onChange={this.handleChangeAsync}
+          small
+        />
       </React.Fragment>
     );
   }

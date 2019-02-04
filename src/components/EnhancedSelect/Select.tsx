@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect from 'react-select';
 import Async, { AsyncProps } from 'react-select/lib/Async';
@@ -96,7 +97,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       color: theme.palette.text.primary,
       backgroundColor: theme.bg.white,
       cursor: 'pointer',
-      padding: '12px',
+      padding: '10px',
       fontSize: '0.9rem'
     },
     '& .react-select__option--is-focused': {
@@ -237,6 +238,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         color: 'white'
       }
     }
+  },
+  small: {
+    minHeight: 33,
+    minWidth: 'auto'
   }
 });
 
@@ -289,6 +294,7 @@ export interface EnhancedSelectProps {
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
   filterOption?: (option: Item, inputValue: string) => boolean | null;
+  small?: boolean;
 }
 
 // Material-UI versions of several React-Select components.
@@ -343,6 +349,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       onMenuClose,
       onBlur,
       blurInputOnSelect,
+      small,
       ...restOfProps
     } = this.props;
 
@@ -384,7 +391,12 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         isMulti={isMulti}
         isDisabled={disabled}
         classes={classes}
-        className={`${classes.root} ${className}`}
+        className={classNames(
+          {
+            [classes.root]: true
+          },
+          className
+        )}
         classNamePrefix="react-select"
         styles={styleOverrides}
         textFieldProps={{
@@ -393,7 +405,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           disabled,
           InputLabelProps: {
             shrink: true
-          }
+          },
+          className: small && classes.small
         }}
         value={value}
         onBlur={onBlur}

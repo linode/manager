@@ -8,6 +8,11 @@ storiesOf('TextField', module)
       Normal State
     </TextField>
   ))
+  .add('Small', () => (
+    <TextField label="Input Label" placeholder="Small Input" small>
+      Normal State | Small input
+    </TextField>
+  ))
   .add('Active', () => (
     <TextField label="Input Label" placeholder="Active State" autoFocus>
       Active State

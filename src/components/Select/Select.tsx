@@ -19,7 +19,8 @@ type ClassNames =
   | 'textError'
   | 'helpWrapper'
   | 'helpWrapperSelectField'
-  | 'pagination';
+  | 'pagination'
+  | 'small';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   inputError: {
@@ -60,6 +61,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       padding: '3px 32px 3px 16px',
       minHeight: 40
     }
+  },
+  small: {
+    minHeight: 'auto',
+    '& [role="button"]': {
+      padding: `0 ${theme.spacing.unit}px`,
+      minHeight: 'auto',
+      minWidth: 'auto'
+    }
   }
 });
 
@@ -70,6 +79,7 @@ interface Props extends SelectProps {
   errorText?: string;
   errorGroup?: string;
   pagination?: boolean;
+  small?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -83,6 +93,8 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
   errorText,
   errorGroup,
   pagination,
+  className,
+  small,
   ...props
 }) => {
   const errorScrollClassName = errorGroup
@@ -113,7 +125,8 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     [classes.inputError]: error === true,
     [errorScrollClassName]: !!errorText && !!errorScrollClassName,
     [classes.helpWrapperSelectField]: Boolean(tooltipText),
-    [classes.pagination]: Boolean(pagination)
+    [classes.pagination]: Boolean(pagination),
+    [classes.small]: small
   });
 
   return (

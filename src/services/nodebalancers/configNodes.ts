@@ -28,7 +28,7 @@ export interface NodeBalancerConfigNode {
   label: string;
   mode: NodeBalancerConfigNodeMode;
   nodebalancer_id: number;
-  status: 'Unknown' | 'UP' | 'DOWN';
+  status: 'unknown' | 'UP' | 'DOWN';
   weight: number;
 }
 
