@@ -12,8 +12,15 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import CircleProgress from 'src/components/CircleProgress';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
+import Notice from 'src/components/Notice';
+import ProductNotification from 'src/components/ProductNotification';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
@@ -40,7 +47,7 @@ import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ConfigsProvider, LinodeProvider } from './context';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
-import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
+import MigrationNotification from './HeaderSections/MigrationNotification';
 import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import MutateDrawer from './MutateDrawer';
@@ -91,7 +98,19 @@ type CombinedProps = LinodeActionsProps &
   WithNotificationsProps &
   DispatchProps &
   RouteProps &
-  InjectedNotistackProps & { linodeId: number };
+  InjectedNotistackProps &
+  WithStyles<ClassNames> & { linodeId: number };
+
+type ClassNames = 'pendingMutationLink';
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  pendingMutationLink: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
+  }
+});
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
@@ -622,13 +641,41 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       <ConfigsProvider value={this.state.context.configs}>
         <LinodeProvider value={this.state.context.linode}>
           <React.Fragment>
-            <NotificationsAndUpgradePanel
-              notifications={this.props.notifications}
-              showPendingMutation={this.state.showPendingMutation}
-              handleUpgrade={this.openMutateDrawer}
-              handleMigration={this.migrate}
-              status={linode.status}
-            />
+            <React.Fragment>
+              {this.state.showPendingMutation && (
+                <Notice important warning>
+                  {`This Linode has pending upgrades available. To learn more about
+          this upgrade and what it includes, `}
+                  {/** @todo change onClick to open mutate drawer once migrate exists */}
+                  <span
+                    className={this.props.classes.pendingMutationLink}
+                    onClick={this.openMutateDrawer}
+                  >
+                    click here.
+                  </span>
+                </Notice>
+              )}
+              {(this.props.notifications || []).map((n, idx) =>
+                ['migration_scheduled', 'migration_pending'].includes(
+                  n.type
+                ) ? (
+                  linode.status !== 'migrating' && (
+                    <MigrationNotification
+                      key={idx}
+                      text={n.message}
+                      type={n.type}
+                      onClick={this.migrate}
+                    />
+                  )
+                ) : (
+                  <ProductNotification
+                    key={idx}
+                    severity={n.severity}
+                    text={n.message}
+                  />
+                )
+              )}
+            </React.Fragment>
             <LabelPowerAndConsolePanel
               launchLish={this.launchLish}
               linode={{
@@ -763,11 +810,14 @@ const withNotifications = connect(
   })
 );
 
+const styled = withStyles(styles);
+
 const enhanced = composeC(
   reloadable,
   withProps((ownProps: RouteProps) => ({
     linodeId: Number(ownProps.match.params.linodeId)
   })),
+  styled,
   withNotifications,
   connected,
   LinodeDetailErrorBoundary,
