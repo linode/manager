@@ -44,8 +44,7 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-
-export type Info = { title: string; details?: string } | undefined;
+import { Info } from './util';
 
 export type TypeInfo =
   | {

@@ -23,7 +23,6 @@ import SelectRegionPanel, {
 } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
-import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
@@ -38,6 +37,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import { Info } from '../util';
 import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
