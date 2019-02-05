@@ -1,7 +1,7 @@
 import { Location } from 'history';
 import * as moment from 'moment';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
+import { compose, last, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
@@ -17,6 +17,8 @@ import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
+import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import {
@@ -27,6 +29,7 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
@@ -58,11 +61,11 @@ import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ConfigsProvider, LinodeProvider } from './context';
-import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import MigrationNotification from './HeaderSections/MigrationNotification';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
+import LinodePowerControl from './LinodePowerControl';
 import LinodeRebuild from './LinodeRebuild';
 import LinodeRescue from './LinodeRescue';
 import LinodeResize from './LinodeResize';
@@ -120,13 +123,52 @@ type CombinedProps = LinodeActionsProps &
   InjectedNotistackProps &
   WithStyles<ClassNames> & { linodeId: number };
 
-type ClassNames = 'pendingMutationLink';
+type ClassNames =
+  | 'pendingMutationLink'
+  | 'titleWrapper'
+  | 'backButton'
+  | 'controls'
+  | 'launchButton';
+
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   pendingMutationLink: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
     '&:hover': {
       textDecoration: 'underline'
+    }
+  },
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 5
+  },
+  backButton: {
+    margin: '5px 0 0 -16px',
+    '& svg': {
+      width: 34,
+      height: 34
+    }
+  },
+  controls: {
+    marginTop: theme.spacing.unit,
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      display: 'flex',
+      flexBasis: '100%'
+    }
+  },
+  launchButton: {
+    padding: '12px 28px 14px 0',
+    lineHeight: 1,
+    position: 'relative',
+    top: 1,
+    '&:hover': {
+      backgroundColor: 'transparent',
+      textDecoration: 'underline'
+    },
+    '&:focus > span:first-child': {
+      outline: '1px dotted #999'
     }
   }
 });
@@ -637,6 +679,12 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       }
     } = this.state;
 
+    const getLabelLink = (): string | undefined => {
+      return last(location.pathname.split('/')) !== 'summary'
+        ? 'summary'
+        : undefined;
+    };
+
     const tabs = [
       /* NB: These must correspond to the routes inside the Switch */
       { routeName: `${url}/summary`, title: 'Summary' },
@@ -716,22 +764,39 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 )
               )}
             </React.Fragment>
-            <LabelPowerAndConsolePanel
-              launchLish={this.launchLish}
-              linode={{
-                id: linode.id,
-                label: linode.label,
-                recentEvent: linode.recentEvent,
-                status: linode.status
-              }}
-              openConfigDrawer={this.openConfigDrawer}
-              labelInput={{
-                label: labelInput.label,
-                errorText: labelInput.errorText,
-                onCancel: this.cancelUpdate,
-                onEdit: this.updateLabel
-              }}
-            />
+            <Grid container justify="space-between">
+              <Grid item className={this.props.classes.titleWrapper}>
+                <Breadcrumb
+                  linkTo="/linodes"
+                  linkText="Linodes"
+                  labelTitle={labelInput.label}
+                  labelOptions={{ linkTo: getLabelLink() }}
+                  onEditHandlers={{
+                    onEdit: this.updateLabel,
+                    onCancel: this.cancelUpdate,
+                    errorText: labelInput.errorText
+                  }}
+                />
+              </Grid>
+              <Grid item className={this.props.classes.controls}>
+                <Button
+                  onClick={this.launchLish}
+                  className={this.props.classes.launchButton}
+                  data-qa-launch-console
+                  disableFocusRipple={true}
+                  disableRipple={true}
+                >
+                  Launch Console
+                </Button>
+                <LinodePowerControl
+                  status={linode.status}
+                  recentEvent={linode.recentEvent}
+                  id={linode.id}
+                  label={linode.label}
+                  openConfigDrawer={this.openConfigDrawer}
+                />
+              </Grid>
+            </Grid>
             <React.Fragment>
               {linodeInTransition(linode.status, linode.recentEvent) && (
                 <LinodeBusyStatus
