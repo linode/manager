@@ -1,5 +1,5 @@
 import actionCreatorFactory from 'typescript-fsa';
-import { ExtendedEvent } from './event.reducer';
+import { ExtendedEvent } from './event.helpers';
 
 type Event = ExtendedEvent;
 

@@ -7,7 +7,7 @@ import {
 } from 'src/store/events/event.helpers';
 import { isType } from 'typescript-fsa';
 import { addEvents } from '../events/event.actions';
-import { ExtendedEvent } from '../events/event.reducer';
+import { ExtendedEvent } from '../events/event.helpers';
 import { ApplicationState } from '../index';
 
 export type EventHandler = (
