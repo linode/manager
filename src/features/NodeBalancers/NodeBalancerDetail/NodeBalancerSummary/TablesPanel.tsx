@@ -23,7 +23,6 @@ type ClassNames =
   | 'chart'
   | 'leftLegend'
   | 'bottomLegend'
-  | 'graphTitle'
   | 'graphControls'
   | 'blue'
   | 'green'
@@ -77,14 +76,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         }
       }
     },
-    graphTitle: {
-      marginRight: theme.spacing.unit * 2,
-      marginTop: theme.spacing.unit * 2
-    },
     graphControls: {
-      margin: `${theme.spacing.unit * 2}px 0`,
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      [theme.breakpoints.up('md')]: {
+        margin: `${theme.spacing.unit * 2}px 0`
+      }
     },
     blue: {
       '&:before': {
@@ -348,11 +345,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <React.Fragment>
           <div className={classes.graphControls}>
-            <Typography
-              role="header"
-              variant="h2"
-              className={classes.graphTitle}
-            >
+            <Typography role="header" variant="h2">
               Graphs
             </Typography>
           </div>

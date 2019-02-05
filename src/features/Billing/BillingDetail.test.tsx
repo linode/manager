@@ -10,7 +10,9 @@ describe('Account Landing', () => {
     <BillingDetail
       classes={{
         root: '',
-        heading: ''
+        heading: '',
+        main: '',
+        sidebar: ''
       }}
       setDocs={jest.fn()}
       clearDocs={jest.fn()}
@@ -31,8 +33,6 @@ describe('Account Landing', () => {
   });
 
   it('should render Summary Panel', () => {
-    expect(
-      component.find('WithStyles(WithConfigs(SummaryPanel))')
-    ).toHaveLength(1);
+    expect(component.find('[data-qa-summary-panel]')).toHaveLength(1);
   });
 });

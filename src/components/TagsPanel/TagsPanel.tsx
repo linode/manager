@@ -3,18 +3,24 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import IconButton from 'src/components/core/IconButton';
+import Button from 'src/components/core/Button';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import { getTags } from 'src/services/tags';
 import TagsPanelItem from './TagsPanelItem';
 
-type ClassNames = 'root' | 'tag' | 'addButton' | 'selectTag';
+type ClassNames =
+  | 'root'
+  | 'tag'
+  | 'addButtonWrapper'
+  | 'addButton'
+  | 'tagsPanelItemWrapper'
+  | 'selectTag';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
@@ -31,35 +37,47 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexWrap: 'wrap'
   },
   tag: {
-    position: 'relative',
-    top: theme.spacing.unit,
+    marginTop: theme.spacing.unit / 2,
     marginRight: theme.spacing.unit,
     [theme.breakpoints.down('xs')]: {
       marginRight: 16
     }
   },
+  addButtonWrapper: {
+    width: '100%',
+    marginTop: 15,
+    marginBottom: 17
+  },
   addButton: {
-    marginTop: theme.spacing.unit / 2,
+    padding: 0,
     position: 'relative',
-    top: 6
+    top: 2,
+    '& svg': {
+      marginRight: theme.spacing.unit
+    },
+    '&:hover p': {
+      color: theme.palette.primary.main
+    }
+  },
+  tagsPanelItemWrapper: {
+    marginBottom: theme.spacing.unit * 2
   },
   selectTag: {
-    marginTop: theme.spacing.unit / 2,
-    height: '48px',
-    width: 'auto',
+    marginTop: theme.spacing.unit,
+    width: '100%',
     position: 'relative',
     zIndex: 3,
     animation: 'fadeIn .3s ease-in-out forwards',
+    maxWidth: 275,
+    '& > div > div': {
+      marginTop: 0
+    },
     '& .error-for-scroll > div': {
       width: 'auto',
       flexDirection: 'row',
       flexWrap: 'wrap-reverse'
     },
     '& .input': {
-      minHeight: 'auto',
-      border: 0,
-      backgroundColor: 'transparent',
-      boxShadow: 'none',
       '& p': {
         fontSize: '.9rem',
         color: theme.color.grey1,
@@ -86,7 +104,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       backgroundColor: 'transparent'
     },
     '& .react-select__value-container': {
-      width: 160
+      padding: '6px'
     }
   }
 });
@@ -277,24 +295,26 @@ class TagsPanel extends React.Component<CombinedProps, State> {
 
     return (
       <div className={classes.root}>
-        {tags.map(eachTag => {
-          return (
-            <TagsPanelItem
-              key={eachTag}
-              label={eachTag}
-              tagLabel={eachTag}
-              onDelete={this.handleDeleteTag}
-              className={classes.tag}
-              loading={listDeletingTags.some(inProgressTag => {
-                /*
-                 * The tag is getting deleted if it appears in the state
-                 * which holds the list of tags queued for deletion
-                 */
-                return eachTag === inProgressTag;
-              })}
-            />
-          );
-        })}
+        <div className={classes.tagsPanelItemWrapper}>
+          {tags.map(eachTag => {
+            return (
+              <TagsPanelItem
+                key={eachTag}
+                label={eachTag}
+                tagLabel={eachTag}
+                onDelete={this.handleDeleteTag}
+                className={classes.tag}
+                loading={listDeletingTags.some(inProgressTag => {
+                  /*
+                   * The tag is getting deleted if it appears in the state
+                   * which holds the list of tags queued for deletion
+                   */
+                  return eachTag === inProgressTag;
+                })}
+              />
+            );
+          })}
+        </div>
         {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
@@ -308,16 +328,19 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             autoFocus
             className={classes.selectTag}
             blurInputOnSelect={false}
+            menuIsOpen={true}
           />
         ) : (
-          <Tooltip title="Add New Tag" placement="right">
-            <IconButton
+          <div className={classes.addButtonWrapper}>
+            <Button
               onClick={this.toggleTagInput}
               className={classes.addButton}
+              type="primary"
             >
               <AddCircle data-qa-add-tag />
-            </IconButton>
-          </Tooltip>
+              <Typography>Add New Tag</Typography>
+            </Button>
+          </div>
         )}
       </div>
     );

@@ -8,6 +8,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
@@ -20,12 +21,22 @@ import UpdateContactInformationPanel from './BillingPanels/UpdateContactInformat
 import UpdateCreditCardPanel from './BillingPanels/UpdateCreditCardPanel';
 import { AccountProvider } from './context';
 
-type ClassNames = 'root' | 'heading';
+type ClassNames = 'root' | 'main' | 'sidebar' | 'heading';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
+  main: {
+    [theme.breakpoints.up('md')]: {
+      order: 1
+    }
+  },
+  sidebar: {
+    [theme.breakpoints.up('md')]: {
+      order: 2
+    }
+  },
   heading: {
-    marginTop: theme.spacing.unit * 4,
+    marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
   }
 });
@@ -114,16 +125,21 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`Account & Billing`} />
         <AccountProvider value={this.state.account}>
-          <Typography role="header" variant="h1" className={classes.heading}>
+          <Typography role="header" variant="h2" className={classes.heading}>
             Billing
           </Typography>
-          <SummaryPanel />
-
-          <UpdateContactInformationPanel />
-          <UpdateCreditCardPanel />
-          <MakeAPaymentPanel />
-          <RecentInvoicesPanel />
-          <RecentPaymentsPanel />
+          <Grid container>
+            <Grid item xs={12} md={3} className={classes.sidebar}>
+              <SummaryPanel data-qa-summary-panel />
+            </Grid>
+            <Grid item xs={12} md={9} className={classes.main}>
+              <UpdateContactInformationPanel />
+              <UpdateCreditCardPanel />
+              <MakeAPaymentPanel />
+              <RecentInvoicesPanel />
+              <RecentPaymentsPanel />
+            </Grid>
+          </Grid>
         </AccountProvider>
       </React.Fragment>
     );

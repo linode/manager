@@ -24,7 +24,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
-import TagsPanel from 'src/components/TagsPanel';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   getNodeBalancer,
@@ -36,6 +35,7 @@ import {
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { NodeBalancerProvider } from './context';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
@@ -253,90 +253,96 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         ? this.state.labelInput
         : nodeBalancer.label;
 
+    const p = {
+      updateTags: this.updateTags
+    };
+
     return (
-      <React.Fragment>
-        <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
-            <Breadcrumb
-              linkTo="/nodebalancers"
-              linkText="NodeBalancers"
-              labelTitle={nodeBalancerLabel}
-              labelOptions={{ linkTo: this.getLabelLink() }}
-              onEditHandlers={{
-                onEdit: this.updateLabel,
-                onCancel: this.cancelUpdate,
-                errorText: apiErrorText
-              }}
-            />
+      <NodeBalancerProvider value={p}>
+        <React.Fragment>
+          <Grid container justify="space-between">
+            <Grid item className={classes.titleWrapper}>
+              <Breadcrumb
+                linkTo="/nodebalancers"
+                linkText="NodeBalancers"
+                labelTitle={nodeBalancerLabel}
+                labelOptions={{ linkTo: this.getLabelLink() }}
+                onEditHandlers={{
+                  onEdit: this.updateLabel,
+                  onCancel: this.cancelUpdate,
+                  errorText: apiErrorText
+                }}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-        <TagsPanel
-          tags={nodeBalancer.tags || []}
-          updateTags={this.updateTags}
-        />
-        <AppBar position="static" color="default">
-          <Tabs
-            value={this.tabs.findIndex(tab => any(matches)(tab.routeNames))}
-            onChange={this.handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="on"
-          >
-            {this.tabs.map(tab => (
-              <Tab key={tab.title} label={tab.title} data-qa-tab={tab.title} />
-            ))}
-          </Tabs>
-        </AppBar>
-        <Switch>
-          <Route
-            exact
-            path={`${path}/summary`}
-            render={() => (
-              <NodeBalancerSummary
-                nodeBalancer={nodeBalancer}
-                errorResponses={pathOr(
-                  undefined,
-                  ['location', 'state', 'errors'],
-                  this.props
-                )}
-              />
-            )}
-          />
-          <Route
-            exact
-            path={`${path}/settings`}
-            render={() => (
-              <NodeBalancerSettings
-                nodeBalancerId={nodeBalancer.id}
-                nodeBalancerLabel={nodeBalancer.label}
-                nodeBalancerClientConnThrottle={
-                  nodeBalancer.client_conn_throttle
-                }
-              />
-            )}
-          />
-          <Route
-            exact
-            path={`${path}/configurations`}
-            render={() => (
-              <NodeBalancerConfigurations
-                nodeBalancerLabel={nodeBalancer.label}
-              />
-            )}
-          />
-          <Route
-            path={`${path}/configurations/:configId`}
-            render={() => (
-              <NodeBalancerConfigurations
-                nodeBalancerLabel={nodeBalancer.label}
-              />
-            )}
-          />
-          {/* 404 */}
-          <Redirect to={`${url}/summary`} />
-        </Switch>
-      </React.Fragment>
+          <AppBar position="static" color="default">
+            <Tabs
+              value={this.tabs.findIndex(tab => any(matches)(tab.routeNames))}
+              onChange={this.handleTabChange}
+              indicatorColor="primary"
+              textColor="primary"
+              variant="scrollable"
+              scrollButtons="on"
+            >
+              {this.tabs.map(tab => (
+                <Tab
+                  key={tab.title}
+                  label={tab.title}
+                  data-qa-tab={tab.title}
+                />
+              ))}
+            </Tabs>
+          </AppBar>
+          <Switch>
+            <Route
+              exact
+              path={`${path}/summary`}
+              render={() => (
+                <NodeBalancerSummary
+                  nodeBalancer={nodeBalancer}
+                  errorResponses={pathOr(
+                    undefined,
+                    ['location', 'state', 'errors'],
+                    this.props
+                  )}
+                />
+              )}
+            />
+            <Route
+              exact
+              path={`${path}/settings`}
+              render={() => (
+                <NodeBalancerSettings
+                  nodeBalancerId={nodeBalancer.id}
+                  nodeBalancerLabel={nodeBalancer.label}
+                  nodeBalancerClientConnThrottle={
+                    nodeBalancer.client_conn_throttle
+                  }
+                />
+              )}
+            />
+            <Route
+              exact
+              path={`${path}/configurations`}
+              render={() => (
+                <NodeBalancerConfigurations
+                  nodeBalancerLabel={nodeBalancer.label}
+                />
+              )}
+            />
+            <Route
+              path={`${path}/configurations/:configId`}
+              render={() => (
+                <NodeBalancerConfigurations
+                  nodeBalancerLabel={nodeBalancer.label}
+                />
+              )}
+            />
+            {/* 404 */}
+            <Redirect to={`${url}/summary`} />
+          </Switch>
+        </React.Fragment>
+      </NodeBalancerProvider>
     );
   }
 }
