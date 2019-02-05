@@ -6,7 +6,6 @@ import { compose } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
-import TagsPanel from 'src/components/TagsPanel';
 import { lishLaunch } from 'src/features/Lish';
 import { scheduleOrQueueMigration } from 'src/services/linodes';
 import {
@@ -118,7 +117,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
       notifications,
       url,
       openConfigDrawer,
-      linodeTags,
       linodeId,
       linodeLabel,
       linodeRegion,
@@ -152,7 +150,6 @@ class LinodesDetailHeader extends React.Component<CombinedProps, State> {
             onEdit: this.editLabel
           }}
         />
-        <TagsPanel tags={linodeTags} updateTags={this.handleUpdateTags} />
         <TabsAndStatusBarPanel
           url={url}
           history={this.props.history}

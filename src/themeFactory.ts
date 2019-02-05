@@ -432,10 +432,11 @@ const themeDefaults: ThemeOptions = {
         [breakpoints.down('xs')]: {
           marginLeft: 8,
           marginRight: -8,
+          marginTop: -6,
           color: 'white !important',
           '& svg': {
-            width: 22,
-            height: 22,
+            width: 20,
+            height: 20,
             borderRadius: '50%',
             backgroundColor: primaryColors.main
           }
@@ -1001,11 +1002,11 @@ const themeDefaults: ThemeOptions = {
         }
       },
       labelContainer: {
-        paddingLeft: 9,
-        paddingRight: 9,
+        paddingLeft: 0,
+        paddingRight: 0,
         [breakpoints.up('md')]: {
-          paddingLeft: 18,
-          paddingRight: 18
+          paddingLeft: 0,
+          paddingRight: 0
         }
       },
       textColorPrimary: {

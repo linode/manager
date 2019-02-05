@@ -391,12 +391,9 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         isMulti={isMulti}
         isDisabled={disabled}
         classes={classes}
-        className={classNames(
-          {
-            [classes.root]: true
-          },
-          className
-        )}
+        className={classNames(className, {
+          [classes.root]: true
+        })}
         classNamePrefix="react-select"
         styles={styleOverrides}
         textFieldProps={{
