@@ -1,20 +1,14 @@
 import { compose, equals, uniqWith } from 'ramda';
-import { Dispatch, Middleware } from 'redux';
+import { Middleware } from 'redux';
 import { resetEventsPolling } from 'src/events';
 import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
+import { EventHandler } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { addEvents } from '../events/event.actions';
 import { ExtendedEvent } from '../events/event.helpers';
-import { ApplicationState } from '../index';
-
-export type EventHandler = (
-  event: Linode.EntityEvent,
-  dispatch: Dispatch<any>,
-  getState: () => ApplicationState
-) => void;
 
 const eventsMiddlewareFactory = (
   ...eventHandlers: EventHandler[]

@@ -1,6 +1,6 @@
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
-import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 import {
   deleteLinode,
   requestLinodeForStore,
