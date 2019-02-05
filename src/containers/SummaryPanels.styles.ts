@@ -31,12 +31,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     ...theme.typography.body1,
     '& .dif': {
       position: 'relative',
-      paddingRight: 35,
       width: 'auto',
       '& .chip': {
         position: 'absolute',
         top: '-4px',
-        right: 0
+        right: -10
       }
     }
   },
