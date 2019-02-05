@@ -4,7 +4,13 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import {
+  matchPath,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch
+} from 'react-router-dom';
 import { compose as composeC, withProps } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
@@ -12,20 +18,26 @@ import 'rxjs/add/operator/filter';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import CircleProgress from 'src/components/CircleProgress';
+import AppBar from 'src/components/core/AppBar';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
+import TabLink from 'src/components/TabLink';
 import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
+import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import { Requestable } from 'src/requestableContext';
 import {
   getLinode,
@@ -48,8 +60,15 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ConfigsProvider, LinodeProvider } from './context';
 import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
 import MigrationNotification from './HeaderSections/MigrationNotification';
-import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
+import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
+import LinodeNetworking from './LinodeNetworking';
+import LinodeRebuild from './LinodeRebuild';
+import LinodeRescue from './LinodeRescue';
+import LinodeResize from './LinodeResize';
+import LinodeSettings from './LinodeSettings';
+import LinodeSummary from './LinodeSummary';
+import LinodeBusyStatus from './LinodeSummary/LinodeBusyStatus';
 import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
 
@@ -618,6 +637,27 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       }
     } = this.state;
 
+    const tabs = [
+      /* NB: These must correspond to the routes inside the Switch */
+      { routeName: `${url}/summary`, title: 'Summary' },
+      { routeName: `${url}/volumes`, title: 'Volumes' },
+      { routeName: `${url}/networking`, title: 'Networking' },
+      { routeName: `${url}/resize`, title: 'Resize' },
+      { routeName: `${url}/rescue`, title: 'Rescue' },
+      { routeName: `${url}/rebuild`, title: 'Rebuild' },
+      { routeName: `${url}/backup`, title: 'Backups' },
+      { routeName: `${url}/settings`, title: 'Settings' }
+    ];
+
+    const handleTabChange = (
+      event: React.ChangeEvent<HTMLDivElement>,
+      value: number
+    ) => {
+      const { history } = this.props;
+      const routeName = tabs[value].routeName;
+      history.push(`${routeName}`);
+    };
+
     const initialLoad = linodeLastUpdated === 0 || configsLastUpdated === 0;
 
     if (initialLoad) {
@@ -692,16 +732,87 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                 onEdit: this.updateLabel
               }}
             />
-            <TabsAndStatusBarPanel
-              url={url}
-              history={this.props.history}
-              linodeRecentEvent={linode.recentEvent}
-              linodeStatus={linode.status}
-              linodeId={linode.id}
-              linodeRegion={linode.region}
-              linodeLabel={linode.label}
-              linodeConfigs={configs}
-            />
+            <React.Fragment>
+              {linodeInTransition(linode.status, linode.recentEvent) && (
+                <LinodeBusyStatus
+                  status={linode.status}
+                  recentEvent={linode.recentEvent}
+                />
+              )}
+              <AppBar position="static" color="default">
+                <Tabs
+                  value={tabs.findIndex(tab => matches(tab.routeName))}
+                  onChange={handleTabChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  scrollButtons="on"
+                >
+                  {tabs.map(tab => (
+                    <Tab
+                      key={tab.title}
+                      label={tab.title}
+                      data-qa-tab={tab.title}
+                      component={() => (
+                        <TabLink to={tab.routeName} title={tab.title} />
+                      )}
+                    />
+                  ))}
+                </Tabs>
+              </AppBar>
+              <Switch>
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/summary`}
+                  component={LinodeSummary}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/volumes`}
+                  render={routeProps => (
+                    <VolumesLanding
+                      linodeId={linode.id}
+                      linodeLabel={linode.label}
+                      linodeRegion={linode.region}
+                      linodeConfigs={configs}
+                      {...routeProps}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/networking`}
+                  component={LinodeNetworking}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/resize`}
+                  component={LinodeResize}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/rescue`}
+                  component={LinodeRescue}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/rebuild`}
+                  component={LinodeRebuild}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/backup`}
+                  component={LinodeBackup}
+                />
+                <Route
+                  exact
+                  path={`/linodes/:linodeId/settings`}
+                  component={LinodeSettings}
+                />
+                {/* 404 */}
+                <Redirect to={`${url}/summary`} />
+              </Switch>
+            </React.Fragment>
           </React.Fragment>
           <LinodeConfigSelectionDrawer
             onClose={this.closeConfigDrawer}
@@ -735,6 +846,10 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+const matches = (p: string) => {
+  return Boolean(matchPath(p, { path: location.pathname }));
+};
 
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
   (routePropsOld, routePropsNew) => {
