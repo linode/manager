@@ -29,7 +29,7 @@ interface Props {
   onChange: (e: React.ChangeEvent<any>) => void;
   onBlur: (e: any) => void;
   value: any;
-  shouldOnlyIncludeRegionsWithBlockStorage?: boolean;
+  shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
 }
 
 type CombinedProps = Props & WithRegions & WithStyles<ClassNames>;
@@ -42,10 +42,10 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     regionsData,
     value,
     name,
-    shouldOnlyIncludeRegionsWithBlockStorage
+    shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage
   } = props;
 
-  const regions = shouldOnlyIncludeRegionsWithBlockStorage
+  const regions = shouldOnlyDisplayRegionsWithBlockStorage
     ? regionsData.filter(region => doesRegionSupportBlockStorage(region.id))
     : regionsData;
 
@@ -79,7 +79,7 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         })}
       </Select>
       {error && <FormHelperText error>{error}</FormHelperText>}
-      {!error && shouldOnlyIncludeRegionsWithBlockStorage && (
+      {!error && shouldOnlyDisplayRegionsWithBlockStorage && (
         <FormHelperText data-qa-volume-region>
           Only regions supporting block storage are displayed.
         </FormHelperText>

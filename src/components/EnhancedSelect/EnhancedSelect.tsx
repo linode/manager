@@ -41,7 +41,7 @@ const styles: StyleRulesCallback = theme => ({
   }
 });
 
-export interface Props {
+interface Props {
   options: Item[];
   value: string;
   handleSelect: (selected: Item) => void;

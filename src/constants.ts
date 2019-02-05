@@ -99,4 +99,5 @@ export const dcDisplayCountry = {
   'ap-northeast': 'JP'
 };
 
+// At this time, the following regions do not support block storage.
 export const regionsWithoutBlockStorage = ['us-southeast', 'ap-northeast-1a'];

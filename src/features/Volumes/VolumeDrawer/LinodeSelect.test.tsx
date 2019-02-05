@@ -54,7 +54,7 @@ describe('Linode Select', () => {
   });
   it('disables Linodes in regions that support block storage when prop specified', () => {
     wrapper.setState({ linodes });
-    wrapper.setProps({ shouldOnlyIncludeRegionsWithBlockStorage: true });
+    wrapper.setProps({ shouldOnlyDisplayRegionsWithBlockStorage: true });
     const { options } = wrapper.find('WithStyles(Select)').props() as any;
     options.forEach((option: any) => {
       const region = pathOr('', ['data', 'region'], option);

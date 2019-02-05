@@ -167,7 +167,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.region}
-              shouldOnlyIncludeRegionsWithBlockStorage={true}
+              shouldOnlyDisplayRegionsWithBlockStorage={true}
             />
 
             <LinodeSelect
@@ -176,7 +176,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={(id: number) => setFieldValue('linodeId', id)}
               region={values.region}
-              shouldOnlyIncludeRegionsWithBlockStorage={true}
+              shouldOnlyDisplayRegionsWithBlockStorage={true}
             />
 
             <TagsInput

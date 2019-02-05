@@ -29,7 +29,7 @@ interface Props {
   name: string;
   onBlur: (e: any) => void;
   region: string;
-  shouldOnlyIncludeRegionsWithBlockStorage?: boolean;
+  shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
 }
 
 interface State {
@@ -167,11 +167,11 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       error,
       name,
       onBlur,
-      shouldOnlyIncludeRegionsWithBlockStorage
+      shouldOnlyDisplayRegionsWithBlockStorage
     } = this.props;
     const { loading, linodes, selectedLinodeId } = this.state;
 
-    const options = shouldOnlyIncludeRegionsWithBlockStorage
+    const options = shouldOnlyDisplayRegionsWithBlockStorage
       ? linodes.filter(linode => {
           const region = pathOr('', ['data', 'region'], linode);
           return doesRegionSupportBlockStorage(region);

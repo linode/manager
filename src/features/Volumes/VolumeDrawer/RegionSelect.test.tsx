@@ -33,7 +33,7 @@ describe('Region Select', () => {
     });
   });
   it('disables regions without block storage if prop specified', () => {
-    wrapper.setProps({ shouldOnlyIncludeRegionsWithBlockStorage: true });
+    wrapper.setProps({ shouldOnlyDisplayRegionsWithBlockStorage: true });
     regionsWithoutBlockStorage.forEach(region => {
       expect(
         wrapper.find(`[data-qa-attach-to-region="${region}"]`)
