@@ -61,7 +61,6 @@ import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ConfigsProvider, LinodeProvider } from './context';
-import MigrationNotification from './HeaderSections/MigrationNotification';
 import LinodeBackup from './LinodeBackup';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import LinodeNetworking from './LinodeNetworking';
@@ -124,6 +123,7 @@ type CombinedProps = LinodeActionsProps &
   WithStyles<ClassNames> & { linodeId: number };
 
 type ClassNames =
+  | 'migrationLink'
   | 'pendingMutationLink'
   | 'titleWrapper'
   | 'backButton'
@@ -131,6 +131,13 @@ type ClassNames =
   | 'launchButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
+  migrationLink: {
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
+  },
   pendingMutationLink: {
     color: theme.palette.primary.main,
     cursor: 'pointer',
@@ -745,12 +752,25 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
                   n.type
                 ) ? (
                   linode.status !== 'migrating' && (
-                    <MigrationNotification
-                      key={idx}
-                      text={n.message}
-                      type={n.type}
-                      onClick={this.migrate}
-                    />
+                    // <MigrationNotification
+                    //   key={idx}
+                    //   text={n.message}
+                    //   type={n.type}
+                    //   onClick={this.migrate}
+                    // />
+                    <Notice important warning>
+                      {n.message}
+                      {n.type === 'migration_scheduled'
+                        ? ' To enter the migration queue right now, please '
+                        : ' To schedule your migration, please '}
+                      <span
+                        className={this.props.classes.migrationLink}
+                        onClick={() => this.migrate(n.type)}
+                      >
+                        click here
+                      </span>
+                      .
+                    </Notice>
                   )
                 ) : (
                   <ProductNotification
