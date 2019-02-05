@@ -45,6 +45,10 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     shouldOnlyIncludeRegionsWithBlockStorage
   } = props;
 
+  const regions = shouldOnlyIncludeRegionsWithBlockStorage
+    ? regionsData.filter(region => doesRegionSupportBlockStorage(region.id))
+    : regionsData;
+
   return (
     <FormControl fullWidth>
       <InputLabel htmlFor="region" disableAnimation shrink={true}>
@@ -62,17 +66,12 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         <MenuItem key="none" value="none">
           All Regions
         </MenuItem>
-        {regionsData.map(eachRegion => {
-          const shouldDisableRegion =
-            shouldOnlyIncludeRegionsWithBlockStorage &&
-            !doesRegionSupportBlockStorage(eachRegion.id);
+        {regions.map(eachRegion => {
           return (
             <MenuItem
               data-qa-attach-to-region={eachRegion.id}
               key={eachRegion.id}
               value={eachRegion.id}
-              disabled={shouldDisableRegion}
-              tooltip={shouldDisableRegion ? regionSupportMessage : ''}
             >
               {formatRegion('' + eachRegion.id)}
             </MenuItem>
@@ -80,6 +79,11 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         })}
       </Select>
       {error && <FormHelperText error>{error}</FormHelperText>}
+      {!error && shouldOnlyIncludeRegionsWithBlockStorage && (
+        <FormHelperText data-qa-volume-region>
+          Only regions supporting block storage are displayed.
+        </FormHelperText>
+      )}
     </FormControl>
   );
 };

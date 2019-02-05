@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { regionsWithoutBlockStorage } from 'src/constants';
-import { RegionSelect, regionSupportMessage } from './RegionSelect';
+import { RegionSelect } from './RegionSelect';
 
 const regionsData: Linode.Region[] = [
   { id: 'us-southeast', country: 'US' },
@@ -34,38 +34,10 @@ describe('Region Select', () => {
   });
   it('disables regions without block storage if prop specified', () => {
     wrapper.setProps({ shouldOnlyIncludeRegionsWithBlockStorage: true });
-    regionsData.forEach(region => {
-      if (regionsWithoutBlockStorage.includes(region.id)) {
-        expect(
-          wrapper
-            .find(`[data-qa-attach-to-region="${region.id}"]`)
-            .prop('disabled')
-        ).toBe(true);
-      } else {
-        expect(
-          wrapper
-            .find(`[data-qa-attach-to-region="${region.id}"]`)
-            .prop('disabled')
-        ).toBe(false);
-      }
-    });
-  });
-  it('displays tooltip for regions without block storage if prop specified', () => {
-    wrapper.setProps({ shouldOnlyIncludeRegionsWithBlockStorage: true });
-    regionsData.forEach(region => {
-      if (regionsWithoutBlockStorage.includes(region.id)) {
-        expect(
-          wrapper
-            .find(`[data-qa-attach-to-region="${region.id}"]`)
-            .prop('tooltip')
-        ).toBe(regionSupportMessage);
-      } else {
-        expect(
-          wrapper
-            .find(`[data-qa-attach-to-region="${region.id}"]`)
-            .prop('tooltip')
-        ).toBe('');
-      }
+    regionsWithoutBlockStorage.forEach(region => {
+      expect(
+        wrapper.find(`[data-qa-attach-to-region="${region}"]`)
+      ).toHaveLength(0);
     });
   });
 });
