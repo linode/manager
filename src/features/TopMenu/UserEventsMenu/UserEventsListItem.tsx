@@ -25,7 +25,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       transition: theme.transitions.create(['border-color', 'opacity']),
       outline: 0,
       '&:hover, &:focus': {
-        backgroundColor: theme.bg.main
+        backgroundColor: theme.palette.primary.main,
+        '& $title, & $content': {
+          color: 'white'
+        }
       }
     },
     title: {
@@ -46,8 +49,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     pointer: {
       '& > h3': {
-        lineHeight: '1.2',
-        textDecoration: 'underline'
+        lineHeight: '1.2'
       }
     }
   };
