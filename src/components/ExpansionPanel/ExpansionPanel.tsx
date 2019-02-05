@@ -68,7 +68,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
 };
 
 export interface Props extends ExpansionPanelProps {
-  heading: string;
+  heading: string | React.ReactNode;
   error?: string;
   warning?: string;
   success?: string;

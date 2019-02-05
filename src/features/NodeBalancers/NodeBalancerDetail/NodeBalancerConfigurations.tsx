@@ -56,13 +56,16 @@ import {
   transformConfigsForRequest
 } from '../utils';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'nbStatuses';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
+  },
+  nbStatuses: {
+    fontFamily: 'LatoWeb'
   }
 });
 
@@ -123,6 +126,21 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
   });
 };
 
+const formatNodesStatus = (nodes: Linode.NodeBalancerConfigNodeFields[]) => {
+  const statuses = nodes.reduce(
+    (acc, node) => {
+      if (node.status) {
+        acc[node.status]++;
+      }
+      return acc;
+    },
+    { UP: 0, DOWN: 0, unknown: 0 }
+  );
+
+  return `Node status: ${statuses.UP} up, ${statuses.DOWN} down${
+    statuses.unknown ? `, ${statuses.unknown} unknown` : ''
+  }`;
+};
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfigConfirmDialogState = {
     submitting: false,
@@ -943,6 +961,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
+    const { classes } = this.props;
 
     const lensTo = lensFrom(['configs', idx]);
 
@@ -981,7 +1000,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         ]}
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
-        heading={`Port ${config.port !== undefined ? config.port : ''}`}
+        heading={
+          <span>
+            Port {config.port !== undefined ? config.port : ''}&nbsp;
+            <em className={classes.nbStatuses}>
+              {formatNodesStatus(config.nodes)}
+            </em>
+          </span>
+        }
       >
         <NodeBalancerConfigPanel
           linodesWithPrivateIPs={this.state.linodesWithPrivateIPs}
