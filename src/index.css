@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
@@ -13,7 +15,7 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: "LatoWeb", sans-serif;
+  font-family: 'LatoWeb', sans-serif;
 }
 
 @media screen and (min-width: 960px) {
@@ -25,8 +27,10 @@ body {
 }
 
 @media print {
-  /** Setting margins */       
-  @page { margin: 1cm }
+  /** Setting margins */
+  @page {
+    margin: 1cm;
+  }
 
   body {
     font-size: 13pt !important;
@@ -36,8 +40,8 @@ body {
   }
 
   #root {
-    width: 100%; 
-    margin: 0; 
+    width: 100%;
+    margin: 0;
     float: none;
   }
 
@@ -45,8 +49,12 @@ body {
     font-size: 24pt;
     color: #000 !important;
   }
-  
-  h2, h3, h4, h5, h6 {
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-size: 14pt;
     margin-top: 25px;
     color: #000 !important;
@@ -84,7 +92,7 @@ body {
     color: #000 !important;
     background-color: #fff !important;
   }
-  
+
   td > span:last-child {
     text-align: left;
     word-break: normal;
@@ -104,15 +112,35 @@ body {
   display: inline-flex;
 }
 
+.xScroll {
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: -12px;
+}
+.xScroll::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+.xScroll::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+.xScroll::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #ccc;
+}
+.xScroll::-webkit-scrollbar-track {
+  background-color: #fff;
+  border-radius: 8px;
+}
+
 a {
   text-decoration: none;
-  color: #3683DC;
+  color: #3683dc;
   cursor: pointer;
 }
 
 strong,
 bold {
-  font-family: "LatoWebBold";
+  font-family: 'LatoWebBold';
 }
 
 .visually-hidden {
@@ -149,27 +177,27 @@ a.blue {
 }
 
 a.blue:visited {
-  color: #3683DC;
+  color: #3683dc;
 }
 
 a.blue:hover {
-  color: #4D99F1;
+  color: #4d99f1;
 }
 
 a.blue:active {
-  color: #2466B3;
+  color: #2466b3;
 }
 
 a.black {
-  color: #32363C;
+  color: #32363c;
 }
 
 a.black:visited {
-  color: #32363C;
+  color: #32363c;
 }
 
 a.black:not(.nu):hover {
-  color: #32363C;
+  color: #32363c;
   text-decoration: underline;
 }
 
@@ -206,7 +234,7 @@ a.black:not(.nu):active {
 @media (min-width: 1280px) {
   .mlMain {
     max-width: 78.8%;
-    flex-basis: 78.8%
+    flex-basis: 78.8%;
   }
   .mlSidebar {
     max-width: 21.2%;
@@ -242,8 +270,8 @@ a.black:not(.nu):active {
 }
 
 button::-moz-focus-inner {
-    padding: 0;
-    border: 0;
+  padding: 0;
+  border: 0;
 }
 
 @keyframes fadeIn {
@@ -256,7 +284,7 @@ button::-moz-focus-inner {
 }
 
 .fade-in-table {
-  animation: fadeIn .3s ease-in-out;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .no-transition *,

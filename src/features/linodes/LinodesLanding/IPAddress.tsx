@@ -35,6 +35,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     marginBottom: theme.spacing.unit / 2,
     width: '100%',
+    maxWidth: '100%',
     '&:last-child': {
       marginBottom: 0
     },
@@ -46,7 +47,8 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   row: {
     display: 'flex',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    width: '100%'
   },
   left: {
     marginLeft: theme.spacing.unit
@@ -63,8 +65,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   ip: {
     color: theme.palette.text.primary,
-    fontSize: '.9rem',
-    wordBreak: 'break-all'
+    fontSize: '.9rem'
   },
   ipLink: {
     color: theme.palette.primary.main,
@@ -122,9 +123,8 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
       <div className={`${classes.ipLink}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
-          className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''} ${
-            copyRight ? classes.right : classes.left
-          }`}
+          className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''}
+            ${copyRight ? classes.right : classes.left} copy`}
         />
       </div>
     );
@@ -134,7 +134,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     const { classes } = this.props;
     return (
       <div key={key} className={classes.row}>
-        <div className={`${classes.ip} ${'ip'}`} data-qa-ip-main>
+        <div className={`${classes.ip} ${'ip xScroll'}`} data-qa-ip-main>
           {ip}
         </div>
         {copyRight && this.renderCopyIcon(ip)}
