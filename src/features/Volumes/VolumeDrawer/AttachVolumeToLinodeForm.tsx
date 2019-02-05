@@ -15,10 +15,10 @@ import { attachVolume } from 'src/services/volumes';
 import { openForCreating } from 'src/store/volumeDrawer';
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
+import { modes } from './modes';
 import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
-import { modes } from './VolumeDrawer';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 
