@@ -126,10 +126,12 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
-const linodeContext = withLinode(context => ({
-  linodeId: context.data!.id,
-  linodeLabel: context.data!.label,
-  updateLinode: context.update
+const linodeContext = withLinode(({ linode }) => ({
+  linodeId: linode.id,
+  linodeLabel: linode.label,
+  updateLinode: () => {
+    window.alert(`deprecated updateLinode called`);
+  }
 }));
 
 export default compose(

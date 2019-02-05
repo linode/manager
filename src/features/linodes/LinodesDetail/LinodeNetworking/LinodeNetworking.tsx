@@ -559,10 +559,10 @@ const getFirstPublicIPv4FromResponse = compose(
   pathOr([], ['ipv4', 'public'])
 );
 
-const linodeContext = withLinode(context => ({
-  linodeID: context.data!.id,
-  linodeLabel: context.data!.label,
-  linodeRegion: context.data!.region
+const linodeContext = withLinode(({ linode }) => ({
+  linodeID: linode.id,
+  linodeLabel: linode.label,
+  linodeRegion: linode.region
 }));
 
 const enhanced = compose<any, any, any>(

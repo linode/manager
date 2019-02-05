@@ -736,11 +736,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(context => ({
-  linodeCreated: context.data!.created,
-  linodeId: context.data!.id,
-  /** @todo get rid of this */
-  linodeData: context.data
+const linodeContext = withLinode(({ linode }) => ({
+  linodeCreated: linode.created,
+  linodeId: linode.id,
+  linodeData: linode
 }));
 
 interface WithTypesProps {

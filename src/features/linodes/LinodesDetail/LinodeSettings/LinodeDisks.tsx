@@ -42,7 +42,6 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
-
 import LinodeDiskSpace from './LinodeDiskSpace';
 
 type ClassNames = 'root' | 'headline' | 'loadingContainer' | 'diskSpaceWrapper';
@@ -730,12 +729,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(context => ({
-  linodeLoading: context.loading,
-  linodeError: context.errors,
-  linodeId: path(['data', 'id'], context),
-  linodeTotalDisk: path(['data', 'specs', 'disk'], context),
-  linodeStatus: path(['data', 'status'], context)
+const linodeContext = withLinode(({ linode }) => ({
+  linodeId: linode.id,
+  linodeTotalDisk: linode.specs.disk,
+  linodeStatus: linode.status
 }));
 
 const paginated = Pagey((ownProps, params, filters) => {

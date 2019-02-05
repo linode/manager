@@ -173,14 +173,16 @@ interface LinodeContextProps {
   request: () => Promise<Linode.Linode>;
 }
 
-const linodeContext = withLinode(context => ({
-  linodeIpv4: context.data!.ipv4,
-  linodeIpv6: context.data!.ipv6,
-  linodeRegion: context.data!.region,
-  linodeImageId: context.data!.image,
-  linodeTags: context.data!.tags,
-  linodeId: context.data!.id,
-  request: context.request
+const linodeContext = withLinode(({ linode }) => ({
+  linodeIpv4: linode.ipv4,
+  linodeIpv6: linode.ipv6,
+  linodeRegion: linode.region,
+  linodeImageId: linode.image,
+  linodeTags: linode.tags,
+  linodeId: linode.id,
+  request: () => {
+    window.alert(`depcreated request invoked`);
+  }
 }));
 
 const enhanced = compose<CombinedProps, Props>(

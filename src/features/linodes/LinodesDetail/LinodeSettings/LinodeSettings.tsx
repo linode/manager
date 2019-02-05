@@ -6,7 +6,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ConfigsConsumer, LinodeConsumer } from '../context';
+import { LinodeConsumer } from '../context';
 import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
@@ -30,53 +30,40 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <LinodeConsumer>
-      {linodeContext => {
-        return (
-          <ConfigsConsumer>
-            {configsContext => {
-              const { data: linode } = linodeContext;
-              const { data: configs } = configsContext;
+      {({ linode }) => {
+        if (!linode) {
+          return null;
+        }
 
-              if (!linode) {
-                return null;
-              }
-              if (!configs) {
-                return null;
-              }
-              return (
-                <React.Fragment>
-                  <DocumentTitleSegment
-                    segment={`${linodeContext.data!.label} - Settings`}
-                  />
-                  <Typography
-                    role="header"
-                    variant="h2"
-                    className={classes.title}
-                    data-qa-settings-header
-                  >
-                    Settings
-                  </Typography>
-                  <LinodeSettingsLabelPanel />
-                  <LinodeSettingsPasswordPanel
-                    linodeLabel={linode.label}
-                    linodeId={linode.id}
-                    linodeStatus={linode.status}
-                  />
-                  <LinodeSettingsAlertsPanel
-                    linodeId={linode.id}
-                    linodeLabel={linode.label}
-                    linodeAlerts={linode.alerts}
-                  />
-                  <LinodeWatchdogPanel
-                    linodeId={linode.id}
-                    currentStatus={linode.watchdog_enabled}
-                  />
-                  <LinodeAdvancedConfigurationsPanel />
-                  <LinodeSettingsDeletePanel linodeId={linode.id} />
-                </React.Fragment>
-              );
-            }}
-          </ConfigsConsumer>
+        return (
+          <React.Fragment>
+            <DocumentTitleSegment segment={`${linode.label} - Settings`} />
+            <Typography
+              role="header"
+              variant="h2"
+              className={classes.title}
+              data-qa-settings-header
+            >
+              Settings
+            </Typography>
+            <LinodeSettingsLabelPanel />
+            <LinodeSettingsPasswordPanel
+              linodeLabel={linode.label}
+              linodeId={linode.id}
+              linodeStatus={linode.status}
+            />
+            <LinodeSettingsAlertsPanel
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              linodeAlerts={linode.alerts}
+            />
+            <LinodeWatchdogPanel
+              linodeId={linode.id}
+              currentStatus={linode.watchdog_enabled}
+            />
+            <LinodeAdvancedConfigurationsPanel />
+            <LinodeSettingsDeletePanel linodeId={linode.id} />
+          </React.Fragment>
         );
       }}
     </LinodeConsumer>
