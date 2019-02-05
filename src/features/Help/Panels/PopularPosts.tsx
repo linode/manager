@@ -46,7 +46,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '1rem',
     fontFamily: 'LatoWebBold',
     lineHeight: '1.2em',
-    textDecoration: 'underline'
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   },
   withSeparator: {
     borderRight: `1px solid ${theme.palette.divider}`
