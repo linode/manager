@@ -25,6 +25,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   title: {},
   summarySection: {},
   section: {},
+  main: {},
+  sidebar: {},
+  domainSidebar: {},
+  titleWrapper: {},
   NBsummarySection: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing.unit * 6
