@@ -14,25 +14,36 @@ import regionsContainer, {
   DefaultProps as WithRegions
 } from 'src/containers/regions.container';
 import { formatRegion } from 'src/utilities';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
+export const regionSupportMessage =
+  'This region does not currently support Block Storage.';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
-
 interface Props {
   error?: string;
   name: string;
   onChange: (e: React.ChangeEvent<any>) => void;
   onBlur: (e: any) => void;
   value: any;
+  shouldOnlyIncludeRegionsWithBlockStorage?: boolean;
 }
 
 type CombinedProps = Props & WithRegions & WithStyles<ClassNames>;
 
-const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
-  const { error, onChange, onBlur, regionsData, value, name } = props;
+export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    error,
+    onChange,
+    onBlur,
+    regionsData,
+    value,
+    name,
+    shouldOnlyIncludeRegionsWithBlockStorage
+  } = props;
 
   return (
     <FormControl fullWidth>
@@ -51,15 +62,22 @@ const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         <MenuItem key="none" value="none">
           All Regions
         </MenuItem>
-        {regionsData.map(eachRegion => (
-          <MenuItem
-            key={eachRegion.id}
-            value={eachRegion.id}
-            data-qa-attach-to-region={eachRegion.id}
-          >
-            {formatRegion('' + eachRegion.id)}
-          </MenuItem>
-        ))}
+        {regionsData.map(eachRegion => {
+          const shouldDisableRegion =
+            shouldOnlyIncludeRegionsWithBlockStorage &&
+            !doesRegionSupportBlockStorage(eachRegion.id);
+          return (
+            <MenuItem
+              data-qa-attach-to-region={eachRegion.id}
+              key={eachRegion.id}
+              value={eachRegion.id}
+              disabled={shouldDisableRegion}
+              tooltip={shouldDisableRegion ? regionSupportMessage : ''}
+            >
+              {formatRegion('' + eachRegion.id)}
+            </MenuItem>
+          );
+        })}
       </Select>
       {error && <FormHelperText error>{error}</FormHelperText>}
     </FormControl>

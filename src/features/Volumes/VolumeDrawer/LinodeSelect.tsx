@@ -1,4 +1,6 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import _Option from 'react-select/lib/components/Option';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
@@ -7,14 +9,36 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import MenuItem from 'src/components/MenuItem';
 import { getLinodes } from 'src/services/linodes';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { debounce } from 'throttle-debounce';
 
-type ClassNames = 'root';
+export const regionSupportMessage =
+  'This Linode is in a region that does not currently support Block Storage';
+
+type ClassNames = 'root' | 'disabledTooltip';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {},
+  disabledTooltip: {
+    padding: 0,
+    '&:hover, &:focus': {
+      background: 'transparent',
+      color: theme.palette.primary.main,
+      '& $toolTip': {
+        marginTop: theme.spacing.unit,
+        maxHeight: 200,
+        opacity: 1
+      }
+    }
+  }
 });
+
+// Style overrides for React Select
+const selectStyles = {
+  option: (base: any) => ({})
+};
 
 interface Props {
   /** * @todo Does not having value passed here break the cycle? */
@@ -23,6 +47,7 @@ interface Props {
   name: string;
   onBlur: (e: any) => void;
   region: string;
+  shouldOnlyIncludeRegionsWithBlockStorage?: boolean;
 }
 
 interface State {
@@ -33,7 +58,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class LinodeSelect extends React.Component<CombinedProps, State> {
+export class LinodeSelect extends React.Component<CombinedProps, State> {
   mounted: boolean;
 
   static defaultProps = {
@@ -156,12 +181,53 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
   render() {
-    const { error, name, onBlur } = this.props;
+    const {
+      error,
+      name,
+      onBlur,
+      classes,
+      shouldOnlyIncludeRegionsWithBlockStorage
+    } = this.props;
     const { loading, linodes, selectedLinodeId } = this.state;
+
+    const Option = (props: any) => {
+      const region = pathOr('', ['data', 'data', 'region'], props);
+
+      const shouldDisable =
+        shouldOnlyIncludeRegionsWithBlockStorage &&
+        !doesRegionSupportBlockStorage(region);
+
+      return shouldDisable ? (
+        <_Option
+          setValue={props.label}
+          className={classes.disabledTooltip}
+          {...props}
+        >
+          <MenuItem
+            className={classes.disabledTooltip}
+            component="div"
+            disabled={true}
+            tooltip={regionSupportMessage}
+          >
+            {props.label}
+          </MenuItem>
+        </_Option>
+      ) : (
+        <_Option {...props} />
+      );
+    };
+
+    const isOptionDisabled = (option: any) => {
+      const region = pathOr('', ['data', 'region'], option);
+      // return false;
+      return !doesRegionSupportBlockStorage(region);
+    };
 
     return (
       <FormControl fullWidth>
         <EnhancedSelect
+          isOptionDisabled={isOptionDisabled}
+          components={{ Option }}
           onBlur={onBlur}
           name={name}
           label="Linode"
@@ -169,6 +235,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
           value={this.getSelectedLinode(selectedLinodeId)}
           isLoading={loading}
           errorText={error}
+          styleOverrides={selectStyles}
           options={[{ label: 'Select a Linode', value: -1 }, ...linodes]}
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}

@@ -98,3 +98,5 @@ export const dcDisplayCountry = {
   'eu-central': 'DE',
   'ap-northeast': 'JP'
 };
+
+export const regionsWithoutBlockStorage = ['us-southeast', 'ap-northeast-1a'];
