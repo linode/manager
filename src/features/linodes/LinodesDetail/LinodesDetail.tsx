@@ -5,6 +5,7 @@ import { compose, Lens, lensPath, pathEq, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { compose as composeC, withProps } from 'recompose';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/filter';
@@ -17,25 +18,31 @@ import { events$ } from 'src/events';
 import { reportException } from 'src/exceptionReporting';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { newLinodeEvents } from 'src/features/linodes/events';
+import { lishLaunch } from 'src/features/Lish';
 import { Requestable } from 'src/requestableContext';
 import {
   getLinode,
   getLinodeConfigs,
   getType,
+  scheduleOrQueueMigration,
   startMutation
 } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
 import { _getLinodeDisks } from 'src/store/linodeDetail/disks';
 import { _getLinodeVolumes } from 'src/store/linodeDetail/volumes';
 import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
+import { requestNotifications } from 'src/store/notification/notification.requests';
 import { ThunkDispatch } from 'src/store/types';
 import haveAnyBeenModified from 'src/utilities/haveAnyBeenModified';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ConfigsProvider, LinodeProvider } from './context';
+import LabelPowerAndConsolePanel from './HeaderSections/LabelPowerAndConsolePanel';
+import NotificationsAndUpgradePanel from './HeaderSections/NotificationsAndUpgradePanel';
+import TabsAndStatusBarPanel from './HeaderSections/TabsAndStatusBarPanel';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
-import LinodesDetailHeader from './LinodesDetailHeader';
 import MutateDrawer from './MutateDrawer';
 import reloadableWithRouter from './reloadableWithRouter';
 
@@ -81,9 +88,10 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 
 type CombinedProps = LinodeActionsProps &
+  WithNotificationsProps &
   DispatchProps &
   RouteProps &
-  InjectedNotistackProps;
+  InjectedNotistackProps & { linodeId: number };
 
 const labelInputLens = lensPath(['labelInput']);
 const configsLens = lensPath(['context', 'configs']);
@@ -544,6 +552,34 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
       });
   };
 
+  migrate = (type: string) => {
+    const { linodeId, enqueueSnackbar } = this.props;
+    const { getNotifications } = this.props.actions;
+    scheduleOrQueueMigration(linodeId)
+      .then(_ => {
+        // A 200 response indicates that the operation was successful.
+        const successMessage =
+          type === 'migration_scheduled'
+            ? 'Your Linode has been entered into the migration queue.'
+            : 'Your migration has been scheduled.';
+        enqueueSnackbar(successMessage, {
+          variant: 'success'
+        });
+        getNotifications();
+      })
+      .catch(_ => {
+        // @todo: use new error handling pattern here after merge.
+        enqueueSnackbar('There was an error starting your migration.', {
+          variant: 'error'
+        });
+      });
+  };
+
+  launchLish = () => {
+    const { linodeId } = this.props;
+    lishLaunch(linodeId);
+  };
+
   render() {
     const {
       match: { url }
@@ -583,66 +619,72 @@ class LinodeDetail extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <React.Fragment>
-        <ConfigsProvider value={this.state.context.configs}>
+      <ConfigsProvider value={this.state.context.configs}>
+        <LinodeProvider value={this.state.context.linode}>
           <React.Fragment>
-            <>
-              <LinodeProvider value={this.state.context.linode}>
-                <React.Fragment>
-                  <LinodesDetailHeader
-                    openMutateDrawer={this.openMutateDrawer}
-                    showPendingMutation={this.state.showPendingMutation}
-                    labelInput={{
-                      label: labelInput.label,
-                      errorText: labelInput.errorText,
-                      onCancel: this.cancelUpdate,
-                      onEdit: this.updateLabel
-                    }}
-                    linodeId={linode.id}
-                    linodeLabel={linode.label}
-                    linodeRegion={linode.region}
-                    linodeStatus={linode.status}
-                    linodeRecentEvent={linode.recentEvent}
-                    linodeTags={linode.tags}
-                    linodeConfigs={configs}
-                    linodeUpdate={this.state.context.linode.request}
-                    url={url}
-                    history={this.props.history}
-                    openConfigDrawer={this.openConfigDrawer}
-                  />
-                  <LinodeConfigSelectionDrawer
-                    onClose={this.closeConfigDrawer}
-                    onSubmit={this.submitConfigChoice}
-                    onChange={this.selectConfig}
-                    open={configDrawer.open}
-                    configs={configDrawer.configs}
-                    selected={String(configDrawer.selected)}
-                    error={configDrawer.error}
-                  />
-                  {this.state.showPendingMutation && linode && (
-                    <MutateDrawer
-                      linodeId={linode.id}
-                      open={mutateDrawer.open}
-                      loading={mutateDrawer.loading}
-                      error={mutateDrawer.error}
-                      handleClose={this.closeMutateDrawer}
-                      mutateInfo={mutateInfo!}
-                      currentTypeInfo={{
-                        vcpus: linode.specs.vcpus,
-                        transfer: linode.specs.transfer,
-                        disk: linode.specs.disk,
-                        memory: linode.specs.memory,
-                        network_out: this.state.currentNetworkOut
-                      }}
-                      initMutation={this.initMutation}
-                    />
-                  )}
-                </React.Fragment>
-              </LinodeProvider>
-            </>
+            <NotificationsAndUpgradePanel
+              notifications={this.props.notifications}
+              showPendingMutation={this.state.showPendingMutation}
+              handleUpgrade={this.openMutateDrawer}
+              handleMigration={this.migrate}
+              status={linode.status}
+            />
+            <LabelPowerAndConsolePanel
+              launchLish={this.launchLish}
+              linode={{
+                id: linode.id,
+                label: linode.label,
+                recentEvent: linode.recentEvent,
+                status: linode.status
+              }}
+              openConfigDrawer={this.openConfigDrawer}
+              labelInput={{
+                label: labelInput.label,
+                errorText: labelInput.errorText,
+                onCancel: this.cancelUpdate,
+                onEdit: this.updateLabel
+              }}
+            />
+            <TabsAndStatusBarPanel
+              url={url}
+              history={this.props.history}
+              linodeRecentEvent={linode.recentEvent}
+              linodeStatus={linode.status}
+              linodeId={linode.id}
+              linodeRegion={linode.region}
+              linodeLabel={linode.label}
+              linodeConfigs={configs}
+            />
           </React.Fragment>
-        </ConfigsProvider>
-      </React.Fragment>
+          <LinodeConfigSelectionDrawer
+            onClose={this.closeConfigDrawer}
+            onSubmit={this.submitConfigChoice}
+            onChange={this.selectConfig}
+            open={configDrawer.open}
+            configs={configDrawer.configs}
+            selected={String(configDrawer.selected)}
+            error={configDrawer.error}
+          />
+          {this.state.showPendingMutation && linode && (
+            <MutateDrawer
+              linodeId={linode.id}
+              open={mutateDrawer.open}
+              loading={mutateDrawer.loading}
+              error={mutateDrawer.error}
+              handleClose={this.closeMutateDrawer}
+              mutateInfo={mutateInfo!}
+              currentTypeInfo={{
+                vcpus: linode.specs.vcpus,
+                transfer: linode.specs.transfer,
+                disk: linode.specs.disk,
+                memory: linode.specs.memory,
+                network_out: this.state.currentNetworkOut
+              }}
+              initMutation={this.initMutation}
+            />
+          )}
+        </LinodeProvider>
+      </ConfigsProvider>
     );
   }
 }
@@ -660,6 +702,7 @@ interface DispatchProps {
   actions: {
     getLinodeVolumes: () => void;
     getLinodeDisks: () => void;
+    getNotifications: () => void;
   };
 }
 
@@ -675,6 +718,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, RouteProps> = (
 
   return {
     actions: {
+      getNotifications: () => dispatch(requestNotifications()),
       getLinodeVolumes:
         typeof linodeId === 'string'
           ? () => dispatch(_getLinodeVolumes(+linodeId))
@@ -692,9 +736,40 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose(
-  connected,
+interface WithNotificationsProps {
+  notificationsLoading: boolean;
+  notificationError?: Error;
+  notifications?: Linode.Notification[];
+}
+
+const filterNotifications = (
+  linodeId: number,
+  notifications: Linode.Notification[] = []
+) => {
+  return notifications.filter(
+    notification => pathOr(0, ['entity', 'id'], notification) === linodeId
+  );
+};
+
+const withNotifications = connect(
+  (state: ApplicationState, ownProps: { linodeId: number }) => ({
+    notificationsLoading: state.__resources.notifications.loading,
+    notificationsError: state.__resources.notifications.error,
+    // Only use notifications for this Linode.
+    notifications: filterNotifications(
+      ownProps.linodeId,
+      state.__resources.notifications.data
+    )
+  })
+);
+
+const enhanced = composeC(
   reloadable,
+  withProps((ownProps: RouteProps) => ({
+    linodeId: Number(ownProps.match.params.linodeId)
+  })),
+  withNotifications,
+  connected,
   LinodeDetailErrorBoundary,
   withSnackbar,
   withLinodeActions
