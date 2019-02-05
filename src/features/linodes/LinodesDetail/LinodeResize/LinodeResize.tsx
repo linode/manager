@@ -232,11 +232,11 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
     .map(LinodeResize.extendType)
 }));
 
-const linodeContext = withLinode(context => ({
-  linodeId: pathOr(undefined, ['data', 'id'], context),
-  linodeType: pathOr(undefined, ['data', 'type'], context),
-  linodeStatus: pathOr(undefined, ['data', 'status'], context),
-  linodeLabel: pathOr(undefined, ['data', 'label'], context)
+const linodeContext = withLinode(({ linode }) => ({
+  linodeId: linode.id,
+  linodeType: linode.type,
+  linodeStatus: linode.status,
+  linodeLabel: linode.label,
 }));
 
 export default compose<CombinedProps, {}>(

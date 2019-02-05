@@ -191,9 +191,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(context => ({
-  linodeId: context.data!.id,
-  linodeLabel: context.data!.label
+const linodeContext = withLinode(({linode}) => ({
+  linodeId: linode.id,
+  linodeLabel: linode.label
 }));
 
 export default compose<CombinedProps, Props>(

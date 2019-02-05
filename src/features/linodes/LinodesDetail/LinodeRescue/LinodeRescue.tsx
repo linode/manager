@@ -258,10 +258,10 @@ export const preloaded = PromiseLoader({
     )
 });
 
-const linodeContext = withLinode(context => ({
-  linodeId: context.data!.id,
-  linodeRegion: context.data!.region,
-  linodeLabel: context.data!.label
+const linodeContext = withLinode(({ linode }) => ({
+  linodeId: linode.id,
+  linodeRegion: linode.region,
+  linodeLabel: linode.label
 }));
 
 export default compose(

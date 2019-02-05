@@ -84,13 +84,10 @@ class SummaryPanel extends React.Component<CombinedProps> {
   };
 
   updateTags = async (tags: string[]) => {
-    const { request, linodeId, linodeActions } = this.props;
+    const { linodeId, linodeActions } = this.props;
 
     /** Send the request (which updates the internal store.) */
     await linodeActions.updateLinode({ linodeId, tags });
-
-    /** Until the Linode Context reads from the Redux store, we need to request the latest version from API. */
-    await request();
   };
   render() {
     const {
@@ -192,21 +189,16 @@ interface LinodeContextProps {
   linodeRegion: string;
   linodeTags: string[];
   mostRecentBackup: string | null;
-  request: () => Promise<Linode.Linode>;
 }
 
-const linodeContext = withLinode(context => {
-  return {
-    linodeIpv4: context.data!.ipv4,
-    linodeIpv6: context.data!.ipv6,
-    linodeRegion: context.data!.region,
-    linodeImageId: context.data!.image,
-    linodeTags: context.data!.tags,
-    linodeId: context.data!.id,
-    mostRecentBackup: context.data!.mostRecentBackup,
-    request: context.request
-  };
-});
+const linodeContext = withLinode(({ linode }) => ({
+  linodeIpv4: linode.ipv4,
+  linodeIpv6: linode.ipv6,
+  linodeRegion: linode.region,
+  linodeImageId: linode.image,
+  linodeTags: linode.tags,
+  linodeId: linode.id
+}));
 
 const enhanced = compose<CombinedProps, Props>(
   styled,

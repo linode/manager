@@ -13,12 +13,10 @@ export interface Requestable<T> {
 
 /* tslint:disable */
 export function createHOCForConsumer<T>(Consumer: any, displayName: string) {
-  return function withContext<P>(mapStateToProps?: (v: Requestable<T>) => any) {
+  return function withContext<P>(mapStateToProps?: (v: T) => any) {
     return function(Component: React.ComponentType<P>) {
       /* tslint:enable */
-      return class ComponentWithContext extends React.Component<
-        Requestable<P>
-      > {
+      return class ComponentWithContext extends React.Component<P> {
         static displayName = `${displayName}(${getDisplayName(Component)})`;
         render() {
           return (

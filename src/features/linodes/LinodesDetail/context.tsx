@@ -1,28 +1,15 @@
 import * as React from 'react';
 
-import { createHOCForConsumer, Requestable } from 'src/requestableContext';
+import { createHOCForConsumer } from 'src/requestableContext';
 
-const initialState = {
-  lastUpdated: 0,
-  loading: true,
-  request: () => Promise.resolve(),
-  update: () => null
-};
+import { IncrediblyExtendedLinode } from './LinodesDetail.container';
 
-const configsContext = React.createContext<Requestable<Linode.Config[]>>({
-  ...initialState
-});
-export const withConfigs = createHOCForConsumer<Linode.Config[]>(
-  configsContext.Consumer,
-  'WithConfigs'
-);
-export const ConfigsProvider = configsContext.Provider;
-export const ConfigsConsumer = configsContext.Consumer;
+interface Context {
+  linode: IncrediblyExtendedLinode;
+}
+const linodeContext = React.createContext<Context>(null as any);
 
-const linodeContext = React.createContext<Requestable<Linode.Linode>>({
-  ...initialState
-});
-export const withLinode = createHOCForConsumer<Linode.Linode>(
+export const withLinode = createHOCForConsumer<Context>(
   linodeContext.Consumer,
   'WithLinode'
 );
