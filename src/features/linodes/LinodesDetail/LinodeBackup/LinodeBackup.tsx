@@ -55,6 +55,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinode } from '../context';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import { formatBackupDate } from './util';
 
 type ClassNames =
   | 'paper'
@@ -162,13 +163,6 @@ export const aggregateBackups = (
   return (
     backups && [...backups.automatic!, manualSnapshot!].filter(b => Boolean(b))
   );
-};
-
-export const formatBackupDate = (backupDate: string) => {
-  return moment
-    .utc(backupDate)
-    .local()
-    .fromNow();
 };
 
 class LinodeBackup extends React.Component<CombinedProps, State> {
