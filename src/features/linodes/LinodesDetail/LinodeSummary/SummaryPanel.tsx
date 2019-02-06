@@ -104,8 +104,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
       mostRecentBackup
     } = this.props;
 
-    console.log('mostRecentBackup', mostRecentBackup);
-
     return (
       <div className={classes.root}>
         <Paper className={classes.summarySection}>
