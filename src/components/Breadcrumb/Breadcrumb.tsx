@@ -16,6 +16,7 @@ type ClassNames =
   | 'root'
   | 'backButton'
   | 'linkText'
+  | 'linkTextWrapper'
   | 'labelText'
   | 'subtitleLinkText'
   | 'prefixComponentWrapper';
@@ -38,32 +39,39 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     alignItems: 'center',
     color: '#3683DC',
-    textDecoration: 'underline',
     borderColor: theme.color.grey,
     whiteSpace: 'nowrap',
     '&:after': {
       content: "''",
       display: 'inline-block',
       padding: '0 8px 0 6px',
-      height: '38px',
+      height: '39px',
       borderRight: `1px solid ${theme.color.grey1}`
     },
     [theme.breakpoints.down('sm')]: {
       display: 'none'
     }
   },
+  linkTextWrapper: {
+    position: 'relative',
+    top: 2
+  },
   subtitleLinkText: {
     display: 'flex',
     alignItems: 'flex-start',
     color: '#3683DC',
-    textDecoration: 'underline',
     borderColor: theme.color.grey,
     whiteSpace: 'nowrap',
     '&:after': {
-      content: "'|'",
+      content: "''",
       display: 'inline-block',
       padding: '0 0 0 8px',
-      color: theme.color.grey1
+      color: theme.color.grey1,
+      borderRight: `1px solid ${theme.color.grey1}`,
+      height: 24,
+      marginTop: -7,
+      position: 'relative',
+      top: 4
     },
     [theme.breakpoints.down('sm')]: {
       display: 'none'
@@ -129,7 +137,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
               }
               data-qa-link-text
             >
-              {linkText}
+              <span className={classes.linkTextWrapper}>{linkText}</span>
             </Typography>
           )}
         </IconButton>
