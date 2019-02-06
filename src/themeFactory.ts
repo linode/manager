@@ -1099,8 +1099,10 @@ const themeDefaults: ThemeOptions = {
       hover: {
         cursor: 'pointer',
         '& a.secondaryLink': {
-          color: primaryColors.offBlack,
-          fontFamily: 'LatoWebBold'
+          color: primaryColors.main,
+          '&:hover': {
+            textDecoration: 'underline'
+          }
         }
       }
     },

@@ -118,12 +118,7 @@ export class SupportTicketsLanding extends React.Component<
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
-        <Grid
-          container
-          justify="space-between"
-          style={{ marginTop: 8 }}
-          updateFor={[]}
-        >
+        <Grid container justify="space-between" updateFor={[]}>
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
               linkTo="/support"
