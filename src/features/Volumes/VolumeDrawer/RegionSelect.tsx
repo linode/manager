@@ -14,25 +14,40 @@ import regionsContainer, {
   DefaultProps as WithRegions
 } from 'src/containers/regions.container';
 import { formatRegion } from 'src/utilities';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
+export const regionSupportMessage =
+  'This region does not currently support Block Storage.';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
-
 interface Props {
   error?: string;
   name: string;
   onChange: (e: React.ChangeEvent<any>) => void;
   onBlur: (e: any) => void;
   value: any;
+  shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
 }
 
 type CombinedProps = Props & WithRegions & WithStyles<ClassNames>;
 
-const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
-  const { error, onChange, onBlur, regionsData, value, name } = props;
+export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    error,
+    onChange,
+    onBlur,
+    regionsData,
+    value,
+    name,
+    shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage
+  } = props;
+
+  const regions = shouldOnlyDisplayRegionsWithBlockStorage
+    ? regionsData.filter(region => doesRegionSupportBlockStorage(region.id))
+    : regionsData;
 
   return (
     <FormControl fullWidth>
@@ -51,17 +66,24 @@ const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         <MenuItem key="none" value="none">
           All Regions
         </MenuItem>
-        {regionsData.map(eachRegion => (
-          <MenuItem
-            key={eachRegion.id}
-            value={eachRegion.id}
-            data-qa-attach-to-region={eachRegion.id}
-          >
-            {formatRegion('' + eachRegion.id)}
-          </MenuItem>
-        ))}
+        {regions.map(eachRegion => {
+          return (
+            <MenuItem
+              data-qa-attach-to-region={eachRegion.id}
+              key={eachRegion.id}
+              value={eachRegion.id}
+            >
+              {formatRegion('' + eachRegion.id)}
+            </MenuItem>
+          );
+        })}
       </Select>
       {error && <FormHelperText error>{error}</FormHelperText>}
+      {!error && shouldOnlyDisplayRegionsWithBlockStorage && (
+        <FormHelperText data-qa-volume-region>
+          Only regions supporting block storage are displayed.
+        </FormHelperText>
+      )}
     </FormControl>
   );
 };
