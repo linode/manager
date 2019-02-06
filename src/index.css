@@ -138,6 +138,10 @@ a {
   cursor: pointer;
 }
 
+.secondaryLink:hover {
+  text-decoration: underline;
+}
+
 strong,
 bold {
   font-family: 'LatoWebBold';
