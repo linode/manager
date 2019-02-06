@@ -1,6 +1,6 @@
 import { removeImage } from 'src/store/image/image.actions';
 import { requestImages } from 'src/store/image/image.requests';
-import { EventHandler } from './combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 
 const imageEventsHandler: EventHandler = (event, dispatch) => {
   const { action } = event;

@@ -3,16 +3,12 @@ import { isType } from 'typescript-fsa';
 import { addEvents, updateEventsAsSeen } from './event.actions';
 import {
   epoch,
+  ExtendedEvent,
   getNumUnseenEvents,
   mostRecentCreated,
   updateEvents,
   updateInProgressEvents
 } from './event.helpers';
-
-export interface ExtendedEvent extends Linode.Event {
-  _deleted?: string;
-  _initial?: boolean;
-}
 
 export interface State {
   events: ExtendedEvent[];

@@ -1,4 +1,4 @@
-import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 import { ApplicationState } from '..';
 import { removeNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { ThunkDispatch } from '../types';

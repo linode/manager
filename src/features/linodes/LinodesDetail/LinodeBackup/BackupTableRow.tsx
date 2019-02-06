@@ -1,12 +1,9 @@
 import * as moment from 'moment-timezone';
 import * as React from 'react';
-
 import TableRow from 'src/components/core/TableRow';
-
 import TableCell from 'src/components/TableCell';
-
-import { formatBackupDate } from './LinodeBackup';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
+import { formatBackupDate } from './util';
 
 interface Props {
   backup: Linode.LinodeBackup;

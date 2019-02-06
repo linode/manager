@@ -13,21 +13,10 @@ import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import CreateVolumeForm from './CreateVolumeForm';
 import EditVolumeForm from './EditVolumeForm';
+import { modes } from './modes';
 import ResizeVolumeForm from './ResizeVolumeForm';
 import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
-
-export const modes = {
-  ATTACHING: 'attaching',
-  CLONING: 'cloning',
-  CLOSED: 'closed',
-  CREATING_FOR_LINODE: 'creating_for_linode',
-  CREATING: 'creating',
-  EDITING: 'editing',
-  RESIZING: 'resizing',
-  VIEW_RESIZE_INSTRUCTIONS: 'viewing_resize_instructions',
-  VIEWING_CONFIG: 'viewing_config'
-};
 
 type CombinedProps = StateProps & DispatchProps;
 

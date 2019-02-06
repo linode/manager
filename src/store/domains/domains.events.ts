@@ -1,6 +1,6 @@
 import { getDomain } from 'src/services/domains';
 import { deleteDomain, upsertDomain } from 'src/store/domains/domains.actions';
-import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 
 const handler: EventHandler = (event, dispatch) => {
   const { action } = event;

@@ -18,7 +18,6 @@ import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
-import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import { getLinodeBackups } from 'src/services/linodes';
 import {
   LinodeActionsProps,
@@ -33,6 +32,7 @@ import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import { Info } from '../util';
 import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 

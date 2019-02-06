@@ -1,4 +1,4 @@
-import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 import { updateNodeBalancerConfigs } from './nodeBalancerConfig.requests';
 
 /**

@@ -9,7 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { ExtendedEvent } from 'src/store/events/event.reducer';
+import { ExtendedEvent } from 'src/store/events/event.helpers';
 import UserEventsListItem, {
   Props as UserEventsListItemProps
 } from './UserEventsListItem';

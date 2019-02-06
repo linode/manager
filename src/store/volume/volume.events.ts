@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { EventHandler } from '../middleware/combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 import { deleteVolumeActions } from './volume.actions';
 import { getAllVolumes, getOneVolume } from './volume.requests';
 
