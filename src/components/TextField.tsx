@@ -43,9 +43,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   selectSmall: {
-    padding: `0 ${theme.spacing.unit}px`,
+    padding: `0 ${theme.spacing.unit * 4}px 0 ${theme.spacing.unit}px`,
     minHeight: 'auto',
-    minWidth: 'auto'
+    minWidth: 132,
+    '& svg': {
+      marginTop: 0,
+      width: 24,
+      heioght: 24
+    }
   }
 });
 

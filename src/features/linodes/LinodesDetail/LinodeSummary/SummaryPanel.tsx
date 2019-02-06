@@ -26,6 +26,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   title: {},
   summarySection: {},
   section: {},
+  main: {},
+  sidebar: {},
+  domainSidebar: {},
+  titleWrapper: {},
   region: {
     [theme.breakpoints.between('sm', 'md')]: {
       flexBasis: '100%',
