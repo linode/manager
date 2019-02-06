@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import BackupStatus from 'src/components/BackupStatus';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -11,6 +12,7 @@ import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
+import withMostRecentBackup from 'src/containers/withMostRecentBackup.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import {
   LinodeActionsProps,
@@ -98,8 +100,11 @@ class SummaryPanel extends React.Component<CombinedProps> {
       linodeId,
       linodeRegion,
       linodeIpv4,
-      linodeIpv6
+      linodeIpv6,
+      mostRecentBackup
     } = this.props;
+
+    console.log('mostRecentBackup', mostRecentBackup);
 
     return (
       <div className={classes.root}>
@@ -156,6 +161,20 @@ class SummaryPanel extends React.Component<CombinedProps> {
           </Typography>
           <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
         </Paper>
+        <Paper className={classes.summarySection}>
+          <Typography
+            role="header"
+            variant="h3"
+            className={classes.title}
+            data-qa-title
+          >
+            Last Backup
+          </Typography>
+          <BackupStatus
+            linodeId={linodeId}
+            mostRecentBackup={mostRecentBackup}
+          />
+        </Paper>
       </div>
     );
   }
@@ -174,24 +193,33 @@ interface LinodeContextProps {
   linodeIpv6: any;
   linodeRegion: string;
   linodeTags: string[];
+  mostRecentBackup: string | null;
   request: () => Promise<Linode.Linode>;
 }
 
-const linodeContext = withLinode(context => ({
-  linodeIpv4: context.data!.ipv4,
-  linodeIpv6: context.data!.ipv6,
-  linodeRegion: context.data!.region,
-  linodeImageId: context.data!.image,
-  linodeTags: context.data!.tags,
-  linodeId: context.data!.id,
-  request: context.request
-}));
+const linodeContext = withLinode(context => {
+  console.log('context', context);
+  return {
+    linodeIpv4: context.data!.ipv4,
+    linodeIpv6: context.data!.ipv6,
+    linodeRegion: context.data!.region,
+    linodeImageId: context.data!.image,
+    linodeTags: context.data!.tags,
+    linodeId: context.data!.id,
+    mostRecentBackup: context.data!.mostRecentBackup,
+    request: context.request
+  };
+});
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
   localStyles,
   linodeContext,
   withLinodeActions,
+  withMostRecentBackup<LinodeContextProps & WithImage, LinodeContextProps>(
+    props => props.linodeId,
+    (ownProps, mostRecentBackup) => ({ ...ownProps, mostRecentBackup })
+  ),
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
     props => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })
