@@ -109,7 +109,7 @@ const combineResults = (
   );
 };
 
-// Walks though an Items array and adds the specified entity type to the `data` field.
+// Walks though an Items array and adds the specified entity type to each item.
 // This is to allow queries like "type:linode".
 const addEntityTypeToItems = (
   entityType: SearchableEntityType,
