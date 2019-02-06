@@ -56,7 +56,7 @@ import {
   transformConfigsForRequest
 } from '../utils';
 
-type ClassNames = 'root' | 'title' | 'nbStatuses';
+type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -64,8 +64,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
   },
+  port: {
+    marginRight: theme.spacing.unit * 2
+  },
   nbStatuses: {
-    fontFamily: 'LatoWeb'
+    display: 'block',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline'
+    }
   }
 });
 
@@ -1001,12 +1007,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
         heading={
-          <span>
-            Port {config.port !== undefined ? config.port : ''}&nbsp;
-            <em className={classes.nbStatuses}>
+          <React.Fragment>
+            <span className={classes.port}>
+              Port {config.port !== undefined ? config.port : ''}
+            </span>
+            <Typography className={classes.nbStatuses} component="span">
               {formatNodesStatus(config.nodes)}
-            </em>
-          </span>
+            </Typography>
+          </React.Fragment>
         }
       >
         <NodeBalancerConfigPanel
