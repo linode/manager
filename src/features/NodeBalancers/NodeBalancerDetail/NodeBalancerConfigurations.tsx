@@ -56,13 +56,22 @@ import {
   transformConfigsForRequest
 } from '../utils';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
+  },
+  port: {
+    marginRight: theme.spacing.unit * 2
+  },
+  nbStatuses: {
+    display: 'block',
+    [theme.breakpoints.up('sm')]: {
+      display: 'inline'
+    }
   }
 });
 
@@ -123,6 +132,21 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
   });
 };
 
+const formatNodesStatus = (nodes: Linode.NodeBalancerConfigNodeFields[]) => {
+  const statuses = nodes.reduce(
+    (acc, node) => {
+      if (node.status) {
+        acc[node.status]++;
+      }
+      return acc;
+    },
+    { UP: 0, DOWN: 0, unknown: 0 }
+  );
+
+  return `Node status: ${statuses.UP} up, ${statuses.DOWN} down${
+    statuses.unknown ? `, ${statuses.unknown} unknown` : ''
+  }`;
+};
 class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   static defaultDeleteConfigConfirmDialogState = {
     submitting: false,
@@ -943,6 +967,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     const isNewConfig =
       this.state.hasUnsavedConfig && idx === this.state.configs.length - 1;
     const { panelNodeMessages } = this.state;
+    const { classes } = this.props;
 
     const lensTo = lensFrom(['configs', idx]);
 
@@ -981,7 +1006,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         ]}
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
-        heading={`Port ${config.port !== undefined ? config.port : ''}`}
+        heading={
+          <React.Fragment>
+            <span className={classes.port}>
+              Port {config.port !== undefined ? config.port : ''}
+            </span>
+            <Typography className={classes.nbStatuses} component="span">
+              {formatNodesStatus(config.nodes)}
+            </Typography>
+          </React.Fragment>
+        }
       >
         <NodeBalancerConfigPanel
           linodesWithPrivateIPs={this.state.linodesWithPrivateIPs}
