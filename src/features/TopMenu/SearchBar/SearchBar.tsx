@@ -113,10 +113,11 @@ class SearchBar extends React.Component<CombinedProps, State> {
     }
     const { history } = this.props;
     const { searchText } = item.data;
+
     if (item.value === 'redirect') {
       history.push({
         pathname: `/search`,
-        search: `?query=${searchText}`,
+        search: `?query=${encodeURIComponent(searchText)}`,
         state: { searchResults: this.state.searchResults }
       });
       return;
