@@ -13,7 +13,6 @@ describe('Breadcrumb component', () => {
         root: '',
         backButton: 'backButton',
         linkText: '',
-        linkTextWrapper: '',
         labelText: '',
         subtitleLinkText: '',
         prefixComponentWrapper: ''
