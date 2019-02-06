@@ -26,15 +26,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         transition: theme.transitions.create(['background-color']),
         paddingLeft: 5
       }
-    },
-    '& .secondaryLink': {
-      transition: theme.transitions.create('color'),
-      '&:hover': {
-        textDecoration: 'underline'
-      }
-    },
-    '&:hover .secondaryLink': {
-      color: theme.palette.primary.main
     }
   }
 });

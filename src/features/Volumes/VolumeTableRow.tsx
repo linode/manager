@@ -240,7 +240,10 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
           data-qa-volume-cell-attachment={volume.linodeLabel}
         >
           {volume.linodeLabel && (
-            <Link to={`/linodes/${volume.linode_id}`}>
+            <Link
+              to={`/linodes/${volume.linode_id}`}
+              className="link secondaryLink"
+            >
               {volume.linodeLabel}
             </Link>
           )}
