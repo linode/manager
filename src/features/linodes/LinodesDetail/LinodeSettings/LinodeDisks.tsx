@@ -230,17 +230,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Grid container>
-          <Grid item md={4} sm={12}>
-            <Paper classes={{ root: classes.diskSpaceWrapper }}>
-              <LinodeDiskSpace
-                disks={data}
-                error={error}
-                loading={loading}
-                totalDiskSpace={linodeTotalDisk}
-              />
-            </Paper>
-          </Grid>
-          <Grid item md={8} sm={12}>
+          <Grid item xs={12} md={8} sm={12}>
             <Table isResponsive={false} aria-label="List of Disks">
               <TableHead>
                 <TableRow>
@@ -255,6 +245,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                 {this.renderTableContent(loading, linodeStatus, error, data)}
               </TableBody>
             </Table>
+          </Grid>
+          <Grid item xs={12} md={4} sm={12}>
+            <Paper classes={{ root: classes.diskSpaceWrapper }}>
+              <LinodeDiskSpace
+                disks={data}
+                error={error}
+                loading={loading}
+                totalDiskSpace={linodeTotalDisk}
+              />
+            </Paper>
           </Grid>
         </Grid>
         <PaginationFooter
