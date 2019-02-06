@@ -18,7 +18,6 @@ import SelectRegionPanel, {
 } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
-import { Info } from 'src/features/linodes/LinodesCreate/LinodesCreate';
 import userSSHKeyHoc, {
   State as UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -32,6 +31,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
+import { Info } from '../util';
 import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 const DEFAULT_IMAGE = 'linode/debian9';

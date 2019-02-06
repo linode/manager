@@ -10,6 +10,12 @@ import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
 import CopyableTextField from 'src/features/Volumes/CopyableTextField';
 
+declare module 'qrcode.react' {
+  export interface QRCodeProps {
+    className: any;
+  }
+}
+
 type ClassNames = 'root' | 'instructions' | 'qrcode';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({

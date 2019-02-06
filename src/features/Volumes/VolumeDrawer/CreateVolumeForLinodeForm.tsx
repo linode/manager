@@ -21,6 +21,7 @@ import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { openForAttaching } from 'src/store/volumeDrawer';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
+import { modes } from './modes';
 import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
@@ -30,7 +31,6 @@ import {
   handleGeneralErrors,
   maybeCastToNumber
 } from './utils';
-import { modes } from './VolumeDrawer';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root' | 'textWrapper';

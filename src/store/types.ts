@@ -2,7 +2,7 @@ import {
   ActionCreator,
   MapStateToProps as _MapStateToProps
 } from 'react-redux';
-import { Action } from 'redux';
+import { Action, Dispatch } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 
@@ -55,3 +55,9 @@ export interface RequestableData<D> {
   data?: D;
   error?: Error | Linode.ApiFieldError[];
 }
+
+export type EventHandler = (
+  event: Linode.EntityEvent,
+  dispatch: Dispatch<any>,
+  getState: () => ApplicationState
+) => void;

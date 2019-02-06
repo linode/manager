@@ -1,6 +1,6 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-import { NodeBalancerConfigFields } from './configs';
+import { NodeBalancerConfigFields } from './interfaces';
 
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
