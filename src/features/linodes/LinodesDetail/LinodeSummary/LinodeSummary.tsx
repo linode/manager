@@ -670,7 +670,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               alignItems="center"
               className={classes.headerWrapper}
             >
-              <Grid item>
+              <Grid item className="py0">
                 <Typography
                   role="header"
                   variant="h2"
@@ -696,6 +696,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                       value={rangeSelection}
                       onChange={this.handleChartRangeChange}
                       inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                      small
                     >
                       {this.rangeSelectOptions}
                     </Select>
