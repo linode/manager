@@ -111,7 +111,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
       <Drawer open={open} onClose={handleClose} title="Free Upgrade Available">
         {error && <Notice error text={error} />}
         <Typography>
-          This Linode has pending upgrades. The resouces that are affected
+          This Linode has pending upgrades. The resources that are affected
           include:
         </Typography>
         <ul className="nonMUI-list">
