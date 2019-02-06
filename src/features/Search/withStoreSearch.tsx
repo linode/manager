@@ -11,6 +11,7 @@ import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   SearchResults
 } from 'src/store/selectors/getSearchEntities';
+import { search as _search } from 'src/utilities/search';
 
 interface HandlerProps {
   search: (query: string) => SearchResults;
@@ -32,26 +33,11 @@ export const search = (
   }
   const { linodes, volumes, domains, nodebalancers, images } = entities;
   return {
-    linodes: linodes.filter(linode =>
-      filterMatched(inputValue, linode.label, linode.data.tags, linode.data.ips)
-    ),
-    volumes: volumes.filter(volume =>
-      filterMatched(inputValue, volume.label, volume.data.tags)
-    ),
-    domains: domains.filter(domain =>
-      filterMatched(inputValue, domain.label, domain.data.tags, domain.data.ips)
-    ),
-    images: images.filter(image =>
-      filterMatched(inputValue, image.label, image.data.tags)
-    ),
-    nodebalancers: nodebalancers.filter(nodebal =>
-      filterMatched(
-        inputValue,
-        nodebal.label,
-        nodebal.data.tags,
-        nodebal.data.ips
-      )
-    )
+    linodes: _search(inputValue, linodes),
+    volumes: _search(inputValue, volumes),
+    domains: _search(inputValue, domains),
+    images: _search(inputValue, images),
+    nodebalancers: _search(inputValue, nodebalancers)
   };
 };
 

@@ -3,6 +3,7 @@ const logicQueryParser = require('logic-query-parser');
 /* tslint:disable-next-line */
 const searchString = require('search-string');
 import { all, any, isEmpty, keys as getKeys } from 'ramda';
+import { Item } from 'src/components/EnhancedSelect/Select';
 
 export type ValueType = 'and' | 'or' | 'string';
 
@@ -12,36 +13,45 @@ export interface Value {
   values?: Value[];
 }
 
-export interface Linode {
-  label: string;
-  tags: string[];
-  id: number;
-}
-
 const toBoolean = (value: any) => Boolean(value);
 export const and = all(toBoolean);
 export const or = any(toBoolean);
 
-const searchEntityField = (
-  entity: any,
-  field: string,
-  queryPortion: string
-) => {
+const searchEntityField = (item: Item, field: string, queryPortion: string) => {
+  // Items separate label and data, so we need to flatten it
+  const entity = { label: item.label, ...item.data };
+
   // If we're searching an array (i.e. tags), convert to a string first
   const toSearch = Array.isArray(entity[field])
     ? entity[field].join(' ')
-    : entity[field];
+    : entity[field] || '';
 
   return toSearch.includes(queryPortion);
 };
 
 // SEARCH FUNCTION
-export const search = (query: string, data: Linode[]): Linode[] => {
-  const cleanedQuery = query.trim();
+export const search = (query: string, items: Item[]): Item[] => {
+  let cleanedQuery = query.trim();
+  cleanedQuery = cleanedQuery.replace('&&', 'AND');
+  cleanedQuery = cleanedQuery.replace('||', 'OR');
 
-  // Parse the query with 3rd-party library
-  const binaryTree = logicQueryParser.parse(cleanedQuery);
-  const queryJson = logicQueryParser.utils.binaryTreeToQueryJson(binaryTree);
+  // Logic Query Parser will throw an error if the query ends with "OR" or "AND"
+  // To avoid an error while a user is typing a query, we chop of the last character
+  // if (cleanedQuery.endsWith('OR') || cleanedQuery.endsWith('AND')) {
+  //   cleanedQuery = cleanedQuery.slice(0, cleanedQuery.length - 1);
+  // }
+
+  try {
+    // Parse the query with 3rd-party library
+    const binaryTree = logicQueryParser.parse(cleanedQuery);
+    const queryJson = logicQueryParser.utils.binaryTreeToQueryJson(binaryTree);
+
+    return items.filter((item: Item) =>
+      recursivelyCreateTestConditions(queryJson, item)
+    );
+  } catch {
+    return [];
+  }
 
   // Now we filter data by applying a "test condition" function to each entity
   // The "test condition" function is Ramda/FP style, and looks something like this:
@@ -51,9 +61,6 @@ export const search = (query: string, data: Linode[]): Linode[] => {
   //   linode.label.includes('test-linode-001'),
   // ]);
   //
-  return data.filter((linode: Linode) =>
-    recursivelyCreateTestConditions(queryJson, linode)
-  );
 };
 
 const recursivelyCreateTestConditions = (v: Value, entity: any): boolean => {
@@ -104,12 +111,13 @@ const createCondition = (queryPortion: string, entity: any): boolean => {
 
     // We should really only have ONE key, so we'll assume this and use the 0th key
     const key = keys[0];
+    const substitutedKey = makeSubstitution(key);
 
     // "parsedValues" will be an array of all values,
     // e.g. "tag:production,my-app" --> ['production', 'my-app']
     const parsedValues: string[] = exclude[key];
     const conditions = parsedValues.map(
-      v => !searchEntityField(entity, key, v)
+      v => !searchEntityField(entity, substitutedKey, v)
     );
     return and(conditions);
   } else {
@@ -118,8 +126,11 @@ const createCondition = (queryPortion: string, entity: any): boolean => {
     if (valueKeys.length > 0) {
       const key = valueKeys[0];
       const val = withoutExclude[key];
+
+      const substitutedKey = makeSubstitution(key);
+
       const conditions: boolean[] = val.map((v: string) =>
-        searchEntityField(entity, key, v)
+        searchEntityField(entity, substitutedKey, v)
       );
       return and(conditions);
 
@@ -131,4 +142,24 @@ const createCondition = (queryPortion: string, entity: any): boolean => {
       return or(conditions);
     }
   }
+};
+
+const keySubstitutions = [
+  {
+    name: 'tags',
+    alternatives: ['tag', 'group']
+  },
+  {
+    name: 'label',
+    alternatives: ['name', 'title']
+  }
+];
+
+const makeSubstitution = (key: string) => {
+  for (const sub of keySubstitutions) {
+    if (sub.alternatives.includes(key)) {
+      return sub.name;
+    }
+  }
+  return key;
 };
