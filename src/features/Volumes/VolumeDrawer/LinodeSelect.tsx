@@ -1,4 +1,6 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import _Option from 'react-select/lib/components/Option';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
@@ -8,7 +10,11 @@ import {
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodes } from 'src/services/linodes';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { debounce } from 'throttle-debounce';
+
+export const regionSupportMessage =
+  'This Linode is in a region that does not currently support Block Storage';
 
 type ClassNames = 'root';
 
@@ -23,6 +29,7 @@ interface Props {
   name: string;
   onBlur: (e: any) => void;
   region: string;
+  shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
 }
 
 interface State {
@@ -33,7 +40,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class LinodeSelect extends React.Component<CombinedProps, State> {
+export class LinodeSelect extends React.Component<CombinedProps, State> {
   mounted: boolean;
 
   static defaultProps = {
@@ -156,8 +163,20 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
   debouncedSearch = debounce(400, false, this.searchLinodes);
 
   render() {
-    const { error, name, onBlur } = this.props;
+    const {
+      error,
+      name,
+      onBlur,
+      shouldOnlyDisplayRegionsWithBlockStorage
+    } = this.props;
     const { loading, linodes, selectedLinodeId } = this.state;
+
+    const options = shouldOnlyDisplayRegionsWithBlockStorage
+      ? linodes.filter(linode => {
+          const region = pathOr('', ['data', 'region'], linode);
+          return doesRegionSupportBlockStorage(region);
+        })
+      : linodes;
 
     return (
       <FormControl fullWidth>
@@ -169,7 +188,7 @@ class LinodeSelect extends React.Component<CombinedProps, State> {
           value={this.getSelectedLinode(selectedLinodeId)}
           isLoading={loading}
           errorText={error}
-          options={[{ label: 'Select a Linode', value: -1 }, ...linodes]}
+          options={[{ label: 'Select a Linode', value: -1 }, ...options]}
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}
           data-qa-select-linode
