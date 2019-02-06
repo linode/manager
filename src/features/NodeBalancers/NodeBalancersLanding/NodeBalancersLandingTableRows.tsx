@@ -109,6 +109,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                     to={`/nodebalancers/${
                       nodeBalancer.id
                     }/configurations/${id}`}
+                    className="secondaryLink"
                   >
                     {port}
                   </Link>
