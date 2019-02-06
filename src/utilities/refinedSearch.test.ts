@@ -1,26 +1,28 @@
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { search } from './search';
+import { refinedSearch as search, SearchableItem } from './refinedSearch';
 
-const mockData: { linodes: Item[] } = {
-  linodes: [
-    { value: 1, label: 'test-linode-001', data: { tags: ['my-app'] } },
-    {
-      value: 2,
-      label: 'test-linode-002',
-      data: { tags: ['my-app2', 'production'] }
-    },
-    {
-      value: 3,
-      label: 'test-linode-003',
-      data: { tags: ['unrelated-app', 'production'] }
-    },
-    { value: 4, label: 'my-app', data: { tags: [] } }
-  ]
-};
+const data: SearchableItem[] = [
+  {
+    value: 1,
+    label: 'test-linode-001',
+    entityType: 'linode',
+    data: { tags: ['my-app'] }
+  },
+  {
+    value: 2,
+    label: 'test-linode-002',
+    entityType: 'linode',
+    data: { tags: ['my-app2', 'production'] }
+  },
+  {
+    value: 3,
+    label: 'test-linode-003',
+    entityType: 'linode',
+    data: { tags: ['unrelated-app', 'production'] }
+  },
+  { value: 4, label: 'my-app', entityType: 'domain', data: { tags: [] } }
+];
 
 describe('Refined Search', () => {
-  const data = mockData.linodes;
-
   describe('simple query', () => {
     it('should search labels', () => {
       const query = 'test-linode-001';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { emptyResults, filterMatched } from 'src/features/Search/utils';
+import { emptyResults } from 'src/features/Search/utils';
 import { ApplicationState } from 'src/store';
 import entitiesErrors, {
   ErrorObject
@@ -11,7 +11,11 @@ import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   SearchResults
 } from 'src/store/selectors/getSearchEntities';
-import { search as _search } from 'src/utilities/search';
+import {
+  refinedSearch,
+  SearchableEntityType,
+  SearchableItem
+} from 'src/utilities/refinedSearch';
 
 interface HandlerProps {
   search: (query: string) => SearchResults;
@@ -32,12 +36,24 @@ export const search = (
     return entities; // could also return empty results, but this matches existing pattern.
   }
   const { linodes, volumes, domains, nodebalancers, images } = entities;
+
+  // Flatten all entities so we can search a single array. We add "entityType" to each item.
+  const entitiesToSearch = [
+    ...addEntityTypeToItems('linode', linodes),
+    ...addEntityTypeToItems('volume', volumes),
+    ...addEntityTypeToItems('domain', domains),
+    ...addEntityTypeToItems('nodebalancer', nodebalancers),
+    ...addEntityTypeToItems('image', images)
+  ];
+
+  const results = refinedSearch(inputValue, entitiesToSearch);
+
   return {
-    linodes: _search(inputValue, linodes),
-    volumes: _search(inputValue, volumes),
-    domains: _search(inputValue, domains),
-    images: _search(inputValue, images),
-    nodebalancers: _search(inputValue, nodebalancers)
+    linodes: filterFor('linode', results),
+    volumes: filterFor('volume', results),
+    domains: filterFor('domain', results),
+    images: filterFor('image', results),
+    nodebalancers: filterFor('nodebalancer', results)
   };
 };
 
@@ -77,9 +93,12 @@ export default () => (Component: React.ComponentType<any>) => {
  * result object. This is the format needed for the search bar, which does not
  * separate results by entity type, and highlights the search match.
  */
-const combineResults = (results: SearchResults, query: string): Item[] => {
+const combineResults = (
+  results: SearchResults,
+  query: string
+): SearchableItem[] => {
   return Object.values(results).reduce(
-    (accumulator, entityResultList: Item[]) => [
+    (accumulator, entityResultList: SearchableItem[]) => [
       ...accumulator,
       ...entityResultList.map(entity => ({
         ...entity,
@@ -88,4 +107,23 @@ const combineResults = (results: SearchResults, query: string): Item[] => {
     ],
     []
   );
+};
+
+// Walks though an Items array and adds the specified entity type to the `data` field.
+// This is to allow queries like "type:linode".
+const addEntityTypeToItems = (
+  entityType: SearchableEntityType,
+  items: Item[]
+): SearchableItem[] =>
+  items.map(item => ({
+    ...item,
+    entityType
+  }));
+
+// Filters given results, including only the specified entity type
+const filterFor = (
+  entityType: SearchableEntityType,
+  searchResults: SearchableItem[]
+) => {
+  return searchResults.filter(result => result.entityType === entityType);
 };
