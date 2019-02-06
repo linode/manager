@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import InputLabel from 'src/components/core/InputLabel';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -24,7 +25,14 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
-type ClassNames = 'root' | 'inner' | 'field' | 'deleteRoot' | 'topMargin';
+type ClassNames =
+  | 'root'
+  | 'inner'
+  | 'field'
+  | 'deleteRoot'
+  | 'topMargin'
+  | 'emailField'
+  | 'emailAddress';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -47,6 +55,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   topMargin: {
     marginTop: theme.spacing.unit * 2
+  },
+  emailField: {
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 2
+  },
+  emailAddress: {
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -122,13 +137,13 @@ class UserProfile extends React.Component<CombinedProps> {
             errorText={hasErrorFor('username')}
             data-qa-username
           />
-          <TextField
-            disabled /* API doesn't allow changing user email address */
-            className={classes.field}
-            label="Email Address"
-            value={email}
-            data-qa-email
-          />
+          {/* API doesn't allow changing user email address */}
+          <div className={classes.emailField}>
+            <InputLabel>Email Address</InputLabel>
+            <Typography data-qa-email className={classes.emailAddress}>
+              {email}
+            </Typography>
+          </div>
           <ActionsPanel style={{ marginTop: 16 }}>
             <Button
               type="primary"
