@@ -31,7 +31,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignContent: 'center'
   },
   backupLink: {
-    display: 'flex'
+    display: 'flex',
+    '&:hover': {
+      '& $icon': {
+        fill: theme.palette.primary.main
+      }
+    }
   },
   backupText: {
     whiteSpace: 'nowrap'

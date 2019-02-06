@@ -150,18 +150,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
             </div>
           )}
         </Paper>
-        <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
-            Tags
-          </Typography>
-          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
-        </Paper>
-        <Paper className={classes.summarySection}>
+        <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
           <Typography
             role="header"
             variant="h3"
@@ -174,6 +163,17 @@ class SummaryPanel extends React.Component<CombinedProps> {
             linodeId={linodeId}
             mostRecentBackup={mostRecentBackup}
           />
+        </Paper>
+        <Paper className={classes.summarySection}>
+          <Typography
+            role="header"
+            variant="h3"
+            className={classes.title}
+            data-qa-title
+          >
+            Tags
+          </Typography>
+          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
         </Paper>
       </div>
     );
