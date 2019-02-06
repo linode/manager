@@ -30,7 +30,7 @@ const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <TableCell parentColumn="Last Backup" className={classes.root}>
-      <BackupStatus linodeId={linodeId} mostRecentBackup={mostRecentBackup} />`
+      <BackupStatus linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
     </TableCell>
   );
 };
