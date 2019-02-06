@@ -11,50 +11,31 @@ import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   SearchResults
 } from 'src/store/selectors/getSearchEntities';
-import {
-  refinedSearch,
-  SearchableEntityType,
-  SearchableItem
-} from 'src/utilities/refinedSearch';
+import { refinedSearch, SearchableItem } from 'src/utilities/refinedSearch';
 
 interface HandlerProps {
   search: (query: string) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
   combinedResults: Item[];
-  entities: SearchResults;
+  entities: SearchableItem[];
   entitiesLoading: boolean;
   searchResults: SearchResults;
   errors: ErrorObject;
 }
 
 export const search = (
-  entities: SearchResults,
+  entities: SearchableItem[],
   inputValue: string
 ): SearchResults => {
   if (!inputValue || inputValue === '') {
-    return entities; // could also return empty results, but this matches existing pattern.
+    return emptyResults;
   }
-  const { linodes, volumes, domains, nodebalancers, images } = entities;
 
-  // Flatten all entities so we can search a single array. We add "entityType" to each item.
-  const entitiesToSearch = [
-    ...addEntityTypeToItems('linode', linodes),
-    ...addEntityTypeToItems('volume', volumes),
-    ...addEntityTypeToItems('domain', domains),
-    ...addEntityTypeToItems('nodebalancer', nodebalancers),
-    ...addEntityTypeToItems('image', images)
-  ];
+  const results = refinedSearch(inputValue, entities);
+  const resultsSeparatedByEntity = separateResultsByEntity(results);
 
-  const results = refinedSearch(inputValue, entitiesToSearch);
-
-  return {
-    linodes: filterFor('linode', results),
-    volumes: filterFor('volume', results),
-    domains: filterFor('domain', results),
-    images: filterFor('image', results),
-    nodebalancers: filterFor('nodebalancer', results)
-  };
+  return resultsSeparatedByEntity;
 };
 
 export default () => (Component: React.ComponentType<any>) => {
@@ -96,7 +77,7 @@ export default () => (Component: React.ComponentType<any>) => {
 const combineResults = (
   results: SearchResults,
   query: string
-): SearchableItem[] => {
+): SearchResults => {
   return Object.values(results).reduce(
     (accumulator, entityResultList: SearchableItem[]) => [
       ...accumulator,
@@ -109,21 +90,19 @@ const combineResults = (
   );
 };
 
-// Walks though an Items array and adds the specified entity type to each item.
-// This is to allow queries like "type:linode".
-const addEntityTypeToItems = (
-  entityType: SearchableEntityType,
-  items: Item[]
-): SearchableItem[] =>
-  items.map(item => ({
-    ...item,
-    entityType
-  }));
+const separateResultsByEntity = (searchResults: SearchableItem[]) => {
+  const separatedResults = {
+    linodes: [],
+    volumes: [],
+    domains: [],
+    images: [],
+    nodebalancers: []
+  };
 
-// Filters given results, including only the specified entity type
-const filterFor = (
-  entityType: SearchableEntityType,
-  searchResults: SearchableItem[]
-) => {
-  return searchResults.filter(result => result.entityType === entityType);
+  searchResults.forEach(result => {
+    // EntityTypes are singular; we'd like the resulting array to be plural
+    const pluralizedEntityType = result.entityType + 's';
+    separatedResults[pluralizedEntityType].push(result);
+  });
+  return separatedResults;
 };

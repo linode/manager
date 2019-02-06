@@ -1,15 +1,15 @@
 import { createSelector } from 'reselect';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { SearchableItem } from 'src/utilities/refinedSearch';
 
 export interface SearchResults {
-  linodes: Item[];
-  volumes: Item[];
-  nodebalancers: Item[];
-  domains: Item[];
-  images: Item[];
+  linodes: SearchableItem[];
+  volumes: SearchableItem[];
+  nodebalancers: SearchableItem[];
+  domains: SearchableItem[];
+  images: SearchableItem[];
 }
 
 type State = ApplicationState['__resources'];
@@ -37,9 +37,10 @@ const formatLinode = (
   linode: Linode.Linode,
   types: Linode.LinodeType[],
   images: Linode.Image[]
-): Item => ({
+): SearchableItem => ({
   label: linode.label,
   value: linode.id,
+  entityType: 'linode',
   data: {
     tags: linode.tags,
     description: getLinodeDescription(
@@ -60,9 +61,10 @@ const formatLinode = (
   }
 });
 
-const volumeToItem = (volume: Linode.Volume) => ({
+const volumeToSearchableItem = (volume: Linode.Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
+  entityType: 'volume',
   data: {
     tags: volume.tags,
     description: volume.size + ' GiB',
@@ -74,12 +76,15 @@ const volumeToItem = (volume: Linode.Volume) => ({
   }
 });
 
-const imageReducer = (accumulator: Item[], image: Linode.Image) =>
-  image.is_public ? accumulator : [...accumulator, imageToItem(image)];
+const imageReducer = (accumulator: SearchableItem[], image: Linode.Image) =>
+  image.is_public
+    ? accumulator
+    : [...accumulator, imageToSearchableItem(image)];
 
-const imageToItem = (image: Linode.Image) => ({
+const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
   label: image.label,
   value: image.id,
+  entityType: 'image',
   data: {
     tags: [],
     description: image.description || '',
@@ -92,9 +97,10 @@ const imageToItem = (image: Linode.Image) => ({
   }
 });
 
-const domainToItem = (domain: Linode.Domain) => ({
+const domainToSearchableItem = (domain: Linode.Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
+  entityType: 'domain',
   data: {
     tags: domain.tags,
     description: domain.type,
@@ -106,9 +112,12 @@ const domainToItem = (domain: Linode.Domain) => ({
   }
 });
 
-const nodeBalToItem = (nodebal: Linode.NodeBalancer) => ({
+const nodeBalToSearchableItem = (
+  nodebal: Linode.NodeBalancer
+): SearchableItem => ({
   label: nodebal.label,
   value: nodebal.id,
+  entityType: 'nodebalancer',
   data: {
     tags: nodebal.tags,
     description: nodebal.hostname,
@@ -136,7 +145,7 @@ export default createSelector<
   Linode.Domain[],
   Linode.NodeBalancer[],
   Linode.LinodeType[],
-  SearchResults
+  SearchableItem[]
 >(
   linodeSelector,
   volumeSelector,
@@ -145,12 +154,20 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   (linodes, volumes, images, domains, nodebalancers, types) => {
-    return {
-      linodes: linodes.map(linode => formatLinode(linode, types, images)),
-      volumes: volumes.map(volumeToItem),
-      images: images.reduce(imageReducer, []),
-      domains: domains.map(domainToItem),
-      nodebalancers: nodebalancers.map(nodeBalToItem)
-    };
+    const searchableLinodes = linodes.map(linode =>
+      formatLinode(linode, types, images)
+    );
+    const searchableVolumes = volumes.map(volumeToSearchableItem);
+    const searchableImages = images.reduce(imageReducer, []);
+    const searchableDomains = domains.map(domainToSearchableItem);
+    const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
+
+    return [
+      ...searchableLinodes,
+      ...searchableVolumes,
+      ...searchableImages,
+      ...searchableDomains,
+      ...searchableNodebalancers
+    ];
   }
 );
