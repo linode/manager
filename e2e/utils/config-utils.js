@@ -53,7 +53,9 @@ exports.login = (username, password, credFilePath) => {
     }
 
     browser.waitForVisible('#password', constants.wait.long);
+    browser.jsClick('#username');
     browser.trySetValue('#username', username);
+    browser.jsClick('#password');
     browser.trySetValue('#password', password);
     letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
     const loginButton = '.btn#submit';
