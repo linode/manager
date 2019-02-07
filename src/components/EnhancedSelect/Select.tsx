@@ -90,7 +90,20 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
-      backgroundColor: theme.bg.white
+      backgroundColor: theme.bg.white,
+      height: '101%',
+      overflow: 'auto',
+      maxHeight: 285,
+      '&::-webkit-scrollbar': {
+        appearance: 'none'
+      },
+      '&::-webkit-scrollbar:vertical': {
+        width: 8
+      },
+      '&::-webkit-scrollbar-thumb': {
+        borderRadius: 8,
+        backgroundColor: '#ccc'
+      }
     },
     '& .react-select__option': {
       transition: theme.transitions.create(['background-color', 'color']),
