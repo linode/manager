@@ -2,7 +2,7 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
-import { SearchableItem } from 'src/utilities/refinedSearch';
+import { SearchableItem } from 'src/features/Search/refinedSearch';
 
 export interface SearchResults {
   combinedResults: SearchableItem[];

@@ -1,5 +1,5 @@
 import { searchableItems } from 'src/__data__/searchableItems';
-import { SearchableItem } from 'src/utilities/refinedSearch';
+import { SearchableItem } from 'src/features/Search/refinedSearch';
 import { separateResultsByEntity } from './utils';
 
 const data = searchableItems as SearchableItem[];

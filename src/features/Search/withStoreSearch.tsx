@@ -7,7 +7,7 @@ import entitiesErrors, {
 } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities from 'src/store/selectors/getSearchEntities';
-import { refinedSearch, SearchableItem } from 'src/utilities/refinedSearch';
+import { refinedSearch, SearchableItem } from './refinedSearch';
 import {
   emptyResults,
   SearchResults,

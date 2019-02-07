@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
+import { SearchableItem } from 'src/features/Search/refinedSearch';
 import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import { SearchableItem } from 'src/utilities/refinedSearch';
 
 type State = ApplicationState['__resources'];
 
