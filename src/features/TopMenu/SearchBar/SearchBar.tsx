@@ -52,17 +52,6 @@ const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
-/* The final option in the list will be the "go to search results page" link.
- * This doesn't share the same shape as the rest of the results, so should use
- * the default styling. */
-const Option = (props: any) => {
-  return props.value === 'redirect' ? (
-    <_Option {...props} />
-  ) : (
-    <SearchSuggestion {...props} />
-  );
-};
-
 class SearchBar extends React.Component<CombinedProps, State> {
   selectRef = React.createRef<HTMLInputElement>();
 
@@ -146,6 +135,17 @@ class SearchBar extends React.Component<CombinedProps, State> {
       !combinedResults || combinedResults.length === 0
         ? []
         : [defaultOption, ...combinedResults];
+
+    /* The final option in the list will be the "go to search results page" link.
+     * This doesn't share the same shape as the rest of the results, so should use
+     * the default styling. */
+    const Option = (props: any) => {
+      return props.value === 'redirect' ? (
+        <_Option {...props} />
+      ) : (
+        <SearchSuggestion searchText={searchText} {...props} />
+      );
+    };
 
     return (
       <React.Fragment>

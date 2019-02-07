@@ -4,14 +4,6 @@ import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { SearchableItem } from 'src/utilities/refinedSearch';
 
-export interface SearchResults {
-  linodes: SearchableItem[];
-  volumes: SearchableItem[];
-  nodebalancers: SearchableItem[];
-  domains: SearchableItem[];
-  images: SearchableItem[];
-}
-
 type State = ApplicationState['__resources'];
 
 export const getLinodeIps = (linode: Linode.Linode): string[] => {
@@ -70,7 +62,6 @@ const volumeToSearchableItem = (volume: Linode.Volume): SearchableItem => ({
     description: volume.size + ' GiB',
     icon: 'volume',
     path: `/volumes/${volume.id}`,
-    searchText: '',
     created: volume.created,
     region: volume.region
   }
@@ -92,7 +83,6 @@ const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
     icon: 'volume',
     /* TODO: Choose a real location for this to link to */
     path: `/images`,
-    searchText: '',
     created: image.created
   }
 });
@@ -107,7 +97,6 @@ const domainToSearchableItem = (domain: Linode.Domain): SearchableItem => ({
     status: domain.status,
     icon: 'domain',
     path: `/domains/${domain.id}`,
-    searchText: '',
     ips: getDomainIps(domain)
   }
 });
@@ -123,7 +112,6 @@ const nodeBalToSearchableItem = (
     description: nodebal.hostname,
     icon: 'nodebalancer',
     path: `/nodebalancers/${nodebal.id}`,
-    searchText: '',
     created: nodebal.created,
     ips: getNodebalIps(nodebal)
   }
