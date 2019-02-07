@@ -1,7 +1,7 @@
 import * as logicQueryParser from 'logic-query-parser';
-import { all, any, isEmpty, keys as ramdaKeys } from 'ramda';
+import { all, any, equals, isEmpty } from 'ramda';
 import * as searchString from 'search-string';
-import { SearchableItem } from './search.interfaces';
+import { SearchableItem, SearchField } from './search.interfaces';
 
 // This type and interface are used by 'logic-query-parser
 export type ValueType = 'and' | 'or' | 'string';
@@ -10,6 +10,8 @@ export interface Value {
   value?: string;
   values?: Value[];
 }
+
+const defaultSearchFields = ['label', 'tags', 'ips'];
 
 // MAIN SEARCH FUNCTION
 export const refinedSearch = (
@@ -48,7 +50,7 @@ const recursivelyCreateTestConditions = (
 ): boolean => {
   // Base case: we have a SINGLE value, and it's a string. Simple queries like "my-app" fall into this category
   if (v.value && v.type === 'string') {
-    return createCondition(v.value, item);
+    return testItem(item, v.value);
   }
 
   // If we have multiple values, we need to recursively call this function until we get a single value.
@@ -61,129 +63,137 @@ const recursivelyCreateTestConditions = (
 
     // If it's an "and" condition, all conditions in the array need to be TRUE
     if (v.type === 'and') {
-      return and(parsedValues);
+      return areAllTrue(parsedValues);
     }
 
     // If it's an "or" condition, only ONE condition in the array needs to be TRUE
     if (v.type === 'or') {
-      return or(parsedValues);
+      return areAnyTrue(parsedValues);
     }
   }
 
   return false;
 };
 
-// Takes a portion of a query ("tag:production") and an entity, and returns
-// TRUE if the query matches the entity. The query can match the entity by key type
-// (e.g. "tag:production,my-app" will look for entities with a tag called "production" AND a
-// tag called "my-app"). If there is no key specified, we'll search label, tags, and ipv4.
-const createCondition = (
-  queryPortion: string,
-  item: SearchableItem
-): boolean => {
-  // Parse query with 3rd party library
-  const parsedValue = searchString.parse(queryPortion).getParsedQuery();
+export const testItem = (item: SearchableItem, query: string) => {
+  const parsedQuery = searchString.parse(query).getParsedQuery();
 
-  // If the condition is negated, it will end up in a property called "exclude",
-  // so we separate them here.
-  const { exclude, ...withoutExclude } = parsedValue;
-
-  // If the condition is negated
-  if (!isEmpty(exclude)) {
-    const keys: string[] = ramdaKeys<string>(exclude);
-
-    // We should really only have ONE key, so we'll assume this and use the 0th key
-    const key = keys[0] || '';
-
-    // "parsedValues" will be an array of all values,
-    // e.g. "tag:production,my-app" --> ['production', 'my-app']
-    const parsedValues: string[] = exclude[key];
-
-    const substitutedKey = makeSubstitution(key);
-
-    const conditions = parsedValues.map(
-      v => !searchEntityField(item, substitutedKey, v)
-    );
-    return and(conditions);
-  } else {
-    const valueKeys = ramdaKeys<string>(withoutExclude);
-
-    if (valueKeys.length > 0) {
-      const key = valueKeys[0];
-      const val = withoutExclude[key];
-
-      const substitutedKey = makeSubstitution(key);
-
-      const conditions: boolean[] = val.map((v: string) =>
-        searchEntityField(item, substitutedKey, v)
-      );
-      return and(conditions);
-
-      // In this case, no keys were specified: the query was simple (e.g. "my-app")
-      // So we'll search all fields we're interested in.
-    } else {
-      const defaultFields = ['label', 'tags', 'ips'];
-
-      const conditions: boolean[] = defaultFields.map(field =>
-        searchEntityField(item, field, queryPortion)
-      );
-      return or(conditions);
-    }
+  // If there are no specified search fields, we search the default fields.
+  if (isSimpleQuery(parsedQuery)) {
+    return searchDefaultFields(item, query);
   }
+
+  const { fieldName, searchTerms, isNegated } = provideQueryInfo(parsedQuery);
+
+  for (const searchTerm of searchTerms) {
+    const isMatch = doesSearchTermMatchItemField(searchTerm, item, fieldName);
+
+    // @todo: clean up these returns
+
+    // If the search term is negated, we can return FALSE as soon as we find a match
+    if (isNegated && isMatch) {
+      return false;
+      // Otherwise, we can return TRUE as soon as we find a match
+    } else if (!isNegated && isMatch) {
+      return true;
+    }
+    return isNegated ? true : false;
+  }
+  return true;
 };
 
 // =============================================================================
 // Utilities
 // =============================================================================
-const toBoolean = (value: any) => Boolean(value);
-export const and = all(toBoolean);
-export const or = any(toBoolean);
 
-const searchEntityField = (
+// Returns true if all values in array are true
+export const areAllTrue = all(equals(true));
+
+// Returns true if at least ONE value in array is true
+export const areAnyTrue = any(equals(true));
+
+// Returns TRUE if there is a substring match on the specified field
+// on the given item
+export const doesSearchTermMatchItemField = (
+  query: string,
   item: SearchableItem,
-  field: string,
-  queryPortion: string
+  field: string
 ): boolean => {
-  // Items separate label and data, so we need to flatten it
-  const entity = { label: item.label, type: item.entityType, ...item.data };
+  const flattenedItem = flattenSearchableItem(item);
 
-  // If we're searching an array (i.e. tags), convert to a string first
-  const toSearch = Array.isArray(entity[field])
-    ? entity[field].join(' ')
-    : entity[field] || '';
+  const fieldValue = ensureValueIsString(flattenedItem[field]);
 
-  return toSearch.includes(queryPortion);
+  return fieldValue.includes(query);
 };
 
-// A user might search "tag:my-tag". Since our field name on an entity is called "tags",
-// we need to make a substitution.
-const makeSubstitution = (key: string) => {
-  const keySubstitutions = [
-    {
-      name: 'tags',
-      alternatives: ['tag', 'group']
-    },
-    {
-      name: 'label',
-      alternatives: ['name', 'title']
-    },
-    {
-      name: 'ips',
-      alternatives: ['ip']
-    }
-  ];
+// Our entities have several fields we'd like to search: "tags", "label", "ips".
+// A user might submit the query "tag:my-app". In this case, we want to trade
+// "tag" for "tags", since "tags" is the actual name of the intended property.
+export const getRealEntityKey = (key: string): SearchField | string => {
+  const TAGS: SearchField = 'tags';
+  const LABEL: SearchField = 'label';
+  const IPS: SearchField = 'ips';
 
-  for (const sub of keySubstitutions) {
-    if (sub.alternatives.includes(key)) {
-      return sub.name;
-    }
-  }
-  return key;
+  const substitutions = {
+    tag: TAGS,
+    group: TAGS,
+    name: LABEL,
+    title: LABEL,
+    ip: IPS
+  };
+
+  return substitutions[key] || key;
 };
 
-const formatQuery = (query: string) => {
+export const formatQuery = (query: string) => {
   return query
     .trim()
-    .replace('&&', 'AND')
-    .replace('||', 'OR');
+    .replace(' && ', ' AND ')
+    .replace(' || ', ' OR ');
+};
+
+// Flattens the "data" prop so we can access all fields on the item root
+export const flattenSearchableItem = (item: SearchableItem) => ({
+  label: item.label,
+  type: item.entityType,
+  ...item.data
+});
+
+export const ensureValueIsString = (value: string | any[]): string =>
+  Array.isArray(value) ? value.join(' ') : value ? value : '';
+
+// Determines whether a query is "simple", i.e., doesn't contain any search fields,
+// like "tags:my-tag" or "-label:my-linode".
+export const isSimpleQuery = (parsedQuery: any) => {
+  const { exclude, ...nonExcluded } = parsedQuery;
+  return isEmpty(exclude) && isEmpty(nonExcluded);
+};
+
+export const searchDefaultFields = (item: SearchableItem, query: string) => {
+  for (const field of defaultSearchFields) {
+    if (doesSearchTermMatchItemField(query, item, field)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const provideQueryInfo = (parsedQuery: any) => {
+  // getParsedQuery() always includes an object called `excluded`. If search
+  // terms are negated (e.g. "-tag:my-app"), they go in this object.
+  const { exclude: excludedFields, ...includedFields } = parsedQuery;
+
+  const isNegated = !isEmpty(excludedFields);
+
+  const fields = isNegated ? excludedFields : includedFields;
+  const searchField = Object.keys(fields)[0];
+  const fieldName = getRealEntityKey(searchField);
+
+  const searchTerms: string[] = fields[searchField] || [];
+
+  return {
+    searchTerms,
+    fieldName,
+    isNegated
+  };
 };

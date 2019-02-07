@@ -17,6 +17,9 @@ export type SearchableEntityType =
   | 'image'
   | 'nodebalancer';
 
+// These are the properties on our entities we'd like to search
+export type SearchField = 'tags' | 'label' | 'ips';
+
 export interface SearchResultsByEntity {
   linodes: SearchableItem[];
   volumes: SearchableItem[];
