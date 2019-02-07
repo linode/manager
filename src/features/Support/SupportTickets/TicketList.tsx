@@ -9,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -114,7 +115,9 @@ class TicketList extends React.Component<CombinedProps, {}> {
         rowLink={`/support/tickets/${ticket.id}`}
       >
         <TableCell parentColumn="Subject" data-qa-support-subject>
-          <Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link>
+          <Link to={`/support/tickets/${ticket.id}`}>
+            <Typography variant="h3">{ticket.summary}</Typography>
+          </Link>
         </TableCell>
         <TableCell parentColumn="Ticket ID" data-qa-support-id>
           {ticket.id}
