@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
-import { SearchableItem } from 'src/features/Search/refinedSearch';
+import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 

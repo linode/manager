@@ -7,13 +7,13 @@ import entitiesErrors, {
 } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities from 'src/store/selectors/getSearchEntities';
-import { refinedSearch, SearchableItem } from './refinedSearch';
+import { refinedSearch } from './refinedSearch';
 import {
-  emptyResults,
+  SearchableItem,
   SearchResults,
-  SearchResultsByEntity,
-  separateResultsByEntity
-} from './utils';
+  SearchResultsByEntity
+} from './search.interfaces';
+import { emptyResults, separateResultsByEntity } from './utils';
 
 interface HandlerProps {
   search: (query: string) => SearchResults;

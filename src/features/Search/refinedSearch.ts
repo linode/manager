@@ -1,20 +1,7 @@
 import * as logicQueryParser from 'logic-query-parser';
 import { all, any, isEmpty, keys as ramdaKeys } from 'ramda';
 import * as searchString from 'search-string';
-
-export interface SearchableItem<T = string | number> {
-  value: T;
-  label: string;
-  entityType: SearchableEntityType;
-  data?: any;
-}
-
-export type SearchableEntityType =
-  | 'linode'
-  | 'volume'
-  | 'domain'
-  | 'image'
-  | 'nodebalancer';
+import { SearchableItem } from './search.interfaces';
 
 // This type and interface are used by 'logic-query-parser
 export type ValueType = 'and' | 'or' | 'string';

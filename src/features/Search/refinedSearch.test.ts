@@ -1,5 +1,6 @@
 import { searchableItems } from 'src/__data__/searchableItems';
-import { refinedSearch as search, SearchableItem } from './refinedSearch';
+import { refinedSearch as search } from './refinedSearch';
+import { SearchableItem } from './search.interfaces';
 
 const data = searchableItems as SearchableItem[];
 
@@ -149,9 +150,5 @@ describe('Refined Search', () => {
       results = search(query, data).map(entity => entity.value);
       expect(results).toEqual([]);
     });
-  });
-  it('', () => {
-    // const query = 'tags:123123';
-    // console.log(search(query, data));
   });
 });
