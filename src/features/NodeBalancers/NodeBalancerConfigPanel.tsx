@@ -32,7 +32,6 @@ type ClassNames =
   | 'suggestionItem'
   | 'chip-UP'
   | 'chip-DOWN'
-  | 'chip-unknown'
   | 'selectedSuggestionItem'
   | 'statusHeader'
   | 'statusChip'
@@ -93,17 +92,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   'chip-DOWN': {
     backgroundColor: theme.color.red
   },
-  'chip-unknown': {
-    backgroundColor: 'gray',
-    color: theme.palette.text.primary
-  },
   statusHeader: {
     fontSize: '.9rem',
     color: theme.color.label
   },
   statusChip: {
     marginTop: theme.spacing.unit,
-    color: 'white'
+    color: 'white',
+    '&.undefined': {
+      backgroundColor: theme.color.grey2,
+      color: theme.palette.text.primary
+    }
   },
   passiveChecks: {
     marginTop: theme.spacing.unit
