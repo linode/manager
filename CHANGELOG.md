@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.48.0] - 2019.02.11
+
+### Added:
+- Support tickets now appended with current Cloud Manager version.
+- Individual Node status in NodeBalancer Detail > Configuration > Ports
+- Implemented pagey pagination to all Domain DNS records, for example a user with over 25 A/AAAA records will have a paginated table in Domain > DNS records page.
+- Public and Private IP addresses are now searchable fields, displaying the corresponding Linode in the search suggestion dropdown.
+
+### Changed:
+- Linode summary moved to the sidebar with individual components for:
+  - Linode details
+  - IP addresses
+  - Last backup
+  - Tags
+- NodeBalancer summary moved to the sidebar with individual components for:
+  - NodeBalancer details
+  - IP addresses
+  - Tags
+- Underlined text removed from application, notably:
+  - Breadcrumb headers
+  - Event notifications
+  - Help landing page
+  - Secondary links in table rows
+- Backups CTA is now dismissible.
+- NodeBalancer ports now clickable links on the NodeBalancer listing page
+  - When a NodeBalancer port is clicked, the user is navigated to the Port Configuration page with the accordion panel of the port clicked expanded by default.
+- NodeBalancer Graphs were removed from accordion panels, and are now displayed prominently on the NodeBalancer summary page.
+- Disks added to Linodes default to the maximum size, so the user can adjust form there.
+- In the additions disks table located in Linode Detail > Settings > Advanced Configuration now display the disk file system type located between the label and size columns.
+- Reboot confirmation prompt removed when rebooting a powered down Linode.
+- Only regions with block storage available are displayed in Volume creation panel.
+  - Additional messaging added to Volume creation panel informing user of the data center limitations.
+
+### Fixed:
+- Typo in Manual Snapshot copy.
+- Spacing of Grouped NodeBalancer headers.
+
 ## [0.47.0] - 2019.01.29
 
 ### Added:
