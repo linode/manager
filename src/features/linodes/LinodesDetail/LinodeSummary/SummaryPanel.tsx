@@ -55,12 +55,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
-  volumes: Linode.Volume[];
-}
-
-type CombinedProps = Props &
-  LinodeContextProps &
+type CombinedProps = LinodeContextProps &
   LinodeActionsProps &
   WithImage &
   StyleProps &
@@ -78,18 +73,16 @@ class SummaryPanel extends React.Component<CombinedProps> {
   };
 
   updateTags = async (tags: string[]) => {
-    const { request, linodeId, linodeActions } = this.props;
+    const { linodeId, linodeActions } = this.props;
 
     /** Send the request (which updates the internal store.) */
     await linodeActions.updateLinode({ linodeId, tags });
-
-    /** Until the Linode Context reads from the Redux store, we need to request the latest version from API. */
-    await request();
   };
+
   render() {
     const {
       classes,
-      volumes,
+      linodeVolumes,
       linodeTags,
       linodeId,
       linodeRegion,
@@ -109,13 +102,16 @@ class SummaryPanel extends React.Component<CombinedProps> {
             Linode Details
           </Typography>
           <div className={classes.section}>{this.renderImage()}</div>
-          <div className={classes.section} data-qa-volumes={volumes.length}>
+          <div
+            className={classes.section}
+            data-qa-volumes={linodeVolumes.length}
+          >
             Volumes:&#160;
             <Link
               className={classes.volumeLink}
               to={`/linodes/${linodeId}/volumes`}
             >
-              {volumes.length}
+              {linodeVolumes.length}
             </Link>
           </div>
           <div className={`${classes.section}`}>
@@ -170,7 +166,7 @@ interface LinodeContextProps {
   linodeIpv6: any;
   linodeRegion: string;
   linodeTags: string[];
-  request: () => Promise<Linode.Linode>;
+  linodeVolumes: Linode.Volume[];
 }
 
 const linodeContext = withLinode(({ linode }) => ({
@@ -180,12 +176,10 @@ const linodeContext = withLinode(({ linode }) => ({
   linodeImageId: linode.image,
   linodeTags: linode.tags,
   linodeId: linode.id,
-  request: () => {
-    window.alert(`depcreated request invoked`);
-  }
+  linodeVolumes: linode._volumes
 }));
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   localStyles,
   linodeContext,

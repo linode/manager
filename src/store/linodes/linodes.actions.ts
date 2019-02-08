@@ -101,3 +101,10 @@ export const deleteLinodeActions = actionCreator.async<
   {},
   Linode.ApiFieldError[]
 >('delete');
+
+export type RebootLinodeParams = LinodeParam & { configId?: number };
+export const rebootLinodeActions = actionCreator.async<
+  RebootLinodeParams,
+  {},
+  Linode.ApiFieldError[]
+>('reboot');

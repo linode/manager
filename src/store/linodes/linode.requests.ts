@@ -1,12 +1,14 @@
 import {
   createLinode as _createLinode,
   deleteLinode as _deleteLinode,
+  linodeReboot as _rebootLinode,
   updateLinode as _updateLinode
 } from 'src/services/linodes';
 import { createRequestThunk } from '../store.helpers';
 import {
   createLinodeActions,
   deleteLinodeActions,
+  rebootLinodeActions,
   updateLinodeActions
 } from './linodes.actions';
 
@@ -22,4 +24,9 @@ export const createLinode = createRequestThunk(createLinodeActions, data =>
 export const deleteLinode = createRequestThunk(
   deleteLinodeActions,
   ({ linodeId }) => _deleteLinode(linodeId)
+);
+
+export const rebootLinode = createRequestThunk(
+  rebootLinodeActions,
+  ({ linodeId, configId }) => _rebootLinode(linodeId, configId)
 );

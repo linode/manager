@@ -1,5 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -30,22 +32,21 @@ import DeviceSelection, {
 import {
   createLinodeConfig,
   getLinodeConfig,
-  getLinodeDisks,
   getLinodeKernels,
   updateLinodeConfig
 } from 'src/services/linodes';
-import { getVolumes } from 'src/services/volumes';
+import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
-import { getAll, getAllFromEntity } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { withLinode } from '../context';
 
-type ClassNames = 'root' | 'section' | 'divider';
+type ClassNames = 'section' | 'divider';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
   section: {
     marginTop: theme.spacing.unit * 2
   },
@@ -90,34 +91,22 @@ interface Props {
 interface State {
   loading: {
     kernels: boolean;
-    config: boolean;
   };
   kernels: Linode.Kernel[];
   errors?: Error | Linode.ApiFieldError[];
   fields: EditableFields;
-  availableDevices: {
-    volumes: ExtendedVolume[];
-    disks: ExtendedDisk[];
-  };
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 const getAllKernels = getAll<Linode.Kernel>(getLinodeKernels);
-const getAllVolumes = getAll<Linode.Volume>(getVolumes);
-const getAllLinodeDisks = getAllFromEntity(getLinodeDisks);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: {
-      kernels: false,
-      config: false
+      kernels: false
     },
     kernels: [],
-    availableDevices: {
-      disks: [],
-      volumes: []
-    },
     fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory)
   };
 
@@ -162,8 +151,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       if (prevState.kernels.length === 0) {
         this.requestKernels(linodeHypervisor);
       }
-
-      this.getAvailableDevices();
 
       if (linodeConfigId !== undefined) {
         this.setState({ loading: { ...this.state.loading, config: true } });
@@ -250,7 +237,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     const {
       kernels,
-      availableDevices,
       fields: {
         useCustomRoot,
         label,
@@ -278,6 +264,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     );
 
     const generalError = errorFor('none');
+
+    const availableDevices = {
+      disks: this.props.disks,
+      volumes: this.props.volumes
+    };
 
     return (
       <React.Fragment>
@@ -568,49 +559,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   isOpening = (prevState: boolean, currentState: boolean) =>
     prevState === false && currentState === true;
 
-  getAvailableDevices = () => {
-    const { linodeId, linodeRegion } = this.props;
-    /** Get all volumes for usage in the block device assignment. */
-    getAllVolumes()
-      .then(({ data: volumes }) =>
-        volumes.reduce((result: Linode.Volume[], volume: Linode.Volume) => {
-          /**
-           * This is a combination of filter and map. Filter out irrelevant volumes, and update
-           * volumes with the special _id property.
-           */
-          const isAttachedToLinode = volume.linode_id === linodeId;
-          const isUnattached = volume.linode_id === null;
-          const isInRegion = volume.region === linodeRegion;
-
-          if (isAttachedToLinode || (isUnattached && isInRegion)) {
-            const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
-
-            return [...result, extendedVolume];
-          }
-
-          return result;
-        }, [])
-      )
-      .then((volumes: ExtendedVolume[]) =>
-        this.setState({
-          availableDevices: { ...this.state.availableDevices, volumes }
-        })
-      )
-      .catch(console.error);
-
-    /** Get all Linode disks for usage in the block device assignment. */
-    getAllLinodeDisks(linodeId)
-      .then(disks =>
-        disks.map((disk: Linode.Disk) => ({ ...disk, _id: `disk-${disk.id}` }))
-      )
-      .then(disks =>
-        this.setState({
-          availableDevices: { ...this.state.availableDevices, disks }
-        })
-      )
-      .catch(console.error);
-  };
-
   onSubmit = () => {
     const { linodeId, linodeConfigId } = this.props;
 
@@ -764,11 +712,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       });
   };
 }
-
-const styled = withStyles(styles);
-
-export default styled(LinodeConfigDrawer);
-
 const isUsingCustomRoot = (value: string) =>
   [
     '/dev/sda',
@@ -780,3 +723,50 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdg',
     '/dev/sdh'
   ].includes(value) === false;
+
+const styled = withStyles(styles);
+
+interface StateProps {
+  disks: ExtendedDisk[];
+  volumes: ExtendedVolume[];
+}
+
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+
+  connect((state: ApplicationState, ownProps: Props) => {
+    const { linodeId, linodeRegion } = ownProps;
+    const { itemsById } = state.__resources.volumes;
+
+    const volumes = Object.values(itemsById).reduce(
+      (result: Linode.Volume[], volume: Linode.Volume) => {
+        /**
+         * This is a combination of filter and map. Filter out irrelevant volumes, and update
+         * volumes with the special _id property.
+         */
+        const isAttachedToLinode = volume.linode_id === linodeId;
+        const isUnattached = volume.linode_id === null;
+        const isInRegion = volume.region === linodeRegion;
+
+        if (isAttachedToLinode || (isUnattached && isInRegion)) {
+          const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
+
+          return [...result, extendedVolume];
+        }
+
+        return result;
+      },
+      []
+    );
+    return { volumes };
+  }),
+
+  withLinode(({ linode }) => ({
+    disks: linode._disks.map((disk: Linode.Disk) => ({
+      ...disk,
+      _id: `disk-${disk.id}`
+    }))
+  }))
+);
+
+export default enhanced(LinodeConfigDrawer);

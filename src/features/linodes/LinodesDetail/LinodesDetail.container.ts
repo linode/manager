@@ -1,24 +1,22 @@
 import { connect } from 'react-redux';
-import { compose, lifecycle } from 'recompose';
-import { getLinodeConfigs } from 'src/services/linodes';
+import { compose } from 'recompose';
 import { MapState } from 'src/store/types';
 
 interface OutterProps {
   linodeId: number;
-  configs?: Linode.Config[];
 }
 
-export interface IncrediblyExtendedLinode extends Linode.Linode {
+export interface ExtendedLinode extends Linode.Linode {
   _type?: null | Linode.LinodeType;
-  _configs: Linode.Config[];
   _notifications: Linode.Notification[];
   _events: Linode.Event[];
+  _volumes: Linode.Volume[];
 }
 
 export interface InnerProps {
   loading: boolean;
-  error?: Linode.ApiFieldError[];
-  linode?: IncrediblyExtendedLinode;
+  error?: Error | Linode.ApiFieldError[];
+  linode?: ExtendedLinode;
 }
 
 const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
@@ -26,11 +24,20 @@ const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
 
 /** Get the Linode from Redux. */
 const mapState: MapState<InnerProps, OutterProps> = (state, ownProps) => {
-  const { linodeId, configs = [] } = ownProps;
-  const { entities: linodes, error: linodesError } = state.__resources.linodes;
-  const { entities: types, error: typesError } = state.__resources.types;
+  const { linodeId } = ownProps;
+  const {
+    entities: linodes = [],
+    error: linodesError
+  } = state.__resources.linodes;
+
+  const { entities: types = [], error: typesError } = state.__resources.types;
+  const {
+    itemsById: volumesById,
+    error: volumesError
+  } = state.__resources.volumes;
+
   const { data: notifications = [] } = state.__resources.notifications;
-  const { events } = state.events;
+  const { events = [] } = state.events;
 
   const linode = linodes.find(l => l.id === linodeId);
 
@@ -58,69 +65,38 @@ const mapState: MapState<InnerProps, OutterProps> = (state, ownProps) => {
     ({ entity }) =>
       entity && entity.type === 'linode' && entity.id === linode.id
   );
+
   const _notifications = notifications.filter(
     ({ entity }) =>
       entity && entity.type === 'linode' && entity.id === linode.id
   );
 
+  const _volumes = Object.values(volumesById).filter(
+    ({ linode_id }) => linode_id === linodeId
+  );
+
   return {
     loading,
-    error: linodesError || typesError,
+    error: linodesError || typesError || volumesError,
     linode: {
       ...linode,
       _type,
       _events,
-      _configs: configs,
-      _notifications
+      _notifications,
+      _volumes
     }
   };
 };
 
 const withLinode = connect(mapState);
 
-/** Gets the configs for the Linode on mount and on update when the linode ID has change. */
-const getConfigsForLinode = lifecycle<
-  OutterProps,
-  { configs: Linode.Config[] }
->({
-  componentDidMount() {
-    const { linodeId } = this.props;
-    getLinodeConfigs(linodeId)
-      .then(({ data }) => this.setState({ configs: data }))
-      .catch(err => undefined);
-  },
-  componentDidUpdate(prevProps) {
-    const { linodeId } = this.props;
-    const { linodeId: prevLinodeId } = prevProps;
-    if (linodeId !== prevLinodeId) {
-      getLinodeConfigs(linodeId)
-        .then(({ data }) => this.setState({ configs: data }))
-        .catch(err => undefined);
-    }
-  }
-});
-
 /**
- * Hi, my name is LinodesDetail.container. My lifes puporse is to create a very comprehensive
- * Linode object, including all of the sub-parts, and tell you where I am in the process. This
- * includes an error and loading state as well. :yay:
+ * Get Linode, type, events, notifications, and volumes from Redux store and mash them onto
+ * the Linode object.
  *
- * Since we're not storing Linode advanced configurations anywhere, I'll go get them for you any
- * time I mount, or if the linodeId provided to me changes. Then I'll go get the Linode from the
- * Redux store. If the Linode is still loading, an error has occured, or I can't find the Linode
- * in the store, Ill let you know about that as well.
- *
- * Then, because I heart you, I'm going to try to find detailed information on your plan type,
- * events, and notifications. Heck I can get more from the store if you want! Then Im going to
- * take that information, and the configs I already have, and attach them to underscored property
- * names on the Linode object. I chose an underscore to let you know they werent native to the
- * API.
- *
- * Welp. thats all for me. Hope I dont crash!
- *
- * :teehee:
+ * @todo Test.
+ * @todo Use reselect!
+ * @todo We could break this into individual selectors (linode, events, type, notifications, and volumes),
+ * then use Recompose's mapProps to merge them together?
  */
-export default compose<InnerProps, OutterProps>(
-  getConfigsForLinode,
-  withLinode
-);
+export default compose<InnerProps, OutterProps>(withLinode);
