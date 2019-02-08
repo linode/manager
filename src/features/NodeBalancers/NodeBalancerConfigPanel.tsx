@@ -649,7 +649,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 hasErrorFor('algorithm'),
                 sessionStickiness,
                 hasErrorFor('stickiness'),
-                configIdx
+                configIdx,
+                sslCertificate,
+                privateKey
               ]}
               container
             >
@@ -715,7 +717,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       multiline
                       rows={3}
                       label="SSL Certificate"
-                      value={sslCertificate}
+                      value={sslCertificate || ''}
                       onChange={this.onSslCertificateChange}
                       required={protocol === 'https'}
                       errorText={hasErrorFor('ssl_cert')}
@@ -729,7 +731,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       multiline
                       rows={3}
                       label="Private Key"
-                      value={privateKey}
+                      value={privateKey || ''}
                       onChange={this.onPrivateKeyChange}
                       required={protocol === 'https'}
                       errorText={hasErrorFor('ssl_key')}
