@@ -5,10 +5,10 @@ import { SearchableItem, SearchField } from './search.interfaces';
 
 // This type and interface are used by 'logic-query-parser
 export type ValueType = 'and' | 'or' | 'string';
-export interface Value {
+export interface QueryJSON {
   type: ValueType;
   value?: string;
-  values?: Value[];
+  values?: QueryJSON[];
 }
 
 const defaultSearchFields = ['label', 'tags', 'ips'];
@@ -26,7 +26,9 @@ export const refinedSearch = (
   try {
     // Parse the query with a 3rd-party library. This turns it into a tree-like object.
     const binaryTree = logicQueryParser.parse(formattedQuery);
-    const queryJson = logicQueryParser.utils.binaryTreeToQueryJson(binaryTree);
+    const queryJSON: QueryJSON = logicQueryParser.utils.binaryTreeToQueryJson(
+      binaryTree
+    );
 
     // Now we filter items by applying a "test condition" function to each item.
     // The "test condition" function is Ramda/FP style, and will look something like this:
@@ -37,41 +39,53 @@ export const refinedSearch = (
     // ]);
     //
     return items.filter((item: SearchableItem) =>
-      recursivelyCreateTestConditions(queryJson, item)
+      recursivelyTestItem(queryJSON, item)
     );
   } catch {
     return [];
   }
 };
 
-const recursivelyCreateTestConditions = (
-  v: Value,
+// QueryJSON can contain either:
+//
+// 1) a SINGLE value: e.g. the queries "tag:my-app", or "my-linode"
+// 2) MULTIPLE values: e.g. the queries "tag:my-app type:linode", or "tag:my-app OR tag:another-app"
+//
+// We need to test each value against the Item, but we need to do so recursively to allow nested queries.
+export const recursivelyTestItem = (
+  queryJSON: QueryJSON,
   item: SearchableItem
 ): boolean => {
-  // Base case: we have a SINGLE value, and it's a string. Simple queries like "my-app" fall into this category
-  if (v.value && v.type === 'string') {
-    return testItem(item, v.value);
+  // Base case: we have a SINGLE value, and it's a string. All we have to do is test the value against the Item.
+  // Example query: "type:linode"
+  if (queryJSON.value && queryJSON.type === 'string') {
+    return testItem(item, queryJSON.value);
   }
 
-  // If we have multiple values, we need to recursively call this function until we get a single value.
-  // Boolean queries like "my-app AND tag:my-tag" fall into this category.
-  else if (v.values && (v.type === 'and' || v.type === 'or')) {
+  // If we have multiple values, we need to recursively call this function until we get ONE value (the base case).
+  // We put all of those values into an array and test them.
+  // Example query: "tag:my-app AND label:my-linode"
+  else if (
+    queryJSON.values &&
+    (queryJSON.type === 'and' || queryJSON.type === 'or')
+  ) {
     // Build an array of conditions for each value
-    const parsedValues = v.values.map(val =>
-      recursivelyCreateTestConditions(val, item)
+    const parsedValues = queryJSON.values.map(val =>
+      recursivelyTestItem(val, item)
     );
 
     // If it's an "and" condition, all conditions in the array need to be TRUE
-    if (v.type === 'and') {
+    if (queryJSON.type === 'and') {
       return areAllTrue(parsedValues);
     }
 
     // If it's an "or" condition, only ONE condition in the array needs to be TRUE
-    if (v.type === 'or') {
+    if (queryJSON.type === 'or') {
       return areAnyTrue(parsedValues);
     }
   }
 
+  // Failsafe
   return false;
 };
 
@@ -83,23 +97,14 @@ export const testItem = (item: SearchableItem, query: string) => {
     return searchDefaultFields(item, query);
   }
 
-  const { fieldName, searchTerms, isNegated } = provideQueryInfo(parsedQuery);
+  const { fieldName, searchTerms, isNegated } = getQueryInfo(parsedQuery);
 
-  for (const searchTerm of searchTerms) {
+  const matchedSearchTerms = searchTerms.map(searchTerm => {
     const isMatch = doesSearchTermMatchItemField(searchTerm, item, fieldName);
+    return isNegated ? !isMatch : isMatch;
+  });
 
-    // @todo: clean up these returns
-
-    // If the search term is negated, we can return FALSE as soon as we find a match
-    if (isNegated && isMatch) {
-      return false;
-      // Otherwise, we can return TRUE as soon as we find a match
-    } else if (!isNegated && isMatch) {
-      return true;
-    }
-    return isNegated ? true : false;
-  }
-  return true;
+  return areAllTrue(matchedSearchTerms);
 };
 
 // =============================================================================
@@ -165,8 +170,8 @@ export const ensureValueIsString = (value: string | any[]): string =>
 // Determines whether a query is "simple", i.e., doesn't contain any search fields,
 // like "tags:my-tag" or "-label:my-linode".
 export const isSimpleQuery = (parsedQuery: any) => {
-  const { exclude, ...nonExcluded } = parsedQuery;
-  return isEmpty(exclude) && isEmpty(nonExcluded);
+  const { exclude, ...include } = parsedQuery;
+  return isEmpty(exclude) && isEmpty(include);
 };
 
 export const searchDefaultFields = (item: SearchableItem, query: string) => {
@@ -178,7 +183,7 @@ export const searchDefaultFields = (item: SearchableItem, query: string) => {
   return false;
 };
 
-export const provideQueryInfo = (parsedQuery: any) => {
+export const getQueryInfo = (parsedQuery: any) => {
   // getParsedQuery() always includes an object called `excluded`. If search
   // terms are negated (e.g. "-tag:my-app"), they go in this object.
   const { exclude: excludedFields, ...includedFields } = parsedQuery;
