@@ -182,26 +182,6 @@ const mockLinode: SearchableItem = {
   }
 };
 
-describe('areAllTrue', () => {
-  it('returns true if all values in array are true', () => {
-    let values = [true, true, true];
-    expect(areAllTrue(values)).toBe(true);
-    values = [true, false, true];
-    expect(areAllTrue(values)).toBe(false);
-  });
-});
-
-describe('areAnyTrue', () => {
-  it('returns true if at least ONE value in array is true', () => {
-    let values = [false, false, false];
-    expect(areAnyTrue(values)).toBe(false);
-    values = [true, false, false];
-    expect(areAnyTrue(values)).toBe(true);
-    values = [true, true, true];
-    expect(areAnyTrue(values)).toBe(true);
-  });
-});
-
 describe('formatQuery', () => {
   it('trims whitespace', () => {
     expect(formatQuery('hello world  ')).toBe('hello world');
@@ -225,139 +205,6 @@ describe('formatQuery', () => {
     expect(formatQuery('hello OR world')).toBe('hello OR world');
     expect(formatQuery('hello OR world')).toBe('hello OR world');
   });
-});
-
-describe('getRealEntityKey', () => {
-  it('returns "label" if given "name" or "title"', () => {
-    expect(getRealEntityKey('name')).toBe('label');
-    expect(getRealEntityKey('title')).toBe('label');
-  });
-  it('returns "tags" if given "tag" or "groups"', () => {
-    expect(getRealEntityKey('tag')).toBe('tags');
-    expect(getRealEntityKey('group')).toBe('tags');
-  });
-  it('returns "ips" if given "ip"', () => {
-    expect(getRealEntityKey('ip')).toBe('ips');
-  });
-  it('returns the original string if no substitute key is found', () => {
-    expect(getRealEntityKey('hello')).toBe('hello');
-    expect(getRealEntityKey('')).toBe('');
-  });
-});
-
-describe('searchEntityField', () => {
-  it('matches given field name', () => {
-    expect(doesSearchTermMatchItemField('my-app', mockLinode, 'tags')).toBe(
-      true
-    );
-    expect(doesSearchTermMatchItemField('my-app', mockLinode, 'ips')).toBe(
-      false
-    );
-    expect(doesSearchTermMatchItemField('12', mockLinode, 'ips')).toBe(true);
-  });
-});
-
-describe('flatten entity', () => {
-  it('flattens properties in "data" with the rest of the entity', () => {
-    expect(flattenSearchableItem(mockLinode)).toHaveProperty('tags');
-    expect(flattenSearchableItem(mockLinode)).toHaveProperty('ips');
-    expect(flattenSearchableItem(mockLinode)).not.toHaveProperty('data');
-  });
-});
-
-describe('ensureValueIsString', () => {
-  it('returns original input if it is a string', () => {
-    expect(ensureValueIsString('hello')).toBe('hello');
-    expect(ensureValueIsString('')).toBe('');
-  });
-
-  it('returns joined string if input is an array', () => {
-    expect(ensureValueIsString(['hello', 'world'])).toBe('hello world');
-    expect(ensureValueIsString([1, 2, 3])).toBe('1 2 3');
-    expect(ensureValueIsString(['hello'])).toBe('hello');
-  });
-});
-
-describe('testItem', () => {
-  it('returns TRUE if there is a substring match, and FALSE if there is not', () => {
-    expect(testItem(mockLinode, 'my-linode')).toBe(true);
-    expect(testItem(mockLinode, 'my-')).toBe(true);
-    expect(testItem(mockLinode, 'linode')).toBe(true);
-    expect(testItem(mockLinode, 'production')).toBe(true);
-    expect(testItem(mockLinode, 'my-app')).toBe(true);
-    expect(testItem(mockLinode, 'n')).toBe(true);
-    expect(testItem(mockLinode, 'hello')).toBe(false);
-  });
-});
-
-describe('isSimpleQuery', () => {
-  it('returns true if there are no specified search fields', () => {
-    let parsedQuery = searchString.parse('-hello world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(true);
-
-    parsedQuery = searchString.parse('hello world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(true);
-
-    parsedQuery = searchString.parse('hello -world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(true);
-  });
-
-  it('returns false if there are specified search fields', () => {
-    let parsedQuery = searchString.parse('label:hello').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(false);
-
-    parsedQuery = searchString.parse('tags:hello,world').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(false);
-
-    parsedQuery = searchString.parse('-label:hello').getParsedQuery();
-    expect(isSimpleQuery(parsedQuery)).toBe(false);
-  });
-});
-
-describe('searchDefaultFields', () => {
-  it('searches each default field', () => {
-    // Label
-    expect(searchDefaultFields(mockLinode, 'my-linode')).toBe(true);
-    // Tags
-    expect(searchDefaultFields(mockLinode, 'production')).toBe(true);
-    // Ips
-    expect(searchDefaultFields(mockLinode, '1234')).toBe(true);
-  });
-});
-
-describe('provideQueryInfo', () => {
-  it('returns searchTerms, fieldName, and isNegated', () => {
-    const parsedQuery = { exclude: {}, tags: ['my-app'] };
-    expect(getQueryInfo(parsedQuery)).toHaveProperty('searchTerms');
-    expect(getQueryInfo(parsedQuery)).toHaveProperty('fieldName');
-    expect(getQueryInfo(parsedQuery)).toHaveProperty('isNegated');
-  });
-
-  it('returns isNegated as TRUE when excluded is not empty', () => {
-    const parsedQuery = { exclude: { tag: ['my-app'] } };
-    expect(getQueryInfo(parsedQuery).isNegated).toBe(true);
-  });
-  it('returns field name', () => {
-    const parsedQuery1 = { exclude: { tags: ['my-app'] } };
-    expect(getQueryInfo(parsedQuery1).fieldName).toBe('tags');
-
-    const parsedQuery2 = { exclude: {}, tags: ['my-app'] };
-    expect(getQueryInfo(parsedQuery2).fieldName).toBe('tags');
-  });
-  it('returns other search terms', () => {
-    const parsedQuery1 = { exclude: { tags: ['my-app'] } };
-    expect(getQueryInfo(parsedQuery1).searchTerms).toEqual(['my-app']);
-
-    const parsedQuery2 = { exclude: {}, tags: ['my-app', 'my-other-app'] };
-    expect(getQueryInfo(parsedQuery2).searchTerms).toEqual([
-      'my-app',
-      'my-other-app'
-    ]);
-  });
-});
-
-it('', () => {
-  refinedSearch('type:linode OR (tag:my-app type:domain)', data);
 });
 
 describe('recursivelyTestItem', () => {
@@ -433,5 +280,154 @@ describe('recursivelyTestItem', () => {
   it('calls itself recursively', () => {
     recursivelyTestItem(queryJSON4, mockLinode);
     expect(spy_recursivelyTestItem).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('testItem', () => {
+  it('returns TRUE if there is a substring match, and FALSE if there is not', () => {
+    expect(testItem(mockLinode, 'my-linode')).toBe(true);
+    expect(testItem(mockLinode, 'my-')).toBe(true);
+    expect(testItem(mockLinode, 'linode')).toBe(true);
+    expect(testItem(mockLinode, 'production')).toBe(true);
+    expect(testItem(mockLinode, 'my-app')).toBe(true);
+    expect(testItem(mockLinode, 'n')).toBe(true);
+    expect(testItem(mockLinode, 'hello')).toBe(false);
+  });
+});
+
+describe('isSimpleQuery', () => {
+  it('returns true if there are no specified search fields', () => {
+    let parsedQuery = searchString.parse('-hello world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(true);
+
+    parsedQuery = searchString.parse('hello world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(true);
+
+    parsedQuery = searchString.parse('hello -world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(true);
+  });
+
+  it('returns false if there are specified search fields', () => {
+    let parsedQuery = searchString.parse('label:hello').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(false);
+
+    parsedQuery = searchString.parse('tags:hello,world').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(false);
+
+    parsedQuery = searchString.parse('-label:hello').getParsedQuery();
+    expect(isSimpleQuery(parsedQuery)).toBe(false);
+  });
+});
+
+describe('searchDefaultFields', () => {
+  it('searches each default field', () => {
+    // Label
+    expect(searchDefaultFields(mockLinode, 'my-linode')).toBe(true);
+    // Tags
+    expect(searchDefaultFields(mockLinode, 'production')).toBe(true);
+    // Ips
+    expect(searchDefaultFields(mockLinode, '1234')).toBe(true);
+  });
+});
+
+describe('doesSearchTermMatchItemField', () => {
+  it('matches given field name', () => {
+    expect(doesSearchTermMatchItemField('my-app', mockLinode, 'tags')).toBe(
+      true
+    );
+    expect(doesSearchTermMatchItemField('my-app', mockLinode, 'ips')).toBe(
+      false
+    );
+    expect(doesSearchTermMatchItemField('12', mockLinode, 'ips')).toBe(true);
+  });
+});
+
+describe('flattenSearchableItem', () => {
+  it('flattens properties in "data" with the rest of the entity', () => {
+    expect(flattenSearchableItem(mockLinode)).toHaveProperty('tags');
+    expect(flattenSearchableItem(mockLinode)).toHaveProperty('ips');
+    expect(flattenSearchableItem(mockLinode)).not.toHaveProperty('data');
+  });
+});
+
+describe('ensureValueIsString', () => {
+  it('returns original input if it is a string', () => {
+    expect(ensureValueIsString('hello')).toBe('hello');
+    expect(ensureValueIsString('')).toBe('');
+  });
+
+  it('returns joined string if input is an array', () => {
+    expect(ensureValueIsString(['hello', 'world'])).toBe('hello world');
+    expect(ensureValueIsString([1, 2, 3])).toBe('1 2 3');
+    expect(ensureValueIsString(['hello'])).toBe('hello');
+  });
+});
+
+describe('getQueryInfo', () => {
+  it('returns searchTerms, fieldName, and isNegated', () => {
+    const parsedQuery = { exclude: {}, tags: ['my-app'] };
+    expect(getQueryInfo(parsedQuery)).toHaveProperty('searchTerms');
+    expect(getQueryInfo(parsedQuery)).toHaveProperty('fieldName');
+    expect(getQueryInfo(parsedQuery)).toHaveProperty('isNegated');
+  });
+
+  it('returns isNegated as TRUE when excluded is not empty', () => {
+    const parsedQuery = { exclude: { tag: ['my-app'] } };
+    expect(getQueryInfo(parsedQuery).isNegated).toBe(true);
+  });
+  it('returns field name', () => {
+    const parsedQuery1 = { exclude: { tags: ['my-app'] } };
+    expect(getQueryInfo(parsedQuery1).fieldName).toBe('tags');
+
+    const parsedQuery2 = { exclude: {}, tags: ['my-app'] };
+    expect(getQueryInfo(parsedQuery2).fieldName).toBe('tags');
+  });
+  it('returns other search terms', () => {
+    const parsedQuery1 = { exclude: { tags: ['my-app'] } };
+    expect(getQueryInfo(parsedQuery1).searchTerms).toEqual(['my-app']);
+
+    const parsedQuery2 = { exclude: {}, tags: ['my-app', 'my-other-app'] };
+    expect(getQueryInfo(parsedQuery2).searchTerms).toEqual([
+      'my-app',
+      'my-other-app'
+    ]);
+  });
+});
+
+describe('getRealEntityKey', () => {
+  it('returns "label" if given "name" or "title"', () => {
+    expect(getRealEntityKey('name')).toBe('label');
+    expect(getRealEntityKey('title')).toBe('label');
+  });
+  it('returns "tags" if given "tag" or "groups"', () => {
+    expect(getRealEntityKey('tag')).toBe('tags');
+    expect(getRealEntityKey('group')).toBe('tags');
+  });
+  it('returns "ips" if given "ip"', () => {
+    expect(getRealEntityKey('ip')).toBe('ips');
+  });
+  it('returns the original string if no substitute key is found', () => {
+    expect(getRealEntityKey('hello')).toBe('hello');
+    expect(getRealEntityKey('')).toBe('');
+  });
+});
+
+describe('areAllTrue', () => {
+  it('returns true if all values in array are true', () => {
+    let values = [true, true, true];
+    expect(areAllTrue(values)).toBe(true);
+    values = [true, false, true];
+    expect(areAllTrue(values)).toBe(false);
+  });
+});
+
+describe('areAnyTrue', () => {
+  it('returns true if at least ONE value in array is true', () => {
+    let values = [false, false, false];
+    expect(areAnyTrue(values)).toBe(false);
+    values = [true, false, false];
+    expect(areAnyTrue(values)).toBe(true);
+    values = [true, true, true];
+    expect(areAnyTrue(values)).toBe(true);
   });
 });
