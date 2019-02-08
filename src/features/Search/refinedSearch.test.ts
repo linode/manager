@@ -281,6 +281,10 @@ describe('recursivelyTestItem', () => {
     recursivelyTestItem(queryJSON4, mockLinode);
     expect(spy_recursivelyTestItem).toHaveBeenCalledTimes(2);
   });
+
+  it('returns false if given bad data', () => {
+    expect(recursivelyTestItem({} as QueryJSON, mockLinode)).toBe(false);
+  });
 });
 
 describe('testItem', () => {
