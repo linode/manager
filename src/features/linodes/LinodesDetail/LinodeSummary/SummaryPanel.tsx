@@ -196,7 +196,6 @@ interface LinodeContextProps {
 }
 
 const linodeContext = withLinode(context => {
-  console.log('context', context);
   return {
     linodeIpv4: context.data!.ipv4,
     linodeIpv6: context.data!.ipv6,
