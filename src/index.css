@@ -296,3 +296,13 @@ button::-moz-focus-inner {
 .no-transition *::after {
   transition: none !important;
 }
+
+input[autocomplete="off"]::-webkit-contacts-auto-fill-button,
+input[autocomplete="off"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  height: 0;
+  width: 0;
+  margin: 0;
+}
