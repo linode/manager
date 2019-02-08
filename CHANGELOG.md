@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Individual Node status in NodeBalancer Detail > Configuration > Ports
 - Implemented pagey pagination to all Domain DNS records, for example a user with over 25 A/AAAA records will have a paginated table in Domain > DNS records page.
 - Public and Private IP addresses are now searchable fields, displaying the corresponding Linode in the search suggestion dropdown.
-
+- Sidebar components in Account Settings page:
+  - Contact information component displaying company name, name, dddress, email, and phone number.
+  - Billing information component displaying current account balance, credit card, and credit card expiration date.
+  
 ### Changed:
 - Linode summary moved to the sidebar with individual components for:
   - Linode details
@@ -22,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - NodeBalancer details
   - IP addresses
   - Tags
+- Domain Tags input field moved to the sidebar in an individual componenet
 - Underlined text removed from application, notably:
   - Breadcrumb headers
   - Event notifications
@@ -33,7 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - NodeBalancer Graphs were removed from accordion panels, and are now displayed prominently on the NodeBalancer summary page.
 - Disks added to Linodes default to the maximum size, so the user can adjust form there.
 - In the additions disks table located in Linode Detail > Settings > Advanced Configuration now display the disk file system type located between the label and size columns.
-- Reboot confirmation prompt removed when rebooting a powered down Linode.
+- The option to reboot a Linode is removed unless the Linode is powered on.
 - Only regions with block storage available are displayed in Volume creation panel.
   - Additional messaging added to Volume creation panel informing user of the data center limitations.
 
