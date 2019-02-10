@@ -238,6 +238,7 @@
     "yargs": "11.0.0"
   },
   "jest": {
+    "diagnostics": false,
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],

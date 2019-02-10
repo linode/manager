@@ -58,7 +58,7 @@ describe('Rescue Linode Suite', () => {
         } while (!checkIfToastIsPresent('Linode rescue started.') && checkIfToastIsPresent('Linode busy.') && i < 10);
     }
 
-  /*  beforeAll(() => {
+    beforeAll(() => {
         const linode = apiCreateLinode(linodeLabel);
         createVolumes(generateVolumeArray(linode.id));
         browser.url(`${constants.routes.linodes}/${linode.id}`);
@@ -67,19 +67,13 @@ describe('Rescue Linode Suite', () => {
         LinodeDetail.toast.waitForVisible(constants.wait.long,true);
         LinodeDetail.changeTab('Rescue');
         browser.pause(500);
-    }); */
+    });
 
     afterAll(() => {
         apiDeleteAllVolumes();
     });
 
     it('Rescue Linode Tab displays', () => {
-        const linode = apiCreateLinode(linodeLabel);
-        createVolumes(generateVolumeArray(linode.id));
-        browser.url(`${constants.routes.linodes}/${linode.id}`);
-        LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
-        LinodeDetail.changeTab('Rescue');
-        browser.pause(500);
         Rescue.rescueDetailDisplays();
     });
 
