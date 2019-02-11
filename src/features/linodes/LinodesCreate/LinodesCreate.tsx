@@ -234,6 +234,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             history={this.props.history}
             accountBackups={this.props.accountBackups}
             handleDisablePasswordField={this.handleDisablePasswordField}
+            disabled={this.props.disabled}
           />
         );
       }
@@ -261,6 +262,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getRegionInfo={this.getRegionInfo}
             accountBackups={this.props.accountBackups}
             history={this.props.history}
+            disabled={this.props.disabled}
           />
         );
       }
@@ -284,6 +286,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
             getRegionInfo={this.getRegionInfo}
             accountBackups={this.props.accountBackups}
             history={this.props.history}
+            disabled={this.props.disabled}
           />
         );
       }
@@ -308,6 +311,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
               this.state.selectedStackScriptTabFromQueryString
             }
             handleDisablePasswordField={this.handleDisablePasswordField}
+            disabled={this.props.disabled}
           />
         );
       }
@@ -462,6 +466,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 
 interface StateProps {
   accountBackups: boolean;
+  disabled: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
@@ -469,7 +474,15 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
     false,
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
     state
-  )
+  ),
+  // disabled if the profile is restricted and doesn't have add_linodes grant
+  disabled:
+    pathOr(false, ['__resources', 'profile', 'data', 'restricted'], state) &&
+    !pathOr(
+      false,
+      ['__resources', 'profile', 'data', 'grants', 'global', 'add_linodes'],
+      state
+    )
 });
 
 const connected = connect(mapStateToProps);

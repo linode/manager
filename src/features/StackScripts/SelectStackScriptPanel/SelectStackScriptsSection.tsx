@@ -30,6 +30,7 @@ export interface Props {
   isSorting: boolean;
   publicImages: Linode.Image[];
   currentUser: string;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -37,7 +38,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const SelectStackScriptsSection: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { onSelect, selectedId, data, isSorting, classes } = props;
+  const { onSelect, selectedId, data, isSorting, classes, disabled } = props;
 
   const selectStackScript = (s: Linode.StackScript.Response) => (
     <StackScriptSelectionRow
@@ -52,6 +53,7 @@ const SelectStackScriptsSection: React.StatelessComponent<
       checked={selectedId === s.id}
       updateFor={[selectedId === s.id]}
       stackScriptID={s.id}
+      disabled={disabled}
     />
   );
 

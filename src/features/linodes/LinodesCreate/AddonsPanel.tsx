@@ -85,6 +85,7 @@ interface Props {
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
+  disabled: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
@@ -107,7 +108,8 @@ class AddonsPanel extends React.Component<CombinedProps> {
       accountBackups,
       classes,
       changeBackups,
-      changePrivateIP
+      changePrivateIP,
+      disabled
     } = this.props;
 
     return (
@@ -124,7 +126,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                   <CheckBox
                     checked={accountBackups || this.props.backups}
                     onChange={changeBackups}
-                    disabled={accountBackups}
+                    disabled={accountBackups || disabled}
                     data-qa-check-backups={
                       accountBackups
                         ? 'auto backup enabled'
@@ -168,6 +170,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                     checked={this.props.privateIP}
                     onChange={() => changePrivateIP()}
                     data-qa-check-private-ip
+                    disabled={disabled}
                   />
                 }
                 label="Private IP"

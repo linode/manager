@@ -22,6 +22,7 @@ interface Props {
     filter?: any
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   category: string;
+  disabled?: boolean;
 }
 
 type CombinedProps = StateProps & Props;
@@ -61,6 +62,7 @@ class SelectStackScriptPanelContent extends React.Component<
         data={listOfStackScripts}
         publicImages={this.props.publicImages}
         currentUser={this.props.currentUser}
+        disabled={this.props.disabled}
       />
     );
   }
