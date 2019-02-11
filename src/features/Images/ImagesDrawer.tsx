@@ -161,7 +161,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedLinode
     } = this.props;
 
-    this.setState({ errors: undefined });
+    this.setState({ errors: undefined, notice: undefined });
     const safeDescription = description ? description : ' ';
 
     switch (mode) {
