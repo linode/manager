@@ -63,8 +63,6 @@ describe('Rescue Linode Suite', () => {
         createVolumes(generateVolumeArray(linode.id));
         browser.url(`${constants.routes.linodes}/${linode.id}`);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
-        LinodeDetail.toast.waitForVisible(constants.wait.minute*3);
-        LinodeDetail.toast.waitForVisible(constants.wait.long,true);
         LinodeDetail.changeTab('Rescue');
         browser.pause(500);
     });
