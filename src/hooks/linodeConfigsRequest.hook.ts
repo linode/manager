@@ -19,7 +19,6 @@ export const userLinodeConfigsRequest = (
   });
 
   useEffect(() => {
-    console.log(`useEffect:configs`);
     setState({ ...state, loading: true, lastRequested: Date.now() });
 
     getLinodeConfigs(linodeId)

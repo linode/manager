@@ -19,7 +19,6 @@ export const useLinodeDisksRequest = (
   });
 
   useEffect(() => {
-    console.log(`useEffect:disks`);
     setState({ ...state, loading: true, lastRequested: Date.now() });
 
     getLinodeDisks(linodeId)
