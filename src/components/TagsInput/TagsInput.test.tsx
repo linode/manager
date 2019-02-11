@@ -34,7 +34,7 @@ describe('TagsInput', () => {
     expect(component.state('accountTags')).toHaveLength(mockTags.length);
   });
 
-  it('calls onChange hanlder when the value is updated', () => {
+  it('calls onChange handler when the value is updated', () => {
     const newValue = ['someTag', 'anotherTag', 'onMoreTag'].map(tag => ({
       value: tag,
       label: tag
