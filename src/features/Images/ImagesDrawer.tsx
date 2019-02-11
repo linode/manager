@@ -160,6 +160,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       selectedDisk,
       selectedLinode
     } = this.props;
+
+    this.setState({ errors: undefined });
     const safeDescription = description ? description : ' ';
 
     switch (mode) {
