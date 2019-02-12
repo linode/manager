@@ -42,15 +42,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingTop: '0 !important',
     paddingBottom: '0 !important',
     width: '100%',
-    cursor: 'pointer',
-    '&:hover': {
-      '& $rowContent': {
-        background: theme.bg.tableHeader,
-        '&:before': {
-          backgroundColor: theme.palette.primary.main
-        }
-      }
-    }
+    cursor: 'pointer'
   },
   description: {},
   label: {
