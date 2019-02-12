@@ -12,14 +12,14 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
-import LinodeStatusIndicator from 'src/features/linodes/LinodesLanding/LinodeStatusIndicator';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 
-import { iconMap } from './utils';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames =
   | 'root'
@@ -27,7 +27,6 @@ type ClassNames =
   | 'icon'
   | 'labelRow'
   | 'resultBody'
-  | 'status'
   | 'iconGridCell'
   | 'tag'
   | 'link'
@@ -120,12 +119,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   resultBody: {},
-  status: {
-    marginLeft: theme.spacing.unit / 2,
-    position: 'relative',
-    top: 0,
-    lineHeight: '0.8rem'
-  },
   iconGridCell: {
     display: 'flex',
     alignItems: 'center',
@@ -148,7 +141,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, result } = props;
   const icon = pathOr<string>('default', ['data', 'icon'], result);
-  const Icon = iconMap[icon];
+  const status = result.data.status;
   return (
     <TableRow
       className={classes.root}
@@ -158,7 +151,12 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
       <Hidden smDown>
         <TableCell className={classes.iconTableCell}>
           <Grid item className={classes.iconGridCell}>
-            <Icon className={classes.icon} />
+            <EntityIcon
+              variant={icon}
+              status={status && status}
+              marginTop={3}
+              loading={linodeInTransition(status)}
+            />
           </Grid>
         </TableCell>
       </Hidden>
@@ -173,11 +171,6 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
               <Typography variant="h3" className={classes.label}>
                 {result.label}
               </Typography>
-              <div className={classes.status}>
-                {result.data.status && (
-                  <LinodeStatusIndicator status={result.data.status} />
-                )}
-              </div>
             </div>
             <Typography variant="body1">{result.data.description}</Typography>
           </Link>

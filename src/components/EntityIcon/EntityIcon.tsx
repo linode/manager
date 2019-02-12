@@ -50,7 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  variant: 'linode' | 'nodeBalancer' | 'volume' | 'domain' | 'stackscript';
+  variant: 'linode' | 'nodebalancer' | 'volume' | 'domain' | 'stackscript';
   status?: string;
   loading?: boolean;
   size?: number;
@@ -83,7 +83,7 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
         />
       );
       break;
-    case 'nodeBalancer':
+    case 'nodebalancer':
       icon = (
         <NodeBalancerIcon
           className={classes.icon}
