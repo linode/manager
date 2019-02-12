@@ -28,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: 'transparent'
   },
   default: {
-    color: theme.palette.divider
+    color: theme.color.grey2
   },
   icon: {},
   running: {

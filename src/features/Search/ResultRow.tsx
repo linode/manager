@@ -18,7 +18,6 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames =
