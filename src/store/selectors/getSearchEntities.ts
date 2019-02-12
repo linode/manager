@@ -50,7 +50,7 @@ const formatLinode = (
       linode.image!,
       images
     ),
-    icon: 'LinodeIcon',
+    icon: 'linode',
     path: `/linodes/${linode.id}`,
     searchText: '', // @todo update this, either here or in the consumer. Probably in the consumer.
     created: linode.created,
@@ -66,7 +66,7 @@ const volumeToItem = (volume: Linode.Volume) => ({
   data: {
     tags: volume.tags,
     description: volume.size + ' GiB',
-    icon: 'VolumeIcon',
+    icon: 'volume',
     path: `/volumes/${volume.id}`,
     searchText: '',
     created: volume.created,
@@ -84,7 +84,7 @@ const imageToItem = (image: Linode.Image) => ({
     tags: [],
     description: image.description || '',
     /* TODO: Update this with the Images icon! */
-    icon: 'VolumeIcon',
+    icon: 'volume',
     /* TODO: Choose a real location for this to link to */
     path: `/images`,
     searchText: '',
@@ -98,7 +98,7 @@ const domainToItem = (domain: Linode.Domain) => ({
   data: {
     tags: domain.tags,
     description: domain.description || domain.status,
-    icon: 'DomainIcon',
+    icon: 'domain',
     path: `/domains/${domain.id}`,
     searchText: '',
     ips: getDomainIps(domain)
@@ -111,7 +111,7 @@ const nodeBalToItem = (nodebal: Linode.NodeBalancer) => ({
   data: {
     tags: nodebal.tags,
     description: nodebal.hostname,
-    icon: 'NodebalIcon',
+    icon: 'nodebalancer',
     path: `/nodebalancers/${nodebal.id}`,
     searchText: '',
     created: nodebal.created,
