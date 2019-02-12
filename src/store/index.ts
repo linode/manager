@@ -37,10 +37,6 @@ import images, {
   defaultState as defaultImagesState,
   State as ImagesStata
 } from 'src/store/image/image.reducer';
-import linodeDetail, {
-  defaultState as linodeDetailDefaultState,
-  State as LinodeDetailState
-} from 'src/store/linodeDetail';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -115,14 +111,6 @@ const __resourcesDefaultState = {
   volumes: defaultVolumesState
 };
 
-const featuresDefaultState = {
-  linodeDetail: linodeDetailDefaultState
-};
-
-export interface FeaturesState {
-  linodeDetail: LinodeDetailState;
-}
-
 export interface ResourcesState {
   account: AccountState;
   accountSettings: AccountSettingsState;
@@ -145,7 +133,6 @@ export interface ApplicationState {
   documentation: DocumentationState;
   domainDrawer: DomainDrawerState;
   events: EventsState;
-  features: FeaturesState;
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
@@ -158,7 +145,6 @@ const defaultState: ApplicationState = {
   documentation: documentationDefaultState,
   domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
-  features: featuresDefaultState,
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState
@@ -182,15 +168,12 @@ const __resources = combineReducers({
   volumes
 });
 
-const features = combineReducers({ linodeDetail });
-
 const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
   documentation,
   domainDrawer,
-  features,
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
