@@ -1,5 +1,6 @@
 import { last, pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
@@ -11,8 +12,12 @@ import Grid from 'src/components/Grid';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { lishLaunch } from 'src/features/Lish';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import linodeDetailContext from '../context';
+import { Context, withLinode } from '../context';
 import LinodePowerControl from '../LinodePowerControl';
+import withConfigDrawerState, { ConfigDrawerProps } from './configDrawerState';
+import withEditableLabelState, {
+  EditableLabelProps
+} from './editableLabelState';
 
 type ClassNames = 'titleWrapper' | 'controls' | 'launchButton';
 
@@ -42,88 +47,41 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
-
-interface ConfigDrawerState {
-  open: boolean;
-  configs: Linode.Config[];
-  error?: string;
-  selected?: number;
-  action?: (id: number) => void;
-}
-
-interface EditableLabelState {
-  label: string;
-  errorText: string;
-}
+type CombinedProps = Context &
+  ConfigDrawerProps &
+  EditableLabelProps &
+  WithStyles<ClassNames>;
 
 const Thingy: React.StatelessComponent<CombinedProps> = props => {
-  const { classes } = props;
-  const { linode, updateLinode } = React.useContext(linodeDetailContext);
+  const {
+    classes,
+    linode,
+    updateLinode,
 
-  const [configDrawerState, setConfigDrawerState] = React.useState<
-    ConfigDrawerState
-  >({
-    action: (id: number) => null,
-    configs: [],
-    error: undefined,
-    open: false,
-    selected: undefined
-  });
+    configDrawerAction,
+    configDrawerError,
+    configDrawerOpen,
+    configDrawerSelected,
+    closeConfigDrawer,
+    openConfigDrawer,
+    configDrawerSelectConfig,
 
-  /** Config Drawer Handlers */
-  const openConfigDrawer = (
-    configs: Linode.Config[],
-    action: (id: number) => void
-  ) => {
-    setConfigDrawerState({
-      action,
-      configs,
-      open: true,
-      selected: configs[0].id
-    });
-  };
-
-  const closeConfigDrawer = () => {
-    setConfigDrawerState({
-      action: (id: number) => null,
-      configs: [],
-      error: undefined,
-      open: false,
-      selected: undefined
-    });
-  };
-
-  const selectConfig = (id: number) => {
-    setConfigDrawerState(prevState => ({
-      ...configDrawerState,
-      selected: id
-    }));
-  };
+    editableLabelError,
+    resetEditableLabel,
+    setEditableLabelError
+  } = props;
 
   const submitConfigChoice = () => {
-    const { action, selected } = configDrawerState;
-    if (selected && action) {
-      action(selected);
+    if (configDrawerSelected && configDrawerAction) {
+      configDrawerAction(configDrawerSelected);
       closeConfigDrawer();
     }
   };
 
-  /** Editable Label */
-  const [editableTextState, setEditableTextState] = React.useState<
-    EditableLabelState
-  >({
-    label: '',
-    errorText: ''
-  });
-
   const handleSubmitLabelChange = (label: string) => {
     return updateLinode({ label })
       .then(updatedLinode => {
-        setEditableTextState({
-          label: updatedLinode.label,
-          errorText: ''
-        });
+        resetEditableLabel();
       })
       .catch(err => {
         const errors: Linode.ApiFieldError[] = pathOr(
@@ -132,21 +90,10 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
           err
         );
         const errorStrings: string[] = errors.map(e => e.reason);
-        setEditableTextState({
-          label: linode.label,
-          errorText: errorStrings[0]
-        });
+        setEditableLabelError(errorStrings[0]);
         scrollErrorIntoView();
         return Promise.reject(errorStrings[0]);
       });
-  };
-
-  const resetLabelState = () => {
-    setEditableTextState({
-      ...editableTextState,
-      label: linode.label,
-      errorText: ''
-    });
   };
 
   const getLabelLink = (): string | undefined => {
@@ -165,8 +112,8 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
           labelOptions={{ linkTo: getLabelLink() }}
           onEditHandlers={{
             onEdit: handleSubmitLabelChange,
-            onCancel: resetLabelState,
-            errorText: editableTextState.errorText
+            onCancel: resetEditableLabel,
+            errorText: editableLabelError
           }}
         />
       </Grid>
@@ -191,11 +138,11 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
       <LinodeConfigSelectionDrawer
         onClose={closeConfigDrawer}
         onSubmit={submitConfigChoice}
-        onChange={selectConfig}
-        open={configDrawerState.open}
-        configs={configDrawerState.configs}
-        selected={String(configDrawerState.selected)}
-        error={configDrawerState.error}
+        onChange={configDrawerSelectConfig}
+        open={configDrawerOpen}
+        configs={linode._configs}
+        selected={String(configDrawerSelected)}
+        error={configDrawerError}
       />
     </Grid>
   );
@@ -203,4 +150,11 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(Thingy);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withConfigDrawerState,
+  withEditableLabelState,
+  withLinode(({ linode, updateLinode }) => ({ linode, updateLinode }))
+);
+
+export default enhanced(Thingy);

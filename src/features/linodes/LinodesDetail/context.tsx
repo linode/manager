@@ -4,7 +4,7 @@ import { createHOCForConsumer } from 'src/requestableContext';
 
 import { ExtendedLinode } from './LinodesDetail.container';
 
-interface IncrediblyExtendedLinode extends ExtendedLinode {
+export interface IncrediblyExtendedLinode extends ExtendedLinode {
   _configs: Linode.Config[];
   _disks: Linode.Disk[];
 }

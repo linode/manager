@@ -16,7 +16,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import linodeDetailContext from './context';
+import { IncrediblyExtendedLinode, withLinode } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeNetworking from './LinodeNetworking';
 import LinodeRebuild from './LinodeRebuild';
@@ -25,13 +25,18 @@ import LinodeResize from './LinodeResize';
 import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 
-type CombinedProps = RouteComponentProps<{ linodeId: string }>;
+type CombinedProps = {
+  linode: IncrediblyExtendedLinode;
+} & RouteComponentProps<{
+  linodeId: string;
+}>;
 
 const LinodesDetailNavigation: React.StatelessComponent<
   CombinedProps
 > = props => {
   const {
-    match: { url }
+    match: { url },
+    linode
   } = props;
 
   const tabs = [
@@ -45,7 +50,6 @@ const LinodesDetailNavigation: React.StatelessComponent<
     { routeName: `${url}/backup`, title: 'Backups' },
     { routeName: `${url}/settings`, title: 'Settings' }
   ];
-  const { linode } = React.useContext(linodeDetailContext);
 
   const handleTabChange = (
     event: React.ChangeEvent<HTMLDivElement>,
@@ -137,6 +141,9 @@ const matches = (p: string) => {
   return Boolean(matchPath(p, { path: location.pathname }));
 };
 
-const enhanced = compose<CombinedProps, {}>(withRouter);
+const enhanced = compose<CombinedProps, {}>(
+  withRouter,
+  withLinode(({ linode }) => ({ linode }))
+);
 
 export default enhanced(LinodesDetailNavigation);

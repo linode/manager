@@ -1,3 +1,4 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -12,8 +13,11 @@ import {
   withTypes,
   WithTypes
 } from 'src/store/linodeType/linodeType.containers';
-import linodeDetailContext from '../context';
+import { IncrediblyExtendedLinode, withLinode } from '../context';
 import MutateDrawer from '../MutateDrawer';
+import withMutationDrawerState, {
+  MutationDrawerProps
+} from './mutationDrawerState';
 
 type ClassNames = 'pendingMutationLink';
 
@@ -27,17 +31,26 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithTypes & WithStyles<ClassNames>;
+type CombinedProps = MutationDrawerProps & {
+  linode: IncrediblyExtendedLinode;
+} & WithTypes &
+  InjectedNotistackProps &
+  WithStyles<ClassNames>;
 
-interface DrawerState {
-  open: boolean;
-  loading: boolean;
-  error: string;
-}
 const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, types } = props;
+  const {
+    classes,
+    types,
+    linode,
+    enqueueSnackbar,
+    openMutationDrawer,
+    closeMutationDrawer,
+    mutationFailed,
+    mutationDrawerError,
+    mutationDrawerLoading,
+    mutationDrawerOpen
+  } = props;
 
-  const { linode } = React.useContext(linodeDetailContext);
   const { _type } = linode;
 
   /** Mutate */
@@ -47,32 +60,17 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
 
   const successorId = _type.successor;
 
-  const [mutationDrawerState, setMutationDrawerState] = React.useState<
-    DrawerState
-  >({
-    open: false,
-    loading: false,
-    error: ''
-  });
-
   const successorType = successorId
     ? types.find(({ id }) => id === successorId)
     : null;
   const { vcpus, network_out, disk, transfer, memory } = _type;
 
   const initMutation = () => {
-    // const { mutateDrawer } = this.state;
-    // const { linode } = this.props;
-
     if (!linode) {
       return;
     }
 
-    setMutationDrawerState({
-      ...mutationDrawerState,
-      loading: true,
-      error: ''
-    });
+    openMutationDrawer();
 
     /*
      * It's okay to disregard the possiblity of linode
@@ -81,26 +79,18 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
      */
     startMutation(linode.id)
       .then(() => {
-        setMutationDrawerState({
-          ...mutationDrawerState,
-          open: false,
-          error: '',
-          loading: false
+        closeMutationDrawer();
+        enqueueSnackbar('Linode upgrade has been initiated.', {
+          variant: 'info'
         });
-
-        // @todo SNACKBAR!!!!
-        // this.props.enqueueSnackbar('Linode upgrade has been initiated.', { variant: 'info' });
       })
       .catch(errors => {
-        setMutationDrawerState({
-          ...mutationDrawerState,
-          loading: false,
-          error: pathOr(
-            'Mutation could not be initiated.',
-            ['response', 'data', 'errors', 0, 'reason'],
-            errors
-          )
-        });
+        const e = pathOr(
+          'Mutation could not be initiated.',
+          ['response', 'data', 'errors', 0, 'reason'],
+          errors
+        );
+        mutationFailed(e);
       });
   };
 
@@ -115,28 +105,17 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
 this upgrade and what it includes, `}
         <span
           className={classes.pendingMutationLink}
-          onClick={() =>
-            setMutationDrawerState({
-              open: true,
-              loading: false,
-              error: ''
-            })
-          }
+          onClick={openMutationDrawer}
         >
           click here.
         </span>
       </Notice>
       <MutateDrawer
         linodeId={linode.id}
-        open={mutationDrawerState.open}
-        loading={mutationDrawerState.loading}
-        error={mutationDrawerState.error}
-        handleClose={() =>
-          setMutationDrawerState({
-            ...mutationDrawerState,
-            open: false
-          })
-        }
+        open={mutationDrawerOpen}
+        loading={mutationDrawerLoading}
+        error={mutationDrawerError}
+        handleClose={closeMutationDrawer}
         mutateInfo={{
           vcpus: successorType.vcpus !== vcpus ? successorType.vcpus : null,
           network_out:
@@ -166,7 +145,10 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withTypes()
+  withTypes(),
+  withLinode(({ linode }) => ({ linode })),
+  withMutationDrawerState,
+  withSnackbar
 );
 
 export default enhanced(MutationNotification);
