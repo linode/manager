@@ -1,9 +1,3 @@
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-// import LoadingIcon from 'src/assets/icons/entityIcons/loading.svg';
-import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-// import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { displayType } from 'src/features/linodes/presentation';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
@@ -22,14 +16,6 @@ export const emptyResults = {
   volumes: [],
   domains: [],
   images: []
-};
-
-export const iconMap = {
-  LinodeIcon,
-  NodeBalancerIcon,
-  VolumeIcon,
-  DomainIcon,
-  default: LinodeIcon
 };
 
 // Helper can be extended to other entities once tags are supported for them.
