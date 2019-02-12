@@ -13,7 +13,7 @@ import {
   withTypes,
   WithTypes
 } from 'src/store/linodeType/linodeType.containers';
-import { IncrediblyExtendedLinode, withLinode } from '../context';
+import { Context, withLinode } from '../context';
 import MutateDrawer from '../MutateDrawer';
 import withMutationDrawerState, {
   MutationDrawerProps
@@ -31,9 +31,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = MutationDrawerProps & {
-  linode: IncrediblyExtendedLinode;
-} & WithTypes &
+type CombinedProps = MutationDrawerProps &
+  Context &
+  WithTypes &
   InjectedNotistackProps &
   WithStyles<ClassNames>;
 

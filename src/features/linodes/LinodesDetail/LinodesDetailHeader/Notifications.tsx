@@ -10,7 +10,7 @@ import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 import { scheduleOrQueueMigration } from 'src/services/linodes';
 import { withNotifications } from 'src/store/notification/notification.containers';
-import { IncrediblyExtendedLinode, withLinode } from '../context';
+import { Context, withLinode } from '../context';
 
 type ClassNames = 'migrationLink';
 
@@ -24,9 +24,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = {
-  linode: IncrediblyExtendedLinode;
-} & InjectedNotistackProps & {
+type CombinedProps = Context &
+  InjectedNotistackProps & {
     requestNotifications: () => void;
   } & WithStyles<ClassNames>;
 
@@ -84,7 +83,7 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withLinode(({ linode }) => ({ linode })),
+  withLinode(context => context),
   withNotifications(undefined, ({ requestNotifications }) => ({
     requestNotifications
   }))

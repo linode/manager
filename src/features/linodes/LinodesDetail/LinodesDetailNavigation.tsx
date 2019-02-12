@@ -16,7 +16,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import { IncrediblyExtendedLinode, withLinode } from './context';
+import { Context, withLinode } from './context';
 import LinodeBackup from './LinodeBackup';
 import LinodeNetworking from './LinodeNetworking';
 import LinodeRebuild from './LinodeRebuild';
@@ -25,11 +25,10 @@ import LinodeResize from './LinodeResize';
 import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 
-type CombinedProps = {
-  linode: IncrediblyExtendedLinode;
-} & RouteComponentProps<{
-  linodeId: string;
-}>;
+type CombinedProps = Context &
+  RouteComponentProps<{
+    linodeId: string;
+  }>;
 
 const LinodesDetailNavigation: React.StatelessComponent<
   CombinedProps

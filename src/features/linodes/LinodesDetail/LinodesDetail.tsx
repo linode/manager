@@ -11,9 +11,9 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
-import { Context, IncrediblyExtendedLinode, LinodeProvider } from './context';
+import { Context, LinodeProvider } from './context';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
-import linodesDetailContainer from './LinodesDetail.container';
+import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
 import LinodesDetailHeader from './LinodesDetailHeader';
 import LinodesDetailNavigation from './LinodesDetailNavigation';
 import reloadableWithRouter from './reloadableWithRouter';
@@ -25,7 +25,9 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 
 type CombinedProps = LinodeActionsProps &
-  WithTypes & { linode: IncrediblyExtendedLinode } & RouteProps &
+  WithTypes &
+  InnerProps &
+  RouteProps &
   WithStyles<ClassNames> & { linodeId: number };
 
 type ClassNames = 'backButton';
@@ -72,17 +74,12 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
   reloadable,
-
   withProps((ownProps: RouteProps) => ({
     linodeId: Number(ownProps.match.params.linodeId)
   })),
-
   styled,
-
   withLinodeActions,
-
   linodesDetailContainer,
-
   LinodeDetailErrorBoundary
 );
 

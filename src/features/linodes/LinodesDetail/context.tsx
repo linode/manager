@@ -2,15 +2,9 @@ import * as React from 'react';
 
 import { createHOCForConsumer } from 'src/requestableContext';
 
-import { ExtendedLinode } from './LinodesDetail.container';
+import { InnerProps } from './LinodesDetail.container';
 
-export interface IncrediblyExtendedLinode extends ExtendedLinode {
-  _configs: Linode.Config[];
-  _disks: Linode.Disk[];
-}
-
-export interface Context {
-  linode: IncrediblyExtendedLinode;
+export interface Context extends InnerProps {
   updateLinode: (data: Partial<Linode.Linode>) => Promise<Linode.Linode>;
 }
 
