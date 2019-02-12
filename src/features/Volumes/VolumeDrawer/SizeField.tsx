@@ -31,7 +31,8 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
   onChange,
   value,
   name,
-  resize
+  resize,
+  ...rest
 }) => {
   const helperText = resize
     ? `This volume can range from ${resize} GiB to ${MAX_VOLUME_SIZE} GiB in size.`
@@ -52,6 +53,7 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
       onChange={onChange}
       required
       value={value}
+      {...rest}
     />
   );
 };

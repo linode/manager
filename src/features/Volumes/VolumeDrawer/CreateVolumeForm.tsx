@@ -1,5 +1,7 @@
+import { pathOr } from 'ramda';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -7,8 +9,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
+import { MapState } from 'src/store/types';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
@@ -45,10 +49,10 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
+type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames> & StateProps;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
-  const { onClose, onSuccess, classes, createVolume } = props;
+  const { onClose, onSuccess, classes, createVolume, disabled } = props;
   return (
     <Formik
       initialValues={initialValues}
@@ -126,7 +130,12 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={status.generalError}
               />
             )}
-
+            {disabled && <Notice
+              text={
+                "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
+              }
+              error={true}
+            />}
             <Typography variant="body1" data-qa-volume-size-help>
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes
               in size and costs $0.10/GiB per month. Up to eight volumes can be
@@ -151,6 +160,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.label}
+              disabled={disabled}
             />
 
             <SizeField
@@ -159,6 +169,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.size}
+              disabled={disabled}
             />
 
             <RegionSelect
@@ -168,6 +179,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onChange={handleChange}
               value={values.region}
               shouldOnlyDisplayRegionsWithBlockStorage={true}
+              disabled={disabled}
             />
 
             <LinodeSelect
@@ -177,6 +189,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onChange={(id: number) => setFieldValue('linodeId', id)}
               region={values.region}
               shouldOnlyDisplayRegionsWithBlockStorage={true}
+              disabled={disabled}
             />
 
             <TagsInput
@@ -189,6 +202,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               }
               name="tags"
               label="Tags"
+              disabled={disabled}
               onChange={selected => setFieldValue('tags', selected)}
               value={values.tags}
             />
@@ -200,13 +214,14 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={(id: number) => setFieldValue('configId', id)}
               value={values.configId}
+              disabled={disabled}
             />
 
             <PricePanel value={values.size} currentSize={10} />
 
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
-              disabled={values.configId === -9999}
+              disabled={values.configId === -9999 || disabled}
               onSubmit={handleSubmit}
               onCancel={() => {
                 resetForm();
@@ -237,11 +252,30 @@ const initialValues: FormState = {
   tags: []
 };
 
+interface StateProps {
+  disabled: boolean;
+}
+
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+  disabled:
+    pathOr(false, ['__resources', 'profile', 'data', 'restricted'], state) &&
+    !pathOr(
+      false,
+      ['__resources', 'profile', 'data', 'grants', 'global', 'add_volumess'],
+      state
+    )
+});
+
+const connected = connect(mapStateToProps);
+
+
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withVolumesRequests
+  withVolumesRequests,
+  connected
 )(CreateVolumeForm);
 
 export default enhanced;

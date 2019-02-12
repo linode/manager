@@ -27,7 +27,8 @@ const LabelField: React.StatelessComponent<CombinedProps> = ({
   onBlur,
   onChange,
   value,
-  name
+  name,
+  ...rest
 }) => {
   return (
     <TextField
@@ -39,6 +40,7 @@ const LabelField: React.StatelessComponent<CombinedProps> = ({
       onChange={onChange}
       required
       value={value}
+      {...rest}
     />
   );
 };
