@@ -128,9 +128,11 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
       value: domain.id,
       data: {
         tags: domain.tags,
-        description: domain.description || domain.status,
+        description: domain.type,
+        domainStatus: domain.status,
         icon: 'domain',
         path: `/domains/${domain.id}`,
+        type: domain.type,
         searchText: query
       }
     }));

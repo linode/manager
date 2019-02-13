@@ -97,7 +97,8 @@ const domainToItem = (domain: Linode.Domain) => ({
   value: domain.id,
   data: {
     tags: domain.tags,
-    description: domain.description || domain.status,
+    description: domain.type,
+    domainStatus: domain.status,
     icon: 'domain',
     path: `/domains/${domain.id}`,
     searchText: '',
