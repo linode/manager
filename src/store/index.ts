@@ -87,6 +87,7 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeDrawer';
+import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
@@ -96,6 +97,7 @@ import notifications, {
   State as NotificationsState
 } from './notification/notification.reducer';
 import { initReselectDevtools } from './selectors';
+
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
 
@@ -201,7 +203,8 @@ const enhancers = compose(
       domainEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
-      volumeEvents
+      volumeEvents,
+      diskEvents
     )
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f
