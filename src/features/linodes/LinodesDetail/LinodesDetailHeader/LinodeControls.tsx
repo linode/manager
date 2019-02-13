@@ -136,6 +136,7 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
         />
       </Grid>
       <LinodeConfigSelectionDrawer
+        configs={linode._configs}
         onClose={closeConfigDrawer}
         onSubmit={submitConfigChoice}
         onChange={configDrawerSelectConfig}

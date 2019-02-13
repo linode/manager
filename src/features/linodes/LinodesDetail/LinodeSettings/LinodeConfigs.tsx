@@ -343,9 +343,9 @@ interface LinodeContext {
   linodeId: number;
   linodeLabel: string;
   linodeMemory: number;
-  linodeTotalDisk: number;
   linodeRegion: string;
   linodeStatus: string;
+  linodeTotalDisk: number;
   deleteLinodeConfig: DeleteLinodeConfig;
 }
 
@@ -355,9 +355,9 @@ const linodeContext = withLinode<LinodeContext>(
     linodeId: linode.id,
     linodeLabel: linode.label,
     linodeMemory: linode.specs.memory,
-    linodeTotalDisk: linode.specs.disk,
     linodeRegion: linode.region,
     linodeStatus: linode.status,
+    linodeTotalDisk: linode.specs.disk,
     deleteLinodeConfig
   })
 );

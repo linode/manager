@@ -10,7 +10,6 @@ import {
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
-import { withLinode } from '../linodes/LinodesDetail/context';
 
 type ClassNames = 'root';
 
@@ -21,6 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
 interface Props {
+  configs: Linode.Config[];
   onClose: () => void;
   onSubmit: () => void;
   onChange: (id: number) => void;
@@ -29,7 +29,7 @@ interface Props {
   error?: string;
 }
 
-type CombinedProps = Props & LinodeContextProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeConfigSelectionDrawer: React.StatelessComponent<
   CombinedProps
@@ -63,18 +63,12 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
 
 LinodeConfigSelectionDrawer.defaultProps = {
   selected: '',
-  open: false
+  open: false,
+  configs: []
 };
 
 const styled = withStyles(styles);
 
-interface LinodeContextProps {
-  configs: Linode.Config[];
-}
-
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withLinode(({ linode }) => ({ configs: linode._configs }))
-);
+const enhanced = compose<CombinedProps, Props>(styled);
 
 export default enhanced(LinodeConfigSelectionDrawer);
