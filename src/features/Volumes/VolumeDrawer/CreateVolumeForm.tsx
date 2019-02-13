@@ -1,5 +1,5 @@
-import { pathOr } from 'ramda';
 import { Form, Formik } from 'formik';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -12,11 +12,11 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { MapState } from 'src/store/types';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
+import { MapState } from 'src/store/types';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import LinodeSelect from './LinodeSelect';

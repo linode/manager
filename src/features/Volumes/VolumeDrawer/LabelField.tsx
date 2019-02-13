@@ -18,6 +18,7 @@ interface Props {
   error?: string;
   value: string;
   name: string;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
