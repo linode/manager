@@ -40,6 +40,9 @@ class SelectStackScriptPanelContent extends React.Component<
   };
 
   handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
+    if (this.props.disabled) {
+      return;
+    }
     this.props.onSelect(
       stackscript.id,
       stackscript.label,

@@ -35,6 +35,10 @@ import {
   displayType,
   typeLabelDetails
 } from 'src/features/linodes/presentation';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { parseQueryParams } from 'src/utilities/queryParams';
@@ -476,13 +480,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
     state
   ),
   // disabled if the profile is restricted and doesn't have add_linodes grant
-  disabled:
-    pathOr(false, ['__resources', 'profile', 'data', 'restricted'], state) &&
-    !pathOr(
-      false,
-      ['__resources', 'profile', 'data', 'grants', 'global', 'add_linodes'],
-      state
-    )
+  disabled: isRestrictedUser(state) && hasGrant(state, 'add_linodes')
 });
 
 const connected = connect(mapStateToProps);
