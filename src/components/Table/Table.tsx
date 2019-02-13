@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       '& tbody > tr': {
         marginBottom: 0,
         '& > td:first-child': {
-          backgroundColor: theme.bg.offWhite,
+          backgroundColor: theme.bg.tableHeader,
           fontFamily: 'LatoWebBold'
         }
       },
