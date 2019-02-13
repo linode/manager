@@ -11,9 +11,6 @@ describe('Entity Icon Suite', () => {
 
     beforeAll(() => {
         navigateToStory(component, childStory);
-        browser.waitUntill(() => {
-            return $$('[data-qa-icon]').length === 4;
-        }, constants.wait.normal);
     });
 
     it('Nodebalancer Icon displays with undefined status', () => {
