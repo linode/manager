@@ -11,6 +11,7 @@ import {
   view
 } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -35,11 +36,16 @@ import SelectRegionPanel, {
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { getLinodes } from 'src/services/linodes';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { MapState } from 'src/store/types';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -442,7 +448,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, regionsData } = this.props;
+    const { classes, regionsData, disabled } = this.props;
     const { nodeBalancerFields, linodesWithPrivateIPs } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -476,7 +482,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 errorText: hasErrorFor('label'),
                 label: 'NodeBalancer Label',
                 onChange: this.labelChange,
-                value: nodeBalancerFields.label || ''
+                value: nodeBalancerFields.label || '',
+                disabled
               }}
               tagsInputProps={{
                 value: nodeBalancerFields.tags
@@ -486,7 +493,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     }))
                   : [],
                 onChange: this.tagsChange,
-                tagError: hasErrorFor('tag')
+                tagError: hasErrorFor('tag'),
+                disabled
               }}
             />
             <SelectRegionPanel
@@ -761,6 +769,18 @@ interface WithRegions {
   regionsLoading: boolean;
   regionsError: Linode.ApiFieldError[];
 }
+
+interface StateProps {
+  disabled: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+  disabled: isRestrictedUser(state) && hasGrant(state, 'add_nodebalancers')
+});
+
+const connected = connect(mapStateToProps);
+
+
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
