@@ -68,6 +68,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 type CombinedProps = WithNodeBalancerActions &
+  StateProps &
   WithRegions &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
@@ -119,7 +120,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     )
   };
 
-  addNodeBalancer = () =>
+  addNodeBalancer = () => {
+    if (this.props.disabled) {
+      return;
+    }
     this.setState({
       nodeBalancerFields: {
         ...this.state.nodeBalancerFields,
@@ -129,6 +133,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         ]
       }
     });
+  };
 
   addNodeBalancerConfigNode = (configIdx: number) => () =>
     this.setState(
@@ -637,6 +642,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   type="secondary"
                   onClick={this.addNodeBalancer}
                   data-qa-add-config
+                  disabled={disabled}
                 >
                   Add another Configuration
                 </Button>
@@ -668,7 +674,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     onDeploy={this.createNodeBalancer}
                     calculatedPrice={20}
                     displaySections={displaySections && [displaySections]}
-                    disabled={this.state.submitting}
+                    disabled={this.state.submitting || disabled}
                     {...props}
                   />
                 );
@@ -777,12 +783,10 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
-  disabled: isRestrictedUser(state) && hasGrant(state, 'add_nodebalancers')
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_nodebalancers')
 });
 
 const connected = connect(mapStateToProps);
-
-
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
@@ -791,6 +795,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 }));
 
 export default compose(
+  connected,
   withRegions,
   withNodeBalancerActions,
   styled,
