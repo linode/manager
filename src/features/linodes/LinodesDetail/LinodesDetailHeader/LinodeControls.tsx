@@ -140,7 +140,6 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
         onSubmit={submitConfigChoice}
         onChange={configDrawerSelectConfig}
         open={configDrawerOpen}
-        configs={linode._configs}
         selected={String(configDrawerSelected)}
         error={configDrawerError}
       />

@@ -1,5 +1,8 @@
-import { lifecycle } from 'recompose';
-import { getLinodeConfigs } from 'src/services/linodes';
+import { compose, lifecycle } from 'recompose';
+import {
+  withLinodeConfigActions,
+  WithLinodeConfigActions
+} from 'src/store/linodes/config/config.containers';
 
 interface OutterProps {
   linodeId: number;
@@ -11,35 +14,29 @@ interface LinodeConfigsState {
   configsData: Linode.Config[];
 }
 
-export default lifecycle<OutterProps, LinodeConfigsState>({
-  componentDidMount() {
-    const { linodeId } = this.props;
+export default compose(
+  withLinodeConfigActions,
+  lifecycle<OutterProps & WithLinodeConfigActions, LinodeConfigsState>({
+    componentDidMount() {
+      const {
+        linodeId,
+        linodeConfigActions: { getAllLinodeConfigs }
+      } = this.props;
+      getAllLinodeConfigs({ linodeId });
+    },
 
-    this.setState({ configsData: [], configsLoading: true });
+    componentDidUpdate(prevProps) {
+      const {
+        linodeId: prevLinodeId,
+        linodeConfigActions: { getAllLinodeConfigs }
+      } = this.props;
+      const { linodeId } = prevProps;
 
-    getLinodeConfigs(linodeId)
-      .then(({ data }) =>
-        this.setState({ configsLoading: false, configsData: data })
-      )
-      .catch(err =>
-        this.setState({ configsLoading: false, configsError: err })
-      );
-  },
+      if (linodeId === prevLinodeId) {
+        return;
+      }
 
-  componentDidUpdate(prevProps) {
-    const { linodeId } = prevProps;
-    const { linodeId: prevLinodeId } = this.props;
-    if (linodeId === prevLinodeId) {
-      return;
+      getAllLinodeConfigs({ linodeId });
     }
-    this.setState({ configsData: [], configsLoading: true });
-
-    getLinodeConfigs(linodeId)
-      .then(({ data }) =>
-        this.setState({ configsLoading: false, configsData: data })
-      )
-      .catch(err =>
-        this.setState({ configsLoading: false, configsError: err })
-      );
-  }
-});
+  })
+);

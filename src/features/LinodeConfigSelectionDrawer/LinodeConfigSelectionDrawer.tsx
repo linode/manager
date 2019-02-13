@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -9,6 +10,7 @@ import {
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
+import { withLinode } from '../linodes/LinodesDetail/context';
 
 type ClassNames = 'root';
 
@@ -23,12 +25,11 @@ interface Props {
   onSubmit: () => void;
   onChange: (id: number) => void;
   open: boolean;
-  configs: Linode.Config[];
   selected?: string;
   error?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & LinodeContextProps & WithStyles<ClassNames>;
 
 const LinodeConfigSelectionDrawer: React.StatelessComponent<
   CombinedProps
@@ -61,11 +62,19 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
 };
 
 LinodeConfigSelectionDrawer.defaultProps = {
-  configs: [],
   selected: '',
   open: false
 };
 
 const styled = withStyles(styles);
 
-export default styled(LinodeConfigSelectionDrawer);
+interface LinodeContextProps {
+  configs: Linode.Config[];
+}
+
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withLinode(({ linode }) => ({ configs: linode._configs }))
+);
+
+export default enhanced(LinodeConfigSelectionDrawer);

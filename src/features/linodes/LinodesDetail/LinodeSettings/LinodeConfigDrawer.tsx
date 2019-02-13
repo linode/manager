@@ -1,3 +1,9 @@
+/**
+ * @todo The config information is now immediately available on the LinodeDetail context and we
+ * should source it directly from there rather than making an additional request. OR We can source
+ * it from there and make the (thunk) request to get the latest/greatest information.
+ */
+
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -29,12 +35,7 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import {
-  createLinodeConfig,
-  getLinodeConfig,
-  getLinodeKernels,
-  updateLinodeConfig
-} from 'src/services/linodes';
+import { getLinodeKernels } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings
@@ -42,7 +43,12 @@ import createDevicesFromStrings, {
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
 import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { withLinode } from '../context';
+import {
+  CreateLinodeConfig,
+  GetLinodeConfig,
+  UpdateLinodeConfig,
+  withLinode
+} from '../context';
 
 type ClassNames = 'section' | 'divider';
 
@@ -79,7 +85,6 @@ interface EditableFields {
 
 interface Props {
   linodeHypervisor: 'kvm' | 'xen';
-  linodeId: number;
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
@@ -97,7 +102,10 @@ interface State {
   fields: EditableFields;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = LinodeContextProps &
+  Props &
+  StateProps &
+  WithStyles<ClassNames>;
 
 const getAllKernels = getAll<Linode.Kernel>(getLinodeKernels);
 
@@ -132,7 +140,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { linodeId, linodeConfigId, linodeHypervisor } = this.props;
+    const { linodeConfigId, linodeHypervisor, getLinodeConfig } = this.props;
 
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
@@ -155,7 +163,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       if (linodeConfigId !== undefined) {
         this.setState({ loading: { ...this.state.loading, config: true } });
 
-        getLinodeConfig(linodeId, linodeConfigId)
+        getLinodeConfig(linodeConfigId)
           .then(config => {
             this.setState({
               loading: {
@@ -560,12 +568,15 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     prevState === false && currentState === true;
 
   onSubmit = () => {
-    const { linodeId, linodeConfigId } = this.props;
+    const {
+      linodeConfigId,
+      createLinodeConfig,
+      updateLinodeConfig
+    } = this.props;
 
     /** Editing */
     if (linodeConfigId) {
       return updateLinodeConfig(
-        linodeId,
         linodeConfigId,
         this.convertStateToData(this.state.fields)
       )
@@ -585,10 +596,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     }
 
     /** Creating */
-    return createLinodeConfig(
-      linodeId,
-      this.convertStateToData(this.state.fields)
-    )
+    return createLinodeConfig(this.convertStateToData(this.state.fields))
       .then(response => {
         this.props.onClose();
         this.props.onSuccess();
@@ -731,10 +739,30 @@ interface StateProps {
   volumes: ExtendedVolume[];
 }
 
+interface LinodeContextProps {
+  linodeId: number;
+  createLinodeConfig: CreateLinodeConfig;
+  updateLinodeConfig: UpdateLinodeConfig;
+  getLinodeConfig: GetLinodeConfig;
+}
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
 
-  connect((state: ApplicationState, ownProps: Props) => {
+  withLinode(
+    ({ linode, createLinodeConfig, updateLinodeConfig, getLinodeConfig }) => ({
+      disks: linode._disks.map((disk: Linode.Disk) => ({
+        ...disk,
+        _id: `disk-${disk.id}`
+      })),
+      linodeId: linode.id,
+      createLinodeConfig,
+      updateLinodeConfig,
+      getLinodeConfig
+    })
+  ),
+
+  connect((state: ApplicationState, ownProps: LinodeContextProps & Props) => {
     const { linodeId, linodeRegion } = ownProps;
     const { itemsById } = state.__resources.volumes;
 
@@ -759,14 +787,7 @@ const enhanced = compose<CombinedProps, Props>(
       []
     );
     return { volumes };
-  }),
-
-  withLinode(({ linode }) => ({
-    disks: linode._disks.map((disk: Linode.Disk) => ({
-      ...disk,
-      _id: `disk-${disk.id}`
-    }))
-  }))
+  })
 );
 
 export default enhanced(LinodeConfigDrawer);

@@ -4,6 +4,7 @@ import { branch, compose, renderComponent } from 'recompose';
 import NotFound from 'src/components/NotFound';
 import { ApplicationState } from 'src/store';
 import { eventsForLinode } from 'src/store/events/event.selectors';
+import { getLinodeConfigsForLinode } from 'src/store/linodes/config/config.selectors';
 import { findLinodeById } from 'src/store/linodes/linodes.selector';
 import { getTypeById } from 'src/store/linodeType/linodeType.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
@@ -40,8 +41,8 @@ export default compose<InnerProps, OutterProps>(
     /** Build the ExtendedLinode */
     connect((state: ApplicationState, ownProps) => {
       const { events, __resources } = state;
-      const { volumes, notifications, types } = __resources;
-      const { linode, linodeId, configsData, disksData } = ownProps;
+      const { volumes, notifications, types, linodeConfigs } = __resources;
+      const { linode, linodeId, disksData } = ownProps;
       const { type } = linode;
 
       return {
@@ -51,7 +52,7 @@ export default compose<InnerProps, OutterProps>(
           _notifications: getNotificationsForLinode(notifications, linodeId),
           _type: getTypeById(types, type),
           _events: eventsForLinode(events, linodeId),
-          _configs: configsData,
+          _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
           _disks: disksData
         }
       };

@@ -1,3 +1,8 @@
+/**
+ * @todo Since configs are requested and stored in Redux, this needs to be updated to use
+ * the OrderBy and Paginated components, rather than Pagey.
+ */
+
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -25,12 +30,11 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { resetEventsPolling } from 'src/events';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import {
-  deleteLinodeConfig,
-  getLinodeConfigs,
-  linodeReboot
-} from 'src/services/linodes';
+  DeleteLinodeConfig,
+  withLinode
+} from 'src/features/linodes/LinodesDetail/context';
+import { getLinodeConfigs, linodeReboot } from 'src/services/linodes';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
 
@@ -115,7 +119,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         <LinodeConfigDrawer
           linodeConfigId={this.state.configDrawer.linodeConfigId}
           linodeHypervisor={this.props.linodeHypervisor}
-          linodeId={this.props.linodeId}
           linodeRegion={this.props.linodeRegion}
           maxMemory={this.props.linodeMemory}
           onClose={this.resetConfigDrawer}
@@ -226,7 +229,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfig = () => {
     this.setConfirmDelete({ submitting: true });
-    const { linodeId } = this.props;
+    const { deleteLinodeConfig } = this.props;
     const {
       confirmDelete: { id: configId }
     } = this.state;
@@ -234,7 +237,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       return;
     }
 
-    deleteLinodeConfig(linodeId, configId)
+    deleteLinodeConfig(configId)
       .then(() => this.props.onDelete())
       .then(() => {
         this.setConfirmDelete(
@@ -343,17 +346,21 @@ interface LinodeContext {
   linodeTotalDisk: number;
   linodeRegion: string;
   linodeStatus: string;
+  deleteLinodeConfig: DeleteLinodeConfig;
 }
 
-const linodeContext = withLinode<LinodeContext>(({ linode }) => ({
-  linodeHypervisor: linode.hypervisor,
-  linodeId: linode.id,
-  linodeLabel: linode.label,
-  linodeMemory: linode.specs.memory,
-  linodeTotalDisk: linode.specs.disk,
-  linodeRegion: linode.region,
-  linodeStatus: linode.status
-}));
+const linodeContext = withLinode<LinodeContext>(
+  ({ linode, deleteLinodeConfig }) => ({
+    linodeHypervisor: linode.hypervisor,
+    linodeId: linode.id,
+    linodeLabel: linode.label,
+    linodeMemory: linode.specs.memory,
+    linodeTotalDisk: linode.specs.disk,
+    linodeRegion: linode.region,
+    linodeStatus: linode.status,
+    deleteLinodeConfig
+  })
+);
 
 const paginated = Pagey((ownProps: LinodeContext, params, filters) => {
   return getLinodeConfigs(ownProps.linodeId, params, filters);

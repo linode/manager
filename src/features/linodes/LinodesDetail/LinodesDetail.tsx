@@ -7,6 +7,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import {
+  withLinodeConfigActions,
+  WithLinodeConfigActions
+} from 'src/store/linodes/config/config.containers';
+import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
@@ -25,6 +29,7 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 
 type CombinedProps = LinodeActionsProps &
+  WithLinodeConfigActions &
   WithTypes &
   InnerProps &
   RouteProps &
@@ -45,16 +50,40 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   const { linodeId, linode } = props;
 
-  const { linodeActions } = props;
+  const { linodeActions, linodeConfigActions } = props;
 
   const updatedContext: Context = {
+    /**
+     * Here we're actually building the context object.
+     * This should include not only the extended Linode, but handlers
+     * bound to the Linode instance (The Linode ID already applied to the request).
+     */
+
+    /** Linode actions */
     updateLinode: (data: Partial<Linode.Linode>) =>
       linodeActions.updateLinode({ linodeId, ...data }),
+
+    /** Linode Config actions */
+    getLinodeConfig: configId =>
+      linodeConfigActions.getLinodeConfig({ linodeId, configId }),
+
+    getLinodeConfigs: () => linodeConfigActions.getLinodeConfigs({ linodeId }),
+
+    updateLinodeConfig: (configId, data) =>
+      linodeConfigActions.updateLinodeConfig({ linodeId, configId, ...data }),
+
+    createLinodeConfig: data =>
+      linodeConfigActions.createLinodeConfig({ linodeId, ...data }),
+
+    deleteLinodeConfig: configId =>
+      linodeConfigActions.deleteLinodeConfig({ linodeId, configId }),
+
     linode
   };
 
   return (
     <LinodeProvider value={updatedContext}>
+      <pre>{JSON.stringify(linode, null, 2)}</pre>
       <LinodesDetailHeader />
       <LinodesDetailNavigation />
     </LinodeProvider>
@@ -79,6 +108,7 @@ const enhanced = compose<CombinedProps, {}>(
   })),
   styled,
   withLinodeActions,
+  withLinodeConfigActions,
   linodesDetailContainer,
   LinodeDetailErrorBoundary
 );

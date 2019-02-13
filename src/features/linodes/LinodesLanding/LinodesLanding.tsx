@@ -319,7 +319,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               onSubmit={this.submitConfigChoice}
               onChange={this.selectConfig}
               open={configDrawer.open}
-              configs={configDrawer.configs}
               selected={String(configDrawer.selected)}
               error={configDrawer.error}
             />
