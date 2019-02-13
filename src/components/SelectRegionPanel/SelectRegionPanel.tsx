@@ -49,6 +49,7 @@ interface Props {
   error?: string;
   handleSelection: (id: string) => void;
   selectedID: string | null;
+  disabled?: boolean;
 }
 
 const getNARegions = (regions: ExtendedRegion[]) =>
@@ -60,10 +61,11 @@ const getEURegions = (regions: ExtendedRegion[]) =>
 const getASRegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(jp|sg)/.test(r.country));
 
-const renderCard = (selectedID: string | null, handleSelection: Function) => (
-  region: ExtendedRegion,
-  idx: number
-) => (
+const renderCard = (
+  selectedID: string | null,
+  handleSelection: Function,
+  disabled?: boolean
+) => (region: ExtendedRegion, idx: number) => (
   <SelectionCard
     key={idx}
     checked={region.id === String(selectedID)}
@@ -71,6 +73,7 @@ const renderCard = (selectedID: string | null, handleSelection: Function) => (
     renderIcon={() => flags[region.country]()}
     heading={region.country.toUpperCase()}
     subheadings={[region.display]}
+    disabled={disabled}
   />
 );
 
@@ -78,7 +81,7 @@ class SelectRegionPanel extends React.Component<
   Props & WithStyles<ClassNames>
 > {
   createTabs = () => {
-    const { regions } = this.props;
+    const { regions, disabled, selectedID, handleSelection } = this.props;
     const tabs: Tab[] = [];
     const na = getNARegions(regions);
     const eu = getEURegions(regions);
@@ -90,9 +93,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container spacing={16}>
-              {na.map(
-                renderCard(this.props.selectedID, this.props.handleSelection)
-              )}
+              {na.map(renderCard(selectedID, handleSelection, disabled))}
             </Grid>
           );
         }
@@ -105,9 +106,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container spacing={16}>
-              {eu.map(
-                renderCard(this.props.selectedID, this.props.handleSelection)
-              )}
+              {eu.map(renderCard(selectedID, handleSelection, disabled))}
             </Grid>
           );
         }
@@ -120,9 +119,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container>
-              {as.map(
-                renderCard(this.props.selectedID, this.props.handleSelection)
-              )}
+              {as.map(renderCard(selectedID, handleSelection, disabled))}
             </Grid>
           );
         }

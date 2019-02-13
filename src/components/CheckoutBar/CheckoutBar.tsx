@@ -69,6 +69,7 @@ interface Props {
   calculatedPrice?: number;
   isSticky?: boolean;
   disabled?: boolean;
+  isMakingRequest?: boolean;
   displaySections?: { title: string; details?: string | number }[];
 }
 
@@ -93,7 +94,8 @@ class CheckoutBar extends React.Component<CombinedProps> {
       heading,
       calculatedPrice,
       disabled,
-      displaySections
+      displaySections,
+      isMakingRequest
     } = this.props;
 
     let finalStyle;
@@ -157,7 +159,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
             onClick={onDeploy}
             data-qa-deploy-linode
           >
-            {!disabled ? 'Create' : 'Creating...'}
+            {!isMakingRequest ? 'Create' : 'Creating...'}
           </Button>
         </div>
       </div>

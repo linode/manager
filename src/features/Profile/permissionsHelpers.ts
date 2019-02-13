@@ -5,7 +5,7 @@ export const isRestrictedUser = (state: any) => {
 };
 
 export const hasGrant = (state: any, grant: string) => {
-  return !pathOr(
+  return pathOr(
     false,
     ['__resources', 'profile', 'data', 'grants', 'global', grant],
     state

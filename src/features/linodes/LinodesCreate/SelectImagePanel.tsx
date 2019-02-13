@@ -61,6 +61,7 @@ interface Props {
   handleSelection: (id: string) => void;
   hideMyImages?: boolean;
   initTab?: number;
+  disabled?: boolean;
 }
 
 const sortByVendor = sortBy(prop('vendor'));
@@ -106,7 +107,7 @@ export const getMyImages = compose<any, any, any>(
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
-  const { images, error, handleSelection } = props;
+  const { images, error, handleSelection, disabled } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
@@ -126,6 +127,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
         heading={image.vendor as string}
         subheadings={[image.label]}
         data-qa-selection-card
+        disabled={disabled}
       />
     ));
 
@@ -143,6 +145,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
         }}
         heading={image.vendor as string}
         subheadings={[image.label]}
+        disabled={disabled}
       />
     ));
 
@@ -175,6 +178,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
                 renderIcon={() => <span className="fl-tux" />}
                 heading={image.label as string}
                 subheadings={[image.description as string]}
+                disabled={disabled}
               />
             ))}
         </Grid>
