@@ -158,3 +158,18 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 export default styled(EntityIcon);
+
+export const getStatusForDomain = (status: string) => {
+  switch (status) {
+    case 'edit_mode':
+      return 'edit';
+    case 'active':
+      return 'running';
+    case 'disabled':
+      return 'offline';
+    case 'has_errors':
+      return 'offline';
+    default:
+      return 'offline';
+  }
+};
