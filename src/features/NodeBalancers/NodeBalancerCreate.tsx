@@ -502,6 +502,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               error={hasErrorFor('region')}
               selectedID={nodeBalancerFields.region || null}
               handleSelection={this.regionChange}
+              disabled={disabled}
             />
             <Grid item xs={12}>
               <Typography role="header" variant="h2" className={classes.title}>
@@ -625,6 +626,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                           this.onNodeWeightChange(idx, nodeIndex, value)
                         }
                         onDelete={this.onDeleteConfig(idx)}
+                        disabled={disabled}
                       />
                     </Paper>
                   );

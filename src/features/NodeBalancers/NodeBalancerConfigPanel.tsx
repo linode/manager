@@ -162,6 +162,7 @@ interface Props {
   onPrivateKeyChange: (v: string) => void;
 
   nodes: Linode.NodeBalancerConfigNodeFields[];
+  disabled: boolean;
   addNode: (nodeIdx?: number) => void;
   removeNode: (nodeIdx: number) => void;
   onNodeLabelChange: (nodeIdx: number, value: string) => void;
@@ -370,7 +371,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckInterval,
       healthCheckTimeout,
       healthCheckType,
-      protocol
+      protocol,
+      disabled
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(
