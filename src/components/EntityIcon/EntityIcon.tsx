@@ -23,6 +23,14 @@ type ClassNames =
   | 'loadingIcon';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
+  '@keyframes rotate': {
+    from: {
+      transform: 'rotate(0deg)'
+    },
+    to: {
+      transform: 'rotate(360deg)'
+    }
+  },
   root: {
     position: 'relative',
     color: 'transparent'
@@ -40,8 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   loading: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    transform: 'rotateY(360deg)'
+    left: 0
   },
   loadingIcon: {
     animation: 'rotate 2s linear infinite',
