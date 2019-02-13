@@ -480,7 +480,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
     state
   ),
   // disabled if the profile is restricted and doesn't have add_linodes grant
-  disabled: isRestrictedUser(state) && hasGrant(state, 'add_linodes')
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
 });
 
 const connected = connect(mapStateToProps);
