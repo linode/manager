@@ -36,6 +36,7 @@ interface Props {
   selectedID: string | null;
   selectedDiskSize?: number;
   currentPlanHeading?: string;
+  disabled?: boolean;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -56,7 +57,7 @@ export class SelectPlanPanel extends React.Component<
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   renderCard = (type: ExtendedType) => {
-    const { selectedID, currentPlanHeading } = this.props;
+    const { selectedID, currentPlanHeading, disabled } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
       : 0;
@@ -79,7 +80,7 @@ export class SelectPlanPanel extends React.Component<
         onClick={this.onSelect(type.id)}
         heading={type.heading}
         subheadings={type.subHeadings}
-        disabled={planTooSmall || isSamePlan}
+        disabled={planTooSmall || isSamePlan || disabled}
         tooltip={tooltip}
       />
     );

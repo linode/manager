@@ -67,6 +67,7 @@ interface Props {
   ) => void;
   publicImages: Linode.Image[];
   resetSelectedStackScript: () => void;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
@@ -121,6 +122,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         request={tab.request}
         key={tab.category + '-tab'}
         category={tab.category}
+        disabled={this.props.disabled}
       />
     )
   }));

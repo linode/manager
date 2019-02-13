@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 const styled = withStyles(styles);
 
 export interface Disabled {
-  disabled: boolean;
+  disabled?: boolean;
   reason?: string;
 }
 
