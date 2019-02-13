@@ -63,7 +63,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    wordBreak: 'break-all'
   },
   statusOuter: {
     top: 0,
