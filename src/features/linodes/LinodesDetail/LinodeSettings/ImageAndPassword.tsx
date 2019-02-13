@@ -45,7 +45,7 @@ export const ImageAndPassword: React.StatelessComponent<
   } = props;
 
   return (
-    <React.Fragment>
+    <form>
       <ImageSelect
         images={images}
         imageError={imageError}
@@ -59,7 +59,7 @@ export const ImageAndPassword: React.StatelessComponent<
         error={passwordError}
         users={userSSHKeys}
       />
-    </React.Fragment>
+    </form>
   );
 };
 
