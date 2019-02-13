@@ -6,10 +6,12 @@ import {
   onDeleteSuccess,
   onError,
   onGetAllSuccess,
-  onStart
+  onStart,
+  removeMany
 } from 'src/store/store.helpers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
+import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
   createLinodeConfigActions,
   deleteLinodeConfigActions,
@@ -25,6 +27,28 @@ export type State = MappedEntityState<Entity>;
 export const defaultState: State = createDefaultState<Entity>();
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
+  if (isType(action, deleteLinodeActions.done)) {
+    const {
+      params: { linodeId }
+    } = action.payload;
+
+    const configIdsToRemove = Object.values(state.itemsById)
+      .filter(({ linode_id }) => linode_id === linodeId)
+      .map(({ id }) => String(id));
+
+    return removeMany(configIdsToRemove, state);
+  }
+
+  if (isType(action, deleteLinode)) {
+    const { payload } = action;
+
+    const configIdsToRemove = Object.values(state.itemsById)
+      .filter(({ linode_id }) => linode_id === payload)
+      .map(({ id }) => String(id));
+
+    return removeMany(configIdsToRemove, state);
+  }
+
   if (isType(action, getLinodeConfigsActions.done)) {
     const { result } = action.payload;
     return addMany(result, state);
