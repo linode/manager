@@ -8,7 +8,6 @@ import {
   GetLinodeConfigsRequest,
   UpdateLinodeConfigRequest
 } from './config.actions';
-
 import * as actions from './config.requests';
 
 interface Actions {

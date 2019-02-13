@@ -25,7 +25,8 @@ const collectLoadingState: MapState<InnerProps, OutterProps> = (
     types,
     volumes,
     notifications,
-    linodeConfigs
+    linodeConfigs,
+    linodeDisks
   } = state.__resources;
   const { configsLoading, disksLoading } = ownProps;
 
@@ -37,7 +38,8 @@ const collectLoadingState: MapState<InnerProps, OutterProps> = (
       isLoading(types) ||
       isLoading(volumes) ||
       isLoading(notifications) ||
-      isLoading(linodeConfigs)
+      isLoading(linodeConfigs) ||
+      isLoading(linodeDisks)
   };
 };
 

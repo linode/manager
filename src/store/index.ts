@@ -41,6 +41,10 @@ import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState
 } from 'src/store/linodes/config/config.reducer';
+import linodeDisks, {
+  defaultState as defaultLinodeDisksState,
+  State as LinodeDisksState
+} from 'src/store/linodes/disk/disk.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -92,7 +96,6 @@ import notifications, {
   State as NotificationsState
 } from './notification/notification.reducer';
 import { initReselectDevtools } from './selectors';
-
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
 
@@ -106,6 +109,7 @@ const __resourcesDefaultState = {
   images: defaultImagesState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
+  linodeDisks: defaultLinodeDisksState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
@@ -122,6 +126,7 @@ export interface ResourcesState {
   images: ImagesStata;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
+  linodeDisks: LinodeDisksState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
@@ -165,6 +170,7 @@ const __resources = combineReducers({
   images,
   linodes,
   linodeConfigs,
+  linodeDisks,
   nodeBalancers,
   nodeBalancerConfigs,
   notifications,

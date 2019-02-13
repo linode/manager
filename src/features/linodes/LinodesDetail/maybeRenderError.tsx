@@ -22,7 +22,8 @@ const collectErrors: MapState<InnerProps, OutterProps> = (
     types,
     volumes,
     notifications,
-    linodeConfigs
+    linodeConfigs,
+    linodeDisks
   } = state.__resources;
 
   return {
@@ -33,7 +34,8 @@ const collectErrors: MapState<InnerProps, OutterProps> = (
       types.error ||
       volumes.error ||
       notifications.error ||
-      linodeConfigs.error
+      linodeConfigs.error ||
+      linodeDisks.error
   };
 };
 

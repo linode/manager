@@ -5,6 +5,7 @@ import NotFound from 'src/components/NotFound';
 import { ApplicationState } from 'src/store';
 import { eventsForLinode } from 'src/store/events/event.selectors';
 import { getLinodeConfigsForLinode } from 'src/store/linodes/config/config.selectors';
+import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { findLinodeById } from 'src/store/linodes/linodes.selector';
 import { getTypeById } from 'src/store/linodeType/linodeType.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
@@ -41,8 +42,14 @@ export default compose<InnerProps, OutterProps>(
     /** Build the ExtendedLinode */
     connect((state: ApplicationState, ownProps) => {
       const { events, __resources } = state;
-      const { volumes, notifications, types, linodeConfigs } = __resources;
-      const { linode, linodeId, disksData } = ownProps;
+      const {
+        volumes,
+        notifications,
+        types,
+        linodeConfigs,
+        linodeDisks
+      } = __resources;
+      const { linode, linodeId } = ownProps;
       const { type } = linode;
 
       return {
@@ -53,7 +60,7 @@ export default compose<InnerProps, OutterProps>(
           _type: getTypeById(types, type),
           _events: eventsForLinode(events, linodeId),
           _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
-          _disks: disksData
+          _disks: getLinodeDisksForLinode(linodeDisks, linodeId)
         }
       };
     }),

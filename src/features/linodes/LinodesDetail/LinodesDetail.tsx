@@ -11,6 +11,10 @@ import {
   WithLinodeConfigActions
 } from 'src/store/linodes/config/config.containers';
 import {
+  withLinodeDiskActions,
+  WithLinodeDiskActions
+} from 'src/store/linodes/disk/disk.containers';
+import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
@@ -30,6 +34,7 @@ type RouteProps = RouteComponentProps<MatchProps>;
 
 type CombinedProps = LinodeActionsProps &
   WithLinodeConfigActions &
+  WithLinodeDiskActions &
   WithTypes &
   InnerProps &
   RouteProps &
@@ -50,7 +55,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   const { linodeId, linode } = props;
 
-  const { linodeActions, linodeConfigActions } = props;
+  const { linodeActions, linodeConfigActions, linodeDiskActions } = props;
 
   const updatedContext: Context = {
     /**
@@ -77,6 +82,24 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
 
     deleteLinodeConfig: configId =>
       linodeConfigActions.deleteLinodeConfig({ linodeId, configId }),
+
+    /** Linode Disk actions */
+    getLinodeDisk: diskId =>
+      linodeDiskActions.getLinodeDisk({ linodeId, diskId }),
+
+    getLinodeDisks: () => linodeDiskActions.getLinodeDisks({ linodeId }),
+
+    updateLinodeDisk: (diskId, data) =>
+      linodeDiskActions.updateLinodeDisk({ linodeId, diskId, ...data }),
+
+    createLinodeDisk: data =>
+      linodeDiskActions.createLinodeDisk({ linodeId, ...data }),
+
+    deleteLinodeDisk: diskId =>
+      linodeDiskActions.deleteLinodeDisk({ linodeId, diskId }),
+
+    resizeLinodeDisk: (diskId, size) =>
+      linodeDiskActions.resizeLinodeDisk({ linodeId, diskId, size }),
 
     linode
   };
@@ -109,6 +132,7 @@ const enhanced = compose<CombinedProps, {}>(
   styled,
   withLinodeActions,
   withLinodeConfigActions,
+  withLinodeDiskActions,
   linodesDetailContainer,
   LinodeDetailErrorBoundary
 );
