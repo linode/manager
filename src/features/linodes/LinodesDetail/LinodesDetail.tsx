@@ -106,7 +106,7 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <LinodeProvider value={updatedContext}>
-      <pre>{JSON.stringify(linode, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
       <LinodesDetailHeader />
       <LinodesDetailNavigation />
     </LinodeProvider>
