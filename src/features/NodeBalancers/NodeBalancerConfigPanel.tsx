@@ -712,7 +712,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     ]}
                     container
                   >
-                    <Grid item xs={12} sm={4} md={3} lg={2}>
+                    <Grid item xs={12}>
                       <TextField
                         multiline
                         rows={3}
@@ -726,7 +726,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         small
                       />
                     </Grid>
-                    <Grid item xs={6} sm={4} md={3} lg={2}>
+                    <Grid item xs={12}>
                       <TextField
                         multiline
                         rows={3}
