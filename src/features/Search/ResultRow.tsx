@@ -12,7 +12,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import EntityIcon, { getStatusForDomain } from 'src/components/EntityIcon';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -133,7 +133,6 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, result } = props;
   const icon = pathOr<string>('default', ['data', 'icon'], result);
   const status = result.data.status;
-  const domainStatus = result.data.domainStatus;
   return (
     <TableRow
       className={classes.root}
@@ -145,15 +144,9 @@ export const ResultRow: React.StatelessComponent<CombinedProps> = props => {
           <Grid item className={classes.iconGridCell}>
             <EntityIcon
               variant={icon}
-              status={
-                (status && status) ||
-                (domainStatus && getStatusForDomain(domainStatus))
-              }
+              status={status && status}
               marginTop={3}
-              loading={
-                (status && linodeInTransition(status)) ||
-                (domainStatus && getStatusForDomain(domainStatus) === 'edit')
-              }
+              loading={status && linodeInTransition(status)}
             />
           </Grid>
         </TableCell>

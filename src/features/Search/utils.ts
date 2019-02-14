@@ -129,7 +129,7 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
       data: {
         tags: domain.tags,
         description: domain.type,
-        domainStatus: domain.status,
+        status: domain.status,
         icon: 'domain',
         path: `/domains/${domain.id}`,
         type: domain.type,
