@@ -1,5 +1,4 @@
 import { Form, Formik } from 'formik';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -15,6 +14,10 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
 import ConfigSelect from './ConfigSelect';
@@ -49,7 +52,10 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames> & StateProps;
+type CombinedProps = Props &
+  VolumesRequests &
+  WithStyles<ClassNames> &
+  StateProps;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   const { onClose, onSuccess, classes, createVolume, disabled } = props;
@@ -130,12 +136,14 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={status.generalError}
               />
             )}
-            {disabled && <Notice
-              text={
-                "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
-              }
-              error={true}
-            />}
+            {disabled && (
+              <Notice
+                text={
+                  "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
+                }
+                error={true}
+              />
+            )}
             <Typography variant="body1" data-qa-volume-size-help>
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gibibytes
               in size and costs $0.10/GiB per month. Up to eight volumes can be
@@ -256,19 +264,11 @@ interface StateProps {
   disabled: boolean;
 }
 
-
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
-  disabled:
-    pathOr(false, ['__resources', 'profile', 'data', 'restricted'], state) &&
-    !pathOr(
-      false,
-      ['__resources', 'profile', 'data', 'grants', 'global', 'add_volumess'],
-      state
-    )
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes')
 });
 
 const connected = connect(mapStateToProps);
-
 
 const styled = withStyles(styles);
 
