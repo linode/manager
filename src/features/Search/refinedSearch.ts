@@ -39,9 +39,16 @@ export const refinedSearch = (
     );
 
     // 3. Test the parsed query against each item.
-    return itemsToSearch.filter((item: SearchableItem) =>
-      recursivelyTestItem(queryJSON, item)
-    );
+    const results: SearchableItem[] = [];
+    itemsToSearch.forEach((item: SearchableItem) => {
+      if (recursivelyTestItem(queryJSON, item)) {
+        results.push({
+          ...item,
+          data: { ...item.data, searchText: query } // add the original query to item.data
+        });
+      }
+    });
+    return results;
   } catch {
     return [];
   }
