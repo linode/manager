@@ -10,15 +10,7 @@ import { findLinodeById } from 'src/store/linodes/linodes.selector';
 import { getTypeById } from 'src/store/linodeType/linodeType.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
-
-export interface ExtendedLinode extends Linode.Linode {
-  _configs: Linode.Config[];
-  _disks: Linode.Disk[];
-  _events: Linode.Event[];
-  _notifications: Linode.Notification[];
-  _volumes: Linode.Volume[];
-  _type?: null | Linode.LinodeType;
-}
+import { ExtendedLinode } from './types';
 
 interface OutterProps {
   linodeId: number;

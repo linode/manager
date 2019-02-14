@@ -99,7 +99,7 @@ export const updateLinodeDiskActions = actionCreator.async<
 /** Delete Linode Disk */
 export type DeleteLinodeDiskParams = GetLinodeDiskParams;
 
-export type DeleteLinodeDiskResponse = Promise<void>;
+export type DeleteLinodeDiskResponse = Promise<{}>;
 
 export type DeleteLinodeDiskRequest = (
   params: DeleteLinodeDiskParams

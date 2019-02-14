@@ -97,7 +97,7 @@ export const updateLinodeConfigActions = actionCreator.async<
 /** Delete Linode Config */
 export type DeleteLinodeConfigParams = GetLinodeConfigParams;
 
-export type DeleteLinodeConfigResponse = Promise<void>;
+export type DeleteLinodeConfigResponse = Promise<{}>;
 
 export type DeleteLinodeConfigRequest = (
   params: DeleteLinodeConfigParams

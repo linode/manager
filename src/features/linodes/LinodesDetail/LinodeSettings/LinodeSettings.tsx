@@ -6,7 +6,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { LinodeConsumer } from '../context';
+import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
@@ -29,7 +29,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
 
   return (
-    <LinodeConsumer>
+    <LinodeDetailContextConsumer>
       {({ linode }) => {
         if (!linode) {
           return null;
@@ -66,7 +66,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
           </React.Fragment>
         );
       }}
-    </LinodeConsumer>
+    </LinodeDetailContextConsumer>
   );
 };
 

@@ -10,7 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
 import { transitionText } from 'src/features/linodes/transitions';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'status';
 
@@ -51,7 +51,7 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withLinode(({ linode }) => ({
+  withLinodeDetailContext(({ linode }) => ({
     status: linode.status,
     recentEvent: head(linode._events)
   }))

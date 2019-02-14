@@ -35,8 +35,8 @@ import {
   DeleteLinodeDisk,
   ResizeLinodeDisk,
   UpdateLinodeDisk,
-  withLinode
-} from 'src/features/linodes/LinodesDetail/context';
+  withLinodeDetailContext
+} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { getLinodeDisks } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -733,7 +733,7 @@ interface LinodeContextProps {
   resizeLinodeDisk: ResizeLinodeDisk;
 }
 
-const linodeContext = withLinode(
+const linodeContext = withLinodeDetailContext(
   ({
     linode,
     deleteLinodeDisk,

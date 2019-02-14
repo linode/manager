@@ -32,8 +32,8 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import { resetEventsPolling } from 'src/events';
 import {
   DeleteLinodeConfig,
-  withLinode
-} from 'src/features/linodes/LinodesDetail/context';
+  withLinodeDetailContext
+} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getLinodeConfigs, linodeReboot } from 'src/services/linodes';
 import LinodeConfigActionMenu from './LinodeConfigActionMenu';
 import LinodeConfigDrawer from './LinodeConfigDrawer';
@@ -349,7 +349,7 @@ interface LinodeContext {
   deleteLinodeConfig: DeleteLinodeConfig;
 }
 
-const linodeContext = withLinode<LinodeContext>(
+const linodeContext = withLinodeDetailContext<LinodeContext>(
   ({ linode, deleteLinodeConfig }) => ({
     linodeHypervisor: linode.hypervisor,
     linodeId: linode.id,

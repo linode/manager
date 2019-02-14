@@ -11,9 +11,9 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import {
-  Context,
-  withLinode
-} from 'src/features/linodes/LinodesDetail/context';
+  LinodeDetailContext,
+  withLinodeDetailContext
+} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -31,7 +31,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Context & WithStyles<ClassNames>;
+type CombinedProps = LinodeDetailContext & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -108,7 +108,7 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
-const linodeContext = withLinode(context => context);
+const linodeContext = withLinodeDetailContext(context => context);
 
 export default compose(
   errorBoundary,

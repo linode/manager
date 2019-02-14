@@ -1,9 +1,8 @@
 import { compose } from 'recompose';
 import maybeRenderError from './maybeRenderError';
 import maybeRenderLoading from './maybeRenderLoading';
-import maybeWithExtendedLinode, {
-  ExtendedLinode
-} from './maybeWithExtendedLinode';
+import maybeWithExtendedLinode from './maybeWithExtendedLinode';
+import { ExtendedLinode } from './types';
 import withLinodeConfigsState from './withLinodeConfigsState';
 import withLinodeDisksState from './withLinodeDisksState';
 
@@ -16,10 +15,10 @@ export interface InnerProps {
 }
 
 export default compose<InnerProps, OutterProps>(
-  /** Go get the Linode's configs { configsData, configsError? configsLoading } */
+  /** Go get the Linode's configs. */
   withLinodeConfigsState,
 
-  /** Go get the Linode's disks { disksData, disksError? disksLoading } */
+  /** Go get the Linode's disks. */
   withLinodeDisksState,
 
   /**

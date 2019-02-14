@@ -47,8 +47,8 @@ import {
   CreateLinodeConfig,
   GetLinodeConfig,
   UpdateLinodeConfig,
-  withLinode
-} from '../context';
+  withLinodeDetailContext
+} from '../linodeDetailContext';
 
 type ClassNames = 'section' | 'divider';
 
@@ -749,7 +749,7 @@ interface LinodeContextProps {
 const enhanced = compose<CombinedProps, Props>(
   styled,
 
-  withLinode(
+  withLinodeDetailContext(
     ({ linode, createLinodeConfig, updateLinodeConfig, getLinodeConfig }) => ({
       disks: linode._disks.map((disk: Linode.Disk) => ({
         ...disk,

@@ -17,7 +17,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { formatRegion } from 'src/utilities';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
@@ -169,7 +169,7 @@ interface LinodeContextProps {
   linodeVolumes: Linode.Volume[];
 }
 
-const linodeContext = withLinode(({ linode }) => ({
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeIpv4: linode.ipv4,
   linodeIpv6: linode.ipv6,
   linodeRegion: linode.region,

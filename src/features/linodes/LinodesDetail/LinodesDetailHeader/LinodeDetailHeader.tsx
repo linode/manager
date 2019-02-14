@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import { Context, withLinode } from '../context';
+import {
+  LinodeDetailContext,
+  withLinodeDetailContext
+} from '../linodeDetailContext';
 import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
 import LinodeControls from './LinodeControls';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 
-type CombinedProps = Context;
+type CombinedProps = LinodeDetailContext;
 
 const LinodeDetailHeader: React.StatelessComponent<CombinedProps> = props => {
   const { linode } = props;
@@ -23,4 +26,4 @@ const LinodeDetailHeader: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-export default withLinode(context => context)(LinodeDetailHeader);
+export default withLinodeDetailContext(context => context)(LinodeDetailHeader);

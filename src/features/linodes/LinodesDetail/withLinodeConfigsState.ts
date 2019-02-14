@@ -1,35 +1,30 @@
+import { connect } from 'react-redux';
 import { compose, lifecycle } from 'recompose';
-import {
-  withLinodeConfigActions,
-  WithLinodeConfigActions
-} from 'src/store/linodes/config/config.containers';
+import { GetAllLinodeConfigsRequest } from 'src/store/linodes/config/config.actions';
+import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 
 interface OutterProps {
   linodeId: number;
 }
 
-interface LinodeConfigsState {
-  configsLoading: boolean;
-  configsError: Linode.ApiFieldError[];
-  configsData: Linode.Config[];
-}
-
 export default compose(
-  withLinodeConfigActions,
-  lifecycle<OutterProps & WithLinodeConfigActions, LinodeConfigsState>({
+  connect(
+    undefined,
+    { getAllLinodeConfigs }
+  ),
+  lifecycle<
+    OutterProps & { getAllLinodeConfigs: GetAllLinodeConfigsRequest },
+    {}
+  >({
     componentDidMount() {
-      const {
-        linodeId,
-        linodeConfigActions: { getAllLinodeConfigs }
-      } = this.props;
+      // tslint:disable-next-line:no-shadowed-variable
+      const { linodeId, getAllLinodeConfigs } = this.props;
       getAllLinodeConfigs({ linodeId });
     },
 
     componentDidUpdate(prevProps) {
-      const {
-        linodeId: prevLinodeId,
-        linodeConfigActions: { getAllLinodeConfigs }
-      } = this.props;
+      // tslint:disable-next-line:no-shadowed-variable
+      const { linodeId: prevLinodeId, getAllLinodeConfigs } = this.props;
       const { linodeId } = prevProps;
 
       if (linodeId === prevLinodeId) {

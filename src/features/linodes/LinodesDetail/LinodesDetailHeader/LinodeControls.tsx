@@ -12,7 +12,10 @@ import Grid from 'src/components/Grid';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { lishLaunch } from 'src/features/Lish';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Context, withLinode } from '../context';
+import {
+  LinodeDetailContext,
+  withLinodeDetailContext
+} from '../linodeDetailContext';
 import LinodePowerControl from '../LinodePowerControl';
 import withConfigDrawerState, { ConfigDrawerProps } from './configDrawerState';
 import withEditableLabelState, {
@@ -47,7 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = Context &
+type CombinedProps = LinodeDetailContext &
   ConfigDrawerProps &
   EditableLabelProps &
   WithStyles<ClassNames>;
@@ -154,7 +157,10 @@ const enhanced = compose<CombinedProps, {}>(
   styled,
   withConfigDrawerState,
   withEditableLabelState,
-  withLinode(({ linode, updateLinode }) => ({ linode, updateLinode }))
+  withLinodeDetailContext(({ linode, updateLinode }) => ({
+    linode,
+    updateLinode
+  }))
 );
 
 export default enhanced(Thingy);

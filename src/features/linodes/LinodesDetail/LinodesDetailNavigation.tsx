@@ -16,8 +16,11 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import { Context, withLinode } from './context';
 import LinodeBackup from './LinodeBackup';
+import {
+  LinodeDetailContext,
+  withLinodeDetailContext
+} from './linodeDetailContext';
 import LinodeNetworking from './LinodeNetworking';
 import LinodeRebuild from './LinodeRebuild';
 import LinodeRescue from './LinodeRescue';
@@ -25,7 +28,7 @@ import LinodeResize from './LinodeResize';
 import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 
-type CombinedProps = Context &
+type CombinedProps = LinodeDetailContext &
   RouteComponentProps<{
     linodeId: string;
   }>;
@@ -142,7 +145,7 @@ const matches = (p: string) => {
 
 const enhanced = compose<CombinedProps, {}>(
   withRouter,
-  withLinode(({ linode }) => ({ linode }))
+  withLinodeDetailContext(({ linode }) => ({ linode }))
 );
 
 export default enhanced(LinodesDetailNavigation);

@@ -15,7 +15,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
@@ -729,7 +729,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(({ linode }) => ({
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeCreated: linode.created,
   linodeId: linode.id,
   linodeData: linode

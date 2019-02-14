@@ -1,36 +1,30 @@
+import { connect } from 'react-redux';
 import { compose, lifecycle } from 'recompose';
-import {
-  withLinodeDiskActions,
-  WithLinodeDiskActions
-} from 'src/store/linodes/disk/disk.containers';
+import { GetAllLinodeConfigsRequest } from 'src/store/linodes/config/config.actions';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 
 interface OutterProps {
   linodeId: number;
 }
-
-interface LinodeDisksState {
-  disksLoading: boolean;
-  disksError: Linode.ApiFieldError[];
-  disksData: Linode.Disk[];
-}
-
 export default compose(
-  withLinodeDiskActions,
-  lifecycle<OutterProps & WithLinodeDiskActions, LinodeDisksState>({
+  connect(
+    undefined,
+    { getAllLinodeDisks }
+  ),
+  lifecycle<
+    OutterProps & { getAllLinodeDisks: GetAllLinodeConfigsRequest },
+    {}
+  >({
     componentDidMount() {
-      const {
-        linodeId,
-        linodeDiskActions: { getAllLinodeDisks }
-      } = this.props;
+      // tslint:disable-next-line:no-shadowed-variable
+      const { linodeId, getAllLinodeDisks } = this.props;
 
       getAllLinodeDisks({ linodeId });
     },
 
     componentDidUpdate(prevProps) {
-      const {
-        linodeId,
-        linodeDiskActions: { getAllLinodeDisks }
-      } = this.props;
+      // tslint:disable-next-line:no-shadowed-variable
+      const { linodeId, getAllLinodeDisks } = this.props;
       const { linodeId: prevLinodeId } = this.props;
 
       if (linodeId === prevLinodeId) {
