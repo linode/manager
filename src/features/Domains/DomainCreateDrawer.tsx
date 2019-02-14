@@ -21,6 +21,10 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { cloneDomain } from 'src/services/domains';
 import { ApplicationState } from 'src/store';
 import { CLONING, CREATING, resetDrawer } from 'src/store/domainDrawer';
@@ -382,13 +386,16 @@ interface StateProps {
   open: boolean;
   domain?: string;
   cloneId?: number;
+  disabled: boolean;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
   open: pathOr(false, ['domainDrawer', 'open'], state),
   domain: path(['domainDrawer', 'domain'], state),
-  cloneId: path(['domainDrawer', 'cloneId'], state)
+  cloneId: path(['domainDrawer', 'cloneId'], state),
+  // disabled if the profile is restricted and doesn't have add_domains grant
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains') 
 });
 
 const connected = connect(
