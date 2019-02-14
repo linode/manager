@@ -11,6 +11,7 @@ import Divider from 'src/components/core/Divider';
 import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Tags from 'src/components/Tags';
@@ -28,7 +29,6 @@ import hasMutationAvailable, {
 import IPAddress from './IPAddress';
 import LinodeActionMenu from './LinodeActionMenu';
 import styled, { StyleProps } from './LinodeCard.style';
-import LinodeStatusIndicator from './LinodeStatusIndicator';
 import RegionIndicator from './RegionIndicator';
 import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withNotifications, { WithNotifications } from './withNotifications';
@@ -130,6 +130,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 linodeLabel={label}
                 linodeNotifications={linodeNotifications}
                 linodeStatus={status}
+                recentEvent={recentEvent}
                 mutationAvailable={mutationAvailable}
               />
             }
@@ -251,6 +252,7 @@ export const RenderTitle: React.StatelessComponent<{
     flag: string;
   };
   linodeStatus: Linode.LinodeStatus;
+  recentEvent?: Linode.Event;
   linodeLabel: string;
   linodeId: number;
   mutationAvailable: boolean;
@@ -262,14 +264,22 @@ export const RenderTitle: React.StatelessComponent<{
     linodeLabel,
     linodeId,
     mutationAvailable,
-    linodeNotifications
+    linodeNotifications,
+    recentEvent
   } = props;
 
   return (
     <Grid container alignItems="center">
       <Link to={`/linodes/${linodeId}`} className={classes.linkWrapper}>
         <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
-          <LinodeStatusIndicator status={linodeStatus} />
+          <EntityIcon
+            variant="linode"
+            status={linodeStatus}
+            loading={
+              recentEvent && linodeInTransition(linodeStatus, recentEvent)
+            }
+            size={38}
+          />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
           <Typography
