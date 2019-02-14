@@ -8,9 +8,6 @@ import {
   withRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/debounce';
-import 'rxjs/add/operator/filter';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
