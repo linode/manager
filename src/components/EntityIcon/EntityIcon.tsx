@@ -77,64 +77,17 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
     className,
     marginTop
   } = props;
-  const iconSize = size ? size : 40;
 
-  let icon;
-  switch (variant) {
-    case 'linode':
-      icon = (
-        <LinodeIcon
-          className={classes.icon}
-          width={iconSize}
-          height={iconSize}
-        />
-      );
-      break;
-    case 'nodebalancer':
-      icon = (
-        <NodeBalancerIcon
-          className={classes.icon}
-          width={iconSize}
-          height={iconSize}
-        />
-      );
-      break;
-    case 'volume':
-      icon = (
-        <VolumeIcon
-          className={classes.icon}
-          width={iconSize}
-          height={iconSize}
-        />
-      );
-      break;
-    case 'domain':
-      icon = (
-        <DomainIcon
-          className={classes.icon}
-          width={iconSize}
-          height={iconSize}
-        />
-      );
-      break;
-    case 'stackscript':
-      icon = (
-        <StackScriptIcon
-          className={classes.icon}
-          width={iconSize}
-          height={iconSize}
-        />
-      );
-      break;
-    default:
-      icon = (
-        <LinodeIcon
-          className={classes.icon}
-          width={iconSize}
-          height={iconSize}
-        />
-      );
-  }
+  const iconSize = size ? size : 40;
+  const iconMap = {
+    linode: LinodeIcon,
+    nodebalancer: NodeBalancerIcon,
+    volume: VolumeIcon,
+    domain: DomainIcon,
+    stackscript: StackScriptIcon
+  };
+
+  const Icon = iconMap[variant];
 
   return (
     <div
@@ -151,7 +104,7 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
       data-qa-entity-status={status || 'undefined'}
       data-qa-is-loading={loading || 'false'}
     >
-      {icon}
+      <Icon className={classes.icon} width={iconSize} height={iconSize} />
       {loading && (
         <div className={classes.loading}>
           <LoadingIcon
