@@ -16,6 +16,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -182,38 +183,10 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.setState({ imageSelectOpen: false });
   };
 
-  handleRemoveImage = (indexToRemove: any) => {
-    /*
-     * remove selected image from the selected list
-     */
-    const selectedImagesCopy = clone(this.state.selectedImages);
-    const removedImage = selectedImagesCopy.splice(indexToRemove, 1);
-
-    /*
-     * add the remvoed image back to the selection list
-     */
-    const availableImagesCopy = clone(this.state.availableImages);
-    const imageToBeReAdded = this.props.imagesData.find(
-      image => image.id === removedImage[0]
-    );
-    availableImagesCopy.unshift(imageToBeReAdded!);
-
+  handleChooseImage = (image: Item<string>) => {
     this.setState({
-      selectedImages: selectedImagesCopy,
-      availableImages: availableImagesCopy
+      selectedImages: [...this.state.selectedImages, image.value]
     });
-  };
-
-  handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { availableImages } = this.state;
-    const filteredAvailableImages = availableImages.filter(image => {
-      return image.id !== e.target.value;
-    });
-    this.setState({
-      selectedImages: [...this.state.selectedImages, e.target.value],
-      availableImages: filteredAvailableImages
-    });
-    this.setState({ imageSelectOpen: true });
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -385,7 +358,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             images={{
               available: availableImages,
               selected: selectedImages,
-              handleRemove: this.handleRemoveImage
             }}
             label={{
               value: labelText,

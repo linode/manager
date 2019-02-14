@@ -13,11 +13,13 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
+import ImageSelect from 'src/features/Images/ImageSelect';
 import filterImagesByDeprecationStatus from 'src/utilities/filterImagesByDeprecationStatus';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -112,7 +114,7 @@ interface SelectFieldHandler {
   open: boolean;
   onOpen: () => void;
   onClose: () => void;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onChange: (image: Item<string[]>) => void;
 }
 
 interface Images {
@@ -120,7 +122,6 @@ interface Images {
   available: Linode.Image[];
   // image ids that are already selected
   selected: string[];
-  handleRemove: (id: string) => void;
 }
 
 interface Props {
@@ -148,6 +149,7 @@ const errorResources = {
 // exported as a class component, otherwise no display name
 // appears in tests
 export class StackScriptForm extends React.Component<CombinedProps> {
+
   render() {
     const {
       currentUser,
@@ -208,7 +210,13 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 >
                   Target Images
                 </InputLabel>
-                <Select
+                <ImageSelect
+                  images={images.available}
+                  onSelect={selectImages.onChange}
+                  isMulti
+                  data-qa-stackscript-target-select
+                />
+                {/* <Select
                   open={selectImages.open}
                   onOpen={selectImages.onOpen}
                   onClose={selectImages.onClose}
@@ -246,22 +254,8 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                       </MenuItem>
                     )
                   )}
-                </Select>
+                </Select> */}
               </FormControl>
-              <div className={classes.chipsContainer}>
-                {images.selected &&
-                  images.selected.map((selectedImage, index) => {
-                    return (
-                      <Tag
-                        key={selectedImage}
-                        label={stripImageName(selectedImage)}
-                        colorVariant="lightBlue"
-                        onDelete={() => images.handleRemove(selectedImage)}
-                        className={classes.targetTag}
-                      />
-                    );
-                  })}
-              </div>
             </Grid>
             <Grid item className={classes.gridWithTips}>
               <Notice className={classes.tips}>
@@ -324,14 +318,6 @@ export class StackScriptForm extends React.Component<CombinedProps> {
     );
   }
 }
-
-/*
- * @TODO Deprecate once we have a reliable way of mapping
- * the slug to the display name
- */
-const stripImageName = (image: string) => {
-  return image.replace('linode/', '');
-};
 
 const styled = withStyles(styles);
 

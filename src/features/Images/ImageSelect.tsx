@@ -33,7 +33,8 @@ interface Props {
   images: Linode.Image[];
   imageError?: string;
   imageFieldError?: string;
-  onSelect: (selected: Item<string>) => void;
+  isMulti?: boolean;
+  onSelect: (selected: Item<any>) => void;
 }
 
 interface State {
@@ -70,7 +71,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, imageError, imageFieldError, onSelect } = this.props;
+    const { classes, imageError, imageFieldError, isMulti, onSelect } = this.props;
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
@@ -85,7 +86,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
           <Grid item className={classes.selectContainer}>
             <Select
               id={'image-select'}
-              isMulti={false}
+              isMulti={Boolean(isMulti)}
               errorText={imageError || imageFieldError}
               disabled={Boolean(imageError)}
               onChange={onSelect}

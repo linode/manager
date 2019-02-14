@@ -15,6 +15,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -114,18 +115,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ imageSelectOpen: false });
   };
 
-  handleRemoveImage = (id: string) => {
-    const { selectedImages } = this.state;
+  handleChooseImage = (images: Item<string>[]) => {
+    const imageList = images.map(image => image.value)
     this.setState({
-      selectedImages: selectedImages.filter(imageId => imageId !== id)
+      selectedImages: [...this.state.selectedImages, ...imageList]
     });
-  };
-
-  handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      selectedImages: [...this.state.selectedImages, e.target.value]
-    });
-    this.setState({ imageSelectOpen: true });
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,6 +160,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       is_public: false,
       rev_note: revisionNote
     };
+    console.log(payload);
 
     if (!this.mounted) {
       return;
@@ -292,7 +287,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           images={{
             available: availableImages,
             selected: selectedImages,
-            handleRemove: this.handleRemoveImage
           }}
           label={{
             value: labelText,
