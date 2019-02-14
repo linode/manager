@@ -2,7 +2,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 
-import EntityIcon, { getStatusForDomain } from 'src/components/EntityIcon';
+import EntityIcon from 'src/components/EntityIcon';
 import Tag from 'src/components/Tag';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
@@ -15,7 +15,6 @@ export interface SearchSuggestionT {
   tags?: string[];
   isHighlighted?: boolean;
   status?: Linode.LinodeStatus;
-  domainStatus?: string;
 }
 
 interface Props extends OptionProps<any> {
@@ -80,7 +79,6 @@ class SearchSuggestion extends React.Component<CombinedProps> {
     const { icon } = pathOr<string>('default', [], suggestion);
     const { innerRef, innerProps } = this.props;
     const { status } = suggestion;
-    const { domainStatus } = suggestion;
     return (
       <div
         className={`
@@ -102,16 +100,9 @@ class SearchSuggestion extends React.Component<CombinedProps> {
           >
             <EntityIcon
               variant={icon}
-              status={
-                (status && status) ||
-                (domainStatus && getStatusForDomain(domainStatus))
-              }
+              status={status && status}
               marginTop={3}
-              loading={
-                (status && linodeInTransition(status)) ||
-                (domainStatus !== undefined &&
-                  getStatusForDomain(domainStatus) === 'edit')
-              }
+              loading={status && linodeInTransition(status)}
             />
           </div>
           <div

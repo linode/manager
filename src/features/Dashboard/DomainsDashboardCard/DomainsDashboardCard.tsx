@@ -12,7 +12,7 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
-import EntityIcon, { getStatusForDomain } from 'src/components/EntityIcon';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -124,9 +124,9 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
               <Grid item className="py0">
                 <EntityIcon
                   variant="domain"
-                  status={getStatusForDomain(status)}
+                  status={status}
                   marginTop={3}
-                  loading={getStatusForDomain(status) === 'edit'}
+                  loading={status === 'edit_mode'}
                 />
               </Grid>
               <Grid item className={classes.labelGridWrapper}>

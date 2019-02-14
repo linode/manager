@@ -6,7 +6,7 @@ import {
   withStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon, { getStatusForDomain } from 'src/components/EntityIcon';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import {} from 'src/components/StatusIndicator';
 import TableCell from 'src/components/TableCell';
@@ -64,9 +64,9 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
             <Grid item className="py0">
               <EntityIcon
                 variant="domain"
-                status={getStatusForDomain(status)}
+                status={status}
                 marginTop={3}
-                loading={getStatusForDomain(status) === 'edit'}
+                loading={status === 'edit_mode'}
               />
             </Grid>
             <Grid item>

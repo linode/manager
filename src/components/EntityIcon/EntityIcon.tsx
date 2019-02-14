@@ -89,13 +89,30 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 
   const Icon = iconMap[variant];
 
+  const getStatusForDomain = (dStatus: string) => {
+    switch (dStatus) {
+      case 'edit_mode':
+        return 'edit';
+      case 'active':
+        return 'running';
+      case 'disabled':
+        return 'offline';
+      case 'has_errors':
+        return 'offline';
+      default:
+        return 'offline';
+    }
+  };
+  const finalStatus =
+    variant === 'domain' ? status && getStatusForDomain(status) : status;
+
   return (
     <div
       className={classNames(
         {
           [classes.root]: true,
           [classes.default]: !loading,
-          [classes[`${status}`]]: !loading
+          [classes[`${finalStatus}`]]: !loading
         },
         className
       )}
@@ -121,18 +138,3 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 export default styled(EntityIcon);
-
-export const getStatusForDomain = (status: string) => {
-  switch (status) {
-    case 'edit_mode':
-      return 'edit';
-    case 'active':
-      return 'running';
-    case 'disabled':
-      return 'offline';
-    case 'has_errors':
-      return 'offline';
-    default:
-      return 'offline';
-  }
-};

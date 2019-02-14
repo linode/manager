@@ -10,7 +10,8 @@ export const transitionStatus = [
   'resizing',
   'rebuilding',
   'restoring',
-  'cloning'
+  'cloning',
+  'edit_mode'
 ];
 
 export const transitionAction = [

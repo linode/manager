@@ -1,1 +1,1 @@
-export { default, getStatusForDomain } from './EntityIcon';
+export { default } from './EntityIcon';
