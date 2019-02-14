@@ -43,6 +43,11 @@ const collectLoadingState: MapState<InnerProps, OutterProps> = (
   };
 };
 
+/**
+ * Collect relevant loading states from Redux, configs request, and disks requests.
+ *
+ * If any are true, render the loading component. (early return)
+ */
 export default compose(
   connect(collectLoadingState),
   branch(({ loading }) => loading, renderComponent(() => <CircleProgress />))

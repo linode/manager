@@ -7,6 +7,10 @@ interface OutterProps {
   linodeId: number;
 }
 
+/**
+ * Get the Linode's configs on mount and on linodeId change.
+ */
+
 export default compose(
   connect(
     undefined,

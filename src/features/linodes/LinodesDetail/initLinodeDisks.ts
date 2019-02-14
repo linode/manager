@@ -6,6 +6,11 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 interface OutterProps {
   linodeId: number;
 }
+
+/**
+ * Get the Linode's disks on mount and on linodeId change.
+ */
+
 export default compose(
   connect(
     undefined,

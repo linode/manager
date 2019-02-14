@@ -20,6 +20,10 @@ interface InnerProps {
   linode: ExtendedLinode;
 }
 
+/**
+ * Retrieve the Linode any it's extended information from Redux.
+ * If the Linode cannot be found, render the NotFound component. (early return)
+ */
 export default compose<InnerProps, OutterProps>(
   connect((state: ApplicationState, ownProps: OutterProps) => {
     const { linodeId } = ownProps;

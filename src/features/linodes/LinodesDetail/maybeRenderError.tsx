@@ -39,6 +39,11 @@ const collectErrors: MapState<InnerProps, OutterProps> = (
   };
 };
 
+/**
+ * Collect possible errors from Redux, configs request, and disks requests.
+ * If any are defined, render the ErrorComponent. (early return)
+ */
+
 export default compose(
   connect(collectErrors),
   branch(
