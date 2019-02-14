@@ -21,6 +21,7 @@ interface Props {
   value: number;
   name: string;
   resize?: number;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

@@ -30,6 +30,7 @@ interface Props {
   onBlur: (e: any) => void;
   value: any;
   shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithRegions & WithStyles<ClassNames>;

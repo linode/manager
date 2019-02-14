@@ -30,6 +30,7 @@ interface Props {
   onBlur: (e: any) => void;
   region: string;
   shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
+  disabled?: boolean;
 }
 
 interface State {
@@ -168,6 +169,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       name,
       onBlur,
       shouldOnlyDisplayRegionsWithBlockStorage,
+      onChange,
       ...rest
     } = this.props;
     const { loading, linodes, selectedLinodeId } = this.state;
