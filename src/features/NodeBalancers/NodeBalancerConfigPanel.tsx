@@ -718,46 +718,48 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
 
               {protocol === 'https' && (
-                <Grid
-                  updateFor={[
-                    sslCertificate,
-                    protocol,
-                    hasErrorFor('ssl_cert'),
-                    privateKey,
-                    hasErrorFor('ssl_key'),
-                    configIdx
-                  ]}
-                  container
-                >
-                  <Grid item xs={6} sm={4} md={3} lg={2}>
-                    <TextField
-                      multiline
-                      rows={3}
-                      label="SSL Certificate"
-                      value={sslCertificate || ''}
-                      onChange={this.onSslCertificateChange}
-                      required={protocol === 'https'}
-                      errorText={hasErrorFor('ssl_cert')}
-                      errorGroup={forEdit ? `${configIdx}` : undefined}
-                      data-qa-cert-field
-                      small
-                      disabled={disabled}
-                    />
-                  </Grid>
-                  <Grid item xs={6} sm={4} md={3} lg={2}>
-                    <TextField
-                      multiline
-                      rows={3}
-                      label="Private Key"
-                      value={privateKey || ''}
-                      onChange={this.onPrivateKeyChange}
-                      required={protocol === 'https'}
-                      errorText={hasErrorFor('ssl_key')}
-                      errorGroup={forEdit ? `${configIdx}` : undefined}
-                      data-qa-private-key-field
-                      small
-                      disabled={disabled}
-                    />
+                <Grid item xs={12}>
+                  <Grid
+                    updateFor={[
+                      sslCertificate,
+                      protocol,
+                      hasErrorFor('ssl_cert'),
+                      privateKey,
+                      hasErrorFor('ssl_key'),
+                      configIdx
+                    ]}
+                    container
+                  >
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        rows={3}
+                        label="SSL Certificate"
+                        value={sslCertificate || ''}
+                        onChange={this.onSslCertificateChange}
+                        required={protocol === 'https'}
+                        errorText={hasErrorFor('ssl_cert')}
+                        errorGroup={forEdit ? `${configIdx}` : undefined}
+                        data-qa-cert-field
+                        small
+                        disabled={disabled}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        multiline
+                        rows={3}
+                        label="Private Key"
+                        value={privateKey || ''}
+                        onChange={this.onPrivateKeyChange}
+                        required={protocol === 'https'}
+                        errorText={hasErrorFor('ssl_key')}
+                        errorGroup={forEdit ? `${configIdx}` : undefined}
+                        data-qa-private-key-field
+                        small
+                        disabled={disabled}
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
               )}

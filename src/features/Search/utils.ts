@@ -1,7 +1,3 @@
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
-import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { displayType } from 'src/features/linodes/presentation';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
@@ -20,14 +16,6 @@ export const emptyResults = {
   volumes: [],
   domains: [],
   images: []
-};
-
-export const iconMap = {
-  LinodeIcon,
-  NodebalIcon,
-  VolumeIcon,
-  DomainIcon,
-  default: LinodeIcon
 };
 
 // Helper can be extended to other entities once tags are supported for them.
@@ -87,7 +75,7 @@ export const searchLinodes = (
           linode.image!,
           images
         ),
-        icon: 'LinodeIcon',
+        icon: 'linode',
         path: `/linodes/${linode.id}`,
         searchText: query,
         created: linode.created,
@@ -105,7 +93,7 @@ export const searchVolumes = (volumes: Linode.Volume[], query: string) =>
       data: {
         tags: volume.tags,
         description: volume.size + ' GiB',
-        icon: 'VolumeIcon',
+        icon: 'volume',
         path: `/volumes/${volume.id}`,
         searchText: query,
         created: volume.created,
@@ -125,7 +113,7 @@ export const searchNodeBalancers = (
       data: {
         tags: nodebal.tags,
         description: nodebal.hostname,
-        icon: 'NodebalIcon',
+        icon: 'nodebalancer',
         path: `/nodebalancers/${nodebal.id}`,
         searchText: query,
         created: nodebal.created
@@ -140,9 +128,11 @@ export const searchDomains = (domains: Linode.Domain[], query: string) =>
       value: domain.id,
       data: {
         tags: domain.tags,
-        description: domain.description || domain.status,
-        icon: 'DomainIcon',
+        description: domain.type,
+        status: domain.status,
+        icon: 'domain',
         path: `/domains/${domain.id}`,
+        type: domain.type,
         searchText: query
       }
     }));
@@ -162,7 +152,7 @@ export const searchImages = (images: Linode.Image[], query: string) =>
         tags: [],
         description: image.description || '',
         /* TODO: Update this with the Images icon! */
-        icon: 'VolumeIcon',
+        icon: 'volume',
         /* TODO: Choose a real location for this to link to */
         path: `/images`,
         searchText: query,

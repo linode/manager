@@ -475,12 +475,19 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               Create a NodeBalancer
             </Typography>
 
-            {generalError && (
+            {generalError && !disabled && (
               <Notice spacingTop={8} error>
                 {generalError}
               </Notice>
             )}
-
+            {disabled && (
+              <Notice
+                text={
+                  "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
+                }
+                error={true}
+              />
+            )}
             <LabelAndTagsPanel
               data-qa-label-input
               labelFieldProps={{
