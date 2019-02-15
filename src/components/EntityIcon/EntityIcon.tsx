@@ -126,6 +126,7 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
       data-qa-icon={variant}
       data-qa-entity-status={status || 'undefined'}
       data-qa-is-loading={loading || 'false'}
+      aria-label={`${variant} is ${finalStatus}`}
     >
       <Icon
         className={classNames({
