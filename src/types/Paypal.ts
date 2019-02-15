@@ -21,7 +21,7 @@ namespace Paypal {
   export interface PayButtonProps {
     env: Env;
     client: Client;
-    onApprove: (data: AuthData) => void;
+    onApprove: (data: AuthData, actions?: any) => void;
     onCancel: () => void;
     onClick?: () => void;
     // createOrder: (data?: any, actions?: any) => Promise<any>;

@@ -124,14 +124,16 @@ const client = {
     'AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA'
 };
 
+const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false`;
+
 const paypalScriptSrc = (isProduction: boolean) => {
   return isProduction
     ? `https://www.paypal.com/sdk/js?client-id=${
         client.production
-      }&disable-funding=card,credit&currency=USD&intent=authorize`
+      }${paypalSrcQueryParams}`
     : `https://www.paypal.com/sdk/js?client-id=${
         client.sandbox
-      }&disable-funding=card,credit&currency=USD&intent=authorize`;
+      }${paypalSrcQueryParams}`;
 };
 
 const env = process.env.NODE_ENV === 'development' ? 'sandbox' : 'production';
@@ -306,8 +308,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    * See documentation:
    * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
    */
-  onApprove = (data: Paypal.AuthData) => {
+  onApprove = (data: Paypal.AuthData, actions: any) => {
     const { usd } = this.state;
+
+    console.log(data);
+    console.log(actions);
 
     this.setState({
       dialogOpen: true,
