@@ -9408,6 +9408,11 @@ logform@^1.9.0:
     ms "^2.1.1"
     triple-beam "^1.2.0"
 
+logic-query-parser@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/logic-query-parser/-/logic-query-parser-0.0.5.tgz#56edf7c012f594c8236fd5175079ef5da1bea93c"
+  integrity sha1-Vu33wBL1lMgjb9UXUHnvXaG+qTw=
+
 loglevel@^1.4.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.1.tgz#e0fc95133b6ef276cdc8887cdaf24aa6f156f8fa"
@@ -12608,6 +12613,11 @@ schema-utils@^1.0.0:
     ajv "^6.1.0"
     ajv-errors "^1.0.0"
     ajv-keywords "^3.1.0"
+
+search-string@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/search-string/-/search-string-3.1.0.tgz#3f111c6919a33de33a8e304fd5f8395c3d806ffb"
+  integrity sha512-yY3b0VlaXfKi2B//34PN5AFF+GQvwme6Kj4FjggmoSBOa7B8AHfS1nYZbsrYu+IyGeYOAkF8ywL9LN9dkrOo6g==
 
 select-hose@^2.0.0:
   version "2.0.0"
