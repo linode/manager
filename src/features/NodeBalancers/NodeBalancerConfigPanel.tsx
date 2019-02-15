@@ -1130,6 +1130,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Add a Node"
                       onClick={this.addNode}
                       left
+                      disabled={disabled}
                     />
                   </Grid>
                 </Grid>
