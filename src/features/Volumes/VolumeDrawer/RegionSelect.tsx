@@ -44,7 +44,7 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     value,
     name,
     shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage,
-    ...rest
+    disabled
   } = props;
 
   const regions = shouldOnlyDisplayRegionsWithBlockStorage
@@ -53,7 +53,12 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <FormControl fullWidth>
-      <InputLabel htmlFor="region" disableAnimation shrink={true}>
+      <InputLabel
+        htmlFor="region"
+        disableAnimation
+        shrink={true}
+        disabled={disabled}
+      >
         Region
       </InputLabel>
       <Select
@@ -64,7 +69,7 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         onBlur={onBlur}
         inputProps={{ name: 'region', id: 'region' }}
         data-qa-select-region
-        {...rest}
+        disabled={disabled}
       >
         <MenuItem key="none" value="none">
           All Regions
