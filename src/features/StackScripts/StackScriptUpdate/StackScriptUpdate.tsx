@@ -1,4 +1,4 @@
-import { clone, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -62,7 +62,6 @@ interface State {
   retrievalError?: Error; // error retrieving the stackscript
   labelText: string;
   descriptionText: string;
-  imageSelectOpen: boolean;
   selectedImages: string[];
   availableImages: Linode.Image[];
   script: string;
@@ -127,7 +126,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       retrievalError: pathOr(undefined, ['error'], this.props.stackScript),
       labelText: this.defaultStackScriptValues.labelText,
       descriptionText: this.defaultStackScriptValues.descriptionText,
-      imageSelectOpen: false,
       selectedImages: this.defaultStackScriptValues.selectedImages,
       /* available images to select from in the dropdown */
       availableImages: this.availableImages,
@@ -175,17 +173,9 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.setState({ descriptionText: e.target.value });
   };
 
-  handleOpenSelect = () => {
-    this.setState({ imageSelectOpen: true });
-  };
-
-  handleCloseSelect = () => {
-    this.setState({ imageSelectOpen: false });
-  };
-
-  handleChooseImage = (image: Item<string>) => {
+  handleChooseImage = (images: Item<string>[]) => {
     this.setState({
-      selectedImages: [...this.state.selectedImages, image.value]
+      selectedImages: images.map(image => image.value)
     });
   };
 
@@ -357,7 +347,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             currentUser={username}
             images={{
               available: availableImages,
-              selected: selectedImages,
+              selected: selectedImages
             }}
             label={{
               value: labelText,
@@ -375,12 +365,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
               value: script,
               handler: this.handleChangeScript
             }}
-            selectImages={{
-              open: this.state.imageSelectOpen, // idk
-              onOpen: this.handleOpenSelect,
-              onClose: this.handleCloseSelect,
-              onChange: this.handleChooseImage
-            }}
+            onSelectChange={this.handleChooseImage}
             errors={errors}
             onSubmit={this.handleUpdateStackScript}
             onCancel={this.handleOpenDialog}

@@ -34,7 +34,8 @@ interface Props {
   imageError?: string;
   imageFieldError?: string;
   isMulti?: boolean;
-  onSelect: (selected: Item<any>) => void;
+  helperText?: string;
+  onSelect: (selected: Item<any> | Item<any>[]) => void;
 }
 
 interface State {
@@ -71,7 +72,14 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, imageError, imageFieldError, isMulti, onSelect } = this.props;
+    const {
+      classes,
+      helperText,
+      imageError,
+      imageFieldError,
+      isMulti,
+      onSelect
+    } = this.props;
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
@@ -98,7 +106,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
           <Grid item xs={1}>
             <HelpIcon
               className={classes.icon}
-              text="Choosing a 64-bit distro is recommended."
+              text={helperText || 'Choosing a 64-bit distro is recommended.'}
             />
           </Grid>
         </Grid>

@@ -53,7 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface State {
   labelText: string;
   descriptionText: string;
-  imageSelectOpen: boolean;
   selectedImages: string[];
   script: string;
   revisionNote: string;
@@ -78,7 +77,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
     labelText: '',
     descriptionText: '',
-    imageSelectOpen: false,
     selectedImages: [],
     /* available images to select from in the dropdown */
     script: '',
@@ -107,18 +105,10 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ descriptionText: e.target.value });
   };
 
-  handleOpenSelect = () => {
-    this.setState({ imageSelectOpen: true });
-  };
-
-  handleCloseSelect = () => {
-    this.setState({ imageSelectOpen: false });
-  };
-
   handleChooseImage = (images: Item<string>[]) => {
-    const imageList = images.map(image => image.value)
+    const imageList = images.map(image => image.value);
     this.setState({
-      selectedImages: [...this.state.selectedImages, ...imageList]
+      selectedImages: imageList
     });
   };
 
@@ -160,7 +150,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       is_public: false,
       rev_note: revisionNote
     };
-    console.log(payload);
 
     if (!this.mounted) {
       return;
@@ -286,7 +275,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           currentUser={username}
           images={{
             available: availableImages,
-            selected: selectedImages,
+            selected: selectedImages
           }}
           label={{
             value: labelText,
@@ -304,12 +293,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             value: script,
             handler: this.handleChangeScript
           }}
-          selectImages={{
-            open: this.state.imageSelectOpen, // idk
-            onOpen: this.handleOpenSelect,
-            onClose: this.handleCloseSelect,
-            onChange: this.handleChooseImage
-          }}
+          onSelectChange={this.handleChooseImage}
           errors={errors}
           onSubmit={this.handleCreateStackScript}
           onCancel={this.handleOpenDialog}
