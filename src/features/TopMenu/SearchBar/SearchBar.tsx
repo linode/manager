@@ -31,6 +31,17 @@ type CombinedProps = WithTypesProps &
 
 const Control = (props: any) => <_Control {...props} />;
 
+/* The final option in the list will be the "go to search results page" link.
+ * This doesn't share the same shape as the rest of the results, so should use
+ * the default styling. */
+const Option = (props: any) => {
+  return props.value === 'redirect' ? (
+    <_Option {...props} />
+  ) : (
+    <SearchSuggestion {...props} />
+  );
+};
+
 // Style overrides for React Select
 const selectStyles = {
   control: (base: any) => ({
@@ -50,17 +61,6 @@ const selectStyles = {
   dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
-};
-
-/* The final option in the list will be the "go to search results page" link.
- * This doesn't share the same shape as the rest of the results, so should use
- * the default styling. */
-const Option = (props: any) => {
-  return props.value === 'redirect' ? (
-    <_Option {...props} />
-  ) : (
-    <SearchSuggestion {...props} />
-  );
 };
 
 class SearchBar extends React.Component<CombinedProps, State> {
@@ -113,11 +113,11 @@ class SearchBar extends React.Component<CombinedProps, State> {
     }
     const { history } = this.props;
     const { searchText } = item.data;
+
     if (item.value === 'redirect') {
       history.push({
         pathname: `/search`,
-        search: `?query=${searchText}`,
-        state: { searchResults: this.state.searchResults }
+        search: `?query=${encodeURIComponent(searchText)}`
       });
       return;
     }
@@ -146,7 +146,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
       !combinedResults || combinedResults.length === 0
         ? []
         : [defaultOption, ...combinedResults];
-
     return (
       <React.Fragment>
         <IconButton

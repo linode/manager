@@ -1,57 +1,44 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import { emptyResults, filterMatched } from 'src/features/Search/utils';
 import { ApplicationState } from 'src/store';
 import entitiesErrors, {
   ErrorObject
 } from 'src/store/selectors/entitiesErrors';
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
-import getSearchEntities, {
-  SearchResults
-} from 'src/store/selectors/getSearchEntities';
+import getSearchEntities from 'src/store/selectors/getSearchEntities';
+import { refinedSearch } from './refinedSearch';
+import {
+  SearchableItem,
+  SearchResults,
+  SearchResultsByEntity
+} from './search.interfaces';
+import { emptyResults, separateResultsByEntity } from './utils';
 
 interface HandlerProps {
   search: (query: string) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
-  combinedResults: Item[];
-  entities: SearchResults;
+  combinedResults: SearchableItem[];
+  entities: SearchableItem[];
   entitiesLoading: boolean;
-  searchResults: SearchResults;
+  searchResultsByEntity: SearchResultsByEntity;
   errors: ErrorObject;
 }
 
 export const search = (
-  entities: SearchResults,
+  entities: SearchableItem[],
   inputValue: string
 ): SearchResults => {
   if (!inputValue || inputValue === '') {
-    return entities; // could also return empty results, but this matches existing pattern.
+    return { searchResultsByEntity: emptyResults, combinedResults: [] };
   }
-  const { linodes, volumes, domains, nodebalancers, images } = entities;
+
+  const combinedResults = refinedSearch(inputValue, entities);
+
   return {
-    linodes: linodes.filter(linode =>
-      filterMatched(inputValue, linode.label, linode.data.tags, linode.data.ips)
-    ),
-    volumes: volumes.filter(volume =>
-      filterMatched(inputValue, volume.label, volume.data.tags)
-    ),
-    domains: domains.filter(domain =>
-      filterMatched(inputValue, domain.label, domain.data.tags, domain.data.ips)
-    ),
-    images: images.filter(image =>
-      filterMatched(inputValue, image.label, image.data.tags)
-    ),
-    nodebalancers: nodebalancers.filter(nodebal =>
-      filterMatched(
-        inputValue,
-        nodebal.label,
-        nodebal.data.tags,
-        nodebal.data.ips
-      )
-    )
+    combinedResults,
+    searchResultsByEntity: separateResultsByEntity(combinedResults)
   };
 };
 
@@ -73,33 +60,17 @@ export default () => (Component: React.ComponentType<any>) => {
   return compose<SearchProps, {}>(
     connected,
     withStateHandlers<any, any, any>(
-      { searchResults: emptyResults },
+      { searchResultsByEntity: emptyResults },
       {
         search: (_, props: SearchProps) => (query: string) => {
-          const searchResults = search(props.entities, query);
+          const results = search(props.entities, query);
+          const { searchResultsByEntity, combinedResults } = results;
           return {
-            searchResults,
-            combinedResults: combineResults(searchResults, query)
+            searchResultsByEntity,
+            combinedResults
           };
         }
       }
     )
   )(WrappedComponent);
-};
-
-/** Flatten results into a single array, and include the query string in each
- * result object. This is the format needed for the search bar, which does not
- * separate results by entity type, and highlights the search match.
- */
-const combineResults = (results: SearchResults, query: string): Item[] => {
-  return Object.values(results).reduce(
-    (accumulator, entityResultList: Item[]) => [
-      ...accumulator,
-      ...entityResultList.map(entity => ({
-        ...entity,
-        data: { ...entity.data, searchText: query }
-      }))
-    ],
-    []
-  );
 };

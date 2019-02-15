@@ -1,16 +1,8 @@
 import { createSelector } from 'reselect';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import { displayType } from 'src/features/linodes/presentation';
+import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
-
-export interface SearchResults {
-  linodes: Item[];
-  volumes: Item[];
-  nodebalancers: Item[];
-  domains: Item[];
-  images: Item[];
-}
 
 type State = ApplicationState['__resources'];
 
@@ -37,9 +29,10 @@ const formatLinode = (
   linode: Linode.Linode,
   types: Linode.LinodeType[],
   images: Linode.Image[]
-): Item => ({
+): SearchableItem => ({
   label: linode.label,
   value: linode.id,
+  entityType: 'linode',
   data: {
     tags: linode.tags,
     description: getLinodeDescription(
@@ -60,26 +53,29 @@ const formatLinode = (
   }
 });
 
-const volumeToItem = (volume: Linode.Volume) => ({
+const volumeToSearchableItem = (volume: Linode.Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
+  entityType: 'volume',
   data: {
     tags: volume.tags,
     description: volume.size + ' GiB',
     icon: 'volume',
     path: `/volumes/${volume.id}`,
-    searchText: '',
     created: volume.created,
     region: volume.region
   }
 });
 
-const imageReducer = (accumulator: Item[], image: Linode.Image) =>
-  image.is_public ? accumulator : [...accumulator, imageToItem(image)];
+const imageReducer = (accumulator: SearchableItem[], image: Linode.Image) =>
+  image.is_public
+    ? accumulator
+    : [...accumulator, imageToSearchableItem(image)];
 
-const imageToItem = (image: Linode.Image) => ({
+const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
   label: image.label,
   value: image.id,
+  entityType: 'image',
   data: {
     tags: [],
     description: image.description || '',
@@ -87,34 +83,35 @@ const imageToItem = (image: Linode.Image) => ({
     icon: 'volume',
     /* TODO: Choose a real location for this to link to */
     path: `/images`,
-    searchText: '',
     created: image.created
   }
 });
 
-const domainToItem = (domain: Linode.Domain) => ({
+const domainToSearchableItem = (domain: Linode.Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
+  entityType: 'domain',
   data: {
     tags: domain.tags,
     description: domain.type,
     status: domain.status,
     icon: 'domain',
     path: `/domains/${domain.id}`,
-    searchText: '',
     ips: getDomainIps(domain)
   }
 });
 
-const nodeBalToItem = (nodebal: Linode.NodeBalancer) => ({
+const nodeBalToSearchableItem = (
+  nodebal: Linode.NodeBalancer
+): SearchableItem => ({
   label: nodebal.label,
   value: nodebal.id,
+  entityType: 'nodebalancer',
   data: {
     tags: nodebal.tags,
     description: nodebal.hostname,
     icon: 'nodebalancer',
     path: `/nodebalancers/${nodebal.id}`,
-    searchText: '',
     created: nodebal.created,
     ips: getNodebalIps(nodebal)
   }
@@ -136,7 +133,7 @@ export default createSelector<
   Linode.Domain[],
   Linode.NodeBalancer[],
   Linode.LinodeType[],
-  SearchResults
+  SearchableItem[]
 >(
   linodeSelector,
   volumeSelector,
@@ -145,12 +142,20 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   (linodes, volumes, images, domains, nodebalancers, types) => {
-    return {
-      linodes: linodes.map(linode => formatLinode(linode, types, images)),
-      volumes: volumes.map(volumeToItem),
-      images: images.reduce(imageReducer, []),
-      domains: domains.map(domainToItem),
-      nodebalancers: nodebalancers.map(nodeBalToItem)
-    };
+    const searchableLinodes = linodes.map(linode =>
+      formatLinode(linode, types, images)
+    );
+    const searchableVolumes = volumes.map(volumeToSearchableItem);
+    const searchableImages = images.reduce(imageReducer, []);
+    const searchableDomains = domains.map(domainToSearchableItem);
+    const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
+
+    return [
+      ...searchableLinodes,
+      ...searchableVolumes,
+      ...searchableImages,
+      ...searchableDomains,
+      ...searchableNodebalancers
+    ];
   }
 );

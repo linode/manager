@@ -25,13 +25,9 @@ describe('getSearchEntities selector', () => {
       )
     }
   };
-  it('should return an array of Items for each entity type', () => {
+  it('should return an array of SearchableItems', () => {
     const results = getSearchEntities(mockState);
-    expect(results.linodes).toBeInstanceOf(Array);
-    expect(results.volumes).toBeInstanceOf(Array);
-    expect(results.domains).toBeInstanceOf(Array);
-    expect(results.images).toBeInstanceOf(Array);
-    expect(results.nodebalancers).toBeInstanceOf(Array);
+    expect(results).toBeInstanceOf(Array);
   });
   it('should not recompute objects if the list of entities does not change.', () => {
     getSearchEntities.resetRecomputations();

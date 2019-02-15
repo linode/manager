@@ -22,6 +22,7 @@ interface Props extends OptionProps<any> {
     label: string;
     data: SearchSuggestionT;
   };
+  searchText: string;
 }
 
 type CombinedProps = Props;
@@ -77,6 +78,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
     const suggestion = this.props.data.data;
     const { classes } = this.props.selectProps;
     const { icon } = pathOr<string>('default', [], suggestion);
+    const { searchText } = suggestion;
     const { innerRef, innerProps } = this.props;
     const { status } = suggestion;
     return (
@@ -114,7 +116,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
             <div className={classes.suggestionTitle} data-qa-suggestion-title>
               {this.maybeStyleSegment(
                 this.props.data.label,
-                suggestion.searchText,
+                searchText,
                 classes.highlight
               )}
             </div>
