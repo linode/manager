@@ -202,7 +202,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                   images={images.available}
                   onSelect={onSelectChange}
                   isMulti
-                  imageError={hasErrorFor('images')}
+                  imageFieldError={hasErrorFor('images')}
                   helperText={
                     'Select which images are compatible with this StackScript.'
                   }
