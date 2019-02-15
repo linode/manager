@@ -9,12 +9,11 @@ describe('Linode Power Control Dialogs', () => {
       classes={{
         root: '',
         button: '',
+        buttonText: '',
         menuItem: '',
+        menuItemInner: '',
+        buttonInner: '',
         caret: '',
-        icon: '',
-        powerOn: '',
-        powerOff: '',
-        rotate: '',
         fadeIn: '',
         hidden: ''
       }}
