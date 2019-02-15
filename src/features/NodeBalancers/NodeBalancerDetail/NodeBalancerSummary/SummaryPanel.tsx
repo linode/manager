@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
@@ -77,8 +78,19 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-ports>
                   <strong>Ports: </strong>
-                  {nodeBalancer.ports.length === 0 && 'None'}
-                  {nodeBalancer.ports.join(', ')}
+                  {nodeBalancer.configPorts.map(({ port, configId }, i) => (
+                    <React.Fragment key={configId}>
+                      <Link
+                        to={`/nodebalancers/${
+                          nodeBalancer.id
+                        }/configurations/${configId}`}
+                        className="secondaryLink"
+                      >
+                        {port}
+                      </Link>
+                      {i < nodeBalancer.configPorts.length - 1 ? ', ' : ''}
+                    </React.Fragment>
+                  )) || 'None'}
                 </Typography>
               </div>
               <div className={classes.section}>

@@ -17,7 +17,7 @@ export const extendedNodeBalancers: Linode.ExtendedNodeBalancer[] = [
     client_conn_throttle: 0,
     up: 0,
     down: 0,
-    ports: [80]
+    configPorts: [{ configId: 1, port: 80 }]
   },
   {
     transfer: {
@@ -37,7 +37,7 @@ export const extendedNodeBalancers: Linode.ExtendedNodeBalancer[] = [
     client_conn_throttle: 0,
     up: 0,
     down: 0,
-    ports: [80, 443]
+    configPorts: [{ configId: 1, port: 80 }, { configId: 2, port: 443 }]
   }
 ];
 
