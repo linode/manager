@@ -15,6 +15,7 @@ import {
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -375,10 +376,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     const type = this.state.type === 'PAYPAL' ? 'PayPal' : 'Credit Card';
 
     const generalError = hasErrorFor('none');
-    const balanceDisplay =
-      !accountLoading && balance !== false
-        ? `$${Math.abs(balance).toFixed(2)}`
-        : '';
+    const shouldDisplayBalance = !accountLoading && balance !== false;
     return (
       <React.Fragment>
         <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
@@ -400,7 +398,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                       [classes.positive]: balance <= 0
                     })}
                   >
-                    {balanceDisplay}
+                    {shouldDisplayBalance && (
+                      <Currency quantity={Math.abs(balance as number)} />
+                    )}
                     {balance < 0 && ` (credit)`}
                   </Typography>
                 </Grid>
@@ -544,7 +544,7 @@ const styled = withStyles(styles);
 
 const accountContext = withAccount(context => ({
   accountLoading: context.loading,
-  balance: context.data && context.data.balance,
+  balance: 12.5,
   request: context.request,
   lastFour: (context.data && context.data.credit_card.last_four) || ''
 }));
