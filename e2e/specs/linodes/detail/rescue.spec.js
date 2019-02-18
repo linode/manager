@@ -60,7 +60,7 @@ describe('Rescue Linode Suite', () => {
 
     beforeAll(() => {
         const linode = apiCreateLinode(linodeLabel);
-        createVolumes(generateVolumeArray(linode.id));
+        createVolumes(generateVolumeArray(linode.id), true);
         browser.url(`${constants.routes.linodes}/${linode.id}`);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
         LinodeDetail.changeTab('Rescue');
