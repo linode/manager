@@ -486,6 +486,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                   "You don't have permissions to create a new NodeBalancer. Please, contact an account administrator for details."
                 }
                 error={true}
+                spacingTop={16}
               />
             )}
             <LabelAndTagsPanel
