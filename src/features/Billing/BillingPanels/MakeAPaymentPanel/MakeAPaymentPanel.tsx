@@ -124,7 +124,7 @@ const client = {
     'AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA'
 };
 
-const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false`;
+const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=authorize`;
 
 const paypalScriptSrc = (isProduction: boolean) => {
   return isProduction
@@ -309,14 +309,21 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
    */
   onApprove = (data: Paypal.AuthData, actions: any) => {
-    const { usd } = this.state;
+    this.setState({
+      payerID: data.payerID
+    });
+  };
 
-    console.log(data);
-    console.log(actions);
+  /**
+   * Callback function which serves the purpose of providing Paypal with
+   * the payment_id that we get from APIv4. It is imperative that this step happens before
+   * we make the call to v4/execute
+   */
+  createOrder = () => {
+    const { usd } = this.state;
 
     this.setState({
       dialogOpen: true,
-      payerID: data.payerID,
       isStagingPaypalPayment: true,
       errors: undefined,
       paypalPaymentFailed: false,
@@ -333,12 +340,14 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           isStagingPaypalPayment: false,
           paymentID: response.payment_id
         });
+        return response.payment_id;
       })
       .catch(errorResponse => {
         this.setState({
           isStagingPaypalPayment: false,
           paypalPaymentFailed: true
         });
+        return;
       });
   };
 
@@ -493,6 +502,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
               <PaypalButton
                 env={env}
                 client={client}
+                createOrder={this.createOrder}
                 onApprove={this.onApprove}
                 onCancel={this.onCancel}
                 style={{

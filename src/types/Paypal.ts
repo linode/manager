@@ -24,8 +24,8 @@ namespace Paypal {
     onApprove: (data: AuthData, actions?: any) => void;
     onCancel: () => void;
     onClick?: () => void;
-    // createOrder: (data?: any, actions?: any) => Promise<any>;
-    // commit?: boolean;
+    /** callback function that NEEDS to return the order id */
+    createOrder: () => Promise<string | void>;
     style?: any;
   }
 }
