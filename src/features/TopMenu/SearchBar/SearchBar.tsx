@@ -222,30 +222,32 @@ export const createFinalOptions = (
   results: Item[],
   searchText: string = ''
 ) => {
+  // NO RESULTS:
   if (!results || results.length === 0) {
     return [];
   }
 
-  const defaultOption = {
+  const firstOption = {
     value: 'redirect',
     data: {
       searchText
-    }
-  };
-
-  const firstOption = {
-    ...defaultOption,
+    },
     label: `View search results page for "${searchText}"`
   };
 
-  const lastOption = {
-    ...defaultOption,
-    label: `View all ${results.length} results for "${searchText}"`
-  };
-
+  // LESS THAN 20 RESULTS:
   if (results.length <= 20) {
     return [firstOption, ...results];
   }
+
+  // MORE THAN 20 RESULTS:
+  const lastOption = {
+    value: 'redirect',
+    data: {
+      searchText
+    },
+    label: `View all ${results.length} results for "${searchText}"`
+  };
 
   const first20Results = take(20, results);
   return [firstOption, ...first20Results, lastOption];
