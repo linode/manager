@@ -24,6 +24,7 @@ interface Props {
   linodeId: number;
   name: string;
   value: number;
+  disabled?: boolean;
 }
 
 type ConfigTuple = [number, string];
@@ -108,7 +109,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { error, onChange, name, onBlur, value } = this.props;
+    const { error, onChange, name, onBlur, value, ...rest } = this.props;
     const { loading, configs } = this.state;
 
     const hasError = Boolean(error);
@@ -136,6 +137,7 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
           onBlur={onBlur}
           inputProps={{ name, id: name }}
           error={hasError}
+          {...rest}
         >
           {configs &&
             configs.map(([v, label]) => (
