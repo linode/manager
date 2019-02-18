@@ -6,6 +6,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 
 type ClassNames = 'root' | 'price' | 'per';
 
@@ -42,7 +43,7 @@ export const DisplayPrice: React.StatelessComponent<CombinedProps> = props => {
         className={classes.price}
         qa-data-price={displayPrice(price)}
       >
-        {displayPrice(price)}
+        <Currency quantity={price} data-qa-currency-component />
       </Typography>
       {interval && (
         <Typography
