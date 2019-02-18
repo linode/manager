@@ -255,6 +255,16 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       return <ListLinodesEmptyState />;
     }
 
+    const headers = [
+      { label: 'Label', key: 'label' },
+      { label: 'Linode ID', key: 'id' },
+      { label: 'Image', key: 'image' },
+      { label: 'Region', key: 'region' },
+      { label: 'Created', key: 'created' },
+      { label: 'Most Recent Backup', key: 'mostRecentBackup' },
+      { label: 'Tags', key: 'tags' }
+    ];
+
     return (
       <Grid container>
         <Grid
@@ -320,6 +330,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 <Grid item className={classes.CSVlinkContainer}>
                   <CSVLink
                     data={linodesData}
+                    headers={headers}
                     filename={`linodes-${formatDate(moment().format())}.csv`}
                     className={classes.CSVlink}
                   >
