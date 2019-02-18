@@ -155,6 +155,9 @@ export class StackScriptForm extends React.Component<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const selectedImages = images.selected.reduce((accum, image) => {
+      return [...accum, { value: image, label: image }];
+    }, []);
 
     return (
       <React.Fragment>
@@ -201,6 +204,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 <ImageSelect
                   images={images.available}
                   onSelect={onSelectChange}
+                  value={selectedImages}
                   isMulti
                   imageFieldError={hasErrorFor('images')}
                   helperText={

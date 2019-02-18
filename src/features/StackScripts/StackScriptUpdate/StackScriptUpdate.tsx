@@ -128,7 +128,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       descriptionText: this.defaultStackScriptValues.descriptionText,
       selectedImages: this.defaultStackScriptValues.selectedImages,
       /* available images to select from in the dropdown */
-      availableImages: this.availableImages,
+      availableImages: this.props.imagesData,
       script: this.defaultStackScriptValues.script,
       revisionNote: this.defaultStackScriptValues.revisionNote,
       isSubmitting: false,
@@ -147,23 +147,6 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
   }
-
-  /*
-   * Filter out already selected images in the available images dropdown
-   */
-  availableImages = this.props.imagesData.filter(image => {
-    if (this.defaultStackScriptValues.selectedImages) {
-      for (const compatibleImage of this.defaultStackScriptValues
-        .selectedImages) {
-        // if the stackscript already has the image attached to it
-        // do not render it in the dropdown
-        if (compatibleImage === image.id) {
-          return false;
-        }
-      }
-    }
-    return true;
-  });
 
   handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ labelText: e.target.value });
@@ -191,7 +174,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.handleCloseDialog();
     this.setState({
       ...this.defaultStackScriptValues,
-      availableImages: this.availableImages
+      availableImages: this.props.imagesData
     });
   };
 
