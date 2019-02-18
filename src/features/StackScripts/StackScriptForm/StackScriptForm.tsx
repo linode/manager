@@ -18,6 +18,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import imageToItem from 'src/utilities/imageToItem';
 
 type ClassNames =
   | 'root'
@@ -155,9 +156,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const selectedImages = images.selected.reduce((accum, image) => {
-      return [...accum, { value: image, label: image }];
-    }, []);
+    const selectedImages = imageToItem(images.selected);
 
     return (
       <React.Fragment>
