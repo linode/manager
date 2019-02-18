@@ -162,6 +162,7 @@ interface Props {
   onPrivateKeyChange: (v: string) => void;
 
   nodes: Linode.NodeBalancerConfigNodeFields[];
+  disabled?: boolean;
   addNode: (nodeIdx?: number) => void;
   removeNode: (nodeIdx: number) => void;
   onNodeLabelChange: (nodeIdx: number, value: string) => void;
@@ -280,10 +281,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   };
 
   addNode = (e: React.MouseEvent<HTMLElement>) => {
+    if (this.props.disabled) {
+      return;
+    }
     this.props.addNode();
   };
 
   removeNode = (e: React.MouseEvent<HTMLElement>) => {
+    if (this.props.disabled) {
+      return;
+    }
     const nodeIdx: string | null = e.currentTarget.getAttribute(
       'data-node-idx'
     );
@@ -370,7 +377,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckInterval,
       healthCheckTimeout,
       healthCheckType,
-      protocol
+      protocol,
+      disabled
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(
@@ -417,6 +425,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-active-check-select
                 small
+                disabled={disabled}
               >
                 <MenuItem value="none">None</MenuItem>
                 <MenuItem
@@ -461,6 +470,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('check_interval')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-interval
+                  disabled={disabled}
                 />
               </Grid>
               <Grid
@@ -486,6 +496,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('check_timeout')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-timeout
+                  disabled={disabled}
                 />
               </Grid>
               <Grid
@@ -509,6 +520,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     'aria-label': 'Active Health Check Attempts'
                   }}
                   data-qa-active-check-attempts
+                  disabled={disabled}
                 />
               </Grid>
               {['http', 'http_body'].includes(healthCheckType) && (
@@ -530,6 +542,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     required={['http', 'http_body'].includes(healthCheckType)}
                     errorText={hasErrorFor('check_path')}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
+                    disabled={disabled}
                   />
                 </Grid>
               )}
@@ -552,6 +565,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     required={healthCheckType === 'http_body'}
                     errorText={hasErrorFor('check_body')}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
+                    disabled={disabled}
                   />
                 </Grid>
               )}
@@ -563,7 +577,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   }
 
   renderPassiveCheck() {
-    const { checkPassive, classes } = this.props;
+    const { checkPassive, classes, disabled } = this.props;
 
     return (
       <Grid item xs={12} md={6}>
@@ -585,6 +599,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   checked={checkPassive}
                   onChange={this.onCheckPassiveChange}
                   data-qa-passive-checks-toggle={checkPassive}
+                  disabled={disabled}
                 />
               }
               label="Passive Checks"
@@ -609,7 +624,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       protocol,
       sessionStickiness,
       sslCertificate,
-      submitting
+      submitting,
+      disabled
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(
@@ -674,6 +690,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-port
                   small
+                  disabled={disabled}
                 />
               </Grid>
               <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -686,6 +703,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-protocol-select
                   small
+                  disabled={disabled}
                 >
                   <MenuItem value="tcp" data-qa-option="tcp">
                     TCP
@@ -724,6 +742,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         errorGroup={forEdit ? `${configIdx}` : undefined}
                         data-qa-cert-field
                         small
+                        disabled={disabled}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -738,6 +757,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         errorGroup={forEdit ? `${configIdx}` : undefined}
                         data-qa-private-key-field
                         small
+                        disabled={disabled}
                       />
                     </Grid>
                   </Grid>
@@ -754,6 +774,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-algorithm-select
                   small
+                  disabled={disabled}
                 >
                   <MenuItem value="roundrobin" data-qa-option="roundrobin">
                     Round Robin
@@ -777,6 +798,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-session-stickiness-select
                   small
+                  disabled={disabled}
                 >
                   <MenuItem value="none" data-qa-option="none">
                     None
@@ -873,6 +895,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   }
                                   data-qa-backend-ip-label
                                   small
+                                  disabled={disabled}
                                 />
                               </Grid>
                               {node.status && (
@@ -951,6 +974,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                           errorGroup={`${configIdx}`}
                                           data-qa-backend-ip-address
                                           small
+                                          disabled={disabled}
                                         />
                                         {isOpen && (
                                           <Paper
@@ -1025,6 +1049,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   }
                                   data-qa-backend-ip-port
                                   small
+                                  disabled={disabled}
                                 />
                               </Grid>
                               <Grid item xs={6} sm={3} lg={2}>
@@ -1040,6 +1065,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   }
                                   data-qa-backend-ip-weight
                                   small
+                                  disabled={disabled}
                                 />
                               </Grid>
                               {forEdit && (
@@ -1053,6 +1079,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     errorText={nodesHasErrorFor('mode')}
                                     data-qa-backend-ip-mode
                                     small
+                                    disabled={disabled}
                                   >
                                     <MenuItem
                                       value="accept"
@@ -1079,6 +1106,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     data-node-idx={idx}
                                     onClick={this.removeNode}
                                     data-qa-remove-node
+                                    disabled={disabled}
                                   />
                                 )}
                               </ActionsPanel>
@@ -1102,6 +1130,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       label="Add a Node"
                       onClick={this.addNode}
                       left
+                      disabled={disabled}
                     />
                   </Grid>
                 </Grid>
@@ -1127,6 +1156,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           onClick={this.onSave}
                           loading={submitting}
                           data-qa-save-config
+                          disabled={disabled}
                         >
                           Save
                         </Button>
@@ -1137,6 +1167,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                           type="secondary"
                           destructive
                           data-qa-delete-config
+                          disabled={disabled}
                         >
                           Delete
                         </Button>
