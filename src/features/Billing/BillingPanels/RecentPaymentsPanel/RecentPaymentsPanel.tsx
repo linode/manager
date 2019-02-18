@@ -9,6 +9,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
@@ -147,7 +148,9 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
           <DateTimeDisplay value={item.date} />
         </TableCell>
         <TableCell parentColumn="Description">Payment #{item.id}</TableCell>
-        <TableCell parentColumn="Amount">${item.usd}</TableCell>
+        <TableCell parentColumn="Amount">
+          <Currency quantity={Number(item.usd)} />
+        </TableCell>
         <TableCell>
           {account.data && (
             <a
