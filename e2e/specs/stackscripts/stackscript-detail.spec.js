@@ -120,7 +120,7 @@ describe('StackScript - detail page and drawer suite', () => {
 
       it('Deploy to StackScript button navigates to cofigure Linode from StackScript page', () => {
           StackScriptDetail.deployStackScriptButton.click();
-          browser.pause(500);
+          browser.pause(2000);
           ConfigureLinode.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.normal);
           expect(ConfigureLinode.stackScriptRowByTitle(stackConfig.label).getAttribute('data-qa-radio')).toBe('true');
       });

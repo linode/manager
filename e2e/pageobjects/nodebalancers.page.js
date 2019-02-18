@@ -143,19 +143,17 @@ class NodeBalancers extends Page {
 
     configAddNode(nodeConfig) {
         this.addNode.click();
-        browser.debug();
-        browser.waitUntil(() => {
-            return $$(this.backendIpLabel.selector).length === 2
-        });
-        $$(this.backendIpLabel.selector)[1].click();
-        $$(this.backendIpLabel.selector)[1].setValue(nodeConfig.label);
-        $$(this.backendIpAddress.selector)[1].setValue(nodeConfig.ip);
+        this.backendIpLabel.waitForVisible(constants.wait.normal);
+        this.backendIpAddress.waitForVisible(constants.wait.normal);
+        this.backendIpLabel.click();
+        this.backendIpLabel.setValue(nodeConfig.label);
+        this.backendIpAddress.setValue(nodeConfig.ip);
     }
 
     configRemoveNode(nodeLabel) {
         const node = $$(this.backendIpLabel.selector).find(l => l.getValue() === nodeLabel);
         $(this.removeNode.selector).click();
-        browse.waitForVisible(constants.wait.normal,true);
+        node.waitForVisible(constants.wait.normal,true);
     }
 
     configSave() {
