@@ -1,5 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import * as classNames from 'classnames';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -25,6 +26,7 @@ type ClassNames =
   | 'button'
   | 'buttonText'
   | 'caret'
+  | 'caretDisabled'
   | 'menuItem'
   | 'menuItemInner'
   | 'buttonInner'
@@ -66,6 +68,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     top: 2,
     left: 2,
     marginLeft: theme.spacing.unit / 2
+  },
+  caretDisabled: {
+    color: theme.color.disabledText
   },
   menuItem: {
     color: theme.palette.primary.main,
@@ -179,16 +184,15 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     const isBusy = linodeInTransition(status, recentEvent);
     const isRunning = !isBusy && status === 'running';
     const isOffline = !isBusy && status === 'offline';
-    const buttonText = (lStatus: string | boolean) => {
-      switch (lStatus) {
-        case isBusy:
-          return 'Busy';
-        case 'running':
-          return 'Running';
-        case 'offline':
-          return 'Offline';
-        default:
-          return 'Offline';
+    const buttonText = () => {
+      if (isBusy) {
+        return 'Busy';
+      } else if (isRunning) {
+        return 'Running';
+      } else if (isOffline) {
+        return 'Offline';
+      } else {
+        return 'Offline';
       }
     };
     return (
@@ -209,12 +213,22 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               size={34}
               marginTop={1}
             />
-            <span className={classes.buttonText}>{buttonText(status)}</span>
+            <span className={classes.buttonText}>{buttonText()}</span>
           </div>
           {anchorEl ? (
-            <KeyboardArrowUp className={classes.caret} />
+            <KeyboardArrowUp
+              className={classNames({
+                [classes.caret]: true,
+                [classes.caretDisabled]: isBusy
+              })}
+            />
           ) : (
-            <KeyboardArrowDown className={classes.caret} />
+            <KeyboardArrowDown
+              className={classNames({
+                [classes.caret]: true,
+                [classes.caretDisabled]: isBusy
+              })}
+            />
           )}
         </Button>
         <Menu
@@ -272,7 +286,6 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               <div className={classes.menuItemInner}>
                 <EntityIcon
                   variant="linode"
-                  loading={true}
                   status="running"
                   size={26}
                   marginTop={2}

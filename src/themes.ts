@@ -86,7 +86,8 @@ export const dark = createTheme({
     toggleActive: '#444',
     diskSpaceBorder: '#222222',
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
-    label: '#C9CACB'
+    label: '#C9CACB',
+    disabledText: '#c9cAcb'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
