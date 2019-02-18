@@ -113,7 +113,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             disabledReason={
               passwordFieldDisabled && passwordFieldDisabled.reason
             }
-            autocomplete="new-password"
+            autoComplete="new-password"
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder={placeholder || 'Enter a password.'}
