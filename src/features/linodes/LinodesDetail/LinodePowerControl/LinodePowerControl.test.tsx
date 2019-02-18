@@ -14,6 +14,7 @@ describe('Linode Power Control Dialogs', () => {
         menuItemInner: '',
         buttonInner: '',
         caret: '',
+        caretDisabled: '',
         fadeIn: '',
         hidden: ''
       }}

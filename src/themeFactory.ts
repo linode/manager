@@ -167,7 +167,8 @@ const themeDefaults: ThemeOptions = {
     toggleActive: '#606469',
     diskSpaceBorder: '#f4f4f4',
     drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
-    label: '#555'
+    label: '#555',
+    disabledText: '#c9cAcb'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
