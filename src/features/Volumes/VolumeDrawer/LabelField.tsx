@@ -18,6 +18,7 @@ interface Props {
   error?: string;
   value: string;
   name: string;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -27,7 +28,8 @@ const LabelField: React.StatelessComponent<CombinedProps> = ({
   onBlur,
   onChange,
   value,
-  name
+  name,
+  ...rest
 }) => {
   return (
     <TextField
@@ -39,6 +41,7 @@ const LabelField: React.StatelessComponent<CombinedProps> = ({
       onChange={onChange}
       required
       value={value}
+      {...rest}
     />
   );
 };

@@ -30,6 +30,7 @@ interface Props {
   onBlur: (e: any) => void;
   value: any;
   shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithRegions & WithStyles<ClassNames>;
@@ -42,7 +43,8 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     regionsData,
     value,
     name,
-    shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage
+    shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage,
+    disabled
   } = props;
 
   const regions = shouldOnlyDisplayRegionsWithBlockStorage
@@ -51,7 +53,12 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <FormControl fullWidth>
-      <InputLabel htmlFor="region" disableAnimation shrink={true}>
+      <InputLabel
+        htmlFor="region"
+        disableAnimation
+        shrink={true}
+        disabled={disabled}
+      >
         Region
       </InputLabel>
       <Select
@@ -62,6 +69,7 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         onBlur={onBlur}
         inputProps={{ name: 'region', id: 'region' }}
         data-qa-select-region
+        disabled={disabled}
       >
         <MenuItem key="none" value="none">
           All Regions
