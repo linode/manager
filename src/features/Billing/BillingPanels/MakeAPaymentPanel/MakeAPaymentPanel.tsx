@@ -544,7 +544,7 @@ const styled = withStyles(styles);
 
 const accountContext = withAccount(context => ({
   accountLoading: context.loading,
-  balance: 12.5,
+  balance: context.data && context.data.balance,
   request: context.request,
   lastFour: (context.data && context.data.credit_card.last_four) || ''
 }));
