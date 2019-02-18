@@ -1,8 +1,10 @@
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
+import * as moment from 'moment-timezone';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { parse, stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { CSVLink } from 'react-csv';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose, withStateHandlers } from 'recompose';
@@ -30,6 +32,7 @@ import LinodeConfigSelectionDrawer, {
 } from 'src/features/LinodeConfigSelectionDrawer';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
+import formatDate from 'src/utilities/formatDate';
 import { storage, views } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -313,6 +316,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                   );
                 }}
               </OrderBy>
+              <Grid container justify="flex-end">
+                <Grid item className={classes.CSVlinkContainer}>
+                  <CSVLink
+                    data={linodesData}
+                    filename={`linodes-${formatDate(moment().format())}.csv`}
+                    className={classes.CSVlink}
+                  >
+                    Download CSV
+                  </CSVLink>
+                </Grid>
+              </Grid>
             </Grid>
             <LinodeConfigSelectionDrawer
               onClose={this.closeConfigDrawer}
