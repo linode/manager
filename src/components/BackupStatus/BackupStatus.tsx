@@ -57,7 +57,7 @@ const BackupStatus: React.StatelessComponent<CombinedProps> = props => {
     <React.Fragment>
       {mostRecentBackup ? (
         <Typography variant="body1" className={classes.backupText}>
-          <DateTimeDisplay value={mostRecentBackup} format={'mm/yy/dd'} />
+          <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={'never'} />
         </Typography>
       ) : (
         <div className={classes.wrapper}>
