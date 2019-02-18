@@ -360,7 +360,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    */
   onCancel = () => {
     this.setState({
-      successMessage: 'Payment Cancelled'
+      successMessage: 'Payment Cancelled',
+      dialogOpen: false
     });
   };
 
