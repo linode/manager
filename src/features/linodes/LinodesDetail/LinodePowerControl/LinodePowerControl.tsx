@@ -47,6 +47,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   button: {
+    position: 'relative',
+    top: 2,
     transition: theme.transitions.create(['color', 'border-color']),
     minWidth: 145,
     padding: `${theme.spacing.unit - 2}px ${theme.spacing.unit}px`,
