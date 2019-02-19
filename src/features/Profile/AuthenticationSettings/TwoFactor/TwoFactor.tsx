@@ -29,13 +29,14 @@ type ClassNames =
   | 'root'
   | 'container'
   | 'title'
+  | 'helpText'
   | 'visibility'
   | 'showHideText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 3
   },
   container: {
@@ -48,6 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   title: {
     marginBottom: theme.spacing.unit
+  },
+  helpText: {
+    maxWidth: 900
   },
   visibility: {
     color: theme.palette.primary.main,
@@ -254,6 +258,18 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                   >
                     Two-Factor Authentication (TFA)
                   </Typography>
+                  <Typography
+                    variant="body1"
+                    className={classes.helpText}
+                    data-qa-copy
+                  >
+                    Two-factor authentication increases the security of your
+                    Linode account by requiring two different forms of
+                    authentication to log in: your account password and a
+                    security token. You can set up a third party app such as
+                    Authy or Google Authenticator to generate these tokens for
+                    you.
+                  </Typography>
                   {typeof twoFactorConfirmed !== 'undefined' && (
                     <TwoFactorToggle
                       twoFactorEnabled={twoFactorEnabled || false}
@@ -262,14 +278,6 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                       twoFactorConfirmed={twoFactorConfirmed}
                     />
                   )}
-                  <Typography variant="body1" data-qa-copy>
-                    Two-factor authentication increases the security of your
-                    Linode account by requiring two different forms of
-                    authentication to log in: your account password and a
-                    security token. You can set up a third party app such as
-                    Authy or Google Authenticator to generate these tokens for
-                    you.
-                  </Typography>
                   {twoFactorEnabled && (
                     <div className={classes.container}>
                       {showQRCode ? (
