@@ -114,7 +114,7 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
           Cancel
         </Button>
         <Button
-          type="secondary"
+          type="primary"
           loading={this.props.loading}
           onClick={this.handleSubmit}
           data-qa-submit
