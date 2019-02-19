@@ -132,7 +132,6 @@ this upgrade and what it includes, `}
         }}
         initMutation={initMutation}
       />
-      )
     </>
   );
 };
