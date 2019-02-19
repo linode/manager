@@ -23,8 +23,10 @@ import { getLinodeIPs } from 'src/services/linodes';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
+import DeleteIPConfirm from './DeleteIPConfirm';
 import EditRDNSDrawer from './EditRDNSDrawer';
 import IPSharingPanel from './IPSharingPanel';
+import { IPTypes } from './LinodeNetworkingActionMenu';
 import LinodeNetworkingActionMenu from './LinodeNetworkingActionMenu';
 import IPTransferPanel from './LinodeNetworkingIPTransferPanel';
 import LinodeNetworkingSummaryPanel from './LinodeNetworkingSummaryPanel';
@@ -100,56 +102,50 @@ interface ContextProps {
 
 interface State {
   linodeIPs?: Linode.LinodeIPsResponse;
+  removeIPDialogOpen: boolean;
   initialLoading: boolean;
+  currentlySelectedIP?: Linode.IPAddress;
+  currentlySelectedIPRange?: Linode.IPRange;
+  viewIPDrawerOpen: boolean;
+  viewRangeDrawerOpen: boolean;
+  editRDNSDrawerOpen: boolean;
+  createIPv4DrawerOpen: boolean;
+  createIPv4DrawerForPublic: boolean;
   IPRequestError?: string;
-  viewIPDrawer: {
-    open: boolean;
-    ip?: Linode.IPAddress;
-  };
-  viewRangeDrawer: {
-    open: boolean;
-    range?: Linode.IPRange;
-  };
-  editRDNSDrawer: {
-    open: boolean;
-    address?: string;
-    rdns?: string;
-  };
-  createIPv4Drawer: {
-    forPublic: boolean;
-    open: boolean;
-  };
-  createIPv6Drawer: {
-    open: boolean;
-  };
+  createIPv6DrawerOpen: boolean;
 }
 
 type CombinedProps = ContextProps & WithStyles<ClassNames>;
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
-    createIPv4Drawer: {
-      forPublic: true,
-      open: false
-    },
-    createIPv6Drawer: {
-      open: false
-    },
-    editRDNSDrawer: {
-      open: false
-    },
-    viewIPDrawer: {
-      open: false
-    },
-    viewRangeDrawer: {
-      open: false
-    },
+    removeIPDialogOpen: false,
+    createIPv4DrawerOpen: false,
+    createIPv4DrawerForPublic: true,
+    createIPv6DrawerOpen: false,
+    editRDNSDrawerOpen: false,
+    viewIPDrawerOpen: false,
+    viewRangeDrawerOpen: false,
     initialLoading: true
   };
 
   componentDidMount() {
     this.refreshIPs().then(() => this.setState({ initialLoading: false }));
   }
+
+  openRemoveIPDialog = (IPToRemove: Linode.IPAddress) => {
+    this.setState({
+      removeIPDialogOpen: !this.state.removeIPDialogOpen,
+      currentlySelectedIP: IPToRemove
+    });
+  };
+
+  closeRemoveIPDialog = () => {
+    this.setState({
+      removeIPDialogOpen: false,
+      currentlySelectedIP: undefined
+    });
+  };
 
   refreshIPs = () => {
     this.setState({ IPRequestError: undefined });
@@ -173,17 +169,26 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   displayRangeDrawer = (range: Linode.IPRange) => () => {
     this.setState({
-      viewRangeDrawer: { open: true, range }
+      viewRangeDrawerOpen: true,
+      currentlySelectedIPRange: range
     });
   };
 
   displayIPDrawer = (ip: Linode.IPAddress) => () => {
     this.setState({
-      viewIPDrawer: { open: true, ip }
+      viewIPDrawerOpen: true,
+      currentlySelectedIP: ip
     });
   };
 
-  renderRangeRow(range: Linode.IPRange, type: string) {
+  handleOpenEditRDNS = (ip: Linode.IPAddress) => {
+    this.setState({
+      editRDNSDrawerOpen: true,
+      currentlySelectedIP: ip
+    });
+  };
+
+  renderRangeRow(range: Linode.IPRange, type: IPTypes) {
     const { classes } = this.props;
 
     return (
@@ -193,22 +198,16 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell />
         <TableCell parentColumn="Type">{type}</TableCell>
         <TableCell className={classes.action}>
-          <LinodeNetworkingActionMenu onView={this.displayRangeDrawer(range)} />
+          <LinodeNetworkingActionMenu
+            onView={this.displayRangeDrawer(range)}
+            ipType={type}
+          />
         </TableCell>
       </TableRow>
     );
   }
 
-  renderIPRow(ip: Linode.IPAddress, type: string) {
-    /* Don't show edit RDNS for private IP addresses */
-    const onEditAction =
-      type === 'Private' || type === 'Link Local'
-        ? undefined
-        : () => {
-            this.setState({
-              editRDNSDrawer: { open: true, address: ip.address, rdns: ip.rdns }
-            });
-          };
+  renderIPRow(ip: Linode.IPAddress, type: IPTypes) {
     const { classes } = this.props;
 
     return (
@@ -226,7 +225,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <TableCell className={classes.action} data-qa-action>
           <LinodeNetworkingActionMenu
             onView={this.displayIPDrawer(ip)}
-            onEdit={onEditAction}
+            onEdit={this.handleOpenEditRDNS}
+            ipType={type}
+            ipAddress={ip}
+            onRemove={this.openRemoveIPDialog}
           />
         </TableCell>
       </TableRow>
@@ -234,47 +236,43 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   closeViewIPDrawer = () =>
-    this.setState({ viewIPDrawer: { open: false, ip: undefined } });
+    this.setState({ viewIPDrawerOpen: false, currentlySelectedIP: undefined });
 
   closeViewRangeDrawer = () =>
-    this.setState({ viewRangeDrawer: { open: false, range: undefined } });
+    this.setState({
+      viewRangeDrawerOpen: false,
+      currentlySelectedIPRange: undefined
+    });
 
   closeEditRDNSDrawer = () => {
     this.setState({
-      editRDNSDrawer: { open: false, address: undefined, rnds: undefined }
+      editRDNSDrawerOpen: false,
+      currentlySelectedIP: undefined
     });
     this.refreshIPs();
   };
 
   closeCreateIPv4Drawer = () => {
     this.setState({
-      createIPv4Drawer: { ...this.state.createIPv4Drawer, open: false }
+      createIPv4DrawerOpen: false
     });
     this.refreshIPs();
   };
 
-  closeCreateIPv6Drawer = () =>
-    this.setState({ createIPv6Drawer: { open: false } });
+  closeCreateIPv6Drawer = () => this.setState({ createIPv6DrawerOpen: false });
 
-  openCreateIPv6Drawer = () =>
-    this.setState({ createIPv6Drawer: { open: true } });
+  openCreateIPv6Drawer = () => this.setState({ createIPv6DrawerOpen: true });
 
   openCreatePublicIPv4Drawer = () =>
     this.setState({
-      createIPv4Drawer: {
-        ...this.state.createIPv4Drawer,
-        open: true,
-        forPublic: true
-      }
+      createIPv4DrawerForPublic: true,
+      createIPv4DrawerOpen: true
     });
 
   openCreatePrivateIPv4Drawer = () =>
     this.setState({
-      createIPv4Drawer: {
-        ...this.state.createIPv4Drawer,
-        open: true,
-        forPublic: false
-      }
+      createIPv4DrawerForPublic: false,
+      createIPv4DrawerOpen: true
     });
 
   hasPrivateIPAddress() {
@@ -332,35 +330,52 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         {this.renderNetworkActions()}
 
         <ViewIPDrawer
-          open={this.state.viewIPDrawer.open}
+          open={this.state.viewIPDrawerOpen}
           onClose={this.closeViewIPDrawer}
-          ip={this.state.viewIPDrawer.ip}
+          ip={this.state.currentlySelectedIP}
         />
 
         <ViewRangeDrawer
-          open={this.state.viewRangeDrawer.open}
+          open={this.state.viewRangeDrawerOpen}
           onClose={this.closeViewRangeDrawer}
-          range={this.state.viewRangeDrawer.range}
+          range={this.state.currentlySelectedIPRange}
         />
 
         <EditRDNSDrawer
-          open={this.state.editRDNSDrawer.open}
+          open={this.state.editRDNSDrawerOpen}
           onClose={this.closeEditRDNSDrawer}
-          address={this.state.editRDNSDrawer.address}
-          rdns={this.state.editRDNSDrawer.rdns}
+          address={
+            this.state.currentlySelectedIP
+              ? this.state.currentlySelectedIP.address
+              : undefined
+          }
+          rdns={
+            this.state.currentlySelectedIP
+              ? this.state.currentlySelectedIP.rdns
+              : undefined
+          }
         />
 
         <CreateIPv6Drawer
-          open={this.state.createIPv6Drawer.open}
+          open={this.state.createIPv6DrawerOpen}
           onClose={this.closeCreateIPv6Drawer}
         />
 
         <CreateIPv4Drawer
-          forPublic={this.state.createIPv4Drawer.forPublic}
-          open={this.state.createIPv4Drawer.open}
+          forPublic={this.state.createIPv4DrawerForPublic}
+          open={this.state.createIPv4DrawerOpen}
           onClose={this.closeCreateIPv4Drawer}
           linodeID={linodeID}
         />
+        {this.state.currentlySelectedIP && linodeID && (
+          <DeleteIPConfirm
+            handleClose={this.closeRemoveIPDialog}
+            IPAddress={this.state.currentlySelectedIP.address}
+            open={this.state.removeIPDialogOpen}
+            linodeID={linodeID}
+            ipRemoveSuccess={this.refreshIPs}
+          />
+        )}
       </React.Fragment>
     );
   }
