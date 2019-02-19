@@ -36,7 +36,7 @@ export default withStateHandlers<State, Handlers>(
     mutationFailed: state => (error: string) => ({
       mutationDrawerError: error,
       mutationDrawerLoading: false,
-      mutationDrawerOpen: false
+      mutationDrawerOpen: true
     })
   }
 );
