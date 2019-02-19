@@ -1,8 +1,7 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import * as classNames from 'classnames';
 import * as React from 'react';
-import PowerOn from 'src/assets/icons/powerOn.svg';
-import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -13,6 +12,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
 import {
   powerOffLinode,
@@ -24,13 +24,12 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 type ClassNames =
   | 'root'
   | 'button'
+  | 'buttonText'
   | 'caret'
+  | 'caretDisabled'
   | 'menuItem'
-  | 'icon'
-  | 'powerOn'
-  | 'powerOff'
-  | 'rotate'
-  | 'fadeIn'
+  | 'menuItemInner'
+  | 'buttonInner'
   | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -42,39 +41,26 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       opacity: 1
     }
   },
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)'
-    },
-    to: {
-      transform: 'rotate(360deg)'
-    }
-  },
   root: {
     '& svg': {
       transition: theme.transitions.create(['color'])
     }
   },
   button: {
-    backgroundColor: theme.color.white,
-    transition: theme.transitions.create([
-      'background-color',
-      'color',
-      'border-color'
-    ]),
-    border: `1px solid ${theme.color.border1}`,
+    position: 'relative',
+    transition: theme.transitions.create(['color', 'border-color']),
     minWidth: 145,
+    padding: `${theme.spacing.unit - 2}px ${theme.spacing.unit}px`,
+    '&:hover': {
+      textDecoration: 'underline'
+    },
     '&:hover, &.active': {
       borderColor: theme.palette.primary.light,
-      backgroundColor: theme.palette.primary.light,
-      color: 'white',
-      '& $caret, & $powerOn, & $powerOff': {
-        color: 'white'
-      }
-    },
-    '&:focus': {
-      backgroundColor: 'white'
+      backgroundColor: 'transparent'
     }
+  },
+  buttonText: {
+    marginLeft: theme.spacing.unit
   },
   caret: {
     color: theme.palette.primary.main,
@@ -84,34 +70,37 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     left: 2,
     marginLeft: theme.spacing.unit / 2
   },
+  caretDisabled: {
+    color: theme.color.disabledText
+  },
   menuItem: {
     color: theme.palette.primary.main,
     padding: theme.spacing.unit * 2,
     outline: 0,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:hover, &:focus': {
-      '& svg': {
+      '& $buttonText': {
         color: 'white'
+      },
+      '& svg': {
+        fill: '#FFF'
+      },
+      '& .insidePath *, ': {
+        stroke: '#fff'
+      },
+      '& svg:not(.loading) .outerCircle': {
+        stroke: '#fff'
       }
     }
   },
-  icon: {
-    marginRight: theme.spacing.unit + 2
+  menuItemInner: {
+    display: 'flex',
+    alignItems: 'center'
   },
-  powerOn: {
-    color: theme.color.green,
-    transition: theme.transitions.create(['color'])
-  },
-  powerOff: {
-    color: theme.color.red,
-    transition: theme.transitions.create(['color'])
-  },
-  rotate: {
-    animation: 'rotate 2s linear infinite',
-    color: theme.palette.text.primary
-  },
-  fadeIn: {
-    animation: 'fadeIn .2s ease-in-out'
+  buttonInner: {
+    display: 'flex',
+    animation: 'fadeIn .2s ease-in-out',
+    alignItems: 'center'
   },
   hidden: {
     height: 0,
@@ -196,7 +185,17 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     const isBusy = linodeInTransition(status, recentEvent);
     const isRunning = !isBusy && status === 'running';
     const isOffline = !isBusy && status === 'offline';
-
+    const buttonText = () => {
+      if (isBusy) {
+        return 'Busy';
+      } else if (isRunning) {
+        return 'Running';
+      } else if (isOffline) {
+        return 'Offline';
+      } else {
+        return 'Offline';
+      }
+    };
     return (
       <React.Fragment>
         <Button
@@ -207,28 +206,30 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
           data-qa-power-control={status}
         >
-          {isRunning && (
-            <span className={classes.fadeIn}>
-              <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
-              Running
-            </span>
-          )}
-          {isOffline && (
-            <span className={classes.fadeIn}>
-              <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
-              Offline
-            </span>
-          )}
-          {isBusy && (
-            <span className={classes.fadeIn}>
-              <Reload className={`${classes.icon} ${classes.rotate}`} />
-              Busy
-            </span>
-          )}
+          <div className={classes.buttonInner}>
+            <EntityIcon
+              variant="linode"
+              status={status}
+              loading={isBusy}
+              size={34}
+              marginTop={1}
+            />
+            <span className={classes.buttonText}>{buttonText()}</span>
+          </div>
           {anchorEl ? (
-            <KeyboardArrowUp className={classes.caret} />
+            <KeyboardArrowUp
+              className={classNames({
+                [classes.caret]: true,
+                [classes.caretDisabled]: isBusy
+              })}
+            />
           ) : (
-            <KeyboardArrowDown className={classes.caret} />
+            <KeyboardArrowDown
+              className={classNames({
+                [classes.caret]: true,
+                [classes.caretDisabled]: isBusy
+              })}
+            />
           )}
         </Button>
         <Menu
@@ -247,8 +248,16 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               className={classes.menuItem}
               data-qa-set-power="reboot"
             >
-              <Reload className={`${classes.icon}`} />
-              Reboot
+              <div className={classes.menuItemInner}>
+                <EntityIcon
+                  variant="linode"
+                  loading={true}
+                  size={26}
+                  marginTop={2}
+                  stopAnimation
+                />
+                <span className={classes.buttonText}>Reboot</span>
+              </div>
             </MenuItem>
           )}
           {isRunning && (
@@ -257,8 +266,16 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               className={classes.menuItem}
               data-qa-set-power="powerOff"
             >
-              <PowerOn className={`${classes.icon} ${classes.powerOff}`} />
-              Power Off
+              <div className={classes.menuItemInner}>
+                <EntityIcon
+                  variant="linode"
+                  status="offline"
+                  size={26}
+                  marginTop={2}
+                  stopAnimation
+                />
+                <span className={classes.buttonText}>Power Off</span>
+              </div>
             </MenuItem>
           )}
           {isOffline && (
@@ -267,8 +284,16 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               className={classes.menuItem}
               data-qa-set-power="powerOn"
             >
-              <PowerOn className={`${classes.icon} ${classes.powerOn}`} />
-              Power On
+              <div className={classes.menuItemInner}>
+                <EntityIcon
+                  variant="linode"
+                  status="running"
+                  size={26}
+                  marginTop={2}
+                  stopAnimation
+                />
+                <span className={classes.buttonText}>Power On</span>
+              </div>
             </MenuItem>
           )}
         </Menu>

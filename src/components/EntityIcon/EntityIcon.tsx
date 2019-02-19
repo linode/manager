@@ -20,7 +20,8 @@ type ClassNames =
   | 'running'
   | 'offline'
   | 'loading'
-  | 'loadingIcon';
+  | 'loadingIcon'
+  | 'animated';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes rotate': {
@@ -33,7 +34,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   root: {
     position: 'relative',
-    color: 'transparent'
+    color: 'transparent',
+    display: 'flex'
   },
   default: {
     color: theme.color.grey2
@@ -51,8 +53,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     left: 0
   },
   loadingIcon: {
-    animation: 'rotate 2s linear infinite',
     fill: theme.color.offBlack
+  },
+  animated: {
+    animation: 'rotate 2s linear infinite'
   }
 });
 
@@ -63,6 +67,7 @@ interface Props {
   size?: number;
   className?: any;
   marginTop?: number;
+  stopAnimation?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -75,7 +80,8 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
     loading,
     size,
     className,
-    marginTop
+    marginTop,
+    stopAnimation
   } = props;
 
   const iconSize = size ? size : 40;
@@ -120,12 +126,23 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
       data-qa-icon={variant}
       data-qa-entity-status={status || 'undefined'}
       data-qa-is-loading={loading || 'false'}
+      aria-label={`${variant} is ${finalStatus}`}
     >
-      <Icon className={classes.icon} width={iconSize} height={iconSize} />
+      <Icon
+        className={classNames({
+          [classes.icon]: true,
+          ['loading']: loading
+        })}
+        width={iconSize}
+        height={iconSize}
+      />
       {loading && (
         <div className={classes.loading}>
           <LoadingIcon
-            className={classes.loadingIcon}
+            className={classNames({
+              [classes.loadingIcon]: true,
+              [classes.animated]: !stopAnimation
+            })}
             width={iconSize - 2}
             height={iconSize - 2}
           />
