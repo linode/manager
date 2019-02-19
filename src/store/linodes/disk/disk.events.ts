@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { EventHandler } from 'src/store/middleware/combineEventsMiddleware';
+import { EventHandler } from 'src/store/types';
 import { getAllLinodeDisks } from './disk.requests';
 
 const diskEventHandler: EventHandler = (event, dispatch, getState) => {
