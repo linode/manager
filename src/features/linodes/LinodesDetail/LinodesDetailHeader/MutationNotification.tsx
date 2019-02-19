@@ -13,10 +13,7 @@ import {
   withTypes,
   WithTypes
 } from 'src/store/linodeType/linodeType.containers';
-import {
-  LinodeDetailContext,
-  withLinodeDetailContext
-} from '../linodeDetailContext';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 import MutateDrawer from '../MutateDrawer';
 import withMutationDrawerState, {
   MutationDrawerProps
@@ -35,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 type CombinedProps = MutationDrawerProps &
-  LinodeDetailContext &
+  ContextProps &
   WithTypes &
   InjectedNotistackProps &
   WithStyles<ClassNames>;
@@ -44,7 +41,9 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     types,
-    linode,
+    linodeId,
+    linodeTypeData,
+    linodeSpecs,
     enqueueSnackbar,
     openMutationDrawer,
     closeMutationDrawer,
@@ -54,25 +53,19 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
     mutationDrawerOpen
   } = props;
 
-  const { _type } = linode;
-
   /** Mutate */
-  if (!_type) {
+  if (!linodeTypeData) {
     throw Error(`Unable to locate type information.`);
   }
 
-  const successorId = _type.successor;
+  const successorId = linodeTypeData.successor;
 
   const successorType = successorId
     ? types.find(({ id }) => id === successorId)
     : null;
-  const { vcpus, network_out, disk, transfer, memory } = _type;
+  const { vcpus, network_out, disk, transfer, memory } = linodeTypeData;
 
   const initMutation = () => {
-    if (!linode) {
-      return;
-    }
-
     openMutationDrawer();
 
     /*
@@ -80,7 +73,7 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
      * being undefined. The upgrade message won't appear unless
      * it's defined
      */
-    startMutation(linode.id)
+    startMutation(linodeId)
       .then(() => {
         closeMutationDrawer();
         enqueueSnackbar('Linode upgrade has been initiated.', {
@@ -114,7 +107,7 @@ this upgrade and what it includes, `}
         </span>
       </Notice>
       <MutateDrawer
-        linodeId={linode.id}
+        linodeId={linodeId}
         open={mutationDrawerOpen}
         loading={mutationDrawerLoading}
         error={mutationDrawerError}
@@ -131,10 +124,10 @@ this upgrade and what it includes, `}
           memory: successorType.memory !== memory ? successorType.memory : null
         }}
         currentTypeInfo={{
-          vcpus: linode.specs.vcpus,
-          transfer: linode.specs.transfer,
-          disk: linode.specs.disk,
-          memory: linode.specs.memory,
+          vcpus: linodeSpecs.vcpus,
+          transfer: linodeSpecs.transfer,
+          disk: linodeSpecs.disk,
+          memory: linodeSpecs.memory,
           network_out
         }}
         initMutation={initMutation}
@@ -146,10 +139,20 @@ this upgrade and what it includes, `}
 
 const styled = withStyles(styles);
 
+interface ContextProps {
+  linodeSpecs: Linode.LinodeSpecs;
+  linodeId: number;
+  linodeType?: Linode.LinodeType | null;
+}
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes(),
-  withLinodeDetailContext(({ linode }) => ({ linode })),
+  withLinodeDetailContext<ContextProps>(({ linode }) => ({
+    linodeSpecs: linode.specs,
+    linodeId: linode.id,
+    linodeTypeData: linode._type
+  })),
   withMutationDrawerState,
   withSnackbar
 );

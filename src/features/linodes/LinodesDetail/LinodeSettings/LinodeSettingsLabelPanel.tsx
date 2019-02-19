@@ -1,5 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -11,7 +12,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import {
-  LinodeDetailContext,
+  UpdateLinode,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -31,12 +32,12 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = LinodeDetailContext & WithStyles<ClassNames>;
+type CombinedProps = ContextProps & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
-    initialValue: this.props.linode.label,
-    updatedValue: this.props.linode.label,
+    initialValue: this.props.linodeLabel,
+    updatedValue: this.props.linodeLabel,
     submitting: false
   };
 
@@ -108,9 +109,19 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
-const linodeContext = withLinodeDetailContext(context => context);
+interface ContextProps {
+  linodeLabel: string;
+  updateLinode: UpdateLinode;
+}
 
-export default compose(
+const linodeContext = withLinodeDetailContext<ContextProps>(
+  ({ linode, updateLinode }) => ({
+    linodeLabel: linode.label,
+    updateLinode
+  })
+);
+
+export default recompose<CombinedProps, {}>(
   errorBoundary,
   styled,
   linodeContext

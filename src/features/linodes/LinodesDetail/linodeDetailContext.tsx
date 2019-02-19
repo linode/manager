@@ -75,6 +75,10 @@ export type UpdateLinodeDisk = (
   data: LinodeDiskUpdateFields
 ) => UpdateLinodeDiskResponse;
 
+export type UpdateLinode = (
+  data: Partial<Linode.Linode>
+) => Promise<Linode.Linode>;
+
 export interface LinodeDetailContext {
   linode: ExtendedLinode;
 

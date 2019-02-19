@@ -10,10 +10,7 @@ import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
 import { scheduleOrQueueMigration } from 'src/services/linodes';
 import { withNotifications } from 'src/store/notification/notification.containers';
-import {
-  LinodeDetailContext,
-  withLinodeDetailContext
-} from '../linodeDetailContext';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'migrationLink';
 
@@ -27,18 +24,24 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = LinodeDetailContext &
+type CombinedProps = ContextProps &
   InjectedNotistackProps & {
     requestNotifications: () => void;
   } & WithStyles<ClassNames>;
 
 const Notifications: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, requestNotifications, enqueueSnackbar, linode } = props;
-  const { _notifications } = linode;
+  const {
+    classes,
+    requestNotifications,
+    enqueueSnackbar,
+    linodeNotifications,
+    linodeId,
+    linodeStatus
+  } = props;
 
   /** Migrate */
   const migrate = (type: string) => {
-    scheduleOrQueueMigration(linode.id)
+    scheduleOrQueueMigration(linodeId)
       .then(_ => {
         // A 200 response indicates that the operation was successful.
         const successMessage =
@@ -53,9 +56,9 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <>
-      {_notifications.map((n, idx) =>
+      {linodeNotifications.map((n, idx) =>
         ['migration_scheduled', 'migration_pending'].includes(n.type) ? (
-          linode.status !== 'migrating' && (
+          linodeStatus !== 'migrating' && (
             <Notice key={idx} important warning>
               {n.message}
               {n.type === 'migration_scheduled'
@@ -84,9 +87,19 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
+interface ContextProps {
+  linodeNotifications: Linode.Notification[];
+  linodeId: number;
+  linodeStatus: Linode.LinodeStatus;
+}
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withLinodeDetailContext(context => context),
+  withLinodeDetailContext<ContextProps>(({ linode }) => ({
+    linodeNotifications: linode._notifications,
+    linodeId: linode.id,
+    linodeStatus: linode.status
+  })),
   withNotifications(undefined, ({ requestNotifications }) => ({
     requestNotifications
   }))

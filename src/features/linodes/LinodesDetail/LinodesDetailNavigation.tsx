@@ -14,10 +14,7 @@ import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import LinodeBackup from './LinodeBackup';
-import {
-  LinodeDetailContext,
-  withLinodeDetailContext
-} from './linodeDetailContext';
+import { withLinodeDetailContext } from './linodeDetailContext';
 import LinodeNetworking from './LinodeNetworking';
 import LinodeRebuild from './LinodeRebuild';
 import LinodeRescue from './LinodeRescue';
@@ -25,7 +22,7 @@ import LinodeResize from './LinodeResize';
 import LinodeSettings from './LinodeSettings';
 import LinodeSummary from './LinodeSummary';
 
-type CombinedProps = LinodeDetailContext &
+type CombinedProps = ContextProps &
   RouteComponentProps<{
     linodeId: string;
   }>;
@@ -35,7 +32,10 @@ const LinodesDetailNavigation: React.StatelessComponent<
 > = props => {
   const {
     match: { url },
-    linode
+    linodeLabel,
+    linodeConfigs,
+    linodeId,
+    linodeRegion
   } = props;
 
   const tabs = [
@@ -91,10 +91,10 @@ const LinodesDetailNavigation: React.StatelessComponent<
           path={`/linodes/:linodeId/volumes`}
           render={routeProps => (
             <VolumesLanding
-              linodeId={linode.id}
-              linodeLabel={linode.label}
-              linodeRegion={linode.region}
-              linodeConfigs={linode._configs}
+              linodeId={linodeId}
+              linodeLabel={linodeLabel}
+              linodeRegion={linodeRegion}
+              linodeConfigs={linodeConfigs}
               {...routeProps}
             />
           )}
@@ -140,9 +140,21 @@ const matches = (p: string) => {
   return Boolean(matchPath(p, { path: location.pathname }));
 };
 
+interface ContextProps {
+  linodeId: number;
+  linodeConfigs: Linode.Config[];
+  linodeLabel: string;
+  linodeRegion: string;
+}
+
 const enhanced = compose<CombinedProps, {}>(
   withRouter,
-  withLinodeDetailContext(({ linode }) => ({ linode }))
+  withLinodeDetailContext<ContextProps>(({ linode }) => ({
+    linodeId: linode.id,
+    linodeConfigs: linode._configs,
+    linodeLabel: linode.label,
+    linodeRegion: linode.region
+  }))
 );
 
 export default enhanced(LinodesDetailNavigation);
