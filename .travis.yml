@@ -19,6 +19,7 @@ script:
 - yarn storybook:e2e
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
+- cat ./coverage/lcov.info
 - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls
 env:
   global:
