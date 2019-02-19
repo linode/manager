@@ -92,7 +92,6 @@ describe('Domain Tag Management Suite', () => {
         });
 
         it('Tag Groups are displayed in alphabetical order', () => {
-            browser.debug();
             ListDomains.tagGroupsInAlphabeticalOrder(groupsAsTags);
         });
 

@@ -11,7 +11,7 @@ import {
     apiDeleteAllVolumes,
 } from '../../../utils/common';
 
-describe('Rescue Linode Suite', () => {
+xdescribe('Rescue Linode Suite', () => {
     let volumeLabels = [];
     let diskImage;
     const intialDisks = ['Debian 9 Disk', '512 MB Swap Image'];
