@@ -14,6 +14,7 @@ interface Props {
   linodeLabel: string;
   linodeBackups: Linode.LinodeBackups;
   linodeStatus: string;
+  noImage: boolean;
   openConfigDrawer: (
     configs: Linode.Config[],
     fn: (id: number) => void
@@ -36,10 +37,11 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       linodeStatus,
       openConfigDrawer,
       toggleConfirmation,
+      noImage,
       history: { push }
     } = this.props;
     return (closeMenu: Function): Action[] => {
-      const actions = [
+      const actions: Action[] = [
         {
           title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -105,6 +107,10 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       if (linodeStatus === 'offline') {
         actions.unshift({
           title: 'Power On',
+          disabled: noImage,
+          tooltip: noImage
+            ? 'An image needs to be added before powering on a Linode'
+            : undefined,
           onClick: e => {
             sendEvent({
               category: 'Linode Action Menu Item',
