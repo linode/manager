@@ -272,8 +272,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { linodeID, enqueueSnackbar } = this.props;
     enableBackups(linodeID)
       .then(() => {
-        // There is no event for when backups have been enabled,
-        // so we don't reset the enabling state.
         enqueueSnackbar('Backups are being enabled for this Linode', {
           variant: 'info'
         });
