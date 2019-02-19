@@ -1,5 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -10,11 +11,10 @@ import {
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
 import {
-  LinodeActionsProps,
-  withLinodeActions
-} from 'src/store/linodes/linode.containers';
+  UpdateLinode,
+  withLinodeDetailContext
+} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -24,12 +24,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
 
-interface ContextProps {
-  linodeLabel: string;
-  linodeId: number;
-  updateLinode: (f: (t: Linode.Linode) => Linode.Linode) => void;
-}
-
 interface State {
   initialValue: string;
   updatedValue: string;
@@ -38,7 +32,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = LinodeActionsProps & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = ContextProps & WithStyles<ClassNames>;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -48,24 +42,13 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   };
 
   changeLabel = () => {
-    const {
-      linodeActions: { updateLinode }
-    } = this.props;
+    const { updateLinode } = this.props;
     this.setState(set(lensPath(['submitting']), true));
     this.setState(set(lensPath(['success']), undefined));
     this.setState(set(lensPath(['errors']), undefined));
 
-    updateLinode({
-      linodeId: this.props.linodeId,
-      label: this.state.updatedValue
-    })
-      .then(response => response)
+    updateLinode({ label: this.state.updatedValue })
       .then(linode => {
-        this.props.updateLinode(existingLinode => ({
-          ...existingLinode,
-          ...linode
-        }));
-
         this.setState(
           compose(
             set(lensPath(['success']), `Linode label changed successfully.`),
@@ -126,17 +109,20 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
-const linodeContext = withLinode(({ linode }) => ({
-  linodeId: linode.id,
-  linodeLabel: linode.label,
-  updateLinode: () => {
-    window.alert(`deprecated updateLinode called`);
-  }
-}));
+interface ContextProps {
+  linodeLabel: string;
+  updateLinode: UpdateLinode;
+}
 
-export default compose(
+const linodeContext = withLinodeDetailContext<ContextProps>(
+  ({ linode, updateLinode }) => ({
+    linodeLabel: linode.label,
+    updateLinode
+  })
+);
+
+export default recompose<CombinedProps, {}>(
   errorBoundary,
   styled,
-  linodeContext,
-  withLinodeActions
+  linodeContext
 )(LinodeSettingsLabelPanel) as React.ComponentType<{}>;

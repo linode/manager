@@ -1,25 +1,34 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { createLinode, deleteLinode, updateLinode } from './linode.requests';
+import {
+  createLinode,
+  deleteLinode,
+  rebootLinode,
+  updateLinode
+} from './linode.requests';
 import {
   CreateLinodeParams,
   DeleteLinodeParams,
+  RebootLinodeParams,
   UpdateLinodeParams
 } from './linodes.actions';
 
+export interface Actions {
+  createLinode: (params: CreateLinodeParams) => Promise<Linode.Linode>;
+  deleteLinode: (params: DeleteLinodeParams) => Promise<void>;
+  updateLinode: (params: UpdateLinodeParams) => Promise<Linode.Linode>;
+  rebootLinode: (params: RebootLinodeParams) => Promise<void>;
+}
+
 export interface LinodeActionsProps {
-  linodeActions: {
-    createLinode: (params: CreateLinodeParams) => Promise<Linode.Linode>;
-    deleteLinode: (params: DeleteLinodeParams) => Promise<void>;
-    updateLinode: (params: UpdateLinodeParams) => Promise<Linode.Linode>;
-  };
+  linodeActions: Actions;
 }
 
 export const withLinodeActions = connect(
   undefined,
   dispatch => ({
     linodeActions: bindActionCreators(
-      { createLinode, deleteLinode, updateLinode },
+      { createLinode, deleteLinode, updateLinode, rebootLinode },
       dispatch
     )
   })

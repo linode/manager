@@ -19,7 +19,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { formatRegion } from 'src/utilities';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
@@ -61,12 +61,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
-  volumes: Linode.Volume[];
-}
-
-type CombinedProps = Props &
-  LinodeContextProps &
+type CombinedProps = LinodeContextProps &
   LinodeActionsProps &
   WithImage &
   StyleProps &
@@ -89,10 +84,11 @@ class SummaryPanel extends React.Component<CombinedProps> {
     /** Send the request (which updates the internal store.) */
     await linodeActions.updateLinode({ linodeId, tags });
   };
+
   render() {
     const {
       classes,
-      volumes,
+      linodeVolumes,
       linodeTags,
       linodeId,
       linodeRegion,
@@ -113,13 +109,16 @@ class SummaryPanel extends React.Component<CombinedProps> {
             Linode Details
           </Typography>
           <div className={classes.section}>{this.renderImage()}</div>
-          <div className={classes.section} data-qa-volumes={volumes.length}>
+          <div
+            className={classes.section}
+            data-qa-volumes={linodeVolumes.length}
+          >
             Volumes:&#160;
             <Link
               className={classes.volumeLink}
               to={`/linodes/${linodeId}/volumes`}
             >
-              {volumes.length}
+              {linodeVolumes.length}
             </Link>
           </div>
           <div className={`${classes.section}`}>
@@ -189,18 +188,20 @@ interface LinodeContextProps {
   linodeRegion: string;
   linodeTags: string[];
   mostRecentBackup: string | null;
+  linodeVolumes: Linode.Volume[];
 }
 
-const linodeContext = withLinode(({ linode }) => ({
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeIpv4: linode.ipv4,
   linodeIpv6: linode.ipv6,
   linodeRegion: linode.region,
   linodeImageId: linode.image,
   linodeTags: linode.tags,
-  linodeId: linode.id
+  linodeId: linode.id,
+  linodeVolumes: linode._volumes
 }));
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   localStyles,
   linodeContext,

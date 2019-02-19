@@ -15,11 +15,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
-import { MapState } from 'src/store/types';
 import { setUpCharts } from 'src/utilities/charts';
 import { isRecent } from 'src/utilities/isRecent';
 import {
@@ -115,7 +114,6 @@ interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
   linodeData: Linode.Linode;
-  volumesData: Linode.Volume[];
 }
 
 interface State {
@@ -622,12 +620,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const {
-      linodeData: linode,
-      volumesData: volumes,
-      classes,
-      typesData
-    } = this.props;
+    const { linodeData: linode, classes, typesData } = this.props;
 
     const {
       dataIsLoading,
@@ -644,7 +637,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       isTooEarlyForGraphData
     };
 
-    if (!linode || !volumes) {
+    if (!linode) {
       return null;
     }
 
@@ -661,7 +654,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
         <Grid container>
           <Grid item xs={12} md={3} className={classes.sidebar}>
-            <SummaryPanel volumes={volumes} />
+            <SummaryPanel />
           </Grid>
           <Grid item xs={12} md={9} className={classes.main}>
             <Grid
@@ -737,7 +730,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(({ linode }) => ({
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeCreated: linode.created,
   linodeId: linode.id,
   linodeData: linode
@@ -751,18 +744,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
-interface StateProps {
-  volumesData?: Linode.Volume[];
-}
-
-const withVolumesData: MapState<StateProps, {}> = (state, ownProps) => ({
-  volumesData: state.features.linodeDetail.volumes.data
-});
-
-const connected = connect(withVolumesData);
-
 const enhanced = compose(
-  connected,
   styled,
   withTypes,
   linodeContext
