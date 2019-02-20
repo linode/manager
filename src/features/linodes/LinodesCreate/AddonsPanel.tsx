@@ -11,6 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -96,7 +97,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
       backupsMonthly && (
         <Grid item className={classes.subLabel}>
           <Typography variant="body1">
-            {`$${backupsMonthly.toFixed(2)}`} per month
+            <Currency quantity={backupsMonthly} /> per month
           </Typography>
         </Grid>
       )
