@@ -4,6 +4,7 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -11,7 +12,9 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
+
 import { attachVolume } from 'src/services/volumes';
+import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeDrawer';
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
@@ -36,6 +39,7 @@ interface Props {
 }
 
 type CombinedProps = Props &
+  StateProps &
   DispatchProps &
   VolumesRequests &
   WithStyles<ClassNames>;
@@ -54,7 +58,11 @@ const initialValues = { volume_id: -1, config_id: -1 };
 const AttachVolumeToLinodeForm: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { actions, onClose, linodeId, linodeRegion } = props;
+  const { actions, onClose, linodeId, linodeRegion, linodeGrants } = props;
+  const linodeGrant = linodeGrants.filter(
+    (grant: Linode.Grant) => grant.id === linodeId
+  )[0];
+  const disabled = linodeGrant && linodeGrant.permissions !== 'read_write';
   return (
     <Formik
       validationSchema={validationScheme}
@@ -97,10 +105,18 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
 
         return (
           <Form>
-            {status && (
+            {status && !disabled && (
               <NoticePanel
                 success={status.success}
                 error={status.generalError}
+              />
+            )}
+
+            {disabled && (
+              <NoticePanel
+                error={
+                  "You don't have permissions to add a Volume for this Linode. Please, contact an account administrator for details."
+                }
               />
             )}
 
@@ -116,6 +132,7 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
               onBlur={handleBlur}
               onChange={v => setFieldValue('volume_id', v)}
               region={linodeRegion}
+              disabled={disabled}
             />
 
             <ConfigSelect
@@ -125,6 +142,7 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
               onBlur={handleBlur}
               onChange={id => setFieldValue('config_id', id)}
               value={values.config_id}
+              disabled={disabled}
             />
 
             <VolumesActionsPanel
@@ -134,6 +152,7 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
                 onClose();
               }}
               isSubmitting={isSubmitting}
+              disabled={disabled}
             />
           </Form>
         );
@@ -166,8 +185,20 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   }
 });
 
+interface StateProps {
+  linodeGrants: Linode.Grant[];
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+  linodeGrants: pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'linode'],
+    state
+  )
+});
+
 const connected = connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 );
 

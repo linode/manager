@@ -35,6 +35,7 @@ interface Props {
   volumeLabel: string;
   linodeRegion: string;
   onClose: () => void;
+  disabled?: boolean;
 }
 
 interface State {
@@ -166,7 +167,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, volumeLabel } = this.props;
+    const { open, volumeLabel, disabled } = this.props;
     const {
       linodes,
       configs,
@@ -192,6 +193,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           handleChange={this.changeSelectedLinode}
           linodeError={linodeError}
           generalError={generalError}
+          disabled={disabled}
         />
 
         {/* Config Selection */}
@@ -202,6 +204,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
               disableAnimation
               shrink={true}
               error={Boolean(configError)}
+              disabled={disabled}
             >
               Config
             </InputLabel>
@@ -210,6 +213,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
               onChange={this.changeSelectedConfig}
               inputProps={{ name: 'config', id: 'config' }}
               error={Boolean(configError)}
+              disabled={disabled}
             >
               {configs &&
                 configs.map(el => {
@@ -227,7 +231,12 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         )}
 
         <ActionsPanel>
-          <Button type="primary" onClick={this.attachToLinode} data-qa-submit>
+          <Button
+            disabled={disabled}
+            type="primary"
+            onClick={this.attachToLinode}
+            data-qa-submit
+          >
             Save
           </Button>
           <Button onClick={this.handleClose} data-qa-cancel>
