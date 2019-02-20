@@ -112,6 +112,7 @@ interface Props {
   id: number;
   label: string;
   status: Linode.LinodeStatus;
+  noImage: boolean;
   recentEvent?: Linode.Event;
   openConfigDrawer: (
     config: Linode.Config[],
@@ -175,7 +176,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { status, classes, recentEvent } = this.props;
+    const { status, classes, recentEvent, noImage } = this.props;
     const {
       menu: { anchorEl },
       bootOption,
@@ -283,6 +284,12 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               onClick={this.powerOn}
               className={classes.menuItem}
               data-qa-set-power="powerOn"
+              disabled={noImage}
+              tooltip={
+                noImage
+                  ? 'An image needs to be added before powering on a Linode'
+                  : undefined
+              }
             >
               <div className={classes.menuItemInner}>
                 <EntityIcon

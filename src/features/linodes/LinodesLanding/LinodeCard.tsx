@@ -101,6 +101,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       ipv4,
       ipv6,
       tags,
+      image,
 
       classes,
       openConfigDrawer,
@@ -143,6 +144,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                   linodeBackups={backups}
                   openConfigDrawer={openConfigDrawer}
                   toggleConfirmation={toggleConfirmation}
+                  noImage={!image}
                 />
               </div>
             }
