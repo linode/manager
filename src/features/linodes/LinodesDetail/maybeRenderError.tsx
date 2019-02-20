@@ -48,6 +48,6 @@ export default compose(
   connect(collectErrors),
   branch(
     ({ error }) => Boolean(error),
-    renderComponent(() => <ErrorState errorText="Unable to load Linodes" />)
+    renderComponent(() => <ErrorState errorText="Unable to load Linode" />)
   )
 );
