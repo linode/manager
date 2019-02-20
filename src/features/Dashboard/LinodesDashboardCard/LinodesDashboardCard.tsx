@@ -84,7 +84,11 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
 
   renderAction = () => {
     return this.props.linodeCount > 5 ? (
-      <ViewAllLink link={'/linodes'} count={this.props.linodeCount} />
+      <ViewAllLink
+        text="View All"
+        link={'/linodes'}
+        count={this.props.linodeCount}
+      />
     ) : null;
   };
 
