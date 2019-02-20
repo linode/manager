@@ -197,7 +197,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditSRVRecord = (
     f: Pick<
       Linode.DomainRecord,
-      'id' | 'name' | 'priority' | 'weight' | 'port' | 'target'
+      'id' | 'name' | 'priority' | 'weight' | 'port' | 'target' | 'protocol'
     >
   ) => this.openForEditing('SRV', f);
 
@@ -547,18 +547,20 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({
             id,
-            name,
+            service,
             port,
             priority,
+            protocol,
             target,
             weight
           }: Linode.DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
-                name,
+                service,
                 port,
                 priority,
+                protocol,
                 target,
                 weight
               }}
