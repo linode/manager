@@ -85,7 +85,11 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
   renderAction = () =>
     this.props.domainCount > 5 ? (
-      <ViewAllLink link={'/domains'} count={this.props.domainCount} />
+      <ViewAllLink
+        text="View All"
+        link={'/domains'}
+        count={this.props.domainCount}
+      />
     ) : null;
 
   renderContent = () => {
