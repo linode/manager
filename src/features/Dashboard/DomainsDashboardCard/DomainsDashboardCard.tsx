@@ -24,6 +24,7 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'
@@ -83,8 +84,12 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   renderAction = () =>
-    this.props.domains.length > 5 ? (
-      <Link to={'/domains'}>View All</Link>
+    this.props.domainCount > 5 ? (
+      <ViewAllLink
+        text="View All"
+        link={'/domains'}
+        count={this.props.domainCount}
+      />
     ) : null;
 
   renderContent = () => {
@@ -150,6 +155,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 interface WithUpdatingDomainsProps {
   domains: Linode.Domain[];
+  domainCount: number;
   loading: boolean;
   error?: Linode.ApiFieldError[];
 }
@@ -162,6 +168,7 @@ const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
       sortBy(prop('domain'))
     )(state.__resources.domains.entities),
     loading: state.__resources.domains.loading,
+    domainCount: state.__resources.domains.entities.length,
     error: state.__resources.domains.error
   };
 });

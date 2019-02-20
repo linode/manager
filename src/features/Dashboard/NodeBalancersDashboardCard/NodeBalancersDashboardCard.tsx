@@ -23,6 +23,7 @@ import { events$ } from 'src/events';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'
@@ -153,7 +154,11 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
 
   renderAction = () =>
     this.state.results && this.state.results > 5 ? (
-      <Link to={'/nodebalancers'}>View All</Link>
+      <ViewAllLink
+        text="View All"
+        link={'/nodebalancers'}
+        count={this.state.results}
+      />
     ) : null;
 
   renderContent = () => {

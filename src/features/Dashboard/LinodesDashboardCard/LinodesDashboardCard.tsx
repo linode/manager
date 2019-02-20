@@ -1,7 +1,6 @@
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -24,6 +23,7 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'
@@ -82,8 +82,15 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     );
   }
 
-  renderAction = () =>
-    this.props.linodeCount > 5 ? <Link to={'/linodes'}>View All</Link> : null;
+  renderAction = () => {
+    return this.props.linodeCount > 5 ? (
+      <ViewAllLink
+        text="View All"
+        link={'/linodes'}
+        count={this.props.linodeCount}
+      />
+    ) : null;
+  };
 
   renderContent = () => {
     const { loading, linodes, error } = this.props;
