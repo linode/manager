@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   StyleRulesCallback,
   withStyles,
@@ -27,6 +28,7 @@ interface Props {
   showPendingMutation: boolean;
   status: Linode.LinodeStatus;
   notifications?: Linode.Notification[];
+  linodeId: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -36,10 +38,17 @@ const NotificationsAndUpgradePanel = (props: CombinedProps) => {
     <React.Fragment>
       {props.showPendingMutation && (
         <Notice important warning>
-          {`This Linode has pending upgrades available. To learn more about
-          this upgrade and what it includes, `}
+          This Linode has pending&nbsp;
+          <Link to={`/linodes/${props.linodeId}/resize`}>
+            upgrades available
+          </Link>
+          . To learn more about this upgrade and what it includes,&nbsp;
           {/** @todo change onClick to open mutate drawer once migrate exists */}
-          <span className={props.classes.link} onClick={props.handleUpgrade}>
+          <span
+            role="button"
+            className={props.classes.link}
+            onClick={props.handleUpgrade}
+          >
             click here.
           </span>
         </Notice>
