@@ -27,10 +27,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   link: {
     color: theme.palette.text.primary,
     fontSize: '90%',
-    textDecoration: 'underline',
     transition: theme.transitions.create('color'),
     '&:hover, &:focus': {
-      color: theme.color.black
+      color: theme.color.black,
+      textDecoration: 'underline'
     },
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing.unit,
