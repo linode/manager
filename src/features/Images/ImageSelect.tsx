@@ -33,7 +33,10 @@ interface Props {
   images: Linode.Image[];
   imageError?: string;
   imageFieldError?: string;
-  onSelect: (selected: Item<string>) => void;
+  isMulti?: boolean;
+  helperText?: string;
+  value?: Item | Item[];
+  onSelect: (selected: Item<any> | Item<any>[]) => void;
 }
 
 interface State {
@@ -70,7 +73,15 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, imageError, imageFieldError, onSelect } = this.props;
+    const {
+      classes,
+      helperText,
+      imageError,
+      imageFieldError,
+      isMulti,
+      onSelect,
+      value
+    } = this.props;
     const { renderedImages } = this.state;
     return (
       <React.Fragment>
@@ -85,7 +96,8 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
           <Grid item className={classes.selectContainer}>
             <Select
               id={'image-select'}
-              isMulti={false}
+              value={value}
+              isMulti={Boolean(isMulti)}
               errorText={imageError || imageFieldError}
               disabled={Boolean(imageError)}
               onChange={onSelect}
@@ -97,7 +109,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
           <Grid item xs={1}>
             <HelpIcon
               className={classes.icon}
-              text="Choosing a 64-bit distro is recommended."
+              text={helperText || 'Choosing a 64-bit distro is recommended.'}
             />
           </Grid>
         </Grid>
