@@ -17,7 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   headerAction: {
     position: 'relative',
-    top: theme.spacing.unit - 3,
+    top: theme.spacing.unit - 2,
     left: -theme.spacing.unit * 2,
     marginLeft: theme.spacing.unit / 2
   }
