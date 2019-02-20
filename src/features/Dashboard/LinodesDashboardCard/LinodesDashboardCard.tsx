@@ -1,7 +1,6 @@
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -24,6 +23,7 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'
@@ -31,9 +31,7 @@ type ClassNames =
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol'
-  | 'wrapHeader'
-  | 'count'
-  | 'countNumber';
+  | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -54,12 +52,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   wrapHeader: {
     whiteSpace: 'nowrap'
-  },
-  count: {
-    marginRight: theme.spacing.unit / 2
-  },
-  countNumber: {
-    fontFamily: 'LatoWebBold'
   }
 });
 
@@ -91,15 +83,8 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
   }
 
   renderAction = () => {
-    const { classes } = this.props;
     return this.props.linodeCount > 5 ? (
-      <>
-        <span className={classes.count}>
-          (<span className={classes.countNumber}>{this.props.linodeCount}</span>
-          )
-        </span>
-        <Link to={'/linodes'}>View All</Link>
-      </>
+      <ViewAllLink link={'/linodes'} count={this.props.linodeCount} />
     ) : null;
   };
 
