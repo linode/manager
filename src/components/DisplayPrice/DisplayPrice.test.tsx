@@ -29,9 +29,10 @@ describe('DisplayPrice component', () => {
       component.containsMatchingElement(<Typography>/mo</Typography>)
     ).toBeTruthy();
   });
-  it('should display the price', () => {
+  it('should render a Currency component with the price', () => {
+    expect(component.find('[data-qa-currency-component]')).toHaveLength(1);
     expect(
-      component.containsMatchingElement(<Typography>$100.00</Typography>)
-    ).toBeTruthy();
+      component.find('[data-qa-currency-component]').prop('quantity')
+    ).toBe(100);
   });
 });

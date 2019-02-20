@@ -26,6 +26,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, {
@@ -444,7 +445,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         Three backup slots are executed and rotated automatically: a daily
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
-        for just <strong>${backupsMonthlyPrice} per month</strong>, click below.
+        for just{' '}
+        <strong>
+          <Currency quantity={backupsMonthlyPrice} /> per month
+        </strong>
+        , click below.
       </React.Fragment>
     ) : (
       'Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups just click below.'

@@ -8,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
@@ -166,7 +167,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
           Invoice #{item.id}
         </TableCell>
         <TableCell parentColumn="Amount" data-qa-invoice-amount>
-          ${item.total}
+          <Currency quantity={Number(item.total)} />
         </TableCell>
         <TableCell>
           {account.data && (
