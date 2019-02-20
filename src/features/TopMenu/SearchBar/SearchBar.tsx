@@ -1,6 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import { compose } from 'ramda';
+import { compose, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -134,18 +134,9 @@ class SearchBar extends React.Component<CombinedProps, State> {
   render() {
     const { classes, combinedResults, entitiesLoading } = this.props;
     const { searchActive, searchText, menuOpen } = this.state;
-    const defaultOption = {
-      label: `View search results page for "${searchText}"`,
-      value: 'redirect',
-      data: {
-        searchText
-      }
-    };
 
-    const finalOptions =
-      !combinedResults || combinedResults.length === 0
-        ? []
-        : [defaultOption, ...combinedResults];
+    const finalOptions = createFinalOptions(combinedResults, searchText);
+
     return (
       <React.Fragment>
         <IconButton
@@ -226,3 +217,38 @@ export default compose(
   })),
   withStoreSearch()
 )(SearchBar) as React.ComponentType<{}>;
+
+export const createFinalOptions = (
+  results: Item[],
+  searchText: string = ''
+) => {
+  // NO RESULTS:
+  if (!results || results.length === 0) {
+    return [];
+  }
+
+  const firstOption = {
+    value: 'redirect',
+    data: {
+      searchText
+    },
+    label: `View search results page for "${searchText}"`
+  };
+
+  // LESS THAN 20 RESULTS:
+  if (results.length <= 20) {
+    return [firstOption, ...results];
+  }
+
+  // MORE THAN 20 RESULTS:
+  const lastOption = {
+    value: 'redirect',
+    data: {
+      searchText
+    },
+    label: `View all ${results.length} results for "${searchText}"`
+  };
+
+  const first20Results = take(20, results);
+  return [firstOption, ...first20Results, lastOption];
+};
