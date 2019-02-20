@@ -7,6 +7,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { LOGIN_ROOT } from 'src/constants';
 
 type ClassNames = 'root' | 'title';
 
@@ -38,7 +39,7 @@ const ResetPassword: React.StatelessComponent<CombinedProps> = props => {
       </Typography>
       <Button
         type="primary"
-        href="https://login.linode.com/forgot/password"
+        href={`${LOGIN_ROOT}/forgot/password`}
         target="_blank"
       >
         Reset Password
