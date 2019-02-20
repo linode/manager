@@ -59,6 +59,7 @@ type CombinedProps = Props &
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   const { onClose, onSuccess, classes, createVolume, disabled } = props;
+  console.log('disabled', disabled);
   return (
     <Formik
       initialValues={initialValues}
