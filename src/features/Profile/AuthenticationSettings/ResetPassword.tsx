@@ -9,7 +9,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 
-type ClassNames = 'root' | 'title' | 'button';
+type ClassNames = 'root' | 'button';
 
 interface Props {}
 
@@ -20,9 +20,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3
   },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
   button: {
     marginTop: theme.spacing.unit * 3
   }
@@ -32,16 +29,8 @@ const ResetPassword: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
   return (
     <Paper className={classes.root}>
-      <Typography
-        role="header"
-        variant="h2"
-        className={classes.title}
-        data-qa-title
-      >
-        Password
-      </Typography>
-      <Typography data-qa-text>
-        Reset your password through our authentication system
+      <Typography role="header" variant="h2" data-qa-title>
+        Account Password
       </Typography>
       <Button
         type="primary"
