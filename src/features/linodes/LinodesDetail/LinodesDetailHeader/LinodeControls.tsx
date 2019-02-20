@@ -135,6 +135,7 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
           recentEvent={linode.recentEvent}
           id={linode.id}
           label={linode.label}
+          noImage={!linode.image}
           openConfigDrawer={openConfigDrawer}
         />
       </Grid>
