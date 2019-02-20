@@ -260,7 +260,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item xs={12}>
           {/* Duplication starts here. How can we refactor this? */}
-          <OrderBy data={domainsData} order={'desc'} orderBy={'domain'}>
+          <OrderBy data={domainsData} order={'asc'} orderBy={'domain'}>
             {({ data: orderedData, handleOrderChange, order, orderBy }) => {
               const props = {
                 orderBy,
