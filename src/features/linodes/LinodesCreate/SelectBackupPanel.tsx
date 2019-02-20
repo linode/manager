@@ -10,10 +10,8 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
-import {
-  aggregateBackups,
-  formatBackupDate
-} from 'src/features/linodes/LinodesDetail/LinodeBackup';
+import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';
+import { formatDate } from 'src/utilities/formatDate';
 
 type ClassNames = 'root' | 'inner' | 'panelBody' | 'wrapper';
 
@@ -111,7 +109,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       : backup.type === 'auto'
       ? 'Automatic'
       : 'Snapshot';
-    const subheading = formatBackupDate(backup.created);
+    const subheading = formatDate(backup.created);
     const infoName =
       heading === 'Automatic'
         ? 'From automatic backup'

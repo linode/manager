@@ -1,9 +1,9 @@
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
-import { formatBackupDate } from './util';
 
 interface Props {
   backup: Linode.LinodeBackup;
@@ -23,14 +23,15 @@ const BackupTableRow: React.StatelessComponent<Props> = props => {
   const { backup, handleRestore } = props;
   return (
     <TableRow key={backup.id} data-qa-backup>
-      <TableCell parentColumn="Date Created">
-        {formatBackupDate(backup.created)}
-      </TableCell>
       <TableCell
         parentColumn="Label"
         data-qa-backup-name={backup.label || typeMap[backup.type]}
       >
         {backup.label || typeMap[backup.type]}
+      </TableCell>
+      <TableCell parentColumn="Date Created">
+        {/** important to note that we're intentionally not humanizing the time here */}
+        <DateTimeDisplay value={backup.created} />
       </TableCell>
       <TableCell parentColumn="Duration">
         {moment

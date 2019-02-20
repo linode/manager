@@ -3,13 +3,12 @@ import * as moment from 'moment';
 import formatDate from './formatDate';
 
 const date = '2018-07-20T04:23:17';
-const timezone = 'America/New_York';
 
 describe('formatDate utility', () => {
   describe('Non-humanized dates', () => {
     it('should be displayed in 24-hour ISO format', () => {
-      const formattedDate = formatDate(date, { timezone });
-      expect(formattedDate).toBe('2018-07-20 00:23:17');
+      const formattedDate = formatDate(date);
+      expect(formattedDate).toBe('2018-07-20 04:23:17');
     });
   });
 
@@ -19,7 +18,6 @@ describe('formatDate utility', () => {
         .subtract(5, 'minutes')
         .format();
       const formattedDate = formatDate(fiveMinutesAgo, {
-        timezone,
         humanizeCutoff: 'day'
       });
       expect(formattedDate).toBe('5 minutes ago');
@@ -29,13 +27,11 @@ describe('formatDate utility', () => {
         .subtract(6, 'days')
         .format();
       let formattedDate = formatDate(almostOneWeek, {
-        timezone,
         humanizeCutoff: 'month'
       });
       expect(formattedDate).toBe('6 days ago');
 
       formattedDate = formatDate(almostOneWeek, {
-        timezone,
         humanizeCutoff: 'day'
       });
       expect(formattedDate).toContain(moment(almostOneWeek).year());
@@ -45,7 +41,6 @@ describe('formatDate utility', () => {
         .subtract(10, 'years')
         .format();
       const formattedDate = formatDate(aLongTimeAgo, {
-        timezone,
         humanizeCutoff: 'never'
       });
       expect(formattedDate).toBe('10 years ago');
@@ -56,7 +51,6 @@ describe('formatDate utility', () => {
           .add(29, 'days')
           .format();
         const formattedDate = formatDate(daysInTheFuture, {
-          timezone,
           humanizeCutoff: 'month'
         });
         expect(formattedDate).toBe('in a month');
@@ -66,7 +60,6 @@ describe('formatDate utility', () => {
           .add(23, 'days')
           .format();
         const formattedDate = formatDate(daysInTheFuture, {
-          timezone,
           humanizeCutoff: 'month'
         });
         expect(formattedDate).toBe('in 23 days');
