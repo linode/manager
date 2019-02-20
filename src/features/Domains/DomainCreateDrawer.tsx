@@ -21,6 +21,10 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { cloneDomain } from 'src/services/domains';
 import { ApplicationState } from 'src/store';
 import { CLONING, CREATING, resetDrawer } from 'src/store/domainDrawer';
@@ -111,7 +115,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, open, mode } = this.props;
+    const { classes, open, mode, disabled } = this.props;
     const {
       type,
       domain,
@@ -129,10 +133,18 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     return (
       <Drawer title="Add a new Domain" open={open} onClose={this.closeDrawer}>
-        {generalError && (
+        {generalError && !disabled && (
           <Notice error spacingTop={8}>
             {generalError}
           </Notice>
+        )}
+        {disabled && (
+          <Notice
+            text={
+              "You don't have permissions to create a new Domain. Please, contact an account administrator for details."
+            }
+            error={true}
+          />
         )}
         <RadioGroup
           aria-label="type"
@@ -146,18 +158,20 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             label="Master"
             control={<Radio />}
             data-qa-domain-radio="Master"
+            disabled={disabled}
           />
           <FormControlLabel
             value="slave"
             label="Slave"
             control={<Radio />}
             data-qa-domain-radio="Slave"
+            disabled={disabled}
           />
         </RadioGroup>
         <TextField
           errorText={(mode === CREATING || '') && errorFor('domain')}
           value={domain}
-          disabled={mode === CLONING}
+          disabled={mode === CLONING || disabled}
           label="Domain"
           onChange={this.updateLabel}
           data-qa-domain-name
@@ -169,6 +183,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             label="New Domain"
             onChange={this.updateCloneLabel}
             data-qa-clone-name
+            disabled={disabled}
           />
         )}
         {mode === CREATING && type === 'master' && (
@@ -178,6 +193,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             label="SOA Email Address"
             onChange={this.updateEmailAddress}
             data-qa-soa-email
+            disabled={disabled}
           />
         )}
         {mode === CREATING && type === 'slave' && (
@@ -197,6 +213,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
                 value={viewMasterIP(idx, this.state) || ''}
                 onChange={this.updateMasterIPAddress(idx)}
                 data-qa-master-ip={idx}
+                disabled={disabled}
               />
             ))}
             <AddNewLink
@@ -204,13 +221,23 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
               label="Add IP"
               data-qa-add-master-ip-field
               left
+              disabled={disabled}
             />
           </React.Fragment>
         )}
-        <TagsInput value={tags} onChange={this.updateTags} />
+        <TagsInput
+          value={tags}
+          onChange={this.updateTags}
+          disabled={disabled}
+        />
         <ActionsPanel>
           {!submitting ? (
-            <Button type="primary" onClick={this.submit} data-qa-submit>
+            <Button
+              type="primary"
+              onClick={this.submit}
+              data-qa-submit
+              disabled={disabled}
+            >
               Create
             </Button>
           ) : (
@@ -382,13 +409,16 @@ interface StateProps {
   open: boolean;
   domain?: string;
   cloneId?: number;
+  disabled: boolean;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
   open: pathOr(false, ['domainDrawer', 'open'], state),
   domain: path(['domainDrawer', 'domain'], state),
-  cloneId: path(['domainDrawer', 'cloneId'], state)
+  cloneId: path(['domainDrawer', 'cloneId'], state),
+  // disabled if the profile is restricted and doesn't have add_domains grant
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains')
 });
 
 const connected = connect(
