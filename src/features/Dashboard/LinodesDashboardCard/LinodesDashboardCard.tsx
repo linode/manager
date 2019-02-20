@@ -31,7 +31,9 @@ type ClassNames =
   | 'labelCol'
   | 'moreCol'
   | 'actionsCol'
-  | 'wrapHeader';
+  | 'wrapHeader'
+  | 'count'
+  | 'countNumber';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -52,6 +54,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   wrapHeader: {
     whiteSpace: 'nowrap'
+  },
+  count: {
+    marginRight: theme.spacing.unit / 2
+  },
+  countNumber: {
+    fontFamily: 'LatoWebBold'
   }
 });
 
@@ -82,8 +90,18 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     );
   }
 
-  renderAction = () =>
-    this.props.linodeCount > 5 ? <Link to={'/linodes'}>View All</Link> : null;
+  renderAction = () => {
+    const { classes } = this.props;
+    return this.props.linodeCount > 5 ? (
+      <>
+        <span className={classes.count}>
+          (<span className={classes.countNumber}>{this.props.linodeCount}</span>
+          )
+        </span>
+        <Link to={'/linodes'}>View All</Link>
+      </>
+    ) : null;
+  };
 
   renderContent = () => {
     const { loading, linodes, error } = this.props;
