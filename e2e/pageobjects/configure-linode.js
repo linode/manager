@@ -259,6 +259,7 @@ class ConfigureLinode extends Page {
 
     createFrom(source) {
         const sourceSelector = `[data-qa-create-from="Create from ${source}"]`;
+        $(sourceSelector).waitForVisible(constants.wait.normal);
         browser.click(sourceSelector);
         browser.waitUntil(function() {
             return browser.getAttribute(sourceSelector, 'aria-selected').includes('true');
