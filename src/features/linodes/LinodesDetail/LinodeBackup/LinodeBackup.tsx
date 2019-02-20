@@ -482,8 +482,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Backups">
             <TableHead>
               <TableRow>
-                <TableCell>Date Created</TableCell>
                 <TableCell>Label</TableCell>
+                <TableCell>Date Created</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Disks</TableCell>
                 <TableCell>Space Required</TableCell>
