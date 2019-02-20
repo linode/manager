@@ -1,8 +1,8 @@
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
 import scriptLoader from 'react-async-script-loader';
 import * as ReactDOM from 'react-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -549,14 +549,11 @@ const accountContext = withAccount(context => ({
   lastFour: (context.data && context.data.credit_card.last_four) || ''
 }));
 
-const enhanced = compose(
+export default compose<CombinedProps, {}>(
   styled,
-  accountContext
-);
-
-export default scriptLoader('https://www.paypalobjects.com/api/checkout.v4.js')(
-  enhanced(MakeAPaymentPanel)
-);
+  accountContext,
+  scriptLoader('https://www.paypalobjects.com/api/checkout.js')
+)(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
   return !!(usd >= 5 && usd <= 500);
