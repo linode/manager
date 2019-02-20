@@ -1,6 +1,7 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -97,8 +98,9 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       <Notice important warning>
-        {`This Linode has pending upgrades available. To learn more about
-this upgrade and what it includes, `}
+        This Linode has pending&nbsp;
+        <Link to={`/linodes/${props.linodeId}/resize`}>upgrades available</Link>
+        . To learn more about this upgrade and what it includes,&nbsp;
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
