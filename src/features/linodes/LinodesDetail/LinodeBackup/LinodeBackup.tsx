@@ -51,12 +51,12 @@ import {
 } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { formatDate } from 'src/utilities/formatDate';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
-import { formatBackupDate } from './util';
 
 type ClassNames =
   | 'paper'
@@ -424,7 +424,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleRestore = (backup: Linode.LinodeBackup) => {
-    this.openRestoreDrawer(backup.id, formatBackupDate(backup.created));
+    this.openRestoreDrawer(backup.id, formatDate(backup.created));
   };
 
   handleRestoreSubmit = () => {

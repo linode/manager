@@ -294,7 +294,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, profileUsername, timezone } = this.props;
+    const { classes, profileUsername } = this.props;
     const {
       attachmentErrors,
       errors,
@@ -326,7 +326,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     }
 
     // Format date for header
-    const formattedDate = formatDate(ticket.updated, { timezone });
+    const formattedDate = formatDate(ticket.updated);
 
     // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
     // details.  For more info see the below link.
@@ -443,11 +443,9 @@ const requestAndMapGravatar = (acc: any, id: string) => {
 const styled = withStyles(styles);
 
 interface StateProps {
-  timezone: string;
   profileUsername?: string;
 }
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile),
   profileUsername: path(['data', 'username'], state.__resources.profile)
 });
 
