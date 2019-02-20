@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -19,11 +20,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
 interface Props {
+  configs: Linode.Config[];
   onClose: () => void;
   onSubmit: () => void;
   onChange: (id: number) => void;
   open: boolean;
-  configs: Linode.Config[];
   selected?: string;
   error?: string;
 }
@@ -61,11 +62,13 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
 };
 
 LinodeConfigSelectionDrawer.defaultProps = {
-  configs: [],
   selected: '',
-  open: false
+  open: false,
+  configs: []
 };
 
 const styled = withStyles(styles);
 
-export default styled(LinodeConfigSelectionDrawer);
+const enhanced = compose<CombinedProps, Props>(styled);
+
+export default enhanced(LinodeConfigSelectionDrawer);

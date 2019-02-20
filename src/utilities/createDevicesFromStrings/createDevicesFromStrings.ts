@@ -1,13 +1,8 @@
-import {
-  always,
-  compose,
-  contains,
-  ifElse,
-  isNil,
-  last,
-  objOf,
-  split
-} from 'ramda';
+import { isNil, objOf, split } from 'ramda';
+
+type DiskRecord = Record<'disk_id', number>;
+
+type VolumeRecord = Record<'volume_id', number>;
 
 export interface DevicesAsStrings {
   sda?: string;
@@ -20,42 +15,33 @@ export interface DevicesAsStrings {
   sdh?: string;
 }
 
-let getIdOrNullFor: (
-  t: string
-) => (d?: string) => null | Linode.VolumeDevice | Linode.DiskDevice;
-getIdOrNullFor = type =>
-  compose(
-    ifElse(
-      isNil,
-      always(null),
-      compose(
-        ifElse(
-          contains(type),
-          compose<string, string[], string, number, Record<string, number>>(
-            objOf(`${type}_id`),
-            Number,
-            last,
-            split('-')
-          ),
-          always(null)
-        )
-      )
-    )
-  );
+/**
+ * The `value` should be formatted as volume-123, disk-123, etc.,
+ */
+const createTypeRecord = (value?: string): null | DiskRecord | VolumeRecord => {
+  if (isNil(value)) {
+    return null;
+  }
 
-const idForDisk = getIdOrNullFor('disk');
-const idForVolume = getIdOrNullFor('volume');
+  // Given: volume-123
+  const [type, id] = split('-', value); // -> [volume, 123]
+
+  const key = `${type}_id`; // -> `volume_id`
+  const idAsNumber = Number(id); // -> 123
+
+  return objOf(key, idAsNumber); // -> { volume_id: 123 }
+};
 
 let createDevicesFromStrings: (v: DevicesAsStrings) => Linode.Devices;
 createDevicesFromStrings = devices => ({
-  sda: idForDisk(devices.sda) || idForVolume(devices.sda),
-  sdb: idForDisk(devices.sdb) || idForVolume(devices.sdb),
-  sdc: idForDisk(devices.sdc) || idForVolume(devices.sdc),
-  sdd: idForDisk(devices.sdd) || idForVolume(devices.sdd),
-  sde: idForDisk(devices.sde) || idForVolume(devices.sde),
-  sdf: idForDisk(devices.sdf) || idForVolume(devices.sdf),
-  sdg: idForDisk(devices.sdg) || idForVolume(devices.sdg),
-  sdh: idForDisk(devices.sdh) || idForVolume(devices.sdh)
+  sda: createTypeRecord(devices.sda),
+  sdb: createTypeRecord(devices.sdb),
+  sdc: createTypeRecord(devices.sdc),
+  sdd: createTypeRecord(devices.sdd),
+  sde: createTypeRecord(devices.sde),
+  sdf: createTypeRecord(devices.sdf),
+  sdg: createTypeRecord(devices.sdg),
+  sdh: createTypeRecord(devices.sdh)
 });
 
 export default createDevicesFromStrings;

@@ -18,7 +18,7 @@ import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
@@ -232,11 +232,11 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
     .map(LinodeResize.extendType)
 }));
 
-const linodeContext = withLinode(context => ({
-  linodeId: pathOr(undefined, ['data', 'id'], context),
-  linodeType: pathOr(undefined, ['data', 'type'], context),
-  linodeStatus: pathOr(undefined, ['data', 'status'], context),
-  linodeLabel: pathOr(undefined, ['data', 'label'], context)
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  linodeId: linode.id,
+  linodeType: linode.type,
+  linodeStatus: linode.status,
+  linodeLabel: linode.label
 }));
 
 export default compose<CombinedProps, {}>(

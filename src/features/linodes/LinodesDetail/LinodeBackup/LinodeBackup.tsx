@@ -52,7 +52,7 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 import { formatBackupDate } from './util';
@@ -266,8 +266,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { linodeID, enqueueSnackbar } = this.props;
     enableBackups(linodeID)
       .then(() => {
-        // There is no event for when backups have been enabled,
-        // so we don't reset the enabling state.
         enqueueSnackbar('Backups are being enabled for this Linode', {
           variant: 'info'
         });
@@ -753,14 +751,14 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const linodeContext = withLinode(context => ({
-  backupsEnabled: context.data!.backups.enabled,
-  backupsSchedule: context.data!.backups.schedule,
-  linodeID: context.data!.id,
-  linodeInTransition: isLinodeInTransition(context.data!.status),
-  linodeLabel: context.data!.label,
-  linodeRegion: context.data!.region,
-  linodeType: context.data!.type
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  backupsEnabled: linode.backups.enabled,
+  backupsSchedule: linode.backups.schedule,
+  linodeID: linode.id,
+  linodeInTransition: isLinodeInTransition(linode.status),
+  linodeLabel: linode.label,
+  linodeRegion: linode.region,
+  linodeType: linode.type
 }));
 
 export default compose<CombinedProps, {}>(

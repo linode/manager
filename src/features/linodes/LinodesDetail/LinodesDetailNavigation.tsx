@@ -1,55 +1,41 @@
 import * as React from 'react';
-import { matchPath, Redirect, Route, Switch } from 'react-router-dom';
-import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+  matchPath,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch,
+  withRouter
+} from 'react-router-dom';
+import { compose } from 'recompose';
+import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
-import { linodeInTransition } from 'src/features/linodes/transitions';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import LinodeBackup from '../LinodeBackup';
-import LinodeNetworking from '../LinodeNetworking';
-import LinodeRebuild from '../LinodeRebuild';
-import LinodeRescue from '../LinodeRescue';
-import LinodeResize from '../LinodeResize';
-import LinodeSettings from '../LinodeSettings';
-import LinodeSummary from '../LinodeSummary';
-import LinodeBusyStatus from '../LinodeSummary/LinodeBusyStatus';
+import LinodeBackup from './LinodeBackup';
+import { withLinodeDetailContext } from './linodeDetailContext';
+import LinodeNetworking from './LinodeNetworking';
+import LinodeRebuild from './LinodeRebuild';
+import LinodeRescue from './LinodeRescue';
+import LinodeResize from './LinodeResize';
+import LinodeSettings from './LinodeSettings';
+import LinodeSummary from './LinodeSummary';
 
-type ClassNames = 'root';
+type CombinedProps = ContextProps &
+  RouteComponentProps<{
+    linodeId: string;
+  }>;
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
-interface Props {
-  linodeId: number;
-  linodeLabel: string;
-  linodeRecentEvent?: Linode.Event;
-  linodeRegion: string;
-  linodeStatus: Linode.LinodeStatus;
-  linodeConfigs: Linode.Config[];
-  url: string;
-  history: any;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const TabsAndStatusBarPanel: React.StatelessComponent<
+const LinodesDetailNavigation: React.StatelessComponent<
   CombinedProps
 > = props => {
   const {
-    linodeRecentEvent,
-    linodeStatus,
-    url,
-    linodeId,
-    linodeRegion,
+    match: { url },
     linodeLabel,
-    linodeConfigs
+    linodeConfigs,
+    linodeId,
+    linodeRegion
   } = props;
 
   const tabs = [
@@ -74,13 +60,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<
   };
 
   return (
-    <React.Fragment>
-      {linodeInTransition(linodeStatus, linodeRecentEvent) && (
-        <LinodeBusyStatus
-          status={linodeStatus}
-          recentEvent={linodeRecentEvent}
-        />
-      )}
+    <>
       <AppBar position="static" color="default">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
@@ -152,7 +132,7 @@ const TabsAndStatusBarPanel: React.StatelessComponent<
         {/* 404 */}
         <Redirect to={`${url}/summary`} />
       </Switch>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -160,6 +140,21 @@ const matches = (p: string) => {
   return Boolean(matchPath(p, { path: location.pathname }));
 };
 
-const styled = withStyles(styles);
+interface ContextProps {
+  linodeId: number;
+  linodeConfigs: Linode.Config[];
+  linodeLabel: string;
+  linodeRegion: string;
+}
 
-export default styled(TabsAndStatusBarPanel);
+const enhanced = compose<CombinedProps, {}>(
+  withRouter,
+  withLinodeDetailContext<ContextProps>(({ linode }) => ({
+    linodeId: linode.id,
+    linodeConfigs: linode._configs,
+    linodeLabel: linode.label,
+    linodeRegion: linode.region
+  }))
+);
+
+export default enhanced(LinodesDetailNavigation);

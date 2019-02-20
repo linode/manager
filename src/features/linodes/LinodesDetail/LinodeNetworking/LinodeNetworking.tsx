@@ -20,7 +20,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import EditRDNSDrawer from './EditRDNSDrawer';
@@ -559,10 +559,10 @@ const getFirstPublicIPv4FromResponse = compose(
   pathOr([], ['ipv4', 'public'])
 );
 
-const linodeContext = withLinode(context => ({
-  linodeID: context.data!.id,
-  linodeLabel: context.data!.label,
-  linodeRegion: context.data!.region
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  linodeID: linode.id,
+  linodeLabel: linode.label,
+  linodeRegion: linode.region
 }));
 
 const enhanced = compose<any, any, any>(
