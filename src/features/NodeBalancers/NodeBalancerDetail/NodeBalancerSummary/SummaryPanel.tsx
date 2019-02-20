@@ -78,6 +78,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-ports>
                   <strong>Ports: </strong>
+                  {nodeBalancer.configPorts.length === 0 && 'None'}
                   {nodeBalancer.configPorts.map(({ port, configId }, i) => (
                     <React.Fragment key={configId}>
                       <Link
@@ -90,7 +91,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
                       </Link>
                       {i < nodeBalancer.configPorts.length - 1 ? ', ' : ''}
                     </React.Fragment>
-                  )) || 'None'}
+                  ))}
                 </Typography>
               </div>
               <div className={classes.section}>
