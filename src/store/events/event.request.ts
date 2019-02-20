@@ -42,6 +42,7 @@ export const getEvents: ThunkActionCreator<Promise<Linode.Event[]>> = () => (
         }
         return events;
       })
+      .catch(e => [])
   );
 };
 
