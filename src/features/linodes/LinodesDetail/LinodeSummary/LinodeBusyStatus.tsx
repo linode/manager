@@ -1,4 +1,6 @@
+import { head } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -8,6 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
 import { transitionText } from 'src/features/linodes/transitions';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'status';
 
@@ -22,12 +25,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
+interface LinodeDetailContextProps {
   status: string;
   recentEvent?: Linode.Event;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;
 
 const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
   const { classes, status, recentEvent } = props;
@@ -46,4 +49,12 @@ const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(LinodeBusyStatus);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withLinodeDetailContext(({ linode }) => ({
+    status: linode.status,
+    recentEvent: head(linode._events)
+  }))
+);
+
+export default enhanced(LinodeBusyStatus);

@@ -315,11 +315,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               </OrderBy>
             </Grid>
             <LinodeConfigSelectionDrawer
+              configs={configDrawer.configs}
               onClose={this.closeConfigDrawer}
               onSubmit={this.submitConfigChoice}
               onChange={this.selectConfig}
               open={configDrawer.open}
-              configs={configDrawer.configs}
               selected={String(configDrawer.selected)}
               error={configDrawer.error}
             />

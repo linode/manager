@@ -21,7 +21,7 @@ import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { rebuildLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
@@ -191,9 +191,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(context => ({
-  linodeId: context.data!.id,
-  linodeLabel: context.data!.label
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  linodeId: linode.id,
+  linodeLabel: linode.label
 }));
 
 export default compose<CombinedProps, Props>(

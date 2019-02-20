@@ -21,6 +21,8 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_addip':
     case 'linode_boot':
     case 'linode_resize':
+    case 'backups_enable':
+    case 'backups_cancel':
       return handleLinodeUpdate(dispatch, status, id);
 
     /** Remove Linode */
