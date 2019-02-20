@@ -102,8 +102,8 @@ const preloaded = PromiseLoader<CombinedProps>({
             up: configs.reduce((acc: number, config) => {
               return acc + config.nodes_status.up;
             }, 0), // add the uptime for each config together
-            ports: configs.reduce((acc: [number], config) => {
-              return [...acc, config.port];
+            configPorts: configs.reduce((acc: [number], config) => {
+              return [...acc, { configId: config.id, port: config.port }];
             }, [])
           };
         })
