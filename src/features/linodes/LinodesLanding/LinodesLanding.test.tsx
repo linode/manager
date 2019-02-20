@@ -8,7 +8,12 @@ import { ListLinodes } from './LinodesLanding';
 const RoutedListLinodes = withRouter(ListLinodes);
 
 describe('ListLinodes', () => {
-  const classes = { title: '', tagGroup: '' };
+  const classes = {
+    title: '',
+    tagGroup: '',
+    CSVlinkContainer: '',
+    CSVlink: ''
+  };
 
   it('renders without error', () => {
     shallow(
