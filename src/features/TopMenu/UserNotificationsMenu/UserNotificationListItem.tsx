@@ -42,7 +42,10 @@ const styles: StyleRulesCallback = theme => {
         marginTop: '0 !important'
       },
       '&:hover, &:focus': {
-        backgroundColor: theme.bg.main
+        backgroundColor: theme.palette.primary.main,
+        '& $noticeText, & p, & $innerTitle': {
+          color: 'white'
+        }
       },
       maxWidth: '100%',
       display: 'flex',
@@ -55,8 +58,7 @@ const styles: StyleRulesCallback = theme => {
     },
     innerLink: {
       '& > h3': {
-        lineHeight: '1.2',
-        textDecoration: 'underline'
+        lineHeight: '1.2'
       }
     },
     innerTitle: {
