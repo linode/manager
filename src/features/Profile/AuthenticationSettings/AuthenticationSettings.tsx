@@ -12,6 +12,7 @@ import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
+import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
@@ -79,6 +80,7 @@ export class AuthenticationSettings extends React.Component<
         {success && <Notice success text={success} />}
         {!loading && (
           <React.Fragment>
+            <ResetPassword />
             <TwoFactor
               twoFactor={twoFactor}
               username={username}
