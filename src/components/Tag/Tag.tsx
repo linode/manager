@@ -118,7 +118,7 @@ class Tag extends React.Component<CombinedProps, {}> {
       this.props.closeMenu();
     }
     const { history, label } = this.props;
-    history.push(`/search/?query=${label}`);
+    history.push(`/search/?query=tag:${label}`);
   };
 
   render() {
