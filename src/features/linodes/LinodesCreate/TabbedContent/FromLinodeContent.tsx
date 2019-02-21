@@ -229,7 +229,6 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       backups,
       privateIP,
       selectedLinodeID,
-      tags,
       selectedRegionID,
       selectedTypeID,
       selectedDiskSize,
@@ -317,12 +316,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                   onChange: updateCustomLabel,
                   errorText: hasErrorFor('label')
                 }}
-                tagsInputProps={{
-                  value: tags,
-                  onChange: this.handleChangeTags,
-                  tagError
-                }}
-                updateFor={[tags, label, errors]}
+                updateFor={[label, errors]}
               />
               <AddonsPanel
                 backups={backups}
