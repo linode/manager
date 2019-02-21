@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -23,6 +23,7 @@ import { resetEventsPolling } from 'src/events';
 import { cloneLinode } from 'src/services/linodes';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { getAPIErrorOrDefault, getTagErrors } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
@@ -188,10 +189,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
         this.setState(
           () => ({
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: getAPIErrorOrDefault(error)
           }),
           () => {
             scrollErrorIntoView();
@@ -254,6 +252,9 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+    // getTagErrors returns a string[]; for now, just use the first one
+    // since tagError is expecting string | undefined.
+    const tagError = path<string | undefined>([0], getTagErrors(errors));
 
     const regionInfo = getRegionInfo(selectedRegionID);
 
@@ -319,7 +320,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                 tagsInputProps={{
                   value: tags,
                   onChange: this.handleChangeTags,
-                  tagError: hasErrorFor('tag')
+                  tagError
                 }}
                 updateFor={[tags, label, errors]}
               />
