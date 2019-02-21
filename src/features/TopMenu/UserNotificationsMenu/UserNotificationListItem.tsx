@@ -36,7 +36,7 @@ const styles: StyleRulesCallback = theme => {
       borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create('background-color'),
       '& p': {
-        color: '#32363C'
+        color: theme.color.headline
       },
       '& + .notice': {
         marginTop: '0 !important'
