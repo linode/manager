@@ -39,6 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   launchButton: {
+    position: 'relative',
+    top: 1,
+    lineHeight: 1,
     padding: '12px 28px 14px 0',
     '&:hover': {
       backgroundColor: 'transparent',
