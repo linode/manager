@@ -65,7 +65,7 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
               <EntityIcon
                 variant="domain"
                 status={status}
-                marginTop={3}
+                marginTop={1}
                 loading={status === 'edit_mode'}
               />
             </Grid>
