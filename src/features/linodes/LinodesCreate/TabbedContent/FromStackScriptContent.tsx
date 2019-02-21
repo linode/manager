@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { assocPath, pathOr } from 'ramda';
+import { assocPath, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
@@ -32,6 +32,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { getAPIErrorOrDefault, getTagErrors } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
@@ -322,22 +323,14 @@ export class FromStackScriptContent extends React.Component<
         if (!this.mounted) {
           return;
         }
-
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.errors
-        ) {
-          const listOfErrors = error.response.data.errors;
-          this.setState(
-            () => ({
-              errors: listOfErrors
-            }),
-            () => {
-              scrollErrorIntoView();
-            }
-          );
-        }
+        this.setState(
+          () => ({
+            errors: getAPIErrorOrDefault(error)
+          }),
+          () => {
+            scrollErrorIntoView();
+          }
+        );
       })
       .finally(() => {
         if (!this.mounted) {
@@ -410,6 +403,9 @@ export class FromStackScriptContent extends React.Component<
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
+    // getTagErrors returns a string[]; for now, just use the first one
+    // since tagError is expecting string | undefined.
+    const tagError = path<string | undefined>([0], getTagErrors(errors));
 
     const hasBackups = Boolean(backups || accountBackups);
 
@@ -524,7 +520,7 @@ export class FromStackScriptContent extends React.Component<
             tagsInputProps={{
               value: tags,
               onChange: this.handleChangeTags,
-              tagError: hasErrorFor('tag')
+              tagError
             }}
             updateFor={[tags, label, errors]}
           />
