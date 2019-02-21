@@ -146,7 +146,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
               variant="linode"
               status={status}
               loading={linodeInTransition(status, recentEvent)}
-              marginTop={3}
+              marginTop={1}
             />
           </Grid>
           <Grid item className={classes.labelGridWrapper}>

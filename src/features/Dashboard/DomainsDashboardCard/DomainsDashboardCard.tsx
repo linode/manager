@@ -131,7 +131,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
                 <EntityIcon
                   variant="domain"
                   status={status}
-                  marginTop={3}
+                  marginTop={1}
                   loading={status === 'edit_mode'}
                 />
               </Grid>
