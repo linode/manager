@@ -6,6 +6,7 @@ import {
   Lens,
   lensPath,
   over,
+  path as ramdaPath,
   pathOr,
   set,
   view
@@ -40,6 +41,7 @@ import {
   withNodeBalancerActions,
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { getTagErrors } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -89,7 +91,8 @@ interface State {
 const errorResources = {
   label: 'label',
   region: 'region',
-  address: 'address'
+  address: 'address',
+  tags: 'tags'
 };
 
 class NodeBalancerCreate extends React.Component<CombinedProps, State> {
@@ -445,6 +448,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const { classes, regionsData } = this.props;
     const { nodeBalancerFields, linodesWithPrivateIPs } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
+    const tagError = ramdaPath<string | undefined>(
+      [0],
+      getTagErrors(this.state.errors)
+    );
     const generalError = hasErrorFor('none');
 
     if (this.props.regionsLoading) {
@@ -486,7 +493,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     }))
                   : [],
                 onChange: this.tagsChange,
-                tagError: hasErrorFor('tag')
+                tagError
               }}
             />
             <SelectRegionPanel

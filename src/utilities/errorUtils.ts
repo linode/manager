@@ -20,7 +20,7 @@ export const getErrorStringOrDefault = (
   return pathOr<string>(defaultError, [0, 'reason'], errors);
 };
 
-const tagRegEx = new RegExp(/tags/);
+export const tagRegEx = new RegExp(/tags/);
 
 export const getTagErrors = (errors?: Linode.ApiFieldError[]): string[] => {
   if (!errors) {
