@@ -1,5 +1,7 @@
 import { compose, head, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
+import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -20,6 +22,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
+import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
@@ -94,12 +97,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface ContextProps {
-  linodeID: number;
-  linodeRegion: string;
-  linodeLabel: string;
-}
-
 interface State {
   linodeIPs?: Linode.LinodeIPsResponse;
   removeIPDialogOpen: boolean;
@@ -115,7 +112,7 @@ interface State {
   createIPv6DrawerOpen: boolean;
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames>;
+type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -149,7 +146,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   refreshIPs = () => {
     this.setState({ IPRequestError: undefined });
-    return getLinodeIPs(this.props.linodeID)
+    return getLinodeIPs(this.props.linode.id)
       .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
       .catch(errorResponse => {
         const defaultError = [
@@ -165,6 +162,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           initialLoading: false
         });
       });
+  };
+
+  handleRemoveIPSuccess = (linode: Linode.Linode) => {
+    /** refresh local state and redux state so our data is persistent everywhere */
+    this.refreshIPs();
+    this.props.upsertLinode(linode);
   };
 
   displayRangeDrawer = (range: Linode.IPRange) => () => {
@@ -294,7 +297,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { linodeID, linodeLabel, linodeRegion } = this.props;
+    const {
+      id: linodeID,
+      label: linodeLabel,
+      region: linodeRegion
+    } = this.props.linode;
     const { linodeIPs, initialLoading, IPRequestError } = this.state;
     const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
@@ -372,8 +379,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             handleClose={this.closeRemoveIPDialog}
             IPAddress={this.state.currentlySelectedIP.address}
             open={this.state.removeIPDialogOpen}
-            linodeID={linodeID}
-            ipRemoveSuccess={this.refreshIPs}
+            linode={this.props.linode}
+            ipRemoveSuccess={this.handleRemoveIPSuccess}
           />
         )}
       </React.Fragment>
@@ -522,7 +529,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   };
 
   renderNetworkActions = () => {
-    const { classes, linodeID, linodeRegion } = this.props;
+    const {
+      classes,
+      linode: { id: linodeID, region: linodeRegion }
+    } = this.props;
     const { linodeIPs } = this.state;
 
     const publicIPs = pathOr([], ['ipv4', 'public'], linodeIPs).map(
@@ -574,15 +584,30 @@ const getFirstPublicIPv4FromResponse = compose(
   pathOr([], ['ipv4', 'public'])
 );
 
+interface ContextProps {
+  linode: Linode.Linode;
+}
+
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeID: linode.id,
-  linodeLabel: linode.label,
-  linodeRegion: linode.region
+  /** actually needs the whole linode for the purposes */
+  linode
 }));
 
-const enhanced = compose<any, any, any>(
-  linodeContext,
-  styled
+interface DispatchProps {
+  upsertLinode: (data: Linode.Linode) => void;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: any
+) => ({
+  upsertLinode: linode => dispatch(_upsertLinode(linode))
+});
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
 );
+
+const enhanced = recompose<CombinedProps, {}>(connected, linodeContext, styled);
 
 export default enhanced(LinodeNetworking);

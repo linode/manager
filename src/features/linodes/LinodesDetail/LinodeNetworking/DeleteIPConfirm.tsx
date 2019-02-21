@@ -14,9 +14,9 @@ import { removeIPAddress } from 'src/services/linodes/linodeIPs';
 interface Props {
   handleClose: () => void;
   open: boolean;
-  linodeID: number;
+  linode: Linode.Linode;
   IPAddress: string;
-  ipRemoveSuccess?: () => void;
+  ipRemoveSuccess?: (linode: Linode.Linode) => void;
 }
 
 type CombinedProps = Props & LoadingErrorProps;
@@ -33,7 +33,8 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       setLoadingAndClearErrors,
       clearLoadingAndErrors,
       ipRemoveSuccess,
-      handleClose
+      handleClose,
+      linode
     } = this.props;
 
     setLoadingAndClearErrors();
@@ -42,7 +43,11 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       .then(response => {
         clearLoadingAndErrors();
         if (ipRemoveSuccess) {
-          ipRemoveSuccess();
+          const linodeWithRemovedIP = {
+            ...linode,
+            ipv4: linode.ipv4.filter(eachIP => eachIP !== data.IPAddress)
+          };
+          ipRemoveSuccess(linodeWithRemovedIP);
           handleClose();
         }
       })
@@ -62,7 +67,7 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
       loading,
       error,
       IPAddress,
-      linodeID
+      linode: { id: linodeID }
     } = this.props;
 
     return (
