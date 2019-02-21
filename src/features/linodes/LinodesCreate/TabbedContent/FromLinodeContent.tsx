@@ -23,6 +23,7 @@ import { resetEventsPolling } from 'src/events';
 import { cloneLinode } from 'src/services/linodes';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
@@ -188,10 +189,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
         this.setState(
           () => ({
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: getAPIErrorOrDefault(error)
           }),
           () => {
             scrollErrorIntoView();
