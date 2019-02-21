@@ -78,18 +78,20 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: theme.spacing.unit * 2,
     outline: 0,
     borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:hover, &:focus': {
-      '& $buttonText': {
-        color: 'white'
-      },
-      '& svg': {
-        fill: '#FFF'
-      },
-      '& .insidePath *, ': {
-        stroke: '#fff'
-      },
-      '& svg:not(.loading) .outerCircle': {
-        stroke: '#fff'
+    '&:not(.hasTooltip)': {
+      '&:hover, &:focus': {
+        '& $buttonText': {
+          color: 'white'
+        },
+        '& svg': {
+          fill: '#FFF'
+        },
+        '& .insidePath *, ': {
+          stroke: '#fff'
+        },
+        '& svg:not(.loading) .outerCircle': {
+          stroke: '#fff'
+        }
       }
     }
   },

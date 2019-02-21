@@ -23,6 +23,7 @@ import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 type CSSClasses =
   | 'wrapper'
   | 'menu'
+  | 'paper'
   | 'button'
   | 'caret'
   | 'mobileCreate'
@@ -39,6 +40,10 @@ const styles: StyleRulesCallback = theme => ({
     [theme.breakpoints.up('md')]: {
       marginTop: 20
     }
+  },
+  paper: {
+    maxWidth: 450,
+    position: 'absolute'
   },
   button: {
     paddingRight: 22,
@@ -163,7 +168,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
           getContentAnchorEl={undefined}
-          PaperProps={{ square: true }}
+          PaperProps={{ square: true, className: classes.paper }}
           anchorOrigin={{ vertical: 45, horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.menu}

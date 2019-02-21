@@ -53,9 +53,8 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     transition: theme.transitions.create(['max-height', 'opacity', 'margin']),
     maxHeight: 0,
     display: 'block',
-    flexBasis: '100%',
     color: theme.palette.text.primary,
-    maxWidth: 200,
+    // maxWidth: 200,
     opacity: 0
   },
   helpButton: {
