@@ -769,6 +769,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiMenu: {
       paper: {
+        maxWidth: 350,
         '&.selectMenuDropdown': {
           boxShadow: 'none',
           position: 'absolute',
