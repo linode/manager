@@ -32,7 +32,7 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
-import { getAPIErrorOrDefault, getTagErrors } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -130,7 +130,6 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
 
     const generalError = errorFor('none');
     const masterIPsError = errorFor('master_ips');
-    const tagError = path<string | undefined>([0], getTagErrors(errors));
 
     return (
       <Drawer title="Add a new Domain" open={open} onClose={this.closeDrawer}>
@@ -229,7 +228,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         <TagsInput
           value={tags}
           onChange={this.updateTags}
-          tagError={tagError}
+          tagError={errorFor('tags')}
           disabled={disabled}
         />
         <ActionsPanel>
@@ -258,7 +257,8 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   errorResources = {
     domain: 'Domain',
     type: 'Type',
-    soa_email: 'SOA Email'
+    soa_email: 'SOA Email',
+    tags: 'Tags'
   };
 
   resetInternalState = () => {

@@ -1,8 +1,4 @@
-import {
-  getAPIErrorOrDefault,
-  getErrorStringOrDefault,
-  getTagErrors
-} from './errorUtils';
+import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
 const error = [{ field: 'a field', reason: 'a reason' }];
 
@@ -48,25 +44,6 @@ describe('Error handling utilities', () => {
       expect(getErrorStringOrDefault([])).toMatch(
         'An unexpected error occurred.'
       );
-    });
-  });
-
-  describe('getTagErrors', () => {
-    it('should return an empty array if there are no errors', () => {
-      expect(getTagErrors()).toEqual([]);
-    });
-
-    it('should return an empty array if there are no tag errors', () => {
-      expect(getTagErrors(multiError)).toEqual([]);
-    });
-
-    it('should return an array of strings, one string for each tag error', () => {
-      const tagErrors = [
-        ...multiError,
-        { field: 'tags[0]', reason: 'error1' },
-        { field: 'tags[1]', reason: 'error2' }
-      ];
-      expect(getTagErrors(tagErrors)).toEqual(['error1', 'error2']);
     });
   });
 });
