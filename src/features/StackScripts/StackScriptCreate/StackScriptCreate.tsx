@@ -15,6 +15,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -52,7 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface State {
   labelText: string;
   descriptionText: string;
-  imageSelectOpen: boolean;
   selectedImages: string[];
   script: string;
   revisionNote: string;
@@ -77,7 +77,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
     labelText: '',
     descriptionText: '',
-    imageSelectOpen: false,
     selectedImages: [],
     /* available images to select from in the dropdown */
     script: '',
@@ -106,26 +105,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ descriptionText: e.target.value });
   };
 
-  handleOpenSelect = () => {
-    this.setState({ imageSelectOpen: true });
-  };
-
-  handleCloseSelect = () => {
-    this.setState({ imageSelectOpen: false });
-  };
-
-  handleRemoveImage = (id: string) => {
-    const { selectedImages } = this.state;
+  handleChooseImage = (images: Item<string>[]) => {
+    const imageList = images.map(image => image.value);
     this.setState({
-      selectedImages: selectedImages.filter(imageId => imageId !== id)
+      selectedImages: imageList
     });
-  };
-
-  handleChooseImage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({
-      selectedImages: [...this.state.selectedImages, e.target.value]
-    });
-    this.setState({ imageSelectOpen: true });
   };
 
   handleChangeScript = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -291,8 +275,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           currentUser={username}
           images={{
             available: availableImages,
-            selected: selectedImages,
-            handleRemove: this.handleRemoveImage
+            selected: selectedImages
           }}
           label={{
             value: labelText,
@@ -310,12 +293,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             value: script,
             handler: this.handleChangeScript
           }}
-          selectImages={{
-            open: this.state.imageSelectOpen, // idk
-            onOpen: this.handleOpenSelect,
-            onClose: this.handleCloseSelect,
-            onChange: this.handleChooseImage
-          }}
+          onSelectChange={this.handleChooseImage}
           errors={errors}
           onSubmit={this.handleCreateStackScript}
           onCancel={this.handleOpenDialog}

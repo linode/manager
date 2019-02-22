@@ -18,7 +18,7 @@ import PromiseLoader, {
 } from 'src/components/PromiseLoader';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { resetEventsPolling } from 'src/events';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getLinodeDisks, rescueLinode } from 'src/services/linodes';
 import { getVolumes } from 'src/services/volumes';
 import createDevicesFromStrings, {
@@ -258,10 +258,10 @@ export const preloaded = PromiseLoader({
     )
 });
 
-const linodeContext = withLinode(context => ({
-  linodeId: context.data!.id,
-  linodeRegion: context.data!.region,
-  linodeLabel: context.data!.label
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  linodeId: linode.id,
+  linodeRegion: linode.region,
+  linodeLabel: linode.label
 }));
 
 export default compose(

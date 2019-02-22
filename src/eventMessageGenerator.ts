@@ -66,13 +66,6 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Image has been created.`
     // notification: e => ``,
   },
-  // disk_resize: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
   disk_resize: {
     scheduled: e => `A disk on ${e.entity!.label} is scheduled for resizing.`,
     started: e => `A disk on Linode ${e.entity!.label} is being resized.`,

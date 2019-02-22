@@ -11,6 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -85,6 +86,7 @@ interface Props {
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
+  disabled: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
@@ -95,7 +97,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
       backupsMonthly && (
         <Grid item className={classes.subLabel}>
           <Typography variant="body1">
-            {`$${backupsMonthly.toFixed(2)}`} per month
+            <Currency quantity={backupsMonthly} /> per month
           </Typography>
         </Grid>
       )
@@ -107,7 +109,8 @@ class AddonsPanel extends React.Component<CombinedProps> {
       accountBackups,
       classes,
       changeBackups,
-      changePrivateIP
+      changePrivateIP,
+      disabled
     } = this.props;
 
     return (
@@ -124,7 +127,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                   <CheckBox
                     checked={accountBackups || this.props.backups}
                     onChange={changeBackups}
-                    disabled={accountBackups}
+                    disabled={accountBackups || disabled}
                     data-qa-check-backups={
                       accountBackups
                         ? 'auto backup enabled'
@@ -168,6 +171,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
                     checked={this.props.privateIP}
                     onChange={() => changePrivateIP()}
                     data-qa-check-private-ip
+                    disabled={disabled}
                   />
                 }
                 label="Private IP"

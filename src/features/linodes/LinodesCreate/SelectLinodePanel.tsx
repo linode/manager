@@ -39,6 +39,7 @@ interface Props {
   handleSelection: (linode: Linode.Linode) => void;
   error?: string;
   header?: string;
+  disabled?: boolean;
 }
 
 type StyledProps = Props & WithStyles<ClassNames>;
@@ -47,7 +48,7 @@ type CombinedProps = StyledProps;
 
 class SelectLinodePanel extends React.Component<CombinedProps> {
   renderCard(linode: ExtendedLinode) {
-    const { selectedLinodeID, handleSelection } = this.props;
+    const { selectedLinodeID, handleSelection, disabled } = this.props;
     return (
       <SelectionCard
         key={`selection-card-${linode.id}`}
@@ -57,6 +58,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
         subheadings={linode.subHeadings}
+        disabled={disabled}
       />
     );
   }

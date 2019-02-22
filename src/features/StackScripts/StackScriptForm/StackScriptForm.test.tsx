@@ -25,8 +25,7 @@ describe('StackScriptCreate', () => {
       }}
       images={{
         available: images,
-        selected: [],
-        handleRemove: jest.fn()
+        selected: []
       }}
       currentUser="mmckenna"
       label={{
@@ -45,12 +44,7 @@ describe('StackScriptCreate', () => {
         value: '',
         handler: jest.fn()
       }}
-      selectImages={{
-        open: false,
-        onOpen: jest.fn(),
-        onClose: jest.fn(),
-        onChange: jest.fn()
-      }}
+      onSelectChange={jest.fn()}
       errors={[]}
       onSubmit={jest.fn()}
       onCancel={jest.fn()}
@@ -58,12 +52,14 @@ describe('StackScriptCreate', () => {
     />
   );
 
-  it('should render three text fields', () => {
-    expect(component.find('WithStyles(LinodeTextField)')).toHaveLength(4);
+  it('should render', () => {
+    expect(component).toHaveLength(1);
   });
 
   it('should render a select field', () => {
-    expect(component.find('WithStyles(SSelect)')).toHaveLength(1);
+    expect(component.find('[data-qa-stackscript-target-select]')).toHaveLength(
+      1
+    );
   });
 
   it('should render a code text field', () => {

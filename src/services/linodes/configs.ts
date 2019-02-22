@@ -40,6 +40,7 @@ export interface LinodeConfigCreationData {
  * Lists Configuration profiles associated with the specified Linode.
  *
  * @param linodeId { number } The id of the Linode to list configs for.
+ * @todo VolumeAttachmentDrawer, ConfigSelect, and LinodeConfigs all make use of this still, and probably shouldnt.
  */
 export const getLinodeConfigs = (
   linodeId: number,

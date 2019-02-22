@@ -167,7 +167,8 @@ const themeDefaults: ThemeOptions = {
     toggleActive: '#606469',
     diskSpaceBorder: '#f4f4f4',
     drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
-    label: '#555'
+    label: '#555',
+    disabledText: '#c9cAcb'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
@@ -768,6 +769,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiMenu: {
       paper: {
+        maxWidth: 350,
         '&.selectMenuDropdown': {
           boxShadow: 'none',
           position: 'absolute',

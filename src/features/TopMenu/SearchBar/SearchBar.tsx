@@ -1,6 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import { compose } from 'ramda';
+import { compose, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -31,6 +31,17 @@ type CombinedProps = WithTypesProps &
 
 const Control = (props: any) => <_Control {...props} />;
 
+/* The final option in the list will be the "go to search results page" link.
+ * This doesn't share the same shape as the rest of the results, so should use
+ * the default styling. */
+const Option = (props: any) => {
+  return props.value === 'redirect' ? (
+    <_Option {...props} />
+  ) : (
+    <SearchSuggestion {...props} />
+  );
+};
+
 // Style overrides for React Select
 const selectStyles = {
   control: (base: any) => ({
@@ -50,17 +61,6 @@ const selectStyles = {
   dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
-};
-
-/* The final option in the list will be the "go to search results page" link.
- * This doesn't share the same shape as the rest of the results, so should use
- * the default styling. */
-const Option = (props: any) => {
-  return props.value === 'redirect' ? (
-    <_Option {...props} />
-  ) : (
-    <SearchSuggestion {...props} />
-  );
 };
 
 class SearchBar extends React.Component<CombinedProps, State> {
@@ -113,11 +113,11 @@ class SearchBar extends React.Component<CombinedProps, State> {
     }
     const { history } = this.props;
     const { searchText } = item.data;
+
     if (item.value === 'redirect') {
       history.push({
         pathname: `/search`,
-        search: `?query=${searchText}`,
-        state: { searchResults: this.state.searchResults }
+        search: `?query=${encodeURIComponent(searchText)}`
       });
       return;
     }
@@ -134,18 +134,8 @@ class SearchBar extends React.Component<CombinedProps, State> {
   render() {
     const { classes, combinedResults, entitiesLoading } = this.props;
     const { searchActive, searchText, menuOpen } = this.state;
-    const defaultOption = {
-      label: `View search results page for "${searchText}"`,
-      value: 'redirect',
-      data: {
-        searchText
-      }
-    };
 
-    const finalOptions =
-      !combinedResults || combinedResults.length === 0
-        ? []
-        : [defaultOption, ...combinedResults];
+    const finalOptions = createFinalOptions(combinedResults, searchText);
 
     return (
       <React.Fragment>
@@ -227,3 +217,38 @@ export default compose(
   })),
   withStoreSearch()
 )(SearchBar) as React.ComponentType<{}>;
+
+export const createFinalOptions = (
+  results: Item[],
+  searchText: string = ''
+) => {
+  // NO RESULTS:
+  if (!results || results.length === 0) {
+    return [];
+  }
+
+  const firstOption = {
+    value: 'redirect',
+    data: {
+      searchText
+    },
+    label: `View search results page for "${searchText}"`
+  };
+
+  // LESS THAN 20 RESULTS:
+  if (results.length <= 20) {
+    return [firstOption, ...results];
+  }
+
+  // MORE THAN 20 RESULTS:
+  const lastOption = {
+    value: 'redirect',
+    data: {
+      searchText
+    },
+    label: `View all ${results.length} results for "${searchText}"`
+  };
+
+  const first20Results = take(20, results);
+  return [firstOption, ...first20Results, lastOption];
+};

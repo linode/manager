@@ -159,6 +159,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
               linodeBackups={backups}
               openConfigDrawer={openConfigDrawer}
               toggleConfirmation={toggleConfirmation}
+              noImage={!image}
             />
           </div>
         </TableCell>

@@ -1,8 +1,10 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 
+import EntityIcon from 'src/components/EntityIcon';
 import Tag from 'src/components/Tag';
-import { iconMap } from 'src/features/Search/utils';
+import { linodeInTransition } from 'src/features/linodes/transitions';
 
 export interface SearchSuggestionT {
   icon: string;
@@ -12,6 +14,7 @@ export interface SearchSuggestionT {
   history: any;
   tags?: string[];
   isHighlighted?: boolean;
+  status?: Linode.LinodeStatus;
 }
 
 interface Props extends OptionProps<any> {
@@ -19,6 +22,7 @@ interface Props extends OptionProps<any> {
     label: string;
     data: SearchSuggestionT;
   };
+  searchText: string;
 }
 
 type CombinedProps = Props;
@@ -73,9 +77,10 @@ class SearchSuggestion extends React.Component<CombinedProps> {
   render() {
     const suggestion = this.props.data.data;
     const { classes } = this.props.selectProps;
-    const { icon } = suggestion;
+    const { icon } = pathOr<string>('default', [], suggestion);
+    const { searchText } = suggestion;
     const { innerRef, innerProps } = this.props;
-    const Icon = iconMap[icon];
+    const { status } = suggestion;
     return (
       <div
         className={`
@@ -95,7 +100,12 @@ class SearchSuggestion extends React.Component<CombinedProps> {
             ${classes.suggestionIcon}
           `}
           >
-            <Icon />
+            <EntityIcon
+              variant={icon}
+              status={status && status}
+              marginTop={3}
+              loading={status && linodeInTransition(status)}
+            />
           </div>
           <div
             className={`
@@ -106,7 +116,7 @@ class SearchSuggestion extends React.Component<CombinedProps> {
             <div className={classes.suggestionTitle} data-qa-suggestion-title>
               {this.maybeStyleSegment(
                 this.props.data.label,
-                suggestion.searchText,
+                searchText,
                 classes.highlight
               )}
             </div>

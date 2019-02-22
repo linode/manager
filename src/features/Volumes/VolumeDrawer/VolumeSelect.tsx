@@ -23,6 +23,7 @@ interface Props {
   onBlur: (e: any) => void;
   value: number;
   region: string;
+  disabled?: boolean;
 }
 
 interface State {
@@ -139,7 +140,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
   debouncedSearch = debounce(400, false, this.searchVolumes);
 
   render() {
-    const { error, name, onBlur } = this.props;
+    const { error, name, onBlur, disabled } = this.props;
     const { loading, volumes, selectedVolumeId } = this.state;
 
     return (
@@ -155,6 +156,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
           options={volumes}
           onChange={this.setSelectedVolume}
           onInputChange={this.onInputChange}
+          disabled={disabled}
         />
         {!error && (
           <FormHelperText data-qa-volume-region>

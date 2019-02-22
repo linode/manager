@@ -13,7 +13,10 @@ type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   bodyRow: {
-    height: 'auto'
+    height: 'auto',
+    '&:before': {
+      borderBottomColor: 'transparent'
+    }
   },
   bodyCell: {
     border: 0,

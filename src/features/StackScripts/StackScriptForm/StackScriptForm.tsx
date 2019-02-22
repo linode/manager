@@ -5,7 +5,6 @@ import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -13,13 +12,13 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Select from 'src/components/Select';
-import Tag from 'src/components/Tag';
 import TextField from 'src/components/TextField';
-import filterImagesByDeprecationStatus from 'src/utilities/filterImagesByDeprecationStatus';
+import ImageSelect from 'src/features/Images/ImageSelect';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import imageToItem from 'src/utilities/imageToItem';
 
 type ClassNames =
   | 'root'
@@ -108,19 +107,11 @@ interface TextFieldHandler {
   handler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-interface SelectFieldHandler {
-  open: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-}
-
 interface Images {
   // available to select in the dropdown
   available: Linode.Image[];
   // image ids that are already selected
   selected: string[];
-  handleRemove: (id: string) => void;
 }
 
 interface Props {
@@ -130,10 +121,10 @@ interface Props {
   revision: TextFieldHandler;
   description: TextFieldHandler;
   script: TextFieldHandler;
-  selectImages: SelectFieldHandler;
   errors?: Linode.ApiFieldError[];
   onSubmit: () => void;
   onCancel: () => void;
+  onSelectChange: (image: Item<string>[]) => void;
   isSubmitting: boolean;
 }
 
@@ -156,8 +147,8 @@ export class StackScriptForm extends React.Component<CombinedProps> {
       revision,
       description,
       script,
-      selectImages,
       errors,
+      onSelectChange,
       onSubmit,
       onCancel,
       isSubmitting,
@@ -165,6 +156,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
+    const selectedImages = imageToItem(images.selected);
 
     return (
       <React.Fragment>
@@ -208,64 +200,22 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 >
                   Target Images
                 </InputLabel>
-                <Select
-                  open={selectImages.open}
-                  onOpen={selectImages.onOpen}
-                  onClose={selectImages.onClose}
-                  value="none"
-                  onChange={selectImages.onChange}
-                  inputProps={{ name: 'image', id: 'image' }}
-                  tooltipText="Select which images are compatible with this StackScript"
-                  error={Boolean(hasErrorFor('images'))}
-                  errorText={hasErrorFor('images')}
+                <ImageSelect
+                  images={images.available}
+                  onSelect={onSelectChange}
+                  value={selectedImages}
+                  isMulti
+                  imageFieldError={hasErrorFor('images')}
+                  helperText={
+                    'Select which images are compatible with this StackScript.'
+                  }
                   data-qa-stackscript-target-select
-                >
-                  <MenuItem disabled key="none" value="none">
-                    Select Compatible Images
-                  </MenuItem>
-                  ,
-                  {filterImagesByDeprecationStatus(images.available, false).map(
-                    image => (
-                      <MenuItem
-                        key={image.id}
-                        value={image.id}
-                        data-qa-stackscript-image={image.id}
-                      >
-                        {image.label}
-                      </MenuItem>
-                    )
-                  )}
-                  <MenuItem disabled key="deprecated" value="deprecated">
-                    Older Images
-                  </MenuItem>
-                  ,
-                  {filterImagesByDeprecationStatus(images.available, true).map(
-                    image => (
-                      <MenuItem key={image.id} value={image.id}>
-                        {image.label}
-                      </MenuItem>
-                    )
-                  )}
-                </Select>
+                />
               </FormControl>
-              <div className={classes.chipsContainer}>
-                {images.selected &&
-                  images.selected.map((selectedImage, index) => {
-                    return (
-                      <Tag
-                        key={selectedImage}
-                        label={stripImageName(selectedImage)}
-                        colorVariant="lightBlue"
-                        onDelete={() => images.handleRemove(selectedImage)}
-                        className={classes.targetTag}
-                      />
-                    );
-                  })}
-              </div>
             </Grid>
             <Grid item className={classes.gridWithTips}>
               <Notice className={classes.tips}>
-                <Typography role="header" variant="title">
+                <Typography role="header" variant="h2">
                   Tips
                 </Typography>
                 <Typography>
@@ -324,14 +274,6 @@ export class StackScriptForm extends React.Component<CombinedProps> {
     );
   }
 }
-
-/*
- * @TODO Deprecate once we have a reliable way of mapping
- * the slug to the display name
- */
-const stripImageName = (image: string) => {
-  return image.replace('linode/', '');
-};
 
 const styled = withStyles(styles);
 

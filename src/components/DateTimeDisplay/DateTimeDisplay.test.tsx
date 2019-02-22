@@ -6,15 +6,13 @@ import { DateTimeDisplay } from './DateTimeDisplay';
 
 const APIDate = '2018-07-20T04:23:17';
 
-const component = shallow(
-  <DateTimeDisplay value={APIDate} timezone={'America/New_York'} />
-);
+const component = shallow(<DateTimeDisplay value={APIDate} />);
 
 describe('DateTimeDisplay component', () => {
   describe('Non-humanized dates', () => {
     it('should be displayed in 24-hour ISO format', () => {
       component.setProps({ value: APIDate, humanizeCutoff: undefined });
-      expect(component.text()).toContain('2018-07-20 00:23:17');
+      expect(component.text()).toContain('2018-07-20 04:23:17');
     });
   });
 

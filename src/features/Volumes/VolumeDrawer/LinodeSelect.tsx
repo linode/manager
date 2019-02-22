@@ -30,6 +30,7 @@ interface Props {
   onBlur: (e: any) => void;
   region: string;
   shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
+  disabled?: boolean;
 }
 
 interface State {
@@ -167,7 +168,9 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       error,
       name,
       onBlur,
-      shouldOnlyDisplayRegionsWithBlockStorage
+      shouldOnlyDisplayRegionsWithBlockStorage,
+      onChange,
+      ...rest
     } = this.props;
     const { loading, linodes, selectedLinodeId } = this.state;
 
@@ -192,6 +195,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}
           data-qa-select-linode
+          {...rest}
         />
         {!error && (
           <FormHelperText data-qa-volume-region>

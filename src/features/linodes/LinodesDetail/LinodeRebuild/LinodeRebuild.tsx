@@ -21,7 +21,7 @@ import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { rebuildLinode } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
@@ -163,24 +163,26 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
             restore from a backup or start over with a fresh Linux distribution.
             Rebuilding will destroy all data.
           </Typography>
-          <ImageAndPassword
-            imageFieldError={imageFieldError}
-            onImageChange={this.handleImageSelect}
-            onPasswordChange={this.onPasswordChange}
-            password={this.state.password || ''}
-            passwordError={passwordError}
-            userSSHKeys={userSSHKeys.length > 0 ? userSSHKeys : []}
-          />
-          <ActionsPanel>
-            <Button
-              type="secondary"
-              className="destructive"
-              onClick={this.onSubmit}
-              data-qa-rebuild
-            >
-              Rebuild
-            </Button>
-          </ActionsPanel>
+          <form>
+            <ImageAndPassword
+              imageFieldError={imageFieldError}
+              onImageChange={this.handleImageSelect}
+              onPasswordChange={this.onPasswordChange}
+              password={this.state.password || ''}
+              passwordError={passwordError}
+              userSSHKeys={userSSHKeys.length > 0 ? userSSHKeys : []}
+            />
+            <ActionsPanel>
+              <Button
+                type="secondary"
+                className="destructive"
+                onClick={this.onSubmit}
+                data-qa-rebuild
+              >
+                Rebuild
+              </Button>
+            </ActionsPanel>
+          </form>
         </Paper>
       </React.Fragment>
     );
@@ -189,9 +191,9 @@ class LinodeRebuild extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(context => ({
-  linodeId: context.data!.id,
-  linodeLabel: context.data!.label
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  linodeId: linode.id,
+  linodeLabel: linode.label
 }));
 
 export default compose<CombinedProps, Props>(

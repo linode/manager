@@ -95,14 +95,17 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-const createTag: (images: string) => JSX.Element = v => (
-  <Chip
-    label={v}
-    key={v}
-    style={{ margin: '2px 2px', outline: 0 }}
-    role="term"
-  />
-);
+const createTag: (images: string) => JSX.Element = v => {
+  const randomId = Math.floor(Math.random() * 1000);
+  return (
+    <Chip
+      label={v}
+      key={`${v}-${randomId}`}
+      style={{ margin: '2px 2px', outline: 0 }}
+      role="term"
+    />
+  );
+};
 
 const createTags: (images: string[]) => JSX.Element[] = map(createTag);
 

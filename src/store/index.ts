@@ -37,10 +37,14 @@ import images, {
   defaultState as defaultImagesState,
   State as ImagesStata
 } from 'src/store/image/image.reducer';
-import linodeDetail, {
-  defaultState as linodeDetailDefaultState,
-  State as LinodeDetailState
-} from 'src/store/linodeDetail';
+import linodeConfigs, {
+  defaultState as defaultLinodeConfigsState,
+  State as LinodeConfigsState
+} from 'src/store/linodes/config/config.reducer';
+import linodeDisks, {
+  defaultState as defaultLinodeDisksState,
+  State as LinodeDisksState
+} from 'src/store/linodes/disk/disk.reducer';
 import linodeEvents from 'src/store/linodes/linodes.events';
 import linodes, {
   defaultState as defaultLinodesState,
@@ -83,6 +87,7 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeDrawer';
+import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
 import nodeBalancerEvents from './nodeBalancer/nodeBalancer.events';
@@ -91,7 +96,6 @@ import notifications, {
   defaultState as notificationsDefaultState,
   State as NotificationsState
 } from './notification/notification.reducer';
-
 import { initReselectDevtools } from './selectors';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
@@ -106,6 +110,8 @@ const __resourcesDefaultState = {
   domains: defaultDomainsState,
   images: defaultImagesState,
   linodes: defaultLinodesState,
+  linodeConfigs: defaultLinodeConfigsState,
+  linodeDisks: defaultLinodeDisksState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
@@ -115,20 +121,14 @@ const __resourcesDefaultState = {
   volumes: defaultVolumesState
 };
 
-const featuresDefaultState = {
-  linodeDetail: linodeDetailDefaultState
-};
-
-export interface FeaturesState {
-  linodeDetail: LinodeDetailState;
-}
-
 export interface ResourcesState {
   account: AccountState;
   accountSettings: AccountSettingsState;
   domains: DomainsState;
   images: ImagesStata;
   linodes: LinodesState;
+  linodeConfigs: LinodeConfigsState;
+  linodeDisks: LinodeDisksState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
@@ -145,7 +145,6 @@ export interface ApplicationState {
   documentation: DocumentationState;
   domainDrawer: DomainDrawerState;
   events: EventsState;
-  features: FeaturesState;
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
@@ -158,7 +157,6 @@ const defaultState: ApplicationState = {
   documentation: documentationDefaultState,
   domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
-  features: featuresDefaultState,
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState
@@ -173,6 +171,8 @@ const __resources = combineReducers({
   domains,
   images,
   linodes,
+  linodeConfigs,
+  linodeDisks,
   nodeBalancers,
   nodeBalancerConfigs,
   notifications,
@@ -182,15 +182,12 @@ const __resources = combineReducers({
   volumes
 });
 
-const features = combineReducers({ linodeDetail });
-
 const reducers = combineReducers<ApplicationState>({
   __resources,
   authentication,
   backups,
   documentation,
   domainDrawer,
-  features,
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
@@ -206,7 +203,8 @@ const enhancers = compose(
       domainEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
-      volumeEvents
+      volumeEvents,
+      diskEvents
     )
   ),
   reduxDevTools ? reduxDevTools() : (f: any) => f

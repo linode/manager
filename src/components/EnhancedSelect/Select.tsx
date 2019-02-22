@@ -32,7 +32,6 @@ type ClassNames =
   | 'suggestionRoot'
   | 'highlight'
   | 'suggestionItem'
-  | 'suggestionIcon'
   | 'suggestionTitle'
   | 'suggestionDescription'
   | 'resultContainer'
@@ -203,18 +202,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   suggestionItem: {
     padding: theme.spacing.unit
   },
-  suggestionIcon: {
-    '& svg': {
-      width: '40px',
-      height: '40px'
-    },
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
-    },
-    '& .outerCircle': {
-      stroke: theme.bg.main
-    }
-  },
+  // suggestionIcon: {
+  //   '& svg': {
+  //     width: '40px',
+  //     height: '40px'
+  //   },
+  //   '& .circle': {
+  //     fill: theme.bg.offWhiteDT
+  //   },
+  //   '& .outerCircle': {
+  //     stroke: theme.bg.main
+  //   }
+  // },
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
@@ -241,7 +240,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   selectedMenuItem: {
-    ...theme.animateCircleIcon,
     backgroundColor: `${theme.bg.main} !important`,
     '& .tag': {
       backgroundColor: theme.bg.lightBlue,
