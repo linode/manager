@@ -73,8 +73,11 @@ const connected = connect((state: ApplicationState) => ({
 
 // Regex taken from API documentation.
 const testAPIRequirements = (label: string) => {
-  const linodeLabelRegExp = /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/;
-  return linodeLabelRegExp.test(label) && label.length <= 32;
+  // NOTE: This regex is incorrect. We need to replace it with one that is consistent with API requirements.
+  // const linodeLabelRegExp = /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/;
+  // return linodeLabelRegExp.test(label) && label.length <= 32;
+
+  return label.length <= 32;
 };
 
 export default withLabelGenerator;

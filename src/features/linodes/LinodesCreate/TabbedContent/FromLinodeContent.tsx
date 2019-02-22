@@ -24,6 +24,7 @@ import { resetEventsPolling } from 'src/events';
 import { cloneLinode } from 'src/services/linodes';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
@@ -190,10 +191,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
 
         this.setState(
           () => ({
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: getAPIErrorOrDefault(error)
           }),
           () => {
             scrollErrorIntoView();
@@ -233,7 +231,6 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
       backups,
       privateIP,
       selectedLinodeID,
-      tags,
       selectedRegionID,
       selectedTypeID,
       selectedDiskSize,
@@ -324,13 +321,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                   errorText: hasErrorFor('label'),
                   disabled
                 }}
-                tagsInputProps={{
-                  value: tags,
-                  onChange: this.handleChangeTags,
-                  tagError: hasErrorFor('tag'),
-                  disabled
-                }}
-                updateFor={[tags, label, errors]}
+                updateFor={[label, errors]}
               />
               <AddonsPanel
                 backups={backups}
