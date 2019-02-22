@@ -21,7 +21,7 @@ describe('SummaryPanel', () => {
     balance: 0
   };
 
-  const mockClasses = {
+  const mockClasses: any = {
     root: '',
     title: '',
     summarySection: '',

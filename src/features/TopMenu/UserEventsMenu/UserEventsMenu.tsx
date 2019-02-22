@@ -27,10 +27,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     minHeight: 16,
-    width: 250,
+    maxWidth: 250,
     maxHeight: 300,
     [theme.breakpoints.up('sm')]: {
-      width: 380
+      maxWidth: 450
     }
   },
   hidden: {

@@ -26,6 +26,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, {
@@ -50,12 +51,12 @@ import {
 } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { formatDate } from 'src/utilities/formatDate';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { withLinode } from '../context';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
-import { formatBackupDate } from './util';
 
 type ClassNames =
   | 'paper'
@@ -266,8 +267,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { linodeID, enqueueSnackbar } = this.props;
     enableBackups(linodeID)
       .then(() => {
-        // There is no event for when backups have been enabled,
-        // so we don't reset the enabling state.
         enqueueSnackbar('Backups are being enabled for this Linode', {
           variant: 'info'
         });
@@ -425,7 +424,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleRestore = (backup: Linode.LinodeBackup) => {
-    this.openRestoreDrawer(backup.id, formatBackupDate(backup.created));
+    this.openRestoreDrawer(backup.id, formatDate(backup.created));
   };
 
   handleRestoreSubmit = () => {
@@ -446,7 +445,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         Three backup slots are executed and rotated automatically: a daily
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
-        for just <strong>${backupsMonthlyPrice} per month</strong>, click below.
+        for just{' '}
+        <strong>
+          <Currency quantity={backupsMonthlyPrice} /> per month
+        </strong>
+        , click below.
       </React.Fragment>
     ) : (
       'Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups just click below.'
@@ -479,8 +482,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Table aria-label="List of Backups">
             <TableHead>
               <TableRow>
-                <TableCell>Date Created</TableCell>
                 <TableCell>Label</TableCell>
+                <TableCell>Date Created</TableCell>
                 <TableCell>Duration</TableCell>
                 <TableCell>Disks</TableCell>
                 <TableCell>Space Required</TableCell>
@@ -753,14 +756,14 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const linodeContext = withLinode(context => ({
-  backupsEnabled: context.data!.backups.enabled,
-  backupsSchedule: context.data!.backups.schedule,
-  linodeID: context.data!.id,
-  linodeInTransition: isLinodeInTransition(context.data!.status),
-  linodeLabel: context.data!.label,
-  linodeRegion: context.data!.region,
-  linodeType: context.data!.type
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  backupsEnabled: linode.backups.enabled,
+  backupsSchedule: linode.backups.schedule,
+  linodeID: linode.id,
+  linodeInTransition: isLinodeInTransition(linode.status),
+  linodeLabel: linode.label,
+  linodeRegion: linode.region,
+  linodeType: linode.type
 }));
 
 export default compose<CombinedProps, {}>(

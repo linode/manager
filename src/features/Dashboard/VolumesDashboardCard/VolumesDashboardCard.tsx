@@ -1,6 +1,5 @@
 import { compose, take } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Hidden from 'src/components/core/Hidden';
@@ -23,6 +22,7 @@ import { events$ } from 'src/events';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { getVolumes } from 'src/services/volumes';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'
@@ -154,7 +154,11 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
 
   renderAction = () =>
     this.state.results && this.state.results > 5 ? (
-      <Link to={'/volumes'}>View All</Link>
+      <ViewAllLink
+        text="View All"
+        link={'/volumes'}
+        count={this.state.results}
+      />
     ) : null;
 
   renderContent = () => {

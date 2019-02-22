@@ -7,9 +7,11 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface EditPayload {
   id?: number;
   name?: string;
+  service?: string | null;
   target?: string;
   ttl_sec?: number;
   priority?: number;
+  protocol?: string | null;
   port?: number;
   weight?: number;
   tag?: string | null;

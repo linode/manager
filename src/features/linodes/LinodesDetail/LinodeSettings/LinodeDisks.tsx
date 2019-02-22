@@ -30,19 +30,18 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { events$, resetEventsPolling } from 'src/events';
 import ImagesDrawer, { modes } from 'src/features/Images/ImagesDrawer';
-import { withLinode } from 'src/features/linodes/LinodesDetail/context';
-import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import {
-  createLinodeDisk,
-  deleteLinodeDisk,
-  getLinodeDisks,
-  resizeLinodeDisk,
-  updateLinodeDisk
-} from 'src/services/linodes';
+  CreateLinodeDisk,
+  DeleteLinodeDisk,
+  ResizeLinodeDisk,
+  UpdateLinodeDisk,
+  withLinodeDetailContext
+} from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
+import { getLinodeDisks } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
-
 import LinodeDiskSpace from './LinodeDiskSpace';
 
 type ClassNames = 'root' | 'headline' | 'loadingContainer' | 'diskSpaceWrapper';
@@ -71,14 +70,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface SSHKeyProps {
   userSSHKeys: UserSSHKeyObject[];
-}
-
-interface LinodeContextProps {
-  linodeError: Linode.ApiFieldError[];
-  linodeLoading: boolean;
-  linodeId?: number;
-  linodeStatus?: string;
-  linodeTotalDisk?: number;
 }
 
 type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
@@ -516,7 +507,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   resizeDisk = () => {
-    const { linodeId } = this.props;
+    const { linodeId, resizeLinodeDisk } = this.props;
     const {
       diskId,
       fields: { size }
@@ -527,8 +518,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     this.setDrawer({ submitting: true, errors: undefined });
 
-    resizeLinodeDisk(linodeId, diskId, size)
-      .then(({ data }) => {
+    resizeLinodeDisk(diskId, size)
+      .then(data => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
         this.props.enqueueSnackbar(`Disk queued for resizing.`, {
           variant: 'info'
@@ -550,7 +541,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   createDisk = () => {
-    const { linodeId, userSSHKeys } = this.props;
+    const { linodeId, userSSHKeys, createLinodeDisk } = this.props;
     const {
       label,
       size,
@@ -564,7 +555,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     this.setDrawer({ submitting: true, errors: undefined });
 
-    createLinodeDisk(linodeId, {
+    createLinodeDisk({
       label,
       size,
       filesystem: filesystem === '_none_' ? undefined : filesystem,
@@ -592,7 +583,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   renameDisk = () => {
-    const { linodeId } = this.props;
+    const { linodeId, updateLinodeDisk } = this.props;
     const {
       diskId,
       fields: { label }
@@ -603,7 +594,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     this.setDrawer({ submitting: true, errors: undefined });
 
-    updateLinodeDisk(linodeId, diskId, { label })
+    updateLinodeDisk(diskId, { label })
       .then(_ => {
         this.setDrawer(LinodeDisks.defaultDrawerState);
         this.props.request();
@@ -624,13 +615,13 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   deleteDisk = () => {
     this.setConfirmDelete({ submitting: true, errors: undefined });
 
-    const { linodeId } = this.props;
+    const { linodeId, deleteLinodeDisk } = this.props;
     const { id: diskId } = this.state.confirmDelete;
     if (!linodeId || !diskId) {
       return;
     }
 
-    deleteLinodeDisk(linodeId, diskId)
+    deleteLinodeDisk(diskId)
       .then(() => {
         this.setConfirmDelete({ open: false, errors: undefined });
         this.props.enqueueSnackbar(`Disk queued for deletion.`, {
@@ -730,13 +721,35 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const linodeContext = withLinode(context => ({
-  linodeLoading: context.loading,
-  linodeError: context.errors,
-  linodeId: path(['data', 'id'], context),
-  linodeTotalDisk: path(['data', 'specs', 'disk'], context),
-  linodeStatus: path(['data', 'status'], context)
-}));
+interface LinodeContextProps {
+  linodeError: Linode.ApiFieldError[];
+  linodeLoading: boolean;
+  linodeId?: number;
+  linodeStatus?: string;
+  linodeTotalDisk?: number;
+  deleteLinodeDisk: DeleteLinodeDisk;
+  updateLinodeDisk: UpdateLinodeDisk;
+  createLinodeDisk: CreateLinodeDisk;
+  resizeLinodeDisk: ResizeLinodeDisk;
+}
+
+const linodeContext = withLinodeDetailContext(
+  ({
+    linode,
+    deleteLinodeDisk,
+    updateLinodeDisk,
+    createLinodeDisk,
+    resizeLinodeDisk
+  }) => ({
+    linodeId: linode.id,
+    linodeTotalDisk: linode.specs.disk,
+    linodeStatus: linode.status,
+    deleteLinodeDisk,
+    updateLinodeDisk,
+    createLinodeDisk,
+    resizeLinodeDisk
+  })
+);
 
 const paginated = Pagey((ownProps, params, filters) => {
   return getLinodeDisks(ownProps.linodeId, params, filters);

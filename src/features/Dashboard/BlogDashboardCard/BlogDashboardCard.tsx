@@ -11,6 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import { parseString } from 'xml2js';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 const parseXMLStringPromise = (str: string) =>
   new Promise((resolve, reject) =>
@@ -121,14 +122,12 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
   };
 
   renderAction = () => (
-    <a
-      href="https://blog.linode.com/"
-      className="blue"
-      target="_blank"
+    <ViewAllLink
+      text="Read More"
+      link={'https://blog.linode.com/'}
       data-qa-read-more
-    >
-      Read More
-    </a>
+      external
+    />
   );
 }
 

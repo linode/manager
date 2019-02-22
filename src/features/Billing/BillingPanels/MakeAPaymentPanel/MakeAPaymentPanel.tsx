@@ -1,8 +1,8 @@
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
 import scriptLoader from 'react-async-script-loader';
 import * as ReactDOM from 'react-dom';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -15,6 +15,7 @@ import {
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -375,10 +376,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     const type = this.state.type === 'PAYPAL' ? 'PayPal' : 'Credit Card';
 
     const generalError = hasErrorFor('none');
-    const balanceDisplay =
-      !accountLoading && balance !== false
-        ? `$${Math.abs(balance).toFixed(2)}`
-        : '';
+    const shouldDisplayBalance = !accountLoading && balance !== false;
     return (
       <React.Fragment>
         <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
@@ -400,7 +398,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                       [classes.positive]: balance <= 0
                     })}
                   >
-                    {balanceDisplay}
+                    {shouldDisplayBalance && (
+                      <Currency quantity={Math.abs(balance as number)} />
+                    )}
                     {balance < 0 && ` (credit)`}
                   </Typography>
                 </Grid>
@@ -549,14 +549,11 @@ const accountContext = withAccount(context => ({
   lastFour: (context.data && context.data.credit_card.last_four) || ''
 }));
 
-const enhanced = compose(
+export default compose<CombinedProps, {}>(
   styled,
-  accountContext
-);
-
-export default scriptLoader('https://www.paypalobjects.com/api/checkout.v4.js')(
-  enhanced(MakeAPaymentPanel)
-);
+  accountContext,
+  scriptLoader('https://www.paypalobjects.com/api/checkout.js')
+)(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
   return !!(usd >= 5 && usd <= 500);

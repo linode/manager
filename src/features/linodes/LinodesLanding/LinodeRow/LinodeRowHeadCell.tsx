@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import withImages from 'src/containers/withImages.container';
@@ -16,7 +16,6 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import LinodeStatusIndicator from '../LinodeStatusIndicator';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
 type ClassNames =
@@ -27,9 +26,7 @@ type ClassNames =
   | 'linodeDescription'
   | 'status'
   | 'labelRow'
-  | 'icon'
   | 'labelStatusWrapper'
-  | 'statusOuter'
   | 'dashboard'
   | 'labelGridWrapper';
 
@@ -69,28 +66,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   linodeDescription: {
     paddingTop: theme.spacing.unit / 2
   },
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
-    },
-    '& .outerCircle': {
-      stroke: theme.bg.main
-    }
-  },
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center'
-  },
-  statusOuter: {
-    top: 0,
-    position: 'relative',
-    marginLeft: 4,
-    lineHeight: '0.8rem'
   },
   labelGridWrapper: {
     paddingLeft: '4px !important',
@@ -163,7 +142,12 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
       <Link to={`/linodes/${id}`} className={classes.link}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <LinodeIcon className={classes.icon} />
+            <EntityIcon
+              variant="linode"
+              status={status}
+              loading={linodeInTransition(status, recentEvent)}
+              marginTop={1}
+            />
           </Grid>
           <Grid item className={classes.labelGridWrapper}>
             <div className={loading ? classes.labelWrapper : ''}>
@@ -178,9 +162,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
                 <Typography role="header" variant="h3" data-qa-label>
                   {label}
                 </Typography>
-                <div className={classes.statusOuter}>
-                  <LinodeStatusIndicator status={status} />
-                </div>
               </div>
               <Typography className={classes.linodeDescription}>
                 {description}

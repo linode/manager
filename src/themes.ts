@@ -86,7 +86,8 @@ export const dark = createTheme({
     toggleActive: '#444',
     diskSpaceBorder: '#222222',
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
-    label: '#C9CACB'
+    label: '#C9CACB',
+    disabledText: '#c9cAcb'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
@@ -350,7 +351,7 @@ export const dark = createTheme({
       root: {
         '&$disabled': {
           borderColor: '#606469',
-          color: '#666 !important'
+          color: '#ccc !important'
         },
         '&$focused': {
           borderColor: primaryColors.main,

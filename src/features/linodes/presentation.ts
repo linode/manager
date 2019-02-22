@@ -26,7 +26,7 @@ export const typeLabelDetails = (
 ) => {
   const memG = memory / 1024;
   const diskG = disk / 1024;
-  return `${cpus} CPU, ${diskG}G Storage, ${memG}G RAM`;
+  return `${cpus} CPU, ${diskG}GB Storage, ${memG}GB RAM`;
 };
 
 export const displayType = (

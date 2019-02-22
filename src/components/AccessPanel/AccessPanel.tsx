@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 const styled = withStyles(styles);
 
 export interface Disabled {
-  disabled: boolean;
+  disabled?: boolean;
   reason?: string;
 }
 
@@ -113,6 +113,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             disabledReason={
               passwordFieldDisabled && passwordFieldDisabled.reason
             }
+            autoComplete="new-password"
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder={placeholder || 'Enter a password.'}

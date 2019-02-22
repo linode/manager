@@ -4,8 +4,6 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
-
-import Button from 'src/components/Button';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -98,6 +96,10 @@ class UntrustButton extends React.PureComponent<ButtonProps, {}> {
     }
   };
   render() {
-    return <Button onClick={this.handleDelete}>Untrust</Button>;
+    return (
+      <a href="javascript:void(0)" onClick={this.handleDelete} title="Untrust">
+        Untrust
+      </a>
+    );
   }
 }

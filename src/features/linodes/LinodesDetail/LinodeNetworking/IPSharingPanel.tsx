@@ -363,7 +363,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           <Grid item xs={12}>
             <Grid container>
               <Grid item className={classes.ipFieldLabel}>
-                IP Addresses
+                <Typography>IP Addresses</Typography>
               </Grid>
             </Grid>
             {loading ? (

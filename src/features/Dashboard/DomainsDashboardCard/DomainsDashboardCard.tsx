@@ -2,7 +2,6 @@ import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -13,10 +12,8 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import StatusIndicator, {
-  getStatusForDomain
-} from 'src/components/StatusIndicator';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -27,32 +24,19 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
+import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'
-  | 'icon'
   | 'labelGridWrapper'
   | 'description'
   | 'labelStatusWrapper'
-  | 'statusOuter'
   | 'labelCol'
   | 'actionsCol'
   | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
-    },
-    '& .outerCircle': {
-      stroke: theme.bg.main
-    }
-  },
   labelGridWrapper: {
     paddingLeft: '4px !important',
     paddingRight: '4px !important'
@@ -63,13 +47,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  statusOuter: {
-    top: 0,
-    position: 'relative',
-    marginLeft: 4,
-    lineHeight: '0.8rem'
+    alignItems: 'center',
+    wordBreak: 'break-all'
   },
   labelCol: {
     width: '90%'
@@ -105,8 +84,12 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   renderAction = () =>
-    this.props.domains.length > 5 ? (
-      <Link to={'/domains'}>View All</Link>
+    this.props.domainCount > 5 ? (
+      <ViewAllLink
+        text="View All"
+        link={'/domains'}
+        count={this.props.domainCount}
+      />
     ) : null;
 
   renderContent = () => {
@@ -145,16 +128,18 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
           <Link to={`/domains/${id}/records`} className={'black nu block'}>
             <Grid container wrap="nowrap" alignItems="center">
               <Grid item className="py0">
-                <DomainIcon className={classes.icon} />
+                <EntityIcon
+                  variant="domain"
+                  status={status}
+                  marginTop={1}
+                  loading={status === 'edit_mode'}
+                />
               </Grid>
               <Grid item className={classes.labelGridWrapper}>
                 <div className={classes.labelStatusWrapper}>
                   <Typography role="header" variant="h3" data-qa-label>
                     {domain}
                   </Typography>
-                  <div className={classes.statusOuter}>
-                    <StatusIndicator status={getStatusForDomain(status)} />
-                  </div>
                 </div>
                 <Typography className={classes.description}>{type}</Typography>
               </Grid>
@@ -170,6 +155,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 interface WithUpdatingDomainsProps {
   domains: Linode.Domain[];
+  domainCount: number;
   loading: boolean;
   error?: Linode.ApiFieldError[];
 }
@@ -182,6 +168,7 @@ const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
       sortBy(prop('domain'))
     )(state.__resources.domains.entities),
     loading: state.__resources.domains.loading,
+    domainCount: state.__resources.domains.entities.length,
     error: state.__resources.domains.error
   };
 });

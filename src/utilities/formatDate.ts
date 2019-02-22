@@ -1,7 +1,10 @@
 import * as moment from 'moment-timezone';
+import { pathOr } from 'ramda';
 
 import { ISO_FORMAT } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+
+import store from 'src/store';
 
 export type TimeInterval = 'day' | 'week' | 'month' | 'year' | 'never';
 
@@ -37,21 +40,25 @@ export const shouldHumanize = (
 interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
-  timezone?: string;
 }
 
 export const formatDate = (
   date: string,
   options: FormatDateOptions = {}
-): string | null => {
+): string => {
   let time;
+
+  /** get the timezone from redux and use it as the moment timezone */
+  const reduxProfile = store.getState().__resources.profile;
+  const userTimezone = pathOr('GMT', ['data', 'timezone'], reduxProfile);
+
   try {
     // Unknown error was causing this to crash in rare situations.
-    time = moment.utc(date).tz(options.timezone || 'GMT');
+    time = moment.utc(date).tz(userTimezone);
   } catch (e) {
     // Better to return a blank date than an error or incorrect information.
     reportException(e);
-    return null;
+    return 'Error getting datetime';
   }
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
     ? time.fromNow()

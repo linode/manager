@@ -90,10 +90,16 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, entitiesLoading, errors, searchResults } = this.props;
+    const {
+      classes,
+      entitiesLoading,
+      errors,
+      searchResultsByEntity
+    } = this.props;
     const { query } = this.state;
 
-    const resultsEmpty = equals(searchResults, emptyResults);
+    const resultsEmpty = equals(searchResultsByEntity, emptyResults);
+
     return (
       <Grid container direction="column">
         <Grid item>
@@ -121,14 +127,16 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
         )}
         {!entitiesLoading && (
           <Grid item>
-            {Object.keys(searchResults).map((entityType, idx: number) => (
-              <ResultGroup
-                key={idx}
-                entity={displayMap[entityType]}
-                results={searchResults[entityType]}
-                groupSize={100}
-              />
-            ))}
+            {Object.keys(searchResultsByEntity).map(
+              (entityType, idx: number) => (
+                <ResultGroup
+                  key={idx}
+                  entity={displayMap[entityType]}
+                  results={searchResultsByEntity[entityType]}
+                  groupSize={100}
+                />
+              )
+            )}
           </Grid>
         )}
       </Grid>

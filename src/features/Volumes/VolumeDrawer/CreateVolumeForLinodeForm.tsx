@@ -17,7 +17,12 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
+import { MapState } from 'src/store/types';
 import { openForAttaching } from 'src/store/volumeDrawer';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
@@ -54,6 +59,7 @@ interface Props {
 }
 
 type CombinedProps = Props &
+  StateProps &
   VolumesRequests &
   DispatchProps &
   WithStyles<ClassNames>;
@@ -66,7 +72,8 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
     linodeLabel,
     linodeRegion,
     actions,
-    createVolume
+    createVolume,
+    disabled
   } = props;
 
   return (
@@ -132,7 +139,13 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={status.generalError}
               />
             )}
-
+            {disabled && (
+              <NoticePanel
+                error={
+                  "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
+                }
+              />
+            )}
             <ModeSelection
               mode={modes.CREATING_FOR_LINODE}
               onChange={() => {
@@ -165,6 +178,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.label}
+              disabled={disabled}
             />
 
             <SizeField
@@ -173,6 +187,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.size}
+              disabled={disabled}
             />
 
             <ConfigSelect
@@ -182,6 +197,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={(id: number) => setFieldValue('configId', id)}
               value={values.configId}
+              disabled={disabled}
             />
 
             <TagsInput
@@ -196,6 +212,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               label="Tags"
               onChange={selected => setFieldValue('tags', selected)}
               value={values.tags}
+              disabled={disabled}
             />
 
             <PricePanel value={values.size} currentSize={10} />
@@ -207,6 +224,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 resetForm();
                 onClose();
               }}
+              disabled={disabled}
             />
           </Form>
         );
@@ -256,8 +274,17 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   }
 });
 
+interface StateProps {
+  disabled: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+  // disabled if the profile is restricted and doesn't have add_volumes grant
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes')
+});
+
 const connected = connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 );
 

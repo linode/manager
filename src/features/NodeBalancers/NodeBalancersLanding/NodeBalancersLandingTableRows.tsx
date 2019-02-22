@@ -103,6 +103,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
               {convertMegabytesTo(nodeBalancer.transfer.total)}
             </TableCell>
             <TableCell parentColumn="Ports" data-qa-ports>
+              {configs.length === 0 && 'None'}
               {configs.map(({ port, id }, i) => (
                 <React.Fragment key={id}>
                   <Link
@@ -115,7 +116,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                   </Link>
                   {i < configs.length - 1 ? ', ' : ''}
                 </React.Fragment>
-              )) || 'None'}
+              ))}
             </TableCell>
             <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
               <div className={classes.ipsWrapper}>

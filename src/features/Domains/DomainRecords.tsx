@@ -40,13 +40,19 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
 
-type ClassNames = 'root' | 'titles' | 'linkContainer';
+type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'flex-start'
+    }
+  },
+  cells: {
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 300,
+      wordBreak: 'break-all'
     }
   },
   titles: {
@@ -191,7 +197,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   openForEditSRVRecord = (
     f: Pick<
       Linode.DomainRecord,
-      'id' | 'name' | 'priority' | 'weight' | 'port' | 'target'
+      'id' | 'name' | 'priority' | 'weight' | 'port' | 'target' | 'protocol'
     >
   ) => this.openForEditing('SRV', f);
 
@@ -541,18 +547,20 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           title: '',
           render: ({
             id,
-            name,
+            service,
             port,
             priority,
+            protocol,
             target,
             weight
           }: Linode.DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
-                name,
+                service,
                 port,
                 priority,
+                protocol,
                 target,
                 weight
               }}
@@ -739,6 +747,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                                                     parentColumn={title}
                                                     key={columnIndex}
                                                     data-qa-column={title}
+                                                    className={classes.cells}
                                                   >
                                                     {render(data)}
                                                   </TableCell>

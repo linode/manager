@@ -23,6 +23,7 @@ export interface Props {
   tagError?: string;
   value: Item[];
   onChange: (selected: Item[]) => void;
+  disabled?: boolean;
 }
 
 class TagsInput extends React.Component<Props, State> {
@@ -78,12 +79,14 @@ class TagsInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { tagError, onChange, value, name, label } = this.props;
+    const { tagError, onChange, value, name, label, disabled } = this.props;
     const { accountTags, errors } = this.state;
 
     const hasErrorFor = getAPIErrorFor({ label: 'label' }, errors);
     const labelError = hasErrorFor('label');
     const generalError = hasErrorFor('none');
+
+    const error = disabled ? undefined : labelError || tagError || generalError;
 
     return (
       <Select
@@ -93,11 +96,12 @@ class TagsInput extends React.Component<Props, State> {
         label={label}
         options={accountTags}
         placeholder={'Type to choose or create a tag.'}
-        errorText={labelError || tagError || generalError}
+        errorText={error}
         value={value}
         onChange={onChange}
         createNew={this.createTag}
         noOptionsMessage={this.getEmptyMessage}
+        disabled={disabled}
       />
     );
   }

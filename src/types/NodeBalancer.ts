@@ -88,10 +88,15 @@ namespace Linode {
     modifyStatus?: 'new';
   }
 
+  export interface NodeBalancerConfigPort {
+    configId: number;
+    port: number;
+  }
+
   export interface ExtendedNodeBalancer extends NodeBalancer {
     up: number;
     down: number;
-    ports: number[];
+    configPorts: NodeBalancerConfigPort[];
   }
 
   export interface NodeBalancerStats {

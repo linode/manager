@@ -27,6 +27,7 @@ export interface Props {
   checked?: boolean;
   stackScriptID: number;
   stackScriptUsername: string;
+  disabled?: boolean;
 }
 
 interface DispatchProps {
@@ -55,7 +56,8 @@ export class StackScriptSelectionRow extends React.Component<
       updated,
       stackScriptID,
       stackScriptUsername,
-      openStackScriptDrawer
+      openStackScriptDrawer,
+      disabled
     } = this.props;
 
     const renderLabel = () => {
@@ -99,8 +101,8 @@ export class StackScriptSelectionRow extends React.Component<
         >
           <TableCell>
             <Radio
-              checked={checked}
-              disabled={disabledCheckedSelect}
+              checked={!disabled && checked}
+              disabled={disabledCheckedSelect || disabled}
               onChange={onSelect}
               id={`${stackScriptID}`}
             />

@@ -9,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import ErrorState from 'src/components/ErrorState';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
@@ -99,10 +100,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       classes
     } = this.props;
 
-    const balanceDisplay =
-      !accountLoading && balance !== false
-        ? `$${Math.abs(balance).toFixed(2)}`
-        : '';
+    const shouldDisplayBalance = !accountLoading && balance !== false;
 
     return (
       <React.Fragment>
@@ -155,7 +153,9 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
                 [classes.positive]: balance <= 0
               })}
             >
-              {balanceDisplay}
+              {shouldDisplayBalance && (
+                <Currency quantity={Math.abs(balance as number)} />
+              )}
               {balance < 0 && ` (credit)`}
             </Typography>
           </div>
