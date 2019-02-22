@@ -45,5 +45,9 @@ describe('Error handling utilities', () => {
         'An unexpected error occurred.'
       );
     });
+
+    it('should just return the string if you pass it a string', () => {
+      expect(getErrorStringOrDefault('a', 'b')).toBe('a');
+    });
   });
 });
