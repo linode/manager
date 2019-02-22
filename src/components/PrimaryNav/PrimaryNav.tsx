@@ -61,7 +61,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'column'
   },
   logoItem: {
-    padding: '10px 0 8px 12px'
+    padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px ${theme
+      .spacing.unit +
+      theme.spacing.unit / 2}px`
   },
   listItem: {
     borderLeft: '6px solid transparent',
@@ -69,7 +71,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       'background-color',
       'border-left-color'
     ]),
-    padding: '10px 30px 10px 24px',
+    padding: `${theme.spacing.unit + 2}px ${theme.spacing.unit * 4 -
+      2}px ${theme.spacing.unit + 2}px ${theme.spacing.unit * 3}px`,
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -114,7 +117,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     listStyleType: 'none'
   },
   sublink: {
-    padding: '4px 0 4px 8px',
+    padding: `${theme.spacing.unit / 2}px 0 ${theme.spacing.unit / 2}px ${
+      theme.spacing.unit
+    }px`,
     color: 'white',
     display: 'block',
     fontSize: '.8rem',

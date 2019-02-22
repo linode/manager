@@ -16,8 +16,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   } = theme;
   return {
     root: {
-      paddingTop: 16,
-      paddingBottom: 16,
+      paddingTop: theme.spacing.unit * 2,
+      paddingBottom: theme.spacing.unit * 2,
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
       borderLeftColor: 'transparent',
