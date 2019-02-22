@@ -20,6 +20,10 @@ const formatDescription = (desc: string) => {
   const isBackup = /^Backup/.test(desc);
   const descChunks = desc.split(' - ');
   const nameIndex = isBackup ? 2 : 1;
+  if (!descChunks[nameIndex]) {
+    // some irregular description. Just truncate and let it through
+    return desc.substring(0, maxInstanceNameLength);
+  }
   descChunks[nameIndex] = descChunks[nameIndex]
     .split(' (')
     .map(s => s.substring(0, maxInstanceNameLength))
