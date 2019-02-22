@@ -49,11 +49,7 @@ export const CreateLinodeSchema = object({
   label: string()
     .nullable(true)
     .min(3, 'Label must contain between 3 and 32 characters.')
-    .max(32, 'Label must contain between 3 and 32 characters.')
-    .matches(
-      /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/,
-      'Label can only use alphanumeric characters, dashes, or underscores.'
-    ),
+    .max(32, 'Label must contain between 3 and 32 characters.'),
   tags: array()
     .of(string())
     .notRequired(),
@@ -102,11 +98,7 @@ export const UpdateLinodeSchema = object({
   label: string()
     .nullable(true)
     .min(3, 'Label must contain between 3 and 32 characters.')
-    .max(32, 'Label must contain between 3 and 32 characters.')
-    .matches(
-      /^[a-zA-Z]((?!--|__)[a-zA-Z0-9-_])+$/,
-      'Label can only use alphanumeric characters, dashes, or underscores.'
-    ),
+    .max(32, 'Label must contain between 3 and 32 characters.'),
   tags: array()
     .of(string())
     .notRequired(),
