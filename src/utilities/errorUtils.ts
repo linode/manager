@@ -14,8 +14,11 @@ export const getAPIErrorOrDefault = (
 };
 
 export const getErrorStringOrDefault = (
-  errors: Linode.ApiFieldError[],
+  errors: Linode.ApiFieldError[] | string,
   defaultError: string = 'An unexpected error occurred.'
 ): string => {
+  if (typeof errors === 'string') {
+    return errors;
+  }
   return pathOr<string>(defaultError, [0, 'reason'], errors);
 };
