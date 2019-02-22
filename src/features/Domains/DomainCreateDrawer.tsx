@@ -145,6 +145,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
               "You don't have permissions to create a new Domain. Please, contact an account administrator for details."
             }
             error={true}
+            important
           />
         )}
         <RadioGroup

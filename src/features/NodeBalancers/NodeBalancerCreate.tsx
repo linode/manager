@@ -494,6 +494,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                 }
                 error={true}
                 spacingTop={16}
+                important
               />
             )}
             <LabelAndTagsPanel
