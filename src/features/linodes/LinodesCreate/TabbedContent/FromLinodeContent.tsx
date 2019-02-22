@@ -118,11 +118,13 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   handleSelectLinode = (linode: Linode.Linode) => {
-    this.setState({
-      selectedLinodeID: linode.id,
-      selectedTypeID: null,
-      selectedDiskSize: linode.specs.disk
-    });
+    if (linode.id !== this.state.selectedLinodeID) {
+      this.setState({
+        selectedLinodeID: linode.id,
+        selectedTypeID: null,
+        selectedDiskSize: linode.specs.disk
+      });
+    }
   };
 
   handleSelectRegion = (id: string) => {
