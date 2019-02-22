@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fill: theme.color.grey1
   },
   noBackupText: {
-    marginRight: '8px'
+    marginRight: theme.spacing.unit
   },
   root: {},
   wrapper: {

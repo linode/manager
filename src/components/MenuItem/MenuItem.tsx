@@ -27,8 +27,8 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     flexWrap: 'wrap',
     '&.hasTooltip': {
       opacity: 1,
-      paddingTop: 6,
-      paddingBottom: 8,
+      paddingTop: theme.spacing.unit - 2,
+      paddingBottom: theme.spacing.unit + 2,
       '&:hover, &:focus': {
         background: 'transparent',
         color: theme.palette.primary.main,
@@ -54,7 +54,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     maxHeight: 0,
     display: 'block',
     color: theme.palette.text.primary,
-    // maxWidth: 200,
     opacity: 0
   },
   helpButton: {
