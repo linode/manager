@@ -31,9 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingRight: theme.spacing.unit * 3,
     paddingLeft: theme.spacing.unit * 3
   },
-  wrapper: {
-    // marginTop: theme.spacing.unit * 2,
-  },
+  wrapper: {},
   postTitle: {
     ...theme.typography.body1,
     marginBottom: theme.spacing.unit
