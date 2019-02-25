@@ -63,10 +63,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   small: {
-    minHeight: 'auto',
+    minHeight: 32,
     '& [role="button"]': {
-      padding: `0 ${theme.spacing.unit * 4}px 0 ${theme.spacing.unit}px`,
-      minHeight: 'auto',
+      minHeight: 32,
+      padding: '8px 32px 0 8px',
       minWidth: 132
     },
     '& svg': {

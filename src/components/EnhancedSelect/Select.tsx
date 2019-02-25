@@ -52,6 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       boxShadow: 'none',
       border: `1px solid transparent`,
       backgroundColor: theme.bg.white,
+      minHeight: theme.spacing.unit * 5 - 2,
       '&:hover': {
         border: `1px dotted #ccc`,
         cursor: 'text'
