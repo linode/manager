@@ -85,6 +85,7 @@ interface Props extends SelectProps {
   errorGroup?: string;
   pagination?: boolean;
   small?: boolean;
+  className?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -125,14 +126,17 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     fullWidth: true
   };
 
-  const c = classNames({
-    [classes.inputSucess]: success === true,
-    [classes.inputError]: error === true,
-    [errorScrollClassName]: !!errorText && !!errorScrollClassName,
-    [classes.helpWrapperSelectField]: Boolean(tooltipText),
-    [classes.pagination]: Boolean(pagination),
-    [classes.small]: small
-  });
+  const c = classNames(
+    {
+      [classes.inputSucess]: success === true,
+      [classes.inputError]: error === true,
+      [errorScrollClassName]: !!errorText && !!errorScrollClassName,
+      [classes.helpWrapperSelectField]: Boolean(tooltipText),
+      [classes.pagination]: Boolean(pagination),
+      [classes.small]: small
+    },
+    className
+  );
 
   return (
     <React.Fragment>

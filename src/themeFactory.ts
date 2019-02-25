@@ -61,7 +61,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
-const spacingUnit = 8;
+const spacingUnit = 4;
 
 const primaryColors = {
   main: '#3683dc',
@@ -325,8 +325,8 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
-        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
-          spacingUnit / 2}px ${spacingUnit * 2}px`,
+        padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
@@ -1018,11 +1018,9 @@ const themeDefaults: ThemeOptions = {
         }
       },
       labelContainer: {
-        paddingLeft: 0,
-        paddingRight: 0,
+        padding: `${spacingUnit - 2}px 0`,
         [breakpoints.up('md')]: {
-          paddingLeft: 0,
-          paddingRight: 0
+          padding: `${spacingUnit - 2}px 0`
         }
       },
       textColorPrimary: {
@@ -1094,6 +1092,7 @@ const themeDefaults: ThemeOptions = {
         backfaceVisibility: 'hidden',
         position: 'relative',
         zIndex: 1,
+        height: spacingUnit * 6,
         '&:before': {
           borderLeftColor: 'white'
         },

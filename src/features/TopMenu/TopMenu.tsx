@@ -30,10 +30,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingRight: '0 !important'
   },
   toolbar: {
-    minHeight: theme.spacing.unit * 8,
+    minHeight: theme.spacing.unit * 4 + 32,
     padding: `${theme.spacing.unit}px 0`,
     [theme.breakpoints.up('md')]: {
-      minHeight: theme.spacing.unit * 10,
+      minHeight: theme.spacing.unit * 5 + 40,
       paddingLeft: theme.spacing.unit * 3,
       paddingRight: theme.spacing.unit * 3
     }
