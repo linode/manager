@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.49.0] - 2019.02.25
+
+### Added:
+- Enhanced Search functionality!
+  - Users can now specify the search entity with `type:{linode, volume, domain, nodebalancer}` or `is:{linode, volume, domain, nodebalancer}`
+  - Aside from entities, other searchable fields are `label:`, `tags:`, `ips:`
+    - Users can search for entries with multiple tags applied by adding the desired tags to a comma separated list after specifying the tags field. Example `tags:tagA,tagB` will return all entities with tagA and tagB applied.
+    - The same pattern described above applies to the ips as well.
+  - Logical operators can by applied to queries: `&&`/`AND`, `||`/`OR`, `-` for the not operator, and grouping with `()`. A query with multiple fields and no operators is implicitly treated as true for all.
+- Status indicators have been incorporated into the entity icons for Linodes and Domains to provide a better visual experience.
+  - Also added the Linode icon and status to the power button.
+- A reset password button in Profile > Password & Authentication that will open the reset password workflow in a separate tab.
+- A better user experience for secondary/restricted account users that displays messaging around and disables features that the user doesn't have access to.
+
+### Changed:
+- Domains now displayed in alphabetical order on the Domain listing page.
+- Timestamps display in last backup table rather than humanized dates.
+- Added a tooltip on the power icon for a Linode with no image, indicating that an image must be added to the Linode in order to boot.
+
+### Fixed:
+- Removed client side validation that incorrectly prevented user from creating a Linode when the label started with a numeric character.
+
 ## [0.48.0] - 2019.02.11
 
 ### Added:
@@ -14,7 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Sidebar components in Account Settings page:
   - Contact information component displaying company name, name, dddress, email, and phone number.
   - Billing information component displaying current account balance, credit card, and credit card expiration date.
-  
+
 ### Changed:
 - Linode summary moved to the sidebar with individual components for:
   - Linode details
