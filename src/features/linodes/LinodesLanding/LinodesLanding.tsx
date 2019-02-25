@@ -250,7 +250,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           <React.Fragment>
             One or more of your Linodes is suspended. Please{' '}
             <Link to="/support/tickets">open a support ticket </Link>
-            if you have questions
+            if you have questions.
           </React.Fragment>
         );
       }

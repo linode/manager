@@ -1,6 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { branch, compose, renderComponent } from 'recompose';
 import ErrorState from 'src/components/ErrorState';
 import { MapState } from 'src/store/types';
@@ -50,11 +51,22 @@ export default compose(
   branch(
     ({ error }) => Boolean(error),
     renderComponent((props: any) => {
-      const errorText = pathOr(
+      let errorText = pathOr(
         'Unable to load Linode',
         ['error', 'response', 'error', 0, 'reason'],
         props
       );
+
+      if (errorText.toLowerCase() === 'this linode has been suspended') {
+        errorText = (
+          <React.Fragment>
+            One or more of your Linodes is suspended. Please{' '}
+            <Link to="/support/tickets">open a support ticket </Link>
+            if you have questions.
+          </React.Fragment>
+        );
+      }
+
       return <ErrorState errorText={errorText} />;
     })
   )

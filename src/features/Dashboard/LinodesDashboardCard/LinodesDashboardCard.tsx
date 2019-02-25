@@ -122,7 +122,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
         <React.Fragment>
           One or more of your Linodes is suspended. Please{' '}
           <Link to="/support/tickets">open a support ticket </Link>
-          if you have questions
+          if you have questions.
         </React.Fragment>
       );
     }
