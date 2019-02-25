@@ -46,15 +46,17 @@ const styles: StyleRulesCallback = theme => ({
     position: 'absolute'
   },
   button: {
-    paddingRight: 22,
+    position: 'relative',
+    minHeight: 40,
+    paddingRight: `calc(${theme.spacing.unit * 3}px + 24px)`,
     [theme.breakpoints.down('sm')]: {
       padding: '6px 11px 7px 14px'
     }
   },
   caret: {
-    position: 'relative',
-    top: 2,
-    left: 2,
+    position: 'absolute',
+    right: -30,
+    top: -3,
     marginLeft: theme.spacing.unit / 2
   },
   mobileButton: {

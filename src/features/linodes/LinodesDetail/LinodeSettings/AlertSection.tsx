@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   root: {
-    minHeight: 130,
+    minHeight: theme.spacing.unit * 16,
     position: 'relative',
     padding: `${theme.spacing.unit * 3}px 0`,
     '&:last-of-type + hr': {
@@ -33,8 +33,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& .toggleLabel > span:last-child': {
       position: 'absolute',
-      left: 90,
-      top: 40,
+      left: `calc(58px + ${theme.spacing.unit * 4}px)`,
+      top: theme.spacing.unit * 5,
       ...theme.typography.h3
     }
   },
