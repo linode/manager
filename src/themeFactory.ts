@@ -61,7 +61,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
-const spacingUnit = 8;
+const spacingUnit = 4;
 
 const primaryColors = {
   main: '#3683dc',
@@ -272,7 +272,7 @@ const themeDefaults: ThemeOptions = {
         color: primaryColors.main,
         padding: `${spacingUnit + 1}px ${spacingUnit * 3 +
           spacingUnit / 2}px ${spacingUnit + 3}px`,
-        maxHeight: spacingUnit * 6,
+        maxHeight: 48,
         '&:hover': {
           backgroundColor: '#fff'
         },
@@ -526,6 +526,7 @@ const themeDefaults: ThemeOptions = {
         padding: `0 ${spacingUnit * 2 + 2}px`,
         backgroundColor: '#fbfbfb',
         justifyContent: 'flex-start',
+        minHeight: spacingUnit * 6,
         '& h3': {
           transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
@@ -551,6 +552,7 @@ const themeDefaults: ThemeOptions = {
       content: {
         flexGrow: 0,
         order: 2,
+        margin: `${spacingUnit + spacingUnit / 2}px 0`,
         '&$expanded': {
           margin: 0
         }
@@ -627,6 +629,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiIconButton: {
       root: {
+        padding: spacingUnit + spacingUnit / 2,
         color: primaryColors.main,
         '&:hover': {
           color: primaryColors.light,
@@ -851,10 +854,11 @@ const themeDefaults: ThemeOptions = {
             opacity: '.5'
           }
         },
-        padding: '6px 32px 5px 12px',
+        padding: `${spacingUnit * 2}px ${spacingUnit * 4}px ${spacingUnit *
+          2}px ${spacingUnit + 4}px`,
         color: primaryColors.text,
         backgroundColor: '#fff',
-        lineHeight: 2.3,
+        lineHeight: 1,
         minHeight: spacingUnit * 6 - 2,
         minWidth: 150,
         '&:focus': {
