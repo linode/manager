@@ -1,5 +1,5 @@
 import { compose } from 'recompose';
-import initLinode from './initLinode';
+// import initLinode from './initLinode';
 import initLinodeConfigs from './initLinodeConfigs';
 import initLinodeDisks from './initLinodeDisks';
 import maybeRenderError from './maybeRenderError';
@@ -16,7 +16,7 @@ export interface InnerProps {
 }
 
 export default compose<InnerProps, OutterProps>(
-  initLinode,
+  // initLinode,
   initLinodeConfigs,
   initLinodeDisks,
   maybeRenderError,
