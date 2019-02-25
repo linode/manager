@@ -63,11 +63,11 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 const breakpoints = createBreakpoints({});
 
 const primaryColors = {
-  main: '#3683DC',
-  light: '#4D99F1',
-  dark: '#2466B3',
+  main: '#3683dc',
+  light: '#4d99f1',
+  dark: '#2466b3',
   text: '#606469',
-  headline: '#32363C',
+  headline: '#32363c',
   divider: '#f4f4f4',
   offBlack: '#444',
   white: '#fff'
@@ -136,23 +136,23 @@ const themeDefaults: ThemeOptions = {
     main: '#f4f4f4',
     offWhite: '#fbfbfb',
     offWhiteDT: '#fbfbfb', // better handing for dark theme
-    navy: '#32363C',
-    lightBlue: '#D7E3EF',
+    navy: '#32363c',
+    lightBlue: '#d7e3ef',
     white: '#fff',
     pureWhite: '#fff',
     tableHeader: '#fbfbfb'
   },
   color: {
     headline: primaryColors.headline,
-    red: '#CA0813',
-    green: '#00B159',
-    yellow: '#FECF2F',
-    border1: '#ABADAF',
-    border2: '#C5C6C8',
+    red: '#ca0813',
+    green: '#00b159',
+    yellow: '#fecf2f',
+    border1: '#abadaf',
+    border2: '#c5c6c8',
     border3: '#eee',
     borderPagination: '#ccc',
     grey1: '#abadaf',
-    grey2: '#E7E7E7',
+    grey2: '#e7e7e7',
     grey3: '#ccc',
     white: '#fff',
     black: '#222',
@@ -160,7 +160,7 @@ const themeDefaults: ThemeOptions = {
     boxShadow: '#ddd',
     focusBorder: '#999',
     absWhite: '#fff',
-    blueDTwhite: '#3683DC',
+    blueDTwhite: '#3683dc',
     selectDropDowns: primaryColors.main,
     borderRow: 'white',
     tableHeaderText: 'rgba(0, 0, 0, 0.54)',
@@ -168,7 +168,7 @@ const themeDefaults: ThemeOptions = {
     diskSpaceBorder: '#f4f4f4',
     drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
     label: '#555',
-    disabledText: '#c9cAcb'
+    disabledText: '#c9cacb'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
@@ -188,7 +188,7 @@ const themeDefaults: ThemeOptions = {
       primary: primaryColors.text
     },
     status: {
-      success: '#d7e3EF',
+      success: '#d7e3ef',
       successDark: '#3682dd',
       warning: '#fdf4da',
       warningDark: '#ffd002',
@@ -331,9 +331,9 @@ const themeDefaults: ThemeOptions = {
           borderColor: primaryColors.dark
         },
         '&$disabled': {
-          borderColor: '#C9CACB',
+          borderColor: '#c9cacb',
           backgroundColor: 'transparent',
-          color: '#C9CACB'
+          color: '#c9cacb'
         },
         '&.cancel': {
           borderColor: 'transparent',
@@ -343,11 +343,11 @@ const themeDefaults: ThemeOptions = {
           }
         },
         '&.destructive': {
-          borderColor: '#C44742',
-          color: '#C44742',
+          borderColor: '#c44742',
+          color: '#c44742',
           '&:hover, &:focus': {
-            color: '#DF6560',
-            borderColor: '#DF6560',
+            color: '#df6560',
+            borderColor: '#df6560',
             backgroundColor: 'transparent'
           },
           '&:active': {
@@ -613,7 +613,7 @@ const themeDefaults: ThemeOptions = {
     MuiFormHelperText: {
       root: {
         '&$error': {
-          color: '#CA0813'
+          color: '#ca0813'
         }
       }
     },
@@ -669,11 +669,11 @@ const themeDefaults: ThemeOptions = {
           fontSize: 18,
           color: primaryColors.main,
           '&:hover': {
-            color: '#5E9AEA'
+            color: '#5e9aea'
           }
         },
         '&.affirmative': {
-          borderColor: '#00B159'
+          borderColor: '#00b159'
         }
       },
       inputMultiline: {
@@ -683,7 +683,7 @@ const themeDefaults: ThemeOptions = {
       },
       focused: {},
       error: {
-        borderColor: '#CA0813'
+        borderColor: '#ca0813'
       },
       disabled: {},
       input: {
@@ -960,7 +960,7 @@ const themeDefaults: ThemeOptions = {
         width: 42,
         height: 22,
         borderRadius: 0,
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#f4f4f4',
         border: '1px solid #999',
         boxSizing: 'content-box',
         transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
@@ -1041,7 +1041,7 @@ const themeDefaults: ThemeOptions = {
     MuiTabs: {
       root: {
         margin: '16px 0',
-        boxShadow: 'inset 0 -1px 0 #C5C6C8'
+        boxShadow: 'inset 0 -1px 0 #c5c6c8'
       },
       fixed: {
         overflowX: 'auto'
