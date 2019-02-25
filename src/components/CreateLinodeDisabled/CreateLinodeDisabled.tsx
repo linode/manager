@@ -16,6 +16,7 @@ export const CreateLinodeDisabled: React.StatelessComponent<Props> = props => {
         "You don't have permissions to create a new Linode. Please, contact an account administrator for details."
       }
       error={true}
+      important
     />
   );
 };

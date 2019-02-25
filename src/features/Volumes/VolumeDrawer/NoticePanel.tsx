@@ -15,19 +15,29 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   success?: string;
   error?: string;
+  important?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const NoticePanel: React.StatelessComponent<CombinedProps> = ({
   success,
-  error
+  error,
+  important
 }) => {
   return (
     <>
-      {success && <Notice success>{success}</Notice>}
+      {success && (
+        <Notice success important={important}>
+          {success}
+        </Notice>
+      )}
 
-      {error && <Notice error>{error}</Notice>}
+      {error && (
+        <Notice error important={important}>
+          {error}
+        </Notice>
+      )}
     </>
   );
 };
