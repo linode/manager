@@ -63,13 +63,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit + 2
+    marginBottom: theme.spacing.unit
   },
   titleWrapper: {
     flex: 1
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
   },
   // styles for /volumes table
   volumesWrapper: {},
@@ -294,7 +294,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
-        <Grid container justify="space-between" alignItems="flex-end">
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          style={{ paddingBottom: 0 }}
+        >
           <Grid item className={classes.titleWrapper}>
             <Typography
               role="header"
