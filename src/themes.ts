@@ -500,7 +500,7 @@ export const dark = createTheme({
           paddingLeft: 13
         },
         '& a': {
-          color: primaryColors.offBlack
+          color: primaryColors.main
         }
       }
     },
