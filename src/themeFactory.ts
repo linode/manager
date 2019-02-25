@@ -1013,7 +1013,7 @@ const themeDefaults: ThemeOptions = {
       },
       textColorPrimary: {
         '&$selected': {
-          color: '#32363C'
+          color: '#32363c'
         }
       },
       selected: {}
