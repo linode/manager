@@ -61,7 +61,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
-const spacingUnit = 4;
+const spacingUnit = 8;
 
 const primaryColors = {
   main: '#3683dc',
