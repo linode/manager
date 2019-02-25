@@ -738,7 +738,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         value={sslCertificate || ''}
                         onChange={this.onSslCertificateChange}
                         required={protocol === 'https'}
-                        errorText={hasErrorFor('ssl_cert')}
+                        errorText={hasErrorFor('ssl_cert') || hasErrorFor('configs')}
                         errorGroup={forEdit ? `${configIdx}` : undefined}
                         data-qa-cert-field
                         small

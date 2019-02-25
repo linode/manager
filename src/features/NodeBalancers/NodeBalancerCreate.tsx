@@ -433,6 +433,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     </ActionsPanel>
   );
 
+  // @todo get linodes data from store
   componentDidMount() {
     getLinodes()
       .then(result => {
