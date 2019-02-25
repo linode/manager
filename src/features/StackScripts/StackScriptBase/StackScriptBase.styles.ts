@@ -19,6 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   emptyState: {
     textAlign: 'center',
     padding: '5em 2em',
+    color: theme.palette.text.primary,
     [theme.breakpoints.up('sm')]: {
       padding: '10em'
     }
