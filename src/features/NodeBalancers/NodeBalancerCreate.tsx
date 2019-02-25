@@ -6,8 +6,6 @@ import {
   Lens,
   lensPath,
   over,
-  path as ramdaPath,
-  pathOr,
   set,
   view
 } from 'ramda';
@@ -47,7 +45,7 @@ import {
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from 'src/store/types';
-import { getTagErrors } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -310,12 +308,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`)
       )
       .catch(errorResponse => {
-        const defaultError = [{ reason: `An unexpected error has occured.` }];
-        const errors = pathOr(
-          defaultError,
-          ['response', 'data', 'errors'],
-          errorResponse
-        );
+        const errors = getAPIErrorOrDefault(errorResponse);
         this.setNodeErrors(
           errors.map((e: Linode.ApiFieldError) => ({
             ...e,
@@ -459,10 +452,6 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     const { classes, regionsData, disabled } = this.props;
     const { nodeBalancerFields, linodesWithPrivateIPs } = this.state;
     const hasErrorFor = getAPIErrorFor(errorResources, this.state.errors);
-    const tagError = ramdaPath<string | undefined>(
-      [0],
-      getTagErrors(this.state.errors)
-    );
     const generalError = hasErrorFor('none');
 
     if (this.props.regionsLoading) {
@@ -514,7 +503,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     }))
                   : [],
                 onChange: this.tagsChange,
-                tagError,
+                tagError: hasErrorFor('tags'),
                 disabled
               }}
             />

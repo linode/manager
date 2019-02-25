@@ -1,5 +1,4 @@
 import { isEmpty, isNil, path } from 'ramda';
-import { tagRegEx } from 'src/utilities/errorUtils';
 
 export const isNilOrEmpty = (v: any) => isNil(v) || isEmpty(v);
 
@@ -18,12 +17,7 @@ export const handleFieldErrors = (callback: Function, response: any) => {
 
   const mappedFieldErrors = fieldErrors.reduce(
     (result, { field, reason }) =>
-      field
-        ? // Tags have a field of 'tags[0]', so need to handle them separately:
-          tagRegEx.test(field)
-          ? { ...result, tags: reason }
-          : { ...result, [field]: reason }
-        : result,
+      field ? { ...result, [field]: reason } : result,
     {}
   );
 

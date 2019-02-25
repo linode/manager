@@ -36,9 +36,9 @@ class TagsInput extends React.Component<Props, State> {
     const newTag = { value: inputValue, label: inputValue };
     const updatedSelectedTags = concat(value, [newTag]);
 
-    if (inputValue.length < 3 || inputValue.length > 25) {
+    if (inputValue.length < 3 || inputValue.length > 50) {
       this.setState({
-        errors: [{ field: 'label', reason: 'Length must be 3-25 characters' }]
+        errors: [{ field: 'label', reason: 'Length must be 3-50 characters' }]
       });
     } else {
       this.setState({

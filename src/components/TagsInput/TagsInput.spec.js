@@ -15,7 +15,7 @@ describe('Tags Input Suite', () => {
       $$(tagOptions)[0].click();
       try {
         inputError.waitForVisible(constants.wait.normal);
-        expect(inputError.getText()).toContain('Length must be 3-25 characters');
+        expect(inputError.getText()).toContain('Length must be 3-50 characters');
       } catch (e) {
 
       }
@@ -71,10 +71,10 @@ describe('Tags Input Suite', () => {
         $('svg[height="20"]').click();
     });
 
-    it('a tag must be between 3-25 characters', () => {
+    it('a tag must be between 3-50 characters', () => {
         inputValidation('aa');
         navigateToStory(component, childStories[0]);
-        inputValidation('aaaaaaaaaaaaaaaaaaaaaaaaaa');
+        inputValidation('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
     });
 
     describe('Tags Input with api error', () => {

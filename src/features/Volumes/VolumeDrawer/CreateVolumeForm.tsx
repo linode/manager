@@ -20,6 +20,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import LinodeSelect from './LinodeSelect';
@@ -59,7 +60,6 @@ type CombinedProps = Props &
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   const { onClose, onSuccess, classes, createVolume, disabled } = props;
-  console.log('disabled', disabled);
   return (
     <Formik
       initialValues={initialValues}
@@ -206,7 +206,10 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               tagError={
                 touched.tags
                   ? errors.tags
-                    ? 'Unable to tag volume.'
+                    ? getErrorStringOrDefault(
+                        errors.tags,
+                        'Unable to tag Volume.'
+                      )
                     : undefined
                   : undefined
               }
