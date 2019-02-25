@@ -39,7 +39,7 @@ export const getTicketsPage = (
   ticketStatus: 'open' | 'closed' | 'all'
 ) => {
   const status = getStatusFilter(ticketStatus);
-  const ordering = { '+order_by': 'updated', '+order': 'desc' };
+  const ordering = { '+order_by': 'opened', '+order': 'desc' };
   const filter = { ...status, ...ordering, ...filters };
   return getTickets(params, filter).then(response => response.data);
 };
