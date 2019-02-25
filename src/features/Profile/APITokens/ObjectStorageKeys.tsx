@@ -78,7 +78,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
     createObjectStorageKeys()
       .then(data => {
         // Keys are returned from the API in an array – for now, just use the first pair.
-        if (data.keys && data.keys.length > 1) {
+        if (data.keys && data.keys.length > 0) {
           const accessKey = data.keys[0].access_key;
           const secretKey = data.keys[0].secret_key;
 
