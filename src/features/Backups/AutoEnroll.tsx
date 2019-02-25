@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     marginBottom: theme.spacing.unit
   },
   toggleLabelText: {
-    marginTop: 12
+    marginTop: theme.spacing.unit + theme.spacing.unit / 2
   }
 });
 

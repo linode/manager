@@ -29,18 +29,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: theme.spacing.unit
   },
   text: {
-    margin: '10px 0',
+    margin: `${theme.spacing.unit + 2}px 0`,
     paddingRight: 40
   },
   divider: {
     backgroundColor: theme.color.grey2
   },
   textOuter: {
-    margin: '10px 0'
+    margin: `${theme.spacing.unit + 2}px 0`
   },
   code: {
     color: theme.color.black,
-    margin: '0 0 10px'
+    margin: `0 0 ${theme.spacing.unit + 2}px`
   }
 });
 

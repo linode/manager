@@ -12,7 +12,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    marginTop: 25,
+    marginTop: theme.spacing.unit * 3,
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'space-between'
     }
@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   text: {
     color: theme.color.black,
     [theme.breakpoints.up('sm')]: {
-      marginLeft: 25
+      marginLeft: theme.spacing.unit * 3
     }
   },
   heading: {
