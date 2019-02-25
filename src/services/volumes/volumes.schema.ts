@@ -12,6 +12,11 @@ const createSizeValidation = (minSize: number = 10) =>
     )
     .required(`A size is required.`);
 
+// @todo this should be used in CreateVolumeForm and CreateVolumeFromLinodeForm
+// export const tag = string()
+//   .min(3, "Tags must be between 3 and 50 characters.")
+//   .max(50, "Tags must be between 3 and 50 characters.")
+
 export const CreateVolumeSchema = object({
   region: string().when('linode_id', {
     is: id => id === undefined || id === '',

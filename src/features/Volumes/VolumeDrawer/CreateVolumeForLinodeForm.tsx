@@ -24,6 +24,7 @@ import {
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
 import { openForAttaching } from 'src/store/volumeDrawer';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
@@ -205,7 +206,10 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               tagError={
                 touched.tags
                   ? errors.tags
-                    ? 'Unable to tag volume.'
+                    ? getErrorStringOrDefault(
+                        errors.tags,
+                        'Unable to tag volume.'
+                      )
                     : undefined
                   : undefined
               }

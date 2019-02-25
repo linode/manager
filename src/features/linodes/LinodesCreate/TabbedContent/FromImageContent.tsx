@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { find, path, pathOr } from 'ramda';
+import { find, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
@@ -27,7 +27,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
-import { getAPIErrorOrDefault, getTagErrors } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
@@ -98,7 +98,8 @@ const errorResources = {
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
-  image: 'Image'
+  image: 'Image',
+  tags: 'Tags'
 };
 
 type CombinedProps = Props &
@@ -300,9 +301,6 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
-    // getTagErrors returns a string[]; for now, just use the first one
-    // since tagError is expecting string | undefined.
-    const tagError = path<string | undefined>([0], getTagErrors(errors));
 
     const imageInfo = this.getImageInfo(
       this.props.images.find(image => image.id === selectedImageID)
@@ -365,7 +363,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             tagsInputProps={{
               value: tags,
               onChange: this.handleChangeTags,
-              tagError,
+              tagError: hasErrorFor('tags'),
               disabled
             }}
             updateFor={[tags, label, errors]}

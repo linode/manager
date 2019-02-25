@@ -1,6 +1,6 @@
 import * as Promise from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose as ramdaCompose, path, pathOr } from 'ramda';
+import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
@@ -25,7 +25,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
-import { getAPIErrorOrDefault, getTagErrors } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import getLinodeInfo from 'src/utilities/getLinodeInfo';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -109,7 +109,8 @@ const errorResources = {
   type: 'A plan selection',
   region: 'A region selection',
   label: 'A label',
-  root_pass: 'A root password'
+  root_pass: 'A root password',
+  tags: 'Tags for this Linode'
 };
 
 const filterLinodesWithBackups = (linodes: Linode.LinodeWithBackups[]) => {
@@ -376,9 +377,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
-    // getTagErrors returns a string[]; for now, just use the first one
-    // since tagError is expecting string | undefined.
-    const tagError = path<string | undefined>([0], getTagErrors(errors));
 
     const imageInfo = selectedBackupInfo;
 
@@ -459,7 +457,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 tagsInputProps={{
                   value: tags,
                   onChange: this.handleChangeTags,
-                  tagError,
+                  tagError: hasErrorFor('tags'),
                   disabled
                 }}
                 updateFor={[tags, label, errors]}
