@@ -32,9 +32,9 @@ export const INTERVAL: number = 1000;
 
 let inProgress = false;
 
-export const resetEventsPolling = () => {
-  eventRequestDeadline = Date.now() + INTERVAL;
-  pollIteration = 1;
+export const resetEventsPolling = (newPollIteration = 1) => {
+  eventRequestDeadline = Date.now() + INTERVAL * newPollIteration;
+  pollIteration = newPollIteration;
 };
 
 export const requestEvents = () => {
@@ -62,7 +62,8 @@ setInterval(
        * overlapping requests.
        */
       if (inProgress) {
-        pollIteration = 1;
+        /** leaving this commented out for now because I'm not sure if it'll break anything */
+        // pollIteration = 1;
         return;
       }
 
