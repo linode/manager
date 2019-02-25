@@ -368,6 +368,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   };
 
   getRegionInfo = (selectedRegionID?: string | null): Info => {
+    console.log(this.props.regionsData)
     const selectedRegion = this.props.regionsData.find(
       region => region.id === selectedRegionID
     );
