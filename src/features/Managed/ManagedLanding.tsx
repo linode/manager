@@ -31,7 +31,7 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
       <React.Fragment>
         <DocumentTitleSegment segment="Managed" />
         <Placeholder
-          title="Managed Services"
+          title="Linode Managed"
           copy={`Linode Managed is only available in the Classic Manager`}
           buttonProps={{
             onClick: () =>
