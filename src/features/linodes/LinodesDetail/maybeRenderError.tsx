@@ -53,7 +53,7 @@ export default compose(
     renderComponent((props: any) => {
       let errorText = pathOr(
         'Unable to load Linode',
-        ['error', 'response', 'error', 0, 'reason'],
+        ['error', 0, 'reason'],
         props
       );
 
