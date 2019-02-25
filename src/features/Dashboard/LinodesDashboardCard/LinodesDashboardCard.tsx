@@ -1,6 +1,7 @@
-import { compose, prop, sortBy, take } from 'ramda';
+import { compose, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -113,9 +114,21 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     return <TableRowLoading colSpan={3} />;
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => (
-    <TableRowError colSpan={3} message={`Unable to load Linodes.`} />
-  );
+  renderErrors = (errors: Linode.ApiFieldError[]) => {
+    let errorText = pathOr('Unable to load Linodes.', [0, 'reason'], errors);
+
+    if (errorText.toLowerCase() === 'this linode has been suspended') {
+      errorText = (
+        <React.Fragment>
+          One or more of your Linodes is suspended. Please{' '}
+          <Link to="/support/tickets">open a support ticket </Link>
+          if you have questions
+        </React.Fragment>
+      );
+    }
+
+    return <TableRowError colSpan={3} message={errorText} />;
+  };
 
   renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 

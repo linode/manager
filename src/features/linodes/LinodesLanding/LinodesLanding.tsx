@@ -6,7 +6,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose, withStateHandlers } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -239,10 +239,26 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     };
 
     if (imagesError || linodesRequestError) {
+      let errorText = pathOr(
+        'Error loading linodes',
+        [0, 'reason'],
+        linodesRequestError
+      );
+
+      if (errorText.toLowerCase() === 'this linode has been suspended') {
+        errorText = (
+          <React.Fragment>
+            One or more of your Linodes is suspended. Please{' '}
+            <Link to="/support/tickets">open a support ticket </Link>
+            if you have questions
+          </React.Fragment>
+        );
+      }
+
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Linodes" />
-          <ErrorState errorText="Error loading data" />
+          <ErrorState errorText={errorText} />
         </React.Fragment>
       );
     }

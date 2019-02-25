@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { branch, compose, renderComponent } from 'recompose';
@@ -48,6 +49,13 @@ export default compose(
   connect(collectErrors),
   branch(
     ({ error }) => Boolean(error),
-    renderComponent(() => <ErrorState errorText="Unable to load Linode" />)
+    renderComponent((props: any) => {
+      const errorText = pathOr(
+        'Unable to load Linode',
+        ['error', 'response', 'error', 0, 'reason'],
+        props
+      );
+      return <ErrorState errorText={errorText} />;
+    })
   )
 );
