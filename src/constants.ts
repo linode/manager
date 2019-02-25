@@ -1,10 +1,12 @@
 const PRODUCTION = 'production';
+const DEVELOPMENT = 'development';
 
 export const GA_ID = process.env.REACT_APP_GA_ID;
 
 export const GTM_ID = process.env.REACT_APP_GTM_ID;
 
 export const isProduction = process.env.NODE_ENV === PRODUCTION;
+export const isDevelopment = process.env.NODE_ENV === DEVELOPMENT;
 export const isTest = process.env.REACT_APP_TEST_ENVIRONMENT === 'true';
 
 export const APP_ROOT =
