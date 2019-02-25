@@ -8,9 +8,9 @@ export const light = createTheme({
 });
 
 const primaryColors = {
-  main: '#3683DC',
-  light: '#4D99F1',
-  dark: '#2466B3',
+  main: '#3683dc',
+  light: '#4d99f1',
+  dark: '#2466b3',
   text: '#ffffff',
   headline: '#f4f4f4',
   divider: '#222222',
@@ -52,20 +52,20 @@ export const dark = createTheme({
     }
   },
   bg: {
-    main: '#2F3236',
+    main: '#2f3236',
     offWhite: '#111111',
     offWhiteDT: '#444', // better handing for dark theme
-    navy: '#32363C',
+    navy: '#32363c',
     lightBlue: '#222',
-    white: '#32363C',
+    white: '#32363c',
     pureWhite: '#000',
     tableHeader: 'rgba(0, 0, 0, 0.15)'
   },
   color: {
     headline: primaryColors.headline,
-    red: '#CA0813',
-    green: '#00B159',
-    yellow: '#FECF2F',
+    red: '#ca0813',
+    green: '#00b159',
+    yellow: '#fecf2f',
     border1: '#000',
     border2: '#111',
     border3: '#222',
@@ -73,7 +73,7 @@ export const dark = createTheme({
     grey1: '#abadaf',
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
-    white: '#32363C',
+    white: '#32363c',
     black: '#fff',
     offBlack: primaryColors.offBlack,
     boxShadow: '#222',
@@ -86,8 +86,8 @@ export const dark = createTheme({
     toggleActive: '#444',
     diskSpaceBorder: '#222222',
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
-    label: '#C9CACB',
-    disabledText: '#c9cAcb'
+    label: '#c9cacb',
+    disabledText: '#c9cacb'
   },
   animateCircleIcon: {
     ...iconCircleAnimation
@@ -188,8 +188,8 @@ export const dark = createTheme({
           borderColor: primaryColors.dark
         },
         '&$disabled': {
-          borderColor: '#C9CACB',
-          color: '#C9CACB'
+          borderColor: '#c9cacb',
+          color: '#c9cacb'
         },
         '&.cancel': {
           borderColor: 'transparent',
@@ -198,11 +198,11 @@ export const dark = createTheme({
           }
         },
         '&.destructive': {
-          borderColor: '#C44742',
-          color: '#C44742',
+          borderColor: '#c44742',
+          color: '#c44742',
           '&:hover, &:focus': {
-            color: '#DF6560',
-            borderColor: '#DF6560',
+            color: '#df6560',
+            borderColor: '#df6560',
             backgroundColor: 'transparent'
           },
           '&:active': {
@@ -271,7 +271,7 @@ export const dark = createTheme({
     },
     MuiExpansionPanelDetails: {
       root: {
-        backgroundColor: '#32363C'
+        backgroundColor: '#32363c'
       }
     },
     MuiExpansionPanelSummary: {
@@ -279,7 +279,7 @@ export const dark = createTheme({
         '& $focused': {
           backgroundColor: '#111111'
         },
-        backgroundColor: '#32363C',
+        backgroundColor: '#32363c',
         '&:hover': {
           '& h3': {
             color: primaryColors.light
@@ -305,7 +305,7 @@ export const dark = createTheme({
     MuiFormControl: {
       root: {
         '&.copy > div': {
-          backgroundColor: '#2F3236'
+          backgroundColor: '#2f3236'
         }
       }
     },
@@ -319,23 +319,23 @@ export const dark = createTheme({
     },
     MuiFormLabel: {
       root: {
-        color: '#C9CACB',
+        color: '#c9cacb',
         '&$focused': {
-          color: '#C9CACB'
+          color: '#c9cacb'
         },
         '&$error': {
-          color: '#C9CACB'
+          color: '#c9cacb'
         },
         '&$disabled': {
-          color: '#C9CACB'
+          color: '#c9cacb'
         }
       }
     },
     MuiFormHelperText: {
       root: {
-        color: '#C9CACB',
+        color: '#c9cacb',
         '&$error': {
-          color: '#CA0813'
+          color: '#ca0813'
         }
       }
     },
@@ -396,7 +396,7 @@ export const dark = createTheme({
     },
     MuiPaper: {
       root: {
-        backgroundColor: '#32363C'
+        backgroundColor: '#32363c'
       }
     },
     MuiPopover: {
@@ -415,7 +415,7 @@ export const dark = createTheme({
     },
     MuiSnackbarContent: {
       root: {
-        backgroundColor: '#32363C',
+        backgroundColor: '#32363c',
         color: primaryColors.text,
         boxShadow: '0 0 5px #222'
       }
@@ -476,9 +476,9 @@ export const dark = createTheme({
     },
     MuiTableRow: {
       root: {
-        backgroundColor: '#32363C',
+        backgroundColor: '#32363c',
         '&:before': {
-          borderLeftColor: '#32363C'
+          borderLeftColor: '#32363c'
         },
         '&:hover': {
           '&$hover': {
@@ -490,7 +490,7 @@ export const dark = createTheme({
         }
       },
       head: {
-        backgroundColor: '#32363C',
+        backgroundColor: '#32363c',
         '&:before': {
           backgroundColor: 'rgba(0, 0, 0, 0.15) !important'
         }
