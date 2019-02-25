@@ -143,6 +143,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                   "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
                 }
                 error={true}
+                important
               />
             )}
             <Typography variant="body1" data-qa-volume-size-help>
