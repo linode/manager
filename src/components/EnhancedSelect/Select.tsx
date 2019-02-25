@@ -145,6 +145,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       paddingLeft: 6,
       paddingRight: 0
     },
+    '& .react-select__clear-indicator': {
+      padding: theme.spacing.unit
+    },
     '& .react-select__multi-value__remove': {
       backgroundColor: 'transparent',
       borderRadius: '50%',

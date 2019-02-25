@@ -61,7 +61,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
-const spacingUnit = 4;
+const spacingUnit = 8;
 
 const primaryColors = {
   main: '#3683dc',
@@ -268,10 +268,11 @@ const themeDefaults: ThemeOptions = {
         textTransform: 'inherit',
         borderRadius: 0,
         fontSize: '1rem',
+        lineHeight: 1,
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
-        padding: `${spacingUnit + 1}px ${spacingUnit * 3 +
-          spacingUnit / 2}px ${spacingUnit + 3}px`,
+        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2}px`,
         maxHeight: 48,
         '&:hover': {
           backgroundColor: '#fff'
@@ -290,8 +291,8 @@ const themeDefaults: ThemeOptions = {
         }
       },
       text: {
-        padding: `${spacingUnit + 1}px ${spacingUnit * 3 +
-          spacingUnit / 2}px ${spacingUnit + 3}px`,
+        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2}px`,
         '&:hover': {
           color: primaryColors.light
         }
@@ -324,8 +325,8 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
-        padding: `${spacingUnit + 1}px ${spacingUnit * 3 +
-          spacingUnit / 2}px ${spacingUnit + 3}px`,
+        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2}px`,
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
@@ -1054,7 +1055,8 @@ const themeDefaults: ThemeOptions = {
     MuiTabs: {
       root: {
         margin: `${spacingUnit * 2}px 0`,
-        boxShadow: 'inset 0 -1px 0 #c5c6c8'
+        boxShadow: 'inset 0 -1px 0 #c5c6c8',
+        minHeight: spacingUnit * 6
       },
       fixed: {
         overflowX: 'auto'
