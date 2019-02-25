@@ -32,7 +32,8 @@ const collectErrors: MapState<InnerProps, OutterProps> = (
       typesError ||
       linodes.error ||
       types.error ||
-      volumes.error ||
+      // @todo remove this patch
+      (volumes.error && volumes.lastUpdated === 0 ? volumes.error : false) ||
       notifications.error ||
       linodeConfigs.error ||
       linodeDisks.error
