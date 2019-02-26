@@ -126,6 +126,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
         <LinodeRowTagCell tags={tags} />
         <LinodeRowBackupCell
           linodeId={id}
+          backupsEnabled={backups.enabled || false}
           mostRecentBackup={mostRecentBackup || ''}
         />
         <TableCell
