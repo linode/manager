@@ -312,7 +312,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                   Linodes
                 </Typography>
               </Grid>
-              <Hidden smDown>
+              <Hidden xsDown>
                 <FormControlLabel
                   className={classes.tagGroup}
                   control={
@@ -500,9 +500,9 @@ const getDisplayType = (
   userSelect?: 'grid' | 'list'
 ) => {
   /**
-   * We force the use of grid view at sm and xs viewports.
+   * We force the use of grid view at xs viewports.
    */
-  if (['sm', 'xs'].includes(width)) {
+  if (['xs'].includes(width)) {
     return 'grid';
   }
 
