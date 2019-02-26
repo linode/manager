@@ -59,7 +59,7 @@ describe('Linode Detail - Volumes Suite', () => {
     const detachVolume = () => {
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();
-        VolumeDetail.createButton.waitForVisible(constants.wait.normal);
+        VolumeDetail.createButton.waitForVisible(constants.wait.long);
         expect(VolumeDetail.placeholderText.getText()).toBe('Create a Volume');
     }
 

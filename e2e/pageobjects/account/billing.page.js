@@ -11,8 +11,8 @@ class Billing extends Page {
     get currentAddress() { return $('[data-qa-contact-summary] [data-qa-contact-address]'); }
     get currentEmail() { return $('[data-qa-contact-summary] [data-qa-contact-email]'); }
     get currentPhone() { return $('[data-qa-contact-summary] [data-qa-contact-phone]'); }
-    get currentCreditCard() { return $('[data-qa-contact-summary] [data-qa-contact-cc]'); }
-    get currentExpDate() { return $('[data-qa-contact-summary] [data-qa-contact-cc-exp-date]'); }
+    get currentCreditCard() { return $('[data-qa-billing-summary] [data-qa-contact-cc]'); }
+    get currentExpDate() { return $('[data-qa-billing-summary] [data-qa-contact-cc-exp-date]'); }
 
     // Update contact info
     get updateContact() { return $('[data-qa-update-contact]'); }

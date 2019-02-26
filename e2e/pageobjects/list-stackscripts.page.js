@@ -48,7 +48,6 @@ class ListStackScripts extends Page {
 
     baseElementsDisplay() {
         this.header.waitForVisible(constants.wait.normal);
-        expect(this.sidebarTitle.isVisible()).toBe(true);
         expect(this.stackScriptTable.isVisible()).toBe(true);
         expect(this.header.getText()).toBe('StackScripts');
         expect(this.create.isVisible()).toBe(true);

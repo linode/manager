@@ -33,7 +33,7 @@ export class Dashboard extends Page {
     get blogPosts() { return $$('[data-qa-blog-post]'); }
     get postDescription() { return $('[data-qa-post-desc]'); }
 
-    get readMore() { return $('[data-qa-read-more]'); }
+    get readMore() { return $$(`${this.blogCard.selector} a`).find( it => it.getText() === 'Read More'); }
     get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
     get backupExistingLinodes() { return $(this.enableAllBackups.selector); }
     get backupExistingMessage() { return $('[data-qa-linodes-message]'); }

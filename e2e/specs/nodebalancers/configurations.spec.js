@@ -18,9 +18,9 @@ describe('NodeBalancer - Configurations Suite', () => {
         createNodeBalancer();
         NodeBalancers.changeTab('Configurations');
         browser.waitForVisible('[data-qa-panel]', constants.wait.normal);
-        
+
         const configPanel = NodeBalancerConfigurations.panels[0];
-        
+
         NodeBalancerConfigurations.expandConfiguration(configPanel);
     });
 
@@ -42,8 +42,8 @@ describe('NodeBalancer - Configurations Suite', () => {
     it('should display error on save configuration without a cert and private key', () => {
         NodeBalancers.saveButton.click();
 
-        expect(NodeBalancers.certTextField.$('p').getText()).toBe('SSL certificate is a required field');
-        expect(NodeBalancers.privateKeyTextField.$('p').getText()).toBe('SSL private key is a required field');
+        expect(NodeBalancers.certTextField.$('label').getText()).toContain('SSL Certificate');
+        expect(NodeBalancers.privateKeyTextField.$('label').getText()).toContain('Private Key');
 
         // Revert choice to HTTP
         NodeBalancers.selectMenuOption(NodeBalancers.protocolSelect, 'http');
@@ -52,17 +52,12 @@ describe('NodeBalancer - Configurations Suite', () => {
     });
 
     it('should display attached node', () => {
-        const attachedNodes = NodeBalancers.nodes
-            .filter(n => n.$('[data-qa-backend-ip-label] input').getValue() !== '');
-        nodeLabel = attachedNodes[0].$(NodeBalancers.backendIpLabel.selector).getValue();
-        nodeIp = attachedNodes[0].$(NodeBalancers.backendIpAddress.selector).getValue();
-        const nodeWeight = attachedNodes[0].$(NodeBalancers.backendIpWeight.selector).getValue();
-        const nodeMode = attachedNodes[0].$(NodeBalancers.backendIpMode.selector).getText();
-
+        nodeLabel = NodeBalancers.backendIpLabel.getValue();
+        nodeIp = NodeBalancers.backendIpAddress.getValue();
         expect(nodeLabel).toMatch(/\w/ig);
         expect(nodeIp).toMatch(/(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/g);
-        expect(nodeWeight).toBe('100');
-        expect(nodeMode).toContain('Accept');
+        expect(NodeBalancers.backendIpWeight.getValue()).toBe('100');
+        expect(NodeBalancers.backendIpMode.getText()).toContain('Accept');
     });
 
     it('should remove attached node', () => {
