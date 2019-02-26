@@ -17,7 +17,12 @@ export const requestRegions: ThunkActionCreator<
 
   return getRegions()
     .then(({ data }) => {
-      dispatch(regionsRequestActions.done({ result: data }));
+      // Mock in the Toronto region for testing
+      dispatch(
+        regionsRequestActions.done({
+          result: [...data, { country: 'ca', id: 'ca-east' }]
+        })
+      );
       return data;
     })
     .catch(error => {
