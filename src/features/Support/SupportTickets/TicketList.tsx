@@ -1,6 +1,5 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -9,8 +8,6 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -19,7 +16,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { ISO_FORMAT } from 'src/constants';
+import TicketRow from './TicketRow';
 import { getTicketsPage } from './ticketUtils';
 
 interface Props extends PaginationProps<Linode.SupportTicket> {
@@ -35,7 +32,7 @@ type ClassNames = 'root';
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class TicketList extends React.Component<CombinedProps, {}> {
+export class TicketList extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
 
   componentDidMount() {
@@ -55,23 +52,6 @@ class TicketList extends React.Component<CombinedProps, {}> {
   componentWillUnmount() {
     this.mounted = false;
   }
-
-  getLinkTargets = (entity: any) => {
-    switch (entity.type) {
-      case 'linode':
-        return `/linodes/${entity.id}`;
-      case 'domain':
-        return `/domains/${entity.id}`;
-      case 'nodebalancer':
-        return `/nodebalancers/${entity.id}`;
-      case 'longview':
-        return '/longview';
-      case 'volume':
-        return '/volumes';
-      default:
-        return '';
-    }
-  };
 
   renderContent = () => {
     const { data: tickets, error, loading } = this.props;
@@ -97,44 +77,9 @@ class TicketList extends React.Component<CombinedProps, {}> {
   };
 
   renderTickets = (tickets: Linode.SupportTicket[]) =>
-    tickets.map(this.renderRow);
-
-  renderEntityLink = (ticket: Linode.SupportTicket) => {
-    return ticket.entity ? (
-      <Link to={this.getLinkTargets(ticket.entity)} className="secondaryLink">
-        {ticket.entity.label}
-      </Link>
-    ) : null;
-  };
-
-  renderRow = (ticket: Linode.SupportTicket) => {
-    return (
-      <TableRow
-        data-qa-support-ticket={ticket.id}
-        key={`ticket-${ticket.id}`}
-        rowLink={`/support/tickets/${ticket.id}`}
-      >
-        <TableCell parentColumn="Subject" data-qa-support-subject>
-          <Link to={`/support/tickets/${ticket.id}`}>
-            <Typography variant="h3">{ticket.summary}</Typography>
-          </Link>
-        </TableCell>
-        <TableCell parentColumn="Ticket ID" data-qa-support-id>
-          {ticket.id}
-        </TableCell>
-        <TableCell parentColumn="Regarding" data-qa-support-entity>
-          {this.renderEntityLink(ticket)}
-        </TableCell>
-        <TableCell parentColumn="Date Created" data-qa-support-date>
-          <DateTimeDisplay value={ticket.opened} format={ISO_FORMAT} />
-        </TableCell>
-        <TableCell parentColumn="Last Updated" data-qa-support-updated>
-          <DateTimeDisplay value={ticket.updated} format={ISO_FORMAT} />
-        </TableCell>
-        <TableCell />
-      </TableRow>
-    );
-  };
+    tickets.map((ticket, idx) => (
+      <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />
+    ));
 
   render() {
     const { count, page, pageSize } = this.props;
@@ -160,6 +105,9 @@ class TicketList extends React.Component<CombinedProps, {}> {
                 </TableCell>
                 <TableCell data-qa-support-updated-header noWrap>
                   Last Updated
+                </TableCell>
+                <TableCell data-qa-support-updated-header noWrap>
+                  Updated By
                 </TableCell>
                 <TableCell />
               </TableRow>
