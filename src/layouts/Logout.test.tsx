@@ -1,27 +1,22 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { expire } from 'src/session';
-import { logout } from 'src/store/authentication';
-
 import { Logout } from './Logout';
 
-jest.mock('src/session', () => ({
-  expire: jest.fn()
-}));
-jest.mock('src/store/authentication');
+/**
+ * prevent console errors in Jest tests
+ * see: https://github.com/jsdom/jsdom/issues/2112
+ */
+window.location.assign = jest.fn();
 
 describe('layouts/Logout', () => {
-  const dispatch = jest.fn();
-  window.location.assign = jest.fn();
-  const component = shallow(<Logout dispatch={dispatch} />);
+  const component = shallow<Logout>(<Logout dispatchLogout={jest.fn()} />);
 
-  it('resets session values on componentDidMount', async () => {
+  it('dispatches logout action on componentDidMount', () => {
     const instance = component.instance();
     if (!instance) {
       throw Error('Logout component did not mount!');
     }
-    expect(expire).toBeCalled();
-    expect(dispatch).toBeCalledWith(logout());
+    expect(instance.props.dispatchLogout).toBeCalled();
   });
 });

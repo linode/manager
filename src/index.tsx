@@ -27,11 +27,6 @@ import App from './App';
 import './events';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import {
-  initialize as sessionInitialize,
-  refreshOAuthOnUserInteraction,
-  refreshOAuthToken
-} from './session';
 
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish')
@@ -66,12 +61,6 @@ createBrowserHistory().listen(({ pathname }) => {
     (window as any).ga('send', 'pageview');
   }
 });
-
-sessionInitialize();
-if (!isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname)) {
-  refreshOAuthToken();
-}
-refreshOAuthOnUserInteraction();
 
 const renderNullAuth = () => <span>null auth route</span>;
 

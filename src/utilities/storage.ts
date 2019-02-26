@@ -33,6 +33,10 @@ const GROUP_DOMAINS = `GROUP_DOMAINS`;
 const GROUP_NODEBALANCERS = `GROUP_NODEBALANCERS`;
 const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
+const TOKEN = 'authentication/token';
+const NONCE = 'authentication/noonce';
+const SCOPES = 'authentication/scopes';
+const EXPIRE = 'authentication/expire';
 
 type Theme = 'dark' | 'light';
 export type Spacing = 'compact' | 'normal';
@@ -40,7 +44,18 @@ export type PageSize = number;
 type Beta = 'open' | 'closed';
 type LinodeView = 'grid' | 'list';
 
+interface AuthGetAndSet {
+  get: () => any;
+  set: (value: string) => void;
+}
+
 export interface Storage {
+  authentication: {
+    token: AuthGetAndSet;
+    nonce: AuthGetAndSet;
+    scopes: AuthGetAndSet;
+    expire: AuthGetAndSet;
+  };
   theme: {
     get: () => Theme;
     set: (theme: Theme) => void;
@@ -100,6 +115,24 @@ export interface Storage {
 }
 
 export const storage: Storage = {
+  authentication: {
+    token: {
+      get: () => getStorage(TOKEN),
+      set: v => setStorage(TOKEN, v)
+    },
+    nonce: {
+      get: () => getStorage(NONCE),
+      set: v => setStorage(NONCE, v)
+    },
+    scopes: {
+      get: () => getStorage(SCOPES),
+      set: v => setStorage(SCOPES, v)
+    },
+    expire: {
+      get: () => getStorage(EXPIRE),
+      set: v => setStorage(EXPIRE, v)
+    }
+  },
   theme: {
     get: () => getStorage(THEME, 'light'),
     set: v => setStorage(THEME, v)
@@ -168,4 +201,4 @@ export const storage: Storage = {
   
 };
 
-export const { theme, spacing, notifications, views } = storage;
+export const { theme, notifications, views, authentication, spacing } = storage;
