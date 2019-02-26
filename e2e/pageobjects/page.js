@@ -268,6 +268,6 @@ export default class Page {
     tagGroupsInAlphabeticalOrder(tags){
         const tagHeaders = this.tagHeaders
             .map(header => header.getAttribute(this.tagHeaderSelector));
-        expect(tagHeaders).toEqual(tags.sort());
+        expect(tagHeaders).toEqual(tagHeaders.sort());
     }
 }

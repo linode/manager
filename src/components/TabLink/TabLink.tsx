@@ -39,6 +39,7 @@ class TabLink extends React.Component<CombinedProps> {
         role="tab"
         tabIndex={0}
         aria-selected={pathName === to}
+        data-qa-tab={title}
       >
         {title}
       </Link>

@@ -18,7 +18,7 @@ export type StyleProps = WithStyles<ClassNames>;
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     position: 'relative' /* for search results */,
-    height: 50,
+    maxHeight: 50,
     flex: 1,
     display: 'flex',
     alignItems: 'center',

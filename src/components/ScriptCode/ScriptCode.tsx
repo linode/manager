@@ -35,11 +35,11 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
       paddingRight: theme.spacing.unit / 2,
       paddingTop: theme.spacing.unit / 4,
       paddingBottom: theme.spacing.unit / 4,
-      fontSize: '14px',
+      fontSize: 14,
       textAlign: 'center',
       color: theme.color.headline,
       userSelect: 'none',
-      width: '35px'
+      width: 35
     },
     codeCell: {
       paddingLeft: theme.spacing.unit,

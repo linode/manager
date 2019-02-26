@@ -36,20 +36,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     maxWidth: '100%'
   },
   small: {
-    minHeight: 'auto',
+    minHeight: 32,
     marginTop: 0,
     '& input': {
+      minHeight: 32,
       padding: theme.spacing.unit
     }
   },
   selectSmall: {
-    padding: `0 ${theme.spacing.unit * 4}px 0 ${theme.spacing.unit}px`,
-    minHeight: 'auto',
+    padding: '8px 32px 0 8px',
+    minHeight: 32,
     minWidth: 132,
     '& svg': {
       marginTop: 0,
       width: 24,
-      heioght: 24
+      height: 24
     }
   }
 });
