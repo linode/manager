@@ -61,6 +61,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
+const spacingUnit = 8;
 
 const primaryColors = {
   main: '#3683dc',
@@ -119,6 +120,9 @@ const themeDefaults: ThemeOptions = {
     'none',
     'none'
   ],
+  spacing: {
+    unit: spacingUnit
+  },
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)'
@@ -264,9 +268,11 @@ const themeDefaults: ThemeOptions = {
         textTransform: 'inherit',
         borderRadius: 0,
         fontSize: '1rem',
+        lineHeight: 1,
         fontFamily: 'LatoWebBold',
         color: primaryColors.main,
-        padding: '9px 28px 11px',
+        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2}px`,
         maxHeight: 48,
         '&:hover': {
           backgroundColor: '#fff'
@@ -285,7 +291,8 @@ const themeDefaults: ThemeOptions = {
         }
       },
       text: {
-        padding: '9px 28px 11px',
+        padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2}px`,
         '&:hover': {
           color: primaryColors.light
         }
@@ -318,7 +325,8 @@ const themeDefaults: ThemeOptions = {
         backgroundColor: 'transparent',
         color: primaryColors.main,
         border: `1px solid ${primaryColors.main}`,
-        padding: '9px 28px 11px',
+        padding: `${spacingUnit * 2 - 1}px ${spacingUnit * 3 +
+          spacingUnit / 2}px ${spacingUnit * 2 - 1}px`,
         transition: 'border 225ms ease-in-out, color 225ms ease-in-out',
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
@@ -462,7 +470,8 @@ const themeDefaults: ThemeOptions = {
     MuiDialogActions: {
       root: {
         margin: 0,
-        padding: '0 24px 24px 24px',
+        padding: `0 ${spacingUnit * 3}px, ${spacingUnit * 3}px, ${spacingUnit *
+          3}px`,
         justifyContent: 'flex-start',
         '& .actionPanel': {
           padding: 0
@@ -475,7 +484,7 @@ const themeDefaults: ThemeOptions = {
     MuiDialogTitle: {
       root: {
         borderBottom: '1px solid #eee',
-        marginBottom: 20,
+        marginBottom: spacingUnit * 2 + spacingUnit / 2,
         '& h2': {
           color: primaryColors.headline
         }
@@ -495,8 +504,8 @@ const themeDefaults: ThemeOptions = {
     MuiExpansionPanel: {
       root: {
         '& .actionPanel': {
-          paddingLeft: 16,
-          paddingRight: 16
+          paddingLeft: spacingUnit * 2,
+          paddingRight: spacingUnit * 2
         },
         '& table': {
           border: `1px solid ${primaryColors.divider}`,
@@ -506,7 +515,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiExpansionPanelDetails: {
       root: {
-        padding: 16,
+        padding: spacingUnit * 2,
         backgroundColor: 'white'
       }
     },
@@ -515,9 +524,10 @@ const themeDefaults: ThemeOptions = {
         '&$focused': {
           backgroundColor: '#fbfbfb'
         },
-        padding: '0 18px',
+        padding: `0 ${spacingUnit * 2 + 2}px`,
         backgroundColor: '#fbfbfb',
         justifyContent: 'flex-start',
+        minHeight: spacingUnit * 6,
         '& h3': {
           transition: 'color 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
         },
@@ -537,12 +547,13 @@ const themeDefaults: ThemeOptions = {
           zIndex: 2
         },
         '&$expanded': {
-          minHeight: 48
+          minHeight: spacingUnit * 6
         }
       },
       content: {
         flexGrow: 0,
         order: 2,
+        margin: `${spacingUnit + spacingUnit / 2}px 0`,
         '&$expanded': {
           margin: 0
         }
@@ -558,7 +569,7 @@ const themeDefaults: ThemeOptions = {
         transform: 'none',
         color: primaryColors.main,
         position: 'relative',
-        marginLeft: -16,
+        marginLeft: -spacingUnit * 2,
         '& svg': {
           fill: '#fff',
           transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
@@ -577,7 +588,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiFormControl: {
       root: {
-        marginTop: 16,
+        marginTop: spacingUnit * 2,
         minWidth: 120,
         '&.copy > div': {
           backgroundColor: '#f4f4f4'
@@ -619,6 +630,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiIconButton: {
       root: {
+        padding: spacingUnit + spacingUnit / 2,
         color: primaryColors.main,
         '&:hover': {
           color: primaryColors.light,
@@ -657,7 +669,7 @@ const themeDefaults: ThemeOptions = {
         alignItems: 'center',
         transition: 'border-color 225ms ease-in-out',
         lineHeight: 1,
-        minHeight: 48,
+        minHeight: spacingUnit * 6,
         color: primaryColors.text,
         boxSizing: 'border-box',
         backgroundColor: '#fff',
@@ -678,7 +690,7 @@ const themeDefaults: ThemeOptions = {
       },
       inputMultiline: {
         minHeight: 125,
-        padding: '5px 12px',
+        padding: `${spacingUnit + 1}px ${spacingUnit * 2 - spacingUnit / 2}px`,
         lineHeight: 1.4
       },
       focused: {},
@@ -687,7 +699,8 @@ const themeDefaults: ThemeOptions = {
       },
       disabled: {},
       input: {
-        padding: '12px 12px 13px',
+        padding: `${spacingUnit * 2 - spacingUnit / 2}px ${spacingUnit * 2 -
+          spacingUnit / 2}px ${spacingUnit * 2 - spacingUnit / 2 + 1}px`,
         fontSize: '.9rem',
         boxSizing: 'border-box'
       },
@@ -711,7 +724,7 @@ const themeDefaults: ThemeOptions = {
         }
       },
       positionEnd: {
-        marginRight: 10
+        marginRight: spacingUnit + 2
       }
     },
     MuiInputLabel: {
@@ -763,7 +776,7 @@ const themeDefaults: ThemeOptions = {
     },
     MuiListItemText: {
       secondary: {
-        marginTop: 4,
+        marginTop: spacingUnit / 2,
         lineHeight: '1.2em'
       }
     },
@@ -784,10 +797,10 @@ const themeDefaults: ThemeOptions = {
           overflowY: 'auto',
           overflowX: 'hidden',
           boxSizing: 'content-box',
-          padding: 4,
+          padding: spacingUnit / 2,
           '& li': {
-            paddingLeft: 10,
-            paddingRight: 10
+            paddingLeft: spacingUnit + 2,
+            paddingRight: spacingUnit + 2
           },
           [breakpoints.down('xs')]: {
             minWidth: 200
@@ -842,11 +855,12 @@ const themeDefaults: ThemeOptions = {
             opacity: '.5'
           }
         },
-        padding: '6px 32px 5px 12px',
+        padding: `${spacingUnit * 2}px ${spacingUnit * 4}px ${spacingUnit *
+          2}px ${spacingUnit + 4}px`,
         color: primaryColors.text,
         backgroundColor: '#fff',
-        lineHeight: 2.3,
-        minHeight: 46,
+        lineHeight: 1,
+        minHeight: spacingUnit * 6 - 2,
         minWidth: 150,
         '&:focus': {
           backgroundColor: '#fff'
@@ -979,7 +993,7 @@ const themeDefaults: ThemeOptions = {
         overflow: 'hidden',
         maxWidth: '264',
         boxSizing: 'border-box',
-        minHeight: 48,
+        minHeight: spacingUnit * 6,
         flexShrink: 0,
         display: 'inline-flex',
         alignItems: 'center',
@@ -1004,11 +1018,9 @@ const themeDefaults: ThemeOptions = {
         }
       },
       labelContainer: {
-        paddingLeft: 0,
-        paddingRight: 0,
+        padding: `${spacingUnit - 2}px 0`,
         [breakpoints.up('md')]: {
-          paddingLeft: 0,
-          paddingRight: 0
+          padding: `${spacingUnit - 2}px 0`
         }
       },
       textColorPrimary: {
@@ -1025,10 +1037,10 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTableCell: {
       root: {
-        padding: '10px',
+        padding: spacingUnit + 2,
         borderBottom: `2px solid ${primaryColors.divider}`,
         '&:last-child': {
-          paddingRight: 10
+          paddingRight: spacingUnit + 2
         }
       },
       head: {
@@ -1040,8 +1052,9 @@ const themeDefaults: ThemeOptions = {
     },
     MuiTabs: {
       root: {
-        margin: '16px 0',
-        boxShadow: 'inset 0 -1px 0 #c5c6c8'
+        margin: `${spacingUnit * 2}px 0`,
+        boxShadow: 'inset 0 -1px 0 #c5c6c8',
+        minHeight: spacingUnit * 6
       },
       fixed: {
         overflowX: 'auto'
@@ -1079,6 +1092,7 @@ const themeDefaults: ThemeOptions = {
         backfaceVisibility: 'hidden',
         position: 'relative',
         zIndex: 1,
+        height: spacingUnit * 6,
         '&:before': {
           borderLeftColor: 'white'
         },

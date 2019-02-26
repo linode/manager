@@ -19,7 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: theme.spacing.unit * 2,
     padding: theme.spacing.unit * 3,
-    paddingBottom: 20
+    paddingBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2
   },
   section: {
     marginBottom: theme.spacing.unit

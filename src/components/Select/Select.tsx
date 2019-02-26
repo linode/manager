@@ -63,10 +63,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   small: {
-    minHeight: 'auto',
+    minHeight: 32,
     '& [role="button"]': {
-      padding: `0 ${theme.spacing.unit * 4}px 0 ${theme.spacing.unit}px`,
-      minHeight: 'auto',
+      minHeight: 32,
+      padding: '8px 32px 0 8px',
       minWidth: 132
     },
     '& svg': {
@@ -85,6 +85,7 @@ interface Props extends SelectProps {
   errorGroup?: string;
   pagination?: boolean;
   small?: boolean;
+  className?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -125,14 +126,17 @@ const SSelect: React.StatelessComponent<CombinedProps> = ({
     fullWidth: true
   };
 
-  const c = classNames({
-    [classes.inputSucess]: success === true,
-    [classes.inputError]: error === true,
-    [errorScrollClassName]: !!errorText && !!errorScrollClassName,
-    [classes.helpWrapperSelectField]: Boolean(tooltipText),
-    [classes.pagination]: Boolean(pagination),
-    [classes.small]: small
-  });
+  const c = classNames(
+    {
+      [classes.inputSucess]: success === true,
+      [classes.inputError]: error === true,
+      [errorScrollClassName]: !!errorText && !!errorScrollClassName,
+      [classes.helpWrapperSelectField]: Boolean(tooltipText),
+      [classes.pagination]: Boolean(pagination),
+      [classes.small]: small
+    },
+    className
+  );
 
   return (
     <React.Fragment>

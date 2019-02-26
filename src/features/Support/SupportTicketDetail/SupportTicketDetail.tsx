@@ -53,8 +53,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   titleWrapper: {
     display: 'flex',
     alignItems: 'flex-start',
-    marginTop: '8px',
-    marginBottom: '8px'
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 2
   },
   backButton: {
     margin: '-6px 0 0 -16px',

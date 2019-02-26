@@ -110,6 +110,7 @@ body {
 
 .dif {
   display: inline-flex;
+  align-items: center;
 }
 
 .xScroll {

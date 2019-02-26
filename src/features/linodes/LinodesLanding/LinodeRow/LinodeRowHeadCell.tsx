@@ -72,8 +72,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   labelGridWrapper: {
-    paddingLeft: '4px !important',
-    paddingRight: '4px !important'
+    paddingLeft: `${theme.spacing.unit / 2}px !important`,
+    paddingRight: `${theme.spacing.unit / 2}px !important`
   }
 });
 

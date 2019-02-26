@@ -64,7 +64,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   domainSidebar: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 4
+      marginTop: theme.spacing.unit + 24
     }
   },
   titleWrapper: {
@@ -278,6 +278,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             textColor="primary"
             variant="scrollable"
             scrollButtons="on"
+            style={{ marginBottom: 16 }}
           >
             {this.tabs.map(tab => (
               <Tab

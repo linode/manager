@@ -51,7 +51,8 @@ const styles: StyleRulesCallback = theme => ({
       fontSize: '.9rem',
       border: 0,
       color: '#C44742',
-      padding: '14px 26px 14px',
+      padding: `${theme.spacing.unit * 2 + 2}px  ${theme.spacing.unit * 2 +
+        2}px ${theme.spacing.unit * 3 + 2}px ${theme.spacing.unit * 2 + 2}px`,
       transition: theme.transitions.create(['color', 'border-color']),
       '&:hover, &:focus': {
         color: '#DF6560'
@@ -100,8 +101,8 @@ const styles: StyleRulesCallback = theme => ({
     }
   },
   compact: {
-    paddingLeft: 14,
-    paddingRight: 14
+    paddingLeft: theme.spacing.unit * 2 - 2,
+    paddingRight: theme.spacing.unit * 2 - 2
   },
   hidden: {
     visibility: 'hidden'

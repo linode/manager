@@ -29,7 +29,7 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: 0,
-    padding: 24
+    padding: theme.spacing.unit * 3
   },
   card: {
     [theme.breakpoints.down('sm')]: {

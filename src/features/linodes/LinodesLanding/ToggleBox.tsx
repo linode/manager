@@ -19,8 +19,8 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    margin: theme.spacing.unit,
-    marginRight: -theme.spacing.unit
+    margin: 8,
+    marginRight: -8
   },
   button: {
     borderWidth: 1,

@@ -40,13 +40,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit / 2,
     marginRight: theme.spacing.unit,
     [theme.breakpoints.down('xs')]: {
-      marginRight: 16
+      marginRight: theme.spacing.unit * 2
     }
   },
   addButtonWrapper: {
     width: '100%',
-    marginTop: 15,
-    marginBottom: 17
+    marginTop: theme.spacing.unit * 2 - 1,
+    marginBottom: theme.spacing.unit * 2 + 1
   },
   addButton: {
     padding: 0,

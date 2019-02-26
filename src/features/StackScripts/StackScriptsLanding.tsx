@@ -22,7 +22,7 @@ type ClassNames = 'root' | 'title';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
   }
 });
 
@@ -49,8 +49,13 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           !!history.location.state.successMessage && (
             <Notice success text={history.location.state.successMessage} />
           )}
-        <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="flex-end"
+          style={{ paddingBottom: 0 }}
+        >
+          <Grid item className="py0">
             <Typography
               role="header"
               variant="h1"
@@ -60,7 +65,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
               StackScripts
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className="py0">
             <Grid container alignItems="flex-end">
               <Grid item className="pt0">
                 <AddNewLink
@@ -76,7 +81,9 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           {imagesLoading ? (
             <CircleProgress />
           ) : (
-            <StackScriptPanel publicImages={imagesData} noHeader={true} />
+            <Grid item xs={12}>
+              <StackScriptPanel publicImages={imagesData} noHeader={true} />
+            </Grid>
           )}
         </Grid>
       </React.Fragment>

@@ -44,7 +44,7 @@ type ClassNames = 'root' | 'title';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
   }
 });
 
@@ -289,6 +289,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           justify="space-between"
           alignItems="flex-end"
           updateFor={[]}
+          style={{ paddingBottom: 0 }}
         >
           <Grid item>
             <Typography variant="h1" data-qa-title className={classes.title}>
