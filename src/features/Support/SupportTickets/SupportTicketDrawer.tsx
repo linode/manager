@@ -21,7 +21,7 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { getVersionString } from 'src/utilities/getVersionString';
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -425,17 +425,14 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     const requirementsMet =
       ticket.description.length > 0 && ticket.summary.length > 0;
 
-    const hasErrorFor = getAPIErrorFor(
-      {
-        summary: 'Summary',
-        description: 'Description'
-      },
+    const hasErrorFor = getErrorMap(
+      ['summary', 'description', 'input'],
       errors
     );
-    const summaryError = hasErrorFor('summary');
-    const descriptionError = hasErrorFor('description');
-    const generalError = hasErrorFor('none');
-    const inputError = hasErrorFor('input');
+    const summaryError = hasErrorFor.summary;
+    const descriptionError = hasErrorFor.description;
+    const generalError = hasErrorFor.none;
+    const inputError = hasErrorFor.input;
 
     const hasNoEntitiesMessage = this.getHasNoEntitiesMessage();
 
