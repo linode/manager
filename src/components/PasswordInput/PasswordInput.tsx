@@ -10,6 +10,7 @@ import { Props as TextFieldProps } from 'src/components/TextField';
 import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
+import { Typography } from '@material-ui/core';
 
 type Props = TextFieldProps & {
   value?: string;
@@ -21,7 +22,7 @@ interface State {
   strength: null | 0 | 1 | 2 | 3;
 }
 
-type ClassNames = 'container' | 'strengthIndicator';
+type ClassNames = 'container' | 'strengthIndicator' | 'infoText';
 
 const styles: StyleRulesCallback = theme => ({
   container: {
@@ -36,6 +37,10 @@ const styles: StyleRulesCallback = theme => ({
     [theme.breakpoints.down('xs')]: {
       maxWidth: '100%'
     }
+  },
+  infoText: {
+    fontSize: '0.85rem',
+    marginTop: 12
   }
 });
 
@@ -65,23 +70,29 @@ class PasswordInput extends React.Component<CombinedProps, State> {
     const { classes, value, required, disabledReason, ...rest } = this.props;
 
     return (
-      <Grid container className={classes.container}>
-        <Grid item xs={12}>
-          <HideShowText
-            {...rest}
-            tooltipText={disabledReason}
-            value={value}
-            onChange={this.onChange}
-            fullWidth
-            required={required}
-          />
-        </Grid>
-        {
-          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-            <StrengthIndicator strength={strength} />
+      <React.Fragment>
+        <Grid container className={classes.container}>
+          <Grid item xs={12}>
+            <HideShowText
+              {...rest}
+              tooltipText={disabledReason}
+              value={value}
+              onChange={this.onChange}
+              fullWidth
+              required={required}
+            />
           </Grid>
-        }
-      </Grid>
+          {
+            <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
+              <StrengthIndicator strength={strength} />
+            </Grid>
+          }
+        </Grid>
+        <Typography variant="body1" className={classes.infoText}>
+          A password must be 8 characters including one uppercase letter, one
+          special character and alphanumeric characters.
+        </Typography>
+      </React.Fragment>
     );
   }
 }
