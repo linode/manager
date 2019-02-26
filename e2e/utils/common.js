@@ -95,7 +95,7 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
 
 export const waitForLinodeStatus = (linodeLabel, status, timeout=constants.wait.minute) => {
   browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, timeout);
-  browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-status="${status}"]`, timeout * 3);
+  browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="${status}"]`, timeout * 3);
 }
 
 export const apiDeleteAllLinodes = () => {
@@ -183,7 +183,7 @@ export const checkEnvironment = () => {
     }
 }
 
-export const createVolumes = (volumeObjArray) => {
+export const createVolumes = (volumeObjArray,waitForToast) => {
     let volumes = [];
     const token = readToken(browser.options.testUser);
 
@@ -193,10 +193,14 @@ export const createVolumes = (volumeObjArray) => {
 
     browser.url(constants.routes.volumes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
-
+    $('[data-qa-volume-loading]').waitForVisible(constants.wait.long, true);
     volumeObjArray.forEach((volumeObj) => {
-        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal)
+        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal);
     });
+    if(waitForToast){
+        $('[data-qa-toast]').waitForVisible(constants.wait.minute);
+        $('[data-qa-toast]').waitForVisible(constants.wait.long, true);
+    }
 }
 
 export const switchTab = () => {

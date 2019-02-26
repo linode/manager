@@ -16,7 +16,6 @@ class Volumes extends Page {
         if (initial) {
             this.placeholderText.waitForVisible();
         } else {
-            this.sidebarTitle.waitForVisible(constants.wait.normal);
             this.volumeCellElem.waitForVisible(constants.wait.normal);
         }
     }

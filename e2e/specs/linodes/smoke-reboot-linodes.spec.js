@@ -15,7 +15,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
     const waitForRebootListView = (linode) => {
         const linodeRow = $(ListLinodes.getLinodeSelector(linode));
         browser.waitUntil(() => {
-             return linodeRow.$('..').$('[data-qa-loading] [data-qa-status="rebooting"]').isVisible();
+             return linodeRow.$('..').$('[data-qa-loading] [data-qa-entity-status="rebooting"]').isVisible();
         }, constants.wait.normal);
     }
 

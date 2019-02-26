@@ -31,7 +31,7 @@ describe('Domain Tag Management Suite', () => {
     }
 
     const checkSortOrder = () => {
-      const order = ListDomains.sortTableByHeader('Domains');
+      const order = ListDomains.sortTableByHeader('Domain');
       groupsAsTags.forEach((tag) => {
           const expectedDomainsInGroup = domainsInGroup(tag);
           const expectedOrder = order === 'asc' ? expectedDomainsInGroup.sort() : expectedDomainsInGroup.sort().reverse();

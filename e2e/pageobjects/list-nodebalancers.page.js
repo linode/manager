@@ -33,7 +33,7 @@ class ListNodeBalancers extends Page {
     }
 
     delete(nodeBalancerElem) {
-        const removeMsg = 'Are you sure you want to delete your NodeBalancer';
+        const removeMsg = 'Are you sure you want to delete your NodeBalancer?';
 
         this.selectActionMenuItem(nodeBalancerElem, 'Delete');
         this.dialogTitle.waitForVisible();
