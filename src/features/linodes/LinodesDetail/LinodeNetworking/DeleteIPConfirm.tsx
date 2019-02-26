@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -10,6 +9,7 @@ import withLoadingAndError, {
 import DeleteIPActions from './DeleteIPActions';
 
 import { removeIPAddress } from 'src/services/linodes/linodeIPs';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   handleClose: () => void;
@@ -52,12 +52,11 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
         }
       })
       .catch(e => {
-        const errText = pathOr(
-          'There was an error removing this IP. Please try again later',
-          ['response', 'data', 'errors', 0, 'reason'],
-          e
+        const errorText = getAPIErrorOrDefault(
+          e,
+          'There was an error removing this IP. Please try again later.'
         );
-        setErrorAndClearLoading(errText);
+        setErrorAndClearLoading(errorText[0].reason);
       });
   };
   render() {
@@ -87,7 +86,7 @@ class DeleteIPConfirm extends React.PureComponent<CombinedProps> {
         }
       >
         <Typography>
-          Are you sure you wish to delete this IP Address. This action cannot be
+          Are you sure you want to delete this IP Address? This action cannot be
           undone.
         </Typography>
       </ConfirmationDialog>

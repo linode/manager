@@ -64,5 +64,5 @@ export const removeIPAddress = (payload: {
       }`
     ),
     setMethod('DELETE')
-  ).then(response => response.data);
+  );
 };
