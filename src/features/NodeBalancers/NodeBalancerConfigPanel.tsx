@@ -664,6 +664,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 hasErrorFor('algorithm'),
                 sessionStickiness,
                 hasErrorFor('stickiness'),
+                hasErrorFor('ssl_cert'),
+                hasErrorFor('ssl_key'),
                 configIdx,
                 sslCertificate,
                 privateKey
