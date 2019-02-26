@@ -9,8 +9,8 @@ import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
+import Typography from 'src/components/core/Typography';
 import HideShowText from './HideShowText';
-import { Typography } from '@material-ui/core';
 
 type Props = TextFieldProps & {
   value?: string;
@@ -89,8 +89,9 @@ class PasswordInput extends React.Component<CombinedProps, State> {
           }
         </Grid>
         <Typography variant="body1" className={classes.infoText}>
-          A password must be 8 characters including one uppercase letter, one
-          special character and alphanumeric characters.
+          A password must be at least 6 characters and contain at least 2 of the
+          following classes: uppercase, lowercase, numeric characters, or
+          special characters.
         </Typography>
       </React.Fragment>
     );
