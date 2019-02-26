@@ -39,10 +39,8 @@ describe('Pagination Controls Suite', () => {
     it('There should be an ellipsis', () => {
         expect(ellipsis(6).isVisible()).toBe(true);
         getPageControl('5').click();
-        browser.pause(500);
         expect(ellipsis(2).isVisible() && ellipsis(8).isVisible()).toBe(true);
         getPageControl('10').click();
-        browser.pause(500);
         expect(ellipsis(2).isVisible()).toBe(true);
     });
 });
