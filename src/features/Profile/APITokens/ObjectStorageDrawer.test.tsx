@@ -35,4 +35,25 @@ describe('ObjectStorageDrawer', () => {
       'An error occurred.'
     );
   });
+  it('can display multiple errors', () => {
+    wrapper.setProps({
+      errors: [
+        { field: 'none', reason: 'An error occurred.' },
+        { field: 'label', reason: 'Another error occurred.' }
+      ]
+    });
+    expect(wrapper.find('[data-qa-error]')).toHaveLength(2);
+    expect(
+      wrapper
+        .find('[data-qa-error]')
+        .at(0)
+        .prop('text')
+    ).toBe('An error occurred.');
+    expect(
+      wrapper
+        .find('[data-qa-error]')
+        .at(1)
+        .prop('text')
+    ).toBe('Another error occurred.');
+  });
 });

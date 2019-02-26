@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -20,6 +19,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { createObjectStorageKeys } from 'src/services/profile/objectStorageKeys';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ObjectStorageDrawer from './ObjectStorageDrawer';
 
 type ClassNames =
@@ -74,6 +74,10 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const [keys, setKeys] = React.useState<KeysState>({ dialogOpen: false });
   const [drawer, setDrawer] = React.useState<DrawerState>({ open: false });
 
+  const closeDialog = () => setKeys({ ...keys, dialogOpen: false });
+  const openDrawer = () => setDrawer({ ...drawer, open: true });
+  const closeDrawer = () => setDrawer({ ...drawer, open: false });
+
   const handleSubmit = () => {
     createObjectStorageKeys()
       .then(data => {
@@ -83,31 +87,20 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
           const secretKey = data.keys[0].secret_key;
 
           setKeys({ accessKey, secretKey, dialogOpen: true });
-          setDrawer({ open: false });
+          closeDrawer();
         }
       })
       .catch(err => {
-        const defaultError: Linode.ApiFieldError[] = [
-          {
-            field: 'none',
-            reason: 'Could not generate Object Storage Keys at this time.'
-          }
-        ];
-        const errors: Linode.ApiFieldError[] = pathOr(
-          defaultError,
-          ['response', 'data', 'errors'],
-          err
+        const errors = getAPIErrorOrDefault(
+          err,
+          'Error generating Object Storage Key.'
         );
         setDrawer({ ...drawer, errors });
       });
   };
 
   const confirmationDialogActions = (
-    <Button
-      type="secondary"
-      onClick={() => setKeys({ ...keys, dialogOpen: false })}
-      data-qa-close-dialog
-    >
+    <Button type="secondary" onClick={closeDialog} data-qa-close-dialog>
       OK
     </Button>
   );
@@ -127,7 +120,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         </Grid>
         <Grid item>
           <AddNewLink
-            onClick={() => setDrawer({ open: true })}
+            onClick={openDrawer}
             label="Create an Object Storage Key"
           />
         </Grid>
@@ -151,7 +144,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
       <ObjectStorageDrawer
         open={drawer.open}
-        onClose={() => setDrawer({ open: false })}
+        onClose={closeDrawer}
         onSubmit={handleSubmit}
         errors={drawer.errors}
       />
@@ -160,7 +153,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         title="Object Storage Keys"
         actions={confirmationDialogActions}
         open={keys.dialogOpen}
-        onClose={() => setKeys({ ...keys, dialogOpen: false })}
+        onClose={closeDrawer}
         className={classes.confirmationDialog}
       >
         <Typography variant="body1" className={classes.helperText}>

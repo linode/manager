@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { isDevelopment } from 'src/constants';
+import { isObjectStorageEnabled } from 'src/constants';
 import APITokenTable from './APITokenTable';
 import ObjectStorageKeys from './ObjectStorageKeys';
 
@@ -18,7 +18,7 @@ export const APITokens: React.StatelessComponent = () => {
         type="OAuth Client Token"
       />
 
-      {isDevelopment && <ObjectStorageKeys />}
+      {isObjectStorageEnabled && <ObjectStorageKeys />}
     </React.Fragment>
   );
 };

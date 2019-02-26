@@ -30,10 +30,12 @@ export const ObjectStorageDrawer: React.StatelessComponent<
   CombinedProps
 > = props => {
   const { open, onClose, onSubmit, errors } = props;
-
   return (
     <Drawer title="Create an Object Storage Key" open={open} onClose={onClose}>
-      {errors && <Notice text={errors[0].reason} error data-qa-error />}
+      {errors &&
+        errors.map(error => (
+          <Notice key={error.reason} text={error.reason} error data-qa-error />
+        ))}
       <Typography>
         Generate an Object Storage key pair for use with an S3-compatible
         client.
