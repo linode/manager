@@ -75,6 +75,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
         it('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
+            ListLinodes.hoverLinodeTags(linodeName);
             assertTagsDisplay(addedTags);
         });
     });

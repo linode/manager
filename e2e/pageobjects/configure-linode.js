@@ -97,7 +97,7 @@ class ConfigureLinode extends Page {
         expect(this.selectRegionHeader.isVisible()).toBe(true);
 
         expect(this.planHeader.isVisible()).toBe(true);
-        expect(this.planTabs.length).toBe(3);
+        expect(this.planTabs.length).toBe(4);
         expect(this.plans.length).toBeGreaterThan(0);
 
         expect(this.label.isVisible()).toBe(true);
@@ -126,10 +126,9 @@ class ConfigureLinode extends Page {
 
     stackScriptTableDisplay() {
         this.stackScriptTableHeader.waitForVisible(constants.wait.normal);
-        expect(this.stackScriptTableHeader.getText()).toBe('StackScript');
-        expect(this.stackScriptDeploysHeader.getText()).toBe('Active Deploys');
-        expect(this.stackScriptRevisionsHeader.getText()).toBe('Last Revision');
-        expect(this.stackScriptCompatibleImagesHeader.getText()).toBe('Compatible Images');
+        this.stackScriptDeploysHeader.waitForVisible(constants.wait.normal);
+        this.stackScriptRevisionsHeader.waitForVisible(constants.wait.normal);
+        this.stackScriptCompatibleImagesHeader.waitForVisible(constants.wait.normal);
     }
 
     stackScriptMetadataDisplay() {
@@ -260,6 +259,7 @@ class ConfigureLinode extends Page {
 
     createFrom(source) {
         const sourceSelector = `[data-qa-create-from="Create from ${source}"]`;
+        $(sourceSelector).waitForVisible(constants.wait.normal);
         browser.click(sourceSelector);
         browser.waitUntil(function() {
             return browser.getAttribute(sourceSelector, 'aria-selected').includes('true');
