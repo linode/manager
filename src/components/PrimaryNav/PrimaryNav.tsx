@@ -419,7 +419,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             </Hidden>
             <div className={classes.spacer} />
             <ThemeToggle toggleTheme={toggleTheme} />
-            <button onClick={toggleSpacing} />
+            <a
+              style={{ margin: 20, textAlign: 'center' }}
+              onClick={toggleSpacing}
+            >
+              Toggle spacing
+            </a>
           </div>
         </Grid>
       </React.Fragment>
