@@ -27,11 +27,10 @@ type ClassNames = 'titleWrapper' | 'controls' | 'launchButton';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
-    marginTop: 5
+    alignItems: 'center'
   },
   controls: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing.unit / 2,
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',
@@ -42,7 +41,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     position: 'relative',
     top: 1,
     lineHeight: 1,
-    padding: '12px 28px 14px 0',
     '&:hover': {
       backgroundColor: 'transparent',
       textDecoration: 'underline'

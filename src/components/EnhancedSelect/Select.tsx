@@ -52,6 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       boxShadow: 'none',
       border: `1px solid transparent`,
       backgroundColor: theme.bg.white,
+      minHeight: theme.spacing.unit * 5 - 2,
       '&:hover': {
         border: `1px dotted #ccc`,
         cursor: 'text'
@@ -143,6 +144,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       marginRight: 4,
       paddingLeft: 6,
       paddingRight: 0
+    },
+    '& .react-select__clear-indicator': {
+      padding: theme.spacing.unit
     },
     '& .react-select__multi-value__remove': {
       backgroundColor: 'transparent',
@@ -251,7 +255,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   small: {
-    minHeight: 33,
+    minHeight: 32,
     minWidth: 'auto'
   }
 });

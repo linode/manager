@@ -22,7 +22,7 @@ const getClampedPrice = (newSize: number, currentSize: number) =>
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 4
   }
 });
 
