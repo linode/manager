@@ -3,6 +3,7 @@ import createBreakpoints from 'src/components/core/styles/createBreakpoints';
 import createMuiTheme, {
   ThemeOptions
 } from 'src/components/core/styles/createMuiTheme';
+import { spacing as spacingStorage } from 'src/utilities/storage';
 
 /**
  * Augmenting Palette and Palette Options
@@ -61,7 +62,16 @@ declare module '@material-ui/core/styles/createMuiTheme' {
 }
 
 const breakpoints = createBreakpoints({});
-const spacingUnit = 8;
+const sp = spacingStorage.get();
+const GetSpacingUnit = () => {
+  switch (sp) {
+    case 'compact':
+      return 4;
+    default:
+      return 8;
+  }
+};
+const spacingUnit = GetSpacingUnit();
 
 const primaryColors = {
   main: '#3683dc',
