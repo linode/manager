@@ -181,13 +181,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   };
 
   handleSelectLinode = (linode: Linode.Linode) => {
-    this.setState({
-      selectedLinodeID: linode.id,
-      selectedTypeID: null,
-      selectedRegionID: linode.region,
-      selectedDiskSize: linode.specs.disk,
-      selectedBackupID: undefined
-    });
+    if (linode.id !== this.state.selectedLinodeID) {
+      this.setState({
+        selectedLinodeID: linode.id,
+        selectedTypeID: null,
+        selectedRegionID: linode.region,
+        selectedDiskSize: linode.specs.disk,
+        selectedBackupID: undefined
+      });
+    }
   };
 
   handleSelectBackupID = (id: number) => {
