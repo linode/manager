@@ -22,6 +22,7 @@ export const setStorage = (key: string, value: string) => {
 };
 
 const THEME = 'themeChoice';
+const SPACING = 'spacingChoice';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
@@ -33,6 +34,7 @@ const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 
 type Theme = 'dark' | 'light';
+type Spacing = 'compact' | 'normal';
 type Beta = 'open' | 'closed';
 type LinodeView = 'grid' | 'list';
 
@@ -40,6 +42,10 @@ export interface Storage {
   theme: {
     get: () => Theme;
     set: (theme: Theme) => void;
+  };
+  spacing: {
+    get: () => Spacing;
+    set: (spacing: Spacing) => void;
   };
   notifications: {
     welcome: {
@@ -91,6 +97,10 @@ export const storage: Storage = {
   theme: {
     get: () => getStorage(THEME, 'light'),
     set: v => setStorage(THEME, v)
+  },
+  spacing: {
+    get: () => getStorage(SPACING, 'normal'),
+    set: v => setStorage(SPACING, v)
   },
   notifications: {
     welcome: {
@@ -145,4 +155,4 @@ export const storage: Storage = {
   }
 };
 
-export const { theme, notifications, views } = storage;
+export const { theme, spacing, notifications, views } = storage;
