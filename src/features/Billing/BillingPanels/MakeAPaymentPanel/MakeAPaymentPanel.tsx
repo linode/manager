@@ -125,7 +125,7 @@ const client = {
 
 const env = process.env.NODE_ENV === 'development' ? 'sandbox' : 'production';
 
-const getDefaultPayment = (balance: number | false): string => {
+export const getDefaultPayment = (balance: number | false): string => {
   if (!balance) {
     return '';
   }
