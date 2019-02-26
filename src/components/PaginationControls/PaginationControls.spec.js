@@ -29,14 +29,14 @@ describe('Pagination Controls Suite', () => {
         expect(getPageControl(1).getAttribute('disabled')).toBeNull();
     });
 
-    it('The next and previous page button work as ', () => {
+    it('The next and previous page button work as expected', () => {
         $(previous).click();
         expect(getPageControl(1).getAttribute('disabled')).not.toBeNull();
         $(next).click();
         expect(getPageControl(2).getAttribute('disabled')).not.toBeNull();
     });
 
-    it('There should be an ellipsis', () => {
+    it('There should be an ellipsis trailing a load of 5 pages', () => {
         expect(ellipsis(6).isVisible()).toBe(true);
         getPageControl(5).click();
         expect(ellipsis(2).isVisible() && ellipsis(8).isVisible()).toBe(true);
