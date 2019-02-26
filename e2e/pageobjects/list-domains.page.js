@@ -113,31 +113,23 @@ class ListDomains extends Page {
 
     clone(newDomainName) {
         this.cloneDrawerElemsDisplay();
-
         browser.trySetValue(`${this.cloneDomainName.selector} input`, newDomainName);
         this.submit.click();
-
-        browser.waitForVisible(this.breadcrumbStaticText.selector, constants.wait.normal);
-
-        browser.url(constants.routes.domains)
-
-        browser.waitUntil(function() {
-            const domains = $$('[data-qa-domain-cell] [data-qa-domain-label]');
-            const domainLabels = domains.map(d => d.getText());
-
-            return domainLabels.includes(newDomainName);
-        }, constants.wait.normal, 'Failed to clone domain');
+        this.drawerBase.waitForVisible(constants.wait.normal, true);
+        this.breadcrumbStaticText.waitForVisible(constants.wait.normal);
+        expect(this.breadcrumbStaticText.getText()).toBe(newDomainName);
+        this.breadcrumbBackLink.click();
+        this.domainRow(newDomainName).waitForVisible(constants.wait.normal);
     }
 
-    remove(domain, domainName) {
+    remove(domainName) {
         this.dialogTitle.waitForVisible();
         expect(this.dialogTitle.getText()).toBe(`Remove ${domainName}`);
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-
         this.submit.click();
         this.dialogTitle.waitForVisible(constants.wait.normal, true);
-        domain.waitForVisible(constants.wait.normal, true);
+        this.domainRow(domainName).waitForVisible(constants.wait.normal, true);
     }
 
     domainRow(domain){
@@ -159,7 +151,7 @@ class ListDomains extends Page {
     sortTableByHeader(header){
         const selector = header.toLowerCase() === 'domain' ?  this.domainSortAtttribute : this.typeSortAttribure;
         const start = $(`[${selector}]`).getAttribute(selector);
-        $(`[${selector}]`).$('svg').click();
+        $(`[${selector}]>span`).click();
         browser.pause(1000);
         browser.waitUntil(() => {
             return $(`[${selector}]`).getAttribute(selector) !== start;

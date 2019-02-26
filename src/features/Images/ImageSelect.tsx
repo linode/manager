@@ -18,7 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '100%'
   },
   icon: {
-    marginTop: 30,
+    marginTop: theme.spacing.unit * 2 + 14,
     marginLeft: -theme.spacing.unit
   },
   selectContainer: {

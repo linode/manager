@@ -8,7 +8,7 @@ export class Display extends Page {
     get userEmail() { return $(`${this.emailAnchor.selector} input`); }
     get invalidEmailWarning() { return $(`${this.emailAnchor.selector} p`); }
     get saveTimeZone() { return $('[data-qa-tz-submit]'); }
-    get timeZoneSelect() { return $(`[data-qa-enhanced-select] ${this.multiSelect.selector}`); }
+    get timeZoneSelect() { return $(`[data-qa-enhanced-select="Choose a timezone."] ${this.multiSelect.selector}`); }
 
     baseElementsDisplay(){
         this.userMenu.waitForVisible(constants.wait.normal);

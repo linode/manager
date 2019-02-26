@@ -126,23 +126,21 @@ export class Profile extends Page {
     get oauthId() { return $('[data-qa-oauth-id]'); }
     get oauthCallback() { return $('[data-qa-oauth-callback]'); }
     get oauthActionMenu() { return $('[data-qa-action-menu]'); }
-    get oauthCreate() { return this.addIcon('Create My App'); }
+    get oauthCreate() { return this.addIcon('Create OAuth App'); }
 
     tokenBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
         expect(this.profileHeader.isVisible()).toBe(true);
-        expect(this.apiTokensTab.isVisible()).toBe(true);
+        expect(this.profileTab('API Tokens').isVisible()).toBe(true);
         expect(this.tokenCreate.waitForVisible(constants.wait.normal)).toBe(true);
         expect(this.tableHeader.length).toBe(2);
         expect(this.tableHead.length).toBe(2);
-        this.tableHead.forEach(t => expect(t.$$('th').length).toBe(5));
+        this.tableHead.forEach(t => expect(t.$$('th').length).toBe(4));
     }
 
     oauthBaseElems() {
         browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
-        const oauthSelected = browser.getAttribute('[data-qa-tab="My Apps"]', 'aria-selected').includes('true');
-        expect(oauthSelected).toBe(true);
-
+        expect(this.profileTab('OAuth Apps').getAttribute('aria-selected')).toBe('true');
         browser.waitForVisible('[data-qa-oauth-label]', constants.wait.normal);
         expect(this.oauthLabel.isVisible()).toBe(true);
         expect(this.oauthAccess.isVisible()).toBe(true);
@@ -184,5 +182,9 @@ export class Profile extends Page {
         if (type == 'token') {
 
         }
+    }
+
+    profileTab(tabText){
+        return $$('[data-qa-tabs] a').find( tab => tab.getText() === tabText);
     }
 }

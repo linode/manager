@@ -29,21 +29,22 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tagGridRow: {
-    marginBottom: 20
+    marginBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2
   },
   tagHeaderRow: {
     backgroundColor: theme.bg.main,
     height: 'auto',
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: '20px 0 10px',
+      padding: `${theme.spacing.unit * 2 + theme.spacing.unit / 2}px 0 ${theme
+        .spacing.unit + 2}px`,
       borderBottom: 'none'
     }
   },
   groupContainer: {
     '&:first-of-type': {
       '& $tagHeaderRow > td': {
-        padding: '10px 0'
+        padding: `${theme.spacing.unit + 2}px 0`
       }
     }
   },

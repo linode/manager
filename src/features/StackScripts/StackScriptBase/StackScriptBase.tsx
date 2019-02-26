@@ -1,12 +1,17 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
@@ -47,7 +52,11 @@ export interface State {
   successMessage: string;
 }
 
-type CombinedProps = StyleProps & any;
+interface StoreProps {
+  stackScriptGrants?: Linode.Grant[];
+}
+
+type CombinedProps = StyleProps & StoreProps & any;
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
@@ -101,12 +110,17 @@ const withStackScriptBase = (isSelecting: boolean) => (
       filter: any = this.state.currentFilter,
       isSorting: boolean = false
     ) => {
-      const { currentUser, category, request } = this.props;
+      const { currentUser, category, request, stackScriptGrants } = this.props;
       this.setState({ gettingMoreStackScripts: true, isSorting });
 
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
-      return request(filteredUser, { page, page_size: 50 }, filter)
+      return request(
+        filteredUser,
+        { page, page_size: 50 },
+        filter,
+        stackScriptGrants
+      )
         .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
           if (!this.mounted) {
             return;
@@ -255,7 +269,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
     handleSearch = (value: string) => {
       const { currentFilter } = this.state;
-      const { category, currentUser, request } = this.props;
+      const { category, currentUser, request, stackScriptGrants } = this.props;
       const filteredUser = category === 'linode' ? 'linode' : currentUser;
 
       const lowerCaseValue = value.toLowerCase().trim();
@@ -311,7 +325,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
       request(
         filteredUser,
         { page: 1, page_size: 50 },
-        { ...filter, ...currentFilter }
+        { ...filter, ...currentFilter },
+        stackScriptGrants
       )
         .then((response: any) => {
           if (!this.mounted) {
@@ -477,7 +492,22 @@ const withStackScriptBase = (isSelecting: boolean) => (
     }
   }
 
-  return withStyles(EnhancedComponent);
+  const mapStateToProps: MapState<StoreProps, CombinedProps> = state => ({
+    stackScriptGrants: isRestrictedUser(state)
+      ? pathOr(
+          undefined,
+          ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+          state
+        )
+      : undefined
+  });
+
+  const connected = connect(mapStateToProps);
+
+  return compose(
+    withStyles,
+    connected
+  )(EnhancedComponent);
 };
 
 const getDisplayName = (Component: React.ComponentType) =>

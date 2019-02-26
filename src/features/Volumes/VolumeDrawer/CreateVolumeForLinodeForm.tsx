@@ -24,6 +24,7 @@ import {
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
 import { openForAttaching } from 'src/store/volumeDrawer';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
@@ -42,7 +43,7 @@ type ClassNames = 'root' | 'textWrapper';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   textWrapper: {
-    marginBottom: 10
+    marginBottom: theme.spacing.unit + 2
   }
 });
 
@@ -144,6 +145,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={
                   "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
                 }
+                important
               />
             )}
             <ModeSelection
@@ -204,7 +206,10 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               tagError={
                 touched.tags
                   ? errors.tags
-                    ? 'Unable to tag volume.'
+                    ? getErrorStringOrDefault(
+                        errors.tags,
+                        'Unable to tag volume.'
+                      )
                     : undefined
                   : undefined
               }
