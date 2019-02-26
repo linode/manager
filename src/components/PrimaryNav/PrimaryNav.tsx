@@ -155,6 +155,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   closeMenu: () => void;
   toggleTheme: () => void;
+  toggleSpacing: () => void;
 }
 
 interface State {
@@ -333,7 +334,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, toggleTheme } = this.props;
+    const { classes, toggleSpacing, toggleTheme } = this.props;
     const { expandedMenus } = this.state;
 
     return (
@@ -418,6 +419,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             </Hidden>
             <div className={classes.spacer} />
             <ThemeToggle toggleTheme={toggleTheme} />
+            <button onClick={toggleSpacing} />
           </div>
         </Grid>
       </React.Fragment>

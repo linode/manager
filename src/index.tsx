@@ -83,7 +83,7 @@ const renderLish = () => (
 
 const renderApp = (props: RouteProps) => (
   <LinodeThemeWrapper>
-    {toggle => (
+    {(toggle, spacing) => (
       <SnackBar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         maxSnack={3}
@@ -91,7 +91,11 @@ const renderApp = (props: RouteProps) => (
         data-qa-toast
         hideIconVariant={true}
       >
-        <App toggleTheme={toggle} location={props.location} />
+        <App
+          toggleTheme={toggle}
+          toggleSpacing={spacing}
+          location={props.location}
+        />
       </SnackBar>
     )}
   </LinodeThemeWrapper>
