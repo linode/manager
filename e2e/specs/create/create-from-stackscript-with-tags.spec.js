@@ -30,7 +30,7 @@ describe('Create Linode From StackScript - Tags Suite', () => {
     });
 
     it('should display tags select', () => {
-        expect(ConfigureLinode.multiSelect.isVisible()).toBe(true);
+        expect(ConfigureLinode.tagsMultiSelect.isVisible()).toBe(true);
     });
 
     it('should create a new tag to the linode', () => {

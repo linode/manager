@@ -56,11 +56,12 @@ describe('View - Personal Access Tokens', () => {
 
         it('should display new token in table', () => {
             tokenCreateDrawer.closeDialog.click();
-            const expectedExpiration = 'in 6 months';
+            const now = new Date();
+            const sixMonths = new Date();
+            sixMonths.setMonth( now.getMonth() + 6);
+            sixMonths.setDate( sixMonths.getDate() - 1);
             expect(browser.waitForVisible(newToken)).toBe(true);
-            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toBe(expectedExpiration);
-            expect($(`${newToken} [data-qa-token-type]`).getText()).toBe('Personal Access Token');
-
+            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,10));
         });
 
         it('should display tokens', () => {
@@ -84,9 +85,9 @@ describe('View - Personal Access Tokens', () => {
             expect(domainPermission.getAttribute('data-qa-perm-none-radio')).toBe('true');
             expect(eventsPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
             expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
-            
+
             browser.click('[data-qa-close-drawer]');
-            
+
             browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
             browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         });
@@ -94,7 +95,7 @@ describe('View - Personal Access Tokens', () => {
         describe('Edit - Personal Access Tokens', () => {
             it('should display edit drawer', () => {
                 profile.selectActionMenuItem($(newToken), 'Rename Token')
-                
+
                 expect(tokenCreateDrawer.label.waitForVisible()).toBe(true);
                 expect(tokenCreateDrawer.title.getText()).toBe('Edit Personal Access Token');
                 expect(tokenCreateDrawer.submit.isVisible()).toBe(true);
