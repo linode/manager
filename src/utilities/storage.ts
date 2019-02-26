@@ -34,7 +34,7 @@ const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 
 type Theme = 'dark' | 'light';
-type Spacing = 'compact' | 'normal';
+export type Spacing = 'compact' | 'normal';
 type Beta = 'open' | 'closed';
 type LinodeView = 'grid' | 'list';
 

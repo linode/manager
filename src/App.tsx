@@ -159,6 +159,7 @@ const styles: StyleRulesCallback = theme => ({
 
 interface Props {
   toggleTheme: () => void;
+  toggleSpacing: () => void;
   location: RouteProps['location'];
 }
 
@@ -269,7 +270,13 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen, hasError } = this.state;
-    const { classes, toggleTheme, profileLoading, profileError } = this.props;
+    const {
+      classes,
+      toggleSpacing,
+      toggleTheme,
+      profileLoading,
+      profileError
+    } = this.props;
 
     if (profileError || hasError) {
       return <TheApplicationIsOnFire />;
@@ -290,6 +297,7 @@ export class App extends React.Component<CombinedProps, State> {
                   open={menuOpen}
                   closeMenu={this.closeMenu}
                   toggleTheme={toggleTheme}
+                  toggleSpacing={toggleSpacing}
                 />
                 <main className={classes.content}>
                   <TopMenu openSideMenu={this.openMenu} />
