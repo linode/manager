@@ -16,7 +16,11 @@ const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
-const formatDescription = (desc: string) => {
+const formatDescription = (desc?: string) => {
+  if (!desc) {
+    return 'No Description';
+  }
+
   const isBackup = /^Backup/.test(desc);
   const descChunks = desc.split(' - ');
   const nameIndex = isBackup ? 2 : 1;
