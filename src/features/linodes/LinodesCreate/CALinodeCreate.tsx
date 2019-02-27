@@ -25,7 +25,7 @@ import {
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { ExtendedType } from './SelectPlanPanel';
-import FromDistro from './TabbedContent/FromDistro';
+import FromImageContent from './TabbedContent/FromImageContent';
 import { Info } from './util';
 
 export type TypeInfo =
@@ -93,7 +93,9 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
       title: 'Distros',
       render: () => {
         return (
-          <FromDistro
+          <FromImageContent
+            publicOnly
+            imagePanelTitle="Choose a Distribution"
             getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
             regions={this.props.regionsData}
             images={this.props.imagesData}
