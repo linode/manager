@@ -19,8 +19,8 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { formatRegion } from 'src/utilities';
-import LinodeNetSummary from './LinodeNetSummary'
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import LinodeNetSummary from './LinodeNetSummary';
 
 type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
@@ -128,7 +128,9 @@ class SummaryPanel extends React.Component<CombinedProps> {
             {formatRegion(linodeRegion)}
           </div>
         </Paper>
-
+        <Paper className={classes.summarySection}>
+          <LinodeNetSummary linodeId={linodeId} />
+        </Paper>
         <Paper className={classes.summarySection}>
           <Typography
             role="header"
@@ -172,7 +174,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
           </Typography>
           <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
         </Paper>
-        <LinodeNetSummary linodeId={linodeId} />
       </div>
     );
   }

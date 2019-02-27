@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 export interface Metrics {
   max: number;
   average: number;
@@ -51,7 +49,7 @@ export const formatNumber = (n: number): string => n.toFixed(2);
 // 1400 --> "1.40 K"
 // 1400000 --> "1.40 M"
 // 1400000000 --> "1.40 G"
-export const formatMagnitude = (value: number | string, unit: string, Wrapper: React.ReactNode = 'span') => {
+export const formatMagnitude = (value: number | string, unit: string) => {
   const num = Number(value);
 
   const ranges = [
@@ -76,13 +74,8 @@ export const formatMagnitude = (value: number | string, unit: string, Wrapper: R
   });
 
   return finalNum
-    ? 
-    (<>
-      <Wrapper>{formatNumber(finalNum)}</Wrapper> {magnitude}{unit}
-    </>)
-    : (<>
-      <Wrapper>{formatNumber(num)}</Wrapper> {unit}
-    </>)
+    ? `${formatNumber(finalNum)} ${magnitude}${unit}`
+    : `${formatNumber(num)} ${unit}`;
 };
 
 export const formatPercentage = (value: number) => formatNumber(value) + '%';
@@ -130,12 +123,15 @@ export const getTotalTraffic = (
 };
 
 export const getMonthlyTraffic = (stats: Linode.Stats) => {
-  const getTrafficSum = (records: number[][]) => records.reduce((acc, record) => {
-    return acc + record[1];
-  }, 0);
+  const getTrafficSum = (records: number[][]) =>
+    records.reduce((acc, record) => {
+      return acc + record[1];
+    }, 0);
 
-  return getTrafficSum(stats.netv4.in) +
+  return (
+    getTrafficSum(stats.netv4.in) +
     getTrafficSum(stats.netv4.out) +
     getTrafficSum(stats.netv6.in) +
-    getTrafficSum(stats.netv4.out);
-}
+    getTrafficSum(stats.netv4.out)
+  );
+};
