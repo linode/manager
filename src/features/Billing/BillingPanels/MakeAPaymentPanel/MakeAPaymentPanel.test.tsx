@@ -1,4 +1,5 @@
 import {
+  getDefaultPayment,
   isAllowedUSDAmount,
   shouldEnablePaypalButton
 } from './MakeAPaymentPanel';
@@ -24,5 +25,19 @@ describe('Make a Payment Panel', () => {
     expect(shouldEnablePaypalButton(500)).toBeTruthy();
     expect(shouldEnablePaypalButton(15)).toBeTruthy();
     expect(shouldEnablePaypalButton(5)).toBeTruthy();
+  });
+
+  describe('getDefaultPayment helper function', () => {
+    it('should return an empty string if balance is false', () => {
+      expect(getDefaultPayment(false)).toEqual('');
+    });
+
+    it('should return an empty string if the balance is below $5', () => {
+      expect(getDefaultPayment(3.0)).toEqual('');
+    });
+
+    it('should return a formatted string if the balance is above $5', () => {
+      expect(getDefaultPayment(6.1)).toEqual('6.10');
+    });
   });
 });
