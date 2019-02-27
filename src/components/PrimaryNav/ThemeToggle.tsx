@@ -21,12 +21,11 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   switchWrapper: {
-    padding: '16px 40px 0 34px',
     alignItems: 'center',
     marginTop: 'auto',
-    width: 'calc(100% - 20px)',
     justifyContent: 'center',
-    display: 'flex'
+    display: 'flex',
+    marginLeft: -10
   },
   toggle: {
     '& > span:last-child': {
