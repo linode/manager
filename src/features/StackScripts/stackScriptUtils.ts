@@ -19,6 +19,17 @@ export const getStackScriptsByUser = (
     username
   });
 
+/**
+ * helper function to get Cloud Apps StackScripts
+ *
+ * for the prototype, all the apps we need are going to be uploaded to
+ * Christine Puk's account. Keep in mind that the Linux distros will be missing from this
+ * list because we're intentionally not including the distros in this view
+ */
+export const getCloudAppsStackScripts = () => {
+  return getStackScriptsByUser('capuk');
+};
+
 export const getAccountStackScripts = (
   currentUser: string,
   params?: any,
