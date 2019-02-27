@@ -164,7 +164,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
   },
   settings: {
-    padding: '16px 40px 24px 24px',
+    padding: '24px 0',
     alignItems: 'center',
     marginTop: 'auto',
     justifyContent: 'center',
@@ -184,7 +184,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: 8,
     position: 'absolute',
     backgroundColor: theme.bg.navy,
-    left: '18px !important',
     border: '1px solid #999',
     outline: 0
   }
@@ -491,8 +490,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               onClose={this.handleClose}
               getContentAnchorEl={undefined}
               PaperProps={{ square: true, className: classes.paper }}
-              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'bottom', horizontal: -16 }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
               className={classes.menu}
             >
               <ThemeToggle toggleTheme={toggleTheme} />
