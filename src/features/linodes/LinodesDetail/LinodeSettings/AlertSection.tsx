@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -137,4 +138,7 @@ class AlertSection extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(AlertSection));
+export default compose<CombinedProps, any>(
+  RenderGuard,
+  styled
+)(AlertSection);
