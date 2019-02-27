@@ -55,27 +55,23 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
   };
 
   toggleSpacing = () => {
-    console.log('toggling');
     const { spacing } = this.state;
     if (spacing === 'compact') {
-      this.setState({ spacing: 'normal' });
       spacingStorage.set('normal');
+      this.setState({ spacing: 'normal' });
     } else {
-      this.setState({ spacing: 'compact' });
       spacingStorage.set('compact');
+      this.setState({ spacing: 'compact' });
     }
   };
 
   render() {
     const { children } = this.props;
-    const { themeChoice, spacing } = this.state;
-    const theme = {
-      ...themes[themeChoice],
-      spacing: { unit: spacing === 'compact' ? 4 : 8 }
-    };
+    const { themeChoice } = this.state;
+    const theme = themes[themeChoice];
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <MuiThemeProvider theme={theme()}>
         {isRenderChildren(children)
           ? children(this.toggleTheme, this.toggleSpacing)
           : children}
