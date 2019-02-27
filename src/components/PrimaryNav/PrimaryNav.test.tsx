@@ -17,11 +17,16 @@ const mockClasses = {
   listItem: '',
   listItemAccount: '',
   logoItem: '',
+  logoItemCompact: '',
   menuGrid: '',
   spacer: '',
   sublink: '',
   sublinkActive: '',
-  sublinkPanel: ''
+  sublinkPanel: '',
+  settings: '',
+  activeSettings: '',
+  menu: '',
+  paper: ''
 };
 
 describe('PrimaryNav', () => {
@@ -33,6 +38,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
+          theme={{ spacing: [] }}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
@@ -97,6 +103,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
+          theme={{ spacing: [] }}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
@@ -121,6 +128,7 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
+          theme={{ spacing: [] }}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
