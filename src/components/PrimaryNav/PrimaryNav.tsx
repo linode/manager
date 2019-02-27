@@ -159,7 +159,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
   },
   settings: {
-    padding: '16px 40px 34px 24px',
+    padding: '16px 40px 24px 24px',
     alignItems: 'center',
     marginTop: 'auto',
     justifyContent: 'center',
