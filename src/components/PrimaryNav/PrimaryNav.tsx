@@ -13,7 +13,8 @@ import Menu from 'src/components/core/Menu';
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
@@ -31,6 +32,7 @@ type ClassNames =
   | 'menuGrid'
   | 'fadeContainer'
   | 'logoItem'
+  | 'logoItemCompact'
   | 'listItem'
   | 'collapsible'
   | 'linkItem'
@@ -73,14 +75,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       .spacing.unit +
       theme.spacing.unit / 2}px`
   },
+  logoItemCompact: {
+    padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px`
+  },
   listItem: {
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create([
       'background-color',
       'border-left-color'
     ]),
-    padding: `${theme.spacing.unit + 2}px ${theme.spacing.unit * 4 -
-      2}px ${theme.spacing.unit + 2}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit / 2 + 6}px ${theme.spacing.unit * 4 -
+      2}px ${theme.spacing.unit / 2 + 6}px ${theme.spacing.unit * 3}px`,
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -198,7 +203,7 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps = Props & StateProps;
+type CombinedProps = Props & StateProps & WithTheme;
 
 export class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
@@ -377,8 +382,9 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, toggleSpacing, toggleTheme } = this.props;
+    const { classes, toggleSpacing, toggleTheme, theme } = this.props;
     const { expandedMenus, anchorEl } = this.state;
+    const { spacing: spacingUnit } = theme;
 
     return (
       <React.Fragment>
@@ -394,11 +400,19 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menu"
         >
           <Grid item>
-            <div className={classes.logoItem}>
-              <Link to={`/dashboard`}>
-                <Logo width={115} height={43} />
-              </Link>
-            </div>
+            {spacingUnit.unit === 8 ? (
+              <div className={classes.logoItem}>
+                <Link to={`/dashboard`}>
+                  <Logo width={115} height={43} />
+                </Link>
+              </div>
+            ) : (
+              <div className={classes.logoItemCompact}>
+                <Link to={`/dashboard`}>
+                  <Logo width={100} height={37} />
+                </Link>
+              </div>
+            )}
           </Grid>
           <div
             className={classNames({
@@ -535,4 +549,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default withStyles(styles)(withRouter(connected(PrimaryNav)));
+export default withStyles(styles, { withTheme: true })(
+  withRouter(connected(PrimaryNav))
+);
