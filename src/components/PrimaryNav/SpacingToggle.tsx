@@ -21,10 +21,8 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   switchWrapper: {
-    padding: '16px 40px 0 34px',
     alignItems: 'center',
     marginTop: 'auto',
-    width: 'calc(100% - 20px)',
     justifyContent: 'center',
     display: 'flex'
   },
@@ -33,7 +31,7 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
       backgroundColor: '#f4f4f4 !important',
       opacity: `0.38 !important`
     },
-    '&.darkTheme .square': {
+    '&.dt .square': {
       fill: '#444 !important'
     }
   }
@@ -64,7 +62,7 @@ export const SpacingToggle: React.StatelessComponent<CombinedProps> = props => {
         checked={spacingUnit.unit !== 8}
         className={classNames({
           [classes.toggle]: true,
-          [spacingUnit.unit]: true
+          dt: spacingUnit.unit === 4
         })}
         aria-label="Switch Spacing"
       />

@@ -1,3 +1,4 @@
+import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -5,8 +6,10 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Divider from 'src/components/core/Divider';
 import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
+import Menu from 'src/components/core/Menu';
 import {
   StyleRulesCallback,
   withStyles,
@@ -39,7 +42,11 @@ type ClassNames =
   | 'sublinkPanel'
   | 'spacer'
   | 'listItemAccount'
-  | 'divider';
+  | 'divider'
+  | 'menu'
+  | 'paper'
+  | 'settings'
+  | 'activeSettings';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuGrid: {
@@ -150,6 +157,31 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
+  },
+  settings: {
+    padding: '16px 40px 34px 24px',
+    alignItems: 'center',
+    marginTop: 'auto',
+    justifyContent: 'center',
+    display: 'flex',
+    color: '#e7e7e7',
+    transition: theme.transitions.create('color'),
+    '&:hover': {
+      color: theme.color.green
+    }
+  },
+  activeSettings: {
+    color: theme.color.green
+  },
+  menu: {},
+  paper: {
+    maxWidth: 350,
+    padding: 8,
+    position: 'absolute',
+    backgroundColor: theme.bg.navy,
+    left: '18px !important',
+    border: '1px solid #999',
+    outline: 0
   }
 });
 
@@ -163,6 +195,7 @@ interface State {
   drawerOpen: boolean;
   expandedMenus: Record<string, boolean>;
   primaryLinks: PrimaryLink[];
+  anchorEl?: HTMLElement;
 }
 
 type CombinedProps = Props & StateProps;
@@ -174,7 +207,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       account: false,
       support: false
     },
-    primaryLinks: []
+    primaryLinks: [],
+    anchorEl: undefined
   };
 
   mounted: boolean = false;
@@ -305,6 +339,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     this.navigate('/logout');
   };
 
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: undefined });
+  };
+
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes } = this.props;
 
@@ -336,7 +378,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, toggleSpacing, toggleTheme } = this.props;
-    const { expandedMenus } = this.state;
+    const { expandedMenus, anchorEl } = this.state;
 
     return (
       <React.Fragment>
@@ -419,8 +461,29 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               </ListItem>
             </Hidden>
             <div className={classes.spacer} />
-            <ThemeToggle toggleTheme={toggleTheme} />
-            <SpacingToggle toggleSpacing={toggleSpacing} />
+            <IconButton
+              onClick={this.handleClick}
+              className={classNames({
+                [classes.settings]: true,
+                [classes.activeSettings]: anchorEl
+              })}
+            >
+              <Settings />
+            </IconButton>
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleClose}
+              getContentAnchorEl={undefined}
+              PaperProps={{ square: true, className: classes.paper }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: -16 }}
+              className={classes.menu}
+            >
+              <ThemeToggle toggleTheme={toggleTheme} />
+              <SpacingToggle toggleSpacing={toggleSpacing} />
+            </Menu>
           </div>
         </Grid>
       </React.Fragment>
