@@ -32,6 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: theme.spacing.unit * 3
   },
   card: {
+    marginTop: 8,
     [theme.breakpoints.down('sm')]: {
       marginTop: 0
     }
