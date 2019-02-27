@@ -1,5 +1,4 @@
 const { constants } = require('../../constants');
-const { apiDeleteAllDomains } =  require('../../utils/common');
 
 import ListDomains from '../../pageobjects/list-domains.page';
 
@@ -37,8 +36,9 @@ describe('Domains - List Suite', () => {
     it('should display action menu options', () => {
         browser.url(constants.routes.domains);
         ListDomains.domainElem.waitForVisible(constants.wait.normal);
-        domainElement = `[data-qa-domain-cell="${initialDomain}"]`;
-
+        domainId = ListDomains.domains[0].getAttribute('data-qa-domain-cell');
+        domainElement = `[data-qa-domain-cell="${domainId}"]`;
+        
         browser.jsClick(`${domainElement} [data-qa-action-menu]`);
 
         const expectedMenuItems = [
@@ -58,34 +58,43 @@ describe('Domains - List Suite', () => {
     });
 
     it('should display clone domain drawer', () => {
-        ListDomains.selectActionMenuItemV2(domainElement, 'Clone');
+        ListDomains.selectActionMenuItem($(domainElement), 'Clone');
         ListDomains.cloneDrawerElemsDisplay();
 
         ListDomains.closeDrawer();
     });
 
     it('should fail to clone with the same domain name', () => {
-        ListDomains.selectActionMenuItemV2(domainElement, 'Clone');
+        ListDomains.selectActionMenuItem($(domainElement), 'Clone');
         ListDomains.cloneDrawerElemsDisplay();
-
+        
         browser.trySetValue(`${ListDomains.cloneDomainName.selector} input`, initialDomain);
-
+        
         ListDomains.submit.click();
         ListDomains.cloneDomainName.$('p').waitForVisible(constants.wait.normal);
         ListDomains.closeDrawer();
     });
 
     it('should clone domain', () => {
-        ListDomains.selectActionMenuItemV2(domainElement, 'Clone');
+        browser.url(constants.routes.domains);
+        browser.waitForVisible('[data-qa-action-menu]');
+        ListDomains.selectActionMenuItem($(domainElement), 'Clone');
         ListDomains.clone(cloneDomain);
     });
 
     it('should remove domain', () => {
-        ListDomains.selectActionMenuItemV2(domainElement, 'Remove');
-        ListDomains.remove(initialDomain);
+        browser.url(constants.routes.domains);
+        browser.waitForVisible('[data-qa-action-menu]');
+        ListDomains.selectActionMenuItem($(domainElement), 'Remove');
+        ListDomains.remove($(domainElement), initialDomain);
     });
 
     afterAll(() => {
-        apiDeleteAllDomains();
+        ListDomains.domains
+            .forEach(d => {
+                ListDomains.drawerTitle.waitForExist(constants.wait.short, true);
+                ListDomains.selectActionMenuItem(d, 'Remove');
+                ListDomains.remove(d, d.$(ListDomains.label.selector).getText());
+            });
     });
 });

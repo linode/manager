@@ -42,7 +42,7 @@ exports.readToken = (username) => {
 * @returns {null} returns nothing
 */
 exports.login = (username, password, credFilePath) => {
-    let letsGoButton;
+    let loginButton,letsGoButton;
 
     browser.url(constants.routes.linodes);
     try {
@@ -53,13 +53,11 @@ exports.login = (username, password, credFilePath) => {
     }
 
     browser.waitForVisible('#password', constants.wait.long);
-    browser.jsClick('#username');
     browser.trySetValue('#username', username);
-    browser.jsClick('#password');
     browser.trySetValue('#password', password);
+    loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '.btn-primary';
     letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
-    const loginButton = '.btn#submit';
-    $(loginButton).click();
+    browser.click(loginButton);
 
     try {
         browser.waitUntil(function() {
@@ -67,18 +65,14 @@ exports.login = (username, password, credFilePath) => {
         }, constants.wait.normal);
     } catch (err) {
         console.log('failed to login!');
-        if ($('.form-actions').getText().includes('CSRF')) {
-            console.log($('.form-actions').getText());
+        if (browser.getText('.alert').includes('This field is required.')) {
             browser.trySetValue('#password', password);
-            browser.trySetValue('#username', username);
-            $(loginButton).click();
+            browser.click(loginButton);
         }
     }
 
-    if(process.env.REACT_APP_APP_ROOT.includes('local')){
-        if($$('.oauthauthorize-page').length > 0 && browser.getUrl().includes('login')){
-          $('.form-actions>.btn').click();
-        }
+    if(browser.isExisting('.Modal') && browser.getUrl().includes('login')){
+        browser.click('.btn.btn-primary');
     }
 
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
@@ -136,6 +130,7 @@ exports.generateCreds = (credFilePath, config, userCount) => {
             setCredCollection('MANAGER_USER', `_${i}`);
         }
     }
+
     writeFileSync(credFilePath, JSON.stringify(credCollection));
 }
 

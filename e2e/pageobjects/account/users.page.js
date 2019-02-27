@@ -49,11 +49,7 @@ class Users extends Page {
 
         if (userConfig.restricted) {
             this.createDrawerRestricted.click();
-            const selector = this.toggleOption.selector;
-            const attribute = selector.substring(1,(selector.length-1));
-            browser.waitUntil(() => {
-                return this.createDrawerRestricted.getAttribute(attribute) === 'false'
-            }, constants.wait.normal);
+            browser.waitForExist(`${this.createDrawerRestricted.selector} input:checked`, constants.wait.normal);
         }
 
         this.createDrawerSubmit.click();

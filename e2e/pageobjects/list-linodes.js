@@ -22,7 +22,7 @@ export class ListLinodes extends Page {
     get linodeActionMenu() { return $('[data-qa-action-menu]'); }
     get listToggle() { return $('[data-qa-view="list"]'); }
     get gridToggle() { return $('[data-qa-view="grid"]'); }
-    get status() { return $('[data-qa-entity-status]') }
+    get status() { return $('[data-qa-status]') }
     get tableHead() { return $('[data-qa-table-head]'); }
     get linodeSortAttribute() { return 'data-qa-sort-label'; }
     get sortLinodesByLabel() { return $(`[${this.linodeSortAttribute}]`); }
@@ -55,10 +55,6 @@ export class ListLinodes extends Page {
 
     getLinodeSelector(linode){
         return `[data-qa-linode="${linode}"]`;
-    }
-
-    hoverLinodeTags(linode){
-        $(`${this.getLinodeSelector(linode)}>td:nth-child(2)`).moveToObject();
     }
 
     getLinodeTags(linode){
@@ -113,7 +109,7 @@ export class ListLinodes extends Page {
     }
 
     getStatus(linode) {
-        return $(`${this.getLinodeSelector(linode)} ${this.status.selector}`).getAttribute('data-qa-entity-status');
+        return $(`${this.getLinodeSelector(linode)} ${this.status.selector}`).getAttribute('data-qa-status');
     }
 
     reboot(linode) {
@@ -134,11 +130,11 @@ export class ListLinodes extends Page {
         }
 
         browser.waitUntil(function() {
-            return linode.$(this.status.selector).getAttribute('data-qa-entity-status') === 'rebooting';
+            return linode.$(this.status.selector).getAttribute('data-qa-status') === 'rebooting';
         }, constants.wait.long);
 
         browser.waitUntil(function() {
-            return linode.$(this.status).getAttribute('data-qa-entity-status') === 'running';
+            return linode.$(this.status).getAttribute('data-qa-status') === 'running';
         }, constants.wait.long);
     }
 
@@ -147,7 +143,7 @@ export class ListLinodes extends Page {
         this.acceptDialog('Powering Off');
 
         browser.waitUntil(function() {
-            return browser.isVisible(`${this.getLinodeSelector(linode)} [data-qa-entity-status="offline"]`);
+            return browser.isVisible(`${this.getLinodeSelector(linode)} [data-qa-status="offline"]`);
         }, constants.wait.minute * 3, 'Failed to power down linode');
     }
 
@@ -155,7 +151,7 @@ export class ListLinodes extends Page {
         this.selectActionMenuItem(linode, 'Power On');
 
         browser.waitUntil(function() {
-            return browser.isVisible('[data-qa-entity-status="running"]');
+            return browser.isVisible('[data-qa-status="running"]');
         }, constants.wait.minute * 2);
     }
 
