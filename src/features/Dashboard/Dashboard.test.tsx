@@ -14,7 +14,7 @@ const props = {
   backupError: undefined,
   entitiesWithGroupsToImport: { linodes: [], domains: [] },
   classes: { root: '' },
-  theme: light
+  theme: light()
 };
 
 const component = shallow(<Dashboard {...props} />);
