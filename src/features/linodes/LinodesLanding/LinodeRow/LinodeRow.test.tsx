@@ -20,7 +20,7 @@ describe('LinodeRow', () => {
   const mockProps: CombinedProps = {
     classes: mockClasses,
     toggleConfirmation: jest.fn(),
-    theme: light,
+    theme: light(),
     recentEvent: undefined,
     openConfigDrawer: jest.fn(),
     mutationAvailable: false,
