@@ -46,7 +46,6 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
         }
         apiCreateMultipleLinodes([linode1,linode2]);
         ListLinodes.navigateToDetail(linodeLabel);
-        browser.pause(500);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
     });
 

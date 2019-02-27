@@ -10,7 +10,9 @@ describe('Linode Detail - Ip Transfer Suite', () => {
 	beforeAll(() => {
 		linodeA = apiCreateLinode(false, true);
 		linodeB = apiCreateLinode(false, true);
-		browser.url(`${constants.routes.linodes}/${linodeA.id}/networking`);
+		browser.click(`[data-qa-linode="${linodeA.label}"] a`);
+		LinodeDetail.landingElemsDisplay();
+		LinodeDetail.changeTab('Networking');
 	});
 
 	afterAll(() => {
@@ -19,7 +21,10 @@ describe('Linode Detail - Ip Transfer Suite', () => {
 
 	it('should display ip transfer configuration', () => {
 		Networking.networkActionsTitle.waitForVisible(constants.wait.normal);
+
+		// Expand the panels
 		Networking.expandPanels(2);
+
 		expect(Networking.networkingActionsSubheading.isVisible()).toBe(true);
 		expect(Networking.ipTransferSubheading.isVisible()).toBe(true);
 		Networking.ipTransferActionMenu.waitForVisible(constants.wait.normal);
