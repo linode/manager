@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import scriptLoader from 'react-async-script-loader';
 import * as ReactDOM from 'react-dom';
@@ -22,7 +23,9 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import { withAccount } from 'src/features/Billing/context';
+import AccountContainer, {
+  DispatchProps as AccountDispatchProps
+} from 'src/containers/account.container';
 import {
   executePaypalPayment,
   makePayment,
@@ -97,12 +100,12 @@ interface PaypalScript {
 interface AccountContextProps {
   accountLoading: boolean;
   balance: false | number;
-  request: () => Promise<void>;
   lastFour: string;
 }
 
 type CombinedProps = AccountContextProps &
   PaypalScript &
+  AccountDispatchProps &
   WithStyles<ClassNames>;
 
 type PaypalButton = React.ComponentType<Paypal.PayButtonProps>;
@@ -122,11 +125,19 @@ const client = {
 
 const env = process.env.NODE_ENV === 'development' ? 'sandbox' : 'production';
 
+export const getDefaultPayment = (balance: number | false): string => {
+  if (!balance) {
+    return '';
+  }
+  // $5 is the minimum payment amount, so we don't want to set a default if they owe less than that.
+  return balance > 5 ? String(balance.toFixed(2)) : '';
+};
+
 class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   state: State = {
     type: 'CREDIT_CARD',
     submitting: false,
-    usd: '',
+    usd: getDefaultPayment(this.props.balance),
     cvv: '',
     dialogOpen: false,
     paymentID: '',
@@ -139,7 +150,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {
     if (!prevProps.isScriptLoadSucceed && this.props.isScriptLoadSucceed) {
       /*
-       * Becuase the paypal script is now loaded, so now we have access to this React component
+       * Because the paypal script is now loaded, so now we have access to this React component
        * in the window element. This will be used in the render method.
        * See documentation: https://github.com/paypal/paypal-checkout/blob/master/docs/frameworks.md
        */
@@ -148,6 +159,14 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         ReactDOM
       });
       this.setState({ paypalLoaded: true });
+    }
+
+    if (prevProps.accountLoading && !this.props.accountLoading) {
+      const defaultPayment = getDefaultPayment(this.props.balance);
+      this.setState({
+        usd: defaultPayment,
+        paypalSubmitEnabled: Number(defaultPayment) >= 5
+      });
     }
   }
 
@@ -200,6 +219,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           submitting: false,
           success: true
         });
+        this.props.requestAccount();
       })
       .catch(errorResponse => {
         this.setState({
@@ -238,7 +258,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       payment_id: paymentID
     })
       .then(() => {
-        this.props.request();
         this.setState({
           isExecutingPaypalPayment: false,
           dialogOpen: false,
@@ -362,7 +381,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   renderForm = () => {
-    const { accountLoading, balance, classes, lastFour } = this.props;
+    const { accountLoading, balance, lastFour, classes } = this.props;
     const { errors, success } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -542,16 +561,18 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const accountContext = withAccount(context => ({
-  accountLoading: context.loading,
-  balance: context.data && context.data.balance,
-  request: context.request,
-  lastFour: (context.data && context.data.credit_card.last_four) || ''
-}));
+const withAccount = AccountContainer(
+  (ownProps, accountLoading, accountData) => ({
+    ...ownProps,
+    accountLoading,
+    balance: pathOr(false, ['balance'], accountData),
+    lastFour: pathOr(false, ['credit_card', 'last_four'], accountData)
+  })
+);
 
 export default compose<CombinedProps, {}>(
   styled,
-  accountContext,
+  withAccount,
   scriptLoader('https://www.paypalobjects.com/api/checkout.js')
 )(MakeAPaymentPanel);
 
