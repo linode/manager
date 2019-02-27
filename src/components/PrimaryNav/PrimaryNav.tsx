@@ -15,6 +15,7 @@ import {
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 
 interface PrimaryLink {
@@ -419,12 +420,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             </Hidden>
             <div className={classes.spacer} />
             <ThemeToggle toggleTheme={toggleTheme} />
-            <a
-              style={{ margin: 20, textAlign: 'center' }}
-              onClick={toggleSpacing}
-            >
-              Toggle spacing
-            </a>
+            <SpacingToggle toggleSpacing={toggleSpacing} />
           </div>
         </Grid>
       </React.Fragment>
