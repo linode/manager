@@ -443,6 +443,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   HTTP Body
                 </MenuItem>
               </TextField>
+              <FormHelperText>
+                Active health checks proactively check the health of back-end
+                nodes. 'TCP Connection' requires a successful TCP handshake.
+                'HTTP Valid Status' requires a 2xx or 3xx response from the
+                backend node. 'HTTP Body Regex' uses a regex to match against an
+                expected result body.
+              </FormHelperText>
             </Grid>
           </Grid>
           {healthCheckType !== 'none' && (
@@ -472,6 +479,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-active-check-interval
                   disabled={disabled}
                 />
+                <FormHelperText>
+                  Seconds between health check probes
+                </FormHelperText>
               </Grid>
               <Grid
                 updateFor={[
@@ -498,6 +508,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-active-check-timeout
                   disabled={disabled}
                 />
+                <FormHelperText>
+                  Seconds to wait before considering the probe a failure. 1-30.
+                  Must be less than check_interval.
+                </FormHelperText>
               </Grid>
               <Grid
                 updateFor={[
@@ -507,7 +521,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 ]}
                 item
                 xs={12}
-                lg={3}
+                lg={6}
               >
                 <TextField
                   type="number"
@@ -522,6 +536,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-active-check-attempts
                   disabled={disabled}
                 />
+                <FormHelperText>
+                  Number of failed probes before taking a node out of rotation.
+                  1-30
+                </FormHelperText>
               </Grid>
               {['http', 'http_body'].includes(healthCheckType) && (
                 <Grid
@@ -533,7 +551,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   ]}
                   item
                   xs={12}
-                  md={4}
+                  lg={6}
                 >
                   <TextField
                     label="Check HTTP Path"
@@ -604,6 +622,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               }
               label="Passive Checks"
             />
+            <FormHelperText>
+              Enable passive checks based on observing communication with
+              back-end nodes.
+            </FormHelperText>
           </Grid>
         </Grid>
       </Grid>
@@ -694,6 +716,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   small
                   disabled={disabled}
                 />
+                <FormHelperText>Listen on this port</FormHelperText>
               </Grid>
               <Grid item xs={6} sm={4} md={3} lg={2}>
                 <TextField
@@ -788,6 +811,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     Source
                   </MenuItem>
                 </TextField>
+                <FormHelperText>
+                  Roundrobin. Least connections assigns connections to the
+                  backend with the least connections. Source uses the client's
+                  IPv4 address
+                </FormHelperText>
               </Grid>
 
               <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -812,6 +840,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     HTTP Cookie
                   </MenuItem>
                 </TextField>
+                <FormHelperText>
+                  Route subsequent requests from the client to the same backend
+                </FormHelperText>
               </Grid>
               <Grid item xs={12}>
                 <Divider className={classes.divider} />

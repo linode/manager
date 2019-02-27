@@ -12,6 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import FormHelperText from 'src/components/core/FormHelperText';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -153,6 +154,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               onChange={this.handleLabelInputChange}
               value={fields.label}
             />
+            <FormHelperText>Rename your NodeBalancer</FormHelperText>
           </div>
           <div className={classes.inner}>
             <TextField
@@ -168,6 +170,10 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               placeholder="0"
               value={defaultTo(0, fields.client_conn_throttle)}
             />
+            <FormHelperText>
+              To help mitigate abuse, throttle connections from a single client
+              IP to this number per second. 0 to disable.
+            </FormHelperText>
           </div>
           <ActionsPanel className={classes.expPanelButton}>
             <Button
