@@ -6,6 +6,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getLinodeStatsByDate } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
@@ -82,45 +83,55 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
           }
           error={true}
           important
+          spacingBottom={0}
         />
       );
     }
 
     return (
-      <>
-        <Typography align="center" variant="h2" className={classes.title}>
-          Monthly Network Transfer
-        </Typography>
-        <CircleProgress
-          variant="static"
-          noTopMargin
-          green
-          value={Math.ceil(usagePercent)}
-          className={classes.poolUsageProgress}
-        >
-          <span className={classes.circleChildren}>
-            <Typography className={classes.used} data-qa-transfer-used>
-              {renderPercentageString(usagePercent)}
-            </Typography>
-          </span>
-        </CircleProgress>
-        <Typography align="center">
-          You have used <strong>{renderPercentageString(usagePercent)}</strong>{' '}
-          of your available Network Transfer quota for this Linode's plan (
-          {total} GB).
-        </Typography>
-        <Divider className={classes.divider} />
-        <Typography className={classes.itemText + ' ' + classes.itemTextFirst}>
-          Free: <strong>{Math.floor(total - usedInGb)}</strong> GB
-        </Typography>
-        <Typography className={classes.itemText}>
-          Used: <strong>{usedInGb}</strong> GB
-        </Typography>
-        <Divider className={classes.divider} />
-        <Typography className={classes.itemText}>
-          Total: <strong>{total}</strong> GB
-        </Typography>
-      </>
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography align="center" variant="h2" className={classes.title}>
+            Monthly Network Transfer
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sm={3} md={12}>
+          <CircleProgress
+            variant="static"
+            noTopMargin
+            green
+            value={Math.ceil(usagePercent)}
+            className={classes.poolUsageProgress}
+          >
+            <span className={classes.circleChildren}>
+              <Typography className={classes.used} data-qa-transfer-used>
+                {renderPercentageString(usagePercent)}
+              </Typography>
+            </span>
+          </CircleProgress>
+        </Grid>
+        <Grid item xs={6} sm={9} md={12}>
+          <Typography>
+            You have used{' '}
+            <strong>{renderPercentageString(usagePercent)}</strong> of your
+            available Network Transfer quota for this Linode's plan ({total}{' '}
+            GB).
+          </Typography>
+          <Divider className={classes.divider} />
+          <Typography
+            className={classes.itemText + ' ' + classes.itemTextFirst}
+          >
+            Free: <strong>{Math.floor(total - usedInGb)}</strong> GB
+          </Typography>
+          <Typography className={classes.itemText}>
+            Used: <strong>{usedInGb}</strong> GB
+          </Typography>
+          <Divider className={classes.divider} />
+          <Typography className={classes.itemText}>
+            Total: <strong>{total}</strong> GB
+          </Typography>
+        </Grid>
+      </Grid>
     );
   }
 }
