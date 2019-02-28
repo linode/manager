@@ -7,7 +7,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 
-import LinodeRowTags from './LinodeRowTags';
+import Tags from './Tags';
 
 import Tooltip from 'src/components/core/Tooltip';
 
@@ -32,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
+export interface Props {
   tags: string[];
 }
 
@@ -45,7 +45,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = props => {
     <TableCell parentColumn="Tags" className={classes.root}>
       {tags.length > 0 ? (
         <Tooltip
-          title={<LinodeRowTags tags={tags} />}
+          title={<Tags tags={tags} />}
           placement="bottom"
           leaveDelay={50}
           interactive={true}
