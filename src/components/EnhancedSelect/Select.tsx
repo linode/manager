@@ -395,7 +395,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
     return (
       <BaseSelect
         {...restOfProps}
-        isClearable={isClearable || true}
+        // If isClearable hasn't been supplied, default to true
+        isClearable={isClearable === undefined ? true : isClearable}
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
