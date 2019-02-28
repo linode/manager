@@ -1,4 +1,7 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
@@ -7,7 +10,9 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { getVolumes } from 'src/services/volumes';
+import { MapState } from 'src/store/types';
 import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root';
@@ -32,7 +37,7 @@ interface State {
   selectedVolumeId?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 class VolumeSelect extends React.Component<CombinedProps, State> {
   state: State = {
@@ -78,7 +83,30 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     if (!volumes) {
       return [];
     }
-    return volumes.map(volume => ({
+
+    const { volumeGrants } = this.props;
+
+    let volumeOptions = [];
+
+    if (volumeGrants) {
+      const allowedVolumeGrants = volumeGrants.reduce(
+        (acc: number[], volume: Linode.Grant) => {
+          if (volume.permissions === 'read_write') {
+            acc.push(volume.id);
+          }
+          return acc;
+        },
+        []
+      );
+
+      volumeOptions = volumes.filter(
+        volume => allowedVolumeGrants.indexOf(volume.id) !== -1
+      );
+    } else {
+      volumeOptions = volumes;
+    }
+
+    return volumeOptions.map(volume => ({
       value: volume.id,
       label: volume.label,
       data: {
@@ -168,6 +196,25 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
   }
 }
 
+interface StateProps {
+  volumeGrants?: Linode.Grant[];
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+  volumeGrants: isRestrictedUser(state)
+    ? pathOr(
+        undefined,
+        ['__resources', 'profile', 'data', 'grants', 'volume'],
+        state
+      )
+    : undefined
+});
+
+const connected = connect(mapStateToProps);
+
 const styled = withStyles(styles);
 
-export default styled(VolumeSelect);
+export default compose<CombinedProps, Props>(
+  styled,
+  connected
+)(VolumeSelect);
