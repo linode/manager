@@ -44,6 +44,7 @@ interface StateProps {
   updateError?: Linode.ApiFieldError[];
   networkHelperEnabled: boolean;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
+  isManaged: boolean;
 }
 
 interface DispatchProps {
@@ -117,12 +118,14 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <AutoBackups
-          backups_enabled={backups_enabled}
-          onChange={this.toggleAutomaticBackups}
-          openBackupsDrawer={openBackupsDrawer}
-          hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
-        />
+        {!this.props.isManaged && (
+          <AutoBackups
+            backups_enabled={backups_enabled}
+            onChange={this.toggleAutomaticBackups}
+            openBackupsDrawer={openBackupsDrawer}
+            hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+          />
+        )}
         <NetworkHelper
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
@@ -154,7 +157,12 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
   ),
   entitiesWithGroupsToImport: !storage.hasImportedGroups.get()
     ? getEntitiesWithGroupsToImport(state)
-    : emptyGroupedEntities
+    : emptyGroupedEntities,
+  isManaged: pathOr(
+    false,
+    ['__resources', 'accountSettings', 'data', 'managed'],
+    state
+  )
 });
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
