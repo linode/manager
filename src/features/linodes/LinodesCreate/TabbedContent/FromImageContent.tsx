@@ -58,6 +58,8 @@ interface Notice {
 interface Props {
   errors?: Linode.ApiFieldError[];
   notice?: Notice;
+  publicOnly?: boolean;
+  imagePanelTitle?: string;
   images: Linode.Image[];
   regions: ExtendedRegion[];
   types: ExtendedType[];
@@ -294,9 +296,11 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
       getBackupsMonthlyPrice,
       getRegionInfo,
       getTypeInfo,
+      publicOnly,
       updateCustomLabel,
       userSSHKeys,
-      disabled
+      disabled,
+      imagePanelTitle
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -327,6 +331,8 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
           <CreateLinodeDisabled isDisabled={disabled} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
+            hideMyImages={publicOnly}
+            title={imagePanelTitle}
             images={images}
             handleSelection={this.handleSelectImage}
             selectedImageID={selectedImageID}
