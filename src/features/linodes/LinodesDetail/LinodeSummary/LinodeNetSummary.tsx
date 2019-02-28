@@ -9,6 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { getLinodeStatsByDate } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
+import { isRecent } from 'src/utilities/isRecent.ts';
 
 import {
   ClassNames,
@@ -57,7 +58,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   }
 
   render() {
-    const { total, classes } = this.props;
+    const { total, classes, isTooEarlyForStats } = this.props;
     const { used, loading, error } = this.state;
 
     const usedInGb = Math.ceil(used / 8e9);
@@ -70,6 +71,19 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
             Monthly Network Transfer
           </Typography>
           <CircleProgress />
+        </>
+      );
+    }
+
+    if (error && isTooEarlyForStats) {
+      return (
+        <>
+          <Typography align="center" variant="h2" className={classes.title}>
+            Monthly Network Transfer
+          </Typography>
+          <Typography align="center">
+            Network Transfer data is not yet available – check back later.
+          </Typography>
         </>
       );
     }
@@ -127,6 +141,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
 
 interface StoreProps {
   total: number;
+  isTooEarlyForStats?: boolean;
 }
 
 const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
@@ -134,7 +149,9 @@ const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
     (l: Linode.Linode) => l.id === props.linodeId
   );
   return {
-    total: linode ? linode.specs.transfer : 0
+    total: linode ? linode.specs.transfer : 0,
+    isTooEarlyForStats:
+      linode && isRecent(linode.created, moment.utc().format())
   };
 };
 
