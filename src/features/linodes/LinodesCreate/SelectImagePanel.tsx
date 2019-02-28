@@ -57,6 +57,7 @@ const distroIcons = {
 
 interface Props {
   images: Linode.Image[];
+  title?: string;
   error?: string;
   selectedImageID: string | null;
   handleSelection: (id: string) => void;
@@ -211,7 +212,7 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
         >
           {error && <Notice text={error} error />}
           <Typography role="header" variant="h2" data-qa-tp="Select Image">
-            Select Image
+            {props.title || 'Select an Image'}
           </Typography>
           <Grid className={props.classes.flatImagePanelSelections} container>
             {renderPublicImages()}

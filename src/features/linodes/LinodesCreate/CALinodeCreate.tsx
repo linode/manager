@@ -25,6 +25,8 @@ import {
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { ExtendedType } from './SelectPlanPanel';
+import FromImageContent from './TabbedContent/FromImageContent';
+import { Info } from './util';
 
 export type TypeInfo =
   | {
@@ -90,7 +92,22 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Distros',
       render: () => {
-        return <React.Fragment />;
+        return (
+          <FromImageContent
+            publicOnly
+            imagePanelTitle="Choose a Distribution"
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            regions={this.props.regionsData}
+            images={this.props.imagesData}
+            types={this.props.typesData}
+            getTypeInfo={this.getTypeInfo}
+            getRegionInfo={this.getRegionInfo}
+            history={this.props.history}
+            accountBackups={this.props.accountBackupsEnabled}
+            handleDisablePasswordField={this.handleDisablePasswordField}
+            disabled={this.props.userCannotCreateLinode}
+          />
+        );
       }
     },
     {
@@ -110,6 +127,68 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
   componentWillUnmount() {
     this.mounted = false;
   }
+
+  getBackupsMonthlyPrice = (selectedTypeID: string | null): number | null => {
+    if (!selectedTypeID || !this.props.typesData) {
+      return null;
+    }
+    const type = this.getTypeInfo(selectedTypeID);
+    if (!type) {
+      return null;
+    }
+    return type.backupsMonthly;
+  };
+
+  getImageInfo = (image: Linode.Image | undefined): Info => {
+    return (
+      image && {
+        title: `${image.vendor || image.label}`,
+        details: `${image.vendor ? image.label : ''}`
+      }
+    );
+  };
+
+  getTypeInfo = (selectedTypeID: string | null): TypeInfo => {
+    const typeInfo = this.reshapeTypeInfo(
+      this.props.typesData.find(type => type.id === selectedTypeID)
+    );
+
+    return typeInfo;
+  };
+
+  reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
+    return (
+      type && {
+        title: type.label,
+        details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
+        monthly: type.price.monthly,
+        backupsMonthly: type.addons.backups.price.monthly
+      }
+    );
+  };
+
+  getRegionInfo = (selectedRegionID?: string | null): Info => {
+    const selectedRegion = this.props.regionsData.find(
+      region => region.id === selectedRegionID
+    );
+
+    return (
+      selectedRegion && {
+        title: selectedRegion.country.toUpperCase(),
+        details: selectedRegion.display
+      }
+    );
+  };
+
+  handleDisablePasswordField = (imageSelected: boolean) => {
+    if (!imageSelected) {
+      return {
+        disabled: true,
+        reason: 'You must first select an image to enter a root password'
+      };
+    }
+    return;
+  };
 
   render() {
     const { selectedTab } = this.state;
