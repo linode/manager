@@ -26,7 +26,9 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3
+  },
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
@@ -139,7 +141,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
         <Typography role="header" variant="h1" className={classes.title}>
           Settings
         </Typography>
-        <Paper style={{ padding: 24 }}>
+        <Paper className={classes.root}>
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}
             {success && <Notice success text={success} />}

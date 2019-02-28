@@ -24,6 +24,7 @@ const mockClasses = {
   sublinkActive: '',
   sublinkPanel: '',
   settings: '',
+  settingsBackdrop: '',
   activeSettings: '',
   menu: '',
   paper: ''
