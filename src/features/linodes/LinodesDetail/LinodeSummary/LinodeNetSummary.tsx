@@ -67,10 +67,14 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
     if (loading) {
       return (
         <>
-          <Typography align="center" variant="h2" className={classes.title}>
+          <Typography align="center" variant="h2">
             Monthly Network Transfer
           </Typography>
-          <CircleProgress />
+          <Grid container justify="center">
+            <Grid item>
+              <CircleProgress mini />
+            </Grid>
+          </Grid>
         </>
       );
     }
@@ -79,7 +83,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
       return (
         <Notice
           text={
-            "Couldn't load Linode's network summary. Please, refresh the page to try loading it again."
+            'Network transfer information for this Linode is currently unavailable.'
           }
           error={true}
           important
@@ -91,7 +95,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <Typography align="center" variant="h2" className={classes.title}>
+          <Typography align="center" variant="h2">
             Monthly Network Transfer
           </Typography>
         </Grid>
