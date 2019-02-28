@@ -7,7 +7,7 @@ import { StickyContainer } from 'react-sticky';
 import { compose as composeComponent } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
-import Tab from 'src/components/core/Tab';
+import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -24,6 +24,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
+import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import { ExtendedType } from './SelectPlanPanel';
 import FromImageContent from './TabbedContent/FromImageContent';
 import { Info } from './util';
@@ -46,11 +47,6 @@ type CombinedProps = WithImagesProps &
 
 interface State {
   selectedTab: number;
-}
-
-interface Tab {
-  title: string;
-  render: () => JSX.Element;
 }
 
 export class LinodeCreate extends React.Component<CombinedProps, State> {
@@ -113,13 +109,13 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'One-Click',
       render: () => {
-        return <React.Fragment />;
+        return <SubTabs history={this.props.history} type="oneClick" />;
       }
     },
     {
       title: 'My Images',
       render: () => {
-        return <React.Fragment />;
+        return <SubTabs history={this.props.history} type="myImages" />;
       }
     }
   ];
@@ -219,7 +215,7 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
                 scrollButtons="on"
               >
                 {this.tabs.map((tab, idx) => (
-                  <Tab
+                  <MUITab
                     key={idx}
                     label={tab.title}
                     data-qa-create-from={tab.title}
