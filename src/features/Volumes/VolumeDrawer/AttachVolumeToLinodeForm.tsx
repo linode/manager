@@ -115,7 +115,7 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
             {disabled && (
               <NoticePanel
                 error={
-                  "You don't have permissions to add a Volume for this Linode. Please, contact an account administrator for details."
+                  "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
                 }
               />
             )}
