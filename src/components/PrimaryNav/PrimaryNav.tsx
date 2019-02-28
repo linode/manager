@@ -48,7 +48,8 @@ type ClassNames =
   | 'menu'
   | 'paper'
   | 'settings'
-  | 'activeSettings';
+  | 'activeSettings'
+  | 'settingsBackdrop';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuGrid: {
@@ -164,19 +165,26 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
   },
   settings: {
-    padding: '24px 0',
+    width: 30,
+    margin: '24px auto 16px',
     alignItems: 'center',
     marginTop: 'auto',
     justifyContent: 'center',
     display: 'flex',
     color: '#e7e7e7',
-    transition: theme.transitions.create('color'),
+    transition: theme.transitions.create(['color']),
+    '& svg': {
+      transition: theme.transitions.create(['transform'])
+    },
     '&:hover': {
       color: theme.color.green
     }
   },
   activeSettings: {
-    color: theme.color.green
+    color: theme.color.green,
+    '& svg': {
+      transform: 'rotate(90deg)'
+    }
   },
   menu: {},
   paper: {
@@ -186,6 +194,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.bg.navy,
     border: '1px solid #999',
     outline: 0
+  },
+  settingsBackdrop: {
+    backgroundColor: 'rgba(0,0,0,.3)'
   }
 });
 
@@ -493,6 +504,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
               className={classes.menu}
+              BackdropProps={{ className: classes.settingsBackdrop }}
             >
               <ThemeToggle toggleTheme={toggleTheme} />
               <SpacingToggle toggleSpacing={toggleSpacing} />

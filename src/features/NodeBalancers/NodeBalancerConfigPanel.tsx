@@ -45,6 +45,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: theme.spacing.unit
   },
   backendIPAction: {
+    display: 'flex',
+    alignItems: 'flex-end',
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     [theme.breakpoints.down('md')]: {

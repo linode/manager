@@ -1011,6 +1011,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           justifyContent: 'center',
           appearance: 'none',
           margin: 1,
+          lineHeight: 1.3,
           [breakpoints.up('md')]: {
             minWidth: 75
           },
