@@ -378,7 +378,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckTimeout,
       healthCheckType,
       protocol,
-      disabled
+      disabled,
+      classes
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(
@@ -397,7 +398,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       <Grid item xs={12} md={4} xl={2}>
         <Grid container>
           <Grid
-            updateFor={[]} // never update after initial render
+            updateFor={[classes]} // never update after initial render
             item
             xs={12}
           >
@@ -410,7 +411,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               protocol,
               healthCheckType,
               hasErrorFor('check'),
-              configIdx
+              configIdx,
+              classes
             ]}
             item
             xs={12}
@@ -451,7 +453,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 updateFor={[
                   healthCheckInterval,
                   hasErrorFor('check_interval'),
-                  configIdx
+                  configIdx,
+                  classes
                 ]}
                 item
                 xs={12}
@@ -477,7 +480,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 updateFor={[
                   healthCheckTimeout,
                   hasErrorFor('check_timeout'),
-                  configIdx
+                  configIdx,
+                  classes
                 ]}
                 item
                 xs={12}
@@ -503,7 +507,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 updateFor={[
                   healthCheckAttempts,
                   hasErrorFor('check_attempts'),
-                  configIdx
+                  configIdx,
+                  classes
                 ]}
                 item
                 xs={12}
@@ -529,7 +534,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     checkPath,
                     healthCheckType,
                     hasErrorFor('check_path'),
-                    configIdx
+                    configIdx,
+                    classes
                   ]}
                   item
                   xs={12}
@@ -552,7 +558,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     checkBody,
                     healthCheckType,
                     hasErrorFor('check_body'),
-                    configIdx
+                    configIdx,
+                    classes
                   ]}
                   item
                   xs={12}
@@ -581,7 +588,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
     return (
       <Grid item xs={12} md={6}>
-        <Grid updateFor={[checkPassive]} container>
+        <Grid updateFor={[checkPassive, classes]} container>
           <Grid item xs={12}>
             <Typography
               role="header"
@@ -668,7 +675,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 hasErrorFor('ssl_key'),
                 configIdx,
                 sslCertificate,
-                privateKey
+                privateKey,
+                classes
               ]}
               container
             >
@@ -728,7 +736,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       hasErrorFor('ssl_cert'),
                       privateKey,
                       hasErrorFor('ssl_key'),
-                      configIdx
+                      configIdx,
+                      classes
                     ]}
                     container
                   >
@@ -825,9 +834,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid updateFor={[nodes, errors, nodeMessage]} container>
+            <Grid updateFor={[nodes, errors, nodeMessage, classes]} container>
               <Grid item xs={12}>
-                <Grid updateFor={[nodeMessage]} item xs={12}>
+                <Grid updateFor={[nodeMessage, classes]} item xs={12}>
                   {nodeMessage && <Notice text={nodeMessage} success />}
                 </Grid>
                 <Typography
@@ -864,7 +873,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       return (
                         <React.Fragment key={`nb-node-${idx}`}>
                           <Grid
-                            updateFor={[nodes.length, node, errors, configIdx]}
+                            updateFor={[
+                              nodes.length,
+                              node,
+                              errors,
+                              configIdx,
+                              classes
+                            ]}
                             item
                             data-qa-node
                             xs={12}
@@ -931,7 +946,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 nodes.length,
                                 node,
                                 errors,
-                                configIdx
+                                configIdx,
+                                classes
                               ]}
                               container
                               data-qa-node
@@ -1120,7 +1136,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <Grid
                     item
                     xs={12}
-                    updateFor={[]}
+                    updateFor={[classes]}
                     // is the Save/Delete ActionsPanel showing?
                     style={
                       forEdit || configIdx !== 0
@@ -1141,17 +1157,17 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             {(forEdit || configIdx !== 0) && (
               <React.Fragment>
-                <Grid updateFor={[]} item xs={12}>
+                <Grid updateFor={[classes]} item xs={12}>
                   <Divider className={classes.divider} />
                 </Grid>
                 <Grid
-                  updateFor={[submitting]}
+                  updateFor={[submitting, classes]}
                   container
                   justify="space-between"
                   alignItems="center"
                 >
-                  <Grid item style={{ marginTop: 16 }} className="py0">
-                    <ActionsPanel style={{ padding: 0 }}>
+                  <Grid item>
+                    <ActionsPanel>
                       {forEdit && (
                         <Button
                           type="primary"

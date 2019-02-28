@@ -564,7 +564,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           order: 2,
           margin: `${spacingUnit + spacingUnit / 2}px 0`,
           '&$expanded': {
-            margin: 0
+            margin: `${spacingUnit + spacingUnit / 2}px 0`
           }
         },
         expanded: {
