@@ -29,7 +29,7 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: 0,
-    padding: theme.spacing.unit * 3
+    padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px`
   },
   card: {
     marginTop: 8,
