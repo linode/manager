@@ -25,7 +25,8 @@ import SelectRegionPanel, {
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
-import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import CASelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/CASelectStackScriptPanel';
+// import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import {
@@ -94,6 +95,8 @@ interface Props {
   selectedStackScriptFromQuery?: number;
   accountBackups: boolean;
   disabled?: boolean;
+  request: () => Promise<Linode.ResourcePage<any>>;
+  header: string;
 
   /** Comes from HOC */
   userSSHKeys: UserSSHKeyObject[];
@@ -402,7 +405,9 @@ export class FromStackScriptContent extends React.Component<
       images,
       userSSHKeys,
       updateCustomLabel,
-      disabled
+      disabled,
+      request,
+      header
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -450,8 +455,9 @@ export class FromStackScriptContent extends React.Component<
             />
           )}
           {generalError && <Notice text={generalError} error={true} />}
-          <SelectStackScriptPanel
+          <CASelectStackScriptPanel
             error={hasErrorFor('stackscript_id')}
+            header={header}
             selectedId={selectedStackScriptID}
             selectedUsername={selectedStackScriptUsername}
             updateFor={[selectedStackScriptID, errors]}
@@ -459,6 +465,7 @@ export class FromStackScriptContent extends React.Component<
             publicImages={this.filterPublicImages(images) || []}
             resetSelectedStackScript={this.resetStackScriptSelection}
             disabled={disabled}
+            request={request}
           />
           {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel

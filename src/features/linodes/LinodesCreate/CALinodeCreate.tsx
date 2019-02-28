@@ -35,12 +35,15 @@ import {
   hasGrant,
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
+import { getStackScriptsByUser } from 'src/features/StackScripts/stackScriptUtils';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
+// import { parseQueryParams } from 'src/utilities/queryParams';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import { ExtendedType } from './SelectPlanPanel';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { Info } from './util';
 
 export interface ExtendedLinode extends Linode.Linode {
@@ -183,7 +186,23 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'My StackScripts',
       render: () => {
-        return <React.Fragment />;
+        return (
+          <FromStackScriptContent
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            regions={this.props.regionsData}
+            images={this.props.imagesData}
+            types={this.props.typesData}
+            getTypeInfo={this.getTypeInfo}
+            getRegionInfo={this.getRegionInfo}
+            history={this.props.history}
+            accountBackups={this.props.accountBackupsEnabled}
+            selectedStackScriptFromQuery={undefined}
+            handleDisablePasswordField={this.handleDisablePasswordField}
+            disabled={this.props.userCannotCreateLinode}
+            request={getStackScriptsByUser}
+            header={'Select a StackScript'}
+          />
+        );
       }
     }
   ];
