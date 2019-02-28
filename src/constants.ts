@@ -72,7 +72,7 @@ export const dcDisplayNames = {
   'us-southeast-1a': 'Atlanta, GA',
   'eu-central-1a': 'Frankfurt, DE',
   'eu-west-1a': 'London, UK',
-  'ap-northeast-1a': 'Tokyo, JP',
+  'ap-northeast-1a': 'Tokyo, JP', // @todo should we remove this and change the display name of Tokyo 2 to Tokyo?
   'ap-northeast-1b': 'Tokyo 2, JP',
   'us-central': 'Dallas, TX',
   'us-west': 'Fremont, CA',
