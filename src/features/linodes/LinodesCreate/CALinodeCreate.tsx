@@ -1,5 +1,15 @@
 import { parse } from 'querystring';
-import { compose, filter, map, pathOr } from 'ramda';
+import {
+  compose,
+  filter,
+  find,
+  lensPath,
+  map,
+  pathOr,
+  prop,
+  propEq,
+  set
+} from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -17,7 +27,10 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+import {
+  displayType,
+  typeLabelDetails
+} from 'src/features/linodes/presentation';
 import {
   hasGrant,
   isRestrictedUser
@@ -27,7 +40,13 @@ import { MapState } from 'src/store/types';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import { ExtendedType } from './SelectPlanPanel';
 import FromImageContent from './TabbedContent/FromImageContent';
+import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import { Info } from './util';
+
+export interface ExtendedLinode extends Linode.Linode {
+  heading: string;
+  subHeadings: string[];
+}
 
 export type TypeInfo =
   | {
@@ -48,6 +67,11 @@ type CombinedProps = WithImagesProps &
 interface State {
   selectedTab: number;
 }
+
+const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
+  const subheading = imageInfo ? `${typeInfo}, ${imageInfo}` : `${typeInfo}`;
+  return [subheading];
+};
 
 export class LinodeCreate extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -115,7 +139,51 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'My Images',
       render: () => {
-        return <SubTabs history={this.props.history} type="myImages" />;
+        return (
+          <SubTabs
+            history={this.props.history}
+            type="myImages"
+            tabs={this.myImagesTabs}
+          />
+        );
+      }
+    }
+  ];
+
+  myImagesTabs: Tab[] = [
+    {
+      title: 'Backups and My Images',
+      render: () => {
+        return <React.Fragment />;
+      }
+    },
+    {
+      title: 'Clone From Existing Linode',
+      render: () => {
+        return (
+          <FromLinodeContent
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode will be created with
+                      the same password and SSH Keys (if any) as the original Linode.`
+            }}
+            getBackupsMonthlyPrice={this.getBackupsMonthlyPrice}
+            regions={this.props.regionsData}
+            types={this.props.typesData}
+            linodes={this.props.linodesData}
+            extendLinodes={this.extendLinodes}
+            getTypeInfo={this.getTypeInfo}
+            getRegionInfo={this.getRegionInfo}
+            accountBackups={this.props.accountBackupsEnabled}
+            history={this.props.history}
+          />
+        );
+      }
+    },
+    {
+      title: 'My StackScripts',
+      render: () => {
+        return <React.Fragment />;
       }
     }
   ];
@@ -150,6 +218,31 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     );
 
     return typeInfo;
+  };
+
+  extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
+    const images = this.props.imagesData || [];
+    const types = this.props.typesData || [];
+    return linodes.map(
+      linode =>
+        compose<
+          Linode.Linode,
+          Partial<ExtendedLinode>,
+          Partial<ExtendedLinode>
+        >(
+          set(lensPath(['heading']), linode.label),
+          set(
+            lensPath(['subHeadings']),
+            formatLinodeSubheading(
+              displayType(linode.type, types),
+              compose<Linode.Image[], Linode.Image, string>(
+                prop('label'),
+                find(propEq('id', linode.image))
+              )(images)
+            )
+          )
+        )(linode) as ExtendedLinode
+    );
   };
 
   reshapeTypeInfo = (type: ExtendedType | undefined): TypeInfo => {
