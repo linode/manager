@@ -1,9 +1,8 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { find, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
-import AccessPanel, { Disabled } from 'src/components/AccessPanel';
+import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import {
   StyleRulesCallback,
@@ -14,29 +13,21 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
-import SelectRegionPanel, {
-  ExtendedRegion
-} from 'src/components/SelectRegionPanel';
-import { Tag } from 'src/components/TagsInput';
-import { resetEventsPolling } from 'src/events';
+import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import userSSHKeyHoc, {
   State as UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
-import {
-  LinodeActionsProps,
-  withLinodeActions
-} from 'src/store/linodes/linode.containers';
-import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import { Info } from '../util';
-import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
+import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
-const DEFAULT_IMAGE = 'linode/debian9';
+
+import {
+  BaseFormStateAndHandlers,
+  WithDisplayData,
+  WithImagesRegionsTypesAndAccountState
+} from '../types';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -55,45 +46,15 @@ interface Notice {
   level: 'warning' | 'error'; // most likely only going to need these two
 }
 
-interface Props {
-  errors?: Linode.ApiFieldError[];
+interface Props extends BaseFormStateAndHandlers {
   notice?: Notice;
   publicOnly?: boolean;
   imagePanelTitle?: string;
-  images: Linode.Image[];
-  regions: ExtendedRegion[];
-  types: ExtendedType[];
-  getBackupsMonthlyPrice: (selectedTypeID: string | null) => number | null;
-  getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
-  getRegionInfo: (selectedRegionID: string | null) => Info;
-  history: any;
-  accountBackups: boolean;
-  handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
-  disabled?: boolean;
 }
 
-interface State {
-  selectedImageID: string | null;
-  selectedRegionID: string | null;
-  selectedTypeID: string | null;
-  label: string;
-  errors?: Linode.ApiFieldError[];
-  backups: boolean;
-  privateIP: boolean;
-  password: string | null;
-  isMakingRequest: boolean;
-  initTab?: number;
-  tags: Tag[];
-}
-
-export type TypeInfo =
-  | {
-      title: string;
-      details: string;
-      monthly: number;
-      backupsMonthly: number | null;
-    }
-  | undefined;
+/**
+ * image, region, type, label, backups, privateIP, tags, error, isLoading,
+ */
 
 const errorResources = {
   type: 'A plan selection',
@@ -105,218 +66,56 @@ const errorResources = {
 };
 
 type CombinedProps = Props &
-  LinodeActionsProps &
   UserSSHKeyProps &
-  InjectedNotistackProps &
-  LabelProps &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  WithDisplayData &
+  BaseFormStateAndHandlers &
+  WithImagesRegionsTypesAndAccountState;
 
-export class FromImageContent extends React.Component<CombinedProps, State> {
-  state: State = {
-    selectedImageID: pathOr(
-      DEFAULT_IMAGE,
-      ['history', 'location', 'state', 'selectedImageId'],
-      this.props
-    ),
-    selectedTypeID: null,
-    selectedRegionID: null,
-    password: '',
-    label: '',
-    backups: false,
-    privateIP: false,
-    isMakingRequest: false,
-    initTab: pathOr(
-      null,
-      ['history', 'location', 'state', 'initTab'],
-      this.props
-    ),
-    tags: []
-  };
-
-  mounted: boolean = false;
-
-  handleSelectImage = (id: string) => {
-    // Allow for deselecting an image
-    id === this.state.selectedImageID
-      ? this.setState({ selectedImageID: null })
-      : this.setState({ selectedImageID: id });
-  };
-
-  handleSelectRegion = (id: string) => {
-    this.setState({ selectedRegionID: id });
-  };
-
-  handleSelectPlan = (id: string) => {
-    this.setState({ selectedTypeID: id });
-  };
-
-  handleChangeTags = (selected: Tag[]) => {
-    this.setState({ tags: selected });
-  };
-
-  handleTypePassword = (value: string) => {
-    this.setState({ password: value });
-  };
-
-  handleToggleBackups = () => {
-    this.setState({ backups: !this.state.backups });
-  };
-
-  handleTogglePrivateIP = () => {
-    this.setState({ privateIP: !this.state.privateIP });
-  };
-
-  getImageInfo = (image: Linode.Image | undefined): Info => {
-    return (
-      image && {
-        title: `${image.vendor || image.label}`,
-        details: `${image.vendor ? image.label : ''}`
-      }
-    );
-  };
-
-  label = () => {
-    const { selectedImageID, selectedRegionID } = this.state;
-    const { getLabel, images } = this.props;
-
-    const selectedImage = images.find(img => img.id === selectedImageID);
-
-    // Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
-    const image =
-      selectedImage &&
-      (selectedImage.is_public ? selectedImage.vendor : selectedImage.label);
-
-    return getLabel(image, selectedRegionID);
-  };
-
-  createNewLinode = () => {
-    const {
-      history,
-      userSSHKeys,
-      linodeActions: { createLinode }
-    } = this.props;
-    const {
-      selectedImageID,
-      selectedRegionID,
-      selectedTypeID,
-      password,
-      backups,
-      privateIP,
-      tags
-    } = this.state;
-
-    this.setState({ isMakingRequest: true });
-
-    const label = this.label();
-
-    createLinode({
-      region: selectedRegionID,
-      type: selectedTypeID,
-      /* label is optional, pass null instead of empty string to bypass Yup validation. */
-      label: label ? label : null,
-      root_pass: password /* required if image ID is provided */,
-      image: selectedImageID /* optional */,
-      backups_enabled: backups /* optional */,
+export class FromImageContent extends React.PureComponent<CombinedProps> {
+  /** create the Linode */
+  createLinode = () => {
+    this.props.handleSubmitForm('create', {
+      type: this.props.selectedTypeID,
+      region: this.props.selectedRegionID,
+      image: this.props.selectedImageID,
+      root_pass: this.props.password,
+      tags: this.props.tags
+        ? this.props.tags.map(eachTag => eachTag.label)
+        : [],
+      backups_enabled: this.props.backupsEnabled,
       booted: true,
-      authorized_users: userSSHKeys
+      label: this.props.label,
+      private_ip: this.props.privateIPEnabled,
+      authorized_users: this.props.userSSHKeys
         .filter(u => u.selected)
-        .map(u => u.username),
-      tags: tags.map((item: Tag) => item.value)
-    })
-      .then((linode: Linode.Linode) => {
-        if (privateIP) {
-          allocatePrivateIP(linode.id);
-        }
-
-        this.props.enqueueSnackbar(`Your Linode ${label} is being created.`, {
-          variant: 'success'
-        });
-
-        resetEventsPolling();
-        history.push('/linodes');
-      })
-      .catch((error: any) => {
-        if (!this.mounted) {
-          return;
-        }
-
-        this.setState(
-          () => ({
-            errors: getAPIErrorOrDefault(error)
-          }),
-          () => {
-            scrollErrorIntoView();
-          }
-        );
-      })
-      .finally(() => {
-        if (!this.mounted) {
-          return;
-        }
-        // regardless of whether request failed or not, change state and enable the submit btn
-        this.setState({ isMakingRequest: false });
-      });
+        .map(u => u.username)
+    });
   };
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  componentDidMount() {
-    this.mounted = true;
-
-    if (
-      !find(image => image.id === this.state.selectedImageID, this.props.images)
-    ) {
-      this.setState({ selectedImageID: null });
-    }
-  }
 
   render() {
     const {
-      errors,
-      backups,
-      privateIP,
-      selectedImageID,
-      tags,
-      selectedRegionID,
-      selectedTypeID,
-      password,
-      isMakingRequest,
-      initTab
-    } = this.state;
-
-    const {
-      accountBackups,
+      accountBackupsEnabled,
       classes,
       notice,
-      types,
-      regions,
-      images,
-      getBackupsMonthlyPrice,
-      getRegionInfo,
-      getTypeInfo,
+      typesData: types,
+      regionsData: regions,
+      imagesData: images,
+      imageDisplayInfo,
+      regionDisplayInfo,
+      typeDisplayInfo,
+      backupsMonthlyPrice,
       publicOnly,
-      updateCustomLabel,
       userSSHKeys,
-      disabled,
+      userCannotCreateLinode,
+      errors,
       imagePanelTitle
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    const imageInfo = this.getImageInfo(
-      this.props.images.find(image => image.id === selectedImageID)
-    );
-
-    const regionInfo = getRegionInfo(selectedRegionID);
-
-    const typeInfo = getTypeInfo(selectedTypeID);
-
-    const hasBackups = backups || accountBackups;
-
-    const label = this.label();
+    const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
 
     return (
       <React.Fragment>
@@ -328,116 +127,140 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
               warning={notice.level === 'warning'}
             />
           )}
-          <CreateLinodeDisabled isDisabled={disabled} />
+          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
             hideMyImages={publicOnly}
             title={imagePanelTitle}
             images={images}
-            handleSelection={this.handleSelectImage}
-            selectedImageID={selectedImageID}
-            updateFor={[selectedImageID, errors]}
-            initTab={initTab}
+            handleSelection={this.props.updateImageID}
+            selectedImageID={this.props.selectedImageID}
+            updateFor={[this.props.selectedImageID, errors]}
+            initTab={0}
             error={hasErrorFor('image')}
-            disabled={disabled}
+            disabled={userCannotCreateLinode}
           />
           <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regions}
-            handleSelection={this.handleSelectRegion}
-            selectedID={selectedRegionID}
+            handleSelection={this.props.updateRegionID}
+            selectedID={this.props.selectedRegionID}
             copy="Determine the best location for your Linode."
-            updateFor={[selectedRegionID, errors]}
-            disabled={disabled}
+            updateFor={[this.props.selectedRegionID, errors]}
+            disabled={userCannotCreateLinode}
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
-            onSelect={this.handleSelectPlan}
-            selectedID={selectedTypeID}
-            updateFor={[selectedTypeID, errors]}
-            disabled={disabled}
+            onSelect={this.props.updateTypeID}
+            selectedID={this.props.selectedTypeID}
+            updateFor={[this.props.selectedTypeID, errors]}
+            disabled={userCannotCreateLinode}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
               label: 'Linode Label',
-              value: label || '',
-              onChange: updateCustomLabel,
+              value: this.props.label || '',
+              onChange: this.props.updateLabel,
               errorText: hasErrorFor('label'),
-              disabled
+              disabled: userCannotCreateLinode
             }}
             tagsInputProps={{
-              value: tags,
-              onChange: this.handleChangeTags,
+              value: this.props.tags || [],
+              onChange: this.props.updateTags,
               tagError: hasErrorFor('tags'),
-              disabled
+              disabled: userCannotCreateLinode
             }}
-            updateFor={[tags, label, errors]}
+            updateFor={[this.props.tags, this.props.label, errors]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
-            passwordFieldDisabled={
-              this.props.handleDisablePasswordField(!!selectedImageID) || {
-                disabled
-              }
+            disabled={!this.props.selectedImageID}
+            disabledReason={
+              !this.props.selectedImageID
+                ? 'You must select an image to set a root password'
+                : ''
             }
             error={hasErrorFor('root_pass')}
-            password={password}
-            handleChange={this.handleTypePassword}
-            updateFor={[password, errors, userSSHKeys, selectedImageID]}
-            users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
+            password={this.props.password}
+            handleChange={this.props.updatePassword}
+            updateFor={[
+              this.props.password,
+              errors,
+              userSSHKeys,
+              this.props.selectedImageID
+            ]}
+            users={
+              userSSHKeys.length > 0 && this.props.selectedImageID
+                ? userSSHKeys
+                : []
+            }
           />
           <AddonsPanel
-            backups={backups}
-            accountBackups={accountBackups}
-            backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
-            privateIP={privateIP}
-            changeBackups={this.handleToggleBackups}
-            changePrivateIP={this.handleTogglePrivateIP}
-            updateFor={[privateIP, backups, selectedTypeID]}
-            disabled={disabled}
+            backups={this.props.backupsEnabled}
+            accountBackups={this.props.accountBackupsEnabled}
+            backupsMonthly={backupsMonthlyPrice}
+            privateIP={this.props.privateIPEnabled}
+            changeBackups={this.props.toggleBackupsEnabled}
+            changePrivateIP={this.props.togglePrivateIPEnabled}
+            updateFor={[
+              this.props.privateIPEnabled,
+              this.props.backupsEnabled,
+              this.props.selectedTypeID
+            ]}
+            disabled={userCannotCreateLinode}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
           <Sticky topOffset={-24} disableCompensation>
             {(props: StickyProps) => {
               const displaySections = [];
-              if (imageInfo) {
-                displaySections.push(imageInfo);
+              if (imageDisplayInfo) {
+                displaySections.push(imageDisplayInfo);
               }
 
-              if (regionInfo) {
+              if (regionDisplayInfo) {
                 displaySections.push({
-                  title: regionInfo.title,
-                  details: regionInfo.details
+                  title: regionDisplayInfo.title,
+                  details: regionDisplayInfo.details
                 });
               }
 
-              if (typeInfo) {
-                displaySections.push(typeInfo);
+              if (typeDisplayInfo) {
+                displaySections.push(typeDisplayInfo);
               }
 
-              if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
+              if (
+                hasBackups &&
+                typeDisplayInfo &&
+                typeDisplayInfo.backupsMonthly
+              ) {
                 displaySections.push(
                   renderBackupsDisplaySection(
-                    accountBackups,
-                    typeInfo.backupsMonthly
+                    accountBackupsEnabled,
+                    typeDisplayInfo.backupsMonthly
                   )
                 );
               }
 
-              let calculatedPrice = pathOr(0, ['monthly'], typeInfo);
-              if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
-                calculatedPrice += typeInfo.backupsMonthly;
+              let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
+              if (
+                hasBackups &&
+                typeDisplayInfo &&
+                typeDisplayInfo.backupsMonthly
+              ) {
+                calculatedPrice += typeDisplayInfo.backupsMonthly;
               }
 
               return (
                 <CheckoutBar
-                  heading={`${label || 'Linode'} Summary`}
+                  heading={`${this.props.label || 'Linode'} Summary`}
                   calculatedPrice={calculatedPrice}
-                  isMakingRequest={isMakingRequest}
-                  disabled={isMakingRequest || disabled}
-                  onDeploy={this.createNewLinode}
+                  isMakingRequest={this.props.formIsSubmitting}
+                  disabled={
+                    this.props.formIsSubmitting || userCannotCreateLinode
+                  }
+                  onDeploy={this.createLinode}
                   displaySections={displaySections}
                   {...props}
                 />
@@ -452,12 +275,12 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<
+  CombinedProps,
+  Props & WithDisplayData & WithImagesRegionsTypesAndAccountState
+>(
   styled,
-  withSnackbar,
-  userSSHKeyHoc,
-  withLabelGenerator,
-  withLinodeActions
+  userSSHKeyHoc
 );
 
 export default enhanced(FromImageContent);

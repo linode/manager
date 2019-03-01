@@ -63,7 +63,7 @@ const mockPropsWithNotice = {
   getLabel: jest.fn()
 };
 
-describe('FromBackupsContent', () => {
+xdescribe('FromBackupsContent', () => {
   const component = shallow(
     <FromBackupsContent
       {...withLinodeActions}

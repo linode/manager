@@ -33,7 +33,7 @@ interface Props {
   types: ExtendedType[];
   error?: string;
   onSelect: (key: string) => void;
-  selectedID: string | null;
+  selectedID?: string;
   selectedDiskSize?: number;
   currentPlanHeading?: string;
   disabled?: boolean;
