@@ -436,53 +436,44 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
             <Hidden mdUp>
               <Divider className={classes.divider} />
-              <ListItem
-                button
-                component="li"
-                focusRipple={true}
-                onClick={this.goToProfile}
+              <Link
+                role="menuitem"
+                to="/profile/display"
+                href="javascript:void(0)"
+                onClick={this.props.closeMenu}
+                data-qa-nav-item="/profile/display"
                 className={classNames({
                   [classes.listItem]: true,
-                  [classes.collapsible]: true,
                   [classes.active]:
                     this.linkIsActive('/profile/display') === true
                 })}
               >
                 <ListItemText
+                  primary="My Profile"
                   disableTypography={true}
                   className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.support ||
-                      this.linkIsActive('/profile/display') === true
+                    [classes.linkItem]: true
                   })}
-                >
-                  My Profile
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                component="li"
-                focusRipple={true}
-                onClick={this.logOut}
+                />
+              </Link>
+              <Link
+                role="menuitem"
+                to="/logout"
+                href="javascript:void(0)"
+                onClick={this.props.closeMenu}
+                data-qa-nav-item="/logout"
                 className={classNames({
-                  [classes.listItem]: true,
-                  [classes.collapsible]: true,
-                  [classes.active]: this.linkIsActive('/logout') === true
+                  [classes.listItem]: true
                 })}
               >
                 <ListItemText
+                  primary="Log Out"
                   disableTypography={true}
                   className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.support ||
-                      this.linkIsActive('/logout') === true
+                    [classes.linkItem]: true
                   })}
-                >
-                  Log Out
-                </ListItemText>
-              </ListItem>
+                />
+              </Link>
             </Hidden>
             <div className={classes.spacer} />
             <IconButton

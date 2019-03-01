@@ -50,7 +50,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     [theme.breakpoints.down('md')]: {
-      marginLeft: -32,
       marginTop: -theme.spacing.unit
     },
     [theme.breakpoints.down('xs')]: {
