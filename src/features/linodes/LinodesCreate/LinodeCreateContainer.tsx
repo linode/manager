@@ -160,7 +160,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         /** if cloning a Linode, upsert Linode in redux */
-        this.props.upsertLinode(response);
+        if (type === 'clone') {
+          this.props.upsertLinode(response);
+        }
 
         /** show toast */
         this.props.enqueueSnackbar(
