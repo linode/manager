@@ -125,7 +125,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
           handleSelectUDFs,
           selectedUDFs,
           selectedStackScriptID,
-          updateStackScriptID,
+          updateStackScript,
           linodesLoading,
           linodesError,
           regionsLoading,
@@ -147,14 +147,18 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
     {
       title: 'My StackScripts',
       render: () => {
+        const {
+          accountBackupsEnabled,
+          userCannotCreateLinode,
+          ...rest
+        } = this.props;
         return (
           <FromStackScriptContent
-            accountBackups={this.props.accountBackupsEnabled}
-            selectedStackScriptFromQuery={undefined}
-            disabled={this.props.userCannotCreateLinode}
+            accountBackupsEnabled={this.props.accountBackupsEnabled}
+            userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getStackScriptsByUser}
             header={'Select a StackScript'}
-            {...this.props}
+            {...rest}
           />
         );
       }

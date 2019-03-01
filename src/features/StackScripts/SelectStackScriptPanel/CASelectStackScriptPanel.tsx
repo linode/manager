@@ -10,6 +10,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
 import { getStackScript } from 'src/services/stackscripts';
@@ -148,7 +149,14 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { category, classes, header, request, selectedId } = this.props;
+    const {
+      category,
+      classes,
+      header,
+      request,
+      selectedId,
+      error
+    } = this.props;
     const { stackScript, stackScriptLoading, stackScriptError } = this.state;
 
     if (selectedId) {
@@ -202,7 +210,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     return (
       <Paper className={classes.panel}>
         <div className={classes.inner}>
-          {/* {error && <Notice text={error} error />} */}
+          {error && <Notice text={error} error />}
           <Typography
             className={classes.header}
             role="header"
