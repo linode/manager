@@ -7,7 +7,6 @@ import Logo from 'src/assets/logo/logo-text.svg';
 import Divider from 'src/components/core/Divider';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
-import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
 import {
