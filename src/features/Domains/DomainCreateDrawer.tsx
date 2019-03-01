@@ -141,7 +141,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         {disabled && (
           <Notice
             text={
-              "You don't have permissions to create a new Domain. Please, contact an account administrator for details."
+              "You don't have permissions to create a new Domain. Please contact an account administrator for details."
             }
             error={true}
             important
