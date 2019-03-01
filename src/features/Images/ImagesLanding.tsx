@@ -288,7 +288,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           container
           justify="space-between"
           alignItems="flex-end"
-          updateFor={[]}
+          updateFor={[classes]}
           style={{ paddingBottom: 0 }}
         >
           <Grid item>
@@ -353,7 +353,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                             onDeploy={this.deployNewLinode}
                             onEdit={this.openForEdit}
                             onDelete={this.openRemoveDialog}
-                            updateFor={[image]}
+                            updateFor={[image, classes]}
                           />
                         ))}
                       </TableBody>

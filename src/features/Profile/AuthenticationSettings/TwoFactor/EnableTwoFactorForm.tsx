@@ -145,7 +145,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           <QRCodeForm
             secret={secret}
             secretLink={secretLink}
-            updateFor={[secret, secretLink]}
+            updateFor={[secret, secretLink, classes]}
           />
         )}
         <Divider className={classes.divider} />
@@ -157,7 +157,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           handleChange={this.handleTokenInputChange}
           onCancel={this.onCancel}
           onSubmit={this.onSubmit}
-          updateFor={[token, tokenError, submitting]}
+          updateFor={[token, tokenError, submitting, classes]}
         />
       </React.Fragment>
     );

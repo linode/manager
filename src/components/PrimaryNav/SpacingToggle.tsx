@@ -24,57 +24,56 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center',
     marginTop: 'auto',
     justifyContent: 'center',
-    display: 'flex',
-    marginLeft: -10
+    display: 'flex'
   },
   toggle: {
     '& > span:last-child': {
       backgroundColor: '#f4f4f4 !important',
       opacity: `0.38 !important`
     },
-    '&.darkTheme .square': {
+    '&.dt .square': {
       fill: '#444 !important'
     }
   }
 });
 
 interface Props {
-  toggleTheme: () => void;
+  toggleSpacing: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
-export const ThemeToggle: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, toggleTheme, theme } = props;
-  const { name: themeName } = theme;
+export const SpacingToggle: React.StatelessComponent<CombinedProps> = props => {
+  const { classes, toggleSpacing, theme } = props;
+  const { spacing: spacingUnit } = theme;
 
   return (
     <div className={classes.switchWrapper}>
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: themeName === 'lightTheme'
+          active: spacingUnit.unit === 8
         })}
       >
-        Light
+        Normal
       </span>
       <Toggle
-        onChange={toggleTheme}
-        checked={themeName !== 'lightTheme'}
+        onChange={toggleSpacing}
+        checked={spacingUnit.unit !== 8}
         className={classNames({
           [classes.toggle]: true,
-          [themeName]: true
+          dt: spacingUnit.unit === 4
         })}
-        aria-label="Switch Theme"
+        aria-label="Switch Spacing"
       />
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: themeName === 'darkTheme'
+          active: spacingUnit.unit === 4
         })}
         style={{ marginLeft: 4 }}
       >
-        Dark
+        Compact
       </span>
     </div>
   );
@@ -82,4 +81,4 @@ export const ThemeToggle: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default styled(ThemeToggle);
+export default styled(SpacingToggle);

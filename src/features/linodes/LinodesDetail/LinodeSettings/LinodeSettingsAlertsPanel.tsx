@@ -270,6 +270,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   };
 
   public render() {
+    const { classes } = this.props;
     const alertSections: Section[] = this.renderAlertSections();
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -283,7 +284,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         {generalError && <Notice error>{generalError}</Notice>}
         {alertSections.map((p, idx) => (
           <AlertSection
-            updateFor={[p.state, p.value, this.state.errors]}
+            updateFor={[p.state, p.value, this.state.errors, classes]}
             key={idx}
             {...p}
           />

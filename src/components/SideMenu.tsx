@@ -13,12 +13,12 @@ type ClassNames = 'menuPaper' | 'menuDocked';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuPaper: {
     height: '100%',
-    width: 215,
+    width: theme.spacing.unit * 17 + 79, // 215
     backgroundColor: theme.bg.navy,
     left: 'inherit',
     boxShadow: 'none',
     [theme.breakpoints.up('xl')]: {
-      width: 275
+      width: theme.spacing.unit * 22 + 99 // 275
     }
   },
   menuDocked: {
@@ -30,13 +30,14 @@ interface Props {
   open: boolean;
   closeMenu: () => void;
   toggleTheme: () => void;
+  toggleSpacing: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SideMenu extends React.Component<CombinedProps> {
   render() {
-    const { classes, open, closeMenu, toggleTheme } = this.props;
+    const { classes, open, closeMenu, toggleSpacing, toggleTheme } = this.props;
 
     return (
       <React.Fragment>
@@ -50,7 +51,11 @@ class SideMenu extends React.Component<CombinedProps> {
               keepMounted: true // Better open performance on mobile.
             }}
           >
-            <PrimaryNav closeMenu={closeMenu} toggleTheme={toggleTheme} />
+            <PrimaryNav
+              closeMenu={closeMenu}
+              toggleTheme={toggleTheme}
+              toggleSpacing={toggleSpacing}
+            />
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
@@ -62,7 +67,11 @@ class SideMenu extends React.Component<CombinedProps> {
               docked: classes.menuDocked
             }}
           >
-            <PrimaryNav closeMenu={closeMenu} toggleTheme={toggleTheme} />
+            <PrimaryNav
+              closeMenu={closeMenu}
+              toggleTheme={toggleTheme}
+              toggleSpacing={toggleSpacing}
+            />
           </Drawer>
         </Hidden>
       </React.Fragment>

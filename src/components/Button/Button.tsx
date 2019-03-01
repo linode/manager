@@ -67,8 +67,8 @@ const styles: StyleRulesCallback = theme => ({
       right: 0,
       bottom: 0,
       margin: '0 auto',
-      width: 22,
-      height: 22,
+      width: theme.spacing.unit + 14,
+      height: theme.spacing.unit + 14,
       animation: 'rotate 2s linear infinite'
     }
   },
