@@ -137,7 +137,12 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item className={classes.labelGridWrapper}>
                 <div className={classes.labelStatusWrapper}>
-                  <Typography role="header" variant="h3" data-qa-label>
+                  <Typography
+                    role="header"
+                    variant="h3"
+                    className={classes.wrapHeader}
+                    data-qa-label
+                  >
                     {domain}
                   </Typography>
                 </div>
