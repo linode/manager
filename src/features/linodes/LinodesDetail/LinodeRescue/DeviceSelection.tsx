@@ -40,7 +40,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
-  const { devices, onChange, getSelected, slots, rescue } = props;
+  const { devices, onChange, getSelected, slots, rescue, classes } = props;
 
   const counter = defaultTo(0, props.counter);
 
@@ -48,7 +48,11 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
     <React.Fragment>
       {slots.map((slot, idx) => {
         return counter < idx ? null : (
-          <FormControl updateFor={[getSelected(slot)]} key={slot} fullWidth>
+          <FormControl
+            updateFor={[getSelected(slot), classes]}
+            key={slot}
+            fullWidth
+          >
             <InputLabel
               htmlFor={`rescueDevice_${slot}`}
               disableAnimation

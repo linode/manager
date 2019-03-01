@@ -55,7 +55,9 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   right: {
     marginLeft: theme.spacing.unit,
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   icon: {
     '& svg': {

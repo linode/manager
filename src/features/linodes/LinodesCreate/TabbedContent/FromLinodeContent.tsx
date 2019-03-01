@@ -294,7 +294,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                 selectedLinodeID={selectedLinodeID}
                 header={'Select Linode to Clone From'}
                 handleSelection={this.handleSelectLinode}
-                updateFor={[selectedLinodeID, errors]}
+                updateFor={[selectedLinodeID, errors, classes]}
                 disabled={disabled}
               />
               <SelectRegionPanel
@@ -303,7 +303,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                 handleSelection={this.handleSelectRegion}
                 selectedID={selectedRegionID}
                 copy="Determine the best location for your Linode."
-                updateFor={[selectedRegionID, errors]}
+                updateFor={[selectedRegionID, errors, classes]}
                 disabled={disabled}
               />
               <SelectPlanPanel
@@ -312,7 +312,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                 onSelect={this.handleSelectPlan}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedDiskSize, selectedTypeID, errors]}
+                updateFor={[selectedDiskSize, selectedTypeID, errors, classes]}
                 disabled={disabled}
               />
               <LabelAndTagsPanel
@@ -323,7 +323,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                   errorText: hasErrorFor('label'),
                   disabled
                 }}
-                updateFor={[label, errors]}
+                updateFor={[label, errors, classes]}
               />
               <AddonsPanel
                 backups={backups}
@@ -332,7 +332,7 @@ export class FromLinodeContent extends React.Component<CombinedProps, State> {
                 privateIP={privateIP}
                 changeBackups={this.handleToggleBackups}
                 changePrivateIP={this.handleTogglePrivateIP}
-                updateFor={[privateIP, backups, selectedTypeID]}
+                updateFor={[privateIP, backups, selectedTypeID, classes]}
                 disabled={disabled}
               />
             </Grid>
