@@ -1,15 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import {
-  compose,
-  filter,
-  find,
-  lensPath,
-  map,
-  pathOr,
-  prop,
-  propEq,
-  set
-} from 'ramda';
+import { compose, filter, map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -25,17 +15,12 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
-// import withLoadingAndError,
-// { Props as LoadingAndErrorProps } from 'src/components/withLoadingAndError';
 
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
-import {
-  displayType,
-  typeLabelDetails
-} from 'src/features/linodes/presentation';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   hasGrant,
   isRestrictedUser
@@ -46,7 +31,6 @@ import { ExtendedType } from './SelectPlanPanel';
 
 import CALinodeCreate from './CALinodeCreate';
 import {
-  ExtendedLinode,
   HandleSubmit,
   Info,
   ReduxStateProps,
@@ -56,6 +40,7 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { cloneLinode } from 'src/services/linodes';
+import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -80,6 +65,7 @@ interface State {
 type CombinedProps = InjectedNotistackProps &
   LinodeActionsProps &
   WithLinodesImagesTypesAndRegions &
+  DispatchProps &
   RouteComponentProps<{}>;
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
@@ -104,7 +90,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setTypeID = (id: string) => this.setState({ selectedTypeID: id });
 
-  setLinodeID = (id: number) => this.setState({ selectedLinodeID: id });
+  setLinodeID = (id: number, diskSize?: number) => {
+    if (id !== this.state.selectedLinodeID) {
+      /**
+       * reset selected plan and set the selectedDiskSize
+       * for the purpose of disabling plans that are smaller
+       * than the clone source
+       */
+      this.setState({
+        selectedLinodeID: id,
+        selectedDiskSize: diskSize,
+        selectedTypeID: undefined
+      });
+    }
+  };
 
   setStackScriptID = (id: number) =>
     this.setState({ selectedStackScriptID: id });
@@ -136,8 +135,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * if create, run create action
      */
     if (type === 'clone' && !linodeID) {
-      return;
+      return this.setState(
+        () => ({
+          errors: [
+            {
+              reason: 'You must select a Linode to clone from',
+              field: 'linode_id'
+            }
+          ]
+        }),
+        () => scrollErrorIntoView()
+      );
     }
+
     const request =
       type === 'create'
         ? () => this.props.linodeActions.createLinode(payload)
@@ -148,6 +158,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return request()
       .then((response: Linode.Linode) => {
         this.setState({ formIsSubmitting: false });
+
+        /** if cloning a Linode, upsert Linode in redux */
+        if (type === 'clone') {
+          this.props.upsertLinode(response);
+        }
 
         /** show toast */
         this.props.enqueueSnackbar(
@@ -196,31 +211,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     );
 
     return typeInfo;
-  };
-
-  extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
-    const images = this.props.imagesData || [];
-    const types = this.props.typesData || [];
-    return linodes.map(
-      linode =>
-        compose<
-          Linode.Linode,
-          Partial<ExtendedLinode>,
-          Partial<ExtendedLinode>
-        >(
-          set(lensPath(['heading']), linode.label),
-          set(
-            lensPath(['subHeadings']),
-            formatLinodeSubheading(
-              displayType(linode.type, types),
-              compose<Linode.Image[], Linode.Image, string>(
-                prop('label'),
-                find(propEq('id', linode.image))
-              )(images)
-            )
-          )
-        )(linode) as ExtendedLinode
-    );
   };
 
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
@@ -305,8 +295,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               updateTypeID={this.setTypeID}
               selectedLinodeID={this.state.selectedLinodeID}
               updateLinodeID={this.setLinodeID}
-              // selectedDiskSize={this.state.selectedDiskSize}
-              // updateDiskSize={this.setDiskSize}
+              selectedDiskSize={this.state.selectedDiskSize}
+              updateDiskSize={this.setDiskSize}
               selectedUDFs={this.state.udfs}
               handleSelectUDFs={this.setUDFs}
               selectedStackScriptID={this.state.selectedStackScriptID}
@@ -347,7 +337,14 @@ const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
     isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
 });
 
-const connected = connect(mapStateToProps);
+interface DispatchProps {
+  upsertLinode: (l: Linode.Linode) => void;
+}
+
+const connected = connect(
+  mapStateToProps,
+  { upsertLinode }
+);
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: compose(
@@ -383,11 +380,6 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsLoading: loading,
   regionsError: error
 }));
-
-const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
-  const subheading = imageInfo ? `${typeInfo}, ${imageInfo}` : `${typeInfo}`;
-  return [subheading];
-};
 
 export default recompose<CombinedProps, {}>(
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
