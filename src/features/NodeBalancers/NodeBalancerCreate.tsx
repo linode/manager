@@ -480,7 +480,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             {disabled && (
               <Notice
                 text={
-                  "You don't have permissions to create a new NodeBalancer. Please, contact an account administrator for details."
+                  "You don't have permissions to create a new NodeBalancer. Please contact an account administrator for details."
                 }
                 error={true}
                 spacingTop={16}
@@ -795,7 +795,9 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
 const connected = connect(mapStateToProps);
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
+  regionsData: data
+    .filter(region => region.id !== 'ap-northeast-1a') // Don't show Tokyo1 as an option
+    .map(r => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
   regionsError: error
 }));

@@ -76,6 +76,9 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
           Name
         </TableSortCell>
         <TableCell className={classes.nodeStatus} noWrap>
+          Tags
+        </TableCell>
+        <TableCell className={classes.nodeStatus} noWrap>
           Node Status
         </TableCell>
         <TableCell className={classes.transferred}>Transferred</TableCell>

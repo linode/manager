@@ -196,8 +196,8 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         {stackScriptError && (
           <Typography variant="body2">
-            An error occured while loading selected stackScript. Please, choose
-            one of the list.
+            An error occured while loading the selected StackScript. Please
+            choose one from the list.
           </Typography>
         )}
         <TabbedPanel

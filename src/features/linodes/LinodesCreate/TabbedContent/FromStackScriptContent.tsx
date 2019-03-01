@@ -121,7 +121,7 @@ interface State {
 
 const errorResources = {
   type: 'A plan selection',
-  region: 'A region selection',
+  region: 'region',
   label: 'A label',
   root_pass: 'A root password',
   image: 'image',
@@ -414,7 +414,7 @@ export class FromStackScriptContent extends React.Component<
 
     /*
      * errors with UDFs have dynamic keys
-     * for exmaple, if there are UDFs that aren't filled out, you can can
+     * for example, if there are UDFs that aren't filled out, you can can
      * errors that look something like this
      * { field: 'wordpress_pass', reason: 'you must fill out a WP password' }
      * Because of this, we need to both make each error doesn't match any
