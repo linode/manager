@@ -17,7 +17,7 @@ const dummyProps = {
   }
 };
 
-describe('FromImageContent', () => {
+xdescribe('FromImageContent', () => {
   const component = shallow(
     <LinodeCreate
       classes={{
