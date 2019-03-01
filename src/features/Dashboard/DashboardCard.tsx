@@ -41,22 +41,24 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
       })}
       data-qa-card={title}
     >
-      <Grid item xs={12}>
-        <Grid container alignItems="flex-start">
-          {title && (
-            <Grid item className={'py0'}>
-              <Typography variant="h2">{title}</Typography>
-            </Grid>
-          )}
-          {headerAction && (
-            <Grid item className={'py0'}>
-              <Typography variant="body1" className={classes.headerAction}>
-                {headerAction()}
-              </Typography>
-            </Grid>
-          )}
+      {(title || headerAction) && (
+        <Grid item xs={12}>
+          <Grid container alignItems="flex-start">
+            {title && (
+              <Grid item className={'py0'}>
+                <Typography variant="h2">{title}</Typography>
+              </Grid>
+            )}
+            {headerAction && (
+              <Grid item className={'py0'}>
+                <Typography variant="body1" className={classes.headerAction}>
+                  {headerAction()}
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
       <Grid item xs={12}>
         {props.children}
       </Grid>

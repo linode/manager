@@ -14,15 +14,11 @@ import {
 import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
-type ClassNames = 'root' | 'header' | 'section' | 'title' | 'button' | 'icon';
+type ClassNames = 'root' | 'section' | 'title' | 'button' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     width: '100%'
-  },
-  header: {
-    textAlign: 'center',
-    fontSize: 18
   },
   section: {
     padding: theme.spacing.unit * 3,
@@ -34,19 +30,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: `${theme.spacing.unit}px !important`,
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px !important`,
     [theme.breakpoints.down('md')]: {
       justifyContent: 'space-between',
       alignItems: 'flex-start'
     }
   },
   button: {
-    marginTop: '18px'
+    marginTop: theme.spacing.unit * 3
   },
   icon: {
     position: 'absolute',
-    top: 10,
+    top: theme.spacing.unit,
     right: 0,
     cursor: 'pointer',
     border: 'none',
@@ -94,12 +89,7 @@ export const GroupImportCard: React.StatelessComponent<
           [classes.title]: true
         })}
       >
-        <Typography
-          className={classes.header}
-          variant="h1"
-          component="h3"
-          data-qa-group-cta-header
-        >
+        <Typography variant="h2" data-qa-group-cta-header>
           Import Display Groups as Tags
         </Typography>
         <div>
@@ -138,14 +128,14 @@ GroupImportCard.displayName = 'ImportGroupsCard';
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withStateHandlers(
     { hidden: false },
     {
       hide: () => () => ({ hidden: true })
     }
   ),
-  onlyUpdateForKeys(['hidden', 'theme'])
+  onlyUpdateForKeys(['hidden', 'theme']),
+  styled
 )(GroupImportCard);
 
 export default enhanced;
