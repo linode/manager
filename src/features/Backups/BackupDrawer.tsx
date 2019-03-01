@@ -1,7 +1,7 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
+import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -269,7 +269,11 @@ export const enhanceLinodes = (
   return addErrors(errors, linodesWithTypes);
 };
 
-const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
+const mapStateToProps: MapStateToProps<
+  StateProps,
+  CombinedProps,
+  ApplicationState
+> = (state: ApplicationState, ownProps: CombinedProps) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = state.__resources.linodes.entities.filter(
     l => !l.backups.enabled
@@ -280,12 +284,12 @@ const mapStateToProps = (state: ApplicationState, ownProps: CombinedProps) => {
       ['__resources', 'accountSettings', 'data', 'backups_enabled'],
       state
     ),
-    backupLoadError: path(['backups', 'error'], state),
-    backupsLoading: path(['backups', 'loading'], state),
+    backupLoadError: pathOr('', ['backups', 'error'], state),
+    backupsLoading: pathOr(false, ['backups', 'loading'], state),
     enableErrors,
-    enableSuccess: path(['backups', 'enableSuccess'], state),
+    enableSuccess: pathOr(false, ['backups', 'enableSuccess'], state),
     updatedCount: pathOr<number>(0, ['backups', 'updatedCount'], state),
-    open: path(['backups', 'open'], state),
+    open: pathOr(false, ['backups', 'open'], state),
     loading: pathOr(false, ['backups', 'loading'], state),
     enabling: pathOr(false, ['backups', 'enabling'], state),
     linodesWithoutBackups: enhanceLinodes(

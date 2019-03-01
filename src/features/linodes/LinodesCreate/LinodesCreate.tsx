@@ -506,7 +506,9 @@ interface WithRegions {
 }
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
+  regionsData: data
+    .filter(region => region.id !== 'ap-northeast-1a')
+    .map(r => ({ ...r, display: dcDisplayNames[r.id] })),
   regionsLoading: loading,
   regionsError: error
 }));

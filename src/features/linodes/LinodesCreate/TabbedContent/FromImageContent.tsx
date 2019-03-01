@@ -95,7 +95,7 @@ export type TypeInfo =
 
 const errorResources = {
   type: 'A plan selection',
-  region: 'A region selection',
+  region: 'region',
   label: 'A label',
   root_pass: 'A root password',
   image: 'Image',
