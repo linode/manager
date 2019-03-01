@@ -115,7 +115,22 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
     {
       title: 'Clone From Existing Linode',
       render: () => {
-        const { ...rest } = this.props;
+        /**
+         * rest being just the props that FromLinodeContent needs
+         * AKA CloneFormStateHandlers, WithLinodesImagesTypesAndRegions,
+         * and WithDisplayData
+         */
+        const {
+          handleSelectUDFs,
+          selectedUDFs,
+          selectedStackScriptID,
+          updateStackScriptID,
+          linodesLoading,
+          linodesError,
+          regionsLoading,
+          regionsError,
+          ...rest
+        } = this.props;
         return (
           <FromLinodeContent
             notice={{
