@@ -50,7 +50,7 @@ interface Props {
   copy?: string;
   error?: string;
   handleSelection: (id: string) => void;
-  selectedID: string | null;
+  selectedID?: string;
   disabled?: boolean;
 }
 
@@ -64,8 +64,8 @@ const getASRegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(jp|sg)/.test(r.country));
 
 const renderCard = (
-  selectedID: string | null,
   handleSelection: Function,
+  selectedID?: string,
   disabled?: boolean
 ) => (region: ExtendedRegion, idx: number) => (
   <SelectionCard
@@ -95,7 +95,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container spacing={16}>
-              {na.map(renderCard(selectedID, handleSelection, disabled))}
+              {na.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
         }
@@ -108,7 +108,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container spacing={16}>
-              {eu.map(renderCard(selectedID, handleSelection, disabled))}
+              {eu.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
         }
@@ -121,7 +121,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container>
-              {as.map(renderCard(selectedID, handleSelection, disabled))}
+              {as.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
         }

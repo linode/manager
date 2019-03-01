@@ -59,11 +59,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 const styled = withStyles(styles);
 
-export interface Disabled {
-  disabled?: boolean;
-  reason?: string;
-}
-
 interface Props {
   password: string | null;
   error?: string;
@@ -74,7 +69,8 @@ interface Props {
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
-  passwordFieldDisabled?: Disabled;
+  disabled?: boolean;
+  disabledReason?: string;
 }
 
 export interface UserSSHKeyObject {
@@ -100,7 +96,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       required,
       placeholder,
       users,
-      passwordFieldDisabled
+      disabled,
+      disabledReason
     } = this.props;
 
     return (
@@ -109,10 +106,8 @@ class AccessPanel extends React.Component<CombinedProps> {
           {error && <Notice text={error} error />}
           <PasswordInput
             required={required}
-            disabled={passwordFieldDisabled && passwordFieldDisabled.disabled}
-            disabledReason={
-              passwordFieldDisabled && passwordFieldDisabled.reason
-            }
+            disabled={disabled}
+            disabledReason={disabledReason || ''}
             autoComplete="new-password"
             value={this.props.password || ''}
             label={label || 'Root Password'}

@@ -31,7 +31,7 @@ const mockProps = {
   customLabel: ''
 };
 
-describe('FromImageContent', () => {
+xdescribe('FromImageContent', () => {
   const componentWithNotice = shallow(
     <FromImageContent
       {...withLinodeActions}
