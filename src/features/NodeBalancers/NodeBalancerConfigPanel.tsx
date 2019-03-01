@@ -300,6 +300,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   };
 
+  displayProtocolText = (p: string) => {
+    if (p === 'tcp') {
+      return `'TCP Connection' requires a successful TCP handshake.`;
+    }
+    if (p === 'http' || 'https') {
+      return `'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body.`;
+    }
+    return;
+  };
+
   onSave = this.props.onSave;
 
   onDelete = this.props.onDelete;
@@ -393,6 +403,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       errors
     );
 
+    const conditionalText = this.displayProtocolText(protocol);
+
     return (
       <Grid item xs={12} md={4} xl={2}>
         <Grid container>
@@ -445,10 +457,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </TextField>
               <FormHelperText>
                 Active health checks proactively check the health of back-end
-                nodes. 'TCP Connection' requires a successful TCP handshake.
-                'HTTP Valid Status' requires a 2xx or 3xx response from the
-                backend node. 'HTTP Body Regex' uses a regex to match against an
-                expected result body.
+                nodes. {conditionalText}
               </FormHelperText>
             </Grid>
           </Grid>
