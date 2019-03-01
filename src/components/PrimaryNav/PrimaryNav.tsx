@@ -445,6 +445,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 className={classNames({
                   [classes.listItem]: true,
                   [classes.active]:
+                    expandedMenus.support ||
                     this.linkIsActive('/profile/display') === true
                 })}
               >
