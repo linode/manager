@@ -423,7 +423,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 )(linodesWithBackups!)}
                 selectedLinodeID={selectedLinodeID}
                 handleSelection={this.handleSelectLinode}
-                updateFor={[selectedLinodeID, errors]}
+                updateFor={[selectedLinodeID, errors, classes]}
                 disabled={disabled}
               />
               <SelectBackupPanel
@@ -437,7 +437,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 selectedBackupID={selectedBackupID}
                 handleChangeBackup={this.handleSelectBackupID}
                 handleChangeBackupInfo={this.handleSelectBackupInfo}
-                updateFor={[selectedLinodeID, selectedBackupID, errors]}
+                updateFor={[
+                  selectedLinodeID,
+                  selectedBackupID,
+                  errors,
+                  classes
+                ]}
               />
               <SelectPlanPanel
                 error={hasErrorFor('type')}
@@ -445,7 +450,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 onSelect={this.handleSelectPlan}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedTypeID, selectedDiskSize, errors]}
+                updateFor={[selectedTypeID, selectedDiskSize, errors, classes]}
                 disabled={disabled}
               />
               <LabelAndTagsPanel
@@ -462,7 +467,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   tagError: hasErrorFor('tags'),
                   disabled
                 }}
-                updateFor={[tags, label, errors]}
+                updateFor={[tags, label, errors, classes]}
               />
               <AddonsPanel
                 backups={backups}
@@ -471,7 +476,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 changePrivateIP={this.handleTogglePrivateIP}
                 backupsMonthly={getBackupsMonthlyPrice(selectedTypeID)}
                 privateIP={privateIP}
-                updateFor={[privateIP, backups, selectedTypeID]}
+                updateFor={[privateIP, backups, selectedTypeID, classes]}
                 disabled={disabled}
               />
             </React.Fragment>

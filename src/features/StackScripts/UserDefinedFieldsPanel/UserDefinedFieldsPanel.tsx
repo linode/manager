@@ -55,7 +55,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           field={field}
           udf_data={props.udf_data}
           updateFormState={handleChange}
-          updateFor={[props.udf_data[field.name]]}
+          updateFor={[props.udf_data[field.name], classes]}
           isOptional={isOptional}
         />
       );
@@ -66,7 +66,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           field={field}
           updateFormState={handleChange}
           udf_data={props.udf_data}
-          updateFor={[props.udf_data[field.name]]}
+          updateFor={[props.udf_data[field.name], classes]}
           isOptional={isOptional}
           key={field.name}
         />
@@ -80,7 +80,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           isPassword={true}
           field={field}
           udf_data={props.udf_data}
-          updateFor={[props.udf_data[field.name]]}
+          updateFor={[props.udf_data[field.name], classes]}
           isOptional={isOptional}
           placeholder={field.example}
         />
@@ -92,7 +92,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
         updateFormState={handleChange}
         field={field}
         udf_data={props.udf_data}
-        updateFor={[props.udf_data[field.name]]}
+        updateFor={[props.udf_data[field.name], classes]}
         isOptional={isOptional}
         placeholder={field.example}
       />

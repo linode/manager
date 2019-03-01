@@ -155,7 +155,11 @@ class UpdateContactInformationPanel extends React.Component<
           </Grid>
         )}
 
-        <Grid item xs={12} updateFor={[fields.company, hasErrorFor('company')]}>
+        <Grid
+          item
+          xs={12}
+          updateFor={[fields.company, hasErrorFor('company'), classes]}
+        >
           <Grid container>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -173,7 +177,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.email, hasErrorFor('email')]}
+          updateFor={[fields.email, hasErrorFor('email'), classes]}
         >
           <TextField
             label="Email"
@@ -189,7 +193,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.phone, hasErrorFor('phone')]}
+          updateFor={[fields.phone, hasErrorFor('phone'), classes]}
         >
           <TextField
             label="Phone Number"
@@ -205,7 +209,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.first_name, hasErrorFor('first_name')]}
+          updateFor={[fields.first_name, hasErrorFor('first_name'), classes]}
         >
           <TextField
             label="First Name"
@@ -220,7 +224,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.last_name, hasErrorFor('last_name')]}
+          updateFor={[fields.last_name, hasErrorFor('last_name'), classes]}
         >
           <TextField
             label="Last Name"
@@ -235,7 +239,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.address_1, hasErrorFor('address_1')]}
+          updateFor={[fields.address_1, hasErrorFor('address_1'), classes]}
         >
           <TextField
             label="Address"
@@ -250,7 +254,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.address_2, hasErrorFor('address2')]}
+          updateFor={[fields.address_2, hasErrorFor('address2'), classes]}
         >
           <TextField
             label="Address 2"
@@ -265,7 +269,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.city, hasErrorFor('city')]}
+          updateFor={[fields.city, hasErrorFor('city'), classes]}
         >
           <TextField
             label="City"
@@ -284,7 +288,8 @@ class UpdateContactInformationPanel extends React.Component<
             fields.state,
             fields.zip,
             hasErrorFor('state'),
-            hasErrorFor('zip')
+            hasErrorFor('zip'),
+            classes
           ]}
         >
           <Grid container className={classes.stateZip}>
@@ -313,7 +318,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.country, hasErrorFor('country')]}
+          updateFor={[fields.country, hasErrorFor('country'), classes]}
         >
           <TextField
             label="Country"
@@ -331,7 +336,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.tax_id, hasErrorFor('tax_id')]}
+          updateFor={[fields.tax_id, hasErrorFor('tax_id'), classes]}
         >
           <TextField
             label="Tax ID"

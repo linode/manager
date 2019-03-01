@@ -543,7 +543,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linodeSharedIPs={sharedIPs}
             linodeRegion={linodeRegion}
             refreshIPs={this.refreshIPs}
-            updateFor={[publicIPs, sharedIPs, linodeID, linodeRegion]}
+            updateFor={[publicIPs, sharedIPs, linodeID, linodeRegion, classes]}
           />
         </Grid>
       </Grid>
