@@ -80,7 +80,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       region: this.props.selectedRegionID,
       image: this.props.selectedImageID,
       root_pass: this.props.password,
-      /** @todo SSHKeys */
       tags: this.props.tags
         ? this.props.tags.map(eachTag => eachTag.label)
         : [],

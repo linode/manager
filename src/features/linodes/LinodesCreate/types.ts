@@ -53,9 +53,6 @@ export interface ReduxStateProps {
   userCannotCreateLinode: boolean;
 }
 
-// selectedDiskSize?: number;
-// updateDiskSize: (id: number) => void;
-
 export type HandleSubmit = (
   type: 'create' | 'clone',
   payload: CreateLinodeRequest,
@@ -97,8 +94,10 @@ export interface BaseFormStateAndHandlers {
  * AKA cloning a Linode
  */
 export interface CloneFormStateHandlers extends BaseFormStateAndHandlers {
+  selectedDiskSize?: number;
+  updateDiskSize: (id: number) => void;
   selectedLinodeID?: number;
-  updateLinodeID: (id: number) => void;
+  updateLinodeID: (id: number, diskSize?: number) => void;
 }
 
 /**

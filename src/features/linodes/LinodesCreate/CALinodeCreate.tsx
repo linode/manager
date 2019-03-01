@@ -7,7 +7,7 @@ import Tabs from 'src/components/core/Tabs';
 import Grid from 'src/components/Grid';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import FromImageContent from './TabbedContent/FromImageContent';
-// import FromLinodeContent from './TabbedContent/FromLinodeContent';
+import FromLinodeContent from './TabbedContent/FromLinodeContent';
 // import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 import {
@@ -29,7 +29,7 @@ interface State {
   selectedTab: number;
 }
 
-export class LinodeCreate extends React.Component<CombinedProps, State> {
+export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
@@ -98,14 +98,14 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
           <SubTabs
             history={this.props.history}
             type="myImages"
-            tabs={this.myImagesTabs}
+            tabs={this.myImagesTabs()}
           />
         );
       }
     }
   ];
 
-  myImagesTabs: Tab[] = [
+  myImagesTabs = (): Tab[] => [
     {
       title: 'Backups and My Images',
       render: () => {
@@ -115,24 +115,16 @@ export class LinodeCreate extends React.Component<CombinedProps, State> {
     {
       title: 'Clone From Existing Linode',
       render: () => {
+        const { ...rest } = this.props;
         return (
-          <React.Fragment />
-          // <FromLinodeContent
-          //   notice={{
-          //     level: 'warning',
-          //     text: `This newly created Linode will be created with
-          //             the same password and SSH Keys (if any) as the original Linode.`
-          //   }}
-          //   getBackupsMonthlyPrice={this.props.getBackupsMonthlyPrice}
-          //   regions={this.props.regionsData}
-          //   types={this.props.typesData}
-          //   linodes={this.props.linodesData}
-          //   extendLinodes={this.props.extendLinodes}
-          //   typeDisplayInfo ={this.props.getTypeInfo}
-          //   getRegionInfo={this.props.getRegionInfo}
-          //   accountBackups={this.props.accountBackupsEnabled}
-          //   history={this.props.history}
-          // />
+          <FromLinodeContent
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode will be created with
+                      the same password and SSH Keys (if any) as the original Linode.`
+            }}
+            {...rest}
+          />
         );
       }
     },
