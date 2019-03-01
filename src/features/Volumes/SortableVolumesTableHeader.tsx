@@ -13,6 +13,8 @@ import TableSortCell from 'src/components/TableSortCell';
 type ClassNames =
   | 'root'
   | 'labelCol'
+  | 'tagsCol'
+  | 'regionCol'
   | 'attachmentCol'
   | 'sizeCol'
   | 'pathCol'
@@ -38,8 +40,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       minWidth: 350
     }
   },
+  tagsCol: {
+    width: '10%',
+    minWidth: 150,
+    paddingLeft: 65
+  },
+  regionCol: {
+    width: '20%',
+    minWidth: 150
+  },
   labelCol: {
-    width: '15%',
+    width: '20%',
     minWidth: 150,
     paddingLeft: 65
   },
@@ -94,8 +105,10 @@ const SortableTableHeader: React.StatelessComponent<CombinedProps> = props => {
         >
           Label
         </TableSortCell>
+        <TableCell className={classes.tagsCol}>Tags</TableCell>
         {isVolumesLanding && (
           <TableSortCell
+            className={classes.regionCol}
             data-qa-volume-region-header={order}
             active={isActive('region')}
             label="region"

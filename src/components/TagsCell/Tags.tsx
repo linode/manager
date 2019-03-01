@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeRowTags: React.StatelessComponent<CombinedProps> = props => {
+const Tags: React.StatelessComponent<CombinedProps> = props => {
   const { tags, classes } = props;
   return (
     <Paper className={classes.root}>
@@ -39,4 +39,4 @@ const LinodeRowTags: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(LinodeRowTags);
+export default styled(Tags);

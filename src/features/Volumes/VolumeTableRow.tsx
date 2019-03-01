@@ -12,7 +12,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
-import Tags from 'src/components/Tags';
+import TagsCell from 'src/components/TagsCell';
 import { formatRegion } from 'src/utilities';
 import VolumesActionMenu from './VolumesActionMenu';
 
@@ -85,36 +85,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     minWidth: 250
   }
 });
-
-type TagClassNames = 'tagWrapper';
-
-interface TagProps {
-  tags: string[];
-}
-
-type CombinedTagsProps = TagProps & WithStyles<TagClassNames>;
-
-class RenderTagsBase extends React.Component<CombinedTagsProps, {}> {
-  render() {
-    const { classes, tags } = this.props;
-    return (
-      <div className={classes.tagWrapper}>
-        <Tags tags={tags} />
-      </div>
-    );
-  }
-}
-
-const tagStyles: StyleRulesCallback<TagClassNames> = theme => ({
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  }
-});
-
-const RenderTags = withStyles(tagStyles)(RenderTagsBase);
 
 interface Props {
   volume: any;
@@ -194,10 +164,10 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
                 {label}
               </Typography>
             </div>
-            <RenderTags tags={volume.tags} />
           </Grid>
         </Grid>
       </TableCell>
+      <TagsCell tags={volume.tags} />
       <TableCell colSpan={5}>
         <LinearProgress value={progressFromEvent(volume.recentEvent)} />
       </TableCell>
@@ -219,10 +189,10 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
                 {volume.label}
               </Typography>
             </div>
-            <RenderTags tags={volume.tags} />
           </Grid>
         </Grid>
       </TableCell>
+      <TagsCell tags={volume.tags} />
       {isVolumesLanding && (
         <TableCell parentColumn="Region" data-qa-volume-region>
           {region}
