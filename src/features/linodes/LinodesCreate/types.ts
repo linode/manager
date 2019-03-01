@@ -54,7 +54,7 @@ export interface ReduxStateProps {
 }
 
 export type HandleSubmit = (
-  type: 'create' | 'clone',
+  type: 'create' | 'clone' | 'createFromStackScript',
   payload: CreateLinodeRequest,
   linodeID?: number
 ) => void;
@@ -105,8 +105,19 @@ export interface CloneFormStateHandlers extends BaseFormStateAndHandlers {
  */
 export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   selectedStackScriptID?: number;
-  updateStackScriptID: (id: number) => void;
-  selectedUDFs?: any[];
+  selectedStackScriptUsername?: string;
+  selectedStackScriptLabel?: string;
+  availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
+  availableStackScriptImages?: Linode.Image[];
+  updateStackScript: (
+    id: number,
+    label: string,
+    username: string,
+    userDefinedFields: Linode.StackScript.UserDefinedField[],
+    availableImages: Linode.Image[],
+    defaultData?: any
+  ) => void;
+  selectedUDFs?: any;
   handleSelectUDFs: (stackScripts: any[]) => void;
 }
 

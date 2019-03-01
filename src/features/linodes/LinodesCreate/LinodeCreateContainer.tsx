@@ -6,6 +6,9 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
+import regionsContainer from 'src/containers/regions.container';
+import withImages from 'src/containers/withImages.container';
+import withLinodes from 'src/containers/withLinodes.container';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -17,19 +20,14 @@ import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 
 import { dcDisplayNames } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
-import withImages from 'src/containers/withImages.container';
-import withLinodes from 'src/containers/withLinodes.container';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   hasGrant,
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import { ApplicationState } from 'src/store';
-import { MapState } from 'src/store/types';
+import CALinodeCreate from './CALinodeCreate';
 import { ExtendedType } from './SelectPlanPanel';
 
-import CALinodeCreate from './CALinodeCreate';
 import {
   HandleSubmit,
   Info,
@@ -40,7 +38,11 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { cloneLinode } from 'src/services/linodes';
+
+import { ApplicationState } from 'src/store';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
+import { MapState } from 'src/store/types';
+
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -50,7 +52,11 @@ interface State {
   selectedRegionID?: string;
   selectedTypeID?: string;
   selectedLinodeID?: number;
+  availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
+  availableStackScriptImages?: Linode.Image[];
   selectedStackScriptID?: number;
+  selectedStackScriptLabel?: string;
+  selectedStackScriptUsername?: string;
   selectedDiskSize?: number;
   label: string;
   backupsEnabled: boolean;
@@ -105,8 +111,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
   };
 
-  setStackScriptID = (id: number) =>
-    this.setState({ selectedStackScriptID: id });
+  setStackScript = (
+    id: number,
+    label: string,
+    username: string,
+    userDefinedFields: Linode.StackScript.UserDefinedField[],
+    images: Linode.Image[],
+    defaultData?: any
+  ) =>
+    this.setState({
+      selectedStackScriptID: id,
+      selectedStackScriptLabel: label,
+      selectedStackScriptUsername: username,
+      availableUserDefinedFields: userDefinedFields,
+      availableStackScriptImages: images,
+      udfs: defaultData
+    });
 
   setDiskSize = (size: number) => this.setState({ selectedDiskSize: size });
 
@@ -148,10 +168,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
+    if (type === 'createFromStackScript' && !this.state.selectedStackScriptID) {
+      return this.setState(
+        () => ({
+          errors: [
+            {
+              reason: 'You must select a StackScript to create from',
+              field: 'stackscript_id'
+            }
+          ]
+        }),
+        () => scrollErrorIntoView()
+      );
+    }
+
     const request =
-      type === 'create'
-        ? () => this.props.linodeActions.createLinode(payload)
-        : () => cloneLinode(linodeID!, payload);
+      type === 'clone'
+        ? () => cloneLinode(linodeID!, payload)
+        : () => this.props.linodeActions.createLinode(payload);
 
     this.setState({ formIsSubmitting: true });
 
@@ -299,8 +333,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               updateDiskSize={this.setDiskSize}
               selectedUDFs={this.state.udfs}
               handleSelectUDFs={this.setUDFs}
+              availableUserDefinedFields={this.state.availableUserDefinedFields}
+              availableStackScriptImages={this.state.availableStackScriptImages}
               selectedStackScriptID={this.state.selectedStackScriptID}
-              updateStackScriptID={this.setStackScriptID}
+              selectedStackScriptLabel={this.state.selectedStackScriptLabel}
+              selectedStackScriptUsername={
+                this.state.selectedStackScriptUsername
+              }
+              updateStackScript={this.setStackScript}
               label={this.state.label}
               updateLabel={this.setLabel}
               password={this.state.password}

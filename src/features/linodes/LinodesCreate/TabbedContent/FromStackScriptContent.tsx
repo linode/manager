@@ -1,4 +1,3 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -22,19 +21,12 @@ import userSSHKeyHoc, {
   State as SSHKeys
 } from 'src/features/linodes/userSSHKeyHoc';
 import CASelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/CASelectStackScriptPanel';
-// import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import {
-  LinodeActionsProps,
-  withLinodeActions
-} from 'src/store/linodes/linode.containers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
-import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
@@ -73,27 +65,13 @@ interface Notice {
 }
 interface Props {
   notice?: Notice;
-  history: any;
   selectedTabFromQuery?: string;
-  selectedStackScriptFromQuery?: number;
-  accountBackups: boolean;
-  disabled?: boolean;
   request: (
     username: string,
     params?: any,
     filter?: any
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   header: string;
-}
-
-interface State {
-  userDefinedFields: Linode.StackScript.UserDefinedField[];
-  udf_data: any;
-  errors?: Linode.ApiFieldError[];
-  selectedStackScriptLabel: string;
-  selectedStackScriptUsername: string;
-  isMakingRequest: boolean;
-  compatibleImages: Linode.Image[];
 }
 
 const errorResources = {
@@ -110,27 +88,10 @@ type InnerProps = Props & WithLinodesImagesTypesAndRegions;
 type CombinedProps = InnerProps &
   StackScriptFormStateHandlers &
   WithDisplayData &
-  LinodeActionsProps &
-  InjectedNotistackProps &
-  LabelProps &
   SSHKeys &
   WithStyles<ClassNames>;
 
-export class FromStackScriptContent extends React.Component<
-  CombinedProps,
-  State
-> {
-  state: State = {
-    userDefinedFields: [],
-    udf_data: null,
-    selectedStackScriptLabel: '',
-    selectedStackScriptUsername: this.props.selectedTabFromQuery || '',
-    isMakingRequest: false,
-    compatibleImages: []
-  };
-
-  mounted: boolean = false;
-
+export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
   handleSelectStackScript = (
     id: number,
     label: string,
@@ -138,78 +99,46 @@ export class FromStackScriptContent extends React.Component<
     stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => {
-    const { imagesData, updateStackScriptID } = this.props;
-    const filteredImages = imagesData.filter(image => {
-      for (const stackScriptImage of stackScriptImages) {
-        if (image.id === stackScriptImage) {
-          return true;
-        }
-      }
-      return false;
+    /**
+     * based on the list of images we get back from the API, compare those
+     * to our list of master images supported by Linode and filter out the ones
+     * that aren't compatible with our selected StackScript
+     */
+    const compatibleImages = this.props.imagesData.filter(eachImage => {
+      return stackScriptImages.some(
+        eachSSImage => eachSSImage === eachImage.id
+      );
     });
 
-    const defaultUDFData = {};
-    userDefinedFields.forEach(eachField => {
-      if (!!eachField.default) {
-        defaultUDFData[eachField.name] = eachField.default;
+    /**
+     * if a UDF field comes back from the API with a "default"
+     * value, it means we need to pre-populate the field and form state
+     */
+    const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {
+      if (eachField.default) {
+        accum[eachField.name] = eachField.default;
       }
-    });
-    // first need to make a request to get the stackscript
-    // then update userDefinedFields to the fields returned
-    this.setState(
-      {
-        selectedStackScriptUsername: username,
-        selectedStackScriptLabel: label,
-        compatibleImages: filteredImages,
-        userDefinedFields,
-        udf_data: defaultUDFData
-        // prob gonna need to update UDF here too
-      },
-      () => updateStackScriptID(id)
+      return accum;
+    }, {});
+
+    this.props.updateStackScript(
+      id,
+      label,
+      username,
+      userDefinedFields,
+      compatibleImages,
+      defaultUDFData
     );
-  };
-
-  resetStackScriptSelection = () => {
-    // reset stackscript selection to unselected
-    if (!this.mounted) {
-      return;
-    }
-    this.setState({
-      selectedStackScriptLabel: '',
-      selectedStackScriptUsername: '',
-      udf_data: null,
-      userDefinedFields: [],
-      compatibleImages: []
-    });
   };
 
   handleChangeUDF = (key: string, value: string) => {
     // either overwrite or create new selection
-    const newUDFData = assocPath([key], value, this.state.udf_data);
+    const newUDFData = assocPath([key], value, this.props.selectedUDFs);
 
-    this.setState({
-      udf_data: { ...this.state.udf_data, ...newUDFData }
-    });
+    this.props.handleSelectUDFs({ ...this.props.selectedUDFs, ...newUDFData });
   };
 
-  createFromStackScript = () => {
-    if (!this.props.selectedStackScriptID) {
-      this.setState(
-        {
-          errors: [
-            { field: 'stackscript_id', reason: 'You must select a StackScript' }
-          ]
-        },
-        () => {
-          scrollErrorIntoView();
-        }
-      );
-      return;
-    }
-    this.createLinode();
-  };
-
-  createLinode = () => {
+  handleCreateLinode = () => {
     const {
       backupsEnabled,
       password,
@@ -219,20 +148,16 @@ export class FromStackScriptContent extends React.Component<
       selectedRegionID,
       selectedStackScriptID,
       selectedTypeID,
+      selectedUDFs,
       tags
     } = this.props;
-    const { udf_data } = this.state;
 
-    this.setState({ isMakingRequest: true });
-
-    const label = this.label();
-
-    handleSubmitForm('create', {
+    handleSubmitForm('createFromStackScript', {
       region: selectedRegionID,
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,
-      stackscript_data: udf_data,
-      label /* optional */,
+      stackscript_data: selectedUDFs,
+      label: this.props.label /* optional */,
       root_pass: password /* required if image ID is provided */,
       image: selectedImageID /* optional */,
       backups_enabled: backupsEnabled /* optional */,
@@ -244,48 +169,10 @@ export class FromStackScriptContent extends React.Component<
     });
   };
 
-  componentDidMount() {
-    this.mounted = true;
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  filterPublicImages = (images: Linode.Image[]) => {
-    return images.filter((image: Linode.Image) => image.is_public);
-  };
-
-  label = () => {
-    const { selectedStackScriptLabel } = this.state;
-
-    const {
-      getLabel,
-      imagesData,
-      selectedImageID,
-      selectedRegionID
-    } = this.props;
-
-    const selectedImage = imagesData.find(img => img.id === selectedImageID);
-
-    const image = selectedImage && selectedImage.vendor;
-
-    return getLabel(selectedStackScriptLabel, image, selectedRegionID);
-  };
-
   render() {
     const {
+      accountBackupsEnabled,
       errors,
-      userDefinedFields,
-      udf_data,
-      isMakingRequest,
-      compatibleImages,
-      selectedStackScriptLabel,
-      selectedStackScriptUsername
-    } = this.state;
-
-    const {
-      accountBackups,
       notice,
       backupsMonthlyPrice,
       regionsData,
@@ -304,8 +191,10 @@ export class FromStackScriptContent extends React.Component<
       password,
       imagesData,
       userSSHKeys,
-      updateCustomLabel,
-      disabled,
+      userCannotCreateLinode: disabled,
+      selectedStackScriptUsername,
+      selectedStackScriptLabel,
+      label,
       request,
       header,
       toggleBackupsEnabled,
@@ -314,35 +203,16 @@ export class FromStackScriptContent extends React.Component<
       updatePassword,
       updateRegionID,
       updateTags,
-      updateTypeID
+      updateTypeID,
+      availableUserDefinedFields: userDefinedFields,
+      availableStackScriptImages: compatibleImages,
+      selectedUDFs: udf_data
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    const hasBackups = Boolean(backupsEnabled || accountBackups);
-
-    const label = this.label();
-
-    /*
-     * errors with UDFs have dynamic keys
-     * for exmaple, if there are UDFs that aren't filled out, you can can
-     * errors that look something like this
-     * { field: 'wordpress_pass', reason: 'you must fill out a WP password' }
-     * Because of this, we need to both make each error doesn't match any
-     * that are in our errorResources map and that it has a 'field' key in the first
-     * place. Then, we can confirm we are indeed looking at a UDF error
-     */
-    const udfErrors = errors
-      ? errors.filter(error => {
-          // ensure the error isn't a root_pass, image, region, type, label
-          const isNotUDFError = Object.keys(errorResources).some(errorKey => {
-            return errorKey === error.field;
-          });
-          // if the 'field' prop exists and isn't any other error
-          return !!error.field && !isNotUDFError;
-        })
-      : undefined;
+    const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
     return (
       <React.Fragment>
@@ -363,20 +233,20 @@ export class FromStackScriptContent extends React.Component<
             selectedUsername={selectedStackScriptUsername}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
-            publicImages={this.filterPublicImages(imagesData) || []}
-            resetSelectedStackScript={this.resetStackScriptSelection}
+            publicImages={filterPublicImages(imagesData) || []}
+            resetSelectedStackScript={() => null}
             disabled={disabled}
             request={request}
           />
           {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel
-              errors={udfErrors}
-              selectedLabel={selectedStackScriptLabel}
-              selectedUsername={selectedStackScriptUsername}
+              errors={filterUDFErrors(this.props.errors)}
+              selectedLabel={selectedStackScriptLabel || ''}
+              selectedUsername={selectedStackScriptUsername || ''}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
               updateFor={[userDefinedFields, udf_data, errors]}
-              udf_data={udf_data}
+              udf_data={udf_data || {}}
             />
           )}
           {!disabled && compatibleImages && compatibleImages.length > 0 ? (
@@ -427,7 +297,7 @@ export class FromStackScriptContent extends React.Component<
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
-              onChange: updateCustomLabel,
+              onChange: this.props.updateLabel,
               errorText: hasErrorFor('label'),
               disabled
             }}
@@ -455,7 +325,7 @@ export class FromStackScriptContent extends React.Component<
           />
           <AddonsPanel
             backups={backupsEnabled}
-            accountBackups={accountBackups}
+            accountBackups={accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
             privateIP={privateIPEnabled}
             changeBackups={toggleBackupsEnabled}
@@ -496,7 +366,7 @@ export class FromStackScriptContent extends React.Component<
               if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
                 displaySections.push(
                   renderBackupsDisplaySection(
-                    accountBackups,
+                    accountBackupsEnabled,
                     backupsMonthlyPrice
                   )
                 );
@@ -511,9 +381,9 @@ export class FromStackScriptContent extends React.Component<
                 <CheckoutBar
                   heading={`${label || 'Linode'} Summary`}
                   calculatedPrice={calculatedPrice}
-                  isMakingRequest={isMakingRequest}
-                  disabled={isMakingRequest || disabled}
-                  onDeploy={this.createFromStackScript}
+                  isMakingRequest={this.props.formIsSubmitting}
+                  disabled={this.props.formIsSubmitting || disabled}
+                  onDeploy={this.handleCreateLinode}
                   displaySections={displaySections}
                   {...props}
                 />
@@ -527,14 +397,38 @@ export class FromStackScriptContent extends React.Component<
   }
 }
 
+/**
+ * @returns { Linode.Image[] } - a list of public images AKA
+ * images that are officially supported by Linode
+ *
+ * @todo test this
+ */
+export const filterPublicImages = (images: Linode.Image[]) => {
+  return images.filter((image: Linode.Image) => image.is_public);
+};
+
+/**
+ * filter out all the UDF errors from our error state.
+ * To do this, we compare the keys from the error state to our "errorResources"
+ * map and return all the errors that don't match the keys in that object
+ *
+ * @todo test this function
+ */
+export const filterUDFErrors = (errors?: Linode.ApiFieldError[]) => {
+  return !errors
+    ? []
+    : errors.filter(eachError => {
+        return !Object.keys(errorResources).some(
+          eachKey => eachKey === eachError.field
+        );
+      });
+};
+
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, InnerProps>(
   styled,
-  withSnackbar,
-  userSSHKeyHoc,
-  withLabelGenerator,
-  withLinodeActions
+  userSSHKeyHoc
 );
 
 export default enhanced(FromStackScriptContent);
