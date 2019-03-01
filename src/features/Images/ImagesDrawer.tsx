@@ -281,7 +281,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       changeDisk,
       changeLinode,
       changeLabel,
-      changeDescription
+      changeDescription,
+      classes
     } = this.props;
     const { disks, linodes, notice } = this.state;
     const { errors } = this.state;
@@ -320,7 +321,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             selectedLinode={selectedLinode || 'none'}
             linodeError={linodeError}
             handleChange={changeLinode}
-            updateFor={[linodes, selectedLinode, linodeError]}
+            updateFor={[linodes, selectedLinode, linodeError, classes]}
           />
         )}
 
@@ -330,7 +331,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             disks={disks}
             diskError={diskError}
             handleChange={changeDisk}
-            updateFor={[disks, selectedDisk, diskError]}
+            updateFor={[disks, selectedDisk, diskError, classes]}
             disabled={mode === modes.IMAGIZING}
             data-qa-disk-select
           />
@@ -360,7 +361,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           </React.Fragment>
         )}
 
-        <ActionsPanel style={{ marginTop: 16 }} updateFor={[requirementsMet]}>
+        <ActionsPanel
+          style={{ marginTop: 16 }}
+          updateFor={[requirementsMet, classes]}
+        >
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet}

@@ -173,7 +173,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, false)}
                   checked={selectedId === stackScript.id}
-                  updateFor={[selectedId === stackScript.id]}
+                  updateFor={[selectedId === stackScript.id, classes]}
                   stackScriptID={stackScript.id}
                 />
               </tbody>

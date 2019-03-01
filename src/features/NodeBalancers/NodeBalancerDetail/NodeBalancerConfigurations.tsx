@@ -1002,7 +1002,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configSubmitting[idx],
           configErrors[idx],
           panelMessages[idx],
-          panelNodeMessages[idx]
+          panelNodeMessages[idx],
+          classes
         ]}
         defaultExpanded={isNewConfig || isExpanded}
         success={panelMessages[idx]}
