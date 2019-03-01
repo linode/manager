@@ -5,10 +5,11 @@ import AppBar from 'src/components/core/AppBar';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Grid from 'src/components/Grid';
+import { getStackScriptsByUser } from 'src/features/StackScripts/stackScriptUtils';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
-// import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 import {
   AllFormStateAndHandlers,
@@ -147,23 +148,14 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
       title: 'My StackScripts',
       render: () => {
         return (
-          <React.Fragment />
-          // <FromStackScriptContent
-          //   getBackupsMonthlyPrice={this.props.getBackupsMonthlyPrice}
-          //   regionsData={this.props.regionsData}
-          //   getImageInfo={this.props.getImageInfo}
-          //   imagesData={this.props.imagesData}
-          //   typesData={this.props.typesData}
-          //   getTypeInfo={this.props.getTypeInfo}
-          //   getRegionInfo={this.props.getRegionInfo}
-          //   history={this.props.history}
-          //   accountBackups={this.props.accountBackupsEnabled}
-          //   selectedStackScriptFromQuery={undefined}
-          //   handleDisablePasswordField={this.props.handleDisablePasswordField}
-          //   disabled={this.props.userCannotCreateLinode}
-          //   request={getStackScriptsByUser}
-          //   header={'Select a StackScript'}
-          // />
+          <FromStackScriptContent
+            accountBackups={this.props.accountBackupsEnabled}
+            selectedStackScriptFromQuery={undefined}
+            disabled={this.props.userCannotCreateLinode}
+            request={getStackScriptsByUser}
+            header={'Select a StackScript'}
+            {...this.props}
+          />
         );
       }
     }
