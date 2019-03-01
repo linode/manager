@@ -106,9 +106,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   setStackScriptID = (id: number) =>
-    this.setState({ selectedStackScriptID: id }, () =>
-      console.log('set ss id')
-    );
+    this.setState({ selectedStackScriptID: id });
 
   setDiskSize = (size: number) => this.setState({ selectedDiskSize: size });
 
