@@ -3,7 +3,7 @@ import createBreakpoints from 'src/components/core/styles/createBreakpoints';
 import createMuiTheme, {
   ThemeOptions
 } from 'src/components/core/styles/createMuiTheme';
-import { spacing as spacingStorage } from 'src/utilities/storage';
+import { spacing as spacingStorage, theme } from 'src/utilities/storage';
 
 /**
  * Augmenting Palette and Palette Options
@@ -609,7 +609,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       MuiFormControlLabel: {
         root: {
-          marginLeft: -11
+          marginLeft: -(spacingUnit + 3)
         }
       },
       MuiFormLabel: {

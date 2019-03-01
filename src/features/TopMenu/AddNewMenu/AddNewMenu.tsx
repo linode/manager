@@ -50,7 +50,7 @@ const styles: StyleRulesCallback = theme => ({
     minHeight: 40,
     paddingRight: `calc(${theme.spacing.unit * 3}px + 24px)`,
     [theme.breakpoints.down('sm')]: {
-      padding: '6px 11px 7px 14px'
+      padding: '6px 11px 7px 11px'
     }
   },
   caret: {
