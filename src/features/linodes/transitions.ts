@@ -17,7 +17,8 @@ export const transitionStatus = [
 export const transitionAction = [
   'linode_snapshot',
   'disk_resize',
-  'backups_restore'
+  'backups_restore',
+  'disk_imagize'
 ];
 
 export const linodeInTransition = (
