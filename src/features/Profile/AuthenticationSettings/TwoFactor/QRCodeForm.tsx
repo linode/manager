@@ -16,16 +16,17 @@ declare module 'qrcode.react' {
   }
 }
 
-type ClassNames = 'root' | 'instructions' | 'qrcode';
+type ClassNames = 'root' | 'instructions' | 'qrcodeContainer';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   instructions: {
     marginTop: theme.spacing.unit * 2
   },
-  qrcode: {
+  qrcodeContainer: {
     margin: `${theme.spacing.unit * 2}px 0`,
-    border: `5px solid #fff`
+    border: `5px solid #fff`,
+    display: 'inline-block'
   }
 });
 
@@ -48,13 +49,15 @@ const QRCodeForm: React.StatelessComponent<CombinedProps> = props => {
       >
         Scan this QR code to add your Linode account to your TFA app:
       </Typography>
-      <QRCode
-        size={200}
-        level="H" // QR code error checking level ("High"); gives a higher resolution code
-        value={secretLink}
-        className={classes.qrcode}
-        data-qa-qr-code
-      />
+      <div className={classes.qrcodeContainer}>
+        <QRCode
+          size={200}
+          level="H" // QR code error checking level ("High"); gives a higher resolution code
+          value={secretLink}
+          data-qa-qr-code
+          className="qrCode"
+        />
+      </div>
       <Typography
         role="header"
         variant="h3"
