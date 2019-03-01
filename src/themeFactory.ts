@@ -479,8 +479,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiDialogActions: {
         root: {
           margin: 0,
-          padding: `0 ${spacingUnit * 3}px, ${spacingUnit *
-            3}px, ${spacingUnit * 3}px`,
+          padding: `0 ${spacingUnit * 3}px ${spacingUnit * 3}px ${spacingUnit *
+            3}px`,
           justifyContent: 'flex-start',
           '& .actionPanel': {
             padding: 0
