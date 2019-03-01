@@ -1,15 +1,15 @@
 import { parse } from 'querystring';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
-import MUITab from 'src/components/core/Tab';
 import Paper from 'src/components/core/Paper';
-import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import {
   StyleRulesCallback,
-  WithStyles,
-  withStyles
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
+import MUITab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root' | 'inner';
@@ -130,7 +130,7 @@ class CALinodeCreateSubTabs extends React.PureComponent<CombinedProps, State> {
           <Paper className={`${classes.root}`}>
             <div className={`${classes.inner}`}>
               <Typography role="header" variant="h2">
-                Create From
+                Create From:
               </Typography>
               <AppBar position="static" color="default">
                 <Tabs
