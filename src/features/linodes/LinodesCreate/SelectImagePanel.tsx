@@ -59,7 +59,7 @@ interface Props {
   images: Linode.Image[];
   title?: string;
   error?: string;
-  selectedImageID: string | null;
+  selectedImageID?: string;
   handleSelection: (id: string) => void;
   hideMyImages?: boolean;
   initTab?: number;
