@@ -145,4 +145,36 @@ describe('PrimaryNav', () => {
       expect(findLinkInPrimaryNav('managed')).toHaveLength(1);
     });
   });
+
+  describe('when Object Storage is enabled', () => {
+    it('should have an Object Storage link', () => {
+      const wrapper = shallow(
+        <PrimaryNav
+          classes={mockClasses}
+          closeMenu={jest.fn()}
+          toggleTheme={jest.fn()}
+          isObjectStorageEnabled={true}
+          {...reactRouterProps}
+        />
+      );
+      const findLinkInPrimaryNav = findLinkIn(wrapper);
+      expect(findLinkInPrimaryNav('objectStorage')).toHaveLength(1);
+    });
+  });
+
+  describe('when Object Storage is NOT enabled', () => {
+    it('should NOT have an Object Storage link', () => {
+      const wrapper = shallow(
+        <PrimaryNav
+          classes={mockClasses}
+          closeMenu={jest.fn()}
+          toggleTheme={jest.fn()}
+          isObjectStorageEnabled={false}
+          {...reactRouterProps}
+        />
+      );
+      const findLinkInPrimaryNav = findLinkIn(wrapper);
+      expect(findLinkInPrimaryNav('objectStorage')).toHaveLength(0);
+    });
+  });
 });

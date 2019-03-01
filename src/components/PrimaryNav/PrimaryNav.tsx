@@ -16,6 +16,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import SpacingToggle from './SpacingToggle';
@@ -301,6 +302,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
     // }
 
+    if (this.props.isObjectStorageEnabled) {
+      primaryLinks.push({
+        display: 'Object Storage',
+        href: '/object-storage',
+        key: 'objectStorage'
+      });
+    }
+
     if (hasAccountAccess) {
       primaryLinks.push({
         display: 'Account',
@@ -511,6 +520,7 @@ interface StateProps {
   hasAccountAccess: boolean;
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
+  isObjectStorageEnabled: boolean;
 }
 
 const userHasAccountAccess = (profile: Linode.Profile) => {
@@ -537,15 +547,17 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false
+      isManagedAccount: false,
       // isLongviewEnabled: false,
+      isObjectStorageEnabled: false
     };
   }
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account)
+    isManagedAccount: accountHasManaged(account),
     // isLongviewEnabled: accountHasLongviewSubscription(account),
+    isObjectStorageEnabled
   };
 };
 
