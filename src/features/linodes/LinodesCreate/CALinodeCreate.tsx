@@ -58,11 +58,12 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
     value: number
   ) => {
     this.props.resetCreationState();
-    this.props.history.push({
-      search: `?type=${event.target.textContent}`
-    });
+
     this.setState({
       selectedTab: value
+    });
+    this.props.history.push({
+      search: `?type=${event.target.textContent}`
     });
   };
 
