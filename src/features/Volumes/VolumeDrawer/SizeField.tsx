@@ -4,6 +4,8 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
+import FormControl from 'src/components/core/FormControl';
+import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import TextField from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
@@ -40,22 +42,25 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
     : undefined;
 
   return (
-    <TextField
-      data-qa-size
-      errorText={error}
-      helperText={helperText}
-      InputProps={{
-        endAdornment: <InputAdornment position="end"> GiB </InputAdornment>
-      }}
-      label="Size"
-      name={name}
-      type="number"
-      onBlur={onBlur}
-      onChange={onChange}
-      required
-      value={value}
-      {...rest}
-    />
+    <FormControl fullWidth>
+      <TextField
+        data-qa-size
+        errorText={error}
+        helperText={helperText}
+        InputProps={{
+          endAdornment: <InputAdornment position="end"> GiB </InputAdornment>
+        }}
+        label="Size"
+        name={name}
+        type="number"
+        onBlur={onBlur}
+        onChange={onChange}
+        required
+        value={value}
+        {...rest}
+      />
+      <FormHelperText>The size of the new volume in GiB</FormHelperText>
+    </FormControl>
   );
 };
 
