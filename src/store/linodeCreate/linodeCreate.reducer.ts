@@ -54,8 +54,6 @@ const reducer: Reducer<State> = reducerWithInitialState(
 ).caseWithAction(handleChangeCreateType, (state, action) => {
   const { payload } = action;
 
-  console.log(payload);
-
   return {
     ...state,
     type: payload
