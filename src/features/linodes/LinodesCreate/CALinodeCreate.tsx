@@ -57,11 +57,11 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
-    this.props.history.push({
-      search: `?type=${event.target.textContent}`
-    });
     this.setState({
       selectedTab: value
+    });
+    this.props.history.push({
+      search: `?type=${event.target.textContent}`
     });
   };
 
