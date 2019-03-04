@@ -72,6 +72,7 @@ interface State {
 }
 
 type CombinedProps = InjectedNotistackProps &
+  ReduxStateProps &
   LinodeActionsProps &
   WithLinodesImagesTypesAndRegions &
   userSSHKeyProps &
