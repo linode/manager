@@ -93,6 +93,16 @@ export class LinodeCreate extends React.PureComponent<
           linodesData,
           linodesError,
           linodesLoading,
+          handleSelectUDFs,
+          selectedUDFs,
+          updateStackScript,
+          availableStackScriptImages,
+          availableUserDefinedFields,
+          selectedStackScriptID,
+          selectedDiskSize,
+          selectedStackScriptUsername,
+          selectedStackScriptLabel,
+          selectedLinodeID,
           ...rest
         } = this.props;
         return (
