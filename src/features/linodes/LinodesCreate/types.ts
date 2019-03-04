@@ -87,6 +87,7 @@ export interface BaseFormStateAndHandlers {
   togglePrivateIPEnabled: () => void;
   tags?: Tag[];
   updateTags: (tags: Tag[]) => void;
+  resetCreationState: () => void;
 }
 
 /**
