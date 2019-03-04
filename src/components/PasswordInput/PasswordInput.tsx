@@ -5,11 +5,11 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
-import Typography from 'src/components/core/Typography';
 import HideShowText from './HideShowText';
 
 type Props = TextFieldProps & {
@@ -89,9 +89,9 @@ class PasswordInput extends React.Component<CombinedProps, State> {
           }
         </Grid>
         <Typography variant="body1" className={classes.infoText}>
-          A password must be at least 6 characters and contain at least 2 of the
-          following classes: uppercase, lowercase, numeric characters, or
-          special characters.
+          Password must be at least 6 characters and contain each of the
+          following characters: uppercase, lowercase, numeric, and special
+          character.
         </Typography>
       </React.Fragment>
     );
