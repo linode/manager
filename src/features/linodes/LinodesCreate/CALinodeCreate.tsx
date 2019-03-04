@@ -81,7 +81,7 @@ export class LinodeCreate extends React.PureComponent<
 
   tabs: Tab[] = [
     {
-      title: 'Distrubutions',
+      title: 'Distributions',
       type: 'fromImage',
       render: () => {
         /** ...rest being all the formstate props and display data */
