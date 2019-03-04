@@ -6,13 +6,13 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
-import SelectImagePanel from 'src/features/linodes/LinodesCreate/SelectImagePanel.tsx';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
 import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import SelectImagePanel from './SelectImagePanel';
 
 interface WithImagesProps {
   imagesData: Linode.Image[];

@@ -252,3 +252,115 @@ export const images: Linode.Image[] = [
     description: null
   }
 ];
+
+export const privateImage1 = {
+  deprecated: false,
+  type: 'manual',
+  id: 'private/0001',
+  created_by: 'somefella',
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const privateImage2 = {
+  deprecated: false,
+  type: 'manual',
+  id: 'private/0002',
+  created_by: 'somefella',
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const deprecatedImage1 = {
+  deprecated: true,
+  type: 'manual',
+  id: 'linode/0001',
+  created_by: 'linode',
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const deprecatedImage2 = {
+  deprecated: true,
+  type: 'manual',
+  id: 'linode/0002',
+  created_by: 'linode',
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const recommendedImage1 = {
+  deprecated: false,
+  type: 'manual',
+  id: 'linode/0001',
+  created_by: 'linode',
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const recommendedImage2 = {
+  deprecated: false,
+  type: 'manual',
+  id: 'linode/0002',
+  created_by: 'linode',
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const deletedImage1 = {
+  deprecated: false,
+  type: 'automatic',
+  id: 'private/0001',
+  created_by: null,
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};
+
+export const deletedImage2 = {
+  deprecated: false,
+  type: 'automatic',
+  id: 'private/0002',
+  created_by: null,
+
+  description: '',
+  vendor: null,
+  size: 0,
+  label: '',
+  is_public: false,
+  created: ''
+};

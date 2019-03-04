@@ -4,12 +4,10 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-
-import { always, cond, groupBy, propOr } from 'ramda';
-
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
+import { getDisplayNameForGroup, groupImages } from 'src/utilities/images';
 
 type ClassNames = 'root' | 'selectContainer' | 'icon';
 
@@ -138,42 +136,6 @@ export const getImagesOptions = (images: Linode.Image[]) => {
     []
   );
 };
-
-interface GroupedImages {
-  deleted?: Linode.Image[];
-  recommended?: Linode.Image[];
-  older?: Linode.Image[];
-  images?: Linode.Image[];
-}
-
-const isRecentlyDeleted = (i: Linode.Image) =>
-  i.created_by === null && i.type === 'automatic';
-const isByLinode = (i: Linode.Image) =>
-  i.created_by !== null && i.created_by === 'linode';
-const isDeprecated = (i: Linode.Image) => i.deprecated === true;
-const isRecommended = (i: Linode.Image) => isByLinode(i) && !isDeprecated(i);
-const isOlderImage = (i: Linode.Image) => isByLinode(i) && isDeprecated(i);
-
-export let groupImages: (i: Linode.Image[]) => GroupedImages;
-groupImages = groupBy(
-  cond([
-    [isRecentlyDeleted, always('deleted')],
-    [isRecommended, always('recommended')],
-    [isOlderImage, always('older')],
-    [(i: Linode.Image) => true, always('images')]
-  ])
-);
-
-export const groupNameMap = {
-  _default: 'Other',
-  deleted: 'Recently Deleted Disks',
-  recommended: '64-bit Distributions - Recommended',
-  older: 'Older Distributions',
-  images: 'Images'
-};
-
-const getDisplayNameForGroup = (key: string) =>
-  propOr('Other', key, groupNameMap);
 
 const styled = withStyles(styles);
 
