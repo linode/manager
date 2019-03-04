@@ -97,9 +97,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   state: State = defaultState;
 
   clearCreationState = () => {
-    this.setState({
-      ...defaultState
-    });
+    this.props.resetSSHKeys();
+    this.setState(defaultState);
   };
 
   setImageID = (id: string) => {
@@ -375,6 +374,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               handleSubmitForm={this.submitForm}
               resetCreationState={this.clearCreationState}
               userSSHKeys={this.props.userSSHKeys}
+              resetSSHKeys={this.props.resetSSHKeys}
             />
           </Grid>
         </Grid>
