@@ -97,7 +97,7 @@ export class LinodeCreate extends React.PureComponent<
         } = this.props;
         return (
           <FromImageContent
-            variant='public'
+            variant="public"
             imagePanelTitle="Choose a Distribution"
             {...rest}
           />
@@ -140,15 +140,16 @@ export class LinodeCreate extends React.PureComponent<
       type: 'fromImage',
       render: () => {
         return (
-        <FromImageContent
-          variant={'private'}
-          imagePanelTitle="Choose an Image"
-          {...this.props}
-        />);
+          <FromImageContent
+            variant={'private'}
+            imagePanelTitle="Choose an Image"
+            {...this.props}
+          />
+        );
       }
     },
     {
-      title: 'From Backups',
+      title: 'Backups',
       render: () => {
         return <React.Fragment />;
       }
