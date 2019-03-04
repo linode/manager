@@ -178,6 +178,7 @@ export class LinodeCreate extends React.PureComponent<
     },
     {
       title: 'Backups',
+      type: 'fromBackup',
       render: () => {
         return <React.Fragment />;
       }
