@@ -304,7 +304,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     if (p === 'tcp') {
       return `'TCP Connection' requires a successful TCP handshake.`;
     }
-    if (p === 'http' || 'https') {
+    if (p === 'http' || p === 'https') {
       return `'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body.`;
     }
     return;
