@@ -136,14 +136,25 @@ export class LinodeCreate extends React.PureComponent<
 
   myImagesTabs = (): Tab[] => [
     {
-      title: 'Backups and My Images',
-      type: 'fromBackup',
+      title: 'Images',
+      type: 'fromImage',
+      render: () => {
+        return (
+        <FromImageContent
+          variant={'private'}
+          imagePanelTitle="Choose an Image"
+          {...this.props}
+        />);
+      }
+    },
+    {
+      title: 'From Backups',
       render: () => {
         return <React.Fragment />;
       }
     },
     {
-      title: 'Clone from Existing Linode',
+      title: 'Clone Linode',
       type: 'fromLinode',
       render: () => {
         /**

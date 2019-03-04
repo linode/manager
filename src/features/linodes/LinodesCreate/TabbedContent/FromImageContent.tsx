@@ -41,7 +41,7 @@ interface Notice {
 
 interface Props extends BaseFormStateAndHandlers {
   notice?: Notice;
-  publicOnly?: boolean;
+  variant?: 'public'| 'private'| 'all';
   imagePanelTitle?: string;
 }
 
@@ -97,11 +97,11 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       regionDisplayInfo,
       typeDisplayInfo,
       backupsMonthlyPrice,
-      publicOnly,
       userSSHKeys,
       userCannotCreateLinode,
       errors,
-      imagePanelTitle
+      imagePanelTitle,
+      variant
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -122,7 +122,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
-            hideMyImages={publicOnly}
+            variant={variant}
             title={imagePanelTitle}
             images={images}
             handleSelection={this.props.updateImageID}
