@@ -1,16 +1,17 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import Grid from 'src/components/Grid';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import withImages from 'src/containers/withImages.container';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
+import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
@@ -20,7 +21,6 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import SelectImagePanel from './SelectImagePanel';
-import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'error';
 
