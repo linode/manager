@@ -1,8 +1,24 @@
 import { AxiosError } from 'axios';
 import { pathOr } from 'ramda';
 
+/**
+ * @example
+ *
+ * fetchData()
+ *  .then()
+ *  .catch((e: AxiosError) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
+ *
+ * @param { AxiosError } - Error response from some API request
+ * @param { string } - Default error message on the "reason" key
+ * @param { string } - Default error field on the "field" key
+ *
+ * @returns Linode.APIError[]
+ *
+ * [ { reason: 'Label is too long', field: 'label' } ]
+ *
+ */
 export const getAPIErrorOrDefault = (
-  errorResponse: Linode.ApiFieldError[] | AxiosError,
+  errorResponse: AxiosError,
   defaultError: string = 'An unexpected error occurred.',
   field?: string
 ): Linode.ApiFieldError[] => {
