@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
@@ -13,6 +14,7 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
+import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
@@ -41,7 +43,7 @@ interface Notice {
 
 interface Props extends BaseFormStateAndHandlers {
   notice?: Notice;
-  publicOnly?: boolean;
+  variant?: 'public' | 'private' | 'all';
   imagePanelTitle?: string;
 }
 
@@ -97,17 +99,35 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       regionDisplayInfo,
       typeDisplayInfo,
       backupsMonthlyPrice,
-      publicOnly,
       userSSHKeys,
       userCannotCreateLinode,
       errors,
-      imagePanelTitle
+      imagePanelTitle,
+      variant
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
+    const privateImages = images.filter(image => !image.is_public);
+
+    if (variant === 'private' && privateImages.length === 0) {
+      return (
+        <Grid item className={`${classes.main} mlMain`}>
+          <Placeholder
+            title="My Images"
+            copy={
+              <span>
+                You don't have any private Images. Visit the{' '}
+                <Link to="/images">Images section</Link> to create an Image from
+                one of your Linode's disks.
+              </span>
+            }
+          />
+        </Grid>
+      );
+    }
 
     return (
       <React.Fragment>
@@ -122,7 +142,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
-            hideMyImages={publicOnly}
+            variant={variant}
             title={imagePanelTitle}
             images={images}
             handleSelection={this.props.updateImageID}
