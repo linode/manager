@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { assoc, map, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -9,12 +9,24 @@ import { getEmailHash } from 'src/utilities/gravatar';
 
 export interface State {
   userSSHKeys: UserSSHKeyObject[];
+  resetSSHKeys: () => void;
 }
+
+const resetKeys = (key: UserSSHKeyObject) => {
+  return assoc('selected', false, key);
+};
 
 export default (Component: React.ComponentType<any>) => {
   class WrappedComponent extends React.PureComponent<StateProps, State> {
+    resetSSHKeys = () => {
+      const { userSSHKeys } = this.state;
+      const newKeys = map(resetKeys, userSSHKeys);
+      this.setState({ userSSHKeys: newKeys });
+    };
+
     state = {
-      userSSHKeys: []
+      userSSHKeys: [],
+      resetSSHKeys: this.resetSSHKeys
     };
 
     mounted: boolean = false;

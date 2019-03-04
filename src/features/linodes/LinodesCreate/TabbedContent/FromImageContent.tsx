@@ -14,20 +14,13 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import userSSHKeyHoc, {
-  State as UserSSHKeyProps
-} from 'src/features/linodes/userSSHKeyHoc';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
-import {
-  BaseFormStateAndHandlers,
-  WithDisplayData,
-  WithImagesRegionsTypesAndAccountState
-} from '../types';
+import { BaseFormStateAndHandlers, WithAll, WithDisplayData } from '../types';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -66,11 +59,10 @@ const errorResources = {
 };
 
 type CombinedProps = Props &
-  UserSSHKeyProps &
   WithStyles<ClassNames> &
   WithDisplayData &
   BaseFormStateAndHandlers &
-  WithImagesRegionsTypesAndAccountState;
+  WithAll;
 
 export class FromImageContent extends React.PureComponent<CombinedProps> {
   /** create the Linode */
@@ -275,12 +267,8 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<
-  CombinedProps,
-  Props & WithDisplayData & WithImagesRegionsTypesAndAccountState
->(
-  styled,
-  userSSHKeyHoc
+const enhanced = compose<CombinedProps, Props & WithDisplayData & WithAll>(
+  styled
 );
 
 export default enhanced(FromImageContent);
