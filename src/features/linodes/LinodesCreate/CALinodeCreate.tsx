@@ -139,11 +139,29 @@ export class LinodeCreate extends React.PureComponent<
       title: 'Images',
       type: 'fromImage',
       render: () => {
+        const {
+          history,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          handleSelectUDFs,
+          selectedUDFs,
+          updateStackScript,
+          availableStackScriptImages,
+          availableUserDefinedFields,
+          selectedStackScriptID,
+          selectedDiskSize,
+          selectedStackScriptUsername,
+          selectedStackScriptLabel,
+          selectedLinodeID,
+          ...rest
+        } = this.props;
+
         return (
           <FromImageContent
             variant={'private'}
             imagePanelTitle="Choose an Image"
-            {...this.props}
+            {...rest}
           />
         );
       }

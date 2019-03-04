@@ -40,9 +40,16 @@ const distroIcons = {
   Ubuntu: 'ubuntu'
 };
 
-const PublicImages: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, disabled, images, handleSelection, oldImages, selectedImageID } = props;
-  const renderPublicImages = () =>
+const PublicImages: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    classes,
+    disabled,
+    images,
+    handleSelection,
+    oldImages,
+    selectedImageID
+  } = props;
+  const renderImages = (images: Linode.Image[]) =>
     images.length &&
     images.map((image: Linode.Image, idx: number) => (
       <SelectionCard
@@ -61,39 +68,21 @@ const PublicImages: React.StatelessComponent<CombinedProps> = (props) => {
       />
     ));
 
-  const renderOlderPublicImages = () =>
-    oldImages.length &&
-    oldImages.map((image: Linode.Image, idx: number) => (
-      <SelectionCard
-        key={idx}
-        checked={image.id === String(props.selectedImageID)}
-        onClick={() => handleSelection(image.id)}
-        renderIcon={() => {
-          return (
-            <span className={`fl-${distroIcons[image.vendor as string]}`} />
-          );
-        }}
-        heading={image.vendor as string}
-        subheadings={[image.label]}
-        disabled={disabled}
-      />
-    ));
-
   return (
     <>
       <Grid className={classes.flatImagePanelSelections} container>
-        {renderPublicImages()}
+        {renderImages(images)}
       </Grid>
       {oldImages.length > 0 && (
         <ShowMoreExpansion name="Show Older Images">
           <Grid container spacing={16} style={{ marginTop: 16 }}>
-            {renderOlderPublicImages()}
+            {renderImages(oldImages)}
           </Grid>
         </ShowMoreExpansion>
       )}
     </>
-  )
-}
+  );
+};
 
 const styled = withStyles(styles);
 
