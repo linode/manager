@@ -35,6 +35,7 @@ export interface Tab {
 
 interface Props {
   history: any;
+  tabs?: Tab[];
   type: 'oneClick' | 'myImages';
 }
 
@@ -48,8 +49,7 @@ class CALinodeCreateSubTabs extends React.PureComponent<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
-    const tabsToRender =
-      props.type === 'oneClick' ? this.oneClickTabs : this.myImagesTabs;
+    const tabsToRender = this.getTabsToRender(props.type, props.tabs);
 
     /** get the query params as an object, excluding the "?" */
     const queryParams = parse(location.search.replace('?', ''));
@@ -79,26 +79,12 @@ class CALinodeCreateSubTabs extends React.PureComponent<CombinedProps, State> {
     }
   ];
 
-  myImagesTabs: Tab[] = [
-    {
-      title: 'Backups and My Images',
-      render: () => {
-        return <React.Fragment />;
-      }
-    },
-    {
-      title: 'Clone From Existing Linode',
-      render: () => {
-        return <React.Fragment />;
-      }
-    },
-    {
-      title: 'My StackScripts',
-      render: () => {
-        return <React.Fragment />;
-      }
+  getTabsToRender = (type: string, tabs?: Tab[]) => {
+    if (tabs) {
+      return tabs;
     }
-  ];
+    return type === 'oneClick' ? this.oneClickTabs : [];
+  };
 
   handleTabChange = (
     event: React.ChangeEvent<HTMLDivElement>,
@@ -116,12 +102,10 @@ class CALinodeCreateSubTabs extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { type, classes } = this.props;
+    const { type, tabs, classes } = this.props;
     const { selectedTab } = this.state;
 
-    const tabsToRender =
-      type === 'oneClick' ? this.oneClickTabs : this.myImagesTabs;
-
+    const tabsToRender = this.getTabsToRender(type, tabs);
     const selectedTabContentRender = tabsToRender[selectedTab].render;
 
     return (
