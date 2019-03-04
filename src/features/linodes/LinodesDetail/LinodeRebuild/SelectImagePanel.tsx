@@ -61,7 +61,7 @@ const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
       )
     },
     {
-      title: 'Images',
+      title: 'My Images',
       render: () => <Grid container>{createImagePanels(myImages)}</Grid>
     }
   ];
