@@ -1,37 +1,28 @@
 import * as React from 'react';
 
-import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 
-type ClassNames = 'root' | 'flatImagePanel' | 'flatImagePanelSelections';
+type ClassNames = 'root' | 'flatImagePanelSelections';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
   flatImagePanelSelections: {
     marginTop: theme.spacing.unit * 2,
     padding: `${theme.spacing.unit}px 0`
   },
   root: {}
 });
-
 interface Props {
   images: Linode.Image[];
   oldImages: Linode.Image[];
   selectedImageID?: string;
   disabled?: boolean;
-  title?: string;
-  error?: string;
   handleSelection: (id: string) => void;
 }
 
@@ -50,7 +41,7 @@ const distroIcons = {
 };
 
 const PublicImages: React.StatelessComponent<CombinedProps> = (props) => {
-  const { classes, disabled, error, images, handleSelection, oldImages, selectedImageID, title } = props;
+  const { classes, disabled, images, handleSelection, oldImages, selectedImageID } = props;
   const renderPublicImages = () =>
     images.length &&
     images.map((image: Linode.Image, idx: number) => (
@@ -89,14 +80,7 @@ const PublicImages: React.StatelessComponent<CombinedProps> = (props) => {
     ));
 
   return (
-    <Paper
-      className={classes.flatImagePanel}
-      data-qa-tp="Select Image"
-    >
-      {error && <Notice text={error} error />}
-      <Typography role="header" variant="h2" data-qa-tp="Select Image">
-        {title || 'Select an Image'}
-      </Typography>
+    <>
       <Grid className={classes.flatImagePanelSelections} container>
         {renderPublicImages()}
       </Grid>
@@ -107,7 +91,7 @@ const PublicImages: React.StatelessComponent<CombinedProps> = (props) => {
           </Grid>
         </ShowMoreExpansion>
       )}
-    </Paper>
+    </>
   )
 }
 

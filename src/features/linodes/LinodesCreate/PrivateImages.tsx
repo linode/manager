@@ -14,7 +14,6 @@ interface Props {
 const PrivateImages: React.StatelessComponent<Props> = (props) => {
   const { disabled, handleSelection, images, selectedImageID } = props;
   return (
-    
     <Grid container>
       {images &&
         images.map((image: Linode.Image, idx: number) => (

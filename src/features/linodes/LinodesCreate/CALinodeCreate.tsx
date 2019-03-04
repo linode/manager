@@ -97,7 +97,7 @@ export class LinodeCreate extends React.PureComponent<
         } = this.props;
         return (
           <FromImageContent
-            publicOnly
+            variant='public'
             imagePanelTitle="Choose a Distribution"
             {...rest}
           />

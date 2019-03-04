@@ -18,6 +18,7 @@ import * as React from 'react';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 
+import Panel from './Panel';
 import PrivateImages from './PrivateImages';
 import PublicImages from './PublicImages';
 
@@ -75,31 +76,43 @@ export const getMyImages = compose<any, any, any>(
 type CombinedProps = Props;
 
 const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
-  const { images, error, handleSelection, disabled, variant } = props;
+  const { images, error, handleSelection, disabled, title, variant } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
+
+  const Public = (
+    <Panel error={error} title={title}>
+      <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} handleSelection={handleSelection} />
+    </Panel>
+  )
+
+  const Private = (
+    <Panel error={error} title={title}>
+      <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} />
+    </Panel>
+  )
 
   const tabs = [
     {
       title: 'Public Images',
       render: () => (
-        <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} error={error} handleSelection={handleSelection} />
+        Public
       )
     },
     {
       title: 'My Images',
       render: () => (
-        <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} />
+        Private
       )
     }
   ];
 
   switch (variant) {
     case 'private':
-      return <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} />
+      return Private;
     case 'public':
-      return <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} error={error} handleSelection={handleSelection} />
+      return Public;
     case 'all':
     default:
       return (
