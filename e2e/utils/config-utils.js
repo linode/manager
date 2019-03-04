@@ -51,8 +51,11 @@ exports.login = (username, password, credFilePath) => {
     }
 
     browser.waitForVisible('#password', constants.wait.long);
+    browser.jsClick('#username');
     browser.trySetValue('#username', username);
+    browser.jsClick('#password');
     browser.trySetValue('#password', password);
+<<<<<<< HEAD
 
     const loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-sign-in] input';
     const letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
@@ -161,7 +164,6 @@ exports.generateCreds = (credFilePath, config, userCount) => {
             setCredCollection('MANAGER_USER', `_${i}`);
         }
     }
-
     writeFileSync(credFilePath, JSON.stringify(credCollection));
 }
 

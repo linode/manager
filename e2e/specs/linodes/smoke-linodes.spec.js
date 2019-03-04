@@ -109,7 +109,7 @@ xdescribe('List Linodes Suite', () => {
         it('should display the status', () => {
             linodes = ListLinodes.linode;
             const statuses = linodes.map(l => l.$(ListLinodes.status.selector));
-            statuses.forEach(s => expect(['offline', 'running']).toContain(s.getAttribute('data-qa-status')));
+            statuses.forEach(s => expect(['offline', 'running']).toContain(s.getAttribute('data-qa-entity-status')));
         });
 
         it('should display action menu and linode action menu items', () => {

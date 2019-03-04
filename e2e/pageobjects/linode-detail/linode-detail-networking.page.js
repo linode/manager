@@ -56,6 +56,7 @@ class Networking extends Page {
     get lookupError() { return $('[data-qa-error]'); }
 
     landingElemsDisplay() {
+        this.ip.waitForVisible(constants.wait.normal);
         expect(this.heading.getText()).toBe('Access');
         expect(this.ipv4Subheading.getText()).toBe('IPv4');
         expect(this.ipv6Subheading.getText()).toBe('IPv6');

@@ -67,9 +67,12 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         const sizeHelpText='A single Volume can range from 10 to 10240 gibibytes in size and costs $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.';
         const volumeHelpText='Volumes must be created in a particular region. You can choose to create a volume in a region and attach it later to a Linode in the same region. If you select a Linode from the field below, the Volume will be automatically created in that Linode’s region and attached upon creation.';
         const regionHelpText='Only Linodes in the selected region are displayed.';
+        const blockStorageText = 'Only regions supporting block storage are displayed.';
         expect(VolumeDetail.volumeCreateSizeHelpText.getText()).toEqual(sizeHelpText);
         expect(VolumeDetail.volumeCreateHelpText.getText()).toEqual(volumeHelpText);
-        expect(VolumeDetail.volumeCreateRegionHelp.getText()).toEqual(regionHelpText);
+        const volumeFieldsText = $$(VolumeDetail.volumeCreateRegionHelp.selector);
+        expect(volumeFieldsText[0].getText()).toEqual(blockStorageText);
+        expect(volumeFieldsText[1].getText()).toEqual(regionHelpText);
     });
 
     it('should display volume price dynamically based on size', () => {
