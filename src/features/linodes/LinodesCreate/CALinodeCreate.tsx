@@ -1,11 +1,16 @@
 import { parse } from 'querystring';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Grid from 'src/components/Grid';
 import { getStackScriptsByUser } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  CreateTypes,
+  handleChangeCreateType
+} from 'src/store/linodeCreate/linodeCreate.actions';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
@@ -24,6 +29,7 @@ interface Props {
 type CombinedProps = Props &
   WithLinodesImagesTypesAndRegions &
   WithDisplayData &
+  DispatchProps &
   AllFormStateAndHandlers;
 
 interface State {
@@ -59,17 +65,18 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
   ) => {
     this.props.resetCreationState();
 
-    this.setState({
-      selectedTab: value
-    });
+    this.props.setTab(event.target.textContent as CreateTypes);
     this.props.history.push({
       search: `?type=${event.target.textContent}`
+    });
+    this.setState({
+      selectedTab: value
     });
   };
 
   tabs: Tab[] = [
     {
-      title: 'Distros',
+      title: 'Distrubutions',
       render: () => {
         /** ...rest being all the formstate props and display data */
         const {
@@ -96,6 +103,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
             history={this.props.history}
             reset={this.props.resetCreationState}
             type="oneClick"
+            onClick={this.props.setTab}
           />
         );
       }
@@ -109,6 +117,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
             history={this.props.history}
             type="myImages"
             tabs={this.myImagesTabs()}
+            onClick={this.props.setTab}
           />
         );
       }
@@ -123,7 +132,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
       }
     },
     {
-      title: 'Clone From Existing Linode',
+      title: 'Clone from Existing Linode',
       render: () => {
         /**
          * rest being just the props that FromLinodeContent needs
@@ -227,4 +236,20 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
   }
 }
 
-export default LinodeCreate;
+interface DispatchProps {
+  setTab: (newType: CreateTypes) => void;
+}
+
+const mapDispatchToProps: MapDispatchToProps<
+  DispatchProps,
+  Props
+> = dispatch => ({
+  setTab: newType => dispatch(handleChangeCreateType(newType))
+});
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
+
+export default connected(LinodeCreate);

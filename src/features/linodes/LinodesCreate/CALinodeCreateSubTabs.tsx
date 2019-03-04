@@ -5,8 +5,10 @@ import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Grid from 'src/components/Grid';
 
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
 export interface Tab {
-  title: string;
+  title: CreateTypes;
   render: () => JSX.Element;
 }
 
@@ -15,6 +17,7 @@ interface Props {
   reset: () => void;
   tabs?: Tab[];
   type: 'oneClick' | 'myImages';
+  onClick: (newType: CreateTypes) => void;
 }
 
 interface State {
@@ -76,6 +79,9 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
     this.props.reset();
     /** get the query params as an object, excluding the "?" */
     const queryParams = parse(location.search.replace('?', ''));
+
+    /** set the tab in redux state */
+    this.props.onClick(event.target.textContent as CreateTypes);
 
     this.props.history.push({
       search: `?type=${queryParams.type}&subtype=${event.target.textContent}`

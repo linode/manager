@@ -40,6 +40,7 @@ import { resetEventsPolling } from 'src/events';
 import { cloneLinode } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
+import { CreateFlows } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
@@ -69,6 +70,8 @@ interface State {
 }
 
 type CombinedProps = InjectedNotistackProps &
+  ReduxStateProps &
+  TabName &
   LinodeActionsProps &
   WithLinodesImagesTypesAndRegions &
   DispatchProps &
@@ -378,7 +381,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 }
 
-const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
+interface TabName {
+  createType: CreateFlows;
+}
+
+const mapStateToProps: MapState<
+  ReduxStateProps & TabName,
+  CombinedProps
+> = state => ({
   accountBackupsEnabled: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
@@ -389,7 +399,8 @@ const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
    * and do not have the "add_linodes" grant
    */
   userCannotCreateLinode:
-    isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
+    isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
+  createType: state.createLinode.type
 });
 
 interface DispatchProps {
