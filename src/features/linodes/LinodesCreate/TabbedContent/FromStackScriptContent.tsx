@@ -454,7 +454,7 @@ export class FromStackScriptContent extends React.Component<
             error={hasErrorFor('stackscript_id')}
             selectedId={selectedStackScriptID}
             selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
+            updateFor={[selectedStackScriptID, errors, classes]}
             onSelect={this.handleSelectStackScript}
             publicImages={this.filterPublicImages(images) || []}
             resetSelectedStackScript={this.resetStackScriptSelection}
@@ -467,7 +467,7 @@ export class FromStackScriptContent extends React.Component<
               selectedUsername={selectedStackScriptUsername}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
+              updateFor={[userDefinedFields, udf_data, errors, classes]}
               udf_data={udf_data}
             />
           )}
@@ -475,7 +475,7 @@ export class FromStackScriptContent extends React.Component<
             <SelectImagePanel
               images={compatibleImages}
               handleSelection={this.handleSelectImage}
-              updateFor={[selectedImageID, compatibleImages, errors]}
+              updateFor={[selectedImageID, compatibleImages, errors, classes]}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
               hideMyImages={true}
@@ -503,7 +503,7 @@ export class FromStackScriptContent extends React.Component<
             regions={regions}
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors]}
+            updateFor={[selectedRegionID, errors, classes]}
             copy="Determine the best location for your Linode."
             disabled={disabled}
           />
@@ -511,7 +511,7 @@ export class FromStackScriptContent extends React.Component<
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
-            updateFor={[selectedTypeID, errors]}
+            updateFor={[selectedTypeID, errors, classes]}
             selectedID={selectedTypeID}
             disabled={disabled}
           />
@@ -529,7 +529,7 @@ export class FromStackScriptContent extends React.Component<
               tagError: hasErrorFor('tags'),
               disabled
             }}
-            updateFor={[tags, label, errors]}
+            updateFor={[tags, label, errors, classes]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
@@ -539,7 +539,13 @@ export class FromStackScriptContent extends React.Component<
               }
             }
             error={hasErrorFor('root_pass')}
-            updateFor={[password, errors, userSSHKeys, selectedImageID]}
+            updateFor={[
+              password,
+              errors,
+              userSSHKeys,
+              selectedImageID,
+              classes
+            ]}
             password={password}
             handleChange={this.handleTypePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
@@ -551,7 +557,7 @@ export class FromStackScriptContent extends React.Component<
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
-            updateFor={[privateIP, backups, selectedTypeID]}
+            updateFor={[privateIP, backups, selectedTypeID, classes]}
             disabled={disabled}
           />
         </Grid>

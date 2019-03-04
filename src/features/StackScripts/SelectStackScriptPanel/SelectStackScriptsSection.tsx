@@ -51,7 +51,7 @@ const SelectStackScriptsSection: React.StatelessComponent<
       updated={formatDate(s.updated, false)}
       onSelect={() => onSelect(s)}
       checked={selectedId === s.id}
-      updateFor={[selectedId === s.id]}
+      updateFor={[selectedId === s.id, classes]}
       stackScriptID={s.id}
       disabled={disabled}
     />

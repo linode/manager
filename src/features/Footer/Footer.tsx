@@ -15,10 +15,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     backgroundColor: theme.bg.main,
     margin: 0,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: 215
+      paddingLeft: theme.spacing.unit * 17 + 79 // 215
     },
     [theme.breakpoints.up('xl')]: {
-      paddingLeft: 275
+      paddingLeft: theme.spacing.unit * 22 + 99 // 275
     }
   },
   version: {

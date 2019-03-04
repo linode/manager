@@ -70,9 +70,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   caption: {
     marginTop: -8,
-    paddingLeft: 39,
+    paddingLeft: theme.spacing.unit * 2 + 23, // 39,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: 55
+      paddingLeft: theme.spacing.unit * 4 + 23 // 55
     }
   }
 });
