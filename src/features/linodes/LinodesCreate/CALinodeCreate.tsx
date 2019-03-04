@@ -14,6 +14,7 @@ import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 
 import {
   AllFormStateAndHandlers,
+  WithAll,
   WithDisplayData,
   WithLinodesImagesTypesAndRegions
 } from './types';
@@ -25,6 +26,7 @@ interface Props {
 type CombinedProps = Props &
   WithLinodesImagesTypesAndRegions &
   WithDisplayData &
+  WithAll &
   AllFormStateAndHandlers;
 
 interface State {
