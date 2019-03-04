@@ -28,7 +28,8 @@ type ClassNames =
   | 'labelRow'
   | 'labelStatusWrapper'
   | 'dashboard'
-  | 'labelGridWrapper';
+  | 'labelGridWrapper'
+  | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   link: {
@@ -74,6 +75,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   labelGridWrapper: {
     paddingLeft: `${theme.spacing.unit / 2}px !important`,
     paddingRight: `${theme.spacing.unit / 2}px !important`
+  },
+  wrapHeader: {
+    wordBreak: 'break-all'
   }
 });
 
@@ -159,7 +163,12 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
                 />
               )}
               <div className={classes.labelStatusWrapper}>
-                <Typography role="header" variant="h3" data-qa-label>
+                <Typography
+                  role="header"
+                  variant="h3"
+                  className={classes.wrapHeader}
+                  data-qa-label
+                >
                   {label}
                 </Typography>
               </div>
