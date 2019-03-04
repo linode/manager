@@ -1,3 +1,4 @@
+import { mockAxiosError } from 'src/__data__/axios';
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
 const error = [{ field: 'a field', reason: 'a reason' }];
@@ -10,21 +11,21 @@ const multiError = [
 describe('Error handling utilities', () => {
   describe('getAPIErrorOrDefault', () => {
     it('if no error is passed in, it should return a default API error using the provided string', () => {
-      expect(getAPIErrorOrDefault([], 'Default error')).toEqual([
+      expect(getAPIErrorOrDefault(mockAxiosError, 'Default error')).toEqual([
         { reason: 'Default error' }
       ]);
     });
 
     it('should provide a default error if no error string is provided', () => {
-      expect(getAPIErrorOrDefault([])).toEqual([
+      expect(getAPIErrorOrDefault(mockAxiosError)).toEqual([
         { reason: 'An unexpected error occurred.' }
       ]);
     });
 
     it('should use the optional 3rd param as a field name for the default error (if provided)', () => {
-      expect(getAPIErrorOrDefault([], 'Label error', 'label')).toEqual([
-        { field: 'label', reason: 'Label error' }
-      ]);
+      expect(
+        getAPIErrorOrDefault(mockAxiosError, 'Label error', 'label')
+      ).toEqual([{ field: 'label', reason: 'Label error' }]);
     });
   });
 

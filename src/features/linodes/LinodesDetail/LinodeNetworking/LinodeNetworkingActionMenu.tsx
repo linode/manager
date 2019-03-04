@@ -5,14 +5,25 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onView: () => void;
-  onEdit?: () => void;
+  onEdit?: (ip: Linode.IPAddress) => void;
+  onRemove?: (ip: Linode.IPAddress) => void;
+  ipType: IPTypes;
+  ipAddress?: Linode.IPAddress;
 }
+
+export type IPTypes =
+  | 'SLAAC'
+  | 'Public'
+  | 'Private'
+  | 'Shared'
+  | 'Link Local'
+  | 'Range';
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
-    const { onView, onEdit } = this.props;
+    const { onView, onEdit, onRemove, ipType, ipAddress } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -26,11 +37,31 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
         }
       ];
 
-      if (onEdit) {
+      /**
+       * can only edit if we're not dealing with
+       * either a private IP or Link Local IP
+       */
+      if (
+        onEdit &&
+        ipAddress &&
+        ipType !== 'Private' &&
+        ipType !== 'Link Local'
+      ) {
         actions.push({
           title: 'Edit RDNS',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            onEdit();
+            onEdit(ipAddress);
+            closeMenu();
+            e.preventDefault();
+          }
+        });
+      }
+
+      if (onRemove && ipAddress && ipType === 'Public') {
+        actions.push({
+          title: 'Delete IP',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            onRemove(ipAddress);
             closeMenu();
             e.preventDefault();
           }
