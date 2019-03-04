@@ -1,5 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
@@ -9,10 +10,12 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
+import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
@@ -41,7 +44,7 @@ interface Notice {
 
 interface Props extends BaseFormStateAndHandlers {
   notice?: Notice;
-  variant?: 'public'| 'private'| 'all';
+  variant?: 'public' | 'private' | 'all';
   imagePanelTitle?: string;
 }
 
@@ -108,6 +111,24 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     const generalError = hasErrorFor('none');
 
     const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
+    const privateImages = images.filter(image => !image.is_public);
+
+    if (variant === 'private' && privateImages.length === 0) {
+      return (
+        <Grid item className={`${classes.main} mlMain`}>
+          <Placeholder
+            title="My Images"
+            copy={
+              <Typography>
+                You don't have any private Images. Visit the{' '}
+                <Link to="/images">Images section</Link> to create an Image from
+                one of your Linode's disks.
+              </Typography>
+            }
+          />
+        </Grid>
+      );
+    }
 
     return (
       <React.Fragment>
