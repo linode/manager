@@ -5,16 +5,19 @@ import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Grid from 'src/components/Grid';
 
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
 export interface Tab {
   title: string;
   render: () => JSX.Element;
+  type: CreateTypes;
 }
 
 interface Props {
   history: any;
   reset: () => void;
-  tabs?: Tab[];
-  type: 'oneClick' | 'myImages';
+  tabs: Tab[];
+  handleClick: (value: CreateTypes) => void;
 }
 
 interface State {
@@ -39,34 +42,10 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
 
-    const tabsToRender = this.getTabsToRender(props.type, props.tabs);
-
     this.state = {
-      selectedTab: determinePreselectedTab(tabsToRender)
+      selectedTab: determinePreselectedTab(props.tabs)
     };
   }
-
-  oneClickTabs: Tab[] = [
-    {
-      title: 'One-Click Apps',
-      render: () => {
-        return <React.Fragment />;
-      }
-    },
-    {
-      title: 'Community StackScripts',
-      render: () => {
-        return <div>community stackscripts</div>;
-      }
-    }
-  ];
-
-  getTabsToRender = (type: string, tabs?: Tab[]) => {
-    if (tabs) {
-      return tabs;
-    }
-    return type === 'oneClick' ? this.oneClickTabs : [];
-  };
 
   handleTabChange = (
     event: React.ChangeEvent<HTMLDivElement>,
@@ -77,6 +56,9 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
     /** get the query params as an object, excluding the "?" */
     const queryParams = parse(location.search.replace('?', ''));
 
+    /** set the type in redux state */
+    this.props.handleClick(this.props.tabs[value].type);
+
     this.props.history.push({
       search: `?type=${queryParams.type}&subtype=${event.target.textContent}`
     });
@@ -86,10 +68,9 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { type, tabs } = this.props;
+    const { tabs } = this.props;
     const { selectedTab: selectedTabFromState } = this.state;
 
-    const tabsToRender = this.getTabsToRender(type, tabs);
     const queryParams = parse(location.search.replace('?', ''));
 
     /**
@@ -102,7 +83,7 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
      */
     const selectedTab = !queryParams.subtype ? 0 : selectedTabFromState;
 
-    const selectedTabContentRender = tabsToRender[selectedTab].render;
+    const selectedTabContentRender = tabs[selectedTab].render;
 
     return (
       <Grid container>
@@ -116,7 +97,7 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
               variant="scrollable"
               scrollButtons="on"
             >
-              {tabsToRender.map((tab, idx) => (
+              {tabs.map((tab, idx) => (
                 <MUITab
                   key={idx}
                   label={tab.title}

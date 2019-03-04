@@ -37,6 +37,10 @@ import images, {
   defaultState as defaultImagesState,
   State as ImagesStata
 } from 'src/store/image/image.reducer';
+import linodeCreateReducer, {
+  defaultState as linodeCreateDefaultState,
+  State as LinodeCreateState
+} from 'src/store/linodeCreate/linodeCreate.reducer';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState
@@ -148,6 +152,7 @@ export interface ApplicationState {
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
+  createLinode: LinodeCreateState;
 }
 
 const defaultState: ApplicationState = {
@@ -159,7 +164,8 @@ const defaultState: ApplicationState = {
   events: eventsDefaultState,
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
-  volumeDrawer: volumeDrawerDefaultState
+  volumeDrawer: volumeDrawerDefaultState,
+  createLinode: linodeCreateDefaultState
 };
 
 /**
@@ -191,7 +197,8 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
-  events
+  events,
+  createLinode: linodeCreateReducer
 });
 
 const enhancers = compose(
