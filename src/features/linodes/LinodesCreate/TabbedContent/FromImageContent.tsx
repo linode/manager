@@ -119,7 +119,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
+        <Grid item className={`${classes.main}`}>
           {notice && (
             <Notice
               text={notice.text}

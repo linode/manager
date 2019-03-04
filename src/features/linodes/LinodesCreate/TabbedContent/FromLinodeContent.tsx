@@ -116,7 +116,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
-          <Grid item className={`${classes.main} mlMain`}>
+          <Grid item className={`${classes.main}`}>
             <Placeholder
               icon={VolumeIcon}
               copy="You do not have any existing Linodes to clone from.
@@ -126,7 +126,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           </Grid>
         ) : (
           <React.Fragment>
-            <Grid item className={`${classes.main} mlMain`}>
+            <Grid item className={`${classes.main}`}>
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               {notice && !userCannotCreateLinode && (
                 <Notice
