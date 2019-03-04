@@ -9,12 +9,18 @@ import { getEmailHash } from 'src/utilities/gravatar';
 
 export interface State {
   userSSHKeys: UserSSHKeyObject[];
+  resetSSHKeys?: () => void;
 }
 
 export default (Component: React.ComponentType<any>) => {
   class WrappedComponent extends React.PureComponent<StateProps, State> {
+    resetSSHKeys = () => {
+      this.setState({ userSSHKeys: [] });
+    };
+
     state = {
-      userSSHKeys: []
+      userSSHKeys: [],
+      resetSSHKeys: this.resetSSHKeys
     };
 
     mounted: boolean = false;
