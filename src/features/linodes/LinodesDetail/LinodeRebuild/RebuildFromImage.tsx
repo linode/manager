@@ -1,18 +1,37 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import Grid from 'src/components/Grid';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import withImages from 'src/containers/withImages.container';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
 import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import SelectImagePanel from './SelectImagePanel';
+import Notice from 'src/components/Notice';
+
+type ClassNames = 'root' | 'error';
+
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {
+    paddingTop: theme.spacing.unit * 3
+  },
+  error: {
+    marginTop: theme.spacing.unit * 2
+  }
+});
 
 interface WithImagesProps {
   imagesData: Linode.Image[];
@@ -25,6 +44,7 @@ interface ContextProps {
 }
 
 export type CombinedProps = WithImagesProps &
+  WithStyles<ClassNames> &
   ContextProps &
   UserSSHKeyProps &
   InjectedNotistackProps;
@@ -33,6 +53,7 @@ export const RebuildFromImage: React.StatelessComponent<
   CombinedProps
 > = props => {
   const {
+    classes,
     imagesData,
     imagesError,
     userSSHKeys,
@@ -55,7 +76,7 @@ export const RebuildFromImage: React.StatelessComponent<
 
     // @todo: eventually this should be a dispatched action instead of a services library call
     rebuildLinode(linodeId, params)
-      .then(response => {
+      .then(_ => {
         resetEventsPolling();
 
         setSelectedImage('');
@@ -73,13 +94,23 @@ export const RebuildFromImage: React.StatelessComponent<
             'There was an issue rebuilding your Linode.'
           )
         );
+        scrollErrorIntoView();
       });
   };
 
-  const hasErrorFor = getErrorMap(['image', 'root_pass'], errors);
+  const hasErrorFor = getErrorMap(['image', 'root_pass', 'none'], errors);
+  const generalError = hasErrorFor.none;
 
   return (
-    <>
+    <Grid item className={classes.root}>
+      {generalError && (
+        <Notice
+          error
+          className={classes.error}
+          text={generalError}
+          data-qa-notice
+        />
+      )}
       <SelectImagePanel
         images={imagesData}
         error={imagesError || hasErrorFor.image}
@@ -106,9 +137,11 @@ export const RebuildFromImage: React.StatelessComponent<
           Rebuild
         </Button>
       </ActionsPanel>
-    </>
+    </Grid>
   );
 };
+
+const styled = withStyles(styles);
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id
@@ -123,6 +156,7 @@ const enhanced = compose<CombinedProps, {}>(
     imagesError
   })),
   userSSHKeyHoc,
+  styled,
   withSnackbar
 );
 

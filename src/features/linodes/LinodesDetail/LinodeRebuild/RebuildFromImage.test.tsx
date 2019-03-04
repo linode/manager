@@ -11,6 +11,7 @@ jest.mock('src/services/linodes', () => ({
 describe('RebuildFromImage', () => {
   const wrapper = shallow(
     <RebuildFromImage
+      classes={{ root: '', error: '' }}
       linodeId={1234}
       imagesData={images}
       imagesLoading={false}
