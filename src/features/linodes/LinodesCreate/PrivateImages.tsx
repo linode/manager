@@ -1,9 +1,22 @@
 import * as React from 'react';
 
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
 
+type ClassNames = 'root' | 'flatImagePanelSelections';
 
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  flatImagePanelSelections: {
+    marginTop: theme.spacing.unit * 2,
+    padding: `${theme.spacing.unit}px 0`
+  },
+  root: {}
+});
 interface Props {
   images: Linode.Image[];
   disabled?: boolean;
@@ -11,10 +24,12 @@ interface Props {
   handleSelection: (id: string) => void;
 }
 
-const PrivateImages: React.StatelessComponent<Props> = (props) => {
-  const { disabled, handleSelection, images, selectedImageID } = props;
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const PrivateImages: React.StatelessComponent<CombinedProps> = (props) => {
+  const { classes, disabled, handleSelection, images, selectedImageID } = props;
   return (
-    <Grid container>
+    <Grid container className={classes.flatImagePanelSelections} >
       {images &&
         images.map((image: Linode.Image, idx: number) => (
           <SelectionCard
@@ -31,4 +46,6 @@ const PrivateImages: React.StatelessComponent<Props> = (props) => {
   )
 }
 
-export default PrivateImages;
+const styled = withStyles(styles);
+
+export default styled(PrivateImages);

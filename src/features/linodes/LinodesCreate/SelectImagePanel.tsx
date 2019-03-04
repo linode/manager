@@ -76,20 +76,20 @@ export const getMyImages = compose<any, any, any>(
 type CombinedProps = Props;
 
 const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
-  const { images, error, handleSelection, disabled, title, variant } = props;
+  const { images, error, handleSelection, disabled, title, variant, selectedImageID } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
 
   const Public = (
     <Panel error={error} title={title}>
-      <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} handleSelection={handleSelection} />
+      <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} handleSelection={handleSelection} selectedImageID={selectedImageID} />
     </Panel>
   )
 
   const Private = (
     <Panel error={error} title={title}>
-      <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} />
+      <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} selectedImageID={selectedImageID} />
     </Panel>
   )
 
