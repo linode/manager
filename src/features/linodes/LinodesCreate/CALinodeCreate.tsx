@@ -192,7 +192,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item>
+        <Grid item className={`mlMain`}>
           <AppBar position="static" color="default">
             <Tabs
               value={selectedTab}
@@ -212,7 +212,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
             </Tabs>
           </AppBar>
         </Grid>
-        <Grid item>{tabRender()}</Grid>
+        {tabRender()}
       </React.Fragment>
     );
   }

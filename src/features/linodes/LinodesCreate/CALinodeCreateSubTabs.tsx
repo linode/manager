@@ -110,7 +110,7 @@ class CALinodeCreateSubTabs extends React.PureComponent<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item>
+        <Grid item className="mlMain">
           <Paper className={`${classes.root}`}>
             <div className={`${classes.inner}`}>
               <Typography role="header" variant="h2">

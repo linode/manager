@@ -126,7 +126,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           </Grid>
         ) : (
           <React.Fragment>
-            <Grid item className={`${classes.main}`}>
+            <Grid item className={`${classes.main} mlMain`}>
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
               {notice && !userCannotCreateLinode && (
                 <Notice
