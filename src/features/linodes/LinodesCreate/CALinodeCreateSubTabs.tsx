@@ -12,6 +12,7 @@ export interface Tab {
 
 interface Props {
   history: any;
+  reset: () => void;
   tabs?: Tab[];
   type: 'oneClick' | 'myImages';
 }
@@ -71,6 +72,8 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
+    /** Reset the top-level creation flow state */
+    this.props.reset();
     /** get the query params as an object, excluding the "?" */
     const queryParams = parse(location.search.replace('?', ''));
 
