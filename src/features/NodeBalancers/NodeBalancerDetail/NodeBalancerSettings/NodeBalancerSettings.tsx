@@ -3,6 +3,7 @@ import * as React from 'react';
 import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
 import {
@@ -155,6 +156,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               onChange={this.handleLabelInputChange}
               value={fields.label}
             />
+            <FormHelperText>Rename your NodeBalancer</FormHelperText>
           </div>
           <div className={classes.inner}>
             <TextField
@@ -170,6 +172,10 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               placeholder="0"
               value={defaultTo(0, fields.client_conn_throttle)}
             />
+            <FormHelperText>
+              To help mitigate abuse, throttle connections from a single client
+              IP to this number per second. 0 to disable.
+            </FormHelperText>
           </div>
           <ActionsPanel className={classes.expPanelButton}>
             <Button
