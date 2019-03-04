@@ -17,9 +17,6 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
-import userSSHKeyHoc, {
-  State as SSHKeys
-} from 'src/features/linodes/userSSHKeyHoc';
 import CASelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/CASelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -31,8 +28,8 @@ import { renderBackupsDisplaySection } from './utils';
 
 import {
   StackScriptFormStateHandlers,
-  WithDisplayData,
-  WithLinodesImagesTypesAndRegions
+  WithAll,
+  WithDisplayData
 } from '../types';
 
 type ClassNames =
@@ -83,12 +80,11 @@ const errorResources = {
   tags: 'Tags'
 };
 
-type InnerProps = Props & WithLinodesImagesTypesAndRegions;
+type InnerProps = Props & WithAll;
 
 type CombinedProps = InnerProps &
   StackScriptFormStateHandlers &
   WithDisplayData &
-  SSHKeys &
   WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
@@ -426,9 +422,6 @@ export const filterUDFErrors = (errors?: Linode.ApiFieldError[]) => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, InnerProps>(
-  styled,
-  userSSHKeyHoc
-);
+const enhanced = compose<CombinedProps, InnerProps>(styled);
 
 export default enhanced(FromStackScriptContent);

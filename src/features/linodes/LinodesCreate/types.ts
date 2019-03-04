@@ -1,5 +1,6 @@
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
 import { CreateLinodeRequest } from 'src/services/linodes';
 import { ExtendedType } from './SelectPlanPanel';
 
@@ -136,3 +137,5 @@ export type WithImagesRegionsTypesAndAccountState = WithImagesProps &
   WithRegions &
   WithTypesProps &
   ReduxStateProps;
+
+export type WithAll = WithImagesRegionsTypesAndAccountState & userSSHKeysProps;
