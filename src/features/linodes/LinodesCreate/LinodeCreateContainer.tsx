@@ -21,6 +21,9 @@ import { Tag } from 'src/components/TagsInput';
 
 import { dcDisplayNames } from 'src/constants';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
+import userSSHKeyHoc, {
+  State as userSSHKeyProps
+} from 'src/features/linodes/userSSHKeyHoc';
 import {
   hasGrant,
   isRestrictedUser
@@ -71,6 +74,7 @@ interface State {
 type CombinedProps = InjectedNotistackProps &
   LinodeActionsProps &
   WithLinodesImagesTypesAndRegions &
+  userSSHKeyProps &
   DispatchProps &
   RouteComponentProps<{}>;
 
@@ -93,9 +97,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   state: State = defaultState;
 
   clearCreationState = () => {
-    this.setState({
-      ...defaultState
-    });
+    this.props.resetSSHKeys();
+    this.setState(defaultState);
   };
 
   setImageID = (id: string) => {
@@ -370,6 +373,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               history={this.props.history}
               handleSubmitForm={this.submitForm}
               resetCreationState={this.clearCreationState}
+              userSSHKeys={this.props.userSSHKeys}
+              resetSSHKeys={this.props.resetSSHKeys}
             />
           </Grid>
         </Grid>
@@ -454,5 +459,6 @@ export default recompose<CombinedProps, {}>(
   withLinodeActions,
   connected,
   withRouter,
-  withSnackbar
+  withSnackbar,
+  userSSHKeyHoc
 )(LinodeCreateContainer);
