@@ -54,6 +54,9 @@ class Networking extends Page {
 
     get domainName() { return $('[data-qa-domain-name]'); }
     get lookupError() { return $('[data-qa-error]'); }
+    get shareIpSelect() { return $('[data-qa-share-ip]>div>div'); }
+    get ipShareOption() { return $('[data-ip-idx]'); }
+    get removeSharedIp() { return $('[data-qa-remove-shared-ip]'); }
 
     landingElemsDisplay() {
         this.ip.waitForVisible(constants.wait.normal);
@@ -169,6 +172,29 @@ class Networking extends Page {
 
     delete(ip) {
         // not implemented yet
+    }
+
+    expandIpSharing(){
+        this.expandPanel('IP Sharing');
+        this.addIcon('Add IP Address').waitForVisible(constants.wait.normal);
+    }
+
+    selectIpForSharing(ipValue){
+        this.shareIpSelect.waitForVisible(constants.wait.normal);
+        this.shareIpSelect.click();
+        this.ipShareSelection(ipValue).waitForVisible(constants.wait.normal);
+        this.ipShareSelection(ipValue).click();
+        browser.pause(500);
+        this.submitButton.click();
+        this.waitForNotice('IP Sharing updated successfully');
+    }
+
+    ipShareSelection(ipValue){
+        return $(`[data-ip-idx][data-value="${ipValue}"]`);
+    }
+
+    ipTableRow(ipValue){
+        return $(`[data-qa-ip="${ipValue}"]`);
     }
 }
 

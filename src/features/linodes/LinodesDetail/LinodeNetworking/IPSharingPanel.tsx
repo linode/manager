@@ -222,6 +222,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             onChange={this.onIPSelect(idx)}
             fullWidth={false}
             className={classes.ipField}
+            data-qa-share-ip
           >
             {this.remainingChoices(ip).map(
               (ipChoice: string, choiceIdx: number) => (
@@ -237,6 +238,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             type="remove"
             onClick={this.onIPDelete(idx)}
             className={classes.remove}
+            data-qa-remove-shared-ip
           />
         </Grid>
       </Grid>
@@ -316,6 +318,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           disabled={loading || noChoices}
           onClick={this.onSubmit}
           type="primary"
+          data-qa-submit
         >
           Save
         </Button>
@@ -323,6 +326,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           disabled={submitting || loading || noChoices}
           onClick={this.onCancel}
           type="secondary"
+          data-qa-cancel
         >
           Cancel
         </Button>
