@@ -74,14 +74,28 @@ type CombinedProps = InjectedNotistackProps &
   DispatchProps &
   RouteComponentProps<{}>;
 
+const defaultState: State = {
+  privateIPEnabled: false,
+  backupsEnabled: false,
+  label: '',
+  password: '',
+  selectedImageID: 'linode/debian9',
+  selectedDiskSize: undefined,
+  selectedLinodeID: undefined,
+  selectedStackScriptID: undefined,
+  selectedRegionID: undefined,
+  selectedTypeID: undefined,
+  tags: [],
+  formIsSubmitting: false
+};
+
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  state: State = {
-    privateIPEnabled: false,
-    backupsEnabled: false,
-    label: '',
-    password: '',
-    selectedImageID: 'linode/debian9',
-    formIsSubmitting: false
+  state: State = defaultState;
+
+  clearCreationState = () => {
+    this.setState({
+      ...defaultState
+    });
   };
 
   setImageID = (id: string) => {
@@ -355,6 +369,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               formIsSubmitting={this.state.formIsSubmitting}
               history={this.props.history}
               handleSubmitForm={this.submitForm}
+              resetCreationState={this.clearCreationState}
             />
           </Grid>
         </Grid>

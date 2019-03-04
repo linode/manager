@@ -57,6 +57,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
+    this.props.resetCreationState();
     this.props.history.push({
       search: `?type=${event.target.textContent}`
     });
@@ -89,7 +90,13 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
     {
       title: 'One-Click',
       render: () => {
-        return <SubTabs history={this.props.history} type="oneClick" />;
+        return (
+          <SubTabs
+            history={this.props.history}
+            reset={this.props.resetCreationState}
+            type="oneClick"
+          />
+        );
       }
     },
     {
@@ -97,6 +104,7 @@ export class LinodeCreate extends React.PureComponent<CombinedProps, State> {
       render: () => {
         return (
           <SubTabs
+            reset={this.props.resetCreationState}
             history={this.props.history}
             type="myImages"
             tabs={this.myImagesTabs()}
