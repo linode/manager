@@ -1,5 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -47,6 +48,7 @@ export type CombinedProps = WithImagesProps &
   WithStyles<ClassNames> &
   ContextProps &
   UserSSHKeyProps &
+  RouteComponentProps &
   InjectedNotistackProps;
 
 export const RebuildFromImage: React.StatelessComponent<
@@ -58,7 +60,8 @@ export const RebuildFromImage: React.StatelessComponent<
     imagesError,
     userSSHKeys,
     linodeId,
-    enqueueSnackbar
+    enqueueSnackbar,
+    history
   } = props;
 
   const [selectedImage, setSelectedImage] = React.useState<string>('');
@@ -86,6 +89,7 @@ export const RebuildFromImage: React.StatelessComponent<
         enqueueSnackbar('Linode rebuild started', {
           variant: 'info'
         });
+        history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
         setErrors(
@@ -157,7 +161,8 @@ const enhanced = compose<CombinedProps, {}>(
   })),
   userSSHKeyHoc,
   styled,
-  withSnackbar
+  withSnackbar,
+  withRouter
 );
 
 export default enhanced(RebuildFromImage);

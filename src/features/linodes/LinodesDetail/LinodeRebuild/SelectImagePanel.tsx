@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
@@ -62,7 +64,15 @@ const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
     },
     {
       title: 'My Images',
-      render: () => <Grid container>{createImagePanels(myImages)}</Grid>
+      render: () =>
+        myImages.length > 0 ? (
+          <Grid container>{createImagePanels(myImages)}</Grid>
+        ) : (
+          <Typography>
+            You don't have any images!{' '}
+            <Link to={'/images'}>Click here to add one.</Link>
+          </Typography>
+        )
     }
   ];
 
