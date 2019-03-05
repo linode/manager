@@ -23,15 +23,16 @@ interface Props {
   children: React.ReactElement;
   error?: string;
   title?: string;
+  className?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const Panel: React.StatelessComponent<CombinedProps> = (props) => {
+const Panel: React.StatelessComponent<CombinedProps> = props => {
   const { classes, children, error, title } = props;
   return (
     <Paper
-      className={classes.flatImagePanel}
+      className={`${classes.flatImagePanel} ${props.className}`}
       data-qa-tp="Select Image"
     >
       {error && <Notice text={error} error />}
@@ -40,8 +41,8 @@ const Panel: React.StatelessComponent<CombinedProps> = (props) => {
       </Typography>
       {children}
     </Paper>
-  )
-}
+  );
+};
 
 const styled = withStyles(styles);
 

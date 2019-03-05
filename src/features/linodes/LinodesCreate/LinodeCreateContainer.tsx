@@ -99,7 +99,8 @@ const defaultState: State = {
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
-  formIsSubmitting: false
+  formIsSubmitting: false,
+  errors: undefined
 };
 
 const getRegionIDFromLinodeID = (

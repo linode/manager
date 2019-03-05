@@ -74,7 +74,8 @@ const errorResources = {
   label: 'A label',
   root_pass: 'A root password',
   image: 'image',
-  tags: 'Tags'
+  tags: 'Tags',
+  stackscript_id: 'A StackScript'
 };
 
 type InnerProps = Props & WithAll;
@@ -143,6 +144,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedStackScriptID,
       selectedTypeID,
       selectedUDFs,
+      privateIPEnabled,
       tags
     } = this.props;
 
@@ -155,6 +157,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       root_pass: password /* required if image ID is provided */,
       image: selectedImageID /* optional */,
       backups_enabled: backupsEnabled /* optional */,
+      private_ip: privateIPEnabled,
       booted: true,
       private_ip: privateIPEnabled,
       authorized_users: userSSHKeys
