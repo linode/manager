@@ -9,6 +9,7 @@ import { compose as recompose } from 'recompose';
 import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
+import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -20,6 +21,9 @@ import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 
 import { dcDisplayNames } from 'src/constants';
+import withLabelGenerator, {
+  LabelProps
+} from 'src/features/linodes/LinodesCreate/withLabelGenerator';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc, {
   State as userSSHKeyProps
@@ -72,11 +76,13 @@ interface State {
 }
 
 type CombinedProps = InjectedNotistackProps &
+  CreateType &
   ReduxStateProps &
   LinodeActionsProps &
   WithLinodesImagesTypesAndRegions &
   userSSHKeyProps &
   DispatchProps &
+  LabelProps &
   RouteComponentProps<{}>;
 
 const defaultState: State = {
@@ -96,6 +102,15 @@ const defaultState: State = {
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   state: State = defaultState;
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (
+      prevProps.createType !== 'fromStackScript' ||
+      this.props.createType === 'fromStackScript'
+    ) {
+      this.setState({ selectedImageID: undefined });
+    }
+  }
 
   clearCreationState = () => {
     this.props.resetSSHKeys();
@@ -148,12 +163,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setDiskSize = (size: number) => this.setState({ selectedDiskSize: size });
 
-  setLabel = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => this.setState({ label: event.target.value });
-
   setPassword = (password: string) => this.setState({ password });
 
   toggleBackupsEnabled = () =>
@@ -166,13 +175,50 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   setUDFs = (udfs: any[]) => this.setState({ udfs });
 
+  generateLabel = () => {
+    const { getLabel, imagesData, regionsData } = this.props;
+    const { selectedImageID, selectedRegionID } = this.state;
+
+    /* tslint:disable-next-line  */
+    let arg1,
+      arg2,
+      arg3 = '';
+
+    if (selectedImageID) {
+      const selectedImage = imagesData.find(img => img.id === selectedImageID);
+      /**
+       * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
+       *
+       * If we have no selectedImage, just use an empty string
+       */
+      arg1 = selectedImage
+        ? selectedImage.is_public
+          ? selectedImage.vendor
+          : selectedImage.label
+        : '';
+    }
+
+    if (selectedRegionID) {
+      const selectedRegion = regionsData.find(
+        region => region.id === selectedRegionID
+      );
+
+      arg2 = selectedRegion ? selectedRegion.id : '';
+    }
+
+    arg3 = this.props.createType;
+
+    return getLabel(arg1, arg2, arg3);
+  };
+
   submitForm: HandleSubmit = (type, payload, linodeID?: number) => {
+    const { createType } = this.props;
     /**
      * run a certain linode action based on the type
      * if clone, run clone service request and upsert linode
      * if create, run create action
      */
-    if (type === 'clone' && !linodeID) {
+    if (createType === 'fromLinode' && !linodeID) {
       return this.setState(
         () => ({
           errors: [
@@ -186,7 +232,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (type === 'createFromStackScript' && !this.state.selectedStackScriptID) {
+    if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
@@ -201,7 +247,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
 
     const request =
-      type === 'clone'
+      createType === 'fromLinode'
         ? () => cloneLinode(linodeID!, payload)
         : () => this.props.linodeActions.createLinode(payload);
 
@@ -212,7 +258,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         /** if cloning a Linode, upsert Linode in redux */
-        if (type === 'clone') {
+        if (createType === 'fromLinode') {
           this.props.upsertLinode(response);
         }
 
@@ -227,7 +273,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         /**
          * allocate private IP if we have one
          *
-         * @todo we need to update redux state here as well
+         * @todo we need to update redux state here as well but it's not
+         * crucial now because the networking tab already makes a request to
+         * /ips on componentDidMount
          */
         if (payload.private_ip) {
           allocatePrivateIP(response.id);
@@ -359,8 +407,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
                 this.state.selectedStackScriptUsername
               }
               updateStackScript={this.setStackScript}
-              label={this.state.label}
-              updateLabel={this.setLabel}
+              label={this.generateLabel()}
+              updateLabel={this.props.updateCustomLabel}
               password={this.state.password}
               updatePassword={this.setPassword}
               backupsEnabled={this.state.backupsEnabled}
@@ -384,7 +432,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 }
 
-const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
+interface CreateType {
+  createType: CreateTypes;
+}
+
+const mapStateToProps: MapState<
+  ReduxStateProps & CreateType,
+  CombinedProps
+> = state => ({
   accountBackupsEnabled: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
@@ -395,7 +450,8 @@ const mapStateToProps: MapState<ReduxStateProps, CombinedProps> = state => ({
    * and do not have the "add_linodes" grant
    */
   userCannotCreateLinode:
-    isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
+    isRestrictedUser(state) && !hasGrant(state, 'add_linodes'),
+  createType: state.createLinode.type
 });
 
 interface DispatchProps {
@@ -461,5 +517,6 @@ export default recompose<CombinedProps, {}>(
   connected,
   withRouter,
   withSnackbar,
-  userSSHKeyHoc
+  userSSHKeyHoc,
+  withLabelGenerator
 )(LinodeCreateContainer);

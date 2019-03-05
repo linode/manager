@@ -5,7 +5,11 @@ import { deriveDefaultLabel, LabelArgTypes } from './deriveDefaultLabel';
 
 export interface LabelProps {
   customLabel: string;
-  updateCustomLabel: (e: any) => void;
+  updateCustomLabel: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
   getLabel: (...args: any[]) => string;
 }
 
