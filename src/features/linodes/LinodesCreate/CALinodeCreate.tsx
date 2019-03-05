@@ -191,6 +191,9 @@ export class LinodeCreate extends React.PureComponent<
           selectedStackScriptID,
           selectedStackScriptUsername,
           selectedStackScriptLabel,
+          linodesLoading,
+          updateDiskSize,
+          updatePassword,
           ...rest
         } = this.props;
         return (
