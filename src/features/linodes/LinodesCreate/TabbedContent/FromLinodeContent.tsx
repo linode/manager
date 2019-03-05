@@ -22,7 +22,7 @@ import SelectLinodePanel from '../SelectLinodePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
-import { extendLinodes } from '../utilites';
+import { extendLinodes } from '../utilities';
 
 import {
   CloneFormStateHandlers,

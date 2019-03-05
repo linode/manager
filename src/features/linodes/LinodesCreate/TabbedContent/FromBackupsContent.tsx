@@ -33,7 +33,7 @@ import {
   WithAll,
   WithDisplayData
 } from '../types';
-import { extendLinodes } from '../utilites';
+import { extendLinodes } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
