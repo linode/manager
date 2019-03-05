@@ -12,6 +12,7 @@ import {
   getStackScriptsByUser
 } from 'src/features/StackScripts/stackScriptUtils';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
+import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
@@ -276,7 +277,14 @@ export class LinodeCreate extends React.PureComponent<
       title: 'One-Click Apps',
       type: 'fromApp',
       render: () => {
-        return <React.Fragment />;
+        const {
+          setTab,
+          linodesError,
+          linodesLoading,
+          linodesData,
+          ...rest
+        } = this.props;
+        return <FromAppsContent {...rest} />;
       }
     },
     {

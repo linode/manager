@@ -47,10 +47,6 @@ interface Props extends BaseFormStateAndHandlers {
   imagePanelTitle?: string;
 }
 
-/**
- * image, region, type, label, backups, privateIP, tags, error, isLoading,
- */
-
 const errorResources = {
   type: 'A plan selection',
   region: 'A region selection',
