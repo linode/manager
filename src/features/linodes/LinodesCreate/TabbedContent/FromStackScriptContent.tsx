@@ -24,6 +24,8 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
+
+import { filterPublicImages, filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
@@ -32,15 +34,9 @@ import {
   WithDisplayData
 } from '../types';
 
-type ClassNames =
-  | 'root'
-  | 'main'
-  | 'sidebar'
-  | 'emptyImagePanel'
-  | 'emptyImagePanelText';
+type ClassNames = 'main' | 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
   main: {
     '&.mlMain': {
       [theme.breakpoints.up('lg')]: {
@@ -63,13 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Notice {
-  text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
-}
 interface Props {
-  notice?: Notice;
-  selectedTabFromQuery?: string;
   request: (
     username: string,
     params?: any,
@@ -178,7 +168,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     const {
       accountBackupsEnabled,
       errors,
-      notice,
       backupsMonthlyPrice,
       regionsData,
       typesData,
@@ -221,15 +210,8 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
+        <Grid item className={`mlMain`}>
           <CreateLinodeDisabled isDisabled={disabled} />
-          {!disabled && notice && (
-            <Notice
-              text={notice.text}
-              error={notice.level === 'error'}
-              warning={notice.level === 'warning'}
-            />
-          )}
           {generalError && <Notice text={generalError} error={true} />}
           <CASelectStackScriptPanel
             error={hasErrorFor('stackscript_id')}
@@ -245,7 +227,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           />
           {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel
-              errors={filterUDFErrors(this.props.errors)}
+              errors={filterUDFErrors(errorResources, this.props.errors)}
               selectedLabel={selectedStackScriptLabel || ''}
               selectedUsername={selectedStackScriptUsername || ''}
               handleChange={this.handleChangeUDF}
@@ -401,33 +383,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     );
   }
 }
-
-/**
- * @returns { Linode.Image[] } - a list of public images AKA
- * images that are officially supported by Linode
- *
- * @todo test this
- */
-export const filterPublicImages = (images: Linode.Image[]) => {
-  return images.filter((image: Linode.Image) => image.is_public);
-};
-
-/**
- * filter out all the UDF errors from our error state.
- * To do this, we compare the keys from the error state to our "errorResources"
- * map and return all the errors that don't match the keys in that object
- *
- * @todo test this function
- */
-export const filterUDFErrors = (errors?: Linode.ApiFieldError[]) => {
-  return !errors
-    ? []
-    : errors.filter(eachError => {
-        return !Object.keys(errorResources).some(
-          eachKey => eachKey === eachError.field
-        );
-      });
-};
 
 const styled = withStyles(styles);
 

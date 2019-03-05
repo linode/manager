@@ -25,6 +25,7 @@ import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
@@ -118,7 +119,7 @@ const FromAppsContent: React.SFC<CombinedProps> = props => {
           userDefinedFields &&
           userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel
-              errors={filterUDFErrors(errors)}
+              errors={filterUDFErrors(errorResources, errors)}
               selectedLabel={selectedStackScriptLabel || ''}
               selectedUsername={selectedStackScriptUsername || ''}
               handleChange={() => null}
@@ -271,33 +272,6 @@ const FromAppsContent: React.SFC<CombinedProps> = props => {
       </Grid>
     </React.Fragment>
   );
-};
-
-/**
- * @returns { Linode.Image[] } - a list of public images AKA
- * images that are officially supported by Linode
- *
- * @todo test this
- */
-export const filterPublicImages = (images: Linode.Image[]) => {
-  return images.filter((image: Linode.Image) => image.is_public);
-};
-
-/**
- * filter out all the UDF errors from our error state.
- * To do this, we compare the keys from the error state to our "errorResources"
- * map and return all the errors that don't match the keys in that object
- *
- * @todo test this function
- */
-export const filterUDFErrors = (errors?: Linode.ApiFieldError[]) => {
-  return !errors
-    ? []
-    : errors.filter(eachError => {
-        return !Object.keys(errorResources).some(
-          eachKey => eachKey === eachError.field
-        );
-      });
 };
 
 const styled = withStyles(styles);
