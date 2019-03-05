@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { images } from 'src/__data__/images';
 import { linode1 } from 'src/__data__/linodes';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/services/linodes', () => ({
@@ -18,6 +19,7 @@ describe('RebuildFromImage', () => {
       userSSHKeys={[]}
       onPresentSnackbar={jest.fn()}
       enqueueSnackbar={jest.fn()}
+      {...reactRouterProps}
     />
   );
 
