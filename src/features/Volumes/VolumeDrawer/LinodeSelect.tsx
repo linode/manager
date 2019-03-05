@@ -199,6 +199,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
         />
         {!error && (
           <FormHelperText data-qa-volume-region>
+            If you want to attach the new volume to a Linode, select it here.
             Only Linodes in the selected region are displayed.
           </FormHelperText>
         )}
