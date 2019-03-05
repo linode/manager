@@ -12,7 +12,7 @@ import Grid from 'src/components/Grid';
 import { getNetworkUtilization } from 'src/services/account';
 import DashboardCard from '../DashboardCard';
 
-type ClassNames =
+export type ClassNames =
   | 'root'
   | 'card'
   | 'grid'
@@ -229,6 +229,6 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
+export const styled = withStyles(styles);
 
 export default styled(TransferDashboardCard);
