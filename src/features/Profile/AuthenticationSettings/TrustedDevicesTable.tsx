@@ -36,7 +36,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
   render() {
     const { loading, error, data } = this.props;
     if (loading) {
-      return <TableRowLoading colSpan={4} />;
+      return <TableRowLoading colSpan={6} />;
     }
 
     if (error) {
@@ -49,7 +49,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
     }
 
     if (!data || data.length === 0) {
-      return <TableRowEmpty colSpan={4} />;
+      return <TableRowEmpty colSpan={6} />;
     }
 
     return (
@@ -59,6 +59,15 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
             <TableRow key={eachDevice.id}>
               <TableCell parentColumn="Device">
                 {eachDevice.user_agent}
+              </TableCell>
+              <TableCell parentColumn="Last IP">
+                {eachDevice.last_remote_addr}
+              </TableCell>
+              <TableCell parentColumn="Last Used">
+                <DateTimeDisplay
+                  value={eachDevice.last_authenticated}
+                  humanizeCutoff="month"
+                />
               </TableCell>
               <TableCell parentColumn="Expires">
                 <DateTimeDisplay

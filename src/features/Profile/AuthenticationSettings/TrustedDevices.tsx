@@ -80,6 +80,8 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
               <TableHead>
                 <TableRow>
                   <TableCell>Device</TableCell>
+                  <TableCell>Last IP</TableCell>
+                  <TableCell>Last Used</TableCell>
                   <TableCell>Expires</TableCell>
                   <TableCell />
                 </TableRow>
