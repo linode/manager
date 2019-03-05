@@ -150,6 +150,7 @@ export const createNodeBalancer = () => {
 export const removeNodeBalancers = (doNotDeleteLinodes) => {
     const token = readToken(browser.options.testUser);
     if(!doNotDeleteLinodes){
+        console.log('here');
         apiDeleteAllLinodes();
     }
     const availableNodeBalancers = browser.getNodeBalancers(token);

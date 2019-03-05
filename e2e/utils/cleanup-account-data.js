@@ -3,12 +3,15 @@ const axios = require('axios');
 const { readFileSync } = require('fs');
 const { argv } = require('yargs');
 
-const deleteAllData = (token,user) => {
+const deleteAllData = (token,user,dev) => {
+
+    const api = dev ? 'https://api.dev.linode.com/v4' : 'https://api.linode.com/v4';
+    
     const axiosInstance = axios.create({
         httpsAgent: new https.Agent({
             rejectUnauthorized: false
         }),
-        baseURL: process.env.REACT_APP_API_ROOT,
+        baseURL: api,
         timeout: 10000,
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -59,4 +62,4 @@ const deleteAllData = (token,user) => {
 }
 
 
-deleteAllData(argv.token,argv.username);
+deleteAllData(argv.token,argv.username,argv.env);

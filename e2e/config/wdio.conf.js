@@ -363,14 +363,14 @@ exports.config = {
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    onComplete: function(exitCode, config, capabilities) {
+    /*onComplete: function(exitCode, config, capabilities) {
         // Run delete all, on every test account
 
         /* We wait an arbitrary amount of time here for linodes to be removed
            Otherwise, attempting to remove attached volumes will fail
         */
-        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
+        /*return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
             .then(res => resolve(res))
             .catch(error => console.error('Error:', error));
-    } 
+    } */
 }

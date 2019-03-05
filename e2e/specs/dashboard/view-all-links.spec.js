@@ -90,6 +90,13 @@ describe('View All Links on Dashboard Entity Tables', () => {
         Dashboard.baseElemsDisplay();
     });
 
+    afterAll(() => {
+        apiDeleteAllLinodes();
+        apiDeleteAllVolumes();
+        apiDeleteAllDomains();
+        removeNodeBalancers('do not remove linodes');
+    });
+
     entities.forEach((entity) => {
         it(`View all links display on the dashboard ${entity} table`, () => {
             Dashboard.viewAllLink(entity).waitForVisible(constants.wait.normal);
