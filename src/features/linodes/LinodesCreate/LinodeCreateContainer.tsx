@@ -102,6 +102,14 @@ const defaultState: State = {
   formIsSubmitting: false
 };
 
+const getRegionIDFromLinodeID = (
+  linodes: Linode.Linode[],
+  id: number
+): string | undefined => {
+  const thisLinode = linodes.find(linode => linode.id === id);
+  return thisLinode ? thisLinode.region : undefined;
+};
+
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   state: State = defaultState;
 
@@ -145,12 +153,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /**
        * reset selected plan and set the selectedDiskSize
        * for the purpose of disabling plans that are smaller
-       * than the clone source
+       * than the clone source.
+       *
+       * Also, when creating from backup, we set the region
+       * to the same region as the Linode that owns the backup,
+       * since the API does not infer this automatically.
        */
+
+      const selectedRegionID = getRegionIDFromLinodeID(
+        this.props.linodesData,
+        id
+      );
       this.setState({
         selectedLinodeID: id,
         selectedDiskSize: diskSize,
-        selectedTypeID: undefined
+        selectedTypeID: undefined,
+        selectedRegionID
       });
     }
   };

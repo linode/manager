@@ -130,7 +130,8 @@ export interface BackupFormStateHandlers extends CloneFormStateHandlers {
 
 export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &
-  StackScriptFormStateHandlers;
+  StackScriptFormStateHandlers &
+  BackupFormStateHandlers;
 
 export type WithLinodesImagesTypesAndRegions = WithImagesProps &
   WithLinodesProps &

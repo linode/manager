@@ -189,13 +189,19 @@ export class LinodeCreate extends React.PureComponent<
           availableStackScriptImages,
           availableUserDefinedFields,
           selectedStackScriptID,
-          selectedDiskSize,
           selectedStackScriptUsername,
           selectedStackScriptLabel,
           ...rest
         } = this.props;
         return (
-          <FromBackupsContent 
+          <FromBackupsContent
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode will be created with
+                      the same password and SSH Keys (if any) as the original Linode.
+                      Also note that this Linode will need to be manually booted after it finishes
+                      provisioning.`
+            }}
             {...rest}
           />
         );

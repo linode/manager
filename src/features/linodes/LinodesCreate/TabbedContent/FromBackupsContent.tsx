@@ -1,6 +1,14 @@
 import * as Promise from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose as ramdaCompose, pathOr } from 'ramda';
+import {
+  compose as ramdaCompose,
+  find,
+  lensPath,
+  pathOr,
+  prop,
+  propEq,
+  set
+} from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
@@ -17,6 +25,7 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
+import { displayType } from 'src/features/linodes/presentation';
 import { getLinodeBackups } from 'src/services/linodes';
 import {
   LinodeActionsProps,
@@ -28,8 +37,13 @@ import { aggregateBackups } from '../../LinodesDetail/LinodeBackup';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
-import SelectPlanPanel, { ExtendedType } from '../SelectPlanPanel';
-import { BackupFormStateHandlers, Info, WithAll, WithDisplayData } from '../types';
+import SelectPlanPanel from '../SelectPlanPanel';
+import {
+  BackupFormStateHandlers,
+  Info,
+  WithAll,
+  WithDisplayData
+} from '../types';
 import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
 import { renderBackupsDisplaySection } from './utils';
 
@@ -57,16 +71,9 @@ export type TypeInfo =
 interface Props {
   notice?: Notice;
   linodesData: Linode.Linode[];
-  types: ExtendedType[];
-  extendLinodes: (linodes: Linode.Linode[]) => ExtendedLinode[];
-  getBackupsMonthlyPrice: (selectedTypeID: string | null) => number | null;
-  getTypeInfo: (selectedTypeID: string | null) => TypeInfo;
-  getRegionInfo: (selectedRegionID: string | null) => Info;
-  history: any;
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
   selectedRegionIDFromLinode?: string;
-  accountBackups: boolean;
   disabled?: boolean;
 }
 
@@ -86,7 +93,7 @@ type CombinedProps = Props &
   LabelProps &
   BackupFormStateHandlers &
   WithAll &
-  WithDisplayData & 
+  WithDisplayData &
   WithStyles<ClassNames>;
 
 interface Notice {
@@ -112,6 +119,11 @@ const filterLinodesWithBackups = (linodes: Linode.LinodeWithBackups[]) => {
   });
 };
 
+const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
+  const subheading = imageInfo ? `${typeInfo}, ${imageInfo}` : `${typeInfo}`;
+  return [subheading];
+};
+
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
     linodesWithBackups: [],
@@ -119,7 +131,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     backups: false,
     selectedBackupInfo: undefined,
     backupInfo: undefined,
-    isGettingBackups: false,
+    isGettingBackups: false
   };
 
   mounted: boolean = false;
@@ -148,6 +160,31 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       .catch(err => this.setState({ isGettingBackups: false }));
   };
 
+  extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
+    const images = this.props.imagesData || [];
+    const types = this.props.typesData || [];
+    return linodes.map(
+      linode =>
+        ramdaCompose<
+          Linode.Linode,
+          Partial<ExtendedLinode>,
+          Partial<ExtendedLinode>
+        >(
+          set(lensPath(['heading']), linode.label),
+          set(
+            lensPath(['subHeadings']),
+            formatLinodeSubheading(
+              displayType(linode.type, types),
+              ramdaCompose<Linode.Image[], Linode.Image, string>(
+                prop('label'),
+                find(propEq('id', linode.image))
+              )(images)
+            )
+          )
+        )(linode) as ExtendedLinode
+    );
+  };
+
   userHasBackups = () => {
     const { linodesWithBackups } = this.state;
     return linodesWithBackups!.some((linode: Linode.LinodeWithBackups) => {
@@ -158,12 +195,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
         !!linode.currentBackups.snapshot.current
       );
     });
-  };
-
-  handleSelectLinode = (linode: Linode.Linode) => {
-    if (linode.id !== this.props.selectedLinodeID) {
-      this.props.setBackupID(linode.id);
-    }
   };
 
   handleSelectBackupInfo = (info: Info) => {
@@ -206,7 +237,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       backups_enabled: backupsEnabled /* optional */,
       booted: true,
       tags: tagsToAdd
-    })
+    });
   };
 
   componentWillUnmount() {
@@ -222,9 +253,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
   // Generate a default label name with a selected Linode and/or Backup name IF they are selected
   label = () => {
-    const {
-      linodesWithBackups,
-    } = this.state;
+    const { linodesWithBackups } = this.state;
     const { getLabel, selectedBackupID, selectedLinodeID } = this.props;
 
     const selectedLinode =
@@ -254,40 +283,38 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       errors,
       backups,
       linodesWithBackups,
-      selectedBackupInfo,
+      selectedBackupInfo
     } = this.state;
     const {
-      accountBackups,
-      extendLinodes,
-      getBackupsMonthlyPrice,
+      accountBackupsEnabled,
       classes,
       notice,
       privateIPEnabled,
       selectedBackupID,
       selectedDiskSize,
       selectedLinodeID,
-      selectedRegionID,
       selectedTypeID,
       setBackupID,
       togglePrivateIPEnabled,
       toggleBackupsEnabled,
+      regionDisplayInfo,
       typeDisplayInfo,
-      types,
-      getRegionInfo,
       updateCustomLabel,
       disabled,
       tags,
+      typesData,
+      updateLinodeID,
       updateTypeID,
       updateTags,
+      backupsMonthlyPrice,
+      backupsEnabled
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const imageInfo = selectedBackupInfo;
 
-    const regionInfo = selectedRegionID && getRegionInfo(selectedRegionID);
-
-    const hasBackups = backups || accountBackups;
+    const hasBackups = backups || accountBackupsEnabled;
 
     const label = this.label();
 
@@ -319,11 +346,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
                   (linodes: Linode.LinodeWithBackups[]) =>
-                    extendLinodes(linodes),
+                    this.extendLinodes(linodes),
                   filterLinodesWithBackups
                 )(linodesWithBackups!)}
                 selectedLinodeID={selectedLinodeID}
-                handleSelection={this.handleSelectLinode}
+                handleSelection={updateLinodeID}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={disabled}
               />
@@ -342,7 +369,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               />
               <SelectPlanPanel
                 error={hasErrorFor('type')}
-                types={types}
+                types={typesData}
                 onSelect={updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
@@ -366,13 +393,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 updateFor={[tags, label, errors]}
               />
               <AddonsPanel
-                backups={backups}
-                accountBackups={accountBackups}
+                backups={backupsEnabled}
+                accountBackups={accountBackupsEnabled}
                 changeBackups={toggleBackupsEnabled}
                 changePrivateIP={togglePrivateIPEnabled}
-                backupsMonthly={getBackupsMonthlyPrice(selectedTypeID || null)}
+                backupsMonthly={backupsMonthlyPrice}
                 privateIP={privateIPEnabled}
-                updateFor={[privateIPEnabled, backups, selectedTypeID]}
+                updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
                 disabled={disabled}
               />
             </React.Fragment>
@@ -389,10 +416,10 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   displaySections.push(imageInfo);
                 }
 
-                if (regionInfo) {
+                if (regionDisplayInfo) {
                   displaySections.push({
-                    title: regionInfo.title,
-                    details: regionInfo.details
+                    title: regionDisplayInfo.title,
+                    details: regionDisplayInfo.details
                   });
                 }
 
@@ -400,17 +427,25 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   displaySections.push(typeDisplayInfo);
                 }
 
-                if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+                if (
+                  hasBackups &&
+                  typeDisplayInfo &&
+                  typeDisplayInfo.backupsMonthly
+                ) {
                   displaySections.push(
                     renderBackupsDisplaySection(
-                      accountBackups,
+                      accountBackupsEnabled,
                       typeDisplayInfo.backupsMonthly
                     )
                   );
                 }
 
                 let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-                if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
+                if (
+                  hasBackups &&
+                  typeDisplayInfo &&
+                  typeDisplayInfo.backupsMonthly
+                ) {
                   calculatedPrice += typeDisplayInfo.backupsMonthly;
                 }
 
