@@ -59,6 +59,7 @@ interface State {
   selectedRegionID?: string;
   selectedTypeID?: string;
   selectedLinodeID?: number;
+  selectedBackupID?: number;
   availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
   availableStackScriptImages?: Linode.Image[];
   selectedStackScriptID?: number;
@@ -91,6 +92,7 @@ const defaultState: State = {
   label: '',
   password: '',
   selectedImageID: 'linode/debian9',
+  selectedBackupID: undefined,
   selectedDiskSize: undefined,
   selectedLinodeID: undefined,
   selectedStackScriptID: undefined,
@@ -128,6 +130,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       return this.setState({ selectedImageID: undefined });
     }
     return this.setState({ selectedImageID: id });
+  };
+
+  setBackupID = (id: number) => {
+    this.setState({ selectedBackupID: id });
   };
 
   setRegionID = (id: string) => this.setState({ selectedRegionID: id });
@@ -431,6 +437,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               resetCreationState={this.clearCreationState}
               userSSHKeys={this.props.userSSHKeys}
               resetSSHKeys={this.props.resetSSHKeys}
+              selectedBackupID={this.state.selectedBackupID}
+              setBackupID={this.setBackupID}
             />
           </Grid>
         </Grid>

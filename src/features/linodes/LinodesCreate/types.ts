@@ -123,6 +123,11 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   handleSelectUDFs: (stackScripts: any[]) => void;
 }
 
+export interface BackupFormStateHandlers extends CloneFormStateHandlers {
+  selectedBackupID?: number;
+  setBackupID: (id: number) => void;
+}
+
 export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &
   StackScriptFormStateHandlers;
