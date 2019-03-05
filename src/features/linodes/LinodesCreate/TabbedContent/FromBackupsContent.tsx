@@ -32,7 +32,6 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { aggregateBackups } from '../../LinodesDetail/LinodeBackup';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
@@ -80,7 +79,6 @@ interface Props {
 interface State {
   linodesWithBackups: Linode.LinodeWithBackups[] | null;
   userHasBackups: boolean;
-  errors?: Linode.ApiFieldError[];
   backups: boolean;
   selectedBackupInfo: Info;
   backupInfo: Info;
@@ -201,22 +199,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.setState({ backupInfo: info });
   };
 
-  deployLinode = () => {
-    if (!this.props.selectedBackupID) {
-      /* a backup selection is also required */
-      this.setState(
-        {
-          errors: [{ field: 'backup_id', reason: 'You must select a Backup' }]
-        },
-        () => {
-          scrollErrorIntoView();
-        }
-      );
-      return;
-    }
-    this.createLinode();
-  };
-
   createLinode = () => {
     const {
       backupsEnabled,
@@ -229,7 +211,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const tagsToAdd = tags ? tags.map(item => item.value) : undefined;
     const label = this.label();
 
-    this.props.handleSubmitForm('create', {
+    this.props.handleSubmitForm('createFromBackup', {
       region: selectedRegionID,
       type: selectedTypeID,
       backup_id: Number(selectedBackupID),
@@ -279,15 +261,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const {
-      errors,
-      backups,
-      linodesWithBackups,
-      selectedBackupInfo
-    } = this.state;
+    const { backups, linodesWithBackups, selectedBackupInfo } = this.state;
     const {
       accountBackupsEnabled,
       classes,
+      errors,
       notice,
       privateIPEnabled,
       selectedBackupID,
@@ -455,7 +433,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     calculatedPrice={calculatedPrice}
                     isMakingRequest={false}
                     disabled={disabled}
-                    onDeploy={this.deployLinode}
+                    onDeploy={this.createLinode}
                     displaySections={displaySections}
                     {...props}
                   />

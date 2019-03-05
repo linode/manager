@@ -263,7 +263,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
+    if (type === 'createFromBackup') {
+      /* a backup selection is also required */
+      this.setState(
+        {
+          errors: [{ field: 'backup_id', reason: 'You must select a Backup' }]
+        },
+        () => {
+          scrollErrorIntoView();
+        }
+      );
+      return;
+    }
+
+    if (type === 'createFromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
