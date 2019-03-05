@@ -15,44 +15,12 @@ import {
   values
 } from 'ramda';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
-import SelectionCard from 'src/components/SelectionCard';
-import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import TabbedPanel from 'src/components/TabbedPanel';
 
-type ClassNames = 'root' | 'flatImagePanel' | 'flatImagePanelSelections';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
-  flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
-  },
-  root: {}
-});
-
-const distroIcons = {
-  Arch: 'archlinux',
-  CentOS: 'centos',
-  CoreOS: 'coreos',
-  Debian: 'debian',
-  Fedora: 'fedora',
-  Gentoo: 'gentoo',
-  openSUSE: 'opensuse',
-  Slackware: 'slackware',
-  Ubuntu: 'ubuntu'
-};
+import Panel from './Panel';
+import PrivateImages from './PrivateImages';
+import PublicImages from './PublicImages';
 
 interface Props {
   images: Linode.Image[];
@@ -60,7 +28,7 @@ interface Props {
   error?: string;
   selectedImageID?: string;
   handleSelection: (id: string) => void;
-  hideMyImages?: boolean;
+  variant?: 'public' | 'private' | 'all';
   initTab?: number;
   disabled?: boolean;
 }
@@ -105,130 +73,57 @@ export const getMyImages = compose<any, any, any>(
   filter(propSatisfies(startsWith('private'), 'id'))
 );
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
-  const { images, error, handleSelection, disabled } = props;
+  const { images, error, handleSelection, disabled, title, variant, selectedImageID } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
 
-  const renderPublicImages = () =>
-    publicImages.length &&
-    publicImages.map((image: Linode.Image, idx: number) => (
-      <SelectionCard
-        key={idx}
-        checked={image.id === String(props.selectedImageID)}
-        onClick={() => handleSelection(image.id)}
-        renderIcon={() => {
-          return (
-            <span className={`fl-${distroIcons[image.vendor as string]}`} />
-          );
-        }}
-        heading={image.vendor as string}
-        subheadings={[image.label]}
-        data-qa-selection-card
-        disabled={disabled}
-      />
-    ));
+  const Public = (
+    <Panel error={error} title={title}>
+      <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} handleSelection={handleSelection} selectedImageID={selectedImageID} />
+    </Panel>
+  )
 
-  const renderOlderPublicImages = () =>
-    olderPublicImages.length &&
-    olderPublicImages.map((image: Linode.Image, idx: number) => (
-      <SelectionCard
-        key={idx}
-        checked={image.id === String(props.selectedImageID)}
-        onClick={() => handleSelection(image.id)}
-        renderIcon={() => {
-          return (
-            <span className={`fl-${distroIcons[image.vendor as string]}`} />
-          );
-        }}
-        heading={image.vendor as string}
-        subheadings={[image.label]}
-        disabled={disabled}
-      />
-    ));
+  const Private = (
+    <Panel error={error} title={title}>
+      <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} selectedImageID={selectedImageID} />
+    </Panel>
+  )
 
   const tabs = [
     {
       title: 'Public Images',
       render: () => (
-        <React.Fragment>
-          <Grid container spacing={16}>
-            {renderPublicImages()}
-          </Grid>
-          <ShowMoreExpansion name="Show Older Images">
-            <Grid container spacing={16} style={{ marginTop: 16 }}>
-              {renderOlderPublicImages()}
-            </Grid>
-          </ShowMoreExpansion>
-        </React.Fragment>
+        Public
       )
     },
     {
       title: 'My Images',
       render: () => (
-        <Grid container>
-          {myImages &&
-            myImages.map((image: Linode.Image, idx: number) => (
-              <SelectionCard
-                key={idx}
-                checked={image.id === String(props.selectedImageID)}
-                onClick={() => handleSelection(image.id)}
-                renderIcon={() => <span className="fl-tux" />}
-                heading={image.label as string}
-                subheadings={[image.description as string]}
-                disabled={disabled}
-              />
-            ))}
-        </Grid>
+        Private
       )
     }
   ];
 
-  const renderTabs = () => {
-    const { hideMyImages } = props;
-    if (hideMyImages) {
-      return tabs;
-    }
-    return tabs;
-  };
-
-  return (
-    <React.Fragment>
-      {props.hideMyImages !== true ? ( // if we have no olderPublicImage, hide the dropdown
+  switch (variant) {
+    case 'private':
+      return Private;
+    case 'public':
+      return Public;
+    case 'all':
+    default:
+      return (
         <TabbedPanel
           error={error}
           header="Select Image"
-          tabs={renderTabs()}
+          tabs={tabs}
           initTab={props.initTab}
         />
-      ) : (
-        <Paper
-          className={props.classes.flatImagePanel}
-          data-qa-tp="Select Image"
-        >
-          {error && <Notice text={error} error />}
-          <Typography role="header" variant="h2" data-qa-tp="Select Image">
-            {props.title || 'Select an Image'}
-          </Typography>
-          <Grid className={props.classes.flatImagePanelSelections} container>
-            {renderPublicImages()}
-          </Grid>
-          {olderPublicImages.length > 0 && (
-            <ShowMoreExpansion name="Show Older Images">
-              <Grid container spacing={16} style={{ marginTop: 16 }}>
-                {renderOlderPublicImages()}
-              </Grid>
-            </ShowMoreExpansion>
-          )}
-        </Paper>
-      )}
-    </React.Fragment>
-  );
+      )
+  }
 };
 
-const styled = withStyles(styles);
-
-export default styled(RenderGuard<Props>(CreateFromImage));
+export default (RenderGuard<Props>(CreateFromImage));

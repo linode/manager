@@ -252,7 +252,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
-              hideMyImages={true}
+              variant="public"
             />
           ) : (
             <Paper className={classes.emptyImagePanel}>

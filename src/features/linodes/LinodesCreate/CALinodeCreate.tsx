@@ -93,11 +93,21 @@ export class LinodeCreate extends React.PureComponent<
           linodesData,
           linodesError,
           linodesLoading,
+          handleSelectUDFs,
+          selectedUDFs,
+          updateStackScript,
+          availableStackScriptImages,
+          availableUserDefinedFields,
+          selectedStackScriptID,
+          selectedDiskSize,
+          selectedStackScriptUsername,
+          selectedStackScriptLabel,
+          selectedLinodeID,
           ...rest
         } = this.props;
         return (
           <FromImageContent
-            publicOnly
+            variant="public"
             imagePanelTitle="Choose a Distribution"
             {...rest}
           />
@@ -136,14 +146,45 @@ export class LinodeCreate extends React.PureComponent<
 
   myImagesTabs = (): Tab[] => [
     {
-      title: 'Backups and My Images',
+      title: 'Images',
+      type: 'fromImage',
+      render: () => {
+        const {
+          history,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          handleSelectUDFs,
+          selectedUDFs,
+          updateStackScript,
+          availableStackScriptImages,
+          availableUserDefinedFields,
+          selectedStackScriptID,
+          selectedDiskSize,
+          selectedStackScriptUsername,
+          selectedStackScriptLabel,
+          selectedLinodeID,
+          ...rest
+        } = this.props;
+
+        return (
+          <FromImageContent
+            variant={'private'}
+            imagePanelTitle="Choose an Image"
+            {...rest}
+          />
+        );
+      }
+    },
+    {
+      title: 'Backups',
       type: 'fromBackup',
       render: () => {
         return <React.Fragment />;
       }
     },
     {
-      title: 'Clone from Existing Linode',
+      title: 'Clone Linode',
       type: 'fromLinode',
       render: () => {
         /**
