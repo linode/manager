@@ -181,7 +181,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     userDefinedFields: Linode.StackScript.UserDefinedField[],
     images: Linode.Image[],
     defaultData?: any
-  ) =>
+  ) => {
+    /**
+     * reset the selected Image but only if we're creating a Linode from
+     * a StackScript and not an app
+     */
+    if (this.props.createType !== 'fromApp') {
+      this.setState({ selectedImageID: undefined });
+    }
+
     this.setState({
       selectedStackScriptID: id,
       selectedStackScriptLabel: label,
@@ -192,6 +200,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /** reset image because stackscript might not be compatible with selected one */
       selectedImageID: undefined
     });
+  };
 
   setDiskSize = (size: number) => this.setState({ selectedDiskSize: size });
 
@@ -209,14 +218,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   generateLabel = () => {
     const { getLabel, imagesData, regionsData } = this.props;
-    const { selectedImageID, selectedRegionID } = this.state;
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedStackScriptLabel
+    } = this.state;
 
     /* tslint:disable-next-line  */
     let arg1,
       arg2,
       arg3 = '';
 
-    if (selectedImageID) {
+    /**
+     * lean in favor of using stackscript label
+     * then next priority is image label
+     */
+    if (selectedStackScriptLabel) {
+      arg1 = selectedStackScriptLabel;
+    } else if (selectedImageID) {
       const selectedImage = imagesData.find(img => img.id === selectedImageID);
       /**
        * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
