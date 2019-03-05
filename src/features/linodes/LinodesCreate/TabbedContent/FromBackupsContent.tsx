@@ -186,7 +186,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { backups, linodesWithBackups, selectedBackupInfo } = this.state;
+    const {
+      backups,
+      linodesWithBackups,
+      isGettingBackups,
+      selectedBackupInfo
+    } = this.state;
     const {
       accountBackupsEnabled,
       classes,
@@ -355,7 +360,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   <CheckoutBar
                     heading={`${label || 'Linode'} Summary`}
                     calculatedPrice={calculatedPrice}
-                    isMakingRequest={false}
+                    isMakingRequest={isGettingBackups}
                     disabled={disabled}
                     onDeploy={this.createLinode}
                     displaySections={displaySections}
