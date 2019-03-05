@@ -15,7 +15,7 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
     beforeAll(() => {
         const environment = process.env.REACT_APP_API_ROOT;
         const testLinodes = [{ linodeLabel: `Auto${timestamp()}`}, { linodeLabel: `Auto1${timestamp()}`}];
-        if ( !environment.includes('dev') && !environment.includes('testing')){
+        if (!environment.includes('dev') && !environment.includes('testing')){
               testLinodes.push({
                   linodeLabel: `Auto2${timestamp()}`,
                   privateIp: false,
@@ -62,7 +62,7 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
         Networking.removeSharedIp.click();
         Networking.submitButton.click();
         Networking.waitForNotice('IP Sharing updated successfully');
-      Networking.ipTableRow(linode2Ip).waitForVisible(constants.wait.normal, true);
+        Networking.ipTableRow(linode2Ip).waitForVisible(constants.wait.normal, true);
     });
 
     it('Shared Ip removal persists after refreshing page', () => {

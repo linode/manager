@@ -14,16 +14,15 @@ describe('Can not boot a linode without an Image', () => {
         noImage: true
     };
 
-    /*beforeAll(() => {
-
-    });*/
+    beforeAll(() => {
+        apiCreateMultipleLinodes([linode]);
+    });
 
     afterAll(() => {
         apiDeleteAllLinodes();
     });
 
     it('Power on tool tip displays for a linode without an image on Linode listing page', () => {
-        apiCreateMultipleLinodes([linode]);
         ListLinodes.openActionMenu($(ListLinodes.getLinodeSelector(linode.linodeLabel)));
         const toolTipIcon = ListLinodes.powerOnMenu.$(ListLinodes.toolTipIcon.selector);
         toolTipIcon.waitForVisible(constants.wait.normal);

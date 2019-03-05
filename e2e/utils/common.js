@@ -96,13 +96,19 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
 
 export const waitForLinodeStatus = (linodeLabel, status, image=true, timeout=constants.wait.minute) => {
     browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, timeout);
-    browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="true"]`, timeout);
     if(image){
         browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="${status}"]`, timeout * 3);
     }else{
+        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="true"]`, timeout);
         browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="false"]`, timeout * 3);
-        browser.refresh();
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="offline"]`, timeout);
+        //this is a hack due to the offline status not rendering until a page refresh when creating a linode without an image
+        let i = 0;
+        browser.waitUntil(() => {
+            browser.refresh();
+            browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, timeout);
+            i++
+            return $(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="offline"]`).isVisible() && i < 6;
+        });
     }
 }
 
