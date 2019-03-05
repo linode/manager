@@ -38,7 +38,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         });
 
         it('should update status on reboot to rebooting', () => {
-            waitForLinodeStatus(linode, 'rebooting', constants.wait.short);
+            waitForLinodeStatus(linode, 'rebooting', true, constants.wait.short);
         });
 
         it('should display running status after booted', () => {

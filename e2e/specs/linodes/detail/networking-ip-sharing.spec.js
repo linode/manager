@@ -14,12 +14,16 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
 
     beforeAll(() => {
         const environment = process.env.REACT_APP_API_ROOT;
-        const testLinodes = (environment.includes('dev') || environment.includes('testing') ? [{ linodeLabel: `Auto${timestamp()}` },
-              { linodeLabel: `Auto1${timestamp()}` }
-            ] : [{ linodeLabel: `Auto${timestamp()}` },
-                { linodeLabel: `Auto1${timestamp()}` },
-                { linodeLabel: `Auto2${timestamp()}`, privateIp: false, tags: [], type: undefined,region: 'us-central' }
-            ];
+        const testLinodes = [{ linodeLabel: `Auto${timestamp()}`}, { linodeLabel: `Auto1${timestamp()}`}];
+        if ( !environment.includes('dev') && !environment.includes('testing')){
+              testLinodes.push({
+                  linodeLabel: `Auto2${timestamp()}`,
+                  privateIp: false,
+                  tags: [],
+                  type: undefined,
+                  region: 'us-central'
+              });
+        }
         const linodes = apiCreateMultipleLinodes(testLinodes);
         linode1id = linodes[0].id;
         linode1Ip = linodes[0].ipv4[0];

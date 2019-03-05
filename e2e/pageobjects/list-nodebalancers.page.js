@@ -54,6 +54,10 @@ class ListNodeBalancers extends Page {
         const configTab = $('[data-qa-tab="Configurations"]');
         expect(configTab.getAttribute('aria-selected')).toBe('true');
     }
+
+    nodeBlanacerRow(label){
+        return $(`[data-qa-nodebalancer-cell="${label}"]`)
+    }
 }
 
 export default new ListNodeBalancers();

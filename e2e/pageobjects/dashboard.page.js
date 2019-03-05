@@ -51,6 +51,15 @@ export class Dashboard extends Page {
         expect(this.blogCard.isVisible()).toBe(true);
         expect(this.readMore.isVisible()).toBe(true);
     }
+
+    entityCount(entity){
+        const countAttribute = 'data-qa-entity-count';
+        return $(`[data-qa-card="${entity}"] [${countAttribute}]`).getAttribute(countAttribute);
+    }
+
+    viewAllLink(entity){
+        return $(`[data-qa-card="${entity}"] [data-qa-view-all-link]`)
+    }
 }
 
 export default new Dashboard();
