@@ -38,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
-  handleSelection: (linode: Linode.Linode) => void;
+  handleSelection: (id: number, diskSize?: number) => void;
   error?: string;
   header?: string;
   disabled?: boolean;
@@ -55,7 +55,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
       <SelectionCard
         key={`selection-card-${linode.id}`}
         onClick={e => {
-          handleSelection(linode);
+          handleSelection(linode.id, linode.specs.disk);
         }}
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}
