@@ -104,8 +104,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   state: State = defaultState;
 
   componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * if we're clicking on the stackscript create flow, we need to stop
+     * defaulting to Debian 9 because it's possible the user chooses a stackscript
+     * that isn't compatible with the defaulted image
+     */
     if (
-      prevProps.createType !== 'fromStackScript' ||
+      prevProps.createType !== 'fromStackScript' &&
       this.props.createType === 'fromStackScript'
     ) {
       this.setState({ selectedImageID: undefined });
