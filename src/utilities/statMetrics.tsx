@@ -121,3 +121,17 @@ export const getTotalTraffic = (
     combinedTraffic: inTraffic + outTraffic
   };
 };
+
+export const getMonthlyTraffic = (stats: Linode.Stats) => {
+  const getTrafficSum = (records: number[][]) =>
+    records.reduce((acc, record) => {
+      return acc + record[1];
+    }, 0);
+
+  return (
+    getTrafficSum(stats.netv4.in) +
+    getTrafficSum(stats.netv4.out) +
+    getTrafficSum(stats.netv6.in) +
+    getTrafficSum(stats.netv4.out)
+  );
+};

@@ -4,7 +4,9 @@ import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Type = Linode.LinodeType;
-type Stats = Linode.Stats;
+type Stats = {
+  data: Linode.Stats;
+}
 
 /**
  * getLinodeStats
