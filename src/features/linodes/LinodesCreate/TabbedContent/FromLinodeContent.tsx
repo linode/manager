@@ -71,10 +71,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
       linode => linode.id === linodeID
     );
     if (linode) {
-      this.props.updateLinodeID(
-        linode.id,
-        pathOr(undefined, ['specs', 'disk'], linode)
-      );
+      this.props.updateLinodeID(linode.id, linode.specs.disk);
     }
   };
 

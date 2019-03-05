@@ -1,14 +1,6 @@
 import * as Promise from 'bluebird';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import {
-  compose as ramdaCompose,
-  find,
-  lensPath,
-  pathOr,
-  prop,
-  propEq,
-  set
-} from 'ramda';
+import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
@@ -25,17 +17,15 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import { displayType } from 'src/features/linodes/presentation';
 import { getLinodeBackups } from 'src/services/linodes';
 import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { aggregateBackups } from '../../LinodesDetail/LinodeBackup';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
-import SelectLinodePanel, { ExtendedLinode } from '../SelectLinodePanel';
+import SelectLinodePanel from '../SelectLinodePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import {
   BackupFormStateHandlers,
@@ -43,7 +33,7 @@ import {
   WithAll,
   WithDisplayData
 } from '../types';
-import withLabelGenerator, { LabelProps } from '../withLabelGenerator';
+import { extendLinodes } from '../utilites';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -57,15 +47,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   }
 });
-
-export type TypeInfo =
-  | {
-      title: string;
-      details: string;
-      monthly: number;
-      backupsMonthly: number | null;
-    }
-  | undefined;
 
 interface Props {
   notice?: Notice;
@@ -88,7 +69,6 @@ interface State {
 type CombinedProps = Props &
   LinodeActionsProps &
   InjectedNotistackProps &
-  LabelProps &
   BackupFormStateHandlers &
   WithAll &
   WithDisplayData &
@@ -115,11 +95,6 @@ const filterLinodesWithBackups = (linodes: Linode.LinodeWithBackups[]) => {
     // for the panel to show the Linode
     return linode.backups.enabled && (hasAutomaticBackups || hasSnapshotBackup);
   });
-};
-
-const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
-  const subheading = imageInfo ? `${typeInfo}, ${imageInfo}` : `${typeInfo}`;
-  return [subheading];
 };
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
@@ -158,31 +133,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       .catch(err => this.setState({ isGettingBackups: false }));
   };
 
-  extendLinodes = (linodes: Linode.Linode[]): ExtendedLinode[] => {
-    const images = this.props.imagesData || [];
-    const types = this.props.typesData || [];
-    return linodes.map(
-      linode =>
-        ramdaCompose<
-          Linode.Linode,
-          Partial<ExtendedLinode>,
-          Partial<ExtendedLinode>
-        >(
-          set(lensPath(['heading']), linode.label),
-          set(
-            lensPath(['subHeadings']),
-            formatLinodeSubheading(
-              displayType(linode.type, types),
-              ramdaCompose<Linode.Image[], Linode.Image, string>(
-                prop('label'),
-                find(propEq('id', linode.image))
-              )(images)
-            )
-          )
-        )(linode) as ExtendedLinode
-    );
-  };
-
   userHasBackups = () => {
     const { linodesWithBackups } = this.state;
     return linodesWithBackups!.some((linode: Linode.LinodeWithBackups) => {
@@ -202,18 +152,20 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
   createLinode = () => {
     const {
       backupsEnabled,
+      privateIPEnabled,
       selectedTypeID,
       selectedRegionID,
       selectedBackupID,
+      label,
       tags
     } = this.props;
 
     const tagsToAdd = tags ? tags.map(item => item.value) : undefined;
-    const label = this.label();
 
     this.props.handleSubmitForm('createFromBackup', {
       region: selectedRegionID,
       type: selectedTypeID,
+      private_ip: privateIPEnabled,
       backup_id: Number(selectedBackupID),
       label,
       backups_enabled: backupsEnabled /* optional */,
@@ -233,33 +185,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     // is set to state as if it had been selected manually.
   }
 
-  // Generate a default label name with a selected Linode and/or Backup name IF they are selected
-  label = () => {
-    const { linodesWithBackups } = this.state;
-    const { getLabel, selectedBackupID, selectedLinodeID } = this.props;
-
-    const selectedLinode =
-      linodesWithBackups &&
-      linodesWithBackups.find(l => l.id === selectedLinodeID);
-
-    if (!selectedLinode) {
-      return getLabel();
-    }
-
-    const selectedBackup = aggregateBackups(selectedLinode.currentBackups).find(
-      b => b.id === selectedBackupID
-    );
-
-    if (!selectedBackup) {
-      return getLabel(selectedLinode.label, 'backup');
-    }
-
-    const backup =
-      selectedBackup.type !== 'auto' ? selectedBackup.label : 'auto'; // automatic backups have a label of 'null', so use a custom string for these
-
-    return getLabel(selectedLinode.label, backup, 'backup');
-  };
-
   render() {
     const { backups, linodesWithBackups, selectedBackupInfo } = this.state;
     const {
@@ -277,15 +202,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       toggleBackupsEnabled,
       regionDisplayInfo,
       typeDisplayInfo,
-      updateCustomLabel,
       disabled,
+      label,
       tags,
       typesData,
       updateLinodeID,
       updateTypeID,
       updateTags,
       backupsMonthlyPrice,
-      backupsEnabled
+      backupsEnabled,
+      updateLabel
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
@@ -293,8 +219,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const imageInfo = selectedBackupInfo;
 
     const hasBackups = backups || accountBackupsEnabled;
-
-    const label = this.label();
 
     return (
       <React.Fragment>
@@ -324,7 +248,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
                   (linodes: Linode.LinodeWithBackups[]) =>
-                    this.extendLinodes(linodes),
+                    extendLinodes(linodes),
                   filterLinodesWithBackups
                 )(linodesWithBackups!)}
                 selectedLinodeID={selectedLinodeID}
@@ -358,7 +282,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 labelFieldProps={{
                   label: 'Linode Label',
                   value: label || '',
-                  onChange: updateCustomLabel,
+                  onChange: updateLabel,
                   errorText: hasErrorFor('label'),
                   disabled
                 }}
@@ -452,7 +376,6 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withSnackbar,
-  withLabelGenerator,
   withLinodeActions
 );
 
