@@ -9,6 +9,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { getStackScriptsByUser } from 'src/features/StackScripts/stackScriptUtils';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
+import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
@@ -180,7 +181,33 @@ export class LinodeCreate extends React.PureComponent<
       title: 'Backups',
       type: 'fromBackup',
       render: () => {
-        return <React.Fragment />;
+        const {
+          history,
+          handleSelectUDFs,
+          selectedUDFs,
+          updateStackScript,
+          availableStackScriptImages,
+          availableUserDefinedFields,
+          selectedStackScriptID,
+          selectedStackScriptUsername,
+          selectedStackScriptLabel,
+          linodesLoading,
+          updateDiskSize,
+          updatePassword,
+          ...rest
+        } = this.props;
+        return (
+          <FromBackupsContent
+            notice={{
+              level: 'warning',
+              text: `This newly created Linode will be created with
+                      the same password and SSH Keys (if any) as the original Linode.
+                      Also note that this Linode will need to be manually booted after it finishes
+                      provisioning.`
+            }}
+            {...rest}
+          />
+        );
       }
     },
     {

@@ -22,7 +22,7 @@ import SelectLinodePanel from '../SelectLinodePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
-import { extendLinodes } from '../utilites';
+import { extendLinodes } from '../utilities';
 
 import {
   CloneFormStateHandlers,
@@ -66,8 +66,13 @@ type CombinedProps = Props &
 
 export class FromLinodeContent extends React.PureComponent<CombinedProps> {
   /** set the Linode ID and the disk size and reset the plan selection */
-  handleSelectLinode = (linode: Linode.Linode) => {
-    this.props.updateLinodeID(linode.id, linode.specs.disk);
+  handleSelectLinode = (linodeID: number) => {
+    const linode = this.props.linodesData.find(
+      linode => linode.id === linodeID
+    );
+    if (linode) {
+      this.props.updateLinodeID(linode.id, linode.specs.disk);
+    }
   };
 
   cloneLinode = () => {
