@@ -163,7 +163,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       selectedStackScriptUsername: username,
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: images,
-      udfs: defaultData
+      udfs: defaultData,
+      /** reset image because stackscript might not be compatible with selected one */
+      selectedImageID: undefined
     });
 
   setDiskSize = (size: number) => this.setState({ selectedDiskSize: size });
