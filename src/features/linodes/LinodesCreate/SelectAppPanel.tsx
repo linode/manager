@@ -12,6 +12,8 @@ import LinearProgress from 'src/components/LinearProgress';
 import SelectionCard from 'src/components/SelectionCard';
 import Panel from './Panel';
 
+import { AppsData } from './types';
+
 type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -28,10 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
-  stackScripts?: Linode.StackScript.Response[];
-  stackScriptsLoading: boolean;
-  stackScriptsError?: string;
+interface Props extends AppsData {
   handleClick: (
     id: number,
     label: string,
@@ -52,21 +51,21 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
     selectedStackScriptID,
     classes,
     error,
-    stackScripts,
-    stackScriptsError,
-    stackScriptsLoading,
+    appInstances,
+    appInstancesError,
+    appInstancesLoading,
     handleClick
   } = props;
 
-  if (stackScriptsError) {
+  if (appInstancesError) {
     return (
       <Panel className={classes.panel} error={error} title="Select App">
-        <ErrorState errorText={stackScriptsError} />
+        <ErrorState errorText={appInstancesError} />
       </Panel>
     );
   }
 
-  if (stackScriptsLoading) {
+  if (appInstancesLoading) {
     return (
       <Panel className={classes.panel} error={error} title="Select App">
         <LinearProgress className={classes.loading} />
@@ -74,7 +73,7 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
     );
   }
 
-  if (!stackScripts) {
+  if (!appInstances) {
     return null;
   }
 
@@ -88,17 +87,17 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
       title="Select App"
     >
       <Grid className={classes.flatImagePanelSelections} container>
-        {stackScripts.map(eachStackScript => (
+        {appInstances.map(eachApp => (
           <SelectionCardWrapper
-            key={eachStackScript.id}
-            checked={eachStackScript.id === selectedStackScriptID}
-            username={eachStackScript.username}
-            label={eachStackScript.label}
-            availableImages={eachStackScript.images}
-            userDefinedFields={eachStackScript.user_defined_fields}
+            key={eachApp.id}
+            checked={eachApp.id === selectedStackScriptID}
+            username={eachApp.username}
+            label={eachApp.label}
+            availableImages={eachApp.images}
+            userDefinedFields={eachApp.user_defined_fields}
             handleClick={handleClick}
             disabled={disabled}
-            id={eachStackScript.id}
+            id={eachApp.id}
           />
         ))}
       </Grid>

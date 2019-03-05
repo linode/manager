@@ -53,6 +53,7 @@ import { MapState } from 'src/store/types';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getCloudApps } from './TabbedContent/formUtilities';
 
 interface State {
   selectedImageID?: string;
@@ -74,6 +75,9 @@ interface State {
   tags?: Tag[];
   errors?: Linode.ApiFieldError[];
   formIsSubmitting: boolean;
+  appInstances?: Linode.StackScript.Response[];
+  appInstancesLoading: boolean;
+  appInstancesError?: string;
 }
 
 type CombinedProps = InjectedNotistackProps &
@@ -100,7 +104,8 @@ const defaultState: State = {
   selectedTypeID: undefined,
   tags: [],
   formIsSubmitting: false,
-  errors: undefined
+  errors: undefined,
+  appInstancesLoading: false
 };
 
 const getRegionIDFromLinodeID = (
@@ -126,6 +131,23 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     ) {
       this.setState({ selectedImageID: undefined });
     }
+  }
+
+  componentDidMount() {
+    this.setState({ appInstancesLoading: true });
+    getCloudApps()
+      .then(response => {
+        this.setState({
+          appInstancesLoading: false,
+          appInstances: response.data
+        });
+      })
+      .catch(e => {
+        this.setState({
+          appInstancesLoading: false,
+          appInstancesError: 'There was an error loading Cloud Apps.'
+        });
+      });
   }
 
   clearCreationState = () => {
@@ -434,62 +456,67 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             <Typography role="header" variant="h1" data-qa-create-linode-header>
               Create New Linode
             </Typography>
+            <CALinodeCreate
+              regionDisplayInfo={this.getRegionInfo()}
+              imageDisplayInfo={this.getImageInfo()}
+              typeDisplayInfo={this.getTypeInfo()}
+              backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
+              regionsData={this.props.regionsData}
+              typesData={this.props.typesData}
+              regionsError={this.props.regionsError}
+              regionsLoading={this.props.regionsLoading}
+              imagesData={this.props.imagesData}
+              imagesError={this.props.imagesError}
+              imagesLoading={this.props.imagesLoading}
+              linodesData={this.props.linodesData}
+              linodesError={this.props.linodesError}
+              linodesLoading={this.props.linodesLoading}
+              accountBackupsEnabled={this.props.accountBackupsEnabled}
+              userCannotCreateLinode={this.props.userCannotCreateLinode}
+              selectedRegionID={this.state.selectedRegionID}
+              updateRegionID={this.setRegionID}
+              selectedImageID={this.state.selectedImageID}
+              updateImageID={this.setImageID}
+              selectedTypeID={this.state.selectedTypeID}
+              updateTypeID={this.setTypeID}
+              selectedLinodeID={this.state.selectedLinodeID}
+              updateLinodeID={this.setLinodeID}
+              selectedDiskSize={this.state.selectedDiskSize}
+              updateDiskSize={this.setDiskSize}
+              selectedUDFs={this.state.udfs}
+              handleSelectUDFs={this.setUDFs}
+              availableUserDefinedFields={this.state.availableUserDefinedFields}
+              availableStackScriptImages={this.state.availableStackScriptImages}
+              selectedStackScriptID={this.state.selectedStackScriptID}
+              selectedStackScriptLabel={this.state.selectedStackScriptLabel}
+              selectedStackScriptUsername={
+                this.state.selectedStackScriptUsername
+              }
+              updateStackScript={this.setStackScript}
+              label={this.generateLabel()}
+              updateLabel={this.props.updateCustomLabel}
+              password={this.state.password}
+              updatePassword={this.setPassword}
+              backupsEnabled={this.state.backupsEnabled}
+              toggleBackupsEnabled={this.toggleBackupsEnabled}
+              privateIPEnabled={this.state.privateIPEnabled}
+              togglePrivateIPEnabled={this.togglePrivateIPEnabled}
+              tags={this.state.tags}
+              updateTags={this.setTags}
+              errors={this.state.errors}
+              formIsSubmitting={this.state.formIsSubmitting}
+              history={this.props.history}
+              handleSubmitForm={this.submitForm}
+              resetCreationState={this.clearCreationState}
+              userSSHKeys={this.props.userSSHKeys}
+              resetSSHKeys={this.props.resetSSHKeys}
+              selectedBackupID={this.state.selectedBackupID}
+              setBackupID={this.setBackupID}
+              appInstances={this.state.appInstances}
+              appInstancesError={this.state.appInstancesError}
+              appInstancesLoading={this.state.appInstancesLoading}
+            />
           </Grid>
-          <CALinodeCreate
-            regionDisplayInfo={this.getRegionInfo()}
-            imageDisplayInfo={this.getImageInfo()}
-            typeDisplayInfo={this.getTypeInfo()}
-            backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
-            regionsData={this.props.regionsData}
-            typesData={this.props.typesData}
-            regionsError={this.props.regionsError}
-            regionsLoading={this.props.regionsLoading}
-            imagesData={this.props.imagesData}
-            imagesError={this.props.imagesError}
-            imagesLoading={this.props.imagesLoading}
-            linodesData={this.props.linodesData}
-            linodesError={this.props.linodesError}
-            linodesLoading={this.props.linodesLoading}
-            accountBackupsEnabled={this.props.accountBackupsEnabled}
-            userCannotCreateLinode={this.props.userCannotCreateLinode}
-            selectedRegionID={this.state.selectedRegionID}
-            updateRegionID={this.setRegionID}
-            selectedImageID={this.state.selectedImageID}
-            updateImageID={this.setImageID}
-            selectedTypeID={this.state.selectedTypeID}
-            updateTypeID={this.setTypeID}
-            selectedLinodeID={this.state.selectedLinodeID}
-            updateLinodeID={this.setLinodeID}
-            selectedDiskSize={this.state.selectedDiskSize}
-            updateDiskSize={this.setDiskSize}
-            selectedUDFs={this.state.udfs}
-            handleSelectUDFs={this.setUDFs}
-            availableUserDefinedFields={this.state.availableUserDefinedFields}
-            availableStackScriptImages={this.state.availableStackScriptImages}
-            selectedStackScriptID={this.state.selectedStackScriptID}
-            selectedStackScriptLabel={this.state.selectedStackScriptLabel}
-            selectedStackScriptUsername={this.state.selectedStackScriptUsername}
-            updateStackScript={this.setStackScript}
-            label={this.generateLabel()}
-            updateLabel={this.props.updateCustomLabel}
-            password={this.state.password}
-            updatePassword={this.setPassword}
-            backupsEnabled={this.state.backupsEnabled}
-            toggleBackupsEnabled={this.toggleBackupsEnabled}
-            privateIPEnabled={this.state.privateIPEnabled}
-            togglePrivateIPEnabled={this.togglePrivateIPEnabled}
-            tags={this.state.tags}
-            updateTags={this.setTags}
-            errors={this.state.errors}
-            formIsSubmitting={this.state.formIsSubmitting}
-            history={this.props.history}
-            handleSubmitForm={this.submitForm}
-            resetCreationState={this.clearCreationState}
-            userSSHKeys={this.props.userSSHKeys}
-            resetSSHKeys={this.props.resetSSHKeys}
-            selectedBackupID={this.state.selectedBackupID}
-            setBackupID={this.setBackupID}
-          />
         </Grid>
       </StickyContainer>
     );

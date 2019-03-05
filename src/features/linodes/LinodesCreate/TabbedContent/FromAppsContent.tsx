@@ -25,10 +25,11 @@ import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { filterUDFErrors, getCloudApps } from './formUtilities';
+import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
+  AppsData,
   StackScriptFormStateHandlers,
   WithAll,
   WithDisplayData
@@ -61,41 +62,13 @@ const errorResources = {
   stackscript_id: 'A StackScript'
 };
 
-interface Props {}
+type InnerProps = WithDisplayData & WithAll & AppsData;
 
-type CombinedProps = Props &
+type CombinedProps = InnerProps &
   WithStyles<ClassNames> &
-  WithDisplayData &
-  StackScriptFormStateHandlers &
-  WithAll;
+  StackScriptFormStateHandlers;
 
-interface State {
-  stackScripts?: Linode.StackScript.Response[];
-  stackScriptsLoading: boolean;
-  stackScriptsError?: string;
-}
-
-class FromAppsContent extends React.PureComponent<CombinedProps, State> {
-  state: State = {
-    stackScriptsLoading: true
-  };
-
-  componentDidMount() {
-    getCloudApps()
-      .then(response => {
-        this.setState({
-          stackScriptsLoading: false,
-          stackScripts: response.data
-        });
-      })
-      .catch(e => {
-        this.setState({
-          stackScriptsLoading: false,
-          stackScriptsError: 'There was an error loading Cloud Apps.'
-        });
-      });
-  }
-
+class FromAppsContent extends React.PureComponent<CombinedProps> {
   handleSelectStackScript = (
     id: number,
     label: string,
@@ -209,10 +182,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       toggleBackupsEnabled,
       privateIPEnabled,
       togglePrivateIPEnabled,
-      errors
+      errors,
+      appInstances,
+      appInstancesError,
+      appInstancesLoading
     } = this.props;
-
-    const { stackScripts, stackScriptsError, stackScriptsLoading } = this.state;
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -224,9 +198,9 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectAppPanel
-            stackScripts={stackScripts}
-            stackScriptsError={stackScriptsError}
-            stackScriptsLoading={stackScriptsLoading}
+            appInstances={appInstances}
+            appInstancesError={appInstancesError}
+            appInstancesLoading={appInstancesLoading}
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
             handleClick={this.handleSelectStackScript}
@@ -394,7 +368,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props & WithDisplayData & WithAll>(
+export default compose<CombinedProps, InnerProps>(
   styled,
   React.memo
 )(FromAppsContent);
