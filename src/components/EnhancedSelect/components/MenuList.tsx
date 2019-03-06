@@ -6,8 +6,7 @@ import _MenuList, {
 
 const Menu: React.StatelessComponent<MenuListComponentProps<any>> = props => {
   const { guidance } = props.selectProps;
-  console.log(guidance);
-  console.log(props.selectProps);
+
   return (
     <React.Fragment>
       <reactSelectComponents.MenuList {...props}>
