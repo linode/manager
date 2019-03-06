@@ -32,9 +32,9 @@ class Networking extends Page {
 
     // drawer elements
     get serviceNotice() { return $('[data-qa-service-notice]'); }
-    get allocate() { return $(this.submitButton.selector); }
+    get allocate() { return $(`${this.drawerBase.selector} ${this.submitButton.selector}`); }
     get submit() { return $(this.submitButton.selector); }
-    get cancel() { return $(this.cancelButton.selector); }
+    get cancel() { return $(`${this.drawerBase.selector} ${this.cancelButton.selector}`); }
 
     // view ip elements
     get configIpHeading() { return $('[data-qa-ip-address-heading]'); }
@@ -75,7 +75,6 @@ class Networking extends Page {
         this.drawerTitle.waitForVisible(constants.wait.normal);
         expect(this.serviceNotice.isVisible()).toBe(true);
         expect(this.allocate.isVisible()).toBe(true);
-        expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
     }
 

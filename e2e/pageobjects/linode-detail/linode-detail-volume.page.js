@@ -232,8 +232,7 @@ export class VolumeDetail extends Page {
         this.submitButton.click();
         this.drawerBase.waitForVisible(constants.wait.normal,false);
         const attachedTo = this.volumeAttachment.selector.replace(']','');
-        this.toastDisplays('Volume successfully attached.', constants.wait.minute);
-        $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.normal);
+        $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.minute);
     }
 
     detachVolume(volume, detach=true) {
