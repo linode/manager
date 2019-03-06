@@ -34,8 +34,10 @@ describe('Can not boot a linode without an Image', () => {
 
     it('Power on tool tip displays for a linode without an image on Linode detail page', () => {
         ListLinodes.navigateToDetail(linode.linodeLabel);
+        browser.pause(500);
         LinodeDetail.powerControl.waitForVisible(constants.wait.normal);
         LinodeDetail.powerControl.click();
+        browser.pause(500);
         LinodeDetail.setPowerOn.waitForVisible(constants.wait.normal);
         const toolTipIcon = LinodeDetail.setPowerOn.$(ListLinodes.toolTipIcon.selector);
         toolTipIcon.moveToObject();

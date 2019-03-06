@@ -262,7 +262,7 @@ export const apiCreateNodeBalancers = (nodebalancerObjArray) => {
     const token = readToken(browser.options.testUser);
     let nodebalancers = [];
     nodebalancerObjArray.forEach((nodebalancer) => {
-        const newNodebalancer = browser.createNodeBalancer(token,nodebalancer.label,nodebalancer.region);
+        const newNodebalancer = browser.createNodeBalancer(token,nodebalancer.label,nodebalancer.region,nodebalancer.tags);
         nodebalancers.push(newNodebalancer);
     });
     browser.url(constants.routes.nodeBalancers);

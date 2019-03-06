@@ -230,8 +230,8 @@ exports.browserCommands = () => {
             .then(res => res);
     });
 
-    browser.addCommand('createNodeBalancer', function async(token,label,region) {
-        return createNodeBalancer(token,label,region)
+    browser.addCommand('createNodeBalancer', function async(token,label,region,tags) {
+        return createNodeBalancer(token,label,region,tags)
             .then(res => res);
     })
 }

@@ -15,6 +15,7 @@ class ListNodeBalancers extends Page {
     get addNodeBalancer() { return this.addIcon('Add a NodeBalancer'); }
     get confirm() { return $('[data-qa-confirm-cancel]'); }
     get cancel() { return $('[data-qa-cancel-cancel]'); }
+    get sortNodeBalancersByLabel() { return $('[data-qa-nb-label]'); }
 
     baseElemsDisplay() {
         this.nodeBalancerElem.waitForVisible(constants.wait.long);
@@ -56,7 +57,14 @@ class ListNodeBalancers extends Page {
     }
 
     nodeBlanacerRow(label){
-        return $(`[data-qa-nodebalancer-cell="${label}"]`)
+        const selector = this.nodeBalancerElem.selector.replace(']','');
+        return $(`${selector}="${label}"]`)
+    }
+
+    getNodeBalancersInTagGroup(tag){
+        const attribute = this.nodeBalancerElem.selector.slice(1, -1);
+        return this.tagHeader(tag).$$(this.nodeBalancerElem.selector)
+            .map(nodebalancer => nodebalancer.getAttribute(attribute));
     }
 }
 

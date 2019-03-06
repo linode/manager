@@ -226,7 +226,7 @@ exports.removeNodebalancer = (token, nodeBalancerId) => {
     });
 }
 
-exports.createNodeBalancer = (token, label, region) => {
+exports.createNodeBalancer = (token, label, region, tags) => {
     return new Promise((resolve,reject) => {
         const endpoint = '/nodebalancers';
 
@@ -235,6 +235,10 @@ exports.createNodeBalancer = (token, label, region) => {
             label: label,
             client_conn_throttle: 0
         };
+
+        if(tags){
+            data['tags'] = tags;
+        }
 
         return getAxiosInstance(token).post(endpoint, data)
             .then(response => resolve(response.data))

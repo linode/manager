@@ -47,6 +47,7 @@ export class VolumeDetail extends Page {
     get resizeFileSystemCommand() { return $('[data-qa-resize-filesystem] input'); }
     get creatAndAttachRadio() { return $('[data-qa-radio="Create and Attach Volume"]'); }
     get attachExistingVolume() { return $('[data-qa-radio="Attach Existing Volume"]'); }
+    get sortVolumesByLabel() { return $('[data-qa-volume-label-header]'); }
 
     removeAllVolumes() {
         const pageObject = this;
@@ -378,7 +379,14 @@ export class VolumeDetail extends Page {
     }
 
     volumeRow(label){
-        return $(`[data-qa-volume-cell-label="${label}"]`);
+        const selector = this.volumeCellLabel.selector.replace(']','');
+        return $(`${selector}="${label}"]`);
+    }
+
+    getVolumesInTagGroup(tag){
+        const attribute = this.volumeCellLabel.selector.slice(1, -1);
+        return this.tagHeader(tag).$$(this.volumeCellLabel.selector)
+            .map(volume => volume.getAttribute(attribute));
     }
 }
 

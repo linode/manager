@@ -33,6 +33,10 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
         Networking.landingElemsDisplay();
     });
 
+    afterAll(() => {
+        apiDeleteAllLinodes();
+    })
+
     it('Can expand the Ip Sharing panel', () => {
         Networking.expandIpSharing();
     });
