@@ -59,6 +59,7 @@ interface State {
   selectedRegionID?: string;
   selectedTypeID?: string;
   selectedLinodeID?: number;
+  selectedBackupID?: number;
   availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
   availableStackScriptImages?: Linode.Image[];
   selectedStackScriptID?: number;
@@ -91,6 +92,7 @@ const defaultState: State = {
   label: '',
   password: '',
   selectedImageID: 'linode/debian9',
+  selectedBackupID: undefined,
   selectedDiskSize: undefined,
   selectedLinodeID: undefined,
   selectedStackScriptID: undefined,
@@ -98,6 +100,14 @@ const defaultState: State = {
   selectedTypeID: undefined,
   tags: [],
   formIsSubmitting: false
+};
+
+const getRegionIDFromLinodeID = (
+  linodes: Linode.Linode[],
+  id: number
+): string | undefined => {
+  const thisLinode = linodes.find(linode => linode.id === id);
+  return thisLinode ? thisLinode.region : undefined;
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
@@ -130,6 +140,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return this.setState({ selectedImageID: id });
   };
 
+  setBackupID = (id: number) => {
+    this.setState({ selectedBackupID: id });
+  };
+
   setRegionID = (id: string) => this.setState({ selectedRegionID: id });
 
   setTypeID = (id: string) => this.setState({ selectedTypeID: id });
@@ -139,12 +153,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /**
        * reset selected plan and set the selectedDiskSize
        * for the purpose of disabling plans that are smaller
-       * than the clone source
+       * than the clone source.
+       *
+       * Also, when creating from backup, we set the region
+       * to the same region as the Linode that owns the backup,
+       * since the API does not infer this automatically.
        */
+
+      const selectedRegionID = getRegionIDFromLinodeID(
+        this.props.linodesData,
+        id
+      );
       this.setState({
         selectedLinodeID: id,
         selectedDiskSize: diskSize,
-        selectedTypeID: undefined
+        selectedTypeID: undefined,
+        selectedRegionID
       });
     }
   };
@@ -239,7 +263,20 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
+    if (type === 'createFromBackup' && !this.state.selectedBackupID) {
+      /* a backup selection is also required */
+      this.setState(
+        {
+          errors: [{ field: 'backup_id', reason: 'You must select a Backup' }]
+        },
+        () => {
+          scrollErrorIntoView();
+        }
+      );
+      return;
+    }
+
+    if (type === 'createFromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
@@ -430,6 +467,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             resetCreationState={this.clearCreationState}
             userSSHKeys={this.props.userSSHKeys}
             resetSSHKeys={this.props.resetSSHKeys}
+            selectedBackupID={this.state.selectedBackupID}
+            setBackupID={this.setBackupID}
           />
         </Grid>
       </StickyContainer>

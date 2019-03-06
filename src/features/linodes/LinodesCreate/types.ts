@@ -55,7 +55,7 @@ export interface ReduxStateProps {
 }
 
 export type HandleSubmit = (
-  type: 'create' | 'clone' | 'createFromStackScript',
+  type: 'create' | 'clone' | 'createFromStackScript' | 'createFromBackup',
   payload: CreateLinodeRequest,
   linodeID?: number
 ) => void;
@@ -123,9 +123,15 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   handleSelectUDFs: (stackScripts: any[]) => void;
 }
 
+export interface BackupFormStateHandlers extends CloneFormStateHandlers {
+  selectedBackupID?: number;
+  setBackupID: (id: number) => void;
+}
+
 export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &
-  StackScriptFormStateHandlers;
+  StackScriptFormStateHandlers &
+  BackupFormStateHandlers;
 
 export type WithLinodesImagesTypesAndRegions = WithImagesProps &
   WithLinodesProps &
