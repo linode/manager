@@ -1,11 +1,33 @@
 import { parse } from 'querystring';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
+import Paper from 'src/components/core/Paper';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
+import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
+
+type ClassNames = 'root' | 'inner';
+
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {
+    flexGrow: 1,
+    width: '100%',
+    backgroundColor: theme.color.white
+  },
+  inner: {
+    padding: theme.spacing.unit * 2,
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit * 3
+    }
+  }
+});
 
 export interface Tab {
   title: string;
@@ -24,7 +46,7 @@ interface State {
   selectedTab: number;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const determinePreselectedTab = (tabsToRender: Tab[]): number => {
   /** get the query params as an object, excluding the "?" */
@@ -68,7 +90,7 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { tabs } = this.props;
+    const { tabs, classes } = this.props;
     const { selectedTab: selectedTabFromState } = this.state;
 
     const queryParams = parse(location.search.replace('?', ''));
@@ -86,31 +108,38 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
     const selectedTabContentRender = tabs[selectedTab].render;
 
     return (
-      <Grid container>
-        <Grid item className={`mlMain`}>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={selectedTab}
-              onChange={this.handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              scrollButtons="on"
-            >
-              {tabs.map((tab, idx) => (
-                <MUITab
-                  key={idx}
-                  label={tab.title}
-                  data-qa-create-from={tab.title}
-                />
-              ))}
-            </Tabs>
-          </AppBar>
+      <React.Fragment>
+        <Grid item className="mlMain">
+          <Paper className={`${classes.root}`}>
+            <div className={`${classes.inner}`}>
+              <Typography role="header" variant="h2">
+                Create From:
+              </Typography>
+              <AppBar position="static" color="default">
+                <Tabs
+                  value={selectedTab}
+                  onChange={this.handleTabChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="scrollable"
+                  scrollButtons="on"
+                >
+                  {tabs.map((tab, idx) => (
+                    <MUITab
+                      key={idx}
+                      label={tab.title}
+                      data-qa-create-from={tab.title}
+                    />
+                  ))}
+                </Tabs>
+              </AppBar>
+            </div>
+          </Paper>
         </Grid>
         {selectedTabContentRender()}
-      </Grid>
+      </React.Fragment>
     );
   }
 }
 
-export default CALinodeCreateSubTabs;
+export default withStyles(styles)(CALinodeCreateSubTabs);
