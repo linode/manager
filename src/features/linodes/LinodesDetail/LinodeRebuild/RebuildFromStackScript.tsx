@@ -96,6 +96,24 @@ export const RebuildFromStackScript: React.StatelessComponent<
 
   const [errors, setErrors, resetErrors] = useErrors();
 
+  const handleSelect = (
+    id: number,
+    label: string,
+    username: string,
+    stackScriptImages: string[],
+    user_defined_fields: Linode.StackScript.UserDefinedField[]
+  ) => {
+    handleSelectStackScript(
+      id,
+      label,
+      username,
+      stackScriptImages,
+      user_defined_fields
+    );
+    // Reset Image ID so that that an incompatible image can't be submitted accidentally
+    setField('imageID', '');
+  };
+
   const handleSubmit = () => {
     // StackScript ID is technically an optional field on the rebuildLinode
     // request, so we need to explicitly check for it here.
@@ -162,7 +180,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         selectedId={ss.id}
         selectedUsername={ss.username}
         updateFor={[ss.id, errors]}
-        onSelect={handleSelectStackScript}
+        onSelect={handleSelect}
         publicImages={filterPublicImages(imagesData)}
         resetSelectedStackScript={resetStackScript}
         data-qa-select-stackscript

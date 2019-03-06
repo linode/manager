@@ -47,7 +47,7 @@ export const useStackScript = (
     emptyStackScriptState
   );
 
-  // Wrapper around setStackScript() – allows child components to handle change
+  // Wrapper around setStackScript() – allows child components to handle selection of StackScript
   const handleSelectStackScript = (
     id: number,
     label: string,
@@ -65,7 +65,7 @@ export const useStackScript = (
     });
   };
 
-  // Wrapper around setStackScript() – allows child components to handle change
+  // Wrapper around setStackScript() – allows child components to handle UDF data changes
   const handleChangeUDF = (key: string, value: string) => {
     setStackScript((prevState: any) => {
       // either overwrite or create new selection
@@ -106,14 +106,7 @@ const getCompatibleImages = (
   allImages: Linode.Image[],
   stackScriptImages: string[]
 ) => {
-  return allImages.filter(image => {
-    for (const stackScriptImage of stackScriptImages) {
-      if (image.id === stackScriptImage) {
-        return true;
-      }
-    }
-    return false;
-  });
+  return allImages.filter(image => stackScriptImages.includes(image.id));
 };
 
 const getDefaultUDFData = (
