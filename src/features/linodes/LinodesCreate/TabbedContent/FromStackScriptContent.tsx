@@ -145,6 +145,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     const {
       backupsEnabled,
       password,
+      privateIPEnabled,
       userSSHKeys,
       handleSubmitForm,
       selectedImageID,
@@ -165,6 +166,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       image: selectedImageID /* optional */,
       backups_enabled: backupsEnabled /* optional */,
       booted: true,
+      private_ip: privateIPEnabled,
       authorized_users: userSSHKeys
         .filter(u => u.selected)
         .map(u => u.username),
