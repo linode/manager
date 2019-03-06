@@ -2,6 +2,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -24,7 +25,6 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { withNotifications } from 'src/store/notification/notification.containers';
-import { RouteComponentProps, withRouter } from 'react-router';
 
 type ClassNames = 'root' | 'title' | 'subTitle' | 'currentPlanContainer';
 

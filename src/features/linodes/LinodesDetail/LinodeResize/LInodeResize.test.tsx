@@ -1,9 +1,9 @@
 import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { types } from 'src/__data__/types';
-import { LinodeResize } from './LinodeResize';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { types } from 'src/__data__/types';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import { LinodeResize } from './LinodeResize';
 
 describe('LinodeResize', () => {
   const mockTypes = types.map(LinodeResize.extendType);
