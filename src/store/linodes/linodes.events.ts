@@ -78,10 +78,9 @@ const handleLinodeUpdate = (
     case 'finished':
     case 'notification':
     case 'scheduled':
+    case 'started':
       return dispatch(requestLinodeForStore(id));
 
-    /** no point in re-requesting the linode for in-progress events  */
-    case 'started':
     default:
       return;
   }

@@ -3,7 +3,6 @@ import { path, pathEq, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Subscription } from 'rxjs/Subscription';
-import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -37,7 +36,9 @@ import {
   UpdateLinodeDisk,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
+import userSSHKeyHoc, {
+  UserSSHKeyProps
+} from 'src/features/linodes/userSSHKeyHoc';
 import { getLinodeDisks } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
@@ -67,10 +68,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     justifyContent: 'center'
   }
 });
-
-interface SSHKeyProps {
-  userSSHKeys: UserSSHKeyObject[];
-}
 
 type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 
@@ -116,7 +113,7 @@ interface DisksProps {
 }
 
 type CombinedProps = DisksProps &
-  SSHKeyProps &
+  UserSSHKeyProps &
   PaginationProps<Linode.Disk> &
   LinodeContextProps &
   WithStyles<ClassNames> &

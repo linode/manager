@@ -3,10 +3,7 @@ import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
-import AccessPanel, {
-  Disabled,
-  UserSSHKeyObject
-} from 'src/components/AccessPanel';
+import AccessPanel, { Disabled } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
@@ -24,7 +21,9 @@ import SelectRegionPanel, {
 } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
-import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
+import userSSHKeyHoc, {
+  UserSSHKeyProps
+} from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -96,7 +95,6 @@ interface Props {
   disabled?: boolean;
 
   /** Comes from HOC */
-  userSSHKeys: UserSSHKeyObject[];
   handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
@@ -132,6 +130,7 @@ type CombinedProps = Props &
   LinodeActionsProps &
   InjectedNotistackProps &
   LabelProps &
+  UserSSHKeyProps &
   WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.Component<
