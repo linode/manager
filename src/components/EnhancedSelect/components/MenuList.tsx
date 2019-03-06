@@ -4,12 +4,10 @@ import _MenuList, {
   MenuListComponentProps
 } from 'react-select/lib/components/Menu';
 
-interface Props extends MenuListComponentProps<any> {
-  guidance?: string;
-}
-
-const Menu: React.StatelessComponent<Props> = props => {
-  const { guidance } = props;
+const Menu: React.StatelessComponent<MenuListComponentProps<any>> = props => {
+  const { guidance } = props.selectProps;
+  console.log(guidance);
+  console.log(props.selectProps);
   return (
     <React.Fragment>
       <reactSelectComponents.MenuList {...props}>
