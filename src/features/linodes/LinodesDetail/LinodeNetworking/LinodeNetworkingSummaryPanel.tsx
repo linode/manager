@@ -70,6 +70,16 @@ const SummarySection: React.StatelessComponent<any> = props => {
 const StyledSummarySection = styled(SummarySection);
 
 const ipv4DNSResolvers = [
+  '172.105.0.5',
+  '172.105.3.5',
+  '172.105.4.5',
+  '172.105.5.5',
+  '172.105.6.5',
+  '172.105.7.5',
+  '172.105.8.5',
+  '172.105.9.5',
+  '172.105.10.5',
+  '172.105.11.5',
   '66.228.42.5',
   '96.126.106.5',
   '50.116.53.5',
@@ -83,13 +93,19 @@ const ipv4DNSResolvers = [
 ];
 
 const ipv6DNSResolvers = [
-  '2600:3c03::5',
-  '2600:3c03::6',
-  '2600:3c03::7',
-  '2600:3c03::8',
-  '2600:3c03::9',
-  '2600:3c03::b',
-  '2600:3c03::c'
+  '2600:3c00::', // Dallas, TX
+  '2600:3c01::', // Fremont, CA
+  '2600:3c02::', // Atlanta, GA
+  '2600:3c03::', // Newark, NJ
+  '2a01:7e00::', // London, UK
+  '2400:8900::', // Tokyo, JP
+  '2400:8901::', // Singapore, SG
+  '2a01:7e01::', // Frankfurt, DE
+  '2400:8902::', // Shinagawa1, JP
+  '2400:8903::', // Newark 2, NJ
+  '2400:8906::', // Philadelphia, PA
+  '2400:8904::', // Mumbai, India
+  '2600:3C04::' // Toronto, CAN
 ];
 
 const LinodeNetworkingSummaryPanel: React.StatelessComponent<
