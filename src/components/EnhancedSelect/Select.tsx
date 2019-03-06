@@ -311,7 +311,7 @@ export interface EnhancedSelectProps {
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
   filterOption?: (option: Item, inputValue: string) => boolean | null;
   small?: boolean;
-  guidance?: string;
+  guidance?: string | React.ReactNode;
 }
 
 // Material-UI versions of several React-Select components.

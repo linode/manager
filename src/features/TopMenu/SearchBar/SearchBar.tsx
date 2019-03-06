@@ -124,6 +124,15 @@ class SearchBar extends React.Component<CombinedProps, State> {
     history.push(item.data.path);
   };
 
+  guidanceText = () => {
+    return (
+      <>
+        <b>By field:</b> “tag:my-app” “label:my-linode” &nbsp;&nbsp;
+        <b>With operators</b>: “tag:my-app AND is:domain”
+      </>
+    );
+  };
+
   /* Need to override the default RS filtering; otherwise entities whose label
    * doesn't match the search term will be automatically filtered, meaning that
    * searching by tag won't work. */
@@ -178,6 +187,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             onMenuOpen={this.onOpen}
             value={false}
             menuIsOpen={menuOpen}
+            guidance={this.guidanceText()}
           />
           <IconButton
             color="inherit"
