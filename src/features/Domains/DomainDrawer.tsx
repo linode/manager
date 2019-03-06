@@ -126,13 +126,20 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       // or the domain for editing has changed
 
       // then put it props into state to populate fields
-      const { domain, tags, master_ips, type } = this.props.domainProps;
+      const {
+        domain,
+        tags,
+        master_ips,
+        type,
+        soa_email
+      } = this.props.domainProps;
       this.setState({
         tags: tags.map(tag => ({ label: tag, value: tag })),
         masterIPsCount: master_ips.length,
         type,
         domain,
-        master_ips
+        master_ips,
+        soaEmail: soa_email
       });
     }
   }
@@ -210,7 +217,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {mode === CREATING && type === 'master' && (
+        {(mode === CREATING || mode === EDITING) && type === 'master' && (
           <TextField
             errorText={errorFor('soa_email')}
             value={soaEmail}
@@ -411,7 +418,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const data =
       type === 'master'
-        ? { domain, type, tags, soa_email: soaEmail, domainId: id }
+        ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
+          { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
 
     this.setState({ submitting: true });

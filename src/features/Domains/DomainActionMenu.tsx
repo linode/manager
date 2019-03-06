@@ -80,6 +80,14 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
     } else {
       return [
         {
+          title: 'Edit',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            this.handleEdit();
+            closeMenu();
+            e.preventDefault();
+          }
+        },
+        {
           title: 'Edit DNS Records',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.goToDomain();
