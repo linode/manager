@@ -165,6 +165,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         onSelect={handleSelectStackScript}
         publicImages={filterPublicImages(imagesData)}
         resetSelectedStackScript={resetStackScript}
+        data-qa-select-stackscript
       />
       {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
         <UserDefinedFieldsPanel
