@@ -66,8 +66,8 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     it('should display volume helper text', () => {
         const sizeHelpText='A single Volume can range from 10 to 10240 gibibytes in size and costs $0.10/GiB per month. Up to eight volumes can be attached to a single Linode.';
         const volumeHelpText='Volumes must be created in a particular region. You can choose to create a volume in a region and attach it later to a Linode in the same region. If you select a Linode from the field below, the Volume will be automatically created in that Linode’s region and attached upon creation.';
-        const regionHelpText='Only Linodes in the selected region are displayed.';
-        const blockStorageText = 'Only regions supporting block storage are displayed.';
+        const regionHelpText='If you want to attach the new volume to a Linode, select it here. Only Linodes in the selected region are displayed.';
+        const blockStorageText = 'The datacenter where the new volume should be created. Only regions supporting block storage are displayed.';
         expect(VolumeDetail.volumeCreateSizeHelpText.getText()).toEqual(sizeHelpText);
         expect(VolumeDetail.volumeCreateHelpText.getText()).toEqual(volumeHelpText);
         const volumeFieldsText = $$(VolumeDetail.volumeCreateRegionHelp.selector);
@@ -137,6 +137,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     });
 
     it('should display the tags added to the volume', () => {
+        VolumeDetail.hoverVolumeTags(testVolume.label);
         VolumeDetail.checkTagsApplied([testVolume.tag]);
     });
 
@@ -158,6 +159,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Edit Volume');
         VolumeDetail.editVolume(testVolume.label, tag2);
         browser.pause(1000);
+        VolumeDetail.hoverVolumeTags(testVolume.label);
         VolumeDetail.checkTagsApplied(testVolume.tag);
     });
 

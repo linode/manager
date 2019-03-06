@@ -74,7 +74,6 @@ export class ListLinodes extends Page {
 
     navigateToDetail(linode) {
        const linodeLink = linode ? $$(`${this.getLinodeSelector(linode)} a>div`)[0] : this.linode[0].$$('a>div')[0];
-       linodeLink.waitForVisible(constants.wait.normal);
        linodeLink.click();
     }
 

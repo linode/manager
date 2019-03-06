@@ -232,6 +232,7 @@ export class VolumeDetail extends Page {
         this.submitButton.click();
         this.drawerBase.waitForVisible(constants.wait.normal,false);
         const attachedTo = this.volumeAttachment.selector.replace(']','');
+        this.toastDisplays('Volume successfully attached.', constants.wait.minute);
         $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.normal);
     }
 
@@ -387,6 +388,12 @@ export class VolumeDetail extends Page {
         const attribute = this.volumeCellLabel.selector.slice(1, -1);
         return this.tagHeader(tag).$$(this.volumeCellLabel.selector)
             .map(volume => volume.getAttribute(attribute));
+    }
+
+    hoverVolumeTags(label, volId){
+        const id = volId ? volId : this.volumeRow(label).$('..').getAttribute(this.volumeCellElem.selector.slice(1,-1));
+        const selector = this.volumeCellElem.selector.replace(']','');
+        $(`${selector}="${id}"]>td:nth-child(2)`).moveToObject();
     }
 }
 

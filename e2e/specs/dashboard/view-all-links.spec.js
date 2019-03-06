@@ -47,6 +47,7 @@ describe('View All Links on Dashboard Entity Tables', () => {
         }
         browser.url(constants.routes.dashboard);
         Dashboard.baseElemsDisplay();
+        browser.pause(2000);
     }
 
     beforeAll(() => {
@@ -100,7 +101,7 @@ describe('View All Links on Dashboard Entity Tables', () => {
 
     entities.forEach((entity) => {
         it(`View all links display on the dashboard ${entity} table`, () => {
-            Dashboard.viewAllLink(entity).waitForVisible(constants.wait.long);
+            Dashboard.viewAllLink(entity).waitForVisible(constants.wait.minute);
             expect(Dashboard.entityCount(entity)).toBe('6');
         });
 
