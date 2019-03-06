@@ -299,7 +299,7 @@ export class LinodeCreate extends React.PureComponent<
 
     return (
       <React.Fragment>
-        <Grid item className={`mlMain`}>
+        <Grid item className={`mlMain py0`}>
           <AppBar position="static" color="default">
             <Tabs
               value={selectedTab}

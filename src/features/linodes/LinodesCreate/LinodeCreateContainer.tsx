@@ -409,7 +409,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       <StickyContainer>
         <DocumentTitleSegment segment="Create a Linode" />
-        <Grid container>
+        <Grid container spacing={0}>
           <Grid item xs={12}>
             <Typography role="header" variant="h1" data-qa-create-linode-header>
               Create New Linode

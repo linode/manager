@@ -5,6 +5,7 @@ import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -115,16 +116,18 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     if (variant === 'private' && privateImages.length === 0) {
       return (
         <Grid item className={`${classes.main} mlMain`}>
-          <Placeholder
-            title="My Images"
-            copy={
-              <span>
-                You don't have any private Images. Visit the{' '}
-                <Link to="/images">Images section</Link> to create an Image from
-                one of your Linode's disks.
-              </span>
-            }
-          />
+          <Paper>
+            <Placeholder
+              title="My Images"
+              copy={
+                <span>
+                  You don't have any private Images. Visit the{' '}
+                  <Link to="/images">Images section</Link> to create an Image
+                  from one of your Linode's disks.
+                </span>
+              }
+            />
+          </Paper>
         </Grid>
       );
     }

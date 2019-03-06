@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -40,17 +41,10 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  main: {
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        order: 3
-      }
-    }
-  },
+  main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-      order: 2
+      marginTop: '-130px !important'
     }
   }
 });
@@ -232,17 +226,21 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
+        <Grid item className={`${classes.main} mlMain py0`}>
           {this.state.isGettingBackups ? (
-            <CircleProgress noTopMargin />
+            <Paper>
+              <CircleProgress noTopMargin />
+            </Paper>
           ) : !this.userHasBackups() ? (
-            <Placeholder
-              icon={VolumeIcon}
-              copy="You either do not have backups enabled for any Linode
+            <Paper>
+              <Placeholder
+                icon={VolumeIcon}
+                copy="You either do not have backups enabled for any Linode
                 or your Linodes have not been backed up. Please visit the 'Backups'
                 panel in the Linode Settings view"
-              title="Create from Backup"
-            />
+                title="Create from Backup"
+              />
+            </Paper>
           ) : (
             <React.Fragment>
               <CreateLinodeDisabled isDisabled={disabled} />

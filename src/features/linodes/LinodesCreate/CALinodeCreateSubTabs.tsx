@@ -22,9 +22,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.color.white
   },
   inner: {
-    padding: theme.spacing.unit * 2,
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px 0 ${theme
+      .spacing.unit * 2}px`,
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3
+      padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit *
+        3}px 0 ${theme.spacing.unit * 3}px`
     }
   }
 });
@@ -109,7 +111,7 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className="mlMain">
+        <Grid item className="mlMain py0">
           <Paper className={`${classes.root}`}>
             <div className={`${classes.inner}`}>
               <Typography role="header" variant="h2">

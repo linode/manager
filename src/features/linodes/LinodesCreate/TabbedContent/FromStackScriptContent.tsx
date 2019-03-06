@@ -41,17 +41,10 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  main: {
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        order: 3
-      }
-    }
-  },
+  main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-      order: 2
+      marginTop: '-130px !important'
     }
   },
   emptyImagePanel: {
@@ -219,7 +212,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
+        <Grid item className={`${classes.main} mlMain py0`}>
           <CreateLinodeDisabled isDisabled={disabled} />
           {!disabled && notice && (
             <Notice
