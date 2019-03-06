@@ -203,7 +203,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       accountBackupsEnabled,
       classes,
       errors,
-      notice,
       privateIPEnabled,
       selectedBackupID,
       selectedDiskSize,
@@ -226,7 +225,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       updateLabel
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     const imageInfo = selectedBackupInfo;
 
@@ -248,14 +246,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           ) : (
             <React.Fragment>
               <CreateLinodeDisabled isDisabled={disabled} />
-              {notice && !disabled && (
-                <Notice
-                  text={notice.text}
-                  error={notice.level === 'error'}
-                  warning={notice.level === 'warning'}
-                />
-              )}
-              {generalError && <Notice text={generalError} error={true} />}
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
@@ -267,6 +257,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 handleSelection={updateLinodeID}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={disabled}
+                notice={{
+                  level: 'warning',
+                  text: `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.
+                          Also note that this Linode will need to be manually booted after it finishes
+                          provisioning.`
+                }}
               />
               <SelectBackupPanel
                 error={hasErrorFor('backup_id')}

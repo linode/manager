@@ -99,7 +99,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
   render() {
     const {
-      notice,
       classes,
       errors,
       accountBackupsEnabled,
@@ -121,7 +120,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
 
@@ -140,14 +138,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
           <React.Fragment>
             <Grid item className={`${classes.main} mlMain`}>
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-              {notice && !userCannotCreateLinode && (
-                <Notice
-                  text={notice.text}
-                  error={notice.level === 'error'}
-                  warning={notice.level === 'warning'}
-                />
-              )}
-              {generalError && <Notice text={generalError} error={true} />}
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
                 linodes={extendLinodes(linodes, images, types)}
@@ -156,6 +146,11 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 handleSelection={this.handleSelectLinode}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={userCannotCreateLinode}
+                notice={{
+                  level: 'warning',
+                  text: `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.`
+                }}
               />
               <SelectRegionPanel
                 error={hasErrorFor('region')}

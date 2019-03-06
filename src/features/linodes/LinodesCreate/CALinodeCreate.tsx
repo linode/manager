@@ -196,18 +196,7 @@ export class LinodeCreate extends React.PureComponent<
           updatePassword,
           ...rest
         } = this.props;
-        return (
-          <FromBackupsContent
-            notice={{
-              level: 'warning',
-              text: `This newly created Linode will be created with
-                      the same password and SSH Keys (if any) as the original Linode.
-                      Also note that this Linode will need to be manually booted after it finishes
-                      provisioning.`
-            }}
-            {...rest}
-          />
-        );
+        return <FromBackupsContent {...rest} />;
       }
     },
     {
@@ -230,16 +219,7 @@ export class LinodeCreate extends React.PureComponent<
           regionsError,
           ...rest
         } = this.props;
-        return (
-          <FromLinodeContent
-            notice={{
-              level: 'warning',
-              text: `This newly created Linode will be created with
-                      the same password and SSH Keys (if any) as the original Linode.`
-            }}
-            {...rest}
-          />
-        );
+        return <FromLinodeContent {...rest} />;
       }
     },
     {
