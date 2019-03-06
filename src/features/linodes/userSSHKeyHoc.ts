@@ -7,6 +7,10 @@ import { getSSHKeys } from 'src/services/profile';
 import { MapState } from 'src/store/types';
 import { getEmailHash } from 'src/utilities/gravatar';
 
+export interface UserSSHKeyProps {
+  userSSHKeys: UserSSHKeyObject[];
+}
+
 export interface State {
   userSSHKeys: UserSSHKeyObject[];
 }
