@@ -34,10 +34,17 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  main: {},
+  main: {
+    '&.mlMain': {
+      [theme.breakpoints.up('lg')]: {
+        order: 3
+      }
+    }
+  },
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130
+      marginTop: -130,
+      order: 2
     }
   }
 });
@@ -121,7 +128,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
-          <Grid item className={`${classes.main} mlMain`}>
+          <Grid item className={`${classes.main}`}>
             <Placeholder
               icon={VolumeIcon}
               copy="You do not have any existing Linodes to clone from.

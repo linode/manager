@@ -40,10 +40,17 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  main: {},
+  main: {
+    '&.mlMain': {
+      [theme.breakpoints.up('lg')]: {
+        order: 3
+      }
+    }
+  },
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130
+      marginTop: -130,
+      order: 2
     }
   }
 });
