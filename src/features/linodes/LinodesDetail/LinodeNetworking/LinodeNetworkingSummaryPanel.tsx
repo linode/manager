@@ -70,6 +70,8 @@ const SummarySection: React.StatelessComponent<any> = props => {
 const StyledSummarySection = styled(SummarySection);
 
 const ipv4DNSResolvers = [
+  // @todo this is a lot of items to display in a single list, and each DC has ~8.
+  // Probably will need a different UX here.
   '172.105.0.5',
   '172.105.3.5',
   '172.105.4.5',
@@ -102,9 +104,6 @@ const ipv6DNSResolvers = [
   '2400:8901::', // Singapore, SG
   '2a01:7e01::', // Frankfurt, DE
   '2400:8902::', // Shinagawa1, JP
-  '2400:8903::', // Newark 2, NJ
-  '2400:8906::', // Philadelphia, PA
-  '2400:8904::', // Mumbai, India
   '2600:3C04::' // Toronto, CAN
 ];
 
