@@ -8,8 +8,10 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import RebuildFromImage from './RebuildFromImage';
+import RebuildFromStackScript from './RebuildFromStackScript';
 
 type ClassNames = 'root' | 'title';
 
@@ -27,8 +29,16 @@ interface ContextProps {
 }
 type CombinedProps = WithStyles<ClassNames> & ContextProps;
 
+type MODES = 'fromImage' | 'fromStackScript';
+const options = [
+  { value: 'fromImage', label: 'From Image' },
+  { value: 'fromStackScript', label: 'From StackScript' }
+];
+
 const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
   const { classes, linodeLabel } = props;
+
+  const [mode, setMode] = React.useState<MODES>('fromImage');
 
   return (
     <React.Fragment>
@@ -48,11 +58,15 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
           restore from a backup or start over with a fresh Linux distribution.
           Rebuilding will destroy all data.
         </Typography>
+        <EnhancedSelect
+          options={options}
+          defaultValue={options[0]}
+          onChange={(selected: Item<MODES>) => setMode(selected.value)}
+          isClearable={false}
+        />
       </Paper>
-      {/* FromImage/FromStackScript <Select /> goes here. The components below
-        will be rendered depending on which is selected. */}
-      <RebuildFromImage />
-      {/* <RebuildFromStackScript />*/}
+      {mode === 'fromImage' && <RebuildFromImage />}
+      {mode === 'fromStackScript' && <RebuildFromStackScript />}
     </React.Fragment>
   );
 };

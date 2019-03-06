@@ -75,3 +75,7 @@ export const groupNameMap = {
 
 export const getDisplayNameForGroup = (key: string) =>
   propOr('Other', key, groupNameMap);
+
+export const filterPublicImages = (images: Linode.Image[] = []) => {
+  return images.filter((image: Linode.Image) => image.is_public);
+};
