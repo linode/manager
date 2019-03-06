@@ -16,6 +16,7 @@ import {
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
 import LoadingIndicator from './components/LoadingIndicator';
+import MenuList from './components/MenuList';
 import MultiValueContainer from './components/MultiValueContainer';
 import MultiValueLabel from './components/MultiValueLabel';
 import MultiValueRemove from './components/MultiValueRemove';
@@ -321,6 +322,7 @@ const _components = {
   MultiValueContainer,
   MultiValueLabel,
   MultiValueRemove,
+  MenuList,
   Option,
   DropdownIndicator,
   LoadingIndicator
