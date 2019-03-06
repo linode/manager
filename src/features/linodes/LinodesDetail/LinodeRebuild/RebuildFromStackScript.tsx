@@ -1,6 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { assocPath } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -14,11 +14,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import SelectRegionPanel, {
-  ExtendedRegion
-} from 'src/components/SelectRegionPanel';
-import { dcDisplayNames } from 'src/constants';
-import regionsContainer from 'src/containers/regions.container';
 import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import SelectImagePanel from 'src/features/linodes/LinodesCreate/SelectImagePanel';
@@ -26,11 +21,14 @@ import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
+import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
+import { useErrors } from 'src/hooks/useErrors';
+import { useForm } from 'src/hooks/useForm';
+import { useStackScript } from 'src/hooks/useStackScript';
 import { rebuildLinode } from 'src/services/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterPublicImages } from 'src/utilities/images';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
@@ -60,11 +58,16 @@ interface WithImagesProps {
   imagesError?: string;
 }
 
+interface RebuildFromStackScriptForm {
+  imageID: string;
+  password: string;
+}
+
 export type CombinedProps = WithStyles<ClassNames> &
   WithImagesProps &
-  WithRegions &
   ContextProps &
   UserSSHKeyProps &
+  RouteComponentProps &
   InjectedNotistackProps;
 
 export const RebuildFromStackScript: React.StatelessComponent<
@@ -74,75 +77,50 @@ export const RebuildFromStackScript: React.StatelessComponent<
     classes,
     imagesData,
     userSSHKeys,
-    regionsData,
     linodeId,
-    enqueueSnackbar
+    enqueueSnackbar,
+    history
   } = props;
 
-  const [stackScript, setStackScript] = React.useState<any>({});
-  const [selectedImage, setSelectedImage] = React.useState<string>('');
-  const [selectedRegionID, setSelectedRegionID] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
-  const [errors, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
+  const [
+    ss,
+    handleSelectStackScript,
+    handleChangeUDF,
+    resetStackScript
+  ] = useStackScript(imagesData);
 
-  const {
-    selectedStackScriptID,
-    selectedStackScriptUsername,
-    selectedStackScriptLabel,
-    compatibleImages,
-    userDefinedFields,
-    udf_data
-  } = stackScript;
+  const [form, setField, resetForm] = useForm<RebuildFromStackScriptForm>({
+    imageID: '',
+    password: ''
+  });
 
-  const handleSelectStackScript = (
-    id: number,
-    label: string,
-    username: string,
-    stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
-  ) => {
-    setStackScript({
-      selectedStackScriptID: id,
-      selectedStackScriptUsername: username,
-      selectedStackScriptLabel: label,
-      compatibleImages: getCompatibleImages(imagesData, stackScriptImages),
-      userDefinedFields,
-      udf_data: getDefaultUDFData(userDefinedFields)
-    });
-    setErrors([]);
-  };
-
-  function handleChangeUDF(key: string, value: string) {
-    setStackScript((prevState: any) => {
-      // either overwrite or create new selection
-      const newUDFData = assocPath([key], value, prevState.udf_data);
-      return {
-        ...prevState,
-        udf_data: {
-          ...prevState.udf_data,
-          ...newUDFData
-        }
-      };
-    });
-  }
+  const [errors, setErrors, resetErrors] = useErrors();
 
   const handleSubmit = () => {
+    // StackScript ID is technically an optional field on the rebuildLinode
+    // request, so we need to explicitly check for it here.
+    if (!ss.id) {
+      setErrors([
+        { field: 'stackscript_id', reason: 'You must select a StackScript' }
+      ]);
+      return;
+    }
+
     rebuildLinode(linodeId, {
-      stackscript_id: selectedStackScriptID,
-      stackscript_data: udf_data,
-      root_pass: password,
-      image: selectedImage,
+      stackscript_id: ss.id,
+      stackscript_data: ss.udf_data,
+      root_pass: form.password,
+      image: form.imageID,
       authorized_users: userSSHKeys.filter(u => u.selected).map(u => u.username)
     })
       .then(_ => {
         resetEventsPolling();
-
-        setPassword('');
-        setErrors([]);
-
+        resetForm();
+        resetErrors();
         enqueueSnackbar('Linode rebuild started', {
           variant: 'info'
         });
+        history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
         setErrors(
@@ -151,23 +129,23 @@ export const RebuildFromStackScript: React.StatelessComponent<
             'There was an issue rebuilding your Linode.'
           )
         );
-        scrollErrorIntoView();
       });
   };
 
-  const fixedErrors = ['root_pass', 'image', 'region', 'none'];
+  // The error handling below could probably go into the useErrors() hook.
+  const fixedErrorFields = ['stackscript_id', 'root_pass', 'image', 'none'];
 
   const hasErrorFor = getErrorMap(
     [
-      ...fixedErrors,
-      ...(userDefinedFields || []).map(
+      ...fixedErrorFields,
+      ...ss.user_defined_fields.map(
         (udf: Linode.StackScript.UserDefinedField) => udf.name
       )
     ],
     errors
   );
   const generalError = hasErrorFor.none;
-  const udfErrors = getUDFErrors(fixedErrors, errors);
+  const udfErrors = getUDFErrors(fixedErrorFields, errors);
 
   return (
     <Grid item className={classes.root}>
@@ -181,30 +159,30 @@ export const RebuildFromStackScript: React.StatelessComponent<
       )}
       <SelectStackScriptPanel
         error={hasErrorFor['stackscript_id']}
-        selectedId={selectedStackScriptID}
-        selectedUsername={selectedStackScriptUsername}
-        updateFor={[selectedStackScriptID, errors]}
+        selectedId={ss.id}
+        selectedUsername={ss.username}
+        updateFor={[ss.id, errors]}
         onSelect={handleSelectStackScript}
         publicImages={filterPublicImages(imagesData)}
-        resetSelectedStackScript={() => setStackScript({})}
+        resetSelectedStackScript={resetStackScript}
       />
-      {userDefinedFields && userDefinedFields.length > 0 && (
+      {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
         <UserDefinedFieldsPanel
           errors={udfErrors}
-          selectedLabel={selectedStackScriptLabel}
-          selectedUsername={selectedStackScriptUsername}
+          selectedLabel={ss.label}
+          selectedUsername={ss.username}
           handleChange={handleChangeUDF}
-          userDefinedFields={userDefinedFields}
-          updateFor={[userDefinedFields, udf_data, errors]}
-          udf_data={udf_data}
+          userDefinedFields={ss.user_defined_fields}
+          updateFor={[ss.user_defined_fields, ss.udf_data, errors]}
+          udf_data={ss.udf_data}
         />
       )}
-      {compatibleImages && compatibleImages.length > 0 ? (
+      {ss.images && ss.images.length > 0 ? (
         <SelectImagePanel
-          images={compatibleImages}
-          handleSelection={(selected: string) => setSelectedImage(selected)}
-          updateFor={[selectedImage, compatibleImages, errors]}
-          selectedImageID={selectedImage}
+          images={ss.images}
+          handleSelection={(selected: string) => setField('imageID', selected)}
+          updateFor={[form.imageID, ss.images, errors]}
+          selectedImageID={form.imageID}
           error={hasErrorFor.image}
           hideMyImages={true}
         />
@@ -226,18 +204,10 @@ export const RebuildFromStackScript: React.StatelessComponent<
           </Typography>
         </Paper>
       )}
-      <SelectRegionPanel
-        error={hasErrorFor.region}
-        regions={regionsData}
-        handleSelection={(selected: string) => setSelectedRegionID(selected)}
-        selectedID={selectedRegionID}
-        updateFor={[selectedRegionID, errors]}
-        copy="Determine the best location for your Linode."
-      />
       <AccessPanel
-        password={password}
-        handleChange={value => setPassword(value)}
-        updateFor={[password, errors, userSSHKeys, selectedStackScriptID]}
+        password={form.password}
+        handleChange={value => setField('password', value)}
+        updateFor={[form.password, errors, userSSHKeys, ss.id]}
         error={hasErrorFor.root_pass}
         users={userSSHKeys}
         data-qa-access-panel
@@ -252,6 +222,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
           Rebuild
         </Button>
       </ActionsPanel>
+      <StackScriptDrawer />
     </Grid>
   );
 };
@@ -262,32 +233,18 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id
 }));
 
-interface WithRegions {
-  regionsData: ExtendedRegion[];
-  regionsLoading: boolean;
-  regionsError: Linode.ApiFieldError[];
-}
-
-const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data
-    .filter(region => region.id !== 'ap-northeast-1a')
-    .map(r => ({ ...r, display: dcDisplayNames[r.id] })),
-  regionsLoading: loading,
-  regionsError: error
-}));
-
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
   userSSHKeyHoc,
   styled,
   withSnackbar,
-  withRegions,
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesData,
     imagesLoading,
     imagesError
-  }))
+  })),
+  withRouter
 );
 
 export default enhanced(RebuildFromStackScript);
@@ -295,40 +252,15 @@ export default enhanced(RebuildFromStackScript);
 // =============================================================================
 // Helpers
 // =============================================================================
-const getCompatibleImages = (
-  allImages: Linode.Image[],
-  stackScriptImages: string[]
-) => {
-  return allImages.filter(image => {
-    for (const stackScriptImage of stackScriptImages) {
-      if (image.id === stackScriptImage) {
-        return true;
-      }
-    }
-    return false;
-  });
-};
-
-const getDefaultUDFData = (
-  userDefinedFields: Linode.StackScript.UserDefinedField[]
-) => {
-  const defaultUDFData = {};
-  userDefinedFields.forEach(eachField => {
-    if (!!eachField.default) {
-      defaultUDFData[eachField.name] = eachField.default;
-    }
-  });
-  return defaultUDFData;
-};
 
 const getUDFErrors = (
-  errorTypes: string[],
+  fixedErrorFields: string[],
   errors: Linode.ApiFieldError[] | undefined
 ) => {
   return errors
     ? errors.filter(error => {
-        // ensure the error isn't a root_pass, image, region, type, label
-        const isNotUDFError = errorTypes.some(errorKey => {
+        // ensure the error isn't a root_pass, image, or none
+        const isNotUDFError = fixedErrorFields.some(errorKey => {
           return errorKey === error.field;
         });
         // if the 'field' prop exists and isn't any other error
