@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -12,6 +12,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { MapState } from 'src/store/types';
+
+import { ipv4DNSResolvers, ipv6DNSResolvers } from './resolvers';
 
 type ClassNames = 'root' | 'title' | 'section' | 'individualContainer' | 'ips';
 
@@ -69,29 +71,6 @@ const SummarySection: React.StatelessComponent<any> = props => {
 
 const StyledSummarySection = styled(SummarySection);
 
-const ipv4DNSResolvers = [
-  '66.228.42.5',
-  '96.126.106.5',
-  '50.116.53.5',
-  '50.116.58.5',
-  '50.116.61.5',
-  '50.116.62.5',
-  '66.175.211.5',
-  '97.107.133.4',
-  '207.192.69.4',
-  '207.192.69.5'
-];
-
-const ipv6DNSResolvers = [
-  '2600:3c03::5',
-  '2600:3c03::6',
-  '2600:3c03::7',
-  '2600:3c03::8',
-  '2600:3c03::9',
-  '2600:3c03::b',
-  '2600:3c03::c'
-];
-
 const LinodeNetworkingSummaryPanel: React.StatelessComponent<
   CombinedProps
 > = props => {
@@ -130,7 +109,7 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<
             <Grid item xs={12} md={6}>
               <StyledSummarySection
                 title="DNS Resolvers (IPv4)"
-                renderValue={renderIPv4DNSResolvers()}
+                renderValue={renderIPv4DNSResolvers(linodeRegion)}
               />
               <StyledSummarySection
                 title="DNS Resolvers (IPv6)"
@@ -160,9 +139,13 @@ export default restyled(
   connected(LinodeNetworkingSummaryPanel)
 ) as React.ComponentType<Props>;
 
-const renderIPv4DNSResolvers = () => () => (
+const getIPv4DNSResolvers = (region: string) => {
+  return pathOr(ipv4DNSResolvers.newark, [region], ipv4DNSResolvers);
+};
+
+const renderIPv4DNSResolvers = (region: string) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <IPAddress ips={ipv4DNSResolvers} copyRight showMore />
+    <IPAddress ips={getIPv4DNSResolvers(region)} copyRight showMore />
   </div>
 );
 

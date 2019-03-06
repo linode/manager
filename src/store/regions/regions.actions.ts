@@ -17,7 +17,11 @@ export const requestRegions: ThunkActionCreator<
 
   return getRegions()
     .then(({ data }) => {
-      dispatch(regionsRequestActions.done({ result: data }));
+      dispatch(
+        regionsRequestActions.done({
+          result: data
+        })
+      );
       return data;
     })
     .catch(error => {
