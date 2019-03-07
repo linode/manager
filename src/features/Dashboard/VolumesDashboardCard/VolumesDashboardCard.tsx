@@ -1,7 +1,6 @@
 import { compose, take } from 'ramda';
 import * as React from 'react';
 import { Subscription } from 'rxjs/Subscription';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -13,6 +12,7 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -196,7 +196,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
-              <VolumeIcon className={classes.icon} />
+              <EntityIcon variant="volume" />
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
               <Typography
