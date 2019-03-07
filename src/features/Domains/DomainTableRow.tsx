@@ -50,7 +50,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const handleRowClick = (
-  e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  e: React.MouseEvent<any, MouseEvent>,
   props: CombinedProps
 ) => {
   const { domain, id, type, onEdit } = props;
@@ -80,6 +80,7 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
       data-qa-domain-cell={domain}
       className={`${classes.domainRow} ${'fade-in-table'}`}
       rowLink={`/domains/${id}`}
+      onClick={e => handleRowClick(e, props)}
     >
       <TableCell parentColumn="Domain" data-qa-domain-label>
         <Link to={`/domains/${id}`} onClick={e => handleRowClick(e, props)}>

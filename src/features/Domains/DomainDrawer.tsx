@@ -161,8 +161,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     const generalError = errorFor('none');
     const masterIPsError = errorFor('master_ips');
 
+    const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
+
     return (
-      <Drawer title="Add a new Domain" open={open} onClose={this.closeDrawer}>
+      <Drawer title={title} open={open} onClose={this.closeDrawer}>
         {generalError && !disabled && (
           <Notice error spacingTop={8}>
             {generalError}
@@ -200,7 +202,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           />
         </RadioGroup>
         <TextField
-          errorText={(mode === CREATING || '') && errorFor('domain')}
+          errorText={
+            (mode === CREATING || mode === EDITING || '') && errorFor('domain')
+          }
           value={domain}
           disabled={mode === CLONING || disabled}
           label="Domain"
