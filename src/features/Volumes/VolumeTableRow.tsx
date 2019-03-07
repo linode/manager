@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import {
   StyleRulesCallback,
   withStyles,
@@ -9,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
@@ -20,7 +20,6 @@ type ClassNames =
   | 'root'
   | 'title'
   | 'labelCol'
-  | 'icon'
   | 'labelStatusWrapper'
   | 'attachmentCol'
   | 'sizeCol'
@@ -54,18 +53,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '25%',
     minWidth: 150,
     paddingLeft: 65
-  },
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
-    },
-    '& .outerCircle': {
-      stroke: theme.bg.main
-    }
   },
   labelStatusWrapper: {
     display: 'flex',
@@ -156,7 +143,7 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
       <TableCell data-qa-volume-cell-label={label}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <VolumesIcon className={classes.icon} />
+            <EntityIcon variant="volume" marginTop={1} />
           </Grid>
           <Grid item>
             <div className={classes.labelStatusWrapper}>
@@ -181,7 +168,7 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
       <TableCell parentColumn="Label" data-qa-volume-cell-label={volume.label}>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <VolumesIcon className={classes.icon} />
+            <EntityIcon variant="volume" marginTop={1} />
           </Grid>
           <Grid item>
             <div className={classes.labelStatusWrapper}>

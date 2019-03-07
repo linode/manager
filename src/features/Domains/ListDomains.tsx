@@ -20,7 +20,7 @@ type ClassNames = 'root' | 'label';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
-    paddingLeft: 65
+    paddingLeft: theme.spacing.unit * 2 + 49
   }
 });
 

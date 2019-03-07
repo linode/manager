@@ -38,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     height: 'auto',
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: '20px 0 10px',
+      padding: `${theme.spacing.unit * 2 + 4}px 0 ${theme.spacing.unit + 2}px`,
       borderBottom: 'none'
     }
   },
