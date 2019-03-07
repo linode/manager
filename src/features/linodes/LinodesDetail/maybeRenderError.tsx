@@ -54,8 +54,8 @@ export default compose(
     renderComponent((props: any) => {
       let errorText = pathOr(
         'Unable to load Linode',
-        ['errors', 0, 'reason'],
-        props
+        ['response', 'data', 'errors', 0, 'reason'],
+        props.error
       );
 
       if (errorText.toLowerCase() === 'this linode has been suspended') {
