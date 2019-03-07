@@ -16,7 +16,6 @@ import {
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { getLinodeBackups } from 'src/services/linodes';
 import {
@@ -50,7 +49,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  notice?: Notice;
   linodesData: Linode.Linode[];
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
@@ -74,11 +72,6 @@ type CombinedProps = Props &
   WithAll &
   WithDisplayData &
   WithStyles<ClassNames>;
-
-interface Notice {
-  text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
-}
 
 const errorResources = {
   type: 'A plan selection',

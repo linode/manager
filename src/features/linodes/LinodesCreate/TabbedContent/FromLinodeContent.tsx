@@ -13,7 +13,6 @@ import {
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 
@@ -43,15 +42,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Notice {
-  text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
-}
-
-interface Props {
-  notice?: Notice;
-}
-
 const errorResources = {
   type: 'A plan selection',
   region: 'A region selection',
@@ -59,8 +49,7 @@ const errorResources = {
   root_pass: 'A root password'
 };
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
+type CombinedProps = WithStyles<ClassNames> &
   WithDisplayData &
   CloneFormStateHandlers &
   WithLinodesImagesTypesAndRegions;
@@ -241,6 +230,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props & CloneFormStateHandlers>(styled);
+const enhanced = compose<CombinedProps, CloneFormStateHandlers>(styled);
 
 export default enhanced(FromLinodeContent);
