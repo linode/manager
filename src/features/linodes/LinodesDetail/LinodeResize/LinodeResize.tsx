@@ -2,6 +2,7 @@ import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -23,6 +24,7 @@ import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
+import { withNotifications } from 'src/store/notification/notification.containers';
 
 type ClassNames = 'root' | 'title' | 'subTitle' | 'currentPlanContainer';
 
@@ -59,17 +61,25 @@ interface LinodeContextProps {
 
 interface State {
   selectedId: string;
+  isLoading: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
+interface NotificationProps {
+  requestNotifications: () => void;
+}
+
 type CombinedProps = WithTypesProps &
+  RouteComponentProps &
   LinodeContextProps &
+  NotificationProps &
   WithStyles<ClassNames> &
   InjectedNotistackProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedId: ''
+    selectedId: '',
+    isLoading: false
   };
 
   static extendType = (type: Linode.LinodeType): ExtendedType => {
@@ -92,20 +102,29 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId, enqueueSnackbar } = this.props;
+    const {
+      linodeId,
+      enqueueSnackbar,
+      requestNotifications,
+      history
+    } = this.props;
     const { selectedId } = this.state;
 
     if (!linodeId) {
       return;
     }
 
+    this.setState({ isLoading: true });
+
     resizeLinode(linodeId, selectedId)
-      .then(response => {
-        enqueueSnackbar('Linode resize started.', {
+      .then(_ => {
+        this.setState({ selectedId: '', isLoading: false });
+        resetEventsPolling();
+        enqueueSnackbar('Linode queued for resize.', {
           variant: 'info'
         });
-        this.setState({ selectedId: '' });
-        resetEventsPolling();
+        requestNotifications();
+        history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
         pathOr(
@@ -117,7 +136,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             variant: 'error'
           })
         );
-        this.setState({ selectedId: '' });
+        this.setState({ selectedId: '', isLoading: false });
       });
   };
 
@@ -203,6 +222,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               !this.state.selectedId ||
               linodeInTransition(this.props.linodeStatus || '')
             }
+            loading={this.state.isLoading}
             type="primary"
             onClick={this.onSubmit}
             data-qa-submit
@@ -243,5 +263,9 @@ export default compose<CombinedProps, {}>(
   linodeContext,
   withTypes,
   styled,
-  withSnackbar
+  withSnackbar,
+  withRouter,
+  withNotifications(undefined, ({ requestNotifications }) => ({
+    requestNotifications
+  }))
 )(LinodeResize);
