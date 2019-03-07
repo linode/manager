@@ -165,8 +165,9 @@ class Networking extends Page {
         expect(this.drawerTitle.getText()).toBe('Edit Reverse DNS');
         expect(this.domainName.isVisible()).toBe(true)
         expect(this.domainName.$('input').getAttribute('placeholder')).toBe('Enter a domain name');
-        expect(this.submit.isVisible()).toBe(true);
-        expect(this.cancel.isVisible()).toBe(true);
+        browser.debug();
+        expect(this.submitButton.isVisible()).toBe(true);
+        expect(this.cancelButton.isVisible()).toBe(true);
     }
 
     delete(ip) {
