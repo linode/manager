@@ -40,7 +40,8 @@ export const RebuildDialog: React.StatelessComponent<
       actions={actions}
     >
       <Typography>
-        <b>Delete all existing data</b> on this Linode and redeploy?
+        Are you sure you want to rebuild your Linode? This will result in
+        permanent data loss.
       </Typography>
     </ConfirmationDialog>
   );
