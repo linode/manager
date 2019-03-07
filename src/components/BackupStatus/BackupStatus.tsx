@@ -72,9 +72,8 @@ const BackupStatus: React.StatelessComponent<CombinedProps> = props => {
             className={classes.backupLink}
           >
             <Typography variant="body1" className={classes.noBackupText}>
-              Never. Backup Scheduled.
+              Scheduled
             </Typography>
-            <Backup className={`${classes.icon} backupIcon`} />
           </a>
         </Tooltip>
       </div>
