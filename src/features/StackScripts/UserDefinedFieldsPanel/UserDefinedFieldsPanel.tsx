@@ -6,7 +6,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
@@ -45,7 +44,10 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
 > = props => {
   const { userDefinedFields, classes, handleChange } = props;
 
-  const renderField = (field: Linode.StackScript.UserDefinedField) => {
+  const renderField = (
+    field: Linode.StackScript.UserDefinedField,
+    error?: string
+  ) => {
     // if the 'default' key is returned from the API, the field is optional
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
@@ -55,8 +57,9 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           field={field}
           udf_data={props.udf_data}
           updateFormState={handleChange}
-          updateFor={[props.udf_data[field.name]]}
+          updateFor={[props.udf_data[field.name], error]}
           isOptional={isOptional}
+          error={error}
         />
       );
     }
@@ -66,9 +69,10 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           field={field}
           updateFormState={handleChange}
           udf_data={props.udf_data}
-          updateFor={[props.udf_data[field.name]]}
+          updateFor={[props.udf_data[field.name], error]}
           isOptional={isOptional}
           key={field.name}
+          error={error}
         />
       );
     }
@@ -80,9 +84,10 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           isPassword={true}
           field={field}
           udf_data={props.udf_data}
-          updateFor={[props.udf_data[field.name]]}
+          updateFor={[props.udf_data[field.name], error]}
           isOptional={isOptional}
           placeholder={field.example}
+          error={error}
         />
       );
     }
@@ -92,19 +97,16 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
         updateFormState={handleChange}
         field={field}
         udf_data={props.udf_data}
-        updateFor={[props.udf_data[field.name]]}
+        updateFor={[props.udf_data[field.name], error]}
         isOptional={isOptional}
         placeholder={field.example}
+        error={error}
       />
     );
   };
 
   return (
     <Paper className={classes.root}>
-      {props.errors &&
-        props.errors.map(error => {
-          return <Notice key={error.reason} text={error.reason} error={true} />;
-        })}
       <Typography role="header" variant="h2" data-qa-user-defined-field-header>
         <span className={classes.username}>{`${
           props.selectedUsername
@@ -112,10 +114,22 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
         <span>{`${props.selectedLabel} Options`}</span>
       </Typography>
       {userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
-        return renderField(field);
+        const error = getError(field, props.errors);
+        return renderField(field, error);
       })}
     </Paper>
   );
+};
+
+const getError = (
+  field: Linode.StackScript.UserDefinedField,
+  errors?: Linode.ApiFieldError[]
+) => {
+  if (!errors) {
+    return;
+  }
+  const error = errors.find(thisError => thisError.field === field.name);
+  return error ? error.reason.replace('the UDF', '') : undefined;
 };
 
 const isPasswordField = (udfName: string) => {

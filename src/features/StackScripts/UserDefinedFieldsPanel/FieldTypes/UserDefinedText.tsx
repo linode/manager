@@ -25,13 +25,14 @@ interface Props {
   udf_data: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
   placeholder?: string;
+  error?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedText extends React.Component<CombinedProps, {}> {
   renderTextField = () => {
-    const { udf_data, field, placeholder, isOptional } = this.props;
+    const { udf_data, error, field, placeholder, isOptional } = this.props;
 
     return (
       <TextField
@@ -40,12 +41,13 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         label={field.label}
         value={udf_data[field.name] || ''}
         placeholder={placeholder}
+        errorText={error}
       />
     );
   };
 
   renderPasswordField = () => {
-    const { udf_data, field, placeholder, isOptional } = this.props;
+    const { udf_data, error, field, placeholder, isOptional } = this.props;
 
     return (
       <AccessPanel
@@ -55,6 +57,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         label={field.label}
         noPadding
         placeholder={placeholder}
+        error={error}
       />
     );
   };
