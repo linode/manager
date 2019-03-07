@@ -52,11 +52,18 @@ export default compose(
   branch(
     ({ error }) => Boolean(error),
     renderComponent((props: any) => {
-      let errorText = pathOr(
+      /**
+       * props.error can either be an Error or Linode.APIFieldError
+       * so we need to handle for both and look for the suspended message
+       * in both paths
+       */
+      const errorTextFromAxios = pathOr(
         'Unable to load Linode',
-        ['error', 0, 'reason'],
-        props
+        ['response', 'data', 'errors', 0, 'reason'],
+        props.error
       );
+
+      let errorText = pathOr(errorTextFromAxios, ['error', 0, 'reason'], props);
 
       if (errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (
