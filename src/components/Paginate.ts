@@ -1,6 +1,7 @@
 import { clamp, slice } from 'ramda';
 import * as React from 'react';
 import scrollTo from 'src/utilities/scrollTo';
+import { storage } from 'src/utilities/storage';
 
 const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
   list: T[]
@@ -41,7 +42,7 @@ interface Props {
 export default class Paginate extends React.Component<Props, State> {
   state: State = {
     page: this.props.page || 1,
-    pageSize: this.props.pageSize || 25
+    pageSize: storage.pageSize.get()
   };
 
   handlePageChange = (page: number) => {
@@ -50,7 +51,10 @@ export default class Paginate extends React.Component<Props, State> {
     this.setState({ page });
   };
 
-  handlePageSizeChange = (pageSize: number) => this.setState({ pageSize });
+  handlePageSizeChange = (pageSize: number) => {
+    this.setState({ pageSize });
+    storage.pageSize.set(pageSize);
+  };
 
   render() {
     const view = createDiplayPage(this.state.page, this.state.pageSize);

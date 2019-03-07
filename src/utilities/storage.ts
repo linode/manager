@@ -23,6 +23,7 @@ export const setStorage = (key: string, value: string) => {
 
 const THEME = 'themeChoice';
 const SPACING = 'spacingChoice';
+const PAGE_SIZE = 'PAGE_SIZE'
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
@@ -35,6 +36,7 @@ const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 
 type Theme = 'dark' | 'light';
 export type Spacing = 'compact' | 'normal';
+export type PageSize = number;
 type Beta = 'open' | 'closed';
 type LinodeView = 'grid' | 'list';
 
@@ -46,6 +48,10 @@ export interface Storage {
   spacing: {
     get: () => Spacing;
     set: (spacing: Spacing) => void;
+  };
+  pageSize: {
+    get: () => PageSize;
+    set: (perPage: PageSize) => void;
   };
   notifications: {
     welcome: {
@@ -102,6 +108,12 @@ export const storage: Storage = {
     get: () => getStorage(SPACING, 'normal'),
     set: v => setStorage(SPACING, v)
   },
+  pageSize: {
+    get: () => {
+      return parseInt(getStorage(PAGE_SIZE, '25'), 10)
+    },
+    set: v => setStorage(PAGE_SIZE, `${v}`)
+  },
   notifications: {
     welcome: {
       /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
@@ -152,7 +164,8 @@ export const storage: Storage = {
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
-  }
+  },
+  
 };
 
 export const { theme, spacing, notifications, views } = storage;
