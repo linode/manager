@@ -52,9 +52,6 @@ class ConfigureStackScript extends Page {
         expect(this.targetImagesSelect.isVisible()).toBe(true);
         this.imageTags.forEach(tag => expect(tag.isVisible()).toBe(true));
 
-        expect(this.labelHelp.getTagName()).toBe('button');
-        expect(this.descriptionHelp.getTagName()).toBe('button');
-
         expect(this.script.isVisible()).toBe(true);
         expect(this.revisionNote.isVisible()).toBe(true);
         expect(this.saveButton.isVisible()).toBe(true);
@@ -73,18 +70,17 @@ class ConfigureStackScript extends Page {
             config.images.forEach(i => {
                 this.targetImagesSelect.click();
                 const imageElement = $(`[data-qa-option="linode/${i}"]`);
-                imageElement.waitForVisible(constants.wait.normal, true);
+                browser.pause(500);
                 imageElement.click();
                 $(`${selectedImage}="${i}"`).waitForVisible(constants.wait.normal);
             });
         } else {
             this.targetImagesSelect.click();
             browser.pause(500);
-            const imageElement = $$('[data-qa-option]')[1];
-            const imageName = imageElement.getAttribute('data-qa-option');
+            const imageElement = $(`[data-qa-option="linode/arch"]`);
             imageElement.click();
-            browser.waitForVisible(`[data-qa-option="${imageName}"]`, constants.wait.normal, true);
-            $(`${selectedImage}="${imageName.replace('linode/','')}"`).waitForVisible(constants.wait.normal);
+            imageElement.waitForVisible(constants.wait.normal, true);
+            $(`${selectedImage}="arch"`).waitForVisible(constants.wait.normal);
         }
 
         // Click outside the select

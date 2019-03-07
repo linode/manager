@@ -243,7 +243,7 @@ exports.createNodeBalancer = (token, label, region, tags) => {
         return getAxiosInstance(token).post(endpoint, data)
             .then(response => resolve(response.data))
             .catch(error => {
-                console.error('Error', error);
+                console.log(error.data);
                 reject(error);
             });
     });

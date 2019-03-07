@@ -11,10 +11,6 @@ class ConfigureLinode extends Page {
     get createFromStackscript() { return $('[data-qa-create-from="Create from StackScript"]'); }
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
-    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
-    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
-    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
-    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
     get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
 
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }

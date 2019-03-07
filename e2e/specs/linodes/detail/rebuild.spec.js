@@ -25,15 +25,22 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.assertElemsDisplay();
     });
 
-    it('should display a help icon with tooltip on click', () => {
-        Rebuild.helpButton.moveToObject();
-        Rebuild.popoverMsg.waitForVisible(constants.wait.normal);
+    it('should display a helper text for rebuilding a linode', () => {
+        const message = "If you can't rescue an existing disk, it's time to rebuild your Linode. There are a couple of different ways you can do this: either restore from a backup or start over with a fresh Linux distribution. Rebuilding will destroy all data.";
+        expect(Rebuild.rebuildDescriptionText.getText()).toBe(message);
+    });
+
+    it('should display the option to rebuild from image or stackscript', function() {
+        Rebuild.rebuildSelect.click();
+        browser.pause(500);
+        const rebuildOptions = Rebuild.selectOptions.map(options => options.getText());
+        expect(rebuildOptions.sort()).toEqual(['From Image','From StackScript']);
+        $('body').click();
     });
 
     it('should display error on create an image without selecting an image', () => {
         Rebuild.submit.click();
-        expect(Rebuild.imageError.isVisible()).toBe(true);
-        expect(Rebuild.imageError.getText()).toBe('Image cannot be blank.');
+        Rebuild.waitForNotice('An image is required.', constants.wait.normal);
         browser.refresh();
         Rebuild.assertElemsDisplay();
     });
@@ -50,7 +57,7 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should rebuild linode on valid image and password', () => {
         const testPassword = generatePassword();
-        Rebuild.selectImage();
+        Rebuild.selectImage('Arch');
         Rebuild.password.setValue(testPassword);
         Rebuild.rebuild();
     });

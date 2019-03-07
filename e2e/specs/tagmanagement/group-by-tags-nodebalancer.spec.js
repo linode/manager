@@ -7,18 +7,18 @@ const {
 import ListNodeBalancers from '../../pageobjects/list-nodebalancers.page';
 
 describe('Group by Tags - NodeBalancers', () => {
-  const tags = [`b${timestamp()}`,`a${timestamp()}`,`c${timestamp()}`];
+  const tags = ['beta','alpha','gamma'];
   let nodebalancers = [];
 
   const generateTagGroups = () => {
       tags.forEach((tag) => {
           const nb = {
-              label: `a${tag[0]}${timestamp()}`,
-              tags: [tag]
+              label: `a${tag}${timestamp()}`,
+              tags: [ tag ]
           }
           const nb1 = {
-              label: `b${tag[0]}${timestamp()}`,
-              tags: [tag]
+              label: `b${tag}${timestamp()}`,
+              tags: [ tag ]
           }
           nodebalancers.push(nb);
           nodebalancers.push(nb1);
@@ -51,8 +51,6 @@ describe('Group by Tags - NodeBalancers', () => {
   });
 
   it('Group by tag toggle is present on NodeBalancer listing and off by default', () => {
-      generateTagGroups();
-      apiCreateNodeBalancers(nodebalancers);
       expect(ListNodeBalancers.groupByTagsToggle.isVisible()).toBe(true);
       expect(ListNodeBalancers.tagHeaders.length).toBe(0);
   });

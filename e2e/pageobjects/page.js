@@ -63,6 +63,12 @@ export default class Page {
     get enterKey() { return '\uE007'; }
     get upArrowKey() { return '\ue013'; }
 
+    //Shared in create linode and rebuild flow
+    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
+    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
+    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
+    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
+
     logout() {
         this.userMenu.waitForVisible(constants.wait.normal);
         this.userMenu.click();

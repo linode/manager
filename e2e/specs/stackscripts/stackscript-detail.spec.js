@@ -21,7 +21,7 @@ describe('StackScript - detail page and drawer suite', () => {
       }, constants.wait.normal);
       const titleAndAuthor = $$(`${ListStackScripts.stackScriptTitle.selector} h3`)[0].getText();
       const deploys = $$(ListStackScripts.stackScriptDeploys.selector)[0].getText();
-      const compatibleDisrobutions = $$(ListStackScripts.stackScriptCompatibleDistrobutions.selector)[0].$$('div').map( distro => distro.getText());
+      const compatibleDisrobutions = $$(ListStackScripts.stackScriptCompatibleDistrobutions.selector)[0].$$('div').map(distro => distro.getText());
       const getTitleAndAuthor = titleAndAuthor.split('/');
       const stackScriptDetails = {
           title: getTitleAndAuthor[1].trim(),
@@ -91,16 +91,13 @@ describe('StackScript - detail page and drawer suite', () => {
           script: '#!/bin/bash\necho "Hello Linode"',
       }
 
-    /* beforeAll(() => {
+     beforeAll(() => {
           ListStackScripts.create.click();
           ConfigureStackScripts.baseElementsDisplay();
           ConfigureStackScripts.configure(stackConfig);
-      });*/
+      });
 
       it('StackScript detail page displays for created StackScript', () => {
-          ListStackScripts.create.click();
-          ConfigureStackScripts.baseElementsDisplay();
-          ConfigureStackScripts.configure(stackConfig);
           ConfigureStackScripts.create(stackConfig);
           ListStackScripts.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.true);
           ListStackScripts.stackScriptDetailPage(stackConfig.label);
