@@ -220,7 +220,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       availableStackScriptImages: images,
       udfs: defaultData,
       /** reset image because stackscript might not be compatible with selected one */
-      selectedImageID: undefined
+      selectedImageID: undefined,
+      errors: undefined
     });
   };
 
