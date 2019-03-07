@@ -127,6 +127,11 @@ export interface BackupFormStateHandlers extends CloneFormStateHandlers {
   selectedBackupID?: number;
   setBackupID: (id: number) => void;
 }
+export interface AppsData {
+  appInstances?: Linode.StackScript.Response[];
+  appInstancesLoading: boolean;
+  appInstancesError?: string;
+}
 
 export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &

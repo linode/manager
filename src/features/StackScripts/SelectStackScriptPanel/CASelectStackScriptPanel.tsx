@@ -62,7 +62,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   panel: {
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.color.white
+    backgroundColor: theme.color.white,
+    marginBottom: theme.spacing.unit * 3
   },
   inner: {
     padding: theme.spacing.unit * 2,
@@ -224,16 +225,18 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               An error occured while loading the selected StackScript.
             </Typography>
           )}
-          <SelectStackScriptPanelContent
-            onSelect={this.props.onSelect}
-            resetStackScriptSelection={this.props.resetSelectedStackScript}
-            publicImages={this.props.publicImages}
-            currentUser={this.props.username}
-            request={request}
-            key={category + '-tab'}
-            category={category}
-            disabled={this.props.disabled}
-          />
+          <Paper className={classes.selecting}>
+            <SelectStackScriptPanelContent
+              onSelect={this.props.onSelect}
+              resetStackScriptSelection={this.props.resetSelectedStackScript}
+              publicImages={this.props.publicImages}
+              currentUser={this.props.username}
+              request={request}
+              key={category + '-tab'}
+              category={category}
+              disabled={this.props.disabled}
+            />
+          </Paper>
         </div>
       </Paper>
     );

@@ -7,8 +7,13 @@ import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { getStackScriptsByUser } from 'src/features/StackScripts/stackScriptUtils';
+import { State as userSSHKeyProps } from 'src/features/linodes/userSSHKeyHoc';
+import {
+  getCommunityStackscripts,
+  getStackScriptsByUser
+} from 'src/features/StackScripts/stackScriptUtils';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
+import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
@@ -21,6 +26,7 @@ import {
 
 import {
   AllFormStateAndHandlers,
+  AppsData,
   WithAll,
   WithDisplayData,
   WithLinodesImagesTypesAndRegions
@@ -34,7 +40,9 @@ type CombinedProps = Props &
   WithLinodesImagesTypesAndRegions &
   WithDisplayData &
   WithAll &
-  AllFormStateAndHandlers;
+  AppsData &
+  AllFormStateAndHandlers &
+  userSSHKeyProps;
 
 interface State {
   selectedTab: number;
@@ -104,6 +112,9 @@ export class LinodeCreate extends React.PureComponent<
           selectedStackScriptUsername,
           selectedStackScriptLabel,
           selectedLinodeID,
+          appInstances,
+          appInstancesError,
+          appInstancesLoading,
           ...rest
         } = this.props;
         return (
@@ -165,6 +176,9 @@ export class LinodeCreate extends React.PureComponent<
           selectedStackScriptUsername,
           selectedStackScriptLabel,
           selectedLinodeID,
+          appInstances,
+          appInstancesError,
+          appInstancesLoading,
           ...rest
         } = this.props;
 
@@ -217,6 +231,9 @@ export class LinodeCreate extends React.PureComponent<
           linodesError,
           regionsLoading,
           regionsError,
+          appInstances,
+          appInstancesError,
+          appInstancesLoading,
           ...rest
         } = this.props;
         return <FromLinodeContent {...rest} />;
@@ -229,6 +246,13 @@ export class LinodeCreate extends React.PureComponent<
         const {
           accountBackupsEnabled,
           userCannotCreateLinode,
+          selectedLinodeID,
+          updateLinodeID,
+          selectedBackupID,
+          setBackupID,
+          appInstances,
+          appInstancesError,
+          appInstancesLoading,
           ...rest
         } = this.props;
         return (
@@ -249,14 +273,38 @@ export class LinodeCreate extends React.PureComponent<
       title: 'One-Click Apps',
       type: 'fromApp',
       render: () => {
-        return <React.Fragment />;
+        const {
+          setTab,
+          linodesError,
+          linodesLoading,
+          linodesData,
+          ...rest
+        } = this.props;
+        return <FromAppsContent {...rest} />;
       }
     },
     {
       title: 'Community StackScripts',
       type: 'fromStackScript',
       render: () => {
-        return <div>community stackscripts</div>;
+        const {
+          accountBackupsEnabled,
+          userCannotCreateLinode,
+          selectedLinodeID,
+          updateLinodeID,
+          selectedBackupID,
+          setBackupID,
+          ...rest
+        } = this.props;
+        return (
+          <FromStackScriptContent
+            accountBackupsEnabled={this.props.accountBackupsEnabled}
+            userCannotCreateLinode={this.props.userCannotCreateLinode}
+            request={getCommunityStackscripts}
+            header={'Select a StackScript'}
+            {...rest}
+          />
+        );
       }
     }
   ];
