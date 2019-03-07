@@ -56,7 +56,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
           {field.label}
           {!isOptional && ' *'}
         </Typography>
-        {error && <Notice error text={error} />}
+        {error && <Notice error text={error} spacingTop={8} />}
         {oneof.map((choice: string, index) => {
           return (
             <React.Fragment key={index}>
