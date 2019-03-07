@@ -412,7 +412,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     };
 
     return (
-      <OrderBy data={volumes} order={'desc'} orderBy={'label'}>
+      <OrderBy data={volumes} order={'asc'} orderBy={'label'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           const orderProps = {
             orderBy,

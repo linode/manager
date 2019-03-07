@@ -95,7 +95,7 @@ export type TypeInfo =
 
 const errorResources = {
   type: 'A plan selection',
-  region: 'A region selection',
+  region: 'region',
   label: 'A label',
   root_pass: 'A root password',
   image: 'Image',
@@ -330,7 +330,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             images={images}
             handleSelection={this.handleSelectImage}
             selectedImageID={selectedImageID}
-            updateFor={[selectedImageID, errors]}
+            updateFor={[selectedImageID, errors, classes]}
             initTab={initTab}
             error={hasErrorFor('image')}
             disabled={disabled}
@@ -341,7 +341,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
             copy="Determine the best location for your Linode."
-            updateFor={[selectedRegionID, errors]}
+            updateFor={[selectedRegionID, errors, classes]}
             disabled={disabled}
           />
           <SelectPlanPanel
@@ -349,7 +349,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             types={types}
             onSelect={this.handleSelectPlan}
             selectedID={selectedTypeID}
-            updateFor={[selectedTypeID, errors]}
+            updateFor={[selectedTypeID, errors, classes]}
             disabled={disabled}
           />
           <LabelAndTagsPanel
@@ -366,7 +366,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
               tagError: hasErrorFor('tags'),
               disabled
             }}
-            updateFor={[tags, label, errors]}
+            updateFor={[tags, label, errors, classes]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
@@ -378,7 +378,13 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             error={hasErrorFor('root_pass')}
             password={password}
             handleChange={this.handleTypePassword}
-            updateFor={[password, errors, userSSHKeys, selectedImageID]}
+            updateFor={[
+              password,
+              errors,
+              userSSHKeys,
+              selectedImageID,
+              classes
+            ]}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
           />
           <AddonsPanel
@@ -388,7 +394,7 @@ export class FromImageContent extends React.Component<CombinedProps, State> {
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
-            updateFor={[privateIP, backups, selectedTypeID]}
+            updateFor={[privateIP, backups, selectedTypeID, classes]}
             disabled={disabled}
           />
         </Grid>

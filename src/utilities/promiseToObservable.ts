@@ -10,7 +10,7 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
  * learn more about switchMap:
  * https://www.learnrxjs.io/operators/transformation/switchmap.html
  *
- * Exmaple usage:
+ * Example usage:
  *
  * transformPromiseToCancellableObservable(getLinodes)
  *      .subscribe(

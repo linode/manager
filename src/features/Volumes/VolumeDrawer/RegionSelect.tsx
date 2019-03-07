@@ -89,7 +89,8 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
       {error && <FormHelperText error>{error}</FormHelperText>}
       {!error && shouldOnlyDisplayRegionsWithBlockStorage && (
         <FormHelperText data-qa-volume-region>
-          Only regions supporting block storage are displayed.
+          The datacenter where the new volume should be created. Only regions
+          supporting block storage are displayed.
         </FormHelperText>
       )}
     </FormControl>

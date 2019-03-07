@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import Tags from 'src/components/Tags';
+import TagsCell from 'src/components/TagsCell';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
@@ -88,13 +88,11 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                   </Grid>
                   <Grid item>
                     <Typography variant="h3">{nodeBalancer.label}</Typography>
-                    <div className={classes.tagWrapper}>
-                      <Tags tags={nodeBalancer.tags} />
-                    </div>
                   </Grid>
                 </Grid>
               </Link>
             </TableCell>
+            <TagsCell tags={nodeBalancer.tags} />
             <TableCell parentColumn="Node Status" data-qa-node-status>
               <span>{nodesUp} up</span> <br />
               <span>{nodesDown} down</span>

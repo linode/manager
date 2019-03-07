@@ -42,6 +42,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Disk has been added to Linode ${e.entity!.label}.`
     // notification: e => ``,
   },
+  disk_update: {
+    notification: e => `A disk has been updated on Linode ${e.entity!.label}.`
+  },
   disk_delete: {
     scheduled: e =>
       `A disk on Linode ${e.entity!.label} is scheduled for deletion.`,
@@ -88,15 +91,24 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   domain_create: {
     notification: e => `Domain ${e.entity!.label} has been created.`
   },
+  domain_update: {
+    notification: e => `Domain ${e.entity!.label} has been updated.`
+  },
   domain_delete: {
     notification: e => `Domain ${e.entity!.label} has been deleted.`
   },
   domain_record_create: {
     notification: e => `A domain record has been created for ${e.entity!.label}`
   },
+  domain_record_update: {
+    notification: e => `A domain record has been updated for ${e.entity!.label}`
+  },
   domain_record_delete: {
     notification: e =>
       `A domain record has been deleted from ${e.entity!.label}`
+  },
+  image_update: {
+    notification: e => `Image ${e.entity!.label} has been updated.`
   },
   image_delete: {
     // scheduled: e => `Image ${e.entity!.label} scheduled for deletion.`,
@@ -125,6 +137,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Linode ${e.entity!.label} is being created.`,
     failed: e => `Linode ${e.entity!.label} could not be created.`,
     finished: e => `Linode ${e.entity!.label} has been created.`
+  },
+  linode_update: {
+    notification: e => `Linode ${e.entity!.label} has been updated.`
   },
   linode_delete: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for deletion.`,
@@ -180,6 +195,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: e => `Snapshot backup failed on Linode ${e.entity!.label}.`,
     finished: e => `A snapshot backup has been created for ${e.entity!.label}.`
   },
+  linode_config_create: {
+    notification: e => `A config has been created on Linode ${e.entity!.label}.`
+  },
+  linode_config_update: {
+    notification: e => `A config has been updated on Linode ${e.entity!.label}.`
+  },
+  linode_config_delete: {
+    notification: e => `A config has been deleted on Linode ${e.entity!.label}.`
+  },
   // longviewclient_create: {
   //   scheduled: e => ``,
   //   started: e => ``,
@@ -224,14 +248,21 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   // },
   nodebalancer_config_create: {
     notification: e =>
-      `NodeBalancer configuration ${e.entity!.label} has been created.`
+      `A config on NodeBalancer ${e.entity!.label} has been created.`
+  },
+  nodebalancer_config_update: {
+    notification: e =>
+      `A config on NodeBalancer ${e.entity!.label} has been updated.`
   },
   nodebalancer_config_delete: {
     notification: e =>
-      `NodeBalancer configuration ${e.entity!.label} has been deleted.`
+      `A config on NodeBalancer ${e.entity!.label} has been deleted.`
   },
   nodebalancer_create: {
     notification: e => `NodeBalancer ${e.entity!.label} has been created.`
+  },
+  nodebalancer_update: {
+    notification: e => `NodeBalancer ${e.entity!.label} has been updated.`
   },
   nodebalancer_delete: {
     notification: e => `NodeBalancer ${e.entity!.label} has been deleted.`
@@ -251,6 +282,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   // },
   stackscript_create: {
     notification: e => `StackScript ${e.entity!.label} has been created.`
+  },
+  stackscript_update: {
+    notification: e => `StackScript ${e.entity!.label} has been updated.`
   },
   stackscript_delete: {
     notification: e => `StackScript ${e.entity!.label} has been deleted.`
@@ -306,6 +340,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Volume ${e.entity!.label} has been created.`,
     notification: e => `Volume ${e.entity!.label} has been created.`
   },
+  volume_update: {
+    notification: e => `Volume ${e.entity!.label} has been updated.`
+  },
   volume_delete: {
     scheduled: e => ``,
     started: e => ``,
@@ -327,6 +364,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   user_ssh_key_add: {
     notification: e => `An SSH key has been added to your profile.`
+  },
+  user_ssh_key_update: {
+    notification: e => `An SSH key on your profile has been updated.`
   },
   user_ssh_key_delete: {
     notification: e => `An SSH key has been removed from your profile.`

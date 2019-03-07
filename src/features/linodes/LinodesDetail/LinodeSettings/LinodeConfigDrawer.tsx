@@ -287,7 +287,13 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           item
           xs={12}
           className={classes.section}
-          updateFor={[errorFor('label'), errorFor('comments'), label, comments]}
+          updateFor={[
+            errorFor('label'),
+            errorFor('comments'),
+            label,
+            comments,
+            classes
+          ]}
         >
           <Typography role="header" variant="h3">
             Label and Comments
@@ -314,7 +320,12 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
         <Divider className={classes.divider} />
 
-        <Grid item xs={12} className={classes.section} updateFor={[virt_mode]}>
+        <Grid
+          item
+          xs={12}
+          className={classes.section}
+          updateFor={[virt_mode, classes]}
+        >
           <Typography role="header" variant="h3">
             Virtual Machine
           </Typography>
@@ -353,7 +364,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             errorFor('kernel'),
             run_level,
             memory_limit,
-            errorFor('memory_limit')
+            errorFor('memory_limit'),
+            classes
           ]}
         >
           <Typography role="header" variant="h3">
@@ -384,7 +396,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           )}
 
           <FormControl
-            updateFor={[run_level]}
+            updateFor={[run_level, classes]}
             fullWidth
             component={'fieldset' as 'div'}
           >
@@ -492,7 +504,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               helpers.updatedb_disabled,
               helpers.modules_dep,
               helpers.devtmpfs_automount,
-              helpers.network
+              helpers.network,
+              classes
             ]}
             fullWidth
             component={'fieldset' as 'div'}

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
 import {
@@ -26,7 +27,9 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  root: {
+    padding: theme.spacing.unit * 3
+  },
   title: {
     marginTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2
@@ -139,7 +142,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
         <Typography role="header" variant="h1" className={classes.title}>
           Settings
         </Typography>
-        <Paper style={{ padding: 24 }}>
+        <Paper className={classes.root}>
           <Grid item xs={12}>
             {generalError && <Notice error text={generalError} />}
             {success && <Notice success text={success} />}
@@ -153,6 +156,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               onChange={this.handleLabelInputChange}
               value={fields.label}
             />
+            <FormHelperText>Rename your NodeBalancer</FormHelperText>
           </div>
           <div className={classes.inner}>
             <TextField
@@ -168,6 +172,10 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
               placeholder="0"
               value={defaultTo(0, fields.client_conn_throttle)}
             />
+            <FormHelperText>
+              To help mitigate abuse, throttle connections from a single client
+              IP to this number per second. 0 to disable.
+            </FormHelperText>
           </div>
           <ActionsPanel className={classes.expPanelButton}>
             <Button

@@ -12,7 +12,7 @@ import Grid from 'src/components/Grid';
 import { getNetworkUtilization } from 'src/services/account';
 import DashboardCard from '../DashboardCard';
 
-type ClassNames =
+export type ClassNames =
   | 'root'
   | 'card'
   | 'grid'
@@ -29,9 +29,10 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: 0,
-    padding: theme.spacing.unit * 3
+    padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px`
   },
   card: {
+    marginTop: 24,
     [theme.breakpoints.down('sm')]: {
       marginTop: 0
     }
@@ -228,6 +229,6 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
+export const styled = withStyles(styles);
 
 export default styled(TransferDashboardCard);

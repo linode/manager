@@ -3,10 +3,7 @@ import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
-import AccessPanel, {
-  Disabled,
-  UserSSHKeyObject
-} from 'src/components/AccessPanel';
+import AccessPanel, { Disabled } from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
@@ -24,7 +21,9 @@ import SelectRegionPanel, {
 } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { resetEventsPolling } from 'src/events';
-import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
+import userSSHKeyHoc, {
+  UserSSHKeyProps
+} from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -96,7 +95,6 @@ interface Props {
   disabled?: boolean;
 
   /** Comes from HOC */
-  userSSHKeys: UserSSHKeyObject[];
   handleDisablePasswordField: (imageSelected: boolean) => Disabled | undefined;
 }
 
@@ -121,7 +119,7 @@ interface State {
 
 const errorResources = {
   type: 'A plan selection',
-  region: 'A region selection',
+  region: 'region',
   label: 'A label',
   root_pass: 'A root password',
   image: 'image',
@@ -132,6 +130,7 @@ type CombinedProps = Props &
   LinodeActionsProps &
   InjectedNotistackProps &
   LabelProps &
+  UserSSHKeyProps &
   WithStyles<ClassNames>;
 
 export class FromStackScriptContent extends React.Component<
@@ -414,7 +413,7 @@ export class FromStackScriptContent extends React.Component<
 
     /*
      * errors with UDFs have dynamic keys
-     * for exmaple, if there are UDFs that aren't filled out, you can can
+     * for example, if there are UDFs that aren't filled out, you can can
      * errors that look something like this
      * { field: 'wordpress_pass', reason: 'you must fill out a WP password' }
      * Because of this, we need to both make each error doesn't match any
@@ -454,7 +453,7 @@ export class FromStackScriptContent extends React.Component<
             error={hasErrorFor('stackscript_id')}
             selectedId={selectedStackScriptID}
             selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
+            updateFor={[selectedStackScriptID, errors, classes]}
             onSelect={this.handleSelectStackScript}
             publicImages={this.filterPublicImages(images) || []}
             resetSelectedStackScript={this.resetStackScriptSelection}
@@ -467,7 +466,7 @@ export class FromStackScriptContent extends React.Component<
               selectedUsername={selectedStackScriptUsername}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
+              updateFor={[userDefinedFields, udf_data, errors, classes]}
               udf_data={udf_data}
             />
           )}
@@ -475,7 +474,7 @@ export class FromStackScriptContent extends React.Component<
             <SelectImagePanel
               images={compatibleImages}
               handleSelection={this.handleSelectImage}
-              updateFor={[selectedImageID, compatibleImages, errors]}
+              updateFor={[selectedImageID, compatibleImages, errors, classes]}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
               hideMyImages={true}
@@ -503,7 +502,7 @@ export class FromStackScriptContent extends React.Component<
             regions={regions}
             handleSelection={this.handleSelectRegion}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors]}
+            updateFor={[selectedRegionID, errors, classes]}
             copy="Determine the best location for your Linode."
             disabled={disabled}
           />
@@ -511,7 +510,7 @@ export class FromStackScriptContent extends React.Component<
             error={hasErrorFor('type')}
             types={types}
             onSelect={this.handleSelectPlan}
-            updateFor={[selectedTypeID, errors]}
+            updateFor={[selectedTypeID, errors, classes]}
             selectedID={selectedTypeID}
             disabled={disabled}
           />
@@ -529,7 +528,7 @@ export class FromStackScriptContent extends React.Component<
               tagError: hasErrorFor('tags'),
               disabled
             }}
-            updateFor={[tags, label, errors]}
+            updateFor={[tags, label, errors, classes]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
@@ -539,7 +538,13 @@ export class FromStackScriptContent extends React.Component<
               }
             }
             error={hasErrorFor('root_pass')}
-            updateFor={[password, errors, userSSHKeys, selectedImageID]}
+            updateFor={[
+              password,
+              errors,
+              userSSHKeys,
+              selectedImageID,
+              classes
+            ]}
             password={password}
             handleChange={this.handleTypePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
@@ -551,7 +556,7 @@ export class FromStackScriptContent extends React.Component<
             privateIP={privateIP}
             changeBackups={this.handleToggleBackups}
             changePrivateIP={this.handleTogglePrivateIP}
-            updateFor={[privateIP, backups, selectedTypeID]}
+            updateFor={[privateIP, backups, selectedTypeID, classes]}
             disabled={disabled}
           />
         </Grid>

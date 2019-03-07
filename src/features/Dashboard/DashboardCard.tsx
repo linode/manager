@@ -17,8 +17,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   headerAction: {
     position: 'relative',
-    top: theme.spacing.unit - 2,
-    left: -theme.spacing.unit * 2,
+    top: 6,
+    left: -16,
     marginLeft: theme.spacing.unit / 2
   }
 });
@@ -41,22 +41,24 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
       })}
       data-qa-card={title}
     >
-      <Grid item xs={12} className={!title || !headerAction ? 'p0' : ''}>
-        <Grid container alignItems="flex-start">
-          {title && (
-            <Grid item className={'py0'}>
-              <Typography variant="h2">{title}</Typography>
-            </Grid>
-          )}
-          {headerAction && (
-            <Grid item className={'py0'}>
-              <Typography variant="body1" className={classes.headerAction}>
-                {headerAction()}
-              </Typography>
-            </Grid>
-          )}
+      {(title || headerAction) && (
+        <Grid item xs={12}>
+          <Grid container alignItems="flex-start">
+            {title && (
+              <Grid item className={'py0'}>
+                <Typography variant="h2">{title}</Typography>
+              </Grid>
+            )}
+            {headerAction && (
+              <Grid item className={'py0'}>
+                <Typography variant="body1" className={classes.headerAction}>
+                  {headerAction()}
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
       <Grid item xs={12}>
         {props.children}
       </Grid>

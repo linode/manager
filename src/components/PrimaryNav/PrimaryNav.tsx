@@ -1,3 +1,4 @@
+import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -5,16 +6,19 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Divider from 'src/components/core/Divider';
 import Hidden from 'src/components/core/Hidden';
-import ListItem from 'src/components/core/ListItem';
+import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
+import Menu from 'src/components/core/Menu';
 import {
   StyleRulesCallback,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 
 interface PrimaryLink {
@@ -27,6 +31,7 @@ type ClassNames =
   | 'menuGrid'
   | 'fadeContainer'
   | 'logoItem'
+  | 'logoItemCompact'
   | 'listItem'
   | 'collapsible'
   | 'linkItem'
@@ -38,7 +43,12 @@ type ClassNames =
   | 'sublinkPanel'
   | 'spacer'
   | 'listItemAccount'
-  | 'divider';
+  | 'divider'
+  | 'menu'
+  | 'paper'
+  | 'settings'
+  | 'activeSettings'
+  | 'settingsBackdrop';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuGrid: {
@@ -65,14 +75,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       .spacing.unit +
       theme.spacing.unit / 2}px`
   },
+  logoItemCompact: {
+    padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px`
+  },
   listItem: {
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create([
       'background-color',
       'border-left-color'
     ]),
-    padding: `${theme.spacing.unit + 2}px ${theme.spacing.unit * 4 -
-      2}px ${theme.spacing.unit + 2}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit / 2 + 6}px ${theme.spacing.unit * 4 -
+      2}px ${theme.spacing.unit / 2 + 6}px ${theme.spacing.unit * 3}px`,
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -149,21 +162,57 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   divider: {
     backgroundColor: 'rgba(0, 0, 0, 0.12)'
+  },
+  settings: {
+    width: 30,
+    margin: '24px auto 16px',
+    alignItems: 'center',
+    marginTop: 'auto',
+    justifyContent: 'center',
+    display: 'flex',
+    color: '#e7e7e7',
+    transition: theme.transitions.create(['color']),
+    '& svg': {
+      transition: theme.transitions.create(['transform'])
+    },
+    '&:hover': {
+      color: theme.color.green
+    }
+  },
+  activeSettings: {
+    color: theme.color.green,
+    '& svg': {
+      transform: 'rotate(90deg)'
+    }
+  },
+  menu: {},
+  paper: {
+    maxWidth: 350,
+    padding: 8,
+    position: 'absolute',
+    backgroundColor: theme.bg.navy,
+    border: '1px solid #999',
+    outline: 0
+  },
+  settingsBackdrop: {
+    backgroundColor: 'rgba(0,0,0,.3)'
   }
 });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   closeMenu: () => void;
   toggleTheme: () => void;
+  toggleSpacing: () => void;
 }
 
 interface State {
   drawerOpen: boolean;
   expandedMenus: Record<string, boolean>;
   primaryLinks: PrimaryLink[];
+  anchorEl?: HTMLElement;
 }
 
-type CombinedProps = Props & StateProps;
+type CombinedProps = Props & StateProps & WithTheme;
 
 export class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
@@ -172,7 +221,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       account: false,
       support: false
     },
-    primaryLinks: []
+    primaryLinks: [],
+    anchorEl: undefined
   };
 
   mounted: boolean = false;
@@ -303,6 +353,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     this.navigate('/logout');
   };
 
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: undefined });
+  };
+
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes } = this.props;
 
@@ -333,8 +391,9 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, toggleTheme } = this.props;
-    const { expandedMenus } = this.state;
+    const { classes, toggleSpacing, toggleTheme, theme } = this.props;
+    const { expandedMenus, anchorEl } = this.state;
+    const { spacing: spacingUnit } = theme;
 
     return (
       <React.Fragment>
@@ -350,11 +409,19 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menu"
         >
           <Grid item>
-            <div className={classes.logoItem}>
-              <Link to={`/dashboard`}>
-                <Logo width={115} height={43} />
-              </Link>
-            </div>
+            {spacingUnit.unit === 8 ? (
+              <div className={classes.logoItem}>
+                <Link to={`/dashboard`}>
+                  <Logo width={115} height={43} />
+                </Link>
+              </div>
+            ) : (
+              <div className={classes.logoItemCompact}>
+                <Link to={`/dashboard`}>
+                  <Logo width={100} height={37} />
+                </Link>
+              </div>
+            )}
           </Grid>
           <div
             className={classNames({
@@ -368,56 +435,71 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
             <Hidden mdUp>
               <Divider className={classes.divider} />
-              <ListItem
-                button
-                component="li"
-                focusRipple={true}
-                onClick={this.goToProfile}
+              <Link
+                role="menuitem"
+                to="/profile/display"
+                href="javascript:void(0)"
+                onClick={this.props.closeMenu}
+                data-qa-nav-item="/profile/display"
                 className={classNames({
                   [classes.listItem]: true,
-                  [classes.collapsible]: true,
                   [classes.active]:
+                    expandedMenus.support ||
                     this.linkIsActive('/profile/display') === true
                 })}
               >
                 <ListItemText
+                  primary="My Profile"
                   disableTypography={true}
                   className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.support ||
-                      this.linkIsActive('/profile/display') === true
+                    [classes.linkItem]: true
                   })}
-                >
-                  My Profile
-                </ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                component="li"
-                focusRipple={true}
-                onClick={this.logOut}
+                />
+              </Link>
+              <Link
+                role="menuitem"
+                to="/logout"
+                href="javascript:void(0)"
+                onClick={this.props.closeMenu}
+                data-qa-nav-item="/logout"
                 className={classNames({
-                  [classes.listItem]: true,
-                  [classes.collapsible]: true,
-                  [classes.active]: this.linkIsActive('/logout') === true
+                  [classes.listItem]: true
                 })}
               >
                 <ListItemText
+                  primary="Log Out"
                   disableTypography={true}
                   className={classNames({
-                    [classes.linkItem]: true,
-                    [classes.activeLink]:
-                      expandedMenus.support ||
-                      this.linkIsActive('/logout') === true
+                    [classes.linkItem]: true
                   })}
-                >
-                  Log Out
-                </ListItemText>
-              </ListItem>
+                />
+              </Link>
             </Hidden>
             <div className={classes.spacer} />
-            <ThemeToggle toggleTheme={toggleTheme} />
+            <IconButton
+              onClick={this.handleClick}
+              className={classNames({
+                [classes.settings]: true,
+                [classes.activeSettings]: anchorEl
+              })}
+            >
+              <Settings />
+            </IconButton>
+            <Menu
+              id="settings-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={this.handleClose}
+              getContentAnchorEl={undefined}
+              PaperProps={{ square: true, className: classes.paper }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              className={classes.menu}
+              BackdropProps={{ className: classes.settingsBackdrop }}
+            >
+              <ThemeToggle toggleTheme={toggleTheme} />
+              <SpacingToggle toggleSpacing={toggleSpacing} />
+            </Menu>
           </div>
         </Grid>
       </React.Fragment>
@@ -469,4 +551,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default withStyles(styles)(withRouter(connected(PrimaryNav)));
+export default withStyles(styles, { withTheme: true })(
+  withRouter(connected(PrimaryNav))
+);

@@ -33,6 +33,10 @@ export const ALGOLIA_APPLICATION_ID =
 export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 
+// Features
+export const isObjectStorageEnabled =
+  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED || false;
+
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
@@ -58,7 +62,8 @@ export const ZONES = {
   'ap-northeast-1a': 'tokyo',
   'ap-northeast-1b': 'shinagawa1',
   'ap-south': 'singapore',
-  'ap-south-1a': 'singapore'
+  'ap-south-1a': 'singapore',
+  'ca-east': 'toronto' // @todo check this after approval
 };
 
 export const dcDisplayNames = {
@@ -68,7 +73,7 @@ export const dcDisplayNames = {
   'us-southeast-1a': 'Atlanta, GA',
   'eu-central-1a': 'Frankfurt, DE',
   'eu-west-1a': 'London, UK',
-  'ap-northeast-1a': 'Tokyo, JP',
+  'ap-northeast-1a': 'Tokyo, JP', // @todo should we remove this and change the display name of Tokyo 2 to Tokyo?
   'ap-northeast-1b': 'Tokyo 2, JP',
   'us-central': 'Dallas, TX',
   'us-west': 'Fremont, CA',
@@ -77,7 +82,8 @@ export const dcDisplayNames = {
   'eu-west': 'London, UK',
   'ap-south': 'Singapore, SG',
   'eu-central': 'Frankfurt, DE',
-  'ap-northeast': 'Tokyo 2, JP'
+  'ap-northeast': 'Tokyo 2, JP',
+  'ca-east': 'Toronto, CA'
 };
 
 export const dcDisplayCountry = {
@@ -96,7 +102,8 @@ export const dcDisplayCountry = {
   'eu-west': 'UK',
   'ap-south': 'SG',
   'eu-central': 'DE',
-  'ap-northeast': 'JP'
+  'ap-northeast': 'JP',
+  'ca-east': 'CA'
 };
 
 // At this time, the following regions do not support block storage.

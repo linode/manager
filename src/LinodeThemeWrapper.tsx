@@ -1,12 +1,20 @@
 import * as React from 'react';
 import { MuiThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
-import { theme as themeStorage } from 'src/utilities/storage';
+import {
+  Spacing,
+  spacing as spacingStorage,
+  theme as themeStorage
+} from 'src/utilities/storage';
 
 interface State {
   themeChoice: 'light' | 'dark';
+  spacing: Spacing;
 }
-type RenderChildren = (toggle: () => void) => React.ReactNode;
+type RenderChildren = (
+  toggle: () => void,
+  spacing: () => void
+) => React.ReactNode;
 interface Props {
   children: RenderChildren | React.ReactNode;
 }
@@ -15,7 +23,8 @@ const themes = { light, dark };
 
 class LinodeThemeWrapper extends React.Component<Props, State> {
   state: State = {
-    themeChoice: 'light'
+    themeChoice: 'light',
+    spacing: 'normal'
   };
 
   componentDidUpdate() {
@@ -25,11 +34,13 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    if (themeStorage.get() === 'dark') {
-      return this.setState({ themeChoice: 'dark' });
-    }
+    const themeSetting = themeStorage.get();
+    const spacingSetting = spacingStorage.get();
 
-    return this.setState({ themeChoice: 'light' });
+    return this.setState({
+      themeChoice: themeSetting,
+      spacing: spacingSetting
+    });
   }
 
   toggleTheme = () => {
@@ -43,14 +54,27 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
     }
   };
 
+  toggleSpacing = () => {
+    const { spacing } = this.state;
+    if (spacing === 'compact') {
+      spacingStorage.set('normal');
+      this.setState({ spacing: 'normal' });
+    } else {
+      spacingStorage.set('compact');
+      this.setState({ spacing: 'compact' });
+    }
+  };
+
   render() {
     const { children } = this.props;
     const { themeChoice } = this.state;
     const theme = themes[themeChoice];
 
     return (
-      <MuiThemeProvider theme={theme}>
-        {isRenderChildren(children) ? children(this.toggleTheme) : children}
+      <MuiThemeProvider theme={theme()}>
+        {isRenderChildren(children)
+          ? children(this.toggleTheme, this.toggleSpacing)
+          : children}
       </MuiThemeProvider>
     );
   }

@@ -23,6 +23,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_resize':
     case 'backups_enable':
     case 'backups_cancel':
+    case 'disk_imagize':
       return handleLinodeUpdate(dispatch, status, id);
 
     /** Remove Linode */
@@ -77,10 +78,9 @@ const handleLinodeUpdate = (
     case 'finished':
     case 'notification':
     case 'scheduled':
+    case 'started':
       return dispatch(requestLinodeForStore(id));
 
-    /** no point in re-requesting the linode for in-progress events  */
-    case 'started':
     default:
       return;
   }

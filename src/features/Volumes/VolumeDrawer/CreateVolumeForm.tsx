@@ -140,7 +140,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             {disabled && (
               <Notice
                 text={
-                  "You don't have permissions to create a new Volume. Please, contact an account administrator for details."
+                  "You don't have permissions to create a new Volume. Please contact an account administrator for details."
                 }
                 error={true}
                 important

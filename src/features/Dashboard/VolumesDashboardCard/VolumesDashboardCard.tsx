@@ -199,7 +199,12 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
               <VolumeIcon className={classes.icon} />
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
-              <Typography role="header" variant="h3" data-qa-label>
+              <Typography
+                role="header"
+                variant="h3"
+                className={classes.wrapHeader}
+                data-qa-label
+              >
                 {label}
               </Typography>
               <Typography className={classes.description}>

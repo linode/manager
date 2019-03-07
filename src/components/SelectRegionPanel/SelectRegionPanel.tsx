@@ -1,3 +1,4 @@
+import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
@@ -28,7 +29,8 @@ const flags = {
     />
   ),
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
-  de: () => <DE width="32" height="24" viewBox="0 0 720 480" />
+  de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
+  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />
 };
 
 export interface ExtendedRegion extends Linode.Region {
@@ -53,7 +55,7 @@ interface Props {
 }
 
 const getNARegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /us/.test(r.country));
+  regions.filter(r => /(us|ca)/.test(r.country));
 
 const getEURegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(de|uk)/.test(r.country));

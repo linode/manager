@@ -45,10 +45,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: theme.spacing.unit
   },
   backendIPAction: {
+    display: 'flex',
+    alignItems: 'flex-end',
     paddingLeft: theme.spacing.unit * 2,
     marginLeft: -theme.spacing.unit,
     [theme.breakpoints.down('md')]: {
-      marginLeft: -32,
       marginTop: -theme.spacing.unit
     },
     [theme.breakpoints.down('xs')]: {
@@ -300,6 +301,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   };
 
+  displayProtocolText = (p: string) => {
+    if (p === 'tcp') {
+      return `'TCP Connection' requires a successful TCP handshake.`;
+    }
+    if (p === 'http' || p === 'https') {
+      return `'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body.`;
+    }
+    return;
+  };
+
   onSave = this.props.onSave;
 
   onDelete = this.props.onDelete;
@@ -378,7 +389,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       healthCheckTimeout,
       healthCheckType,
       protocol,
-      disabled
+      disabled,
+      classes
     } = this.props;
 
     const hasErrorFor = getAPIErrorFor(
@@ -393,11 +405,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       errors
     );
 
+    const conditionalText = this.displayProtocolText(protocol);
+
     return (
       <Grid item xs={12} md={4} xl={2}>
         <Grid container>
           <Grid
-            updateFor={[]} // never update after initial render
+            updateFor={[classes]} // never update after initial render
             item
             xs={12}
           >
@@ -410,7 +424,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               protocol,
               healthCheckType,
               hasErrorFor('check'),
-              configIdx
+              configIdx,
+              classes
             ]}
             item
             xs={12}
@@ -443,6 +458,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   HTTP Body
                 </MenuItem>
               </TextField>
+              <FormHelperText>
+                Active health checks proactively check the health of back-end
+                nodes. {conditionalText}
+              </FormHelperText>
             </Grid>
           </Grid>
           {healthCheckType !== 'none' && (
@@ -451,7 +470,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 updateFor={[
                   healthCheckInterval,
                   hasErrorFor('check_interval'),
-                  configIdx
+                  configIdx,
+                  classes
                 ]}
                 item
                 xs={12}
@@ -472,12 +492,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-active-check-interval
                   disabled={disabled}
                 />
+                <FormHelperText>
+                  Seconds between health check probes
+                </FormHelperText>
               </Grid>
               <Grid
                 updateFor={[
                   healthCheckTimeout,
                   hasErrorFor('check_timeout'),
-                  configIdx
+                  configIdx,
+                  classes
                 ]}
                 item
                 xs={12}
@@ -498,16 +522,21 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-active-check-timeout
                   disabled={disabled}
                 />
+                <FormHelperText>
+                  Seconds to wait before considering the probe a failure. 1-30.
+                  Must be less than check_interval.
+                </FormHelperText>
               </Grid>
               <Grid
                 updateFor={[
                   healthCheckAttempts,
                   hasErrorFor('check_attempts'),
-                  configIdx
+                  configIdx,
+                  classes
                 ]}
                 item
                 xs={12}
-                lg={3}
+                lg={6}
               >
                 <TextField
                   type="number"
@@ -522,6 +551,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-active-check-attempts
                   disabled={disabled}
                 />
+                <FormHelperText>
+                  Number of failed probes before taking a node out of rotation.
+                  1-30
+                </FormHelperText>
               </Grid>
               {['http', 'http_body'].includes(healthCheckType) && (
                 <Grid
@@ -529,11 +562,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     checkPath,
                     healthCheckType,
                     hasErrorFor('check_path'),
-                    configIdx
+                    configIdx,
+                    classes
                   ]}
                   item
                   xs={12}
-                  md={4}
+                  lg={6}
                 >
                   <TextField
                     label="Check HTTP Path"
@@ -552,7 +586,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     checkBody,
                     healthCheckType,
                     hasErrorFor('check_body'),
-                    configIdx
+                    configIdx,
+                    classes
                   ]}
                   item
                   xs={12}
@@ -581,7 +616,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
     return (
       <Grid item xs={12} md={6}>
-        <Grid updateFor={[checkPassive]} container>
+        <Grid updateFor={[checkPassive, classes]} container>
           <Grid item xs={12}>
             <Typography
               role="header"
@@ -604,6 +639,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               }
               label="Passive Checks"
             />
+            <FormHelperText>
+              Enable passive checks based on observing communication with
+              back-end nodes.
+            </FormHelperText>
           </Grid>
         </Grid>
       </Grid>
@@ -668,7 +707,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 hasErrorFor('ssl_key'),
                 configIdx,
                 sslCertificate,
-                privateKey
+                privateKey,
+                classes
               ]}
               container
             >
@@ -694,6 +734,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   small
                   disabled={disabled}
                 />
+                <FormHelperText>Listen on this port</FormHelperText>
               </Grid>
               <Grid item xs={6} sm={4} md={3} lg={2}>
                 <TextField
@@ -728,7 +769,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       hasErrorFor('ssl_cert'),
                       privateKey,
                       hasErrorFor('ssl_key'),
-                      configIdx
+                      configIdx,
+                      classes
                     ]}
                     container
                   >
@@ -788,6 +830,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     Source
                   </MenuItem>
                 </TextField>
+                <FormHelperText>
+                  Roundrobin. Least connections assigns connections to the
+                  backend with the least connections. Source uses the client's
+                  IPv4 address
+                </FormHelperText>
               </Grid>
 
               <Grid item xs={6} sm={4} md={3} lg={2}>
@@ -812,6 +859,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     HTTP Cookie
                   </MenuItem>
                 </TextField>
+                <FormHelperText>
+                  Route subsequent requests from the client to the same backend
+                </FormHelperText>
               </Grid>
               <Grid item xs={12}>
                 <Divider className={classes.divider} />
@@ -825,9 +875,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid updateFor={[nodes, errors, nodeMessage]} container>
+            <Grid updateFor={[nodes, errors, nodeMessage, classes]} container>
               <Grid item xs={12}>
-                <Grid updateFor={[nodeMessage]} item xs={12}>
+                <Grid updateFor={[nodeMessage, classes]} item xs={12}>
                   {nodeMessage && <Notice text={nodeMessage} success />}
                 </Grid>
                 <Typography
@@ -864,7 +914,13 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       return (
                         <React.Fragment key={`nb-node-${idx}`}>
                           <Grid
-                            updateFor={[nodes.length, node, errors, configIdx]}
+                            updateFor={[
+                              nodes.length,
+                              node,
+                              errors,
+                              configIdx,
+                              classes
+                            ]}
                             item
                             data-qa-node
                             xs={12}
@@ -931,7 +987,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 nodes.length,
                                 node,
                                 errors,
-                                configIdx
+                                configIdx,
+                                classes
                               ]}
                               container
                               data-qa-node
@@ -1120,7 +1177,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   <Grid
                     item
                     xs={12}
-                    updateFor={[]}
+                    updateFor={[classes]}
                     // is the Save/Delete ActionsPanel showing?
                     style={
                       forEdit || configIdx !== 0
@@ -1141,17 +1198,17 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
             {(forEdit || configIdx !== 0) && (
               <React.Fragment>
-                <Grid updateFor={[]} item xs={12}>
+                <Grid updateFor={[classes]} item xs={12}>
                   <Divider className={classes.divider} />
                 </Grid>
                 <Grid
-                  updateFor={[submitting]}
+                  updateFor={[submitting, classes]}
                   container
                   justify="space-between"
                   alignItems="center"
                 >
-                  <Grid item style={{ marginTop: 16 }} className="py0">
-                    <ActionsPanel style={{ padding: 0 }}>
+                  <Grid item>
+                    <ActionsPanel>
                       {forEdit && (
                         <Button
                           type="primary"

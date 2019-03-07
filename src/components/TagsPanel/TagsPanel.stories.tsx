@@ -6,6 +6,7 @@ import MockAdapter from 'axios-mock-adapter';
 
 import { API_ROOT } from '../../constants';
 
+import Snackbar from 'src/components/SnackBar';
 import TagsPanel from './TagsPanel';
 
 const API_REQUEST = `${API_ROOT}/tags`;
@@ -44,7 +45,11 @@ class TagsPanelDemo extends React.Component<Props, {}> {
   render() {
     const { tags } = this.state;
 
-    return <TagsPanel tags={tags} updateTags={this.updateTags} />;
+    return (
+      <Snackbar maxSnack={3}>
+        <TagsPanel tags={tags} updateTags={this.updateTags} />
+      </Snackbar>
+    );
   }
 }
 
