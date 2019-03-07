@@ -40,7 +40,7 @@ export const RebuildDialog: React.StatelessComponent<
       actions={actions}
     >
       <Typography>
-        Are you sure you want to rebuild your Linode? This will result in
+        Are you sure you want to rebuild this Linode? This will result in
         permanent data loss.
       </Typography>
     </ConfirmationDialog>
