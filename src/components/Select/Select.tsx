@@ -58,7 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   pagination: {
     minHeight: 40,
     '& [role="button"]': {
-      padding: '3px 32px 3px 16px',
+      padding: '13px 32px 13px 16px',
       minHeight: 40
     }
   },
