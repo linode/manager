@@ -14,7 +14,7 @@ type ClassNames =
   | 'ip'
   | 'nameCell'
   | 'nodeStatus'
-  | 'nodeStatus'
+  | 'tags'
   | 'ports'
   | 'tagGroup'
   | 'title'
@@ -29,11 +29,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   nameCell: {
     width: '15%',
     minWidth: 150,
-    paddingLeft: 65
+    paddingLeft: theme.spacing.unit * 2 + 49
   },
   region: {
     width: '15%',
     minWidth: 150
+  },
+  tags: {
+    width: '10%',
+    minWidth: 100,
+    textAlign: 'center'
   },
   nodeStatus: {
     width: '10%',
@@ -75,7 +80,7 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
         >
           Name
         </TableSortCell>
-        <TableCell className={classes.nodeStatus} noWrap>
+        <TableCell className={classes.tags} noWrap>
           Tags
         </TableCell>
         <TableCell className={classes.nodeStatus} noWrap>

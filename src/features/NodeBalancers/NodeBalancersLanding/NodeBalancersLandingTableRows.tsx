@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import NodeBalancer from 'src/assets/addnewmenu/nodebalancer.svg';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -84,7 +84,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
               <Link to={`/nodebalancers/${nodeBalancer.id}`}>
                 <Grid container wrap="nowrap" alignItems="center">
                   <Grid item className="py0">
-                    <NodeBalancer className={classes.icon} />
+                    <EntityIcon variant="nodebalancer" marginTop={1} />
                   </Grid>
                   <Grid item>
                     <Typography variant="h3">{nodeBalancer.label}</Typography>

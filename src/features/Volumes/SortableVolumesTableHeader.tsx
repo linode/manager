@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   labelCol: {
     width: '20%',
     minWidth: 150,
-    paddingLeft: 65
+    paddingLeft: theme.spacing.unit * 2 + 49
   },
   attachmentCol: {
     width: '15%',
