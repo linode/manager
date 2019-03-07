@@ -61,6 +61,7 @@ interface LinodeContextProps {
 
 interface State {
   selectedId: string;
+  isLoading: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -77,7 +78,8 @@ type CombinedProps = WithTypesProps &
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedId: ''
+    selectedId: '',
+    isLoading: false
   };
 
   static extendType = (type: Linode.LinodeType): ExtendedType => {
@@ -112,9 +114,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       return;
     }
 
+    this.setState({ isLoading: true });
+
     resizeLinode(linodeId, selectedId)
       .then(_ => {
-        this.setState({ selectedId: '' });
+        this.setState({ selectedId: '', isLoading: false });
         resetEventsPolling();
         enqueueSnackbar('Linode queued for resize.', {
           variant: 'info'
@@ -132,7 +136,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             variant: 'error'
           })
         );
-        this.setState({ selectedId: '' });
+        this.setState({ selectedId: '', isLoading: false });
       });
   };
 
@@ -218,6 +222,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               !this.state.selectedId ||
               linodeInTransition(this.props.linodeStatus || '')
             }
+            loading={this.state.isLoading}
             type="primary"
             onClick={this.onSubmit}
             data-qa-submit
