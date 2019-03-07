@@ -30,6 +30,7 @@ import { rebuildLinode } from 'src/services/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterPublicImages } from 'src/utilities/images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import { RebuildDialog } from './RebuildDialog';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
@@ -95,6 +96,8 @@ export const RebuildFromStackScript: React.StatelessComponent<
   });
 
   const [errors, setErrors, resetErrors] = useErrors();
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   const handleSelect = (
     id: number,
@@ -115,6 +118,9 @@ export const RebuildFromStackScript: React.StatelessComponent<
   };
 
   const handleSubmit = () => {
+    // @todo: Ideally we would do form validation BEFORE opening up the
+    // confirmation dialog.
+
     // StackScript ID is technically an optional field on the rebuildLinode
     // request, so we need to explicitly check for it here.
     if (!ss.id) {
@@ -123,6 +129,8 @@ export const RebuildFromStackScript: React.StatelessComponent<
       ]);
       return;
     }
+
+    setIsLoading(true);
 
     rebuildLinode(linodeId, {
       stackscript_id: ss.id,
@@ -135,12 +143,17 @@ export const RebuildFromStackScript: React.StatelessComponent<
         resetEventsPolling();
         resetForm();
         resetErrors();
+        setIsLoading(false);
+        setIsDialogOpen(false);
         enqueueSnackbar('Linode rebuild started', {
           variant: 'info'
         });
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
+        setIsLoading(false);
+        setIsDialogOpen(false);
+
         setErrors(
           getAPIErrorOrDefault(
             errorResponse,
@@ -235,12 +248,18 @@ export const RebuildFromStackScript: React.StatelessComponent<
         <Button
           type="secondary"
           className="destructive"
-          onClick={handleSubmit}
+          onClick={() => setIsDialogOpen(true)}
           data-qa-rebuild
         >
           Rebuild
         </Button>
       </ActionsPanel>
+      <RebuildDialog
+        isOpen={isDialogOpen}
+        isLoading={isLoading}
+        handleClose={() => setIsDialogOpen(false)}
+        handleSubmit={handleSubmit}
+      />
       <StackScriptDrawer />
     </Grid>
   );
