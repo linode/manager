@@ -566,7 +566,7 @@ const withAccount = AccountContainer(
     ...ownProps,
     accountLoading,
     balance: pathOr(false, ['balance'], accountData),
-    lastFour: pathOr(false, ['credit_card', 'last_four'], accountData)
+    lastFour: pathOr('', ['credit_card', 'last_four'], accountData)
   })
 );
 
