@@ -2,6 +2,7 @@ import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
+
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -17,41 +18,29 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
-import CASelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/CASelectStackScriptPanel';
-import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
+import SelectAppPanel from '../SelectAppPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
-import { filterPublicImages, filterUDFErrors } from './formUtilities';
+import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
+  AppsData,
   StackScriptFormStateHandlers,
   WithAll,
   WithDisplayData
 } from '../types';
 
-type ClassNames =
-  | 'main'
-  | 'sidebar'
-  | 'emptyImagePanel'
-  | 'emptyImagePanelText';
+type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  main: {
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        order: 3
-      }
-    }
-  },
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-      order: 2
+      marginTop: -130
     }
   },
   emptyImagePanel: {
@@ -63,33 +52,23 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
-  request: (
-    username: string,
-    params?: any,
-    filter?: any
-  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
-  header: string;
-}
-
 const errorResources = {
   type: 'A plan selection',
   region: 'A region selection',
   label: 'A label',
   root_pass: 'A root password',
-  image: 'image',
+  image: 'Image',
   tags: 'Tags',
   stackscript_id: 'A StackScript'
 };
 
-type InnerProps = Props & WithAll;
+type InnerProps = WithDisplayData & WithAll & AppsData;
 
 type CombinedProps = InnerProps &
-  StackScriptFormStateHandlers &
-  WithDisplayData &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  StackScriptFormStateHandlers;
 
-export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
+class FromAppsContent extends React.PureComponent<CombinedProps> {
   handleSelectStackScript = (
     id: number,
     label: string,
@@ -140,7 +119,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     const {
       backupsEnabled,
       password,
-      privateIPEnabled,
       userSSHKeys,
       handleSubmitForm,
       selectedImageID,
@@ -148,6 +126,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedStackScriptID,
       selectedTypeID,
       selectedUDFs,
+      privateIPEnabled,
       tags
     } = this.props;
 
@@ -172,76 +151,77 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
   render() {
     const {
       accountBackupsEnabled,
-      errors,
-      backupsMonthlyPrice,
-      regionsData,
-      typesData,
       classes,
+      typesData,
+      regionsData,
       imageDisplayInfo,
       regionDisplayInfo,
+      typeDisplayInfo,
+      backupsMonthlyPrice,
+      userSSHKeys,
+      userCannotCreateLinode,
       selectedImageID,
       selectedRegionID,
       selectedStackScriptID,
-      selectedTypeID,
-      typeDisplayInfo,
-      privateIPEnabled,
-      tags,
-      backupsEnabled,
-      password,
-      imagesData,
-      userSSHKeys,
-      userCannotCreateLinode: disabled,
-      selectedStackScriptUsername,
       selectedStackScriptLabel,
+      selectedTypeID,
+      selectedUDFs: udf_data,
       label,
-      request,
-      header,
-      toggleBackupsEnabled,
-      togglePrivateIPEnabled,
+      tags,
+      availableUserDefinedFields: userDefinedFields,
+      availableStackScriptImages: compatibleImages,
       updateImageID,
+      updateLabel,
       updatePassword,
       updateRegionID,
       updateTags,
       updateTypeID,
-      availableUserDefinedFields: userDefinedFields,
-      availableStackScriptImages: compatibleImages,
-      selectedUDFs: udf_data
+      formIsSubmitting,
+      password,
+      backupsEnabled,
+      toggleBackupsEnabled,
+      privateIPEnabled,
+      togglePrivateIPEnabled,
+      errors,
+      appInstances,
+      appInstancesError,
+      appInstancesLoading
     } = this.props;
 
+    const hasBackups = backupsEnabled || accountBackupsEnabled;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
-
-    const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
     return (
       <React.Fragment>
         <Grid item className={`mlMain`}>
-          <CreateLinodeDisabled isDisabled={disabled} />
+          <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
-          <CASelectStackScriptPanel
+          <SelectAppPanel
+            appInstances={appInstances}
+            appInstancesError={appInstancesError}
+            appInstancesLoading={appInstancesLoading}
+            selectedStackScriptID={selectedStackScriptID}
+            disabled={userCannotCreateLinode}
+            handleClick={this.handleSelectStackScript}
             error={hasErrorFor('stackscript_id')}
-            header={header}
-            selectedId={selectedStackScriptID}
-            selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors]}
-            onSelect={this.handleSelectStackScript}
-            publicImages={filterPublicImages(imagesData) || []}
-            resetSelectedStackScript={() => null}
-            disabled={disabled}
-            request={request}
           />
-          {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
-            <UserDefinedFieldsPanel
-              errors={filterUDFErrors(errorResources, this.props.errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
-              selectedUsername={selectedStackScriptUsername || ''}
-              handleChange={this.handleChangeUDF}
-              userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
-              udf_data={udf_data || {}}
-            />
-          )}
-          {!disabled && compatibleImages && compatibleImages.length > 0 ? (
+          {!userCannotCreateLinode &&
+            userDefinedFields &&
+            userDefinedFields.length > 0 && (
+              <UserDefinedFieldsPanel
+                errors={filterUDFErrors(errorResources, errors)}
+                selectedLabel={selectedStackScriptLabel || ''}
+                selectedUsername="Linode"
+                handleChange={this.handleChangeUDF}
+                userDefinedFields={userDefinedFields}
+                updateFor={[userDefinedFields, udf_data, errors]}
+                udf_data={udf_data || {}}
+              />
+            )}
+          {!userCannotCreateLinode &&
+          compatibleImages &&
+          compatibleImages.length > 0 ? (
             <SelectImagePanel
               images={compatibleImages}
               handleSelection={updateImageID}
@@ -275,7 +255,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             selectedID={selectedRegionID}
             updateFor={[selectedRegionID, errors]}
             copy="Determine the best location for your Linode."
-            disabled={disabled}
+            disabled={userCannotCreateLinode}
           />
           <SelectPlanPanel
             error={hasErrorFor('type')}
@@ -283,29 +263,29 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             onSelect={updateTypeID}
             updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
-            disabled={disabled}
+            disabled={userCannotCreateLinode}
           />
           <LabelAndTagsPanel
             labelFieldProps={{
               label: 'Linode Label',
               value: label || '',
-              onChange: this.props.updateLabel,
+              onChange: updateLabel,
               errorText: hasErrorFor('label'),
-              disabled
+              disabled: userCannotCreateLinode
             }}
             tagsInputProps={{
               value: tags || [],
               onChange: updateTags,
               tagError: hasErrorFor('tags'),
-              disabled
+              disabled: userCannotCreateLinode
             }}
             updateFor={[tags, label, errors]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
-            disabled={!this.props.selectedImageID}
+            disabled={!selectedImageID}
             disabledReason={
-              !this.props.selectedImageID
+              !selectedImageID
                 ? 'You must select an image to set a root password'
                 : ''
             }
@@ -323,23 +303,13 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             changeBackups={toggleBackupsEnabled}
             changePrivateIP={togglePrivateIPEnabled}
             updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
-            disabled={disabled}
+            disabled={userCannotCreateLinode}
           />
         </Grid>
         <Grid item className={`${classes.sidebar} mlSidebar`}>
           <Sticky topOffset={-24} disableCompensation>
-            {(props: StickyProps) => {
+            {(stickyProps: StickyProps) => {
               const displaySections = [];
-
-              if (selectedStackScriptUsername && selectedStackScriptLabel) {
-                displaySections.push({
-                  title:
-                    selectedStackScriptUsername +
-                    ' / ' +
-                    selectedStackScriptLabel
-                });
-              }
-
               if (imageDisplayInfo) {
                 displaySections.push(imageDisplayInfo);
               }
@@ -355,35 +325,42 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 displaySections.push(typeDisplayInfo);
               }
 
-              if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
+              if (
+                hasBackups &&
+                typeDisplayInfo &&
+                typeDisplayInfo.backupsMonthly
+              ) {
                 displaySections.push(
                   renderBackupsDisplaySection(
                     accountBackupsEnabled,
-                    backupsMonthlyPrice
+                    typeDisplayInfo.backupsMonthly
                   )
                 );
               }
 
               let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-              if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
-                calculatedPrice += backupsMonthlyPrice;
+              if (
+                hasBackups &&
+                typeDisplayInfo &&
+                typeDisplayInfo.backupsMonthly
+              ) {
+                calculatedPrice += typeDisplayInfo.backupsMonthly;
               }
 
               return (
                 <CheckoutBar
                   heading={`${label || 'Linode'} Summary`}
                   calculatedPrice={calculatedPrice}
-                  isMakingRequest={this.props.formIsSubmitting}
-                  disabled={this.props.formIsSubmitting || disabled}
+                  isMakingRequest={formIsSubmitting}
+                  disabled={formIsSubmitting || userCannotCreateLinode}
                   onDeploy={this.handleCreateLinode}
                   displaySections={displaySections}
-                  {...props}
+                  {...stickyProps}
                 />
               );
             }}
           </Sticky>
         </Grid>
-        <StackScriptDrawer />
       </React.Fragment>
     );
   }
@@ -391,6 +368,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, InnerProps>(styled);
-
-export default enhanced(FromStackScriptContent);
+export default compose<CombinedProps, InnerProps>(
+  styled,
+  React.memo
+)(FromAppsContent);

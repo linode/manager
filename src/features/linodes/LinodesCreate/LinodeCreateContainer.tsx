@@ -53,6 +53,7 @@ import { MapState } from 'src/store/types';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getCloudApps } from './TabbedContent/formUtilities';
 
 interface State {
   selectedImageID?: string;
@@ -74,6 +75,9 @@ interface State {
   tags?: Tag[];
   errors?: Linode.ApiFieldError[];
   formIsSubmitting: boolean;
+  appInstances?: Linode.StackScript.Response[];
+  appInstancesLoading: boolean;
+  appInstancesError?: string;
 }
 
 type CombinedProps = InjectedNotistackProps &
@@ -99,7 +103,9 @@ const defaultState: State = {
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
-  formIsSubmitting: false
+  formIsSubmitting: false,
+  errors: undefined,
+  appInstancesLoading: false
 };
 
 const getRegionIDFromLinodeID = (
@@ -125,6 +131,23 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     ) {
       this.setState({ selectedImageID: undefined });
     }
+  }
+
+  componentDidMount() {
+    this.setState({ appInstancesLoading: true });
+    getCloudApps()
+      .then(response => {
+        this.setState({
+          appInstancesLoading: false,
+          appInstances: response.data
+        });
+      })
+      .catch(e => {
+        this.setState({
+          appInstancesLoading: false,
+          appInstancesError: 'There was an error loading Cloud Apps.'
+        });
+      });
   }
 
   clearCreationState = () => {
@@ -180,7 +203,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     userDefinedFields: Linode.StackScript.UserDefinedField[],
     images: Linode.Image[],
     defaultData?: any
-  ) =>
+  ) => {
+    /**
+     * reset the selected Image but only if we're creating a Linode from
+     * a StackScript and not an app
+     */
+    if (this.props.createType !== 'fromApp') {
+      this.setState({ selectedImageID: undefined });
+    }
+
     this.setState({
       selectedStackScriptID: id,
       selectedStackScriptLabel: label,
@@ -189,8 +220,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       availableStackScriptImages: images,
       udfs: defaultData,
       /** reset image because stackscript might not be compatible with selected one */
-      selectedImageID: undefined
+      selectedImageID: undefined,
+      errors: undefined
     });
+  };
 
   setDiskSize = (size: number) => this.setState({ selectedDiskSize: size });
 
@@ -208,14 +241,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   generateLabel = () => {
     const { getLabel, imagesData, regionsData } = this.props;
-    const { selectedImageID, selectedRegionID } = this.state;
+    const {
+      selectedImageID,
+      selectedRegionID,
+      selectedStackScriptLabel
+    } = this.state;
 
     /* tslint:disable-next-line  */
     let arg1,
       arg2,
       arg3 = '';
 
-    if (selectedImageID) {
+    /**
+     * lean in favor of using stackscript label
+     * then next priority is image label
+     */
+    if (selectedStackScriptLabel) {
+      arg1 = selectedStackScriptLabel;
+    } else if (selectedImageID) {
       const selectedImage = imagesData.find(img => img.id === selectedImageID);
       /**
        * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
@@ -469,6 +512,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             resetSSHKeys={this.props.resetSSHKeys}
             selectedBackupID={this.state.selectedBackupID}
             setBackupID={this.setBackupID}
+            appInstances={this.state.appInstances}
+            appInstancesError={this.state.appInstancesError}
+            appInstancesLoading={this.state.appInstancesLoading}
           />
         </Grid>
       </StickyContainer>
