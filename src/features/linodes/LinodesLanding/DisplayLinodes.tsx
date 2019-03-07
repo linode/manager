@@ -36,7 +36,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   return (
-    <Paginate data={data} pageSize={25}>
+    <Paginate data={data}>
       {({
         data: paginatedData,
         handlePageChange,

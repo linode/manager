@@ -16,6 +16,7 @@ import {
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
 import LoadingIndicator from './components/LoadingIndicator';
+import MenuList from './components/MenuList';
 import MultiValueContainer from './components/MultiValueContainer';
 import MultiValueLabel from './components/MultiValueLabel';
 import MultiValueRemove from './components/MultiValueRemove';
@@ -310,6 +311,7 @@ export interface EnhancedSelectProps {
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
   filterOption?: (option: Item, inputValue: string) => boolean | null;
   small?: boolean;
+  guidance?: string | React.ReactNode;
 }
 
 // Material-UI versions of several React-Select components.
@@ -321,6 +323,7 @@ const _components = {
   MultiValueContainer,
   MultiValueLabel,
   MultiValueRemove,
+  MenuList,
   Option,
   DropdownIndicator,
   LoadingIndicator

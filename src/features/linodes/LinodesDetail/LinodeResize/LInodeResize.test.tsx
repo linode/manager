@@ -1,9 +1,8 @@
 import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { types } from 'src/__data__/types';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-
 import { LinodeResize } from './LinodeResize';
 
 describe('LinodeResize', () => {
@@ -13,6 +12,8 @@ describe('LinodeResize', () => {
     <LinodeResize
       onPresentSnackbar={jest.fn()}
       enqueueSnackbar={jest.fn()}
+      requestNotifications={jest.fn()}
+      {...reactRouterProps}
       classes={{
         root: '',
         title: '',
@@ -33,6 +34,8 @@ describe('LinodeResize', () => {
         <LinodeResize
           onPresentSnackbar={jest.fn()}
           enqueueSnackbar={jest.fn()}
+          requestNotifications={jest.fn()}
+          {...reactRouterProps}
           classes={{
             root: '',
             title: '',
@@ -64,6 +67,8 @@ describe('LinodeResize', () => {
             <LinodeResize
               onPresentSnackbar={jest.fn()}
               enqueueSnackbar={jest.fn()}
+              requestNotifications={jest.fn()}
+              {...reactRouterProps}
               classes={{
                 root: '',
                 title: '',
@@ -97,6 +102,8 @@ describe('LinodeResize', () => {
             <LinodeResize
               onPresentSnackbar={jest.fn()}
               enqueueSnackbar={jest.fn()}
+              requestNotifications={jest.fn()}
+              {...reactRouterProps}
               classes={{
                 root: '',
                 title: '',

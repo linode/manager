@@ -129,6 +129,7 @@ class Example extends React.Component<{}, State> {
           placeholder="Choose one fruit"
           onChange={this.handleChangeSingle}
           options={fruit}
+          guidance={'some text'}
         />
         <Select
           label="Always Loading"

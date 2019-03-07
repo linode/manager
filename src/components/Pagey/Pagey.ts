@@ -1,5 +1,7 @@
 import { clone } from 'ramda';
 import * as React from 'react';
+import { storage } from 'src/utilities/storage';
+
 
 /**
  * @todo Document loading prop update as a result of promise resolution/rejection.
@@ -64,7 +66,7 @@ export default (requestFn: PaginatedRequest) => (
       loading: true,
       isSorting: false,
       page: 1,
-      pageSize: 25,
+      pageSize: storage.pageSize.get(),
       error: undefined,
       orderBy: undefined,
       order: asc,
@@ -132,6 +134,7 @@ export default (requestFn: PaginatedRequest) => (
       this.setState({ pageSize, page: 1 }, () => {
         this.request();
       });
+      storage.pageSize.set(pageSize);
     };
 
     public handlePageChange = (page: number) => {

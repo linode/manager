@@ -64,7 +64,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     '& .react-select__menu': {
       marginTop: 12,
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-      maxHeight: 325,
+      maxHeight: 350,
       overflowY: 'auto',
       border: 0
     }
