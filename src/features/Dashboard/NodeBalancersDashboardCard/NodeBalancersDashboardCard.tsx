@@ -2,7 +2,6 @@ import { compose, take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
-import NodeBalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -14,6 +13,7 @@ import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
+import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
@@ -197,7 +197,7 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
           <Link to={`/nodebalancers/${id}`} className={'black nu block'}>
             <Grid container wrap="nowrap" alignItems="center">
               <Grid item className="py0">
-                <NodeBalancerIcon className={classes.icon} />
+                <EntityIcon variant="nodebalancer" />
               </Grid>
               <Grid item className={classes.labelGridWrapper}>
                 <Typography

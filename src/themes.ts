@@ -498,9 +498,6 @@ export const dark = () =>
           }
         },
         hover: {
-          '& > td:first-child': {
-            paddingLeft: 13
-          },
           '& a': {
             color: primaryColors.main
           }

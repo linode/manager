@@ -73,8 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   labelGridWrapper: {
-    paddingLeft: `${theme.spacing.unit / 2}px !important`,
-    paddingRight: `${theme.spacing.unit / 2}px !important`
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit / 2}px !important`
   },
   wrapHeader: {
     wordBreak: 'break-all'
@@ -186,11 +185,11 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
-  styled,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
     imagesData: imagesData.filter(i => i.is_public === true)
-  }))
+  })),
+  styled
 );
 
 export default enhanced(LinodeRowHeadCell);
