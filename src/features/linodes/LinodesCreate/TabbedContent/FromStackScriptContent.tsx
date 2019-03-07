@@ -34,7 +34,11 @@ import {
   WithDisplayData
 } from '../types';
 
-type ClassNames = 'main' | 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
+type ClassNames =
+  | 'main'
+  | 'sidebar'
+  | 'emptyImagePanel'
+  | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   main: {
@@ -144,7 +148,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedStackScriptID,
       selectedTypeID,
       selectedUDFs,
-      privateIPEnabled,
       tags
     } = this.props;
 
@@ -157,7 +160,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       root_pass: password /* required if image ID is provided */,
       image: selectedImageID /* optional */,
       backups_enabled: backupsEnabled /* optional */,
-      private_ip: privateIPEnabled,
       booted: true,
       private_ip: privateIPEnabled,
       authorized_users: userSSHKeys
