@@ -61,7 +61,7 @@ export const dark = () =>
       lightBlue: '#222',
       white: '#32363c',
       pureWhite: '#000',
-      tableHeader: 'rgba(0, 0, 0, 0.15)'
+      tableHeader: '#2B2E32'
     },
     color: {
       headline: primaryColors.headline,
