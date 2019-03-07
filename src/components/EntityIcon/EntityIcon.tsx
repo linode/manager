@@ -5,6 +5,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { spacing as themeSpacingStorage } from 'src/utilities/storage';
 
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -84,7 +85,11 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
     stopAnimation
   } = props;
 
-  const iconSize = size ? size : 40;
+  const iconSize = size
+    ? size
+    : themeSpacingStorage.get() === 'compact'
+    ? 34
+    : 40;
   const iconMap = {
     linode: LinodeIcon,
     nodebalancer: NodeBalancerIcon,

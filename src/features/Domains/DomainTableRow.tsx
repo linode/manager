@@ -14,7 +14,12 @@ import TableRow from 'src/components/TableRow';
 import Tags from 'src/components/Tags';
 import ActionMenu from './DomainActionMenu';
 
-type ClassNames = 'domain' | 'labelStatusWrapper' | 'tagWrapper' | 'domainRow';
+type ClassNames =
+  | 'domain'
+  | 'labelStatusWrapper'
+  | 'tagWrapper'
+  | 'domainRow'
+  | 'domainCellContainer';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   domain: {
@@ -22,6 +27,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   domainRow: {
     backgroundColor: theme.bg.white
+  },
+  domainCellContainer: {
+    padding: `${theme.spacing.unit}px !important`
   },
   labelStatusWrapper: {
     display: 'flex',
@@ -69,7 +77,7 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
                 loading={status === 'edit_mode'}
               />
             </Grid>
-            <Grid item>
+            <Grid item className={classes.domainCellContainer}>
               <div className={classes.labelStatusWrapper}>
                 <Typography role="header" variant="h3" data-qa-label>
                   {domain}
