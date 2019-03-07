@@ -21,6 +21,7 @@ import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import { RebuildDialog } from './RebuildDialog';
 import SelectImagePanel from './SelectImagePanel';
 
 type ClassNames = 'root' | 'error';
@@ -68,8 +69,13 @@ export const RebuildFromImage: React.StatelessComponent<
   const [password, setPassword] = React.useState<string>('');
   const [errors, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
 
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
   const handleSubmit = () => {
-    // @todo: as this is destructive, we really should be presenting a confirmation dialog before doing this.
+    // @todo: Ideally we would do form validation BEFORE opening up the
+    // confirmation dialog.
+    setIsLoading(true);
 
     const params: RebuildRequest = {
       image: selectedImage,
@@ -82,6 +88,8 @@ export const RebuildFromImage: React.StatelessComponent<
       .then(_ => {
         resetEventsPolling();
 
+        setIsLoading(false);
+        setIsDialogOpen(false);
         setSelectedImage('');
         setPassword('');
         setErrors([]);
@@ -92,6 +100,9 @@ export const RebuildFromImage: React.StatelessComponent<
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
+        setIsLoading(false);
+        setIsDialogOpen(false);
+
         setErrors(
           getAPIErrorOrDefault(
             errorResponse,
@@ -135,12 +146,18 @@ export const RebuildFromImage: React.StatelessComponent<
         <Button
           type="secondary"
           className="destructive"
-          onClick={handleSubmit}
+          onClick={() => setIsDialogOpen(true)}
           data-qa-rebuild
         >
           Rebuild
         </Button>
       </ActionsPanel>
+      <RebuildDialog
+        isOpen={isDialogOpen}
+        isLoading={isLoading}
+        handleClose={() => setIsDialogOpen(false)}
+        handleSubmit={handleSubmit}
+      />
     </Grid>
   );
 };
