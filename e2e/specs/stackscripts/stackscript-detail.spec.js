@@ -91,13 +91,16 @@ describe('StackScript - detail page and drawer suite', () => {
           script: '#!/bin/bash\necho "Hello Linode"',
       }
 
-      beforeAll(() => {
+    /* beforeAll(() => {
           ListStackScripts.create.click();
           ConfigureStackScripts.baseElementsDisplay();
           ConfigureStackScripts.configure(stackConfig);
-      });
+      });*/
 
       it('StackScript detail page displays for created StackScript', () => {
+          ListStackScripts.create.click();
+          ConfigureStackScripts.baseElementsDisplay();
+          ConfigureStackScripts.configure(stackConfig);
           ConfigureStackScripts.create(stackConfig);
           ListStackScripts.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.true);
           ListStackScripts.stackScriptDetailPage(stackConfig.label);

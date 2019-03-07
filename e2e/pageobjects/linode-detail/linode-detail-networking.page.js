@@ -33,7 +33,7 @@ class Networking extends Page {
     // drawer elements
     get serviceNotice() { return $('[data-qa-service-notice]'); }
     get allocate() { return $(`${this.drawerBase.selector} ${this.submitButton.selector}`); }
-    get submit() { return $(this.submitButton.selector); }
+    get submit() { return $(`${this.drawerBase.selector} ${this.submitButton.selector}`); }
     get cancel() { return $(`${this.drawerBase.selector} ${this.cancelButton.selector}`); }
 
     // view ip elements
@@ -165,9 +165,8 @@ class Networking extends Page {
         expect(this.drawerTitle.getText()).toBe('Edit Reverse DNS');
         expect(this.domainName.isVisible()).toBe(true)
         expect(this.domainName.$('input').getAttribute('placeholder')).toBe('Enter a domain name');
-        browser.debug();
-        expect(this.submitButton.isVisible()).toBe(true);
-        expect(this.cancelButton.isVisible()).toBe(true);
+        expect(this.submit.isVisible()).toBe(true);
+        expect(this.cancel.isVisible()).toBe(true);
     }
 
     delete(ip) {
