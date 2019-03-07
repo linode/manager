@@ -7,7 +7,10 @@ import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { getStackScriptsByUser } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  getCommunityStackscripts,
+  getStackScriptsByUser
+} from 'src/features/StackScripts/stackScriptUtils';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
@@ -249,6 +252,10 @@ export class LinodeCreate extends React.PureComponent<
         const {
           accountBackupsEnabled,
           userCannotCreateLinode,
+          selectedLinodeID,
+          updateLinodeID,
+          selectedBackupID,
+          setBackupID,
           ...rest
         } = this.props;
         return (
@@ -276,7 +283,24 @@ export class LinodeCreate extends React.PureComponent<
       title: 'Community StackScripts',
       type: 'fromStackScript',
       render: () => {
-        return <div>community stackscripts</div>;
+        const {
+          accountBackupsEnabled,
+          userCannotCreateLinode,
+          selectedLinodeID,
+          updateLinodeID,
+          selectedBackupID,
+          setBackupID,
+          ...rest
+        } = this.props;
+        return (
+          <FromStackScriptContent
+            accountBackupsEnabled={this.props.accountBackupsEnabled}
+            userCannotCreateLinode={this.props.userCannotCreateLinode}
+            request={getCommunityStackscripts}
+            header={'Select a StackScript'}
+            {...rest}
+          />
+        );
       }
     }
   ];
