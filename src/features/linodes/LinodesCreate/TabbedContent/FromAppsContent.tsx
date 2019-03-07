@@ -40,7 +40,7 @@ type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130
+      marginTop: '-130px !important'
     }
   },
   emptyImagePanel: {
@@ -194,7 +194,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid item className={`mlMain`}>
+        <Grid item className={`mlMain py0`}>
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectAppPanel
