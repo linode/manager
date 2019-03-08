@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { EventHandler } from 'src/store/types';
+import { requestNotifications } from '../notification/notification.requests';
 import {
   deleteLinode,
   requestLinodeForStore,
@@ -14,13 +15,14 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   switch (action) {
     /** Update Linode */
     case 'linode_migrate':
+    case 'linode_resize':
+      return handleLinodeMigrate(dispatch, status, id);
     case 'linode_reboot':
     case 'linode_rebuild':
     case 'linode_shutdown':
     case 'linode_snapshot':
     case 'linode_addip':
     case 'linode_boot':
-    case 'linode_resize':
     case 'backups_enable':
     case 'backups_cancel':
     case 'disk_imagize':
@@ -43,6 +45,28 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
 };
 
 export default linodeEventsHandler;
+
+const handleLinodeMigrate = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number
+) => {
+  switch (status) {
+    case 'notification':
+    case 'scheduled':
+    case 'started':
+      return dispatch(requestLinodeForStore(id));
+
+    case 'finished':
+    case 'failed':
+      // Once the migration/resize is done, we request notifications in order
+      // to clear the Migration Imminent notification
+      dispatch(requestNotifications());
+      return dispatch(requestLinodeForStore(id));
+    default:
+      return;
+  }
+};
 
 const handleLinodeClone = (
   dispatch: Dispatch<any>,
