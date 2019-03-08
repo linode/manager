@@ -1,4 +1,4 @@
-import { compose } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 
 import { RouteComponentProps } from 'react-router-dom';
@@ -14,9 +14,12 @@ import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import StackScript from 'src/components/StackScript';
+import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
 
 import { getStackScript } from 'src/services/stackscripts';
+
+import { getStackScriptUrl } from './stackScriptUtils';
 
 interface MatchProps {
   stackScriptId: string;
@@ -49,7 +52,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = RouteProps & WithStyles<ClassNames> & SetDocsProps;
+interface ProfileProps {
+  // From Profile container
+  username?: string;
+}
+
+type CombinedProps = ProfileProps &
+  RouteProps &
+  WithStyles<ClassNames> &
+  SetDocsProps;
 
 export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   state: State = {
@@ -70,7 +81,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, username } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -97,9 +108,12 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             <Button
               type="primary"
               className={classes.button}
-              href={`/linodes/create?type=fromStackScript&stackScriptID=${
-                stackScript.id
-              }&stackScriptUsername=${stackScript.username}`}
+              href={getStackScriptUrl(
+                stackScript.username,
+                stackScript.id,
+                stackScript.label,
+                username
+              )}
               data-qa-stack-deploy
             >
               Deploy New Linode
@@ -116,5 +130,11 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
 export default compose(
   withStyles(styles),
-  setDocs([StackScriptsDocs])
+  setDocs([StackScriptsDocs]),
+  withProfile((ownProps, profile) => {
+    return {
+      ...ownProps,
+      username: path(['username'], profile)
+    };
+  })
 )(StackScriptsDetail);
