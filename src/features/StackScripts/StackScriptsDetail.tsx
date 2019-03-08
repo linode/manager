@@ -80,8 +80,23 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       });
   }
 
+  handleClick = () => {
+    const { history, username } = this.props;
+    const { stackScript } = this.state;
+    if (!stackScript) {
+      return;
+    }
+    const url = getStackScriptUrl(
+      stackScript.username,
+      stackScript.id,
+      stackScript.label,
+      username
+    );
+    history.push(url);
+  };
+
   render() {
-    const { classes, username } = this.props;
+    const { classes } = this.props;
     const { loading, stackScript } = this.state;
 
     if (loading) {
@@ -108,12 +123,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
             <Button
               type="primary"
               className={classes.button}
-              href={getStackScriptUrl(
-                stackScript.username,
-                stackScript.id,
-                stackScript.label,
-                username
-              )}
+              onClick={this.handleClick}
               data-qa-stack-deploy
             >
               Deploy New Linode
