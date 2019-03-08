@@ -30,7 +30,7 @@ describe('Linode Detail - Rebuild Suite', () => {
         expect(Rebuild.rebuildDescriptionText.getText()).toBe(message);
     });
 
-    it('should display the option to rebuild from image or stackscript', function() {
+    it('should display the option to rebuild from image or stackscript', () => {
         Rebuild.rebuildSelect.click();
         browser.pause(500);
         const rebuildOptions = Rebuild.selectOptions.map(options => options.getText());
