@@ -32,7 +32,11 @@ namespace Linode {
     total: number;
   }
 
-  export type NodeBalancerConfigNodeMode = 'accept' | 'reject' | 'drain';
+  export type NodeBalancerConfigNodeMode =
+    | 'accept'
+    | 'reject'
+    | 'backup'
+    | 'drain';
 
   export interface NodeBalancerConfigNode {
     id: number;
