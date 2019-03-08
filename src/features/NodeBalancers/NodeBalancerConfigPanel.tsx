@@ -1152,6 +1152,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     >
                                       Reject
                                     </MenuItem>
+                                    <MenuItem
+                                      value="backup"
+                                      data-node-idx={idx}
+                                    >
+                                      Backup
+                                    </MenuItem>
                                     <MenuItem value="drain" data-node-idx={idx}>
                                       Drain
                                     </MenuItem>

@@ -5,7 +5,11 @@ import { mergeAddressAndPort } from './utils';
 
 type Page<T> = Linode.ResourcePage<T>;
 
-export type NodeBalancerConfigNodeMode = 'accept' | 'reject' | 'drain';
+export type NodeBalancerConfigNodeMode =
+  | 'accept'
+  | 'reject'
+  | 'backup'
+  | 'drain';
 
 export interface CreateNodeBalancerConfigNode {
   address: string;

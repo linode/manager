@@ -13,7 +13,10 @@ export const nodeBalancerConfigNodeSchema = object({
     .required('Label is required.'),
 
   address: string()
-    .matches(/^192\.168\.\d{1,3}\.\d{1,3}$/, 'Must be a valid private IPv4 address.')
+    .matches(
+      /^192\.168\.\d{1,3}\.\d{1,3}$/,
+      'Must be a valid private IPv4 address.'
+    )
     .required('IP address is required.'),
 
   port: number()
@@ -27,7 +30,7 @@ export const nodeBalancerConfigNodeSchema = object({
     .min(1, `Weight must be between 1 and 255.`)
     .max(255, `Weight must be between 1 and 255.`),
 
-  mode: mixed().oneOf(['accept', 'reject', 'drain'])
+  mode: mixed().oneOf(['accept', 'reject', 'backup', 'drain'])
 });
 
 export const createNodeBalancerConfigSchema = object({
