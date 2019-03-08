@@ -21,16 +21,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   mostRecentBackup: string | null;
   linodeId: number;
+  backupsEnabled: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const LinodeRowBackupCell: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, mostRecentBackup, linodeId } = props;
+  const { classes, mostRecentBackup, backupsEnabled, linodeId } = props;
 
   return (
     <TableCell parentColumn="Last Backup" className={classes.root}>
-      <BackupStatus linodeId={linodeId} mostRecentBackup={mostRecentBackup} />
+      <BackupStatus
+        linodeId={linodeId}
+        backupsEnabled={backupsEnabled}
+        mostRecentBackup={mostRecentBackup}
+      />
     </TableCell>
   );
 };

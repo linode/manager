@@ -104,7 +104,7 @@ const styles: StyleRulesCallback = theme => {
     },
     icon: {
       color: 'white',
-      marginLeft: -38,
+      marginLeft: -(theme.spacing.unit * 2 + 22),
       marginRight: 18
     }
   };
