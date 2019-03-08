@@ -18,7 +18,11 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { createObjectStorageKeys } from 'src/services/profile/objectStorageKeys';
+import { useForm } from 'src/hooks/useForm';
+import {
+  createObjectStorageKeys,
+  CreateObjectStorageKeysRequest
+} from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ObjectStorageDrawer from './ObjectStorageDrawer';
 
@@ -72,25 +76,32 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes } = props;
 
   const [keys, setKeys] = React.useState<KeysState>({ dialogOpen: false });
+  const [form, setField, resetForm] = useForm<CreateObjectStorageKeysRequest>({
+    label: ''
+  });
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [drawer, setDrawer] = React.useState<DrawerState>({ open: false });
 
   const closeDialog = () => setKeys({ ...keys, dialogOpen: false });
-  const openDrawer = () => setDrawer({ ...drawer, open: true });
-  const closeDrawer = () => setDrawer({ ...drawer, open: false });
+  const openDrawer = () => setDrawer({ open: true, errors: [] });
+  const closeDrawer = () => setDrawer({ open: false, errors: [] });
 
   const handleSubmit = () => {
-    createObjectStorageKeys()
+    setIsLoading(true);
+    createObjectStorageKeys(form)
       .then(data => {
-        // Keys are returned from the API in an array – for now, just use the first pair.
-        if (data.keys && data.keys.length > 0) {
-          const accessKey = data.keys[0].access_key;
-          const secretKey = data.keys[0].secret_key;
+        setIsLoading(false);
+        resetForm();
 
-          setKeys({ accessKey, secretKey, dialogOpen: true });
-          closeDrawer();
-        }
+        const accessKey = data.access_key;
+        const secretKey = data.secret_key;
+
+        setKeys({ accessKey, secretKey, dialogOpen: true });
+        closeDrawer();
       })
       .catch(err => {
+        setIsLoading(false);
+
         const errors = getAPIErrorOrDefault(
           err,
           'Error generating Object Storage Key.'
@@ -146,6 +157,9 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         open={drawer.open}
         onClose={closeDrawer}
         onSubmit={handleSubmit}
+        label={form.label}
+        updateLabel={e => setField('label', e.target.value)}
+        isLoading={isLoading}
         errors={drawer.errors}
       />
 

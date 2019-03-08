@@ -7,7 +7,10 @@ describe('ObjectStorageDrawer', () => {
     classes: { root: '' },
     open: true,
     onSubmit: jest.fn(),
-    onClose: jest.fn()
+    onClose: jest.fn(),
+    label: 'test-label',
+    updateLabel: jest.fn(),
+    isLoading: false
   };
   const wrapper = shallow<Props>(<ObjectStorageDrawer {...props} />);
   it('renders without crashing', () => {
@@ -34,26 +37,5 @@ describe('ObjectStorageDrawer', () => {
     expect(wrapper.find('[data-qa-error]').prop('text')).toBe(
       'An error occurred.'
     );
-  });
-  it('can display multiple errors', () => {
-    wrapper.setProps({
-      errors: [
-        { field: 'none', reason: 'An error occurred.' },
-        { field: 'label', reason: 'Another error occurred.' }
-      ]
-    });
-    expect(wrapper.find('[data-qa-error]')).toHaveLength(2);
-    expect(
-      wrapper
-        .find('[data-qa-error]')
-        .at(0)
-        .prop('text')
-    ).toBe('An error occurred.');
-    expect(
-      wrapper
-        .find('[data-qa-error]')
-        .at(1)
-        .prop('text')
-    ).toBe('Another error occurred.');
   });
 });
