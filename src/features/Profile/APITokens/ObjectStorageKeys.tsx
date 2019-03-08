@@ -76,7 +76,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes } = props;
 
   const [keys, setKeys] = React.useState<KeysState>({ dialogOpen: false });
-  const [form, setField] = useForm<CreateObjectStorageKeysRequest>({
+  const [form, setField, resetForm] = useForm<CreateObjectStorageKeysRequest>({
     label: ''
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -90,16 +90,14 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
     setIsLoading(true);
     createObjectStorageKeys(form)
       .then(data => {
-        // Keys are returned from the API in an array – for now, just use the first pair.
-        if (data.keys && data.keys.length > 0) {
-          setIsLoading(false);
+        setIsLoading(false);
+        resetForm();
 
-          const accessKey = data.keys[0].access_key;
-          const secretKey = data.keys[0].secret_key;
+        const accessKey = data.access_key;
+        const secretKey = data.secret_key;
 
-          setKeys({ accessKey, secretKey, dialogOpen: true });
-          closeDrawer();
-        }
+        setKeys({ accessKey, secretKey, dialogOpen: true });
+        closeDrawer();
       })
       .catch(err => {
         setIsLoading(false);

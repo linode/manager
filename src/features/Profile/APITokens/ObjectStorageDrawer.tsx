@@ -62,7 +62,12 @@ export const ObjectStorageDrawer: React.StatelessComponent<
       />
 
       <ActionsPanel>
-        <Button type="primary" onClick={onSubmit} data-qa-submit>
+        <Button
+          type="primary"
+          onClick={onSubmit}
+          loading={isLoading}
+          data-qa-submit
+        >
           Submit
         </Button>
         <Button
@@ -70,7 +75,6 @@ export const ObjectStorageDrawer: React.StatelessComponent<
           data-qa-cancel
           type="secondary"
           className="cancel"
-          loading={isLoading}
         >
           Cancel
         </Button>
