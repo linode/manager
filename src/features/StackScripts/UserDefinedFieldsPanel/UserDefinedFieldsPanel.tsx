@@ -116,10 +116,13 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
       </Typography>
 
       {userDefinedFields!
-        .filter(field => field.hasOwnProperty('default') !== true)
+        .filter(
+          (field: Linode.StackScript.UserDefinedField) =>
+            field.hasOwnProperty('default') !== true
+        )
         .map((field: Linode.StackScript.UserDefinedField) => {
           const error = getError(field, props.errors);
-          <React.Fragment>{renderField(field, error)}</React.Fragment>;
+          return renderField(field, error);
         })}
 
       <ShowMoreExpansion name="Show Advanced Options">
@@ -128,17 +131,15 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           for creation.
         </Typography>
         {userDefinedFields!
-          .filter(field => field.hasOwnProperty('default') === true)
+          .filter(
+            (field: Linode.StackScript.UserDefinedField) =>
+              field.hasOwnProperty('default') === true
+          )
           .map((field: Linode.StackScript.UserDefinedField) => {
             const error = getError(field, props.errors);
-            <React.Fragment>{renderField(field, error)}</React.Fragment>;
+            return renderField(field, error);
           })}
       </ShowMoreExpansion>
-
-      {/* {userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
-        const error = getError(field, props.errors);
-        return renderField(field, error);
-      })} */}
     </Paper>
   );
 };
