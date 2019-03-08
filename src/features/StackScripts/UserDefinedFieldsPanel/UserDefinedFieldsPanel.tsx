@@ -12,7 +12,7 @@ import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 
-type ClassNames = 'root' | 'username';
+type ClassNames = 'root' | 'username' | 'optionalFieldWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -26,6 +26,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   username: {
     color: theme.color.grey1
+  },
+  optionalFieldWrapper: {
+    [theme.breakpoints.up('lg')]: {
+      columnCount: 3
+    }
   }
 });
 
@@ -115,6 +120,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
         <span>{`${props.selectedLabel} Options`}</span>
       </Typography>
 
+      {/* Required Fields */}
       {userDefinedFields!
         .filter(
           (field: Linode.StackScript.UserDefinedField) =>
@@ -125,20 +131,23 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           return renderField(field, error);
         })}
 
+      {/* Optional Fields */}
       <ShowMoreExpansion name="Show Advanced Options">
         <Typography variant="body1">
           These fields are additional configuration options and are not required
           for creation.
         </Typography>
-        {userDefinedFields!
-          .filter(
-            (field: Linode.StackScript.UserDefinedField) =>
-              field.hasOwnProperty('default') === true
-          )
-          .map((field: Linode.StackScript.UserDefinedField) => {
-            const error = getError(field, props.errors);
-            return renderField(field, error);
-          })}
+        <div className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}>
+          {userDefinedFields!
+            .filter(
+              (field: Linode.StackScript.UserDefinedField) =>
+                field.hasOwnProperty('default') === true
+            )
+            .map((field: Linode.StackScript.UserDefinedField) => {
+              const error = getError(field, props.errors);
+              return renderField(field, error);
+            })}
+        </div>
       </ShowMoreExpansion>
     </Paper>
   );
