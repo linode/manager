@@ -93,6 +93,7 @@
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js --env=jsdom",
+    "test:debug": "node --inspect-brk scripts/test.js --runInBand --env=jsdom",
     "storybook": "start-storybook -p 6006",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
