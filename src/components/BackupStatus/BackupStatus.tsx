@@ -46,36 +46,55 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   mostRecentBackup: string | null;
   linodeId: number;
+  backupsEnabled: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const BackupStatus: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, mostRecentBackup, linodeId } = props;
+  const { classes, mostRecentBackup, linodeId, backupsEnabled } = props;
+
+  if (mostRecentBackup) {
+    return (
+      <Typography variant="body1" className={classes.backupText}>
+        <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={'never'} />
+      </Typography>
+    );
+  }
+
+  if (backupsEnabled) {
+    return (
+      <div className={classes.wrapper}>
+        <Tooltip title="Edit Backups" placement={'right'}>
+          <a
+            aria-label={'Edit Backups'}
+            href={`/linodes/${linodeId}/backup`}
+            className={classes.backupLink}
+          >
+            <Typography variant="body1" className={classes.noBackupText}>
+              Scheduled
+            </Typography>
+          </a>
+        </Tooltip>
+      </div>
+    );
+  }
 
   return (
-    <React.Fragment>
-      {mostRecentBackup ? (
-        <Typography variant="body1" className={classes.backupText}>
-          <DateTimeDisplay value={mostRecentBackup} humanizeCutoff={'never'} />
-        </Typography>
-      ) : (
-        <div className={classes.wrapper}>
-          <Tooltip title="Enable Backups" placement={'right'}>
-            <a
-              aria-label={'Enable Backups'}
-              href={`/linodes/${linodeId}/backup`}
-              className={classes.backupLink}
-            >
-              <Typography variant="body1" className={classes.noBackupText}>
-                Never
-              </Typography>
-              <Backup className={`${classes.icon} backupIcon`} />
-            </a>
-          </Tooltip>
-        </div>
-      )}
-    </React.Fragment>
+    <div className={classes.wrapper}>
+      <Tooltip title="Enable Backups" placement={'right'}>
+        <a
+          aria-label={'Enable Backups'}
+          href={`/linodes/${linodeId}/backup`}
+          className={classes.backupLink}
+        >
+          <Typography variant="body1" className={classes.noBackupText}>
+            Never
+          </Typography>
+          <Backup className={`${classes.icon} backupIcon`} />
+        </a>
+      </Tooltip>
+    </div>
   );
 };
 

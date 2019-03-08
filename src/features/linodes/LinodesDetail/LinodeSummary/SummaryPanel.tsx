@@ -97,6 +97,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
       linodeRegion,
       linodeIpv4,
       linodeIpv6,
+      backupsEnabled,
       mostRecentBackup
     } = this.props;
 
@@ -160,6 +161,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           </Typography>
           <BackupStatus
             linodeId={linodeId}
+            backupsEnabled={backupsEnabled}
             mostRecentBackup={mostRecentBackup}
           />
         </Paper>
@@ -194,6 +196,7 @@ interface LinodeContextProps {
   linodeTags: string[];
   mostRecentBackup: string | null;
   linodeVolumes: Linode.Volume[];
+  backupsEnabled: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -203,6 +206,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeImageId: linode.image,
   linodeTags: linode.tags,
   linodeId: linode.id,
+  backupsEnabled: linode.backups.enabled,
   linodeVolumes: linode._volumes
 }));
 
