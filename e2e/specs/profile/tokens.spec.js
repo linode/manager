@@ -58,10 +58,10 @@ describe('View - Personal Access Tokens', () => {
             tokenCreateDrawer.closeDialog.click();
             const now = new Date();
             const sixMonths = new Date();
-            sixMonths.setMonth( now.getMonth() + 6);
-            sixMonths.setDate( sixMonths.getDate() - 1);
-            expect(browser.waitForVisible(newToken)).toBe(true);
-            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,10));
+            sixMonths.setMonth(now.getMonth() + 6);
+            sixMonths.setDate(sixMonths.getDate());
+            $(newToken).waitForVisible();
+            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,8));
         });
 
         it('should display tokens', () => {

@@ -13,9 +13,10 @@ describe('Can not boot a linode without an Image', () => {
         linodeLabel: `Auto${timestamp()}`,
         noImage: true
     };
+    let testLinode;
 
     beforeAll(() => {
-        apiCreateMultipleLinodes([linode]);
+        testLinode = apiCreateMultipleLinodes([linode])[0];
     });
 
     afterAll(() => {
@@ -28,12 +29,10 @@ describe('Can not boot a linode without an Image', () => {
         toolTipIcon.waitForVisible(constants.wait.normal);
         toolTipIcon.moveToObject();
         expect(ListLinodes.toolTipMessage.getText()).toBe(toolTipMessage);
-        $('body').click();
-        browser.pause(500);
     });
 
     it('Power on tool tip displays for a linode without an image on Linode detail page', () => {
-        ListLinodes.navigateToDetail(linode.linodeLabel);
+        browser.url(`${constants.routes.linodes}/${testLinode.id}/summary`)
         browser.pause(500);
         LinodeDetail.powerControl.waitForVisible(constants.wait.normal);
         LinodeDetail.powerControl.click();
