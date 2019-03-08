@@ -11,13 +11,7 @@ import TextField from 'src/components/TextField';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    '.optionalFieldWrapper &': {
-      [theme.breakpoints.up('lg')]: {
-        maxWidth: '70%'
-      }
-    }
-  }
+  root: {}
 });
 
 interface Props {
