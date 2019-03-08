@@ -83,8 +83,8 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const [drawer, setDrawer] = React.useState<DrawerState>({ open: false });
 
   const closeDialog = () => setKeys({ ...keys, dialogOpen: false });
-  const openDrawer = () => setDrawer({ ...drawer, open: true });
-  const closeDrawer = () => setDrawer({ ...drawer, open: false });
+  const openDrawer = () => setDrawer({ open: true, errors: [] });
+  const closeDrawer = () => setDrawer({ open: false, errors: [] });
 
   const handleSubmit = () => {
     setIsLoading(true);

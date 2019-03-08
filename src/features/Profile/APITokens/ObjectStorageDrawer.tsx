@@ -11,6 +11,7 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { CreateObjectStorageKeysRequest } from 'src/services/profile/objectStorageKeys';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
 
@@ -43,12 +44,14 @@ export const ObjectStorageDrawer: React.StatelessComponent<
     isLoading,
     errors
   } = props;
+
+  const hasErrorFor = getErrorMap(['label'], errors);
+  const generalError = hasErrorFor.none;
   return (
     <Drawer title="Create an Object Storage Key" open={open} onClose={onClose}>
-      {errors &&
-        errors.map(error => (
-          <Notice key={error.reason} text={error.reason} error data-qa-error />
-        ))}
+      {generalError && (
+        <Notice key={generalError} text={generalError} error data-qa-error />
+      )}
       <Typography>
         Generate an Object Storage key pair for use with an S3-compatible
         client.
@@ -58,6 +61,8 @@ export const ObjectStorageDrawer: React.StatelessComponent<
         label="Label"
         data-qa-add-label
         value={label}
+        error={!!hasErrorFor.label}
+        errorText={hasErrorFor.label}
         onChange={updateLabel}
       />
 
