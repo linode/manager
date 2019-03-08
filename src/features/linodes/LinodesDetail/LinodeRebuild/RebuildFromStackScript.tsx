@@ -192,7 +192,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         error={hasErrorFor['stackscript_id']}
         selectedId={ss.id}
         selectedUsername={ss.username}
-        updateFor={[ss.id, errors]}
+        updateFor={[classes, ss.id, errors]}
         onSelect={handleSelect}
         publicImages={filterPublicImages(imagesData)}
         resetSelectedStackScript={resetStackScript}
@@ -205,7 +205,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
           selectedUsername={ss.username}
           handleChange={handleChangeUDF}
           userDefinedFields={ss.user_defined_fields}
-          updateFor={[ss.user_defined_fields, ss.udf_data, errors]}
+          updateFor={[classes, ss.user_defined_fields, ss.udf_data, errors]}
           udf_data={ss.udf_data}
         />
       )}
@@ -213,7 +213,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         <SelectImagePanel
           images={ss.images}
           handleSelection={(selected: string) => setField('imageID', selected)}
-          updateFor={[form.imageID, ss.images, errors]}
+          updateFor={[classes, form.imageID, ss.images, errors]}
           selectedImageID={form.imageID}
           error={hasErrorFor.image}
           hideMyImages={true}
@@ -239,7 +239,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
       <AccessPanel
         password={form.password}
         handleChange={value => setField('password', value)}
-        updateFor={[form.password, errors, userSSHKeys, ss.id]}
+        updateFor={[classes, form.password, errors, userSSHKeys, ss.id]}
         error={hasErrorFor.root_pass}
         users={userSSHKeys}
         data-qa-access-panel
