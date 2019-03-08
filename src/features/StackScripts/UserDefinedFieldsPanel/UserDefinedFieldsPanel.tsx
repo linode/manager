@@ -7,6 +7,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
+import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
@@ -113,10 +114,31 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
         } / `}</span>
         <span>{`${props.selectedLabel} Options`}</span>
       </Typography>
-      {userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
+
+      {userDefinedFields!
+        .filter(field => field.hasOwnProperty('default') !== true)
+        .map((field: Linode.StackScript.UserDefinedField) => {
+          const error = getError(field, props.errors);
+          <React.Fragment>{renderField(field, error)}</React.Fragment>;
+        })}
+
+      <ShowMoreExpansion name="Show Advanced Options">
+        <Typography variant="body1">
+          These fields are additional configuration options and are not required
+          for creation.
+        </Typography>
+        {userDefinedFields!
+          .filter(field => field.hasOwnProperty('default') === true)
+          .map((field: Linode.StackScript.UserDefinedField) => {
+            const error = getError(field, props.errors);
+            <React.Fragment>{renderField(field, error)}</React.Fragment>;
+          })}
+      </ShowMoreExpansion>
+
+      {/* {userDefinedFields!.map((field: Linode.StackScript.UserDefinedField) => {
         const error = getError(field, props.errors);
         return renderField(field, error);
-      })}
+      })} */}
     </Paper>
   );
 };
