@@ -239,7 +239,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
       <AccessPanel
         password={form.password}
         handleChange={value => setField('password', value)}
-        updateFor={[classes, form.password, errors, userSSHKeys, ss.id]}
+        updateFor={[form.password, errors, userSSHKeys, ss.id]}
         error={hasErrorFor.root_pass}
         users={userSSHKeys}
         data-qa-access-panel
