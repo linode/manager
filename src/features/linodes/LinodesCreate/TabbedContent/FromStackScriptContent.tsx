@@ -41,17 +41,11 @@ type ClassNames =
   | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  main: {
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        order: 3
-      }
-    }
-  },
+  root: {},
+  main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-      order: 2
+      marginTop: '-130px !important'
     }
   },
   emptyImagePanel: {
@@ -215,7 +209,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid item className={`mlMain`}>
+        <Grid item className={`${classes.main} mlMain py0`}>
           <CreateLinodeDisabled isDisabled={disabled} />
           {generalError && <Notice text={generalError} error={true} />}
           <CASelectStackScriptPanel

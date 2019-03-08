@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -15,7 +16,6 @@ import {
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import { getLinodeBackups } from 'src/services/linodes';
 import {
@@ -40,23 +40,15 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  main: {
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        order: 3
-      }
-    }
-  },
+  main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-      order: 2
+      marginTop: '-130px !important'
     }
   }
 });
 
 interface Props {
-  notice?: Notice;
   linodesData: Linode.Linode[];
   selectedBackupFromQuery?: number;
   selectedLinodeFromQuery?: number;
@@ -80,11 +72,6 @@ type CombinedProps = Props &
   WithAll &
   WithDisplayData &
   WithStyles<ClassNames>;
-
-interface Notice {
-  text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
-}
 
 const errorResources = {
   type: 'A plan selection',
@@ -203,7 +190,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       accountBackupsEnabled,
       classes,
       errors,
-      notice,
       privateIPEnabled,
       selectedBackupID,
       selectedDiskSize,
@@ -226,7 +212,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       updateLabel
     } = this.props;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     const imageInfo = selectedBackupInfo;
 
@@ -234,28 +219,24 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
+        <Grid item className={`${classes.main} mlMain py0`}>
           {this.state.isGettingBackups ? (
-            <CircleProgress noTopMargin />
+            <Paper>
+              <CircleProgress noTopMargin />
+            </Paper>
           ) : !this.userHasBackups() ? (
-            <Placeholder
-              icon={VolumeIcon}
-              copy="You either do not have backups enabled for any Linode
+            <Paper>
+              <Placeholder
+                icon={VolumeIcon}
+                copy="You either do not have backups enabled for any Linode
                 or your Linodes have not been backed up. Please visit the 'Backups'
                 panel in the Linode Settings view"
-              title="Create from Backup"
-            />
+                title="Create from Backup"
+              />
+            </Paper>
           ) : (
             <React.Fragment>
               <CreateLinodeDisabled isDisabled={disabled} />
-              {notice && !disabled && (
-                <Notice
-                  text={notice.text}
-                  error={notice.level === 'error'}
-                  warning={notice.level === 'warning'}
-                />
-              )}
-              {generalError && <Notice text={generalError} error={true} />}
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
@@ -267,6 +248,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 handleSelection={updateLinodeID}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={disabled}
+                notice={{
+                  level: 'warning',
+                  text: `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.
+                          Also note that this Linode will need to be manually booted after it finishes
+                          provisioning.`
+                }}
               />
               <SelectBackupPanel
                 error={hasErrorFor('backup_id')}

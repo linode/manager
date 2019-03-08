@@ -51,7 +51,7 @@ interface State {
 export class LinodeCreate extends React.PureComponent<
   CombinedProps & DispatchProps,
   State
-  > {
+> {
   constructor(props: CombinedProps & DispatchProps) {
     super(props);
 
@@ -210,18 +210,7 @@ export class LinodeCreate extends React.PureComponent<
           updatePassword,
           ...rest
         } = this.props;
-        return (
-          <FromBackupsContent
-            notice={{
-              level: 'warning',
-              text: `This newly created Linode will be created with
-                      the same password and SSH Keys (if any) as the original Linode.
-                      Also note that this Linode will need to be manually booted after it finishes
-                      provisioning.`
-            }}
-            {...rest}
-          />
-        );
+        return <FromBackupsContent {...rest} />;
       }
     },
     {
@@ -247,16 +236,7 @@ export class LinodeCreate extends React.PureComponent<
           appInstancesLoading,
           ...rest
         } = this.props;
-        return (
-          <FromLinodeContent
-            notice={{
-              level: 'warning',
-              text: `This newly created Linode will be created with
-                      the same password and SSH Keys (if any) as the original Linode.`
-            }}
-            {...rest}
-          />
-        );
+        return <FromLinodeContent {...rest} />;
       }
     },
     {
@@ -367,7 +347,7 @@ export class LinodeCreate extends React.PureComponent<
 
     return (
       <React.Fragment>
-        <Grid item className={`mlMain`}>
+        <Grid item className={`mlMain py0`}>
           <AppBar position="static" color="default">
             <Tabs
               value={selectedTab}
