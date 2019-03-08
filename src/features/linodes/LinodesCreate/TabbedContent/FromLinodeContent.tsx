@@ -4,6 +4,7 @@ import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -12,7 +13,6 @@ import {
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 
@@ -34,29 +34,13 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  main: {
-    '&.mlMain': {
-      [theme.breakpoints.up('lg')]: {
-        order: 3
-      }
-    }
-  },
+  main: {},
   sidebar: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130,
-      order: 2
+      marginTop: '-130px !important'
     }
   }
 });
-
-interface Notice {
-  text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
-}
-
-interface Props {
-  notice?: Notice;
-}
 
 const errorResources = {
   type: 'A plan selection',
@@ -65,8 +49,7 @@ const errorResources = {
   root_pass: 'A root password'
 };
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
+type CombinedProps = WithStyles<ClassNames> &
   WithDisplayData &
   CloneFormStateHandlers &
   WithLinodesImagesTypesAndRegions;
@@ -99,7 +82,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
   render() {
     const {
-      notice,
       classes,
       errors,
       accountBackupsEnabled,
@@ -121,33 +103,26 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
 
     return (
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
-          <Grid item className={`${classes.main}`}>
-            <Placeholder
-              icon={VolumeIcon}
-              copy="You do not have any existing Linodes to clone from.
-                  Please first create a Linode from either an Image or StackScript."
-              title="Clone from Existing Linode"
-            />
+          <Grid item className={`${classes.main} py0`}>
+            <Paper>
+              <Placeholder
+                icon={VolumeIcon}
+                copy="You do not have any existing Linodes to clone from.
+                    Please first create a Linode from either an Image or StackScript."
+                title="Clone from Existing Linode"
+              />
+            </Paper>
           </Grid>
         ) : (
           <React.Fragment>
-            <Grid item className={`${classes.main} mlMain`}>
+            <Grid item className={`${classes.main} mlMain py0`}>
               <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-              {notice && !userCannotCreateLinode && (
-                <Notice
-                  text={notice.text}
-                  error={notice.level === 'error'}
-                  warning={notice.level === 'warning'}
-                />
-              )}
-              {generalError && <Notice text={generalError} error={true} />}
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
                 linodes={extendLinodes(linodes, images, types)}
@@ -156,6 +131,11 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 handleSelection={this.handleSelectLinode}
                 updateFor={[selectedLinodeID, errors]}
                 disabled={userCannotCreateLinode}
+                notice={{
+                  level: 'warning',
+                  text: `This newly created Linode will be created with
+                          the same password and SSH Keys (if any) as the original Linode.`
+                }}
               />
               <SelectRegionPanel
                 error={hasErrorFor('region')}
@@ -250,6 +230,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props & CloneFormStateHandlers>(styled);
+const enhanced = compose<CombinedProps, CloneFormStateHandlers>(styled);
 
 export default enhanced(FromLinodeContent);

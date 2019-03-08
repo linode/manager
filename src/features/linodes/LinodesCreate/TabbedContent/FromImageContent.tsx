@@ -5,6 +5,7 @@ import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -24,14 +25,19 @@ import { renderBackupsDisplaySection } from './utils';
 
 import { BaseFormStateAndHandlers, WithAll, WithDisplayData } from '../types';
 
-type ClassNames = 'root' | 'main' | 'sidebar';
+type ClassNames = 'root' | 'main' | 'sidebarPrivate' | 'sidebarPublic';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   main: {},
-  sidebar: {
+  sidebarPrivate: {
     [theme.breakpoints.up('lg')]: {
-      marginTop: -130
+      marginTop: '-130px !important'
+    }
+  },
+  sidebarPublic: {
+    [theme.breakpoints.up('lg')]: {
+      marginTop: '0 !important'
     }
   }
 });
@@ -110,24 +116,26 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
 
     if (variant === 'private' && privateImages.length === 0) {
       return (
-        <Grid item className={`${classes.main} mlMain`}>
-          <Placeholder
-            title="My Images"
-            copy={
-              <span>
-                You don't have any private Images. Visit the{' '}
-                <Link to="/images">Images section</Link> to create an Image from
-                one of your Linode's disks.
-              </span>
-            }
-          />
+        <Grid item className={`${classes.main} mlMain py0`}>
+          <Paper>
+            <Placeholder
+              title="My Images"
+              copy={
+                <span>
+                  You don't have any private Images. Visit the{' '}
+                  <Link to="/images">Images section</Link> to create an Image
+                  from one of your Linode's disks.
+                </span>
+              }
+            />
+          </Paper>
         </Grid>
       );
     }
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain`}>
+        <Grid item className={`${classes.main} mlMain py0`}>
           {notice && (
             <Notice
               text={notice.text}
@@ -219,7 +227,15 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             disabled={userCannotCreateLinode}
           />
         </Grid>
-        <Grid item className={`${classes.sidebar} mlSidebar`}>
+        <Grid
+          item
+          className={
+            'mlSidebar ' +
+            (variant === 'private'
+              ? classes.sidebarPrivate
+              : classes.sidebarPublic)
+          }
+        >
           <Sticky topOffset={-24} disableCompensation>
             {(props: StickyProps) => {
               const displaySections = [];
