@@ -7,7 +7,10 @@ describe('ObjectStorageDrawer', () => {
     classes: { root: '' },
     open: true,
     onSubmit: jest.fn(),
-    onClose: jest.fn()
+    onClose: jest.fn(),
+    label: 'test-label',
+    updateLabel: jest.fn(),
+    isLoading: false
   };
   const wrapper = shallow<Props>(<ObjectStorageDrawer {...props} />);
   it('renders without crashing', () => {

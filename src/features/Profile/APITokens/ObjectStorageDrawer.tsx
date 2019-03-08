@@ -10,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { CreateObjectStorageKeysRequest } from 'src/services/profile/objectStorageKeys';
 
 type ClassNames = 'root';
 
@@ -21,15 +22,27 @@ export interface Props {
   open: boolean;
   onClose: () => void;
   onSubmit: () => void;
+  updateLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isLoading: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  CreateObjectStorageKeysRequest &
+  WithStyles<ClassNames>;
 
 export const ObjectStorageDrawer: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { open, onClose, onSubmit, errors } = props;
+  const {
+    open,
+    onClose,
+    onSubmit,
+    label,
+    updateLabel,
+    isLoading,
+    errors
+  } = props;
   return (
     <Drawer title="Create an Object Storage Key" open={open} onClose={onClose}>
       {errors &&
@@ -41,8 +54,12 @@ export const ObjectStorageDrawer: React.StatelessComponent<
         client.
       </Typography>
 
-      {/* @todo: This label field doesn't actually do anything yet */}
-      <TextField label="Label" data-qa-add-label />
+      <TextField
+        label="Label"
+        data-qa-add-label
+        value={label}
+        onChange={updateLabel}
+      />
 
       <ActionsPanel>
         <Button type="primary" onClick={onSubmit} data-qa-submit>
@@ -53,6 +70,7 @@ export const ObjectStorageDrawer: React.StatelessComponent<
           data-qa-cancel
           type="secondary"
           className="cancel"
+          loading={isLoading}
         >
           Cancel
         </Button>

@@ -18,7 +18,11 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { createObjectStorageKeys } from 'src/services/profile/objectStorageKeys';
+import { useForm } from 'src/hooks/useForm';
+import {
+  createObjectStorageKeys,
+  CreateObjectStorageKeysRequest
+} from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ObjectStorageDrawer from './ObjectStorageDrawer';
 
@@ -72,6 +76,10 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes } = props;
 
   const [keys, setKeys] = React.useState<KeysState>({ dialogOpen: false });
+  const [form, setField] = useForm<CreateObjectStorageKeysRequest>({
+    label: ''
+  });
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [drawer, setDrawer] = React.useState<DrawerState>({ open: false });
 
   const closeDialog = () => setKeys({ ...keys, dialogOpen: false });
@@ -79,10 +87,13 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const closeDrawer = () => setDrawer({ ...drawer, open: false });
 
   const handleSubmit = () => {
-    createObjectStorageKeys()
+    setIsLoading(true);
+    createObjectStorageKeys(form)
       .then(data => {
         // Keys are returned from the API in an array – for now, just use the first pair.
         if (data.keys && data.keys.length > 0) {
+          setIsLoading(false);
+
           const accessKey = data.keys[0].access_key;
           const secretKey = data.keys[0].secret_key;
 
@@ -91,6 +102,8 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         }
       })
       .catch(err => {
+        setIsLoading(false);
+
         const errors = getAPIErrorOrDefault(
           err,
           'Error generating Object Storage Key.'
@@ -146,6 +159,9 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         open={drawer.open}
         onClose={closeDrawer}
         onSubmit={handleSubmit}
+        label={form.label}
+        updateLabel={e => setField('label', e.target.value)}
+        isLoading={isLoading}
         errors={drawer.errors}
       />
 
