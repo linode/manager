@@ -382,6 +382,9 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             Cancel
           </Button>
         </ActionsPanel>
+        {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
+          <Notice warning>Images must be less than 2048MB each.</Notice>
+        )}
       </Drawer>
     );
   }
