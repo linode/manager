@@ -60,7 +60,8 @@ describe('View - Personal Access Tokens', () => {
             const sixMonths = new Date();
             sixMonths.setMonth(now.getMonth() + 6);
             sixMonths.setDate(sixMonths.getDate());
-            $(newToken).waitForVisible();
+            browser.waitForVisible(token)
+            // $(newToken).waitForVisible();
             expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,8));
         });
 
