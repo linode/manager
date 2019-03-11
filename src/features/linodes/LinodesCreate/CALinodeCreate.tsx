@@ -1,4 +1,3 @@
-import { parse } from 'querystring';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import CircleProgress from 'src/components/CircleProgress';
@@ -12,6 +11,7 @@ import {
   getCommunityStackscripts,
   getStackScriptsByUser
 } from 'src/features/StackScripts/stackScriptUtils';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
 import SubTabs, { Tab } from './CALinodeCreateSubTabs';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
@@ -56,7 +56,7 @@ export class LinodeCreate extends React.PureComponent<
     super(props);
 
     /** get the query params as an object, excluding the "?" */
-    const queryParams = parse(location.search.replace('?', ''));
+    const queryParams = getParamsFromUrl(location.search);
 
     /** will be -1 if the query param is not found */
     const preSelectedTab = this.tabs.findIndex((eachTab, index) => {

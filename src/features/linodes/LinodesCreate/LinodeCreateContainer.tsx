@@ -32,6 +32,7 @@ import {
   hasGrant,
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
 import CALinodeCreate from './CALinodeCreate';
 import { ExtendedType } from './SelectPlanPanel';
 
@@ -134,6 +135,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   }
 
   componentDidMount() {
+    const params = getParamsFromUrl(this.props.location.search);
+    if (params && params !== {}) {
+      this.setState({
+        // Each of these will be undefined if not included in the URL, so this will behave correctly:
+        selectedStackScriptID: Number(params.stackScriptID),
+        selectedStackScriptLabel: params.stackScriptLabel,
+        selectedStackScriptUsername: params.stackScriptUserName
+      });
+    }
     this.setState({ appInstancesLoading: true });
     getCloudApps()
       .then(response => {
