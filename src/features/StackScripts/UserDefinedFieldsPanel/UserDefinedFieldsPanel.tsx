@@ -28,9 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   username: {
     color: theme.color.grey1
   },
-  optionalFieldWrapper: {
-    maxWidth: 860
-  }
+  optionalFieldWrapper: {}
 });
 
 interface Props {
@@ -57,36 +55,56 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return (
-        <UserDefinedMultiSelect
-          key={field.name}
-          field={field}
-          udf_data={props.udf_data}
-          updateFormState={handleChange}
-          updateFor={[props.udf_data[field.name], error]}
-          isOptional={isOptional}
-          error={error}
-        />
+        <Grid item xs={12}>
+          <UserDefinedMultiSelect
+            key={field.name}
+            field={field}
+            udf_data={props.udf_data}
+            updateFormState={handleChange}
+            updateFor={[props.udf_data[field.name], error]}
+            isOptional={isOptional}
+            error={error}
+          />
+        </Grid>
       );
     }
     if (isOneSelect(field)) {
       return (
-        <UserDefinedSelect
-          field={field}
-          updateFormState={handleChange}
-          udf_data={props.udf_data}
-          updateFor={[props.udf_data[field.name], error]}
-          isOptional={isOptional}
-          key={field.name}
-          error={error}
-        />
+        <Grid item xs={12}>
+          <UserDefinedSelect
+            field={field}
+            updateFormState={handleChange}
+            udf_data={props.udf_data}
+            updateFor={[props.udf_data[field.name], error]}
+            isOptional={isOptional}
+            key={field.name}
+            error={error}
+          />{' '}
+        </Grid>
       );
     }
     if (isPasswordField(field.name)) {
       return (
+        <Grid item xs={12} sm={6} md={4}>
+          <UserDefinedText
+            key={field.name}
+            updateFormState={handleChange}
+            isPassword={true}
+            field={field}
+            udf_data={props.udf_data}
+            updateFor={[props.udf_data[field.name], error]}
+            isOptional={isOptional}
+            placeholder={field.example}
+            error={error}
+          />
+        </Grid>
+      );
+    }
+    return (
+      <Grid item xs={12} sm={6} md={4}>
         <UserDefinedText
           key={field.name}
           updateFormState={handleChange}
-          isPassword={true}
           field={field}
           udf_data={props.udf_data}
           updateFor={[props.udf_data[field.name], error]}
@@ -94,19 +112,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           placeholder={field.example}
           error={error}
         />
-      );
-    }
-    return (
-      <UserDefinedText
-        key={field.name}
-        updateFormState={handleChange}
-        field={field}
-        udf_data={props.udf_data}
-        updateFor={[props.udf_data[field.name], error]}
-        isOptional={isOptional}
-        placeholder={field.example}
-        error={error}
-      />
+      </Grid>
     );
   };
 
@@ -134,7 +140,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           for creation.
         </Typography>
         <div className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}>
-          <Grid container>
+          <Grid container alignItems="center">
             {userDefinedFields!
               .filter(
                 (field: Linode.StackScript.UserDefinedField) =>
@@ -142,11 +148,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
               )
               .map((field: Linode.StackScript.UserDefinedField) => {
                 const error = getError(field, props.errors);
-                return (
-                  <Grid item xs={12} sm={6} md={4}>
-                    {renderField(field, error)}
-                  </Grid>
-                );
+                return renderField(field, error);
               })}
           </Grid>
         </div>

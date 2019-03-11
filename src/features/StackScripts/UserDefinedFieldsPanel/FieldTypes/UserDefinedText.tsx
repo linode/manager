@@ -54,6 +54,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         noPadding
         placeholder={placeholder}
         error={error}
+        hideStrengthLabel
       />
     );
   };

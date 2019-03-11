@@ -71,6 +71,7 @@ interface Props {
   users?: UserSSHKeyObject[];
   disabled?: boolean;
   disabledReason?: string;
+  hideStrengthLabel?: boolean;
 }
 
 export interface UserSSHKeyObject {
@@ -97,7 +98,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       placeholder,
       users,
       disabled,
-      disabledReason
+      disabledReason,
+      hideStrengthLabel
     } = this.props;
 
     return (
@@ -113,6 +115,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             label={label || 'Root Password'}
             placeholder={placeholder || 'Enter a password.'}
             onChange={this.handleChange}
+            hideStrengthLabel={hideStrengthLabel}
           />
           {users && users.length > 0 && this.renderUserSSHKeyTable(users)}
         </div>
