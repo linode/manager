@@ -19,6 +19,7 @@ namespace Linode {
     country: string;
     last_name: string;
     balance: number;
+    balance_uninvoiced: number;
     city: string;
     phone: string;
     company: string;
