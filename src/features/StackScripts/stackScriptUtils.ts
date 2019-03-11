@@ -179,8 +179,8 @@ export const getStackScriptUrl = (
   let type;
   let subtype;
   switch (username) {
-    case 'capuk':
-      // This is a Cloud App
+    case 'linode':
+      // This is a Cloud App (unless it isn't, which we are unable to handle at this time)
       type = 'One-Click';
       subtype = 'One-Click%20Apps';
       break;

@@ -136,11 +136,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidMount() {
     const params = getParamsFromUrl(this.props.location.search);
-    this.setState({
-      selectedStackScriptID: Number(params.stackScriptID),
-      selectedStackScriptLabel: params.stackScriptLabel,
-      selectedStackScriptUsername: params.stackScriptUserName
-    });
+    if (params && params !== {}) {
+      this.setState({
+        // Each of these will be undefined if not included in the URL, so this will behave correctly:
+        selectedStackScriptID: Number(params.stackScriptID),
+        selectedStackScriptLabel: params.stackScriptLabel,
+        selectedStackScriptUsername: params.stackScriptUserName
+      });
+    }
     this.setState({ appInstancesLoading: true });
     getCloudApps()
       .then(response => {
