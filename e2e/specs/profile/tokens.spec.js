@@ -60,6 +60,7 @@ describe('View - Personal Access Tokens', () => {
             expect(browser.waitForVisible(newToken)).toBe(true);
             expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toBe(expectedExpiration);
             expect($(`${newToken} [data-qa-token-type]`).getText()).toBe('Personal Access Token');
+        });
 
         it('should display tokens', () => {
             const labels = profile.tokenLabel;
