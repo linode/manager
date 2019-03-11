@@ -59,28 +59,58 @@ exports.login = (username, password, credFilePath) => {
     letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
     browser.click(loginButton);
 
+
+    const isOauthAuthPage = () => {
+        /** 
+         * looking to determine if we're on the oauth/auth page
+         */
+        return $('.oauthauthorize-page').isVisible();
+    }
+
+    const CSRFErrorExists = () => {
+        /** otherwise look for the CSRF error being on-screen */
+        return $('.form-warnings').isVisible() && $('.form-warnings').getText().includes('CSRF')
+    };
+
+
     try {
-        browser.waitUntil(function() {
-            return browser.isExisting('[data-qa-add-new-menu-button]') || browser.getUrl().includes('oauth/authorize');
+        browser.waitUntil(function () {
+            if (isOauthAuthPage() && process.env.REACT_APP_APP_ROOT.includes('local')) {
+                console.log('attempting to click the oauth submit button')
+                $('.form-actions>.btn').click();
+            } else if (!isOauthAuthPage() && CSRFErrorExists()) {
+                console.log('attempting to login again')
+                browser.trySetValue('#password', password);
+                browser.trySetValue('#username', username);
+                $(loginButton).click();
+            }
+            /** we're either on the authorize page or we're on the manager home page */
+            return browser.isExisting('[data-qa-add-new-menu-button]');
         }, constants.wait.normal);
     } catch (err) {
         console.log('failed to login!');
-        if (browser.getText('.alert').includes('This field is required.')) {
-            browser.trySetValue('#password', password);
-            browser.click(loginButton);
-        }
+        // if (!isOauthAuthPage() && CSRFErrorExists()) {
+        //     console.log($('.form-warnings').getText());
+        //     browser.trySetValue('#password', password);
+        //     browser.trySetValue('#username', username);
+        //     $(loginButton).click();
+        // }
+
+        // /** click the submit button on the oauth/auth page if we're on the oauth page */
+        // if (isOAuthPage() && process.env.REACT_APP_APP_ROOT.includes('local')) {
+        //     if ($$('.oauthauthorize-page').length > 0 && browser.getUrl().includes('login')) {
+        //         $('.form-actions>.btn').click();
+        //     }
+        // }
     }
 
-    if(browser.isExisting('.Modal') && browser.getUrl().includes('login')){
-        browser.click('.btn.btn-primary');
-    }
-
-    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
 
     if (browser.waitForVisible('[role="dialog"]')) {
         browser.click(letsGoButton);
         browser.waitForVisible('[role="dialog"]', constants.wait.long, true)
     }
+
+    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
 
     if (credFilePath) {
         exports.storeToken(credFilePath, username);

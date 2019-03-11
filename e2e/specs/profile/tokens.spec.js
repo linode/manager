@@ -56,11 +56,13 @@ describe('View - Personal Access Tokens', () => {
 
         it('should display new token in table', () => {
             tokenCreateDrawer.closeDialog.click();
-            const expectedExpiration = 'in 6 months';
-            expect(browser.waitForVisible(newToken)).toBe(true);
-            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toBe(expectedExpiration);
-            expect($(`${newToken} [data-qa-token-type]`).getText()).toBe('Personal Access Token');
-
+            const now = new Date();
+            const sixMonths = new Date();
+            sixMonths.setMonth(now.getMonth() + 6);
+            sixMonths.setDate(sixMonths.getDate());
+            browser.waitForVisible(newToken)
+            // $(newToken).waitForVisible();
+            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,8));
         });
 
         it('should display tokens', () => {
