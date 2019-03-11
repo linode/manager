@@ -8,6 +8,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
@@ -20,7 +21,7 @@ import { getLinodeDisks, getLinodes } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-type ClassNames = 'root' | 'suffix' | 'actionPanel';
+type ClassNames = 'root' | 'suffix' | 'actionPanel' | 'helperText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -30,6 +31,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   actionPanel: {
     marginTop: theme.spacing.unit * 2
+  },
+  helperText: {
+    paddingTop: theme.spacing.unit / 2
   }
 });
 
@@ -326,15 +330,20 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         )}
 
         {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
-          <DiskSelect
-            selectedDisk={selectedDisk || 'none'}
-            disks={disks}
-            diskError={diskError}
-            handleChange={changeDisk}
-            updateFor={[disks, selectedDisk, diskError, classes]}
-            disabled={mode === modes.IMAGIZING}
-            data-qa-disk-select
-          />
+          <>
+            <DiskSelect
+              selectedDisk={selectedDisk || 'none'}
+              disks={disks}
+              diskError={diskError}
+              handleChange={changeDisk}
+              updateFor={[disks, selectedDisk, diskError, classes]}
+              disabled={mode === modes.IMAGIZING}
+              data-qa-disk-select
+            />
+            <Typography className={classes.helperText} variant="body1">
+              Images must be less than 2048MB each.
+            </Typography>
+          </>
         )}
 
         {[modes.CREATING, modes.EDITING, modes.IMAGIZING].includes(mode) && (
@@ -382,9 +391,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             Cancel
           </Button>
         </ActionsPanel>
-        {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
-          <Notice warning>Images must be less than 2048MB each.</Notice>
-        )}
       </Drawer>
     );
   }
