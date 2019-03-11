@@ -1,6 +1,8 @@
-import { compose, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
@@ -11,11 +13,12 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
 import { getStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/format-date-iso8601';
+import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
@@ -76,7 +79,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
+interface Props extends RenderGuardProps {
   selectedId: number | undefined;
   selectedUsername?: string;
   error?: string;
@@ -90,12 +93,20 @@ interface Props {
   publicImages: Linode.Image[];
   resetSelectedStackScript: () => void;
   disabled?: boolean;
-  request: () => Promise<Linode.ResourcePage<any>>;
+  request: (
+    username: string,
+    params?: any,
+    filter?: any
+  ) => Promise<Linode.ResourcePage<any>>;
   category: string;
   header: string;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  StateProps &
+  RouteComponentProps<{}> &
+  RenderGuardProps &
+  WithStyles<ClassNames>;
 
 interface State {
   stackScript?: Linode.StackScript.Response;
@@ -112,9 +123,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   componentDidMount() {
-    if (this.props.selectedId) {
+    const selected =
+      this.props.selectedId ||
+      getParamFromUrl(this.props.location.search, 'stackScriptID');
+    if (selected) {
       this.setState({ stackScriptLoading: true });
-      getStackScript(this.props.selectedId)
+      getStackScript(selected)
         .then(stackScript => {
           this.setState({ stackScript, stackScriptLoading: false });
           this.props.onSelect(
@@ -195,11 +209,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               </tbody>
             </Table>
             <div className={classes.link}>
-              <Button
-                href="/linodes/create?type=fromStackScript"
-                onClick={this.resetStackScript}
-                type="secondary"
-              >
+              <Button onClick={this.resetStackScript} type="secondary">
                 Choose another StackScript
               </Button>
             </div>
@@ -255,12 +265,8 @@ const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose<
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny
->(
+export default compose<CombinedProps, Props>(
+  withRouter,
   connected,
   RenderGuard,
   styled

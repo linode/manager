@@ -223,6 +223,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             resetSelectedStackScript={() => null}
             disabled={disabled}
             request={request}
+            category={'apps'}
           />
           {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel
