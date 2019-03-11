@@ -57,56 +57,36 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return (
-        <Grid item xs={12}>
-          <UserDefinedMultiSelect
-            key={field.name}
-            field={field}
-            udf_data={props.udf_data}
-            updateFormState={handleChange}
-            updateFor={[props.udf_data[field.name], error]}
-            isOptional={isOptional}
-            error={error}
-          />
-        </Grid>
+        <UserDefinedMultiSelect
+          key={field.name}
+          field={field}
+          udf_data={props.udf_data}
+          updateFormState={handleChange}
+          updateFor={[props.udf_data[field.name], error]}
+          isOptional={isOptional}
+          error={error}
+        />
       );
     }
     if (isOneSelect(field)) {
       return (
-        <Grid item xs={12}>
-          <UserDefinedSelect
-            field={field}
-            updateFormState={handleChange}
-            udf_data={props.udf_data}
-            updateFor={[props.udf_data[field.name], error]}
-            isOptional={isOptional}
-            key={field.name}
-            error={error}
-          />
-        </Grid>
+        <UserDefinedSelect
+          field={field}
+          updateFormState={handleChange}
+          udf_data={props.udf_data}
+          updateFor={[props.udf_data[field.name], error]}
+          isOptional={isOptional}
+          key={field.name}
+          error={error}
+        />
       );
     }
     if (isPasswordField(field.name)) {
       return (
-        <Grid item xs={12}>
-          <UserDefinedText
-            key={field.name}
-            updateFormState={handleChange}
-            isPassword={true}
-            field={field}
-            udf_data={props.udf_data}
-            updateFor={[props.udf_data[field.name], error]}
-            isOptional={isOptional}
-            placeholder={field.example}
-            error={error}
-          />
-        </Grid>
-      );
-    }
-    return (
-      <Grid item xs={12}>
         <UserDefinedText
           key={field.name}
           updateFormState={handleChange}
+          isPassword={true}
           field={field}
           udf_data={props.udf_data}
           updateFor={[props.udf_data[field.name], error]}
@@ -114,7 +94,19 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           placeholder={field.example}
           error={error}
         />
-      </Grid>
+      );
+    }
+    return (
+      <UserDefinedText
+        key={field.name}
+        updateFormState={handleChange}
+        field={field}
+        udf_data={props.udf_data}
+        updateFor={[props.udf_data[field.name], error]}
+        isOptional={isOptional}
+        placeholder={field.example}
+        error={error}
+      />
     );
   };
 
