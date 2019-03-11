@@ -169,3 +169,30 @@ export const getErrorText = (error: any) => {
   }
   return 'There was an error loading your StackScripts. Please try again later.';
 };
+
+export const getStackScriptUrl = (
+  username: string,
+  id: number,
+  label: string,
+  currentUser?: string
+) => {
+  let type;
+  let subtype;
+  switch (username) {
+    case 'linode':
+      // This is a Cloud App (unless it isn't, which we are unable to handle at this time)
+      type = 'One-Click';
+      subtype = 'One-Click%20Apps';
+      break;
+    case currentUser:
+      // My StackScripts
+      type = 'My%20Images';
+      subtype = 'My%20StackScripts';
+      break;
+    default:
+      // Community StackScripts
+      type = 'One-Click';
+      subtype = 'Community%20StackScripts';
+  }
+  return `/linodes/create?type=${type}&stackScriptID=${id}&stackScriptUsername=${username}&stackScriptLabel=${label}&subtype=${subtype}`;
+};
