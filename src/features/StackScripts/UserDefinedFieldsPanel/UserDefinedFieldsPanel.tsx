@@ -28,7 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   username: {
     color: theme.color.grey1
   },
-  optionalFieldWrapper: {}
+  optionalFieldWrapper: {
+    maxWidth: 860
+  }
 });
 
 interface Props {
@@ -55,7 +57,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return (
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12}>
           <UserDefinedMultiSelect
             key={field.name}
             field={field}
@@ -70,7 +72,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     }
     if (isOneSelect(field)) {
       return (
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12}>
           <UserDefinedSelect
             field={field}
             updateFormState={handleChange}
@@ -85,7 +87,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     }
     if (isPasswordField(field.name)) {
       return (
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12}>
           <UserDefinedText
             key={field.name}
             updateFormState={handleChange}
@@ -101,7 +103,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
       );
     }
     return (
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12}>
         <UserDefinedText
           key={field.name}
           updateFormState={handleChange}
