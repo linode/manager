@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added:
 - Display guidance to bottom of search bar to make it easier for users to work with enhanced search functionality
 - Add Compact Mode (theme toggle) and corresponding settings panel on PrimaryNav
+- Users can now rebuild a Linode from a StackScript
 - Backup mode support for NB nodes
 - Support for Toronto region  
 - Improve spacing of Domain table
