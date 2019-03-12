@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { clamp, compose, pathOr } from 'ramda';
+import { assoc, clamp, compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -23,6 +23,7 @@ import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume
@@ -143,10 +144,9 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch(errorResponse => {
-        pathOr(
-          [{ reason: 'There was an issue rescuing your Linode.' }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue rescuing your Linode.'
         ).forEach((err: Linode.ApiFieldError) =>
           enqueueSnackbar(err.reason, {
             variant: 'error'
@@ -241,7 +241,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeRegion: linode.region,
   linodeLabel: linode.label,
-  linodeDisks: linode._disks
+  linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk))
 }));
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
