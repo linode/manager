@@ -31,6 +31,13 @@ export const filterUDFErrors = (
 };
 
 /**
+ * Currently existing Linode account StackScripts. These aren't cloud apps so
+ * we will use this list to filter them out.
+ */
+
+const LINODE_SCRIPTS = [1, 3, 5, 7, 8, 9, 12, 13];
+
+/**
  * helper function to get Cloud Apps StackScripts
  *
  * for the prototype, all the apps we need are going to be uploaded to
@@ -41,4 +48,21 @@ export const getCloudApps = (params?: any, filter?: any) =>
   getStackscripts(params, {
     ...filter,
     username: 'capuk'
+  }).then(response => {
+    return response.data.filter(script => {
+      return !LINODE_SCRIPTS.includes(script.id);
+    });
   });
+
+export const iconMap = {
+  399468: '/assets/Terraria.svg',
+  399470: '/assets/Ark@1x.svg',
+  399471: '/assets/TF2.svg',
+  399465: '/assets/Rust.svg',
+  399467: '/assets/GitLab.svg',
+  399469: '/assets/Minecraft.svg',
+  399466: '/assets/Drupal.svg',
+  399464: '/assets/Wireguard.svg',
+  399462: '/assets/WooCommerce.svg',
+  399457: '/assets/WordPress.svg'
+};

@@ -11,7 +11,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import SelectionCard from 'src/components/SelectionCard';
 import Panel from './Panel';
-
+import { iconMap } from './TabbedContent/formUtilities';
 import { AppsData } from './types';
 
 type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
@@ -98,6 +98,7 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
             handleClick={handleClick}
             disabled={disabled}
             id={eachApp.id}
+            iconUrl={iconMap[eachApp.id]}
           />
         ))}
       </Grid>
@@ -120,6 +121,7 @@ interface SelectionProps {
     stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
+  iconUrl: string;
   id: number;
   label: string;
   username: string;
@@ -149,14 +151,14 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
   };
 
   render() {
-    const { id, checked, label, disabled } = this.props;
+    const { iconUrl, id, checked, label, disabled } = this.props;
     return (
       <SelectionCard
         key={id}
         checked={checked}
         onClick={this.handleSelectApp}
         renderIcon={() => {
-          return <span className={`fl-coreos`} />;
+          return <img src={iconUrl} />;
         }}
         heading={label}
         subheadings={['']}
