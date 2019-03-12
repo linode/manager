@@ -66,6 +66,7 @@ const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
             [classes.link]: true,
             [classes.noCount]: !count
           })}
+          data-qa-view-all-link
           target="_blank"
         >
           {text}
