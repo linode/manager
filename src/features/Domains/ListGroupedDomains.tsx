@@ -65,7 +65,8 @@ interface Props {
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
   onRemove: (domain: string, domainID: number) => void;
-  onClone: (domain: string, cloneId: number) => void;
+  onClone: (domain: string, id: number) => void;
+  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -74,6 +75,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
   const {
     data,
     onClone,
+    onEdit,
     onRemove,
     order,
     handleOrderChange,
@@ -124,6 +126,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           domain={domain.domain}
                           id={domain.id}
                           onClone={onClone}
+                          onEdit={onEdit}
                           onRemove={onRemove}
                           tags={domain.tags}
                           type={domain.type}

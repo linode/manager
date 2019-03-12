@@ -25,9 +25,9 @@ describe('domainDrawer reducer', () => {
     expect(newState.domain).toBe('my-domain');
   });
 
-  it('should accept cloneId when cloning', () => {
+  it('should accept id when cloning', () => {
     const newState = reducer(defaultState, openForCloning('my-domain', 1234));
-    expect(newState.cloneId).toBe(1234);
+    expect(newState.id).toBe(1234);
   });
 
   it('should handle CLOSE', () => {

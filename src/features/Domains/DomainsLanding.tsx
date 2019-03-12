@@ -30,7 +30,11 @@ import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
-import { openForCloning, openForCreating } from 'src/store/domainDrawer';
+import {
+  openForCloning,
+  openForCreating,
+  openForEditing
+} from 'src/store/domainDrawer';
 import {
   DomainActionsProps,
   withDomainActions
@@ -81,7 +85,7 @@ interface State {
     open: boolean;
     mode: 'clone' | 'create';
     domain?: string;
-    cloneID?: number;
+    id?: number;
   };
   removeDialog: {
     open: boolean;
@@ -273,6 +277,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                 handleOrderChange,
                 data: orderedData,
                 onClone: this.props.openForCloning,
+                onEdit: this.props.openForEditing,
                 onRemove: this.openRemoveDialog
               };
 
@@ -334,7 +339,8 @@ const RenderEmpty: React.StatelessComponent<{
 const styled = withStyles(styles);
 
 interface DispatchProps {
-  openForCloning: (domain: string, cloneId: number) => void;
+  openForCloning: (domain: string, id: number) => void;
+  openForEditing: (domain: string, id: number) => void;
   openForCreating: () => void;
 }
 
@@ -379,7 +385,7 @@ const withLocalStorage = localStorageContainer<
 
 export const connected = connect(
   undefined,
-  { openForCreating, openForCloning }
+  { openForCreating, openForCloning, openForEditing }
 );
 
 export default compose<CombinedProps, {}>(

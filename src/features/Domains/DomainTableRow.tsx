@@ -51,23 +51,48 @@ interface Props {
   status: string;
   type: 'master' | 'slave';
   onRemove: (domain: string, domainID: number) => void;
-  onClone: (domain: string, cloneId: number) => void;
+  onClone: (domain: string, id: number) => void;
+  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const handleRowClick = (
+  e: React.MouseEvent<any, MouseEvent>,
+  props: CombinedProps
+) => {
+  const { domain, id, type, onEdit } = props;
+
+  if (type === 'slave') {
+    e.preventDefault();
+    onEdit(domain, id);
+  }
+};
+
 const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, domain, id, tags, type, status, onClone, onRemove } = props;
+  const {
+    classes,
+    domain,
+    id,
+    tags,
+    type,
+    status,
+    onClone,
+    onRemove,
+    onEdit
+  } = props;
 
   return (
     <TableRow
       key={id}
       data-qa-domain-cell={domain}
       className={`${classes.domainRow} ${'fade-in-table'}`}
-      rowLink={`/domains/${id}`}
+      rowLink={
+        type === 'slave' ? e => handleRowClick(e, props) : `/domains/${id}`
+      }
     >
       <TableCell parentColumn="Domain" data-qa-domain-label>
-        <Link to={`/domains/${id}`}>
+        <Link to={`/domains/${id}`} onClick={e => handleRowClick(e, props)}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
               <EntityIcon
@@ -97,8 +122,10 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
         <ActionMenu
           domain={domain}
           id={id}
+          type={type}
           onRemove={onRemove}
           onClone={onClone}
+          onEdit={onEdit}
         />
       </TableCell>
     </TableRow>

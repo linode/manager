@@ -22,7 +22,7 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
-import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
+import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
@@ -352,7 +352,7 @@ export class App extends React.Component<CombinedProps, State> {
                   data-qa-beta-notice
                 />
                 <ToastNotifications />
-                <DomainCreateDrawer />
+                <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
               </div>
