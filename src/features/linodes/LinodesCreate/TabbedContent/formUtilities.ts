@@ -45,9 +45,9 @@ export const getCloudApps = (params?: any, filter?: any) =>
     return response.data
       .filter(script => {
         return Object.keys(iconMap).includes(String(script.id));
-        // so sorry about this
       })
       .map(script => ({
+        // so sorry about this
         ...script,
         label: script.label.replace('One-Click', '').replace('- OneClick', '')
       }));
