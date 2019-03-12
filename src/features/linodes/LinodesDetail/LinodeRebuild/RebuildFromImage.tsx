@@ -129,7 +129,7 @@ export const RebuildFromImage: React.StatelessComponent<
       <SelectImagePanel
         images={imagesData}
         error={imagesError || hasErrorFor.image}
-        updateFor={[selectedImage, errors]}
+        updateFor={[classes, selectedImage, errors]}
         selectedImageID={selectedImage}
         handleSelection={selected => setSelectedImage(selected)}
         data-qa-select-image
@@ -137,7 +137,7 @@ export const RebuildFromImage: React.StatelessComponent<
       <AccessPanel
         password={password}
         handleChange={value => setPassword(value)}
-        updateFor={[password, errors, userSSHKeys, selectedImage]}
+        updateFor={[classes, password, errors, userSSHKeys, selectedImage]}
         error={hasErrorFor.root_pass}
         users={userSSHKeys}
         data-qa-access-panel

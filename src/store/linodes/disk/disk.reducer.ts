@@ -77,7 +77,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onDeleteSuccess(DiskId, state);
   }
 
-  if (isType(action, getAllLinodeDisksActions.started)) {
+  /**
+   * reset error state when our request to disks has started and
+   * or a request to get one disk has started
+   */
+  if (
+    isType(action, getAllLinodeDisksActions.started) ||
+    isType(action, getLinodeDiskActions.started)
+  ) {
     return onStart(state);
   }
 

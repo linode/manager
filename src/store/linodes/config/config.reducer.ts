@@ -77,7 +77,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onDeleteSuccess(configId, state);
   }
 
-  if (isType(action, getAllLinodeConfigsActions.started)) {
+  /**
+   * reset error state when our request to disks has started and
+   * or a request to get one config has started
+   */
+  if (
+    isType(action, getAllLinodeConfigsActions.started) ||
+    isType(action, getLinodeConfigsActions.started) ||
+    isType(action, getLinodeConfigActions.started)
+  ) {
     return onStart(state);
   }
 

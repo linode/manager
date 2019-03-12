@@ -68,7 +68,7 @@ export default compose(
       if (errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (
           <React.Fragment>
-            One or more of your Linodes is suspended. Please{' '}
+            This Linode is suspended. Please{' '}
             <Link to="/support/tickets">open a support ticket </Link>
             if you have questions.
           </React.Fragment>

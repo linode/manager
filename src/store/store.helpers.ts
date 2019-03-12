@@ -17,7 +17,7 @@ export const addEntityRecord = <T extends Entity>(
 ): EntityMap<T> => assoc(String(current.id), current, result);
 
 export const onStart = <S>(state: S) =>
-  Object.assign({}, state, { loading: true });
+  Object.assign({}, state, { loading: true, error: undefined });
 
 export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
