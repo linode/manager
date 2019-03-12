@@ -1,24 +1,37 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
 import { createObjectStorageKeysSchema } from './objectStorageKeys.schema';
 
-export interface CreateObjectStorageKeysRequest {
+type Page<T> = Linode.ResourcePage<T>;
+export interface CreateObjectStorageKeyRequest {
   label: string;
 }
+/**
+ * getObjectStorageKeys
+ *
+ * Gets a list of a user's Object Storage Keys
+ */
+export const getObjectStorageKeys = (params?: any, filters?: any) =>
+  Request<Page<Linode.ObjectStorageKey>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}beta/account/s3-keys`)
+  ).then(response => response.data);
 
-export interface CreateObjectStorageKeysResponse {
-  access_key: string;
-  id: number;
-  label: string;
-  secret_key: string;
-}
 /**
  * createObjectStorageKeys
  *
- * Creates an Object Storage User and returns the Access Key and Secret Key
+ * Creates an Object Storage key
  */
-export const createObjectStorageKeys = (data: CreateObjectStorageKeysRequest) =>
-  Request<CreateObjectStorageKeysResponse>(
+export const createObjectStorageKeys = (data: CreateObjectStorageKeyRequest) =>
+  Request<Linode.ObjectStorageKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}beta/account/s3-keys`),
     setData(data, createObjectStorageKeysSchema)

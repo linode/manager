@@ -3,28 +3,25 @@ import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Button from 'src/components/core/Button';
-import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import Pagey, { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter';
 import { useForm } from 'src/hooks/useForm';
 import {
+  CreateObjectStorageKeyRequest,
   createObjectStorageKeys,
-  CreateObjectStorageKeysRequest
+  getObjectStorageKeys
 } from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ObjectStorageDrawer from './ObjectStorageDrawer';
+import ObjectStorageKeyTable from './ObjectStorageKeyTable';
 
 type ClassNames =
   | 'headline'
@@ -70,13 +67,13 @@ interface DrawerState {
   errors?: Linode.ApiFieldError[];
 }
 
-type Props = WithStyles<ClassNames>;
+type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
 
 export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
-  const { classes } = props;
+  const { classes, ...paginationProps } = props;
 
   const [keys, setKeys] = React.useState<KeysState>({ dialogOpen: false });
-  const [form, setField, resetForm] = useForm<CreateObjectStorageKeysRequest>({
+  const [form, setField, resetForm] = useForm<CreateObjectStorageKeyRequest>({
     label: ''
   });
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -98,6 +95,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
         setKeys({ accessKey, secretKey, dialogOpen: true });
         closeDrawer();
+        paginationProps.request();
       })
       .catch(err => {
         setIsLoading(false);
@@ -109,6 +107,11 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         setDrawer({ ...drawer, errors });
       });
   };
+
+  // Request keys on first render
+  React.useEffect(() => {
+    paginationProps.request();
+  }, []);
 
   const confirmationDialogActions = (
     <Button type="secondary" onClick={closeDialog} data-qa-close-dialog>
@@ -136,29 +139,26 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
           />
         </Grid>
       </Grid>
-      <Paper className={classes.paper}>
-        <Table aria-label="List of Object Storage Keys">
-          <TableHead>
-            <TableRow data-qa-table-head>
-              <TableCell className={classes.labelCell}>Label</TableCell>
-              <TableCell className={classes.labelCell}>Access Key</TableCell>
-              <TableCell className={classes.createdCell}>Created</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* @todo: List Object Storage Access Keys when returned by API */}
-            <TableRowEmptyState colSpan={6} />
-          </TableBody>
-        </Table>
-      </Paper>
+
+      <ObjectStorageKeyTable {...paginationProps} />
+
+      <PaginationFooter
+        page={props.page}
+        pageSize={props.pageSize}
+        count={props.count}
+        handlePageChange={props.handlePageChange}
+        handleSizeChange={props.handlePageSizeChange}
+        eventCategory="object storage keys table"
+      />
 
       <ObjectStorageDrawer
         open={drawer.open}
         onClose={closeDrawer}
         onSubmit={handleSubmit}
         label={form.label}
-        updateLabel={e => setField('label', e.target.value)}
+        updateLabel={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setField('label', e.target.value)
+        }
         isLoading={isLoading}
         errors={drawer.errors}
       />
@@ -203,6 +203,14 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose(styled);
+const updatedRequest = (_: Props, params: any, filters: any) =>
+  getObjectStorageKeys(params, filters);
+
+const paginated = Pagey(updatedRequest);
+
+const enhanced = compose(
+  styled,
+  paginated
+);
 
 export default enhanced(ObjectStorageKeys);
