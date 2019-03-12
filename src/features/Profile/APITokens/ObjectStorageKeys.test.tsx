@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { pageyProps } from 'src/__data__/pageyProps';
 import { ObjectStorageKeys } from './ObjectStorageKeys';
 
 describe('ObjectStorageKeys', () => {
@@ -11,7 +12,8 @@ describe('ObjectStorageKeys', () => {
       labelCell: '',
       createdCell: '',
       confirmationDialog: ''
-    }
+    },
+    ...pageyProps
   };
   const wrapper = shallow(<ObjectStorageKeys {...props} />);
   it('renders without crashing', () => {
