@@ -42,9 +42,15 @@ export const getCloudApps = (params?: any, filter?: any) =>
     ...filter,
     username: 'linode'
   }).then(response => {
-    return response.data.filter(script => {
-      return Object.keys(iconMap).includes(String(script.id));
-    });
+    return response.data
+      .filter(script => {
+        return Object.keys(iconMap).includes(String(script.id));
+        // so sorry about this
+      })
+      .map(script => ({
+        ...script,
+        label: script.label.replace('One-Click', '').replace('- OneClick', '')
+      }));
   });
 
 export const iconMap = {
