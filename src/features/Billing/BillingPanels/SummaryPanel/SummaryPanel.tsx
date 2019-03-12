@@ -47,6 +47,7 @@ interface AccountContextProps {
   data?: Linode.Account;
   accountLoading: boolean;
   balance: false | number;
+  balance_uninvoiced?: number;
 }
 
 type CombinedProps = AccountContextProps & StyleProps & WithStyles<ClassNames>;
@@ -96,6 +97,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         zip
       },
       balance,
+      balance_uninvoiced,
       accountLoading,
       classes
     } = this.props;
@@ -143,9 +145,14 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           <Typography role="header" variant="h3" className={classes.title}>
             Billing Information
           </Typography>
-
+          {balance_uninvoiced !== undefined && (
+            <div className={classes.section} data-qa-contact-cc>
+              <strong>Uninvoiced Balance:&nbsp;</strong>
+              <Currency quantity={balance_uninvoiced} />
+            </div>
+          )}
           <div className={`${classes.section} ${classes.balance}`}>
-            <strong>Balance:&nbsp;</strong>
+            <strong>Current Balance:&nbsp;</strong>
             <Typography
               component={'span'}
               className={classNames({
@@ -182,6 +189,7 @@ const accountContext = withAccount(
   ({ data, errors, loading, lastUpdated }) => ({
     accountLoading: loading,
     balance: data && data.balance,
+    balance_uninvoiced: data && data.balance_uninvoiced,
     errors,
     lastUpdated,
     loading,

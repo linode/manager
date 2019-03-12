@@ -13,6 +13,7 @@ export const account: Linode.Account = {
   country: 'US',
   last_name: 'McKenna',
   balance: 0.0,
+  balance_uninvoiced: 0,
   city: 'philadelphia',
   phone: '2151231234',
   company: 'mmckenna'
