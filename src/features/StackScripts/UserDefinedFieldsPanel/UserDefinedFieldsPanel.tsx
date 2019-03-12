@@ -55,7 +55,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return (
-        <Grid item xs={12}>
+        <Grid item xs={12} key={field.name}>
           <UserDefinedMultiSelect
             key={field.name}
             field={field}
@@ -70,7 +70,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     }
     if (isOneSelect(field)) {
       return (
-        <Grid item xs={12}>
+        <Grid item xs={12} key={field.name}>
           <UserDefinedSelect
             field={field}
             updateFormState={handleChange}
@@ -85,7 +85,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     }
     if (isPasswordField(field.name)) {
       return (
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4} key={field.name}>
           <UserDefinedText
             key={field.name}
             updateFormState={handleChange}
@@ -101,7 +101,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
       );
     }
     return (
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={12} sm={6} md={4} key={field.name}>
         <UserDefinedText
           key={field.name}
           updateFormState={handleChange}
