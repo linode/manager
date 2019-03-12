@@ -55,7 +55,6 @@ exports.login = (username, password, credFilePath) => {
     browser.trySetValue('#username', username);
     browser.jsClick('#password');
     browser.trySetValue('#password', password);
-<<<<<<< HEAD
 
     const loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-sign-in] input';
     const letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
