@@ -338,7 +338,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        this.redirect(domainData.id || '');
+        if (type === 'master' && domainData.id) {
+          this.redirect(domainData.id);
+        } else {
+          this.redirect('');
+        }
         this.closeDrawer();
       })
       .catch(err => {

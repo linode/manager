@@ -66,9 +66,9 @@ class TableRow extends React.Component<CombinedProps> {
           this.props.history.push(target);
           // return if a modal is open
         }
-      }
-      if (typeof target === 'function') {
-        target(e);
+        if (typeof target === 'function') {
+          target(e);
+        }
       }
     }
   };

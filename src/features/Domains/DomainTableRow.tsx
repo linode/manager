@@ -79,8 +79,9 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
       key={id}
       data-qa-domain-cell={domain}
       className={`${classes.domainRow} ${'fade-in-table'}`}
-      rowLink={`/domains/${id}`}
-      onClick={e => handleRowClick(e, props)}
+      rowLink={
+        type === 'slave' ? e => handleRowClick(e, props) : `/domains/${id}`
+      }
     >
       <TableCell parentColumn="Domain" data-qa-domain-label>
         <Link to={`/domains/${id}`} onClick={e => handleRowClick(e, props)}>
