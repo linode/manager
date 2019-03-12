@@ -59,7 +59,7 @@ exports.login = (username, password, credFilePath) => {
     const loginButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-sign-in] input';
     const letsGoButton = browser.getUrl().includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
 
-    // Helper to check if on the Authorize 3rd Party App Income
+    // Helper to check if on the Authorize 3rd Party App
     const isOauthAuthPage = () => {
         /**
          * looking to determine if we're on the oauth/auth page
@@ -103,7 +103,7 @@ exports.login = (username, password, credFilePath) => {
         browser.waitForExist('[data-qa-add-new-menu-button]', constants.wait.normal);
     } catch (err) {
         console.log('Add an entity menu failed to exist', 'Failed to login to the Manager for some reason.');
-        console.error(`Current URL is ${browser.getUrl()}`);
+        console.error(`Current URL is:\n${browser.getUrl()}`);
         console.error(`Page source: \n ${browser.getSource()}`);
     }
 
