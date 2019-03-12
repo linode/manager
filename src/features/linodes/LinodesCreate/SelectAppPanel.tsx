@@ -159,7 +159,7 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
         checked={checked}
         onClick={this.handleSelectApp}
         renderIcon={() => {
-          return <img src={`${APP_ROOT}/${iconUrl}`} />;
+          return <img src={`${APP_ROOT}${iconUrl}`} />;
         }}
         heading={label}
         subheadings={['']}
