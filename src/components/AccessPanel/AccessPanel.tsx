@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
@@ -72,6 +73,7 @@ interface Props {
   disabled?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
+  className?: string;
 }
 
 export interface UserSSHKeyObject {
@@ -99,11 +101,19 @@ class AccessPanel extends React.Component<CombinedProps> {
       users,
       disabled,
       disabledReason,
-      hideStrengthLabel
+      hideStrengthLabel,
+      className
     } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Paper
+        className={classNames(
+          {
+            [classes.root]: true
+          },
+          className
+        )}
+      >
         <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
           {error && <Notice text={error} error />}
           <PasswordInput

@@ -13,7 +13,11 @@ import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
 
-type ClassNames = 'root' | 'username' | 'optionalFieldWrapper';
+type ClassNames =
+  | 'root'
+  | 'username'
+  | 'advDescription'
+  | 'optionalFieldWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -24,6 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       marginBottom: 0,
       paddingBottom: 0
     }
+  },
+  advDescription: {
+    margin: `${theme.spacing.unit * 2}px 0`
   },
   username: {
     color: theme.color.grey1
@@ -87,7 +94,6 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
       return (
         <Grid item xs={12} sm={6} md={4} key={field.name}>
           <UserDefinedText
-            key={field.name}
             updateFormState={handleChange}
             isPassword={true}
             field={field}
@@ -103,7 +109,6 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     return (
       <Grid item xs={12} sm={6} md={4} key={field.name}>
         <UserDefinedText
-          key={field.name}
           updateFormState={handleChange}
           field={field}
           udf_data={props.udf_data}
@@ -135,7 +140,7 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
 
       {/* Optional Fields */}
       <ShowMoreExpansion name="Show Advanced Options">
-        <Typography variant="body1">
+        <Typography variant="body1" className={classes.advDescription}>
           These fields are additional configuration options and are not required
           for creation.
         </Typography>
