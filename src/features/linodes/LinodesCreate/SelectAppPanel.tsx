@@ -10,6 +10,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import SelectionCard from 'src/components/SelectionCard';
+import { APP_ROOT } from 'src/constants';
 import Panel from './Panel';
 import { iconMap } from './TabbedContent/formUtilities';
 import { AppsData } from './types';
@@ -158,7 +159,7 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
         checked={checked}
         onClick={this.handleSelectApp}
         renderIcon={() => {
-          return <img src={iconUrl} />;
+          return <img src={`${APP_ROOT}/${iconUrl}`} />;
         }}
         heading={label}
         subheadings={['']}
