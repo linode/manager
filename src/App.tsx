@@ -134,6 +134,7 @@ const styles: StyleRulesCallback = theme => ({
   },
   wrapper: {
     padding: theme.spacing.unit * 3,
+    transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing.unit * 2,
       paddingLeft: theme.spacing.unit * 2,
