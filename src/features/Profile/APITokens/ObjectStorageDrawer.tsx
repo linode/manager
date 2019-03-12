@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { CreateObjectStorageKeysRequest } from 'src/services/profile/objectStorageKeys';
+import { CreateObjectStorageKeyRequest } from 'src/services/profile/objectStorageKeys';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
@@ -29,7 +29,7 @@ export interface Props {
 }
 
 type CombinedProps = Props &
-  CreateObjectStorageKeysRequest &
+  CreateObjectStorageKeyRequest &
   WithStyles<ClassNames>;
 
 export const ObjectStorageDrawer: React.StatelessComponent<

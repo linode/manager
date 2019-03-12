@@ -41,11 +41,6 @@ namespace Linode {
     created: string;
   }
 
-  export interface ObjectStorageKeyPair {
-    access_key: string;
-    secret_key: string;
-  }
-
   export interface OAuthClient {
     id: string;
     label: string;
