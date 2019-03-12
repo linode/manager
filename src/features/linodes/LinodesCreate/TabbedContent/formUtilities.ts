@@ -31,13 +31,6 @@ export const filterUDFErrors = (
 };
 
 /**
- * Currently existing Linode account StackScripts. These aren't cloud apps so
- * we will use this list to filter them out.
- */
-
-const LINODE_SCRIPTS = [1, 3, 5, 7, 8, 9, 12, 13];
-
-/**
  * helper function to get Cloud Apps StackScripts
  *
  * for the prototype, all the apps we need are going to be uploaded to
@@ -47,22 +40,26 @@ const LINODE_SCRIPTS = [1, 3, 5, 7, 8, 9, 12, 13];
 export const getCloudApps = (params?: any, filter?: any) =>
   getStackscripts(params, {
     ...filter,
-    username: 'capuk'
+    username: 'linode'
   }).then(response => {
     return response.data.filter(script => {
-      return !LINODE_SCRIPTS.includes(script.id);
+      return Object.keys(iconMap).includes(String(script.id));
     });
   });
 
 export const iconMap = {
-  399468: '/assets/Terraria.svg',
-  399470: '/assets/Ark@1x.svg',
-  399471: '/assets/TF2.svg',
-  399465: '/assets/Rust.svg',
-  399467: '/assets/GitLab.svg',
-  399469: '/assets/Minecraft.svg',
-  399466: '/assets/Drupal.svg',
-  399464: '/assets/Wireguard.svg',
-  399462: '/assets/WooCommerce.svg',
-  399457: '/assets/WordPress.svg'
+  401705: '/assets/Terraria.svg',
+  401699: '/assets/Ark@1x.svg',
+  401704: '/assets/TF2.svg',
+  401703: '/assets/Rust.svg',
+  401707: '/assets/GitLab.svg',
+  401709: '/assets/Minecraft.svg',
+  401698: '/assets/Drupal.svg',
+  401706: '/assets/Wireguard.svg',
+  401708: '/assets/WooCommerce.svg',
+  401697: '/assets/WordPress.svg',
+  401700: '/assets/CSGO2.svg',
+  401701: '/assets/LAMP.svg',
+  401702: '/assets/MERN.svg',
+  401719: '/assets/OpenVPN.svg'
 };

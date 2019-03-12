@@ -54,7 +54,7 @@ import { MapState } from 'src/store/types';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { getCloudApps, iconMap } from './TabbedContent/formUtilities';
+import { getCloudApps } from './TabbedContent/formUtilities';
 
 interface State {
   selectedImageID?: string;
@@ -149,8 +149,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .then(response => {
         this.setState({
           appInstancesLoading: false,
-          // Filter out helpers
-          appInstances: response.filter(app => iconMap.hasOwnProperty(app.id))
+          appInstances: response
         });
       })
       .catch(e => {
