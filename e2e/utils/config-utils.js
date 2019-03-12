@@ -83,19 +83,17 @@ exports.login = (username, password, credFilePath) => {
     const onOauthPage = isOauthAuthPage();
     const csrfError = csrfErrorExists();
 
-    if (onOauthPage || csrfError) {
-        // If on the authorize page, click the authorize button
-        if (onOauthPage) {
-            $('.form-actions>.btn').click();
-        }
+    // If on the authorize page, click the authorize button
+    if (onOauthPage) {
+        $('.form-actions>.btn').click();
+    }
 
-        // If still on the login page, check for a form error
-        if (csrfError) {
-            // Attempt to Login after encountering the CSRF Error
-            browser.trySetValue('#password', password);
-            browser.trySetValue('#username', username);
-            $(loginButton).click();
-        }
+    // If still on the login page, check for a form error
+    if (csrfError) {
+        // Attempt to Login after encountering the CSRF Error
+        browser.trySetValue('#password', password);
+        browser.trySetValue('#username', username);
+        $(loginButton).click();
     }
 
     // Wait for the add entity menu to exist
