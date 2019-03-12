@@ -113,8 +113,8 @@ class Tag extends React.Component<CombinedProps, {}> {
 
   handleClick = (e: React.MouseEvent<any>) => {
     e.preventDefault();
+    e.stopPropagation();
     if (this.props.asSuggestion) {
-      e.stopPropagation();
       this.props.closeMenu();
     }
     const { history, label } = this.props;

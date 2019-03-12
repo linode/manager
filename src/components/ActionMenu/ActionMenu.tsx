@@ -13,7 +13,7 @@ export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
-  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CSSClasses = 'root' | 'item' | 'button' | 'actionSingleLink' | 'hidden';

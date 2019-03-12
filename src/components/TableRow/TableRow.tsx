@@ -66,9 +66,9 @@ class TableRow extends React.Component<CombinedProps> {
           this.props.history.push(target);
           // return if a modal is open
         }
-      }
-      if (typeof target === 'function') {
-        target(e);
+        if (typeof target === 'function') {
+          target(e);
+        }
       }
     }
   };
@@ -76,11 +76,23 @@ class TableRow extends React.Component<CombinedProps> {
   render() {
     const { classes, className, rowLink, staticContext, ...rest } = this.props;
 
+    let role;
+    switch (typeof rowLink) {
+      case 'string':
+        role = 'link';
+        break;
+      case 'function':
+        role = 'button';
+        break;
+      default:
+        role = undefined;
+    }
+
     return (
       <_TableRow
         onClick={e => rowLink && this.rowClick(e, rowLink)}
         hover={rowLink !== undefined}
-        role={rowLink && 'link'}
+        role={role}
         className={classNames(className, {
           [classes.root]: true
         })}
