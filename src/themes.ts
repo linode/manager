@@ -79,6 +79,7 @@ export const dark = () =>
       black: '#fff',
       offBlack: primaryColors.offBlack,
       boxShadow: '#222',
+      boxShadowDark: '#000',
       focusBorder: '#999',
       absWhite: '#000',
       blueDTwhite: '#fff',

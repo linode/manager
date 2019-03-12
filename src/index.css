@@ -18,6 +18,10 @@ body {
   font-family: 'LatoWeb', sans-serif;
 }
 
+body.searchOverlay #main-content {
+  opacity: 0.5;
+}
+
 @media screen and (min-width: 960px) {
   body {
     /* fix for scrollbar compoensation */
