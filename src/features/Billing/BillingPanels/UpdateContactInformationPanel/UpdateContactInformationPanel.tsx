@@ -101,13 +101,7 @@ class UpdateContactInformationPanel extends React.Component<
   }
 
   renderContent = () => {
-    const {
-      loading,
-      errors,
-      data,
-      lastUpdated
-      //countryRegionItems
-    } = this.props;
+    const { loading, errors, data, lastUpdated } = this.props;
 
     if (loading && lastUpdated === 0) {
       return this.renderLoading();
@@ -309,29 +303,28 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
-              {/* <TextField
-                label="State / Province"
-                value={defaultTo(account.state, fields.state)}
-                errorText={hasErrorFor('state')}
-                onChange={this.updateState}
-                data-qa-contact-province
-              /> */}
               <TextField
                 label="State / Province"
-                value={defaultTo(account.state, fields.state)}
+                value={'defaultTo(account.state, fields.state)'}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
                 select
                 data-qa-contact-province
               >
                 {countryRegionItems.default.map((country: any) => {
-                  country.regions.map((region: any) => {
-                    return (
-                      <MenuItem value={region.shortCode} key={region.shortCode}>
-                        {region.name}
-                      </MenuItem>
-                    );
-                  });
+                  if (country.countryShortCode === fields.country) {
+                    // return console.log(country, country.regions);
+                    country.regions.map((region: any) => {
+                      return (
+                        <MenuItem
+                          value={region.shortCode}
+                          key={region.shortCode}
+                        >
+                          {region.name}
+                        </MenuItem>
+                      );
+                    });
+                  }
                 })}
               </TextField>
             </Grid>
