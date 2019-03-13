@@ -62,7 +62,7 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
               currentStatus={linode.watchdog_enabled}
             />
             <LinodeAdvancedConfigurationsPanel />
-            <LinodeSettingsDeletePanel linodeId={linode.id} />
+            <LinodeSettingsDeletePanel linodeId={linode.id} linodeLabel={linode.label}/>
           </React.Fragment>
         );
       }}
