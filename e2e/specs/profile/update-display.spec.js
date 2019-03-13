@@ -30,7 +30,7 @@ describe('Profile - Update Display Settings', () => {
         expect(Display.userEmail.getAttribute('disabled')).toBe(null);
     });
 
-    it('Invalid emails can not be saved', () => {
+    xit('Invalid emails can not be saved', () => {
         Display.userEmail.setValue('fakeemail');
         Display.submitButton.click();
         Display.invalidEmailWarning.waitForVisible(constants.wait.normal);

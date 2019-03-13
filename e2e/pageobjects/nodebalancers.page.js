@@ -143,26 +143,17 @@ class NodeBalancers extends Page {
 
     configAddNode(nodeConfig) {
         this.addNode.click();
-        const labels = $$('[data-qa-backend-ip-label] input')
-            .filter(label => label.getValue() === '');
-        const ips = $$('[data-qa-backend-ip-address] input')
-            .filter(ip => ip.getValue() === '');
-        labels[0].click();
-        labels[0].setValue(nodeConfig.label);
-        ips[0].setValue(nodeConfig.ip);
+        this.backendIpLabel.waitForVisible(constants.wait.normal);
+        this.backendIpAddress.waitForVisible(constants.wait.normal);
+        this.backendIpLabel.click();
+        this.backendIpLabel.setValue(nodeConfig.label);
+        this.backendIpAddress.setValue(nodeConfig.ip);
     }
 
     configRemoveNode(nodeLabel) {
-        const node = this.nodes
-            .filter(l => l.$('[data-qa-backend-ip-label] input').getValue() === nodeLabel);
-
-        node[0].$(this.removeNode.selector).click();
-
-        browser.waitUntil(function() {
-            const matchingNodes = $$('[data-qa-backend-ip-label] input')
-                .filter(l => l.getValue() === nodeLabel);
-            return matchingNodes.length === 0;
-        }, constants.wait.normal);
+        const node = $$(this.backendIpLabel.selector).find(l => l.getValue() === nodeLabel);
+        $(this.removeNode.selector).click();
+        node.waitForVisible(constants.wait.normal,true);
     }
 
     configSave() {
@@ -199,9 +190,9 @@ class NodeBalancers extends Page {
         this.label.setValue(nodeBalancerConfig.label);
         this.regionCards[nodeBalancerConfig.regionIndex].click();
         this.port.setValue(nodeBalancerConfig.port);
-        this.selectMenuOption(this.protocolSelect, nodeBalancerConfig.protocol);
-        this.selectMenuOption(this.algorithmSelect, nodeBalancerConfig.algorithm);
-        this.selectMenuOption(this.sessionStickiness, nodeBalancerConfig.sessionStickiness);
+        this.selectMenuOption(this.protocolSelect.$('div'), nodeBalancerConfig.protocol);
+        this.selectMenuOption(this.algorithmSelect.$('div'), nodeBalancerConfig.algorithm);
+        this.selectMenuOption(this.sessionStickiness.$('div'), nodeBalancerConfig.sessionStickiness);
         this.backendIpLabel.setValue(linodeConfig.label);
         this.backendIpAddress.setValue(linodeConfig.privateIp);
         this.backendIpPort.setValue(80);

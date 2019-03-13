@@ -70,6 +70,7 @@ class Profile extends React.Component<Props> {
             textColor="primary"
             variant="scrollable"
             scrollButtons="on"
+            data-qa-tabs
           >
             {this.tabs.map(tab => (
               <Tab

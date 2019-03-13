@@ -11,7 +11,7 @@ import {
     apiDeleteAllVolumes,
 } from '../../../utils/common';
 
-describe('Rescue Linode Suite', () => {
+xdescribe('Rescue Linode Suite', () => {
     let volumeLabels = [];
     let diskImage;
     const intialDisks = ['Debian 9 Disk', '512 MB Swap Image'];
@@ -60,7 +60,7 @@ describe('Rescue Linode Suite', () => {
 
     beforeAll(() => {
         const linode = apiCreateLinode(linodeLabel);
-        createVolumes(generateVolumeArray(linode.id));
+        createVolumes(generateVolumeArray(linode.id), true);
         browser.url(`${constants.routes.linodes}/${linode.id}`);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
         LinodeDetail.changeTab('Rescue');
@@ -93,8 +93,6 @@ describe('Rescue Linode Suite', () => {
             browser.pause(500);
             Resize.landingElemsDisplay();
             Resize.planCards.find(plan => plan.$(`[${cardHeader}]`).getAttribute(cardHeader) === 'Linode 4GB').click();
-            Resize.toast.waitForVisible(constants.wait.normal);
-            Resize.toast.waitForVisible(constants.wait.long,true);
             Resize.submit.click();
             Resize.toastDisplays('Linode resize started.');
             Resize.linearProgress.waitForVisible(constants.wait.normal);

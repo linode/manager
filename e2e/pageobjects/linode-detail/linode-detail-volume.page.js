@@ -47,6 +47,7 @@ export class VolumeDetail extends Page {
     get resizeFileSystemCommand() { return $('[data-qa-resize-filesystem] input'); }
     get creatAndAttachRadio() { return $('[data-qa-radio="Create and Attach Volume"]'); }
     get attachExistingVolume() { return $('[data-qa-radio="Attach Existing Volume"]'); }
+    get sortVolumesByLabel() { return $('[data-qa-volume-label-header]'); }
 
     removeAllVolumes() {
         const pageObject = this;
@@ -231,7 +232,7 @@ export class VolumeDetail extends Page {
         this.submitButton.click();
         this.drawerBase.waitForVisible(constants.wait.normal,false);
         const attachedTo = this.volumeAttachment.selector.replace(']','');
-        $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.normal);
+        $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.minute);
     }
 
     detachVolume(volume, detach=true) {
@@ -375,6 +376,23 @@ export class VolumeDetail extends Page {
         expect(this.createMountDirCommand.getAttribute('value')).toEqual(`mkdir "/mnt/${volumeLabel}"`);
         expect(this.mountCommand.getAttribute('value')).toEqual(`mount "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}" "/mnt/${volumeLabel}"`);
         expect(this.mountOnBootCommand.getAttribute('value')).toEqual(`/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel} ext4 defaults,noatime 0 2`);
+    }
+
+    volumeRow(label){
+        const selector = this.volumeCellLabel.selector.replace(']','');
+        return $(`${selector}="${label}"]`);
+    }
+
+    getVolumesInTagGroup(tag){
+        const attribute = this.volumeCellLabel.selector.slice(1, -1);
+        return this.tagHeader(tag).$$(this.volumeCellLabel.selector)
+            .map(volume => volume.getAttribute(attribute));
+    }
+
+    hoverVolumeTags(label, volId){
+        const id = volId ? volId : this.volumeRow(label).$('..').getAttribute(this.volumeCellElem.selector.slice(1,-1));
+        const selector = this.volumeCellElem.selector.replace(']','');
+        $(`${selector}="${id}"]>td:nth-child(2)`).moveToObject();
     }
 }
 

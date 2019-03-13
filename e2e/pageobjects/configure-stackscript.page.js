@@ -8,16 +8,16 @@ class ConfigureStackScript extends Page {
     get createHeader() { return $(this.breadcrumbStaticText.selector); }
     get editHeader() { return $(this.breadcrumbStaticText.selector); }
     get label() { return $('[data-qa-stackscript-label]'); }
-    get labelHelp() { return $('[data-qa-stackscript-label]').$('..').$(this.helpButton.selector); }
+    get labelHelp() { return $('[data-qa-stackscript-label]').$('..').$(this.toolTipIcon.selector); }
     get description() { return $('[data-qa-stackscript-description]'); }
-    get descriptionHelp() { return $('[data-qa-stackscript-description]').$('..').$(this.helpButton.selector); }
-    get targetImagesSelect() { return $('[data-qa-stackscript-target-select]'); }
+    get descriptionHelp() { return $('[data-qa-stackscript-description]').$('..').$(this.toolTipIcon.selector); }
+    get targetImagesSelect() { return $('#image-select>div>div>div'); }
     get targetImages() { return $$('[data-qa-stackscript-image]'); }
-    get targetImagesHelp() { return $('[data-qa-stackscript-target-select]').$('..').$(this.helpButton.selector); }
+    get targetImagesHelp() { return $('[data-qa-stackscript-target-select]').$('..').$(this.toolTipIcon.selector); }
     get script() { return $('[data-qa-stackscript-script]'); }
     get revisionNote() { return $('[data-qa-stackscript-revision]'); }
     get saveButton() { return $('[data-qa-save]'); }
-    get imageTags() { return $$('[data-qa-tag]'); }
+    get imageTags() { return $$('[data-qa-multi-option]'); }
 
     save() {
         this.saveButton.click();
@@ -38,17 +38,10 @@ class ConfigureStackScript extends Page {
 
     baseElementsDisplay() {
         this.createHeader.waitForVisible(constants.wait.normal);
-        expect(this.description.isVisible()).toBe(true);
-        expect(this.targetImagesSelect.isVisible()).toBe(true);
-
-        expect(this.labelHelp.getTagName()).toBe('button');
-        expect(this.descriptionHelp.getTagName()).toBe('button');
-        expect(this.targetImagesHelp.getTagName()).toBe('button');
-
-        expect(this.script.isVisible()).toBe(true);
-        expect(this.revisionNote.isVisible()).toBe(true);
-        expect(this.saveButton.isVisible()).toBe(true);
-        expect(this.cancelButton.isVisible()).toBe(true);
+        this.label.waitForVisible(constants.wait.normal);
+        this.description.waitForVisible(constants.wait.normal);
+        this.targetImagesSelect.waitForVisible(constants.wait.normal);
+        this.saveButton.waitForVisible(constants.wait.normal);
     }
 
 
@@ -58,10 +51,6 @@ class ConfigureStackScript extends Page {
         expect(this.description.isVisible()).toBe(true);
         expect(this.targetImagesSelect.isVisible()).toBe(true);
         this.imageTags.forEach(tag => expect(tag.isVisible()).toBe(true));
-
-        expect(this.labelHelp.getTagName()).toBe('button');
-        expect(this.descriptionHelp.getTagName()).toBe('button');
-        expect(this.targetImagesHelp.getTagName()).toBe('button');
 
         expect(this.script.isVisible()).toBe(true);
         expect(this.revisionNote.isVisible()).toBe(true);
@@ -74,32 +63,35 @@ class ConfigureStackScript extends Page {
         this.description.$('textarea').setValue(config.description);
 
         // Choose an image from the multi select
-        this.targetImagesSelect.click();
+
+        const selectedImage = this.multiOption.selector.replace(']', '');
 
         if (config.images) {
             config.images.forEach(i => {
-                const imageElement = $(`[data-value="linode/${i}"]`);
-                const imageName = imageElement.getAttribute('data-value');
-
-                browser.jsClick(`[data-value="linode/${i}"]`);
-                browser.waitForVisible(`[data-value="linode/${imageName}"]`, constants.wait.normal, true);
+                this.targetImagesSelect.click();
+                const imageElement = $(`[data-qa-option="linode/${i}"]`);
+                browser.pause(500);
+                imageElement.click();
+                $(`${selectedImage}="${i}"`).waitForVisible(constants.wait.normal);
             });
         } else {
-            const imageElement = $$('[data-value]')[1];
-            const imageName = imageElement.getAttribute('data-value');
+            this.targetImagesSelect.click();
+            browser.pause(500);
+            const imageElement = $(`[data-qa-option="linode/arch"]`);
             imageElement.click();
-            browser.waitForVisible(`[data-value="${imageName}"]`, constants.wait.normal, true);
+            imageElement.waitForVisible(constants.wait.normal, true);
+            $(`${selectedImage}="arch"`).waitForVisible(constants.wait.normal);
         }
 
         // Click outside the select
         browser.click('body');
-
-        this.targetImagesSelect.waitForVisible(constants.wait.normal);
-        browser.waitForVisible('#menu-image', constants.wait.normal, true);
+        browser.waitForVisible('#react-select__menu', constants.wait.normal, true);
 
         this.script.$('textarea').click();
         this.script.$('textarea').setValue(config.script);
-        this.revisionNote.$('input').setValue(config.revisionNote);
+        if(config.revisionNote){
+            this.revisionNote.$('input').setValue(config.revisionNote);
+        }
     }
 
     create(config, update=false) {
@@ -121,7 +113,7 @@ class ConfigureStackScript extends Page {
         this.imageTags
             .filter(i => i.getText().includes(imageName))
             .forEach(i => {
-                i.$('svg').click();
+                i.$('..').$('svg').click();
                 i.waitForVisible(constants.wait.normal, true);
             });
 

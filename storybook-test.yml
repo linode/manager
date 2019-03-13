@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   selenium:
-    image: selenium/standalone-chrome:3.4.0-francium
+    image: selenium/standalone-chrome:3.141.59-gold
     volumes:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
     networks:
@@ -15,7 +15,7 @@ services:
       - ./src/components:/src/src/components
     entrypoint: yarn storybook
     depends_on:
-      - selenium-standalone
+      - selenium
     networks:
       - backend
   storybook-test:

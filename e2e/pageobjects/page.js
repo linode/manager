@@ -58,8 +58,16 @@ export default class Page {
     get groupByTagsToggle() { return $$('span').find(it => it.getText().includes('Group by Tag')).$('..'); }
     get tagHeaderSelector() { return 'data-qa-tag-header'; }
     get tagHeaders() { return $$(`[${this.tagHeaderSelector}]`); }
+    get toolTipIcon() { return $('[data-qa-tooltip-icon]'); }
+    get toolTipMessage() { return $('[data-qa-tooltip]'); }
     get enterKey() { return '\uE007'; }
     get upArrowKey() { return '\ue013'; }
+
+    //Shared in create linode and rebuild flow
+    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
+    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
+    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
+    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
 
     logout() {
         this.userMenu.waitForVisible(constants.wait.normal);
@@ -268,6 +276,6 @@ export default class Page {
     tagGroupsInAlphabeticalOrder(tags){
         const tagHeaders = this.tagHeaders
             .map(header => header.getAttribute(this.tagHeaderSelector));
-        expect(tagHeaders).toEqual(tags.sort());
+        expect(tagHeaders).toEqual(tagHeaders.sort());
     }
 }

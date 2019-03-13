@@ -115,17 +115,20 @@ exports.removeAllLinodes = token => {
     });
 }
 
-exports.createLinode = (token, password, linodeLabel, tags, type, region, group) => {
+exports.createLinode = (token, password, linodeLabel, tags, type, region, group, image) => {
     return new Promise((resolve, reject) => {
         const linodesEndpoint = '/linode/instances';
 
         const linodeConfig = {
             backups_enabled: false,
             booted: true,
-            image: 'linode/debian9',
             region: !region ? 'us-east' : region,
             root_pass: password,
             type: !type ? 'g6-nanode-1' : type
+        }
+
+        if(image){
+            linodeConfig['image'] = 'linode/debian9';
         }
 
         if (linodeLabel !== false) {
@@ -218,6 +221,29 @@ exports.removeNodebalancer = (token, nodeBalancerId) => {
             .then(response => resolve(response.data))
             .catch(error => {
                 console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
+exports.createNodeBalancer = (token, label, region, tags) => {
+    return new Promise((resolve,reject) => {
+        const endpoint = '/nodebalancers';
+
+        const data = {
+            region: region || 'us-east',
+            label: label,
+            client_conn_throttle: 0
+        };
+
+        if(tags){
+            data['tags'] = tags;
+        }
+
+        return getAxiosInstance(token).post(endpoint, data)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.log(error.data);
                 reject(error);
             });
     });
