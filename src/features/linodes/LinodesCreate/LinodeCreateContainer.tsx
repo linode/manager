@@ -149,7 +149,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .then(response => {
         this.setState({
           appInstancesLoading: false,
-          appInstances: response.data
+          appInstances: response
         });
       })
       .catch(e => {
