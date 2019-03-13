@@ -7,6 +7,7 @@ import { ISO_FORMAT } from 'src/constants';
 
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
   ticket: Linode.SupportTicket;
@@ -18,23 +19,6 @@ const renderEntityLink = (ticket: Linode.SupportTicket) => {
       {ticket.entity.label}
     </Link>
   ) : null;
-};
-
-const getLinkTargets = (entity: any) => {
-  switch (entity.type) {
-    case 'linode':
-      return `/linodes/${entity.id}`;
-    case 'domain':
-      return `/domains/${entity.id}`;
-    case 'nodebalancer':
-      return `/nodebalancers/${entity.id}`;
-    case 'longview':
-      return '/longview';
-    case 'volume':
-      return '/volumes';
-    default:
-      return '';
-  }
 };
 
 const TicketRow: React.StatelessComponent<Props> = props => {
