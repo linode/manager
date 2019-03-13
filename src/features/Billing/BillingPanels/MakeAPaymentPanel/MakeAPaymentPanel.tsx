@@ -201,34 +201,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     this.setState({ cvv: e.target.value || '' });
 
   submitForm = () => {
-    const { usd, cvv } = this.state;
-
     this.setState({
-      submitting: true,
-      errors: undefined,
-      successMessage: ''
+      dialogOpen: true
     });
-
-    makePayment({
-      usd: (+usd).toFixed(2),
-      cvv
-    })
-      .then(response => {
-        this.setState({
-          submitting: false,
-          success: true
-        });
-        this.props.requestAccount();
-      })
-      .catch(errorResponse => {
-        this.setState({
-          submitting: false,
-          errors: getAPIErrorOrDefault(
-            errorResponse,
-            'Unable to make a payment at this time.'
-          )
-        });
-      });
   };
 
   resetForm = () =>
@@ -247,6 +222,39 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       success: true,
       successMessage: 'Payment Cancelled'
     });
+  };
+
+  confirmCardPayment = () => {
+    const { usd, cvv } = this.state;
+
+    this.setState({
+      submitting: true,
+      errors: undefined,
+      successMessage: ''
+    });
+
+    makePayment({
+      usd: (+usd).toFixed(2),
+      cvv
+    })
+      .then(response => {
+        this.setState({
+          submitting: false,
+          success: true,
+          dialogOpen: false
+        });
+        this.props.requestAccount();
+      })
+      .catch(errorResponse => {
+        this.setState({
+          submitting: false,
+          dialogOpen: false,
+          errors: getAPIErrorOrDefault(
+            errorResponse,
+            'Unable to make a payment at this time.'
+          )
+        });
+      });
   };
 
   confirmPaypalPayment = () => {
@@ -278,7 +286,25 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
       });
   };
 
-  dialogActions = () => {
+  creditCardActions = () => {
+    return (
+      <ActionsPanel>
+        <Button type="cancel" onClick={this.closeDialog} data-qa-cancel>
+          Cancel
+        </Button>
+        <Button
+          type="secondary"
+          loading={this.state.submitting}
+          onClick={this.confirmCardPayment}
+          data-qa-submit
+        >
+          Confirm Payment
+        </Button>
+      </ActionsPanel>
+    );
+  };
+
+  paypalActions = () => {
     return (
       <ActionsPanel>
         <Button type="cancel" onClick={this.closeDialog} data-qa-cancel>
@@ -457,7 +483,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           open={this.state.dialogOpen}
           title={`Confirm Payment`}
           onClose={this.closeDialog}
-          actions={this.dialogActions}
+          actions={
+            this.state.type === 'PAYPAL'
+              ? this.paypalActions
+              : this.creditCardActions
+          }
         >
           <Typography>
             {`Confirm ${type} payment for $${(+this.state.usd).toFixed(2)} USD
@@ -520,7 +550,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             loading={this.state.submitting}
             onClick={this.submitForm}
           >
-            Confirm Payment
+            Submit Payment
           </Button>
         )}
         <Button type="cancel" onClick={this.resetForm}>
