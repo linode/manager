@@ -18,6 +18,10 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   componentWillMount() {
     const { isAuthenticated } = this.props;
 
+    /**
+     * only show app content if we're authed or at a route we don't need auth for
+     * otherwise, shoot us to login to auth
+     */
     if (isAuthenticated || this.isExcludedRoute(location.pathname)) {
       return this.setState({ showChildren: true });
     } else {
@@ -34,7 +38,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
   }
 
   shouldComponentUpdate(nextProps: CombinedProps) {
-    /** if we're not authed and not on a whitelisted route */
+    /** if we're not authed and not on a whitelisted route, we need to re-auth */
     if (
       !nextProps.isAuthenticated &&
       !this.isExcludedRoute(location.pathname)
@@ -45,6 +49,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     return true;
   }
 
+  /** routes we do not need to auth for */
   isExcludedRoute = (pathname: string) => {
     const excludedPaths = ['/oauth/callback', '/logout'];
     return excludedPaths.reduce(
