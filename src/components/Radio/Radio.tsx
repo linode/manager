@@ -88,6 +88,11 @@ const LinodeRadioControl: React.StatelessComponent<FinalProps> = props => {
       icon={<RadioIcon />}
       checkedIcon={<RadioIconRadioed />}
       data-qa-radio={props.checked}
+      inputProps={
+        props.inputProps === undefined
+          ? { 'aria-label': props.name ? `${props.name}` : undefined }
+          : { ...props.inputProps }
+      }
     />
   );
 };
