@@ -202,6 +202,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   submitForm = () => {
     this.setState({
+      errors: undefined,
+      success: undefined,
       dialogOpen: true
     });
   };
