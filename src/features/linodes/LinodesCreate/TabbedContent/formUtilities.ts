@@ -40,5 +40,32 @@ export const filterUDFErrors = (
 export const getCloudApps = (params?: any, filter?: any) =>
   getStackscripts(params, {
     ...filter,
-    username: 'capuk'
+    username: 'linode'
+  }).then(response => {
+    return response.data
+      .filter(script => {
+        return Object.keys(iconMap).includes(String(script.id));
+      })
+      .map(script => ({
+        // so sorry about this
+        ...script,
+        label: script.label.replace('One-Click', '').replace('- OneClick', '')
+      }));
   });
+
+export const iconMap = {
+  401705: '/assets/Terraria.svg',
+  401699: '/assets/Ark@1x.svg',
+  401704: '/assets/TF2.svg',
+  401703: '/assets/Rust.svg',
+  401707: '/assets/GitLab.svg',
+  401709: '/assets/Minecraft.svg',
+  401698: '/assets/Drupal.svg',
+  401706: '/assets/Wireguard.svg',
+  401708: '/assets/WooCommerce.svg',
+  401697: '/assets/WordPress.svg',
+  401700: '/assets/CSGO2.svg',
+  401701: '/assets/LAMP.svg',
+  401702: '/assets/MERN.svg',
+  401719: '/assets/OpenVPN.svg'
+};
