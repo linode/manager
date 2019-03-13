@@ -90,8 +90,6 @@ export class StackScript extends React.Component<CombinedProps> {
         }, [])
         .join(', ') || 'No compatible images found';
 
-    console.log(this.props);
-
     return (
       <div className={classes.root}>
         <Typography
