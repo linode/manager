@@ -49,15 +49,12 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const UserDefinedFieldsPanel: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const { userDefinedFields, classes, handleChange } = props;
-
-  const renderField = (
+class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
+  renderField = (
     field: Linode.StackScript.UserDefinedField,
     error?: string
   ) => {
+    const { udf_data, handleChange } = this.props;
     // if the 'default' key is returned from the API, the field is optional
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
@@ -66,9 +63,9 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           <UserDefinedMultiSelect
             key={field.name}
             field={field}
-            udf_data={props.udf_data}
+            udf_data={udf_data}
             updateFormState={handleChange}
-            updateFor={[props.udf_data[field.name], error]}
+            updateFor={[udf_data[field.name], error]}
             isOptional={isOptional}
             error={error}
           />
@@ -81,8 +78,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
           <UserDefinedSelect
             field={field}
             updateFormState={handleChange}
-            udf_data={props.udf_data}
-            updateFor={[props.udf_data[field.name], error]}
+            udf_data={udf_data}
+            updateFor={[udf_data[field.name], error]}
             isOptional={isOptional}
             key={field.name}
             error={error}
@@ -97,8 +94,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
             updateFormState={handleChange}
             isPassword={true}
             field={field}
-            udf_data={props.udf_data}
-            updateFor={[props.udf_data[field.name], error]}
+            udf_data={udf_data}
+            updateFor={[udf_data[field.name], error]}
             isOptional={isOptional}
             placeholder={field.example}
             error={error}
@@ -111,8 +108,8 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
         <UserDefinedText
           updateFormState={handleChange}
           field={field}
-          udf_data={props.udf_data}
-          updateFor={[props.udf_data[field.name], error]}
+          udf_data={udf_data}
+          updateFor={[udf_data[field.name], error]}
           isOptional={isOptional}
           placeholder={field.example}
           error={error}
@@ -121,46 +118,66 @@ const UserDefinedFieldsPanel: React.StatelessComponent<
     );
   };
 
-  return (
-    <Paper className={classes.root}>
-      <Typography role="header" variant="h2" data-qa-user-defined-field-header>
-        <span>{`${props.selectedLabel} Options`}</span>
-      </Typography>
+  render() {
+    const { userDefinedFields, classes } = this.props;
 
-      {/* Required Fields */}
-      {userDefinedFields!
-        .filter(
-          (field: Linode.StackScript.UserDefinedField) =>
-            field.hasOwnProperty('default') !== true
-        )
-        .map((field: Linode.StackScript.UserDefinedField) => {
-          const error = getError(field, props.errors);
-          return renderField(field, error);
-        })}
+    /** [true, false, true, false] */
+    const hasOnlyOptionalFields = userDefinedFields!
+      .map(eachUDF => {
+        return Object.keys(eachUDF).some(eachKey => eachKey === 'default');
+      })
+      .every(eachValue => eachValue === true);
 
-      {/* Optional Fields */}
-      <ShowMoreExpansion name="Show Advanced Options">
-        <Typography variant="body1" className={classes.advDescription}>
-          These fields are additional configuration options and are not required
-          for creation.
+    return (
+      <Paper className={classes.root}>
+        <Typography
+          role="header"
+          variant="h2"
+          data-qa-user-defined-field-header
+        >
+          <span>{`${this.props.selectedLabel} Options`}</span>
         </Typography>
-        <div className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}>
-          <Grid container alignItems="center">
-            {userDefinedFields!
-              .filter(
-                (field: Linode.StackScript.UserDefinedField) =>
-                  field.hasOwnProperty('default') === true
-              )
-              .map((field: Linode.StackScript.UserDefinedField) => {
-                const error = getError(field, props.errors);
-                return renderField(field, error);
-              })}
-          </Grid>
-        </div>
-      </ShowMoreExpansion>
-    </Paper>
-  );
-};
+
+        {/* Required Fields */}
+        {userDefinedFields!
+          .filter(
+            (field: Linode.StackScript.UserDefinedField) =>
+              field.hasOwnProperty('default') !== true
+          )
+          .map((field: Linode.StackScript.UserDefinedField) => {
+            const error = getError(field, this.props.errors);
+            return this.renderField(field, error);
+          })}
+
+        {/* Optional Fields */}
+        <ShowMoreExpansion
+          name="Show Advanced Options"
+          defaultExpanded={hasOnlyOptionalFields}
+        >
+          <Typography variant="body1" className={classes.advDescription}>
+            These fields are additional configuration options and are not
+            required for creation.
+          </Typography>
+          <div
+            className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
+          >
+            <Grid container alignItems="center">
+              {userDefinedFields!
+                .filter(
+                  (field: Linode.StackScript.UserDefinedField) =>
+                    field.hasOwnProperty('default') === true
+                )
+                .map((field: Linode.StackScript.UserDefinedField) => {
+                  const error = getError(field, this.props.errors);
+                  return this.renderField(field, error);
+                })}
+            </Grid>
+          </div>
+        </ShowMoreExpansion>
+      </Paper>
+    );
+  }
+}
 
 const getError = (
   field: Linode.StackScript.UserDefinedField,
