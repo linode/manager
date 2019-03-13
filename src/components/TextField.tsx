@@ -11,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
+import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
 type ClassNames =
   | 'root'
@@ -171,6 +172,11 @@ class LinodeTextField extends React.Component<CombinedProps> {
             },
             className
           )}
+          id={
+            this.props.label
+              ? convertToKebabCase(`${this.props.label}`)
+              : undefined
+          }
         >
           {this.props.children}
         </TextField>
