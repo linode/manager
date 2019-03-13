@@ -28,6 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   linodeId: number;
+  linodeLabel: string;
 }
 
 interface State {
@@ -91,7 +92,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
           </Typography>
         </ExpansionPanel>
         <ConfirmationDialog
-          title="Confirm Deletion"
+          title={`Confirm Deletion of ${this.props.linodeLabel}`}
           actions={this.renderConfirmationActions}
           open={this.state.open}
           onClose={this.closeDeleteDialog}
