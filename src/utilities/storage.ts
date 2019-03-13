@@ -34,7 +34,7 @@ const GROUP_NODEBALANCERS = `GROUP_NODEBALANCERS`;
 const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 const TOKEN = 'authentication/token';
-const NONCE = 'authentication/noonce';
+const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 
