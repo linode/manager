@@ -14,7 +14,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -124,7 +123,7 @@ const client = {
     'AWdnFJ_Yx5X9uqKZQdbdkLfCnEJwtauQJ2tyesKf3S0IxSrkRLmB2ZN2ACSwy37gxY_AZoTagHWlZCOA'
 };
 
-const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=authorize`;
+const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
 
 const paypalScriptSrc = (isProduction: boolean) => {
   return isProduction
@@ -272,6 +271,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     });
   };
 
+  /**
+   * user submits payment and we send APIv4 request to confirm paypal payment
+   */
   confirmPaypalPayment = () => {
     const { payerID, paymentID } = this.state;
     this.setState({ isExecutingPaypalPayment: true });
@@ -316,8 +318,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
   /**
    * Callback function which serves the purpose of providing Paypal with
-   * the payment_id that we get from APIv4. It is imperative that this step happens before
-   * we make the call to v4/execute
+   * the order_id that we get from APIv4. It is imperative that this step happens before
+   * we make the call to v4/execute.
+   *
+   * It is also impertive that this function returns the checkout_id returned from APIv4.
+   * checkout_id is the same thing as order_id
    */
   createOrder = () => {
     const { usd } = this.state;
@@ -331,8 +336,8 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     });
 
     return stagePaypalPayment({
-      cancel_url: 'https://cloud.linode.com/billing',
-      redirect_url: 'https://cloud.linode.com/billing',
+      cancel_url: 'https://www.paypal.com/checkoutnow/error',
+      redirect_url: 'https://www.paypal.com/checkoutnow/error',
       usd: (+usd).toFixed(2)
     })
       .then(response => {
@@ -340,7 +345,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           isStagingPaypalPayment: false,
           paymentID: response.payment_id
         });
-        return response.payment_id;
+        return response.checkout_token;
       })
       .catch(errorResponse => {
         this.setState({
@@ -376,7 +381,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
   };
 
   renderForm = () => {
-    const { accountLoading, balance, classes, lastFour } = this.props;
+    const { lastFour } = this.props;
     const { errors, successMessage } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -389,10 +394,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     );
 
     const generalError = hasErrorFor('none');
-    const balanceDisplay =
-      !accountLoading && balance !== false
-        ? `$${Math.abs(balance).toFixed(2)}`
-        : '';
 
     return (
       <React.Fragment>
@@ -544,12 +545,8 @@ const withAccount = AccountContainer(
 export default compose<CombinedProps, {}>(
   styled,
   withAccount,
-  scriptLoader('https://www.paypalobjects.com/api/checkout.js')
+  scriptLoader(paypalScriptSrc(true || process.env.NODE_ENV === 'production'))
 )(MakeAPaymentPanel);
-
-// export default scriptLoader(
-//   paypalScriptSrc(true || process.env.NODE_ENV === 'production')
-// )(enhanced(MakeAPaymentPanel));
 
 export const isAllowedUSDAmount = (usd: number) => {
   return !!(usd >= 5 && usd <= 500);

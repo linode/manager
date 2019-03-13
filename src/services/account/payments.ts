@@ -33,10 +33,6 @@ interface SaveCreditCardData {
   expiry_month: number;
 }
 
-interface PaymentID {
-  payment_id: string;
-}
-
 /**
  * getPayments
  *
@@ -71,6 +67,11 @@ export const makePayment = (data: { usd: string; cvv?: string }) =>
     setData(data, PaymentSchema)
   ).then(response => response.data);
 
+interface StagePaypalData {
+  checkout_token: string;
+  payment_id: string;
+}
+
 /**
  * stagePaypalPayment
  *
@@ -85,7 +86,7 @@ export const makePayment = (data: { usd: string; cvv?: string }) =>
  *
  */
 export const stagePaypalPayment = (data: Paypal) =>
-  Request<PaymentID>(
+  Request<StagePaypalData>(
     setURL(`${API_ROOT}/account/payments/paypal`),
     setMethod('POST'),
     setData(data, StagePaypalPaymentSchema)
