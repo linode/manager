@@ -54,8 +54,9 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const formatOffset = (offset: number, label: string) => {
   const isHalfHour = offset % 1 === 0.5 ? ':30' : ':00';
-  const rounded = Math.floor(offset);
-  return `\(GMT ${rounded}${isHalfHour}\) ${label}`;
+  const isPositive = Math.abs(offset) === offset ? '+' : '-';
+  const rounded = Math.floor(Math.abs(offset));
+  return `\(GMT ${isPositive}${rounded}${isHalfHour}\) ${label}`;
 };
 
 const renderTimeZonesList = (): Item[] => {
