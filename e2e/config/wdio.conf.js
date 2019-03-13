@@ -183,7 +183,7 @@ exports.config = {
     jasmineNodeOpts: {
         //
         // Jasmine default timeout
-        defaultTimeoutInterval: 60000 * 60,
+        defaultTimeoutInterval: 60000 * 10,
         //
         // The Jasmine framework allows interception of each assertion in order to log the state of the application
         // or website depending on the result. For example, it is pretty handy to take a screenshot every time
@@ -372,5 +372,5 @@ exports.config = {
         return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
             .then(res => resolve(res))
             .catch(error => console.error('Error:', error));
-    } 
+    }
 }

@@ -106,7 +106,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Paper className={classes.summarySection}>
+        <Paper className={classes.summarySection} data-qa-contact-summary>
           <Typography role="header" variant="h3" className={classes.title}>
             Contact Information
           </Typography>
@@ -141,7 +141,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           </div>
         </Paper>
 
-        <Paper className={classes.summarySection}>
+        <Paper className={classes.summarySection} data-qa-billing-summary>
           <Typography role="header" variant="h3" className={classes.title}>
             Billing Information
           </Typography>
@@ -151,7 +151,9 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               <Currency quantity={balance_uninvoiced} />
             </div>
           )}
-          <div className={`${classes.section} ${classes.balance}`}>
+          <div className={`${classes.section} ${classes.balance}`}
+            data-qa-current-balance
+          >
             <strong>Current Balance:&nbsp;</strong>
             <Typography
               component={'span'}
