@@ -546,9 +546,8 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false,
+      isManagedAccount: false
       // isLongviewEnabled: false,
-      isObjectStorageEnabled: false
     };
   }
 
