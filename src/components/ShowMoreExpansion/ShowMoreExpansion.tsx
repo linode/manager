@@ -52,7 +52,7 @@ interface State {
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class ShowMoreExpansion extends React.Component<CombinedProps, State> {
-  state = { open: this.props.defaultExpanded };
+  state = { open: this.props.defaultExpanded || false };
 
   handleNameClick = () => {
     this.setState({
