@@ -12,7 +12,6 @@ import LinearProgress from 'src/components/LinearProgress';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
 import Panel from './Panel';
-import { iconMap } from './TabbedContent/formUtilities';
 import { AppsData } from './types';
 
 type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
@@ -92,14 +91,13 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
           <SelectionCardWrapper
             key={eachApp.id}
             checked={eachApp.id === selectedStackScriptID}
-            username={eachApp.username}
             label={eachApp.label}
             availableImages={eachApp.images}
             userDefinedFields={eachApp.user_defined_fields}
             handleClick={handleClick}
             disabled={disabled}
             id={eachApp.id}
-            iconUrl={iconMap[eachApp.id]}
+            iconUrl={eachApp.logo_url || ''}
           />
         ))}
       </Grid>
@@ -125,7 +123,6 @@ interface SelectionProps {
   iconUrl: string;
   id: number;
   label: string;
-  username: string;
   userDefinedFields: Linode.StackScript.UserDefinedField[];
   availableImages: string[];
   disabled: boolean;
@@ -134,18 +131,12 @@ interface SelectionProps {
 
 class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
   handleSelectApp = (event: React.SyntheticEvent<HTMLElement, Event>) => {
-    const {
-      id,
-      label,
-      username,
-      userDefinedFields,
-      availableImages
-    } = this.props;
+    const { id, label, userDefinedFields, availableImages } = this.props;
 
     return this.props.handleClick(
       id,
       label,
-      username,
+      '' /** username doesn't matter since we're not displaying it */,
       availableImages,
       userDefinedFields
     );
@@ -159,7 +150,7 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
         checked={checked}
         onClick={this.handleSelectApp}
         renderIcon={() => {
-          return <img src={`${APP_ROOT}${iconUrl}`} />;
+          return <img src={`${APP_ROOT}/${iconUrl}`} />;
         }}
         heading={label}
         subheadings={['']}
