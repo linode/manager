@@ -10,22 +10,26 @@ import { AuthenticationWrapper } from 'src/components/AuthenticationWrapper/Auth
 window.location.assign = jest.fn();
 
 const component = shallow<AuthenticationWrapper>(
-  <AuthenticationWrapper isAuthenticated={false} initSession={jest.fn()} />
+  <AuthenticationWrapper isAuthenticated={false} initSession={jest.fn()}>
+    <div />
+  </AuthenticationWrapper>
 );
 
 describe('AuthenticationWrapper', () => {
-  xit('should dispatch init session action when mounted', () => {
-    expect(component.childAt(0).prop('initSession')).toBeCalled();
+  it('should render just a react fragment if showChildren state is false', () => {
+    expect(component.childAt(0)).toHaveLength(0);
   });
-  it('redirects when logged out and hitting /linodes', () => {
-    return;
+  it('should render one child when showChildren state is true', () => {
+    component.setState({ showChildren: true });
+    expect(component.childAt(0)).toHaveLength(1);
+  });
+  it('should invoke props.initSession when the component is mounted', () => {
+    expect(component.instance().props.initSession).toHaveBeenCalledTimes(1);
   });
 
-  it("doesn't redirect when logged out and hitting /oauth/callback", () => {
-    return;
-  });
-
-  it("doesn't redirect when authenticated", () => {
-    return;
+  it('should set showChildren state to true when the isAuhenticated prop goes from false to true', () => {
+    component.setState({ showChildren: false });
+    component.setProps({ isAuthenticated: true });
+    expect(component.state('showChildren')).toBeTruthy();
   });
 });
