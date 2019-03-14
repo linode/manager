@@ -8,13 +8,12 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'accessPanel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
+  root: {},
+  accessPanel: {
+    marginTop: 0
   }
 });
 
@@ -47,7 +46,14 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   };
 
   renderPasswordField = () => {
-    const { udf_data, error, field, placeholder, isOptional } = this.props;
+    const {
+      udf_data,
+      error,
+      field,
+      placeholder,
+      isOptional,
+      classes
+    } = this.props;
 
     return (
       <AccessPanel
@@ -58,6 +64,8 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         noPadding
         placeholder={placeholder}
         error={error}
+        hideStrengthLabel
+        className={!isOptional ? classes.accessPanel : ''}
       />
     );
   };
