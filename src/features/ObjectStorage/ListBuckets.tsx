@@ -55,35 +55,35 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
                     label="name"
                     direction={order}
                     handleClick={handleOrderChange}
-                    data-qa-name={order}
                     className={classes.label}
+                    data-qa-name
                   >
                     Name
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-size={order}
                     active={orderBy === 'size'}
                     label="size"
                     direction={order}
                     handleClick={handleOrderChange}
+                    data-qa-size
                   >
                     Size
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-region={order}
                     active={orderBy === 'region'}
                     label="region"
                     direction={order}
                     handleClick={handleOrderChange}
+                    data-qa-region
                   >
                     Region
                   </TableSortCell>
                   <TableSortCell
-                    data-qa-created={order}
                     active={orderBy === 'created'}
                     label="created"
                     direction={order}
                     handleClick={handleOrderChange}
+                    data-qa-created
                   >
                     Created
                   </TableSortCell>
