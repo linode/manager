@@ -302,7 +302,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
     // }
 
-    if (this.props.isObjectStorageEnabled) {
+    if (isObjectStorageEnabled) {
       primaryLinks.push({
         display: 'Object Storage',
         href: '/object-storage',
@@ -520,7 +520,6 @@ interface StateProps {
   hasAccountAccess: boolean;
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
-  isObjectStorageEnabled: boolean;
 }
 
 const userHasAccountAccess = (profile: Linode.Profile) => {
@@ -555,9 +554,8 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account),
+    isManagedAccount: accountHasManaged(account)
     // isLongviewEnabled: accountHasLongviewSubscription(account),
-    isObjectStorageEnabled
   };
 };
 
