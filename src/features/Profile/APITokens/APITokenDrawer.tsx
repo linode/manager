@@ -248,6 +248,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   value="0"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-none-radio
+                  inputProps={{
+                    'aria-label': 'Select none for all'
+                  }}
                 />
               </TableCell>
               <TableCell
@@ -263,6 +266,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   value="1"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-read-radio
+                  inputProps={{
+                    'aria-label': 'Select read-only for all'
+                  }}
                 />
               </TableCell>
               <TableCell
@@ -278,6 +284,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                   value="2"
                   onChange={this.handleSelectAllScopes}
                   data-qa-perm-rw-radio
+                  inputProps={{
+                    'aria-label': 'Select read/write for all'
+                  }}
                 />
               </TableCell>
             </TableRow>
@@ -307,6 +316,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     value="0"
                     onChange={this.handleScopeChange}
                     data-qa-perm-none-radio
+                    inputProps={{
+                      'aria-label': `no access for ${scopeTup[0]}`
+                    }}
                   />
                 </TableCell>
                 <TableCell
@@ -321,6 +333,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     value="1"
                     onChange={this.handleScopeChange}
                     data-qa-perm-read-radio
+                    inputProps={{
+                      'aria-label': `read-only for ${scopeTup[0]}`
+                    }}
                   />
                 </TableCell>
                 <TableCell
@@ -335,6 +350,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                     value="2"
                     onChange={this.handleScopeChange}
                     data-qa-perm-rw-radio
+                    inputProps={{
+                      'aria-label': `read/write for ${scopeTup[0]}`
+                    }}
                   />
                 </TableCell>
               </TableRow>
