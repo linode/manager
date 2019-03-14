@@ -165,6 +165,7 @@ class UpdateContactInformationPanel extends React.Component<
 
     console.log(account.country, fields.country);
     console.log(regionResults);
+    console.log(account.state, fields.state);
     return (
       <Grid
         container
@@ -325,7 +326,8 @@ class UpdateContactInformationPanel extends React.Component<
             <Grid item xs={12} sm={7}>
               <TextField
                 label="State / Province"
-                value={defaultTo('Select a State / Province', account.state)}
+                value={defaultTo(account.state, fields.state)}
+                placeholder="Select a State / Province"
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
                 select
