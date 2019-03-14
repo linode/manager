@@ -42,24 +42,29 @@ const styles: StyleRulesCallback = theme => ({
 
 interface Props {
   name: string;
+  defaultExpanded?: boolean;
 }
 
 interface State {
-  open: boolean;
+  open: boolean | undefined;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
 class ShowMoreExpansion extends React.Component<CombinedProps, State> {
-  state = {
-    open: false
-  };
+  state = { open: this.props.defaultExpanded || false };
 
   handleNameClick = () => {
     this.setState({
-      open: !this.state.open
+      open: !this.props.defaultExpanded
     });
   };
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevState.open !== this.props.defaultExpanded) {
+      this.setState({ open: this.props.defaultExpanded });
+    }
+  }
 
   render() {
     const { name, classes, children } = this.props;

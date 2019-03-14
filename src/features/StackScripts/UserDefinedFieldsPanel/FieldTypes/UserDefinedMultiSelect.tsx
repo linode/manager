@@ -15,9 +15,7 @@ type ClassNames = 'root' | 'toggle';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
+    margin: `${theme.spacing.unit * 3}px 0 0`
   },
   toggle: {}
 });
