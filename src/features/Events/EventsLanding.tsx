@@ -33,62 +33,61 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 type CombinedProps = WithStyles<ClassNames> & PaginationProps<Linode.Event>;
 
-export class EventsLanding extends React.PureComponent<CombinedProps> {
-  componentDidMount() {
-    this.props.request();
-  }
+export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
+  React.useEffect(() => {
+    props.request();
+  }, []);
 
-  render() {
-    const { classes, count, data, error, loading, page, pageSize } = this.props;
+  const { classes, count, data, error, loading, page, pageSize } = props;
 
-    return (
-      <>
-        <Typography variant="h2" className={classes.header}>
-          Events
-        </Typography>
-        <Paper>
-          <Table aria-label="List of Tickets">
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ padding: 0, width: 50 }} />
-                <TableCell
-                  data-qa-events-subject-header
-                  style={{ minWidth: 200 }}
-                >
-                  Event
-                </TableCell>
-                <TableCell data-qa-events-time-header>Time</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{renderTableBody(loading, data, error)}</TableBody>
-          </Table>
-          <PaginationFooter
-            count={count}
-            page={page}
-            pageSize={pageSize}
-            handlePageChange={this.props.handlePageChange}
-            handleSizeChange={this.props.handlePageSizeChange}
-            eventCategory="event list"
-            padded
-          />
-        </Paper>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Typography variant="h2" className={classes.header}>
+        Events
+      </Typography>
+      <Paper>
+        <Table aria-label="List of Events">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ padding: 0, width: 50 }} />
+              <TableCell
+                data-qa-events-subject-header
+                style={{ minWidth: 200 }}
+              >
+                Event
+              </TableCell>
+              <TableCell data-qa-events-time-header>Time</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{renderTableBody(loading, data, error)}</TableBody>
+        </Table>
+        <PaginationFooter
+          count={count}
+          page={page}
+          pageSize={pageSize}
+          handlePageChange={props.handlePageChange}
+          handleSizeChange={props.handlePageSizeChange}
+          eventCategory="event list"
+          padded
+        />
+      </Paper>
+    </>
+  );
+};
 
-const renderTableBody = (
+export const renderTableBody = (
   loading: boolean,
   events?: Linode.Event[],
   error?: Error
 ) => {
   if (loading) {
-    return <TableRowLoading colSpan={12} />;
+    return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
   } else if (error) {
     return (
       <TableRowError
         colSpan={12}
         message="There was an error retrieving the events on your account."
+        data-qa-events-table-error
       />
     );
   } else if (!events || events.length === 0) {
@@ -96,6 +95,7 @@ const renderTableBody = (
       <TableRowEmptyState
         colSpan={12}
         message={"You don't have any events on your account."}
+        data-qa-events-table-empty
       />
     );
   } else {

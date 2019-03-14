@@ -3,7 +3,9 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
+import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -51,11 +53,11 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     <>
       {Boolean(linkTarget) ? (
         // This row has an entity/external target to link to.
-        <Row {...rowProps} />
+        <Row {...rowProps} data-qa-events-row={event.id} />
       ) : (
         // This one doesn't. Usually that means the entity has been deleted.
         <Tooltip title="The entity for this event no longer exists.">
-          <Row {...rowProps} />
+          <Row {...rowProps} data-qa-events-row={event.id} />
         </Tooltip>
       )}
     </>
@@ -75,11 +77,15 @@ const Row: React.StatelessComponent<RowProps> = props => {
 
   return (
     <TableRow rowLink={linkTarget}>
-      <TableCell>
-        <EntityIcon variant={type} status={status} />
+      <Hidden smDown>
+        <TableCell data-qa-event-icon-cell>
+          <EntityIcon variant={type} status={status} />
+        </TableCell>
+      </Hidden>
+      <TableCell parentColumn={'Event'} data-qa-event-message-cell>
+        <Typography variant="body1">{message}</Typography>
       </TableCell>
-      <TableCell parentColumn={'Event'}>{message}</TableCell>
-      <TableCell parentColumn={'Time'}>
+      <TableCell parentColumn={'Time'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} humanizeCutoff={'month'} />
       </TableCell>
     </TableRow>
