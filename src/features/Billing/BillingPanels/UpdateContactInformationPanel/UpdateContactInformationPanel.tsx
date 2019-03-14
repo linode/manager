@@ -147,6 +147,24 @@ class UpdateContactInformationPanel extends React.Component<
 
     const generalError = hasErrorFor('none');
 
+    const countryResult = countryRegionItems.default.filter((country: any) => {
+      if (fields.country) {
+        return country.countryShortCode === fields.country;
+      } else {
+        return country.countryShortCode === account.country;
+      }
+    });
+
+    const regionResults = countryResult[0]['regions'].map((region: any) => {
+      return (
+        <MenuItem value={region.shortCode} key={region.shortCode}>
+          {region.name}
+        </MenuItem>
+      );
+    });
+
+    console.log(account.country, fields.country);
+    console.log(regionResults);
     return (
       <Grid
         container
@@ -296,8 +314,10 @@ class UpdateContactInformationPanel extends React.Component<
           updateFor={[
             fields.state,
             fields.zip,
+            fields.country,
             hasErrorFor('state'),
             hasErrorFor('zip'),
+            hasErrorFor('country'),
             classes
           ]}
         >
@@ -305,27 +325,13 @@ class UpdateContactInformationPanel extends React.Component<
             <Grid item xs={12} sm={7}>
               <TextField
                 label="State / Province"
-                value={'defaultTo(account.state, fields.state)'}
+                value={defaultTo('Select a State / Province', account.state)}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
                 select
                 data-qa-contact-province
               >
-                {countryRegionItems.default.map((country: any) => {
-                  if (country.countryShortCode === fields.country) {
-                    // return console.log(country, country.regions);
-                    country.regions.map((region: any) => {
-                      return (
-                        <MenuItem
-                          value={region.shortCode}
-                          key={region.shortCode}
-                        >
-                          {region.name}
-                        </MenuItem>
-                      );
-                    });
-                  }
-                })}
+                {regionResults}
               </TextField>
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -451,7 +457,7 @@ class UpdateContactInformationPanel extends React.Component<
     this.composeState([set(L.fields.phone, e.target.value)]);
   };
 
-  updateState = (e: React.ChangeEvent<HTMLInputElement>) => {
+  updateState = (e: React.ChangeEvent<HTMLSelectElement>) => {
     this.composeState([set(L.fields.state, e.target.value)]);
   };
 
