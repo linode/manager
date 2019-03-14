@@ -20,8 +20,8 @@ import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { reportException } from 'src/exceptionReporting';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import createMailto from 'src/features/Footer/createMailto';
 import { getPayments } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
@@ -39,6 +39,7 @@ type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 interface PdfGenerationError {
   itemId: number | undefined;
+  error?: Error;
 }
 
 interface State {
@@ -126,13 +127,13 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
         itemId: undefined
       }
     });
-    try {
-      printPayment(account, item);
-    } catch (e) {
-      reportException(Error('Error while generating PDF.'), e);
+    const result = printPayment(account, item);
+
+    if (result.status === 'error') {
       this.setState({
         pdfGenerationError: {
-          itemId: item.id
+          itemId: item.id,
+          error: result.error
         }
       });
     }
@@ -163,7 +164,13 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
             </a>
           )}
           {pdfGenerationError.itemId === item.id && (
-            <Notice error={true} text="Failed generating PDF." />
+            <Notice
+              error={true}
+              html={`Failed generating PDF. <a href="${createMailto(
+                pdfGenerationError.error && pdfGenerationError.error.stack
+              )}"
+          > Send report</a>`}
+            />
           )}
         </TableCell>
       </TableRow>

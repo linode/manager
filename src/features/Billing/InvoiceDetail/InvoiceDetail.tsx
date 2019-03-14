@@ -14,8 +14,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
-import { reportException } from 'src/exceptionReporting';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import createMailto from 'src/features/Footer/createMailto';
 import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
@@ -47,7 +47,7 @@ interface State {
   items?: Linode.InvoiceItem[];
   loading: boolean;
   errors?: Linode.ApiFieldError[];
-  pdfGenerationError: boolean;
+  pdfGenerationError?: any;
 }
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
@@ -57,7 +57,7 @@ type CombinedProps = RouteComponentProps<{ invoiceId: string }> &
 class InvoiceDetail extends React.Component<CombinedProps, State> {
   state: State = {
     loading: false,
-    pdfGenerationError: false
+    pdfGenerationError: undefined
   };
 
   mounted: boolean = false;
@@ -107,17 +107,10 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     invoice: Linode.Invoice,
     items: Linode.InvoiceItem[]
   ) {
+    const result = printInvoice(account, invoice, items);
     this.setState({
-      pdfGenerationError: false
+      pdfGenerationError: result.status === 'error' ? result.error : undefined
     });
-    try {
-      printInvoice(account, invoice, items);
-    } catch (e) {
-      reportException(Error('Error while generating PDF.'), e);
-      this.setState({
-        pdfGenerationError: true
-      });
-    }
   }
 
   render() {
@@ -174,7 +167,13 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item xs={12}>
             {pdfGenerationError && (
-              <Notice error={true} text="Failed generating PDF." />
+              <Notice
+                error={true}
+                html={`Failed generating PDF. <a href="${createMailto(
+                  pdfGenerationError.stack
+                )}"
+            > Send report</a>`}
+              />
             )}
             <InvoiceTable loading={loading} items={items} errors={errors} />
           </Grid>
