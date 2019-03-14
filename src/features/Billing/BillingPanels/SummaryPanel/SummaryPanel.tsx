@@ -15,7 +15,7 @@ import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
-type ClassNames = 'expired' | 'balance' | 'positive' | 'negative';
+type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -37,6 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   negative: {
     color: theme.color.red
+  },
+  wordWrap: {
+    wordBreak: 'break-all'
   }
 });
 
@@ -113,12 +116,14 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
 
           <div className={classes.section} data-qa-company>
             <strong>Company Name:&nbsp;</strong>
-            {company ? company : 'None'}
+            <div className={classes.wordWrap}>{company ? company : 'None'}</div>
           </div>
           <div className={classes.section} data-qa-contact-name>
             <strong>Name:&nbsp;</strong>
             {!(first_name || last_name) && 'None'}
-            {`${first_name} ${last_name}`}
+            <div
+              className={classes.wordWrap}
+            >{`${first_name} ${last_name}`}</div>
           </div>
           <div className={classes.section} data-qa-contact-address>
             <div>
@@ -133,7 +138,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           </div>
           <div className={classes.section} data-qa-contact-email>
             <strong>Email:&nbsp;</strong>
-            {email}
+            <div className={classes.wordWrap}>{email}</div>
           </div>
           <div className={classes.section} data-qa-contact-phone>
             <strong>Phone Number:&nbsp;</strong>
@@ -151,7 +156,8 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
               <Currency quantity={balance_uninvoiced} />
             </div>
           )}
-          <div className={`${classes.section} ${classes.balance}`}
+          <div
+            className={`${classes.section} ${classes.balance}`}
             data-qa-current-balance
           >
             <strong>Current Balance:&nbsp;</strong>
