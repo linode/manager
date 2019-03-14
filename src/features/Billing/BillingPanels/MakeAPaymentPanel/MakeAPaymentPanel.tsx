@@ -285,7 +285,9 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         this.setState({
           isExecutingPaypalPayment: false,
           dialogOpen: false,
-          successMessage: `Payment for ${this.state.usd} successfully submitted`
+          successMessage: `Payment for $${
+            this.state.usd
+          } successfully submitted`
         });
       })
       .catch(errorResponse => {
@@ -310,7 +312,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
    * See documentation:
    * https://github.com/paypal/paypal-checkout-components/blob/master/docs/implement-checkout.md
    */
-  onApprove = (data: Paypal.AuthData, actions: any) => {
+  onApprove = (data: Paypal.AuthData) => {
     this.setState({
       payerID: data.payerID
     });
@@ -545,7 +547,7 @@ const withAccount = AccountContainer(
 export default compose<CombinedProps, {}>(
   styled,
   withAccount,
-  scriptLoader(paypalScriptSrc(true || process.env.NODE_ENV === 'production'))
+  scriptLoader(paypalScriptSrc(false || process.env.NODE_ENV === 'production'))
 )(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
