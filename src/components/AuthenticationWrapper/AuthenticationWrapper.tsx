@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { redirectToLogin } from 'src/session';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { MapState } from 'src/store/types';
 
@@ -15,48 +14,35 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     isAuthenticated: false
   };
 
-  componentWillMount() {
-    const { isAuthenticated } = this.props;
-
-    /**
-     * only show app content if we're authed or at a route we don't need auth for
-     * otherwise, shoot us to login to auth
-     */
-    if (isAuthenticated || this.isExcludedRoute(location.pathname)) {
-      return this.setState({ showChildren: true });
-    } else {
-      return redirectToLogin(location.pathname, location.search);
-    }
-  }
-
   componentDidMount() {
+    const { initSession } = this.props;
     /**
      * set redux state to what's in local storage
      * or expire the tokens if the expiry time is in the past
+     *
+     * if nothing exist in local storage, we get shot off to login
      */
-    this.props.initSession();
-  }
+    initSession();
 
-  shouldComponentUpdate(nextProps: CombinedProps) {
-    /** if we're not authed and not on a whitelisted route, we need to re-auth */
-    if (
-      !nextProps.isAuthenticated &&
-      !this.isExcludedRoute(location.pathname)
-    ) {
-      redirectToLogin(location.pathname, location.search);
+    /**
+     * this is the case where we've just come back from login and need
+     * to show the children onMount
+     */
+    if (this.props.isAuthenticated) {
+      this.setState({ showChildren: true });
     }
-
-    return true;
   }
 
-  /** routes we do not need to auth for */
-  isExcludedRoute = (pathname: string) => {
-    const excludedPaths = ['/oauth/callback', '/logout'];
-    return excludedPaths.reduce(
-      (result, current) => result || pathname.includes(current),
-      false
-    );
-  };
+  /**
+   * handles for the case where we've refreshed the page
+   * and redux has now been synced with what is in local storage
+   */
+  componentDidUpdate(prevProps: CombinedProps) {
+    /** if we were previously not authed and now we are authed */
+    if (!prevProps.isAuthenticated && this.props.isAuthenticated) {
+      return this.setState({ showChildren: true });
+    }
+  }
 
   render() {
     const { children } = this.props;
@@ -78,7 +64,7 @@ interface DispatchProps {
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  initSession: () => dispatch(handleInitTokens)
+  initSession: () => dispatch(handleInitTokens())
 });
 
 const connected = connect(

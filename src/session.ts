@@ -3,11 +3,6 @@ import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import { authentication } from 'src/utilities/storage';
 import { v4 } from 'uuid';
 
-export const AUTH_TOKEN = 'authentication/oauth-token';
-export const AUTH_SCOPES = 'authentication/scopes';
-export const AUTH_EXPIRE_DATETIME = 'authentication/expire-datetime';
-export const LATEST_REFRESH = 'authentication/latest-refresh';
-
 /**
  * Creates a URL with the supplied props as a stringified query. The shape of the query is required
  * by the Login server.

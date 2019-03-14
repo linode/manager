@@ -91,16 +91,16 @@ const renderApp = (props: RouteProps) => (
 );
 
 const renderAuthentication = () => (
-  <AuthenticationWrapper>
-    <Switch>
+  <Switch>
+    <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+    {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+    <Route exact path="/nullauth" render={renderNullAuth} />
+    <Route exact path="/logout" component={Logout} />
+    <AuthenticationWrapper>
       <Route path="/linodes/:linodeId/lish" render={renderLish} />
-      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-      <Route exact path="/nullauth" render={renderNullAuth} />
-      <Route exact path="/logout" component={Logout} />
       <Route render={renderApp} />
-    </Switch>
-  </AuthenticationWrapper>
+    </AuthenticationWrapper>
+  </Switch>
 );
 
 ReactDOM.render(

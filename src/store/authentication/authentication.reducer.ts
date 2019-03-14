@@ -1,3 +1,4 @@
+import { redirectToLogin } from 'src/session';
 import { authentication } from 'src/utilities/storage';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import {
@@ -23,8 +24,8 @@ const {
 } = authentication;
 
 const reducer = reducerWithInitialState(defaultState)
-  .caseWithAction(handleStartSession, (state, action) => {
-    const { scopes, token, expires } = action.payload;
+  .case(handleStartSession, (state, payload) => {
+    const { scopes, token, expires } = payload;
 
     /** set local storage */
     scopesInLocalStorage.set(scopes || '');
@@ -61,6 +62,12 @@ const reducer = reducerWithInitialState(defaultState)
      */
     const token = tokenInLocalStorage.get();
     const scopes = scopesInLocalStorage.get();
+
+    /** if we have no token in local storage, send us to login */
+    if (!token) {
+      redirectToLogin(location.pathname, location.search);
+    }
+
     return {
       ...state,
       token,
