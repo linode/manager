@@ -13,6 +13,10 @@ export default (
     return (e: React.MouseEvent<HTMLElement>) => onClick(`/profile/keys`);
   }
 
+  if (['account_settings_update'].includes(action)) {
+    return (e: React.MouseEvent<HTMLElement>) => onClick(`/account/settings`);
+  }
+
   /**
    * If we have a deletion event or an event that is marked as referring to a deleted entity
    * we don't want a clickable action.
@@ -41,7 +45,8 @@ export default (
       return (e: React.MouseEvent<HTMLElement>) => onClick(`/volumes`);
 
     case 'stackscript':
-       return (e: React.MouseEvent<HTMLElement>) => onClick(`/stackscripts/${id}`);
+      return (e: React.MouseEvent<HTMLElement>) =>
+        onClick(`/stackscripts/${id}`);
 
     case 'nodebalancer':
       switch (action) {
@@ -70,7 +75,9 @@ export default (
 };
 
 export const getLinkTargets = (entity: Linode.Entity | null) => {
-  if (entity === null) { return ''; }
+  if (entity === null) {
+    return '';
+  }
   switch (entity.type) {
     case 'linode':
       return `/linodes/${entity.id}`;

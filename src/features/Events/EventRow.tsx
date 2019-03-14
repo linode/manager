@@ -3,7 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import Tooltip from 'src/components/core/Tooltip'
+import Tooltip from 'src/components/core/Tooltip';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -20,39 +20,47 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const EventRow: React.StatelessComponent<CombinedProps> = (props) => {
+export const EventRow: React.StatelessComponent<CombinedProps> = props => {
   const { event } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
-  const id = pathOr<string|number>(-1, ['entity', 'id'], event);
+  const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
   // Community likes and questions don't have an "entity" but they do have a link
-  const linkTarget = ['community_like', 'community_question'].includes(type) || entity
-    ? getEventsActionLink(
-        event.action,
-        event.entity,
-        false,
-        (s: string) => props.history.push(s)
-      ) 
-    : undefined;
+  const linkTarget =
+    ['community_like', 'community_question'].includes(type) || entity
+      ? getEventsActionLink(event.action, event.entity, false, (s: string) =>
+          props.history.push(s)
+        )
+      : undefined;
   const rowProps = {
     created: event.created,
-    linkTarget, 
+    linkTarget,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type
+  };
+
+  /** Some event types may not be handled by our system (or new types
+   * may be added). Filter these out so we don't display blank messages to the user.
+   */
+  if (!rowProps.message) {
+    return null;
   }
 
   return (
     <>
-      {Boolean(rowProps.linkTarget)
+      {Boolean(linkTarget) ? (
         // This row has an entity/external target to link to.
-        ? <Row {...rowProps} />
+        <Row {...rowProps} />
+      ) : (
         // This one doesn't. Usually that means the entity has been deleted.
-        : <Tooltip title="The entity for this event no longer exists."><Row {...rowProps} /></Tooltip>
-      } 
+        <Tooltip title="The entity for this event no longer exists.">
+          <Row {...rowProps} />
+        </Tooltip>
+      )}
     </>
-  )
-}
+  );
+};
 
 interface RowProps {
   message?: string;
@@ -62,33 +70,25 @@ interface RowProps {
   created: string;
 }
 
-const Row: React.StatelessComponent<RowProps> = (props) => {
-  const {
-    linkTarget,
-    message,
-    status,
-    type,
-    created,
-  } = props;
+const Row: React.StatelessComponent<RowProps> = props => {
+  const { linkTarget, message, status, type, created } = props;
 
   return (
     <TableRow rowLink={linkTarget}>
       <TableCell>
         <EntityIcon variant={type} status={status} />
       </TableCell>
-      <TableCell parentColumn={'Event'}>
-        {message}
-      </TableCell>
+      <TableCell parentColumn={'Event'}>{message}</TableCell>
       <TableCell parentColumn={'Time'}>
         <DateTimeDisplay value={created} humanizeCutoff={'month'} />
       </TableCell>
     </TableRow>
-  )
-}
+  );
+};
 
 const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
   withRouter,
   renderGuard
-)
+);
 
 export default enhanced(EventRow);
