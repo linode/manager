@@ -12,6 +12,7 @@ type ClassNames = 'root' | 'border' | 'responsive';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     overflowX: 'auto',
+    overflowY: 'hidden',
     '& tbody': {
       transition: [theme.transitions.create('opacity')]
     },
