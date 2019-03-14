@@ -11995,18 +11995,17 @@ react-color@^2.14.1:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
+react-csv@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.1.1.tgz#718dadd2607a1795bfc8dbd32ca282a043739634"
+  integrity sha512-eQSrkEfzPN+1IeXT58kJaDNmpFr3RhdjfE09jTrw+jdTEp0g0Ig9NOI+TpvMBbCukE1HQhOf4dyrLDRFKgZzbA==
+
 react-currency-formatter@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-currency-formatter/-/react-currency-formatter-1.1.0.tgz#69296c82efd6ef7a9e74bcae52414a5e23bcdba2"
   integrity sha512-5AIHYk8WKKKfXfxQW7i7V3DTQkDNqRcqAWyTy3KTs89qooOTj1o5VWkPOLjIxKOSGir6nUt8Aw8WXxAGn5nY6w==
   dependencies:
     prop-types "^15.6.0"
-
-react-csv@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.1.1.tgz#718dadd2607a1795bfc8dbd32ca282a043739634"
-  integrity sha512-eQSrkEfzPN+1IeXT58kJaDNmpFr3RhdjfE09jTrw+jdTEp0g0Ig9NOI+TpvMBbCukE1HQhOf4dyrLDRFKgZzbA==
-
 
 react-dev-utils@^6.1.0:
   version "6.1.1"
