@@ -43,6 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 const distroIcons = {
+  Alpine: 'alpine',
   Arch: 'archlinux',
   CentOS: 'centos',
   CoreOS: 'coreos',
