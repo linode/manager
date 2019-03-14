@@ -147,21 +147,36 @@ class UpdateContactInformationPanel extends React.Component<
 
     const generalError = hasErrorFor('none');
 
-    const countryResult = countryRegionItems.default.filter((country: any) => {
-      if (fields.country) {
-        return country.countryShortCode === fields.country;
-      } else {
-        return country.countryShortCode === account.country;
-      }
-    });
-
-    const regionResults = countryResult[0]['regions'].map((region: any) => {
+    const countryResults = countryRegionItems.default.map((country: any) => {
       return (
-        <MenuItem value={region.shortCode} key={region.shortCode}>
-          {region.name}
+        <MenuItem
+          value={country.countryShortCode}
+          key={country.countryShortCode}
+        >
+          {country.countryName}
         </MenuItem>
       );
     });
+
+    const currentCountryResult = countryRegionItems.default.filter(
+      (country: any) => {
+        if (fields.country) {
+          return country.countryShortCode === fields.country;
+        } else {
+          return country.countryShortCode === account.country;
+        }
+      }
+    );
+
+    const regionResults = currentCountryResult[0]['regions'].map(
+      (region: any) => {
+        return (
+          <MenuItem value={region.shortCode} key={region.shortCode}>
+            {region.name}
+          </MenuItem>
+        );
+      }
+    );
 
     console.log(account.country, fields.country);
     console.log(regionResults);
@@ -362,16 +377,7 @@ class UpdateContactInformationPanel extends React.Component<
             select
             data-qa-contact-country
           >
-            {countryRegionItems.default.map((country: any) => {
-              return (
-                <MenuItem
-                  value={country.countryShortCode}
-                  key={country.countryShortCode}
-                >
-                  {country.countryName}
-                </MenuItem>
-              );
-            })}
+            {countryResults}
           </TextField>
         </Grid>
 
