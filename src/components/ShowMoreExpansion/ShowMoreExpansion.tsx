@@ -42,11 +42,11 @@ const styles: StyleRulesCallback = theme => ({
 
 interface Props {
   name: string;
-  defaultExpanded: boolean;
+  defaultExpanded?: boolean;
 }
 
 interface State {
-  open: boolean;
+  open: boolean | undefined;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
