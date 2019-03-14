@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   controls: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: 9 - theme.spacing.unit / 2, // 4
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',
@@ -38,8 +38,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   launchButton: {
-    position: 'relative',
-    top: 1,
     lineHeight: 1,
     '&:hover': {
       backgroundColor: 'transparent',
@@ -56,7 +54,7 @@ type CombinedProps = LinodeDetailContext &
   EditableLabelProps &
   WithStyles<ClassNames>;
 
-const Thingy: React.StatelessComponent<CombinedProps> = props => {
+const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     linode,
@@ -156,13 +154,13 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   withConfigDrawerState,
   withEditableLabelState,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
     updateLinode
-  }))
+  })),
+  styled
 );
 
-export default enhanced(Thingy);
+export default enhanced(LinodeControls);
