@@ -127,6 +127,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
       setErrors([
         { field: 'stackscript_id', reason: 'You must select a StackScript' }
       ]);
+      setIsDialogOpen(false);
       return;
     }
 
