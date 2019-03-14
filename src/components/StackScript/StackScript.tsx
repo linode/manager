@@ -71,10 +71,24 @@ export class StackScript extends React.Component<CombinedProps> {
         description,
         script,
         label,
-        updated
+        updated,
+        images
       },
       imagesData
     } = this.props;
+
+    const compatibleImages =
+      images
+        .reduce((acc: string[], image: string) => {
+          const imageObj = imagesData.find(i => i.id === image);
+
+          if (imageObj) {
+            acc.push(imageObj.label);
+          }
+
+          return acc;
+        }, [])
+        .join(', ') || 'No compatible images found';
 
     return (
       <div className={classes.root}>
@@ -117,12 +131,10 @@ export class StackScript extends React.Component<CombinedProps> {
               {description}
             </Typography>
           )}
-          {imagesData.length !== 0 && (
-            <Typography variant="body2" data-qa-compatible-distro>
-              <strong>Compatible with: </strong>
-              {imagesData.map(image => image.label).join(', ')}
-            </Typography>
-          )}
+          <Typography variant="body2" data-qa-compatible-distro>
+            <strong>Compatible with: </strong>
+            {compatibleImages}
+          </Typography>
         </div>
         <Typography variant="h3" className={classes.scriptHeading}>
           Script:
