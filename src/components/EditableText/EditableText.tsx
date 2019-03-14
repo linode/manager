@@ -47,7 +47,8 @@ const styles: StyleRulesCallback = theme => ({
     border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
-    textDecoration: 'inherit'
+    textDecoration: 'inherit',
+    lineHeight: 1
   },
   container: {
     display: 'flex',
@@ -55,8 +56,7 @@ const styles: StyleRulesCallback = theme => ({
     alignItems: 'center',
     maxHeight: 48,
     position: 'relative',
-    top: -1,
-    left: -2
+    transform: 'translate(-2px, -0.5px)'
   },
   initial: {
     border: '1px solid transparent',
