@@ -1,28 +1,7 @@
-import { shallow } from 'enzyme';
 import { isEmpty } from 'ramda';
-import * as React from 'react';
-
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-
-import { OAuthCallbackPage } from 'src/layouts/OAuth';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 describe('layouts/OAuth', () => {
-  const component = shallow<OAuthCallbackPage>(
-    <OAuthCallbackPage {...reactRouterProps} dispatchStartSession={jest.fn()} />
-  );
-
-  xit('dispatches start session action on component mount', () => {
-    expect(component.instance().props.dispatchStartSession).toBeCalled();
-  });
-
-  xit('supports the return query string option', () => {
-    const redirectMock = jest.fn();
-    const historyMock = { push: jest.fn() };
-
-    expect(redirectMock).toBeCalledWith('/asdf', historyMock);
-  });
-
   describe('parseQueryParams', () => {
     it('parses query params of the expected format', () => {
       const res = parseQueryParams(
