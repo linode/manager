@@ -1,4 +1,4 @@
-import { compose, lensPath, set } from 'ramda';
+import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -9,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import {
@@ -43,22 +44,25 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
 
   changeLabel = () => {
     const { updateLinode } = this.props;
-    this.setState(set(lensPath(['submitting']), true));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
+    this.setState({
+      submitting: true,
+      success: undefined,
+      errors: undefined
+    });
 
     updateLinode({ label: this.state.updatedValue })
       .then(linode => {
-        this.setState(
-          compose(
-            set(lensPath(['success']), `Linode label changed successfully.`),
-            set(lensPath(['submitting']), false)
-          )
-        );
+        this.setState({
+          success: 'Linode label changed successfully.',
+          submitting: false
+        });
       })
       .catch(error => {
         this.setState(
-          set(lensPath(['errors']), error.response.data.errors),
+          {
+            submitting: false,
+            errors: error.response.data.errors
+          },
           () => {
             scrollErrorIntoView('linode-settings-label');
           }
@@ -70,6 +74,14 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const labelError = hasErrorFor('label');
     const { submitting } = this.state;
+    const genericError =
+      this.state.errors &&
+      !labelError &&
+      pathOr(
+        'An error occured while updating label',
+        [0, 'reason'],
+        this.state.errors
+      );
 
     return (
       <ExpansionPanel
@@ -89,6 +101,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           </ActionsPanel>
         )}
       >
+        {genericError && <Notice error text={genericError} />}
         <TextField
           label="Label"
           value={this.state.updatedValue}
