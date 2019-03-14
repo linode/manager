@@ -19,7 +19,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import * as countryRegionItems from 'src/features/Billing/BillingPanels/UpdateContactInformationPanel/countryRegionData.json';
+import * as countryRegionItems from './countryRegionData.json';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -159,13 +159,10 @@ class UpdateContactInformationPanel extends React.Component<
     });
 
     const currentCountryResult = countryRegionItems.default.filter(
-      (country: any) => {
-        if (fields.country) {
-          return country.countryShortCode === fields.country;
-        } else {
-          return country.countryShortCode === account.country;
-        }
-      }
+      (country: any) =>
+        fields.country
+          ? country.countryShortCode === fields.country
+          : country.countryShortCode === account.country
     );
 
     const regionResults = currentCountryResult[0]['regions'].map(
