@@ -1,7 +1,7 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
-interface CloudApp {
+export interface CloudApp {
   sequence: number;
   /**
    * will be something like /assets/minecraft.svg
@@ -16,8 +16,8 @@ interface CloudApp {
   id: number;
 }
 
-export const getCloudApps = (params: any, filter: any) => {
-  return Request<Linode.ResourcePage<CloudApp[]>>(
+export const getCloudApps = (params?: any, filter?: any) => {
+  return Request<Linode.ResourcePage<CloudApp>>(
     setURL(`${API_ROOT}beta/linode/one-click-apps`),
     setMethod('GET'),
     setParams(params),
