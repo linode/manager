@@ -16,6 +16,10 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState
 } from 'src/store/backupDrawer';
+import buckets, {
+  defaultState as defaultBucketsState,
+  State as BucketsState
+} from 'src/store/bucket/bucket.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -70,10 +74,6 @@ import regions, {
   defaultState as defaultRegionsState,
   State as RegionsState
 } from 'src/store/regions/regions.reducer';
-import buckets, {
-  defaultState as defaultBucketsState,
-  State as BucketsState
-} from 'src/store/bucket/bucket.reducer';
 import stackScriptDrawer, {
   defaultState as stackScriptDrawerDefaultState,
   State as StackScriptDrawerState
