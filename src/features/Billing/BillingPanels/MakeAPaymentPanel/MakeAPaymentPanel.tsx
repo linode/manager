@@ -42,6 +42,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
+import { isProduction } from 'src/constants';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
@@ -583,7 +584,7 @@ const withAccount = AccountContainer(
 export default compose<CombinedProps, {}>(
   styled,
   withAccount,
-  scriptLoader(paypalScriptSrc(false || process.env.NODE_ENV === 'production'))
+  scriptLoader(paypalScriptSrc(isProduction))
 )(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
