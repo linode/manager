@@ -119,6 +119,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
     <>
       {data.map(bucket => (
         <BucketTableRow
+          key={bucket.label}
           label={bucket.label}
           objects={bucket.objects}
           region={bucket.region}
