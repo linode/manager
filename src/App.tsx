@@ -271,15 +271,9 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen, hasError } = this.state;
-    const {
-      classes,
-      toggleSpacing,
-      toggleTheme,
-      profileLoading,
-      profileError
-    } = this.props;
+    const { classes, toggleSpacing, toggleTheme, profileLoading } = this.props;
 
-    if (profileError || hasError) {
+    if (hasError) {
       return <TheApplicationIsOnFire />;
     }
 

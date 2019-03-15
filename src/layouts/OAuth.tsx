@@ -84,7 +84,8 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     this.checkNonce(nonce);
 
     /**
-     * We multiply the expiration time by 1000 ms, I don't know why. Ask Andrew.
+     * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
+     * the API returns the expiry time in seconds
      */
     const expireDate = new Date();
     expireDate.setTime(expireDate.getTime() + +expiresIn * 1000);
