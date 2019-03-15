@@ -1,4 +1,3 @@
-import * as moment from 'moment-timezone';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
@@ -14,6 +13,7 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { updateProfile } from 'src/services/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -47,18 +47,21 @@ interface State {
 interface Timezone {
   label: string;
   name: string;
+  offset: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const renderTimezoneOffset = (tz: Timezone) => {
-  const offset = moment.tz(tz.name).format('Z');
-  return `\(GMT ${offset}\) ${tz.label}`;
+const formatOffset = (offset: number, label: string) => {
+  const isHalfHour = offset % 1 === 0.5 ? ':30' : ':00';
+  const isPositive = Math.abs(offset) === offset ? '+' : '-';
+  const rounded = Math.floor(Math.abs(offset));
+  return `\(GMT ${isPositive}${rounded}${isHalfHour}\) ${label}`;
 };
 
 const renderTimeZonesList = (): Item[] => {
   return timezones.map((tz: Timezone) => {
-    const label = renderTimezoneOffset(tz);
+    const label = formatOffset(tz.offset, tz.label);
     return { label, value: tz.name };
   });
 };
@@ -105,15 +108,10 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
         });
       })
       .catch(error => {
-        const fallbackError = [{ reason: 'An unexpected error has occurred.' }];
         this.setState(
           {
             submitting: false,
-            errors: pathOr(
-              fallbackError,
-              ['response', 'data', 'errors'],
-              error
-            ),
+            errors: getAPIErrorOrDefault(error),
             success: undefined
           },
           () => {
