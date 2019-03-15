@@ -45,6 +45,7 @@ import {
 } from './types';
 
 import { resetEventsPolling } from 'src/events';
+import { CloudApp, getCloudApps } from 'src/services/cloud_apps';
 import { cloneLinode } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
@@ -54,7 +55,6 @@ import { MapState } from 'src/store/types';
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { getCloudApps } from './TabbedContent/formUtilities';
 
 interface State {
   selectedImageID?: string;
@@ -76,7 +76,7 @@ interface State {
   tags?: Tag[];
   errors?: Linode.ApiFieldError[];
   formIsSubmitting: boolean;
-  appInstances?: Linode.StackScript.Response[];
+  appInstances?: CloudApp[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
 }
@@ -149,7 +149,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .then(response => {
         this.setState({
           appInstancesLoading: false,
-          appInstances: response
+          appInstances: response.data
         });
       })
       .catch(e => {
