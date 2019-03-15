@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { redirectToLogin } from 'src/session';
 import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { MapState } from 'src/store/types';
 
@@ -41,6 +42,11 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     /** if we were previously not authed and now we are authed */
     if (!prevProps.isAuthenticated && this.props.isAuthenticated) {
       return this.setState({ showChildren: true });
+    }
+
+    /** basically handles for the case where our token is expired or we got a 401 error */
+    if (prevProps.isAuthenticated && !this.props.isAuthenticated) {
+      redirectToLogin(location.pathname, location.search);
     }
   }
 

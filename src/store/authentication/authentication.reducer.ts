@@ -47,7 +47,6 @@ const reducer = reducerWithInitialState(defaultState)
      */
     const expiryTime = expiryInLocalStorage.get();
     if (expiryTime && new Date(expiryTime) < new Date()) {
-      redirectToLogin(location.pathname, location.search);
       return {
         ...state,
         token: null,
