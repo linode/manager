@@ -41,6 +41,7 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import { isObjectStorageEnabled } from './constants';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions
@@ -67,6 +68,10 @@ const Domains = DefaultLoader({
 
 const Images = DefaultLoader({
   loader: () => import('src/features/Images')
+});
+
+const ObjectStorage = DefaultLoader({
+  loader: () => import('src/features/ObjectStorage')
 });
 
 const Profile = DefaultLoader({
@@ -349,6 +354,12 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
+                          {isObjectStorageEnabled && (
+                            <Route
+                              path="/object-storage"
+                              component={ObjectStorage}
+                            />
+                          )}
                           <Route path="/account" component={Account} />
                           <Route
                             exact

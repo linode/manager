@@ -16,6 +16,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import SpacingToggle from './SpacingToggle';
@@ -300,6 +301,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // if(canAccessImages){
     primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
     // }
+
+    if (isObjectStorageEnabled) {
+      primaryLinks.push({
+        display: 'Object Storage',
+        href: '/object-storage',
+        key: 'objectStorage'
+      });
+    }
 
     if (hasAccountAccess) {
       primaryLinks.push({
