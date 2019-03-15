@@ -1,6 +1,7 @@
 import { ExtendedRegion } from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
+import { CloudApp } from 'src/services/cloud_apps';
 import { CreateLinodeRequest } from 'src/services/linodes';
 import { ExtendedType } from './SelectPlanPanel';
 
@@ -89,6 +90,7 @@ export interface BaseFormStateAndHandlers {
   tags?: Tag[];
   updateTags: (tags: Tag[]) => void;
   resetCreationState: () => void;
+  resetSSHKeys: () => void;
 }
 
 /**
@@ -128,7 +130,7 @@ export interface BackupFormStateHandlers extends CloneFormStateHandlers {
   setBackupID: (id: number) => void;
 }
 export interface AppsData {
-  appInstances?: Linode.StackScript.Response[];
+  appInstances?: CloudApp[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
 }
