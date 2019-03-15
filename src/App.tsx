@@ -1,6 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -271,10 +271,45 @@ export class App extends React.Component<CombinedProps, State> {
 
   render() {
     const { menuOpen, hasError } = this.state;
-    const { classes, toggleSpacing, toggleTheme, profileLoading } = this.props;
+    const {
+      classes,
+      toggleSpacing,
+      toggleTheme,
+      profileLoading,
+      linodesError,
+      domainsError,
+      typesError,
+      imagesError,
+      notificationsError,
+      regionsError,
+      volumesError,
+      settingsError,
+      profileError
+    } = this.props;
 
     if (hasError) {
       return <TheApplicationIsOnFire />;
+    }
+
+    /**
+     * basically, if we get an "invalid oauth token"
+     * error from the API, just render nothing because the user is
+     * about to get shot off to login
+     */
+    if (
+      hasOauthError(
+        linodesError,
+        domainsError,
+        typesError,
+        imagesError,
+        notificationsError,
+        regionsError,
+        volumesError,
+        settingsError,
+        profileError
+      )
+    ) {
+      return null;
     }
 
     return (
@@ -406,8 +441,15 @@ interface StateProps {
   /** Profile */
   profileLoading: boolean;
   profileError?: Error | Linode.ApiFieldError[];
+  linodesError?: Linode.ApiFieldError[];
+  domainsError?: Linode.ApiFieldError[];
+  imagesError?: Linode.ApiFieldError[];
+  notificationsError?: Linode.ApiFieldError[] | Error;
+  settingsError?: Linode.ApiFieldError[] | Error;
+  typesError?: Linode.ApiFieldError[];
+  regionsError?: Linode.ApiFieldError[];
+  volumesError?: Linode.ApiFieldError[] | Error;
   userId?: number;
-
   documentation: Linode.Doc[];
 }
 
@@ -415,6 +457,14 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: state.__resources.profile.error,
+  linodesError: state.__resources.linodes.error,
+  domainsError: state.__resources.domains.error,
+  imagesError: state.__resources.images.error,
+  notificationsError: state.__resources.notifications.error,
+  settingsError: state.__resources.accountSettings.error,
+  typesError: state.__resources.types.error,
+  regionsError: state.__resources.regions.error,
+  volumesError: state.__resources.volumes.error,
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation
@@ -434,3 +484,13 @@ export default compose(
   withSnackbar,
   withNodeBalancerActions
 )(App);
+
+export const hasOauthError = (
+  ...args: (Error | Linode.ApiFieldError[] | undefined)[]
+) => {
+  return args.some(eachError => {
+    return pathOr('', [0, 'reason'], eachError)
+      .toLowerCase()
+      .includes('oauth');
+  });
+};
