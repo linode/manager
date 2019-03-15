@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { buckets } from 'src/__data__/buckets';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -10,6 +9,9 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
+import bucketContainer, {
+  Props as BucketContainerProps
+} from 'src/containers/bucket.container';
 import ListBuckets from './ListBuckets';
 
 type ClassNames = 'root' | 'titleWrapper' | 'title';
@@ -24,12 +26,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = BucketContainerProps & WithStyles<ClassNames>;
 
 export const ObjectStorageLanding: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes } = props;
+  const { classes, bucketsData } = props;
 
   return (
     <React.Fragment>
@@ -53,7 +55,7 @@ export const ObjectStorageLanding: React.StatelessComponent<
       </Grid>
       <Grid item xs={12}>
         {/* @todo: source buckets from Redux (via API) */}
-        <OrderBy data={buckets} order={'asc'} orderBy={'label'}>
+        <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
             const listBucketsProps = {
               orderBy,
@@ -71,6 +73,9 @@ export const ObjectStorageLanding: React.StatelessComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  bucketContainer
+);
 
 export default enhanced(ObjectStorageLanding);

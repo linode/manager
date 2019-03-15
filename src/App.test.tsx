@@ -40,7 +40,8 @@ it('renders without crashing', () => {
               requestSettings: jest.fn(),
               requestTypes: jest.fn(),
               requestRegions: jest.fn(),
-              requestVolumes: jest.fn()
+              requestVolumes: jest.fn(),
+              requestBuckets: jest.fn()
             }}
             documentation={[]}
             toggleTheme={jest.fn()}

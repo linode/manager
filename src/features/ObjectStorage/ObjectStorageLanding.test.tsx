@@ -4,7 +4,11 @@ import { ObjectStorageLanding } from './ObjectStorageLanding';
 
 describe('ObjectStorageLanding', () => {
   const wrapper = shallow(
-    <ObjectStorageLanding classes={{ root: '', title: '', titleWrapper: '' }} />
+    <ObjectStorageLanding
+      classes={{ root: '', title: '', titleWrapper: '' }}
+      bucketsData={[]}
+      bucketsLoading={false}
+    />
   );
 
   it('renders without crashing', () => {
