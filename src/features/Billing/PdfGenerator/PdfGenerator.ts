@@ -3,6 +3,8 @@ import { splitEvery } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 import LinodeLogo from './LinodeLogo';
 
+import { reportException } from 'src/exceptionReporting';
+
 const leftPadding = 15;
 const baseFont = 'Times';
 const tableBodyStart = 155;
@@ -145,11 +147,16 @@ const addTitle = (doc: jsPDF, title: string) => {
   doc.setFontStyle('normal');
 };
 
+interface pdfResult {
+  status: 'success' | 'error';
+  error?: Error;
+}
+
 export const printInvoice = (
   account: Linode.Account,
   invoice: Linode.Invoice,
   items: Linode.InvoiceItem[]
-) => {
+): pdfResult => {
   try {
     const itemsPerPage = 18;
     const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
@@ -157,7 +164,6 @@ export const printInvoice = (
     const itemsChunks = items ? splitEvery(itemsPerPage, items) : [[]];
     const tableEnd =
       tableBodyStart + cellHeight * itemsChunks[itemsChunks.length - 1].length;
-
     const doc = new jsPDF({
       unit: 'px'
     });
@@ -250,15 +256,23 @@ export const printInvoice = (
     addTotalAmount();
 
     doc.save(`invoice-${date}.pdf`);
+    return {
+      status: 'success'
+    };
   } catch (e) {
     console.error(e);
+    reportException(Error('Error while generating Invoice PDF.'), e);
+    return {
+      status: 'error',
+      error: e
+    };
   }
 };
 
 export const printPayment = (
   account: Linode.Account,
   payment: Linode.Payment
-) => {
+): pdfResult => {
   try {
     const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
     const paymentId = payment.id;
@@ -336,7 +350,16 @@ export const printPayment = (
     addTotalAmount();
 
     doc.save(`payment-${date}.pdf`);
+
+    return {
+      status: 'success'
+    };
   } catch (e) {
     console.error(e);
+    reportException(Error('Error while generating Payment PDF.'), e);
+    return {
+      status: 'error',
+      error: e
+    };
   }
 };

@@ -1,6 +1,6 @@
 const { VERSION } = process.env;
 
-const createMailto = (userAgent: string): string => {
+const createMailto = (userAgent?: string): string => {
   const recipient = 'feedback@linode.com';
   const subject = 'Cloud Manager User Feedback';
 
