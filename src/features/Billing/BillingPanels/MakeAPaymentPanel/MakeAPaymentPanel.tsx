@@ -150,7 +150,7 @@ const client = {
 
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
 
-const paypalScriptSrc = (isProduction: boolean) => {
+const paypalScriptSrc = () => {
   return isProduction
     ? `https://www.paypal.com/sdk/js?client-id=${
         client.production
@@ -433,11 +433,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <ExpansionPanel
-          defaultExpanded
-          heading="Make a Payment"
-          actions={this.renderActions}
-        >
+        <ExpansionPanel heading="Make a Payment" actions={this.renderActions}>
           <Grid container>
             {/* Payment */}
             <Grid item xs={12}>
@@ -584,7 +580,7 @@ const withAccount = AccountContainer(
 export default compose<CombinedProps, {}>(
   styled,
   withAccount,
-  scriptLoader(paypalScriptSrc(isProduction))
+  scriptLoader(paypalScriptSrc())
 )(MakeAPaymentPanel);
 
 export const isAllowedUSDAmount = (usd: number) => {
