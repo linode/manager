@@ -361,6 +361,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           className={classes.section}
           updateFor={[
             kernel,
+            kernels,
             errorFor('kernel'),
             run_level,
             memory_limit,
