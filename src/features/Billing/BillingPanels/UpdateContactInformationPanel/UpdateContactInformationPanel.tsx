@@ -175,9 +175,6 @@ class UpdateContactInformationPanel extends React.Component<
       }
     );
 
-    console.log(account.country, fields.country);
-    console.log(regionResults);
-    console.log(account.state, fields.state);
     return (
       <Grid
         container
