@@ -239,6 +239,7 @@
     "yargs": "11.0.0"
   },
   "jest": {
+    "roots": ["<rootDir>/src"],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],
