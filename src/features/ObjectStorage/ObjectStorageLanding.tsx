@@ -55,13 +55,13 @@ export const ObjectStorageLanding: React.StatelessComponent<
         {/* @todo: source buckets from Redux (via API) */}
         <OrderBy data={buckets} order={'asc'} orderBy={'label'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const props = {
+            const listBucketsProps = {
               orderBy,
               order,
               handleOrderChange,
               data: orderedData
             };
-            return <ListBuckets {...props} />;
+            return <ListBuckets {...listBucketsProps} />;
           }}
         </OrderBy>
       </Grid>
