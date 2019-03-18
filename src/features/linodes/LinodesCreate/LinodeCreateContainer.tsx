@@ -215,6 +215,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     defaultData?: any
   ) => {
     /**
+     * If we're switching from one cloud app to another,
+     * usually the only compatible image will be Debian 9. If this
+     * is the case, preselect that value.
+     */
+    const defaultImage = images.length === 1 ? images[0].id : undefined;
+
+    /**
      * reset the selected Image but only if we're creating a Linode from
      * a StackScript and not an app
      */
@@ -230,7 +237,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       availableStackScriptImages: images,
       udfs: defaultData,
       /** reset image because stackscript might not be compatible with selected one */
-      selectedImageID: undefined,
+      selectedImageID: defaultImage,
       errors: undefined
     });
   };
