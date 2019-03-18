@@ -11,12 +11,12 @@ import {
 import Grid from 'src/components/Grid';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { lishLaunch } from 'src/features/Lish';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   LinodeDetailContext,
   withLinodeDetailContext
 } from '../linodeDetailContext';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePowerControl from '../LinodePowerControl';
 import withConfigDrawerState, { ConfigDrawerProps } from './configDrawerState';
 import withEditableLabelState, {
