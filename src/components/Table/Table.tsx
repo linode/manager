@@ -74,7 +74,7 @@ interface Props {
   isResponsive?: boolean; // back-door for tables that don't need to be responsive
   spacingTop?: 0 | 8 | 16 | 24;
   spacingBottom?: 0 | 8 | 16 | 24;
-  removeLabelonMobile?: boolean; //only for table instances where we want to hide the cell label for small screens
+  removeLabelonMobile?: boolean; // only for table instances where we want to hide the cell label for small screens
 }
 
 type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
