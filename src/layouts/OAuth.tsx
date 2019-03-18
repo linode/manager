@@ -1,54 +1,104 @@
 import { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'redux';
+import { connect, MapDispatchToProps } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
-import * as session from 'src/session';
-import { getParamFromUrl, parseQueryParams } from 'src/utilities/queryParams';
-import { getStorage, setStorage } from 'src/utilities/storage';
+import { handleStartSession } from 'src/store/authentication/authentication.actions';
+import { parseQueryParams, splitIntoTwo } from 'src/utilities/queryParams';
+import { authentication } from 'src/utilities/storage';
 
-export class OAuthCallbackPage extends Component<Linode.TodoAny> {
+type CombinedProps = DispatchProps & RouteComponentProps;
+
+interface OAuthQueryParams {
+  access_token: string;
+  scope: string;
+  expires_in: string;
+  state: string;
+  return: string;
+}
+
+export class OAuthCallbackPage extends Component<CombinedProps> {
   checkNonce(nonce: string) {
     const { history } = this.props;
     // nonce should be set and equal to ours otherwise retry auth
-    const storedNonce = getStorage('authentication/nonce');
+    const storedNonce = authentication.nonce.get();
     if (!(nonce && storedNonce === nonce)) {
-      setStorage('authentication/nonce', '');
+      authentication.nonce.set('');
       history.push('/');
     }
   }
 
   componentDidMount() {
-    const { location, startSession, redirect, history } = this.props;
+    /**
+     * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
+     * the data we need and should bounce.
+     * location.hash is a string which starts with # and is followed by a basic query params stype string.
+     *
+     * 'location.hash = `#access_token=something&token_type=something˙&expires_in=something&scope=something&state=something&return=the-url-we-are-now-at?returnTo=where-to-redirect-when-done`
+     *
+     */
+    const { location, history } = this.props;
+
+    /**
+     * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
+     * the query params we need.
+     */
+
     if (!location.hash || location.hash.length < 2) {
-      return redirect('/', history);
+      return history.push('/');
     }
 
-    const hashParams = parseQueryParams(location.hash.substr(1)) as any;
+    const hashParams: OAuthQueryParams = parseQueryParams(
+      location.hash.substr(1)
+    );
+
     const {
       access_token: accessToken,
       scope: scopes,
       expires_in: expiresIn,
-      state: nonce
-    } = hashParams as Linode.TodoAny;
+      state: nonce,
+      return: returnParam
+    } = hashParams;
+
+    /** If the access token wasn't returned, something is wrong and we should bail. */
     if (!accessToken) {
-      return redirect('/', history);
+      return history.push('/');
     }
 
-    const returnTo = hashParams.return
-      ? getParamFromUrl(hashParams.return, 'returnTo', '/')
-      : '/';
+    /**
+     * Build the path we're going to redirect to after we're done (back to where the user was when they started authentication).
+     */
+    let returnTo = '/';
+    if (returnParam && returnParam.indexOf('?') > -1) {
+      const returnParams: any = parseQueryParams(
+        splitIntoTwo(returnParam, '?')[1]
+      );
+      returnTo = returnParams.returnTo;
+    }
 
+    /**
+     * We need to validate that the nonce returned (comes from the location.hash as the state param)
+     * matches the one we stored when authentication was started. This confirms the initiator
+     * and receiver are the same.
+     */
     this.checkNonce(nonce);
 
+    /**
+     * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
+     * the API returns the expiry time in seconds
+     */
     const expireDate = new Date();
     expireDate.setTime(expireDate.getTime() + +expiresIn * 1000);
 
-    // begin our authenticated session
-    startSession(accessToken, scopes, expireDate.toString());
+    /**
+     * We have all the information we need and can persist it to localStorage and Redux.
+     */
+    this.props.dispatchStartSession(accessToken, scopes, expireDate.toString());
 
-    // redirect to prior page
-    redirect(returnTo, history);
+    /**
+     * All done, redirect this bad-boy to the returnTo URL we generated earlier.
+     */
+    history.push(returnTo);
   }
 
   render() {
@@ -56,19 +106,29 @@ export class OAuthCallbackPage extends Component<Linode.TodoAny> {
   }
 }
 
-const mapDispatchToProps = (dispatch: Linode.TodoAny) => ({
-  startSession(accessToken: string, scopes: string, expireDate: string) {
-    session.start(accessToken, scopes, expireDate);
-  },
-  redirect(path: string, history: Linode.TodoAny) {
-    history.push(path);
-  }
-});
+interface DispatchProps {
+  dispatchStartSession: (token: string, scopes: string, expiry: string) => void;
+}
 
-export default compose(
-  connect(
-    undefined,
-    mapDispatchToProps
-  ),
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
+  return {
+    dispatchStartSession: (token, scopes, expiry) =>
+      dispatch(
+        handleStartSession({
+          token,
+          scopes,
+          expires: expiry
+        })
+      )
+  };
+};
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
+
+export default compose<CombinedProps, {}>(
+  connected,
   withRouter
 )(OAuthCallbackPage);

@@ -1,21 +1,10 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import { compose } from 'redux';
 import { redirectToLogin } from 'src/session';
+import { handleInitTokens } from 'src/store/authentication/authentication.actions';
 import { MapState } from 'src/store/types';
 
-interface Props {
-  location: {
-    pathname: string;
-    search: string;
-  };
-  history: {
-    push: Function;
-  };
-}
-
-type CombinedProps = Props & StateProps & DispatchProps;
+type CombinedProps = DispatchProps & StateProps;
 
 export class AuthenticationWrapper extends React.Component<CombinedProps> {
   state = {
@@ -26,41 +15,40 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     isAuthenticated: false
   };
 
-  componentWillMount() {
-    const {
-      isAuthenticated,
-      location: { pathname },
-      actions
-    } = this.props;
+  componentDidMount() {
+    const { initSession } = this.props;
+    /**
+     * set redux state to what's in local storage
+     * or expire the tokens if the expiry time is in the past
+     *
+     * if nothing exist in local storage, we get shot off to login
+     */
+    initSession();
 
-    if (this.isExcludedRoute(pathname) || isAuthenticated) {
+    /**
+     * this is the case where we've just come back from login and need
+     * to show the children onMount
+     */
+    if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
-      return;
-    }
-
-    if (!isAuthenticated) {
-      return actions.loginRedirect();
     }
   }
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
-    const {
-      isAuthenticated,
-      location: { pathname },
-      actions
-    } = nextProps;
-    if (!isAuthenticated && !this.isExcludedRoute(pathname)) {
-      return actions.loginRedirect();
+  /**
+   * handles for the case where we've refreshed the page
+   * and redux has now been synced with what is in local storage
+   */
+  componentDidUpdate(prevProps: CombinedProps) {
+    /** if we were previously not authed and now we are authed */
+    if (!prevProps.isAuthenticated && this.props.isAuthenticated) {
+      return this.setState({ showChildren: true });
+    }
+
+    /** basically handles for the case where our token is expired or we got a 401 error */
+    if (prevProps.isAuthenticated && !this.props.isAuthenticated) {
+      redirectToLogin(location.pathname, location.search);
     }
   }
-
-  isExcludedRoute = (pathname: string) => {
-    const excludedPaths = ['/oauth/callback', '/logout'];
-    return excludedPaths.reduce(
-      (result, current) => result || pathname.includes(current),
-      false
-    );
-  };
 
   render() {
     const { children } = this.props;
@@ -73,28 +61,16 @@ interface StateProps {
   isAuthenticated: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, Props> = state => ({
+const mapStateToProps: MapState<StateProps, {}> = state => ({
   isAuthenticated: Boolean(state.authentication.token)
 });
 
 interface DispatchProps {
-  actions: {
-    loginRedirect: () => void;
-  };
+  initSession: () => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch,
-  ownProps
-) => ({
-  actions: {
-    loginRedirect: () => {
-      const {
-        location: { pathname: path, search: querystring }
-      } = ownProps;
-      redirectToLogin(path, querystring);
-    }
-  }
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
+  initSession: () => dispatch(handleInitTokens())
 });
 
 const connected = connect(
@@ -102,7 +78,4 @@ const connected = connect(
   mapDispatchToProps
 );
 
-export default compose<Linode.TodoAny, Linode.TodoAny, Linode.TodoAny>(
-  withRouter,
-  connected
-)(AuthenticationWrapper);
+export default connected(AuthenticationWrapper);

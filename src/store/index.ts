@@ -8,10 +8,10 @@ import accountSettings, {
   defaultState as defaultAccountSettingsState,
   State as AccountSettingsState
 } from 'src/store/accountSettings/accountSettings.reducer';
+import { State as AuthState } from 'src/store/authentication';
 import authentication, {
-  defaultState as authenticationDefaultState,
-  State as AuthState
-} from 'src/store/authentication';
+  defaultState as authenticationDefaultState
+} from 'src/store/authentication/authentication.reducer';
 import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState

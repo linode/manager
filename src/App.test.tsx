@@ -7,6 +7,8 @@ import { mockNodeBalancerActions } from './__data__/nodeBalancerActions';
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
+import { hasOauthError } from './App';
+
 it('renders without crashing', () => {
   const component = shallow(
     <LinodeThemeWrapper>
@@ -51,4 +53,24 @@ it('renders without crashing', () => {
     </LinodeThemeWrapper>
   );
   expect(component.find('App')).toHaveLength(1);
+});
+
+const errors: (Linode.ApiFieldError[] | Error)[] = [
+  [
+    {
+      reason: 'invalid OAuTh token'
+    }
+  ],
+  new Error('hello world'),
+  [
+    {
+      reason: 'Invalid Something else'
+    }
+  ],
+  new Error('hello world again')
+];
+
+it('isOAuthError returns true for errors that have oauth errors in them', () => {
+  expect(hasOauthError(errors[0], errors[1])).toBeTruthy();
+  expect(hasOauthError(errors[2], errors[3])).toBeFalsy();
 });
