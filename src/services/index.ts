@@ -8,7 +8,8 @@ const L = {
   params: lensPath(['params']),
   data: lensPath(['data']),
   xFilter: lensPath(['headers', 'X-Filter']),
-  validationErrors: lensPath(['validationErrors'])
+  validationErrors: lensPath(['validationErrors']),
+  headers: lensPath(['headers'])
 };
 
 const isNotEmpty = compose(
@@ -26,6 +27,9 @@ export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
 /** Param */
 export const setParams = (params: any = {}) =>
   when(() => isNotEmpty(params), set(L.params, params));
+
+export const setHeaders = (headers: any = {}) =>
+  when(() => isNotEmpty(headers), set(L.headers, headers));
 
 /**
  * Validate and set data in the request configuration object.
