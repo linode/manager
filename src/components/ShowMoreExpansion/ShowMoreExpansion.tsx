@@ -56,12 +56,15 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
 
   handleNameClick = () => {
     this.setState({
-      open: !this.props.defaultExpanded
+      open: !this.state.open
     });
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevState.open !== this.props.defaultExpanded) {
+    if (
+      prevState.open !== this.props.defaultExpanded &&
+      prevProps.defaultExpanded !== this.props.defaultExpanded
+    ) {
       this.setState({ open: this.props.defaultExpanded });
     }
   }
