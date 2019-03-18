@@ -689,10 +689,19 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       errors
     );
 
+    const globalFormError = hasErrorFor('none');
+
     return (
       <Grid item xs={12}>
         <Paper className={classes.root} data-qa-label-header>
           <div className={classes.inner}>
+            {globalFormError && (
+              <Notice
+                className={'error-for-scroll-0'}
+                text={globalFormError}
+                error={true}
+              />
+            )}
             <Grid
               updateFor={[
                 port,
