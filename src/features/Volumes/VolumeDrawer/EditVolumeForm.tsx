@@ -1,17 +1,22 @@
+import { Form, Formik } from 'formik';
+import { pathOr } from 'ramda';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
-import { Form, Formik } from 'formik';
-import * as React from 'react';
-import { compose } from 'recompose';
+} from 'src/components/core/styles';
+import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
+import { MapState } from 'src/store/types';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
@@ -30,7 +35,10 @@ interface Props {
   volumeId: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & VolumesRequests;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  VolumesRequests &
+  StateProps;
 
 /** Single field posts like rename/resize dont have validation schemas in services */
 const validationSchema = UpdateVolumeSchema;
@@ -40,7 +48,14 @@ interface FormState {
 }
 
 const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
-  const { volumeId, volumeLabel, volumeTags, onClose, updateVolume } = props;
+  const {
+    volumeId,
+    volumeLabel,
+    volumeTags,
+    onClose,
+    updateVolume,
+    disabled
+  } = props;
   const initialValues: FormState = { label: volumeLabel, tags: volumeTags };
 
   return (
@@ -100,6 +115,13 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={status.generalError}
               />
             )}
+            {disabled && (
+              <Notice
+                text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
+                error={true}
+                important
+              />
+            )}
 
             <LabelField
               error={errors.label}
@@ -107,6 +129,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.label}
+              disabled={disabled}
             />
 
             <TagsInput
@@ -121,11 +144,13 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               label="Tags"
               onChange={selected => setFieldValue('tags', selected)}
               value={values.tags}
+              disabled={disabled}
             />
 
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
+              disabled={disabled}
               onCancel={() => {
                 resetForm();
                 onClose();
@@ -140,9 +165,36 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
+interface StateProps {
+  disabled: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => {
+  const volumesPermissions = pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'volume'],
+    state
+  );
+  const volumePermissions = volumesPermissions.find(
+    (v: Linode.Grant) => (v.id = ownProps.volumeId)
+  );
+  return {
+    disabled:
+      isRestrictedUser(state) &&
+      volumePermissions &&
+      volumePermissions.permissions === 'read_only'
+  };
+};
+
+const connected = connect(mapStateToProps);
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withVolumesRequest
+  withVolumesRequest,
+  connected
 )(RenameVolumeForm);
 
 export default enhanced;
