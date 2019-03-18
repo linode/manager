@@ -204,22 +204,26 @@ export class App extends React.Component<CombinedProps, State> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
+    const dataFetchingPromises: Promise<any>[] = [
+      actions.requestProfile(),
+      actions.requestDomains(),
+      actions.requestImages(),
+      actions.requestLinodes(),
+      actions.requestNotifications(),
+      actions.requestSettings(),
+      actions.requestTypes(),
+      actions.requestRegions(),
+      actions.requestVolumes(),
+      getAllNodeBalancersWithConfigs()
+    ];
+
+    // Make this request only if the feature is enabled.
+    if (isObjectStorageEnabled) {
+      dataFetchingPromises.push(actions.requestBuckets());
+    }
+
     try {
-      await Promise.all([
-        actions.requestProfile(),
-        actions.requestDomains(),
-        actions.requestImages(),
-        actions.requestLinodes(),
-        actions.requestNotifications(),
-        actions.requestSettings(),
-        actions.requestTypes(),
-        actions.requestRegions(),
-        actions.requestVolumes(),
-        actions.requestBuckets(),
-        getAllNodeBalancersWithConfigs()
-      ] as any);
-      // The type definition for Promise.all includes up to 10 promises, so I
-      // added "as any" to keep it from complaining.
+      await Promise.all(dataFetchingPromises);
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
