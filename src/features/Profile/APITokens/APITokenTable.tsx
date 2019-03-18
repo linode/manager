@@ -571,6 +571,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           actions={this.renderPersonalAccessTokenDisplayActions}
           open={Boolean(this.state.token && this.state.token.open)}
           onClose={this.closeTokenDialog}
+          maxWidth="md"
         >
           <Typography variant="body1">
             {`Your personal access token has been created.
