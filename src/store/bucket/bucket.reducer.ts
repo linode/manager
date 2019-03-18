@@ -1,7 +1,7 @@
 import { Reducer } from 'redux';
 import { RequestableData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { onError, onStart } from '../store.helpers';
+import { onStart } from '../store.helpers';
 import { getAllBucketsActions } from './bucket.actions';
 
 /**
@@ -46,7 +46,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   // FAILED
   if (isType(action, getAllBucketsActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state);
+    return {
+      ...state,
+      loading: false,
+      error
+    };
   }
 
   return state;
