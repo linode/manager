@@ -21,11 +21,11 @@ namespace Paypal {
   export interface PayButtonProps {
     env: Env;
     client: Client;
-    onAuthorize: (data: AuthData) => void;
+    onApprove: (data: AuthData, actions?: any) => void;
     onCancel: () => void;
     onClick?: () => void;
-    payment: (data?: any, actions?: any) => Promise<any>;
-    commit?: boolean;
+    /** callback function that NEEDS to return the order id */
+    createOrder: () => Promise<string | void>;
     style?: any;
   }
 }
