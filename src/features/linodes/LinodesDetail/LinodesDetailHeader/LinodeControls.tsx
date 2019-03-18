@@ -1,4 +1,4 @@
-import { last, pathOr } from 'ramda';
+import { last } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -16,6 +16,7 @@ import {
   LinodeDetailContext,
   withLinodeDetailContext
 } from '../linodeDetailContext';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePowerControl from '../LinodePowerControl';
 import withConfigDrawerState, { ConfigDrawerProps } from './configDrawerState';
 import withEditableLabelState, {
@@ -88,10 +89,10 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
         resetEditableLabel();
       })
       .catch(err => {
-        const errors: Linode.ApiFieldError[] = pathOr(
-          [],
-          ['response', 'data', 'errors'],
-          err
+        const errors: Linode.ApiFieldError[] = getAPIErrorOrDefault(
+          err,
+          'An error occured while updating label',
+          'label'
         );
         const errorStrings: string[] = errors.map(e => e.reason);
         setEditableLabelError(errorStrings[0]);

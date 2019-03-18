@@ -16,6 +16,7 @@ import {
   UpdateLinode,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -61,7 +62,11 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
         this.setState(
           {
             submitting: false,
-            errors: error.response.data.errors
+            errors: getAPIErrorOrDefault(
+              error,
+              'An error occured while updating label',
+              'label'
+            )
           },
           () => {
             scrollErrorIntoView('linode-settings-label');
