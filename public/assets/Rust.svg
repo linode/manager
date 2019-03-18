@@ -1,3 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="44" height="44" viewBox="0 0 44 44">
-  <image width="44" height="44" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAsCAYAAAAehFoBAAADXElEQVRYhe2ZW4iNURTHfzPnjJlxDYMwmBmKGLdyz6XIA0XI5QXxQhQ1Hkgoo3hQXoiHUVKiXB/kzYPLC5IkDy6NXJLrg1AYZoxW/qf55uzzzXxnzvedc6bmX7vO2Xt/e//X2muvtfbeBbW1tT+AIqAJKCC/URQHYkBcJe9R2BlIetFFOGqEabfN2rjtKeGvNnfMaQmAMAk3AjuBh0A3CZAME2gAcAQod1qzTNg0ay7yltPSGtOA/k5tGpOEBVvi2QHGmgWUOrU5IGwYDfR0altgtjvBqU0DYRMerOKHknwjXAaMcGpbUAWMcmrTQNiES2UWfjDtdvdpC4QoAsdYp6YF1Uq0OowoEp45wHrgu0chzSrznd5pIgrCpuFDnojmJTzI6Z0HhF8AG4APnvETufYZYKbzRRqIgnAD8A54nVRvhH86vUMibMv5CyjuQJJiY/ZQ8Wo4phwjI/gR/gZs0qRTgXHAUNlgL6d3a5ivvQz80aZr9iRCVU7vDmgjFUzDj4DnwGlNPEQTVgAjgYXAFOCOltr6zJBAY1KMGQr8CJPkL02Atyq3VfdSAmwD3ivsXvOE3mfASWCHhI2ccHtokCBfgc+yz0Z9YyuzBbghYQ7LpDJGJpGuMOnkEPP43XMim/idyJEfAE+ckdKcNAps16Y1IQ4Cy4F7wFJgBXDX50QSKeEmTfpb/xs9JPqJ6CVgF3Bf4dr881OgRm4zbWRiwyXS4ECRLUnaqJZqLgNuAhuBV6rvC2wG6oEvwFxn5DbQFuGE5grUbzgwST65Wv7ZzmYX1bcwRS5sNrsG+KT/Jtx5bcDFwEdgHXAg6DnPj3BcPnUeMB2YCFQCvVNEq7aCwTB9ex3oI+HKJES9+pyQfe+REMXOKAEIm/Ov0zJnAtPoKWArsEpHfCP7OGlMW4nVMpUaBaaU8Nt0BSGQTcDuH64oKi5JQTYB2wfHFUGPKj1w4Ec4bMSlgCDzWQQ9pjTVQTbv1mwP7A1wRCqXhic7LTm4DFyr4gcjexZY5NOedcI23z5gvNPy323WteeXc3HdWqno53VfFfImvppNIFf3wyuVUyA/fgFY4PRKAT8/HDVMu7uBN8B+Rc1AyOVDjNnxVSVKgZHrJ4O0yNL1KJMFdMpXJDs5WOKR/0+3UPQPceyF1g0E7x4AAAAASUVORK5CYII="/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Rust</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Rust" fill="#818181" fill-rule="nonzero">
+            <polygon id="Rectangle" transform="translate(23.532519, 23.604538) rotate(-45.000000) translate(-23.532519, -23.604538) " points="21.4397115 21.5117302 25.6253263 21.5117302 25.6253263 25.697345 21.4397115 25.697345"></polygon>
+            <rect id="Rectangle" x="13.371556" y="20.2844402" width="4.38979118" height="8.3712297"></rect>
+            <polygon id="Rectangle-Copy" transform="translate(24.418413, 15.668141) rotate(90.000000) translate(-24.418413, -15.668141) " points="22.1214291 11.4825261 26.7153966 11.4825261 26.7153966 19.8537557 22.1214291 19.8537557"></polygon>
+            <polygon id="Rectangle-Copy-2" transform="translate(28.092075, 28.165052) rotate(45.000000) translate(-28.092075, -28.165052) " points="25.9482234 23.928393 30.2359264 23.928393 30.2359264 32.4017109 25.9482234 32.4017109"></polygon>
+            <polygon id="Path" points="0 17.6470961 0 31.1227342 11.7401392 28.6308209 11.7401392 20.2797269"></polygon>
+            <polygon id="Path-Copy" transform="translate(24.423198, 5.921114) rotate(90.000000) translate(-24.423198, -5.921114) " points="18.5531286 -0.816705336 18.5531286 12.6589327 30.2932678 10.1670194 30.2932678 1.81592541"></polygon>
+            <polygon id="Path-Copy-2" transform="translate(34.942467, 35.074663) rotate(-135.000000) translate(-34.942467, -35.074663) " points="29.0723971 28.3368439 29.0723971 41.8124819 40.8125363 39.3205686 40.8125363 30.9694745"></polygon>
+        </g>
+    </g>
 </svg>
