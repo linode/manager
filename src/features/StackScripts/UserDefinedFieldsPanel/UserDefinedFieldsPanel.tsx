@@ -145,7 +145,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
         {optionalUDFs.length !== 0 && (
           <ShowMoreExpansion
             name="Show Advanced Options"
-            /** expand the panel by default if there are only required UDFs */
+            /** expand the panel by default if there are no required UDFs */
             defaultExpanded={requiredUDFs.length === 0}
           >
             <Typography variant="body1" className={classes.advDescription}>
@@ -195,7 +195,7 @@ const isMultiSelect = (udf: Linode.StackScript.UserDefinedField) => {
 };
 
 /**
- * being used to seperated required UDFs from un-required ones
+ * Used to separate required UDFs from non-required ones
  *
  * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
