@@ -60,6 +60,15 @@ class ShowMoreExpansion extends React.Component<CombinedProps, State> {
     });
   };
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (
+      prevState.open !== this.props.defaultExpanded &&
+      prevProps.defaultExpanded !== this.props.defaultExpanded
+    ) {
+      this.setState({ open: this.props.defaultExpanded });
+    }
+  }
+
   render() {
     const { name, classes, children } = this.props;
     const { open } = this.state;
