@@ -221,14 +221,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
     const defaultImage = images.length === 1 ? images[0].id : undefined;
 
-    /**
-     * reset the selected Image but only if we're creating a Linode from
-     * a StackScript and not an app
-     */
-    if (this.props.createType !== 'fromApp') {
-      this.setState({ selectedImageID: undefined });
-    }
-
     this.setState({
       selectedStackScriptID: id,
       selectedStackScriptLabel: label,
