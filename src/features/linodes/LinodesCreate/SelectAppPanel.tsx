@@ -90,13 +90,13 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
         {appInstances.map(eachApp => (
           <SelectionCardWrapper
             key={eachApp.id}
-            checked={eachApp.id === selectedStackScriptID}
+            checked={eachApp.stackscript_id === selectedStackScriptID}
             label={eachApp.label}
             availableImages={eachApp.images}
             userDefinedFields={eachApp.user_defined_fields}
             handleClick={handleClick}
             disabled={disabled}
-            id={eachApp.id}
+            id={eachApp.stackscript_id}
             iconUrl={eachApp.logo_url || ''}
           />
         ))}
