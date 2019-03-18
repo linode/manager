@@ -27,7 +27,7 @@ type ClassNames = 'root' | 'header';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   header: {
-    paddingBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit
   }
 });
 
@@ -42,7 +42,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <>
-      <Typography variant="h2" className={classes.header}>
+      <Typography variant="h1" className={classes.header}>
         Events
       </Typography>
       <Paper>

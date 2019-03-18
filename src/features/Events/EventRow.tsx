@@ -3,7 +3,13 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import HelpOutline from '@material-ui/icons/HelpOutline';
 import Hidden from 'src/components/core/Hidden';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -16,14 +22,28 @@ import getEventsActionLink from 'src/utilities/getEventsActionLink';
 
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 
+type ClassNames = 'tooltipWrapper' | 'helpIcon';
+
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  tooltipWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  helpIcon: {
+    width: 20,
+    color: theme.color.grey1,
+    marginLeft: theme.spacing.unit
+  }
+});
+
 interface Props {
   event: Linode.Event;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const EventRow: React.StatelessComponent<CombinedProps> = props => {
-  const { event } = props;
+  const { event, classes } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
@@ -39,7 +59,8 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     linkTarget,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
-    type
+    type,
+    classes
   };
 
   /** Some event types may not be handled by our system (or new types
@@ -49,19 +70,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     return null;
   }
 
-  return (
-    <>
-      {Boolean(linkTarget) ? (
-        // This row has an entity/external target to link to.
-        <Row {...rowProps} data-qa-events-row={event.id} />
-      ) : (
-        // This one doesn't. Usually that means the entity has been deleted.
-        <Tooltip title="The entity for this event no longer exists.">
-          <Row {...rowProps} data-qa-events-row={event.id} />
-        </Tooltip>
-      )}
-    </>
-  );
+  return <Row {...rowProps} data-qa-events-row={event.id} />;
 };
 
 interface RowProps {
@@ -72,29 +81,46 @@ interface RowProps {
   created: string;
 }
 
-const Row: React.StatelessComponent<RowProps> = props => {
-  const { linkTarget, message, status, type, created } = props;
+const Row: React.StatelessComponent<
+  RowProps & WithStyles<ClassNames>
+> = props => {
+  const { linkTarget, message, status, type, created, classes } = props;
 
   return (
     <TableRow rowLink={linkTarget}>
       <Hidden smDown>
-        <TableCell data-qa-event-icon-cell>
-          <EntityIcon variant={type} status={status} />
+        <TableCell data-qa-event-icon-cell compact>
+          <EntityIcon variant={type} status={status} size={28} marginTop={1} />
         </TableCell>
       </Hidden>
-      <TableCell parentColumn={'Event'} data-qa-event-message-cell>
-        <Typography variant="body1">{message}</Typography>
+      <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
+        {Boolean(!linkTarget) ? (
+          <div className={classes.tooltipWrapper}>
+            <Typography variant="body1">{message}</Typography>
+            <Tooltip
+              title="The entity for this event no longer exists."
+              placement="right"
+            >
+              <HelpOutline className={classes.helpIcon} />
+            </Tooltip>
+          </div>
+        ) : (
+          <Typography variant="body1">{message}</Typography>
+        )}
       </TableCell>
-      <TableCell parentColumn={'Time'} data-qa-event-created-cell>
+      <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>
         <DateTimeDisplay value={created} humanizeCutoff={'month'} />
       </TableCell>
     </TableRow>
   );
 };
 
+const styled = withStyles(styles);
+
 const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
   withRouter,
-  renderGuard
+  renderGuard,
+  styled
 );
 
 export default enhanced(EventRow);
