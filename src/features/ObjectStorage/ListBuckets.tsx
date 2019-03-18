@@ -13,7 +13,6 @@ import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import BucketTableRow from './BucketTableRow';
-``;
 
 type ClassNames = 'root' | 'label';
 

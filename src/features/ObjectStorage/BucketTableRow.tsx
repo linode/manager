@@ -29,9 +29,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   hostname: { paddingTop: theme.spacing.unit }
 });
 
-interface BucketRowProps extends Linode.Bucket {}
+// BucketTableRow has the same props as Linode.Bucket.
+// Aliased for convention's sake.
+type BucketTableRowProps = Linode.Bucket;
 
-type CombinedProps = BucketRowProps & WithStyles<ClassNames>;
+type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.StatelessComponent<
   CombinedProps
