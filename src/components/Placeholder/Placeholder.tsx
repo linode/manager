@@ -111,7 +111,11 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         </Typography>
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
-        <Typography variant="subtitle1">{copy}</Typography>
+        {typeof copy === 'string' ? (
+          <Typography variant="subtitle1">{copy}</Typography>
+        ) : (
+          copy
+        )}
       </Grid>
       {buttonProps && (
         <Grid item xs={12} lg={10}>
