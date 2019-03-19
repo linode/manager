@@ -1,6 +1,8 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import {
@@ -36,7 +38,8 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       volumeSize,
       volumeTags,
       volumePath,
-      message
+      message,
+      readOnly
     } = this.props;
 
     return (
@@ -56,6 +59,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
               volumeLabel={volumeLabel}
               onClose={actions.closeDrawer}
               volumeTags={volumeTags.map(v => ({ label: v, value: v }))}
+              readOnly={readOnly}
             />
           )}
         {mode === modes.RESIZING &&
@@ -68,6 +72,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
               onClose={actions.closeDrawer}
               volumeLabel={volumeLabel}
               onSuccess={actions.openForResizeInstructions}
+              readOnly={readOnly}
             />
           )}
         {mode === modes.CLONING &&
@@ -168,6 +173,7 @@ interface StateProps {
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
+  readOnly?: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -185,6 +191,15 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     message
   } = state.volumeDrawer;
 
+  const volumesPermissions = pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'volume'],
+    state
+  );
+  const volumePermissions = volumesPermissions.find(
+    (v: Linode.Grant) => v.id === volumeId
+  );
+
   return {
     drawerTitle: titleFromState(state.volumeDrawer),
     isOpen: mode !== modes.CLOSED,
@@ -198,7 +213,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     volumeSize,
     volumeTags,
     volumePath,
-    message
+    message,
+    readOnly:
+      isRestrictedUser(state) &&
+      volumePermissions &&
+      volumePermissions.permissions === 'read_only'
   };
 };
 
