@@ -330,7 +330,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.openCreateVolumeDrawer}
-                  label="Add Volume"
+                  label="Add a Volume"
                 />
               </Grid>
             </Grid>
@@ -391,7 +391,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           icon={VolumesIcon}
           buttonProps={{
             onClick: this.openCreateVolumeDrawer,
-            children: 'Add Volume'
+            children: 'Add a Volume'
           }}
         />
       </React.Fragment>
@@ -506,13 +506,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 const EmptyCopy = () => (
   <>
     <Typography variant="subtitle1">
+      Need additional storage?&nbsp;
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
         className="h-u"
       >
-        Need additional storage? Here's how to use Block Storage with your
-        Linode.
+        Here's how to use Block Storage with your Linode.
       </a>
     </Typography>
     <Typography variant="subtitle1">
