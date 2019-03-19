@@ -60,12 +60,43 @@ export const getPayments = (params?: any, filter?: any) =>
  * credit card.
  *
  */
-export const makePayment = (data: { usd: string; cvv?: string }) =>
-  Request<Linode.Payment>(
+export const makePayment = (data: { usd: string; cvv?: string }) => {
+  /**
+   * in the context of APIv4, CVV is optional - in other words, it's totally
+   * valid to submit a payment without a CVV
+   *
+   * BUT if CVV is included in the payload, APIv4 will send an error that CVV must
+   * have 3-4 characters.
+   *
+   * So for example this payload will result in an error
+   *
+   * {
+   *   usd: 5,
+   *   cvv: ''
+   * }
+   *
+   * but this is good
+   *
+   * {
+   *   usd: 5
+   * }
+   */
+  const sanitizedData = Object.keys(data).reduce((accum, eachDataAttr) => {
+    if (eachDataAttr === 'cvv' && !!data.cvv) {
+      /* tslint:disable-next-line */
+      accum['cvv'] = data.cvv;
+    } else if (eachDataAttr !== 'cvv') {
+      accum[eachDataAttr] = data[eachDataAttr];
+    }
+    return accum;
+  }, {});
+
+  return Request<Linode.Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
-    setData(data, PaymentSchema)
+    setData(sanitizedData, PaymentSchema)
   ).then(response => response.data);
+};
 
 interface StagePaypalData {
   checkout_token: string;
