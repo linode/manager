@@ -121,12 +121,9 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
   render() {
     const { userDefinedFields, classes } = this.props;
 
-    /** [true, false, true, false] */
-    const hasOnlyOptionalFields = userDefinedFields!
-      .map(eachUDF => {
-        return Object.keys(eachUDF).some(eachKey => eachKey === 'default');
-      })
-      .every(eachValue => eachValue === true);
+    const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
+      userDefinedFields!
+    );
 
     return (
       <Paper className={classes.root}>
@@ -139,41 +136,36 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
         </Typography>
 
         {/* Required Fields */}
-        {userDefinedFields!
-          .filter(
-            (field: Linode.StackScript.UserDefinedField) =>
-              field.hasOwnProperty('default') !== true
-          )
-          .map((field: Linode.StackScript.UserDefinedField) => {
-            const error = getError(field, this.props.errors);
-            return this.renderField(field, error);
-          })}
+        {requiredUDFs.map((field: Linode.StackScript.UserDefinedField) => {
+          const error = getError(field, this.props.errors);
+          return this.renderField(field, error);
+        })}
 
         {/* Optional Fields */}
-        <ShowMoreExpansion
-          name="Show Advanced Options"
-          defaultExpanded={hasOnlyOptionalFields}
-        >
-          <Typography variant="body1" className={classes.advDescription}>
-            These fields are additional configuration options and are not
-            required for creation.
-          </Typography>
-          <div
-            className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
+        {optionalUDFs.length !== 0 && (
+          <ShowMoreExpansion
+            name="Show Advanced Options"
+            /** expand the panel by default if there are no required UDFs */
+            defaultExpanded={requiredUDFs.length === 0}
           >
-            <Grid container alignItems="center">
-              {userDefinedFields!
-                .filter(
-                  (field: Linode.StackScript.UserDefinedField) =>
-                    field.hasOwnProperty('default') === true
-                )
-                .map((field: Linode.StackScript.UserDefinedField) => {
-                  const error = getError(field, this.props.errors);
-                  return this.renderField(field, error);
-                })}
-            </Grid>
-          </div>
-        </ShowMoreExpansion>
+            <Typography variant="body1" className={classes.advDescription}>
+              These fields are additional configuration options and are not
+              required for creation.
+            </Typography>
+            <div
+              className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
+            >
+              <Grid container alignItems="center">
+                {optionalUDFs.map(
+                  (field: Linode.StackScript.UserDefinedField) => {
+                    const error = getError(field, this.props.errors);
+                    return this.renderField(field, error);
+                  }
+                )}
+              </Grid>
+            </div>
+          </ShowMoreExpansion>
+        )}
       </Paper>
     );
   }
@@ -200,6 +192,29 @@ const isOneSelect = (udf: Linode.StackScript.UserDefinedField) => {
 
 const isMultiSelect = (udf: Linode.StackScript.UserDefinedField) => {
   return !!udf.manyof; // if we have a manyof prop, it's a checkbox
+};
+
+/**
+ * Used to separate required UDFs from non-required ones
+ *
+ * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
+ */
+const seperateUDFsByRequiredStatus = (
+  udfs: Linode.StackScript.UserDefinedField[]
+) => {
+  return udfs.reduce(
+    (accum, eachUDF) => {
+      /**
+       * if the "default" key exists, it's optional
+       */
+      if (eachUDF.hasOwnProperty('default')) {
+        return [[...accum[0]], [...accum[1], eachUDF]];
+      } else {
+        return [[...accum[0], eachUDF], [...accum[1]]];
+      }
+    },
+    [[], []]
+  );
 };
 
 const styled = withStyles(styles);

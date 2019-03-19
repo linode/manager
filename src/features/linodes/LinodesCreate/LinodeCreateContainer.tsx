@@ -101,6 +101,8 @@ const defaultState: State = {
   selectedDiskSize: undefined,
   selectedLinodeID: undefined,
   selectedStackScriptID: undefined,
+  selectedStackScriptLabel: '',
+  selectedStackScriptUsername: '',
   selectedRegionID: undefined,
   selectedTypeID: undefined,
   tags: [],
