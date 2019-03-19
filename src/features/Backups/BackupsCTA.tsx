@@ -70,7 +70,17 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item>
           <Typography>
-            We've got your back! Enable now to protect all existing Linodes.
+            We've got your back! Click below to enable Backups for all Linodes,
+            and be sure to read our guide on Backups{` `}
+            <a
+              target="_blank"
+              href={
+                'https://www.linode.com/docs/platform' +
+                '/disk-images/linode-backup-service/'
+              }
+            >
+              features and limitations.
+            </a>
           </Typography>
         </Grid>
         <Grid item className={classes.buttonsContainer}>
