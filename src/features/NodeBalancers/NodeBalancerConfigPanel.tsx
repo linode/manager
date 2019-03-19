@@ -697,7 +697,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
           <div className={classes.inner}>
             {globalFormError && (
               <Notice
-                className={'error-for-scroll-0'}
+                className={`error-for-scroll-${configIdx}`}
                 text={globalFormError}
                 error={true}
               />
