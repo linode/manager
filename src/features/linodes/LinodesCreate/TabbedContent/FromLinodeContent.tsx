@@ -109,7 +109,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         {linodes && linodes.length === 0 ? (
-          <Grid item className={`${classes.main} py0`}>
+          <Grid item className={`${classes.main} mlMain py0`}>
             <Paper>
               <Placeholder
                 icon={VolumeIcon}
