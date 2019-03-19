@@ -297,7 +297,8 @@ export class App extends React.Component<CombinedProps, State> {
       regionsError,
       volumesError,
       settingsError,
-      profileError
+      profileError,
+      bucketsError
     } = this.props;
 
     if (hasError) {
@@ -319,7 +320,8 @@ export class App extends React.Component<CombinedProps, State> {
         regionsError,
         volumesError,
         settingsError,
-        profileError
+        profileError,
+        bucketsError
       )
     ) {
       return null;
@@ -470,6 +472,7 @@ interface StateProps {
   typesError?: Linode.ApiFieldError[];
   regionsError?: Linode.ApiFieldError[];
   volumesError?: Linode.ApiFieldError[] | Error;
+  bucketsError?: Error | Linode.ApiFieldError[];
   userId?: number;
   documentation: Linode.Doc[];
 }
@@ -486,6 +489,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
   volumesError: state.__resources.volumes.error,
+  bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation
