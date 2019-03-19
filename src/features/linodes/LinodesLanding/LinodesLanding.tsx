@@ -192,9 +192,17 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   deleteLinode = (linodeId: number) => {
     const _deleteLinode = this.props.actions.deleteLinode;
     _deleteLinode(linodeId)
-      .then(_ => this.setState({ confirmationOpen: false })) // @todo do we need to display for this? e.g. this.props.enqueueSnackbar('Linode deleted successfully', { variant: 'info' }))
+      .then(_ =>
+        this.setState({
+          confirmationOpen: false,
+          confirmationLoading: false,
+          confirmationError: undefined
+        })
+      )
+      // @todo do we need to display for this? e.g. ( this.props.enqueueSnackbar('Linode deleted successfully', { variant: 'info' }))
       .catch(err =>
         this.setState({
+          confirmationLoading: false,
           confirmationError: getErrorStringOrDefault(
             err,
             'There was an error deleting your Linode.'
@@ -227,7 +235,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         this.setState({ confirmationOpen: false });
         break;
     }
-    this.setState({ confirmationLoading: false });
   };
 
   dismissCTA = () => {
