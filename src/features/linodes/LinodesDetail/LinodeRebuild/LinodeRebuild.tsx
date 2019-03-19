@@ -8,10 +8,13 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
+
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import Radio from 'src/components/Radio';
 
 type ClassNames = 'root' | 'title';
 
@@ -62,12 +65,23 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
           restore from a backup or start over with a fresh Linux distribution.
           Rebuilding will destroy all data.
         </Typography>
-        <EnhancedSelect
-          options={options}
-          defaultValue={options[0]}
-          onChange={(selected: Item<MODES>) => setMode(selected.value)}
-          isClearable={false}
-        />
+        <RadioGroup
+          aria-label="rebuild modes"
+          name="rebuild modes"
+          value={mode}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setMode(e.target.value as MODES)
+          }
+        >
+          {options.map(eachOption => (
+            <FormControlLabel
+              key={eachOption.value}
+              value={eachOption.value}
+              label={eachOption.label}
+              control={<Radio />}
+            />
+          ))}
+        </RadioGroup>
       </Paper>
       {mode === 'fromImage' && <RebuildFromImage />}
       {mode === 'fromCommunityStackScript' && (
