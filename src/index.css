@@ -143,6 +143,10 @@ a {
   cursor: pointer;
 }
 
+a.h-u:hover {
+  text-decoration: underline;
+}
+
 .secondaryLink:hover {
   text-decoration: underline;
 }
