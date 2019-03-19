@@ -505,19 +505,18 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
 
 const EmptyCopy = () => (
   <>
+    <Typography variant="subtitle1">Need additional storage?</Typography>
     <Typography variant="subtitle1">
-      Need additional storage?&nbsp;
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
         className="h-u"
       >
-        Here's how to use Block Storage with your Linode.
+        Here's how to use Block Storage with your Linode
       </a>
-    </Typography>
-    <Typography variant="subtitle1">
+      &nbsp;or&nbsp;
       <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
-        Learn more about getting started or visit our guides and tutorials.
+        visit our guides and tutorials.
       </a>
     </Typography>
   </>

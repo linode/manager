@@ -41,12 +41,15 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'masterIPErrorNotice';
+type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   masterIPErrorNotice: {
     marginTop: theme.spacing.unit * 2
+  },
+  addIP: {
+    left: -theme.spacing.unit * 2 + 3
   }
 });
 
@@ -253,9 +256,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             ))}
             <AddNewLink
               onClick={this.addIPField}
+              className={classes.addIP}
               label="Add IP"
               data-qa-add-master-ip-field
-              left
               disabled={disabled}
             />
           </React.Fragment>
