@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     maxWidth: '85%',
     marginTop: -theme.spacing.unit * 3,
     [theme.breakpoints.up('md')]: {
-      maxWidth: 500
+      maxWidth: 800
     }
   },
   icon: {
