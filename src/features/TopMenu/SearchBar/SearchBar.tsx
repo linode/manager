@@ -135,10 +135,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
     );
   };
 
-  emptyMessage = () => {
-    return 'No Results';
-  };
-
   /* Need to override the default RS filtering; otherwise entities whose label
    * doesn't match the search term will be automatically filtered, meaning that
    * searching by tag won't work. */
@@ -194,7 +190,6 @@ class SearchBar extends React.Component<CombinedProps, State> {
             value={false}
             menuIsOpen={menuOpen}
             guidance={this.guidanceText()}
-            noOptionsMessage={this.emptyMessage}
           />
           <IconButton
             color="inherit"
