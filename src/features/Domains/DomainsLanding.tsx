@@ -320,18 +320,19 @@ const RenderError: React.StatelessComponent<{}> = () => {
 const EmptyCopy = () => (
   <>
     <Typography variant="subtitle1">
-      Need a new Domain?&nbsp;
+      Create a Domain, add Domain records, import zones and domains.
+    </Typography>
+    <Typography variant="subtitle1">
       <a
         href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
         target="_blank"
         className="h-u"
       >
-        Find out how to setup your domains associated with your Linodes.
+        Find out how to setup your domains associated with your Linodes
       </a>
-    </Typography>
-    <Typography variant="subtitle1">
+      &nbsp;or&nbsp;
       <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
-        Learn more about getting started or visit our guides and tutorials.
+        visit our guides and tutorials.
       </a>
     </Typography>
   </>
@@ -344,7 +345,7 @@ const RenderEmpty: React.StatelessComponent<{
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
       <Placeholder
-        title="Manage your Domains!"
+        title="Manage your Domains"
         copy={<EmptyCopy />}
         icon={DomainIcon}
         buttonProps={{
