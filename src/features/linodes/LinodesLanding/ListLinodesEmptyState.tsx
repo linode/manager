@@ -11,7 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
+type CSSClasses = 'root' | 'copy' | 'icon' | 'title' | 'link';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes scaleIn': {
@@ -38,7 +38,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   copy: {
     textAlign: 'center',
-    maxWidth: 390
+    maxWidth: 800
   },
   icon: {
     animation: 'scaleIn .5s ease-in-out',
@@ -60,6 +60,11 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   title: {
     fontFamily: 'LatoWebBold',
     textAlign: 'center'
+  },
+  link: {
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   }
 });
 
@@ -86,12 +91,29 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
           className={classes.title}
           data-qa-placeholder-title
         >
-          You don't have any Linodes!
+          Add your first Linode!
         </Typography>
         <Grid item xs={12} lg={10} className={classes.copy}>
-          <Typography variant="body1">
-            Host your next project on a Linode. Click the button below to choose
-            a plan and deploy an image.
+          <Typography variant="subtitle1">
+            Choose a plan, select an image, and deploy within minutes. Need help
+            getting started?
+          </Typography>
+          <Typography variant="subtitle1">
+            <a
+              href="https://linode.com/docs/getting-started-new-manager/"
+              target="_blank"
+              className={classes.link}
+            >
+              Learn more about getting started
+            </a>
+            &nbsp;or&nbsp;
+            <a
+              href="https://www.linode.com/docs/"
+              target="_blank"
+              className={classes.link}
+            >
+              visit our guides and tutorials.
+            </a>
           </Typography>
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
@@ -99,7 +121,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             type="primary"
             onClick={() => this.props.history.push('/linodes/create')}
           >
-            Add New Linode
+            Create a Linode
           </Button>
         </Grid>
       </Grid>

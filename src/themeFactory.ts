@@ -257,6 +257,10 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           fontSize: '2.5rem',
           lineHeight: '2.5rem'
         }
+      },
+      subtitle1: {
+        fontSize: '1.075rem',
+        lineHeight: '1.5rem'
       }
     },
     overrides: {
