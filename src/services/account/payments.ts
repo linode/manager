@@ -81,20 +81,14 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
    *   usd: 5
    * }
    */
-  const sanitizedData = Object.keys(data).reduce((accum, eachDataAttr) => {
-    if (eachDataAttr === 'cvv' && !!data.cvv) {
-      /* tslint:disable-next-line */
-      accum['cvv'] = data.cvv;
-    } else if (eachDataAttr !== 'cvv') {
-      accum[eachDataAttr] = data[eachDataAttr];
-    }
-    return accum;
-  }, {});
+  if (!data.cvv) {
+    delete data.cvv;
+  }
 
   return Request<Linode.Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
-    setData(sanitizedData, PaymentSchema)
+    setData(data, PaymentSchema)
   ).then(response => response.data);
 };
 
