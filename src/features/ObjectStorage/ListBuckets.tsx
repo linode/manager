@@ -51,7 +51,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
                 <TableRow>
                   <TableSortCell
                     active={orderBy === 'label'}
-                    label="name"
+                    label="label"
                     direction={order}
                     handleClick={handleOrderChange}
                     className={classes.label}
