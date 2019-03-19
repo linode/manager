@@ -30,6 +30,7 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
@@ -203,19 +204,26 @@ export class App extends React.Component<CombinedProps, State> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
+    const dataFetchingPromises: Promise<any>[] = [
+      actions.requestProfile(),
+      actions.requestDomains(),
+      actions.requestImages(),
+      actions.requestLinodes(),
+      actions.requestNotifications(),
+      actions.requestSettings(),
+      actions.requestTypes(),
+      actions.requestRegions(),
+      actions.requestVolumes(),
+      getAllNodeBalancersWithConfigs()
+    ];
+
+    // Make this request only if the feature is enabled.
+    if (isObjectStorageEnabled) {
+      dataFetchingPromises.push(actions.requestBuckets());
+    }
+
     try {
-      await Promise.all([
-        actions.requestProfile(),
-        actions.requestDomains(),
-        actions.requestImages(),
-        actions.requestLinodes(),
-        actions.requestNotifications(),
-        actions.requestSettings(),
-        actions.requestTypes(),
-        actions.requestRegions(),
-        actions.requestVolumes(),
-        getAllNodeBalancersWithConfigs()
-      ]);
+      await Promise.all(dataFetchingPromises);
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
@@ -427,6 +435,7 @@ interface DispatchProps {
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
     requestVolumes: () => Promise<Linode.Volume[]>;
+    requestBuckets: () => Promise<Linode.Bucket[]>;
   };
 }
 
@@ -443,7 +452,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
-      requestVolumes: () => dispatch(getAllVolumes())
+      requestVolumes: () => dispatch(getAllVolumes()),
+      requestBuckets: () => dispatch(getAllBuckets())
     }
   };
 };
