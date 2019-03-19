@@ -64,8 +64,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
             submitting: false,
             errors: getAPIErrorOrDefault(
               error,
-              'An error occured while updating label',
-              'label'
+              'An error occured while updating label'
             )
           },
           () => {
