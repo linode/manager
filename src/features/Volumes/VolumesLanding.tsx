@@ -509,12 +509,14 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
+        className="h-u"
       >
-        Find out how to use Block Storage with your Linode?
+        Need additional storage? Here's how to use Block Storage with your
+        Linode.
       </a>
     </Typography>
     <Typography variant="subtitle1">
-      <a href="https://www.linode.com/docs/" target="_blank">
+      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
         Learn more about getting started or visit our guides and tutorials.
       </a>
     </Typography>

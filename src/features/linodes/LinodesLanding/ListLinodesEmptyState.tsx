@@ -11,7 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-type CSSClasses = 'root' | 'copy' | 'icon' | 'title' | 'link';
+type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes scaleIn': {
@@ -60,11 +60,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   title: {
     fontFamily: 'LatoWebBold',
     textAlign: 'center'
-  },
-  link: {
-    '&:hover': {
-      textDecoration: 'underline'
-    }
   }
 });
 
@@ -102,7 +97,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://linode.com/docs/getting-started-new-manager/"
               target="_blank"
-              className={classes.link}
+              className="h-u"
             >
               Learn more about getting started
             </a>
@@ -110,7 +105,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             <a
               href="https://www.linode.com/docs/"
               target="_blank"
-              className={classes.link}
+              className="h-u"
             >
               visit our guides and tutorials.
             </a>
