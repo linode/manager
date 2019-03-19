@@ -84,7 +84,21 @@ const schedule = object({
     'Invalid day value.'
   ),
   window: mixed().oneOf(
-    ['W0', 'W2', 'W4', 'W8', 'W10', 'W12', 'W14', 'W16', 'W18', 'W20', 'W22'],
+    [
+      'W0',
+      'W2',
+      'W4',
+      'W6',
+      'W8',
+      'W10',
+      'W12',
+      'W14',
+      'W16',
+      'W18',
+      'W20',
+      'W22',
+      'W24'
+    ],
     'Invalid schedule value.'
   )
 });
