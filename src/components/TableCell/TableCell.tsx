@@ -80,7 +80,9 @@ class WrappedTableCell extends React.Component<CombinedProps> {
             <Hidden mdUp>
               <span>{parentColumn}</span>
             </Hidden>
-            <span className={classes.data}>{this.props.children}</span>
+            <span className={`${classes.data} data`}>
+              {this.props.children}
+            </span>
           </React.Fragment>
         ) : (
           this.props.children
