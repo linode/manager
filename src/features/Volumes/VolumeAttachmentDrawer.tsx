@@ -1,5 +1,6 @@
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -13,13 +14,16 @@ import {
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
+import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -46,7 +50,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  VolumesRequests &
+  WithStyles<ClassNames> &
+  StateProps;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -167,7 +174,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, volumeLabel, disabled } = this.props;
+    const { open, volumeLabel, disabled, readOnly } = this.props;
     const {
       linodes,
       configs,
@@ -187,13 +194,20 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         onClose={this.handleClose}
         title={`Attach Volume ${volumeLabel}`}
       >
+        {readOnly && (
+          <Notice
+            text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
+            error={true}
+            important
+          />
+        )}
         <LinodeSelect
           linodes={linodes}
           selectedLinode={selectedLinode}
           handleChange={this.changeSelectedLinode}
           linodeError={linodeError}
           generalError={generalError}
-          disabled={disabled}
+          disabled={disabled || readOnly}
         />
 
         {/* Config Selection */}
@@ -204,7 +218,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
               disableAnimation
               shrink={true}
               error={Boolean(configError)}
-              disabled={disabled}
+              disabled={disabled || readOnly}
             >
               Config
             </InputLabel>
@@ -213,7 +227,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
               onChange={this.changeSelectedConfig}
               inputProps={{ name: 'config', id: 'config' }}
               error={Boolean(configError)}
-              disabled={disabled}
+              disabled={disabled || readOnly}
             >
               {configs &&
                 configs.map(el => {
@@ -232,7 +246,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
         <ActionsPanel>
           <Button
-            disabled={disabled}
+            disabled={disabled || readOnly}
             type="primary"
             onClick={this.attachToLinode}
             data-qa-submit
@@ -248,11 +262,36 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
+interface StateProps {
+  readOnly?: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+  const volumesPermissions = pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'volume'],
+    state
+  );
+  const volumePermissions = volumesPermissions.find(
+    (v: Linode.Grant) => v.id === ownProps.volumeId
+  );
+
+  return {
+    readOnly:
+      isRestrictedUser(state) &&
+      volumePermissions &&
+      volumePermissions.permissions === 'read_only'
+  };
+};
+
+const connected = connect(mapStateToProps);
+
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withVolumesRequests
+  withVolumesRequests,
+  connected
 );
 
 export default enhanced(VolumeAttachmentDrawer);

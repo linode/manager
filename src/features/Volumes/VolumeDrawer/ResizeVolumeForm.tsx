@@ -6,6 +6,7 @@ import {
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Notice from 'src/components/Notice';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
@@ -28,6 +29,7 @@ interface Props {
   volumeSize: number;
   volumeId: number;
   volumeLabel: string;
+  readOnly?: boolean;
   onSuccess: (volumeLabel: string, message?: string) => void;
 }
 
@@ -40,7 +42,8 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
     onClose,
     volumeLabel,
     onSuccess,
-    resizeVolume
+    resizeVolume,
+    readOnly
   } = props;
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
@@ -96,7 +99,13 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={status.generalError}
               />
             )}
-
+            {readOnly && (
+              <Notice
+                text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
+                error={true}
+                important
+              />
+            )}
             <SizeField
               error={errors.size}
               name="size"
@@ -104,6 +113,7 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onChange={handleChange}
               value={values.size}
               resize={volumeSize}
+              disabled={readOnly}
             />
 
             <PricePanel value={values.size} currentSize={volumeSize} />
@@ -111,6 +121,7 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
+              disabled={readOnly}
               onCancel={() => {
                 resetForm();
                 onClose();

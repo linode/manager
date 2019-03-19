@@ -23,6 +23,7 @@ interface Props {
   linodes: string[][];
   linodeError?: string;
   selectedLinode?: string;
+  disabled?: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -36,6 +37,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
         disableAnimation
         shrink={true}
         error={Boolean(props.linodeError)}
+        disabled={props.disabled}
       >
         Linode
       </InputLabel>
@@ -46,6 +48,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
         error={Boolean(props.linodeError)}
         select
         data-qa-linode-select
+        disabled={props.disabled}
       >
         <MenuItem value="none" disabled>
           Select a Linode

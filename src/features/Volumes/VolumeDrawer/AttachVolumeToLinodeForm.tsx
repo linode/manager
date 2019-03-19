@@ -36,6 +36,7 @@ interface Props {
   linodeId: number;
   linodeRegion: string;
   linodeLabel: string;
+  readOnly?: boolean;
 }
 
 type CombinedProps = Props &
@@ -58,11 +59,19 @@ const initialValues = { volume_id: -1, config_id: -1 };
 const AttachVolumeToLinodeForm: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { actions, onClose, linodeId, linodeRegion, linodeGrants } = props;
+  const {
+    actions,
+    onClose,
+    linodeId,
+    linodeRegion,
+    linodeGrants,
+    readOnly
+  } = props;
   const linodeGrant = linodeGrants.filter(
     (grant: Linode.Grant) => grant.id === linodeId
   )[0];
-  const disabled = linodeGrant && linodeGrant.permissions !== 'read_write';
+  const disabled =
+    readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
   return (
     <Formik
       validationSchema={validationScheme}
