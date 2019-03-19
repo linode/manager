@@ -10,7 +10,7 @@ echo $? >| .tmp.lint.status
 (
 # Run TSC to check for type errors, does not emit files.
 yarn tsc --noEmit
-echo $? >| .tmp.test.status
+echo $? >| .tmp.tsc.status
 ) &
 (
 yarn test --findRelatedTests $changes --passWithNoTests
@@ -48,14 +48,15 @@ wait
 
 lintStatus=$( cat .tmp.lint.status )
 testStatus=$( cat .tmp.test.status )
+tscStatus=$( cat .tmp.tsc.status )
 
 if [[ -z ${storybookStatus+x} ]]; then
 storybookStatus=$( cat .tmp.storybook.status )
 fi
 
-status=$(($lintStatus + $testStatus + $storybookStatus))
+status=$(($lintStatus + $testStatus + $storybookStatus + $tscStatus))
 
 # Remove temp files
-$( rm -rf .tmp.lint.status .tmp.test.status .tmp.storybook.status)
+$( rm -rf .tmp.lint.status .tmp.test.status .tmp.storybook.status .tmp.)
 
 exit $status
