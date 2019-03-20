@@ -96,9 +96,6 @@ class PasswordInput extends React.Component<CombinedProps, State> {
               hideStrengthLabel={hideStrengthLabel}
             />
           </Grid>
-          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-            <StrengthIndicator strength={strength} />
-          </Grid>
         </Grid>
         <Typography variant="body1" className={classes.infoText}>
           Password must be at least 6 characters and contain each of the

@@ -24,9 +24,9 @@ import SelectPlanPanel from '../SelectPlanPanel';
 import {
   BackupFormStateHandlers,
   Info,
-  WithAll,
+  ReduxStatePropsAndSSHKeys,
   WithDisplayData,
-  WithLinodesProps
+  WithLinodesTypesRegionsAndImages
 } from '../types';
 import { extendLinodes } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
@@ -58,8 +58,8 @@ interface State {
 
 export type CombinedProps = Props &
   BackupFormStateHandlers &
-  WithLinodesProps &
-  WithAll &
+  WithLinodesTypesRegionsAndImages &
+  ReduxStatePropsAndSSHKeys &
   WithDisplayData &
   WithStyles<ClassNames>;
 

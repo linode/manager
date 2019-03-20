@@ -25,9 +25,7 @@ import withLabelGenerator, {
   LabelProps
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
-import userSSHKeyHoc, {
-  State as userSSHKeyProps
-} from 'src/features/linodes/userSSHKeyHoc';
+import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import {
   hasGrant,
   isRestrictedUser
@@ -40,8 +38,12 @@ import {
   HandleSubmit,
   Info,
   ReduxStateProps,
+  ReduxStatePropsAndSSHKeys,
   TypeInfo,
-  WithLinodesImagesTypesAndRegions
+  WithImagesProps,
+  WithLinodesProps,
+  WithRegionsProps,
+  WithTypesProps
 } from './types';
 
 import { resetEventsPolling } from 'src/events';
@@ -83,10 +85,12 @@ interface State {
 
 type CombinedProps = InjectedNotistackProps &
   CreateType &
-  ReduxStateProps &
   LinodeActionsProps &
-  WithLinodesImagesTypesAndRegions &
-  userSSHKeyProps &
+  WithImagesProps &
+  WithTypesProps &
+  WithLinodesProps &
+  WithRegionsProps &
+  ReduxStatePropsAndSSHKeys &
   DispatchProps &
   LabelProps &
   RouteComponentProps<{}>;
@@ -195,8 +199,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * since the API does not infer this automatically.
        */
 
+      /**
+       * safe to ignore possibility of "undefined"
+       * null checking happens in CALinodeCreate
+       */
       const selectedRegionID = getRegionIDFromLinodeID(
-        this.props.linodesData,
+        this.props.linodesData!,
         id
       );
       this.setState({
@@ -270,7 +278,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (selectedStackScriptLabel) {
       arg1 = selectedStackScriptLabel;
     } else if (selectedImageID) {
-      const selectedImage = imagesData.find(img => img.id === selectedImageID);
+      /**
+       * safe to ignore possibility of "undefined"
+       * null checking happens in CALinodeCreate
+       */
+      const selectedImage = imagesData!.find(img => img.id === selectedImageID);
       /**
        * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
        *
@@ -284,7 +296,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }
 
     if (selectedRegionID) {
-      const selectedRegion = regionsData.find(
+      /**
+       * safe to ignore possibility of "undefined"
+       * null checking happens in CALinodeCreate
+       */
+      const selectedRegion = regionsData!.find(
         region => region.id === selectedRegionID
       );
 
@@ -404,8 +420,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   getTypeInfo = (): TypeInfo => {
     const { selectedTypeID } = this.state;
+    /**
+     * safe to ignore possibility of "undefined"
+     * null checking happens in CALinodeCreate
+     */
     const typeInfo = this.reshapeTypeInfo(
-      this.props.typesData.find(type => type.id === selectedTypeID)
+      this.props.typesData!.find(type => type.id === selectedTypeID)
     );
 
     return typeInfo;
@@ -428,7 +448,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (!selectedRegionID) {
       return;
     }
-    const selectedRegion = this.props.regionsData.find(
+    /**
+     * safe to ignore possibility of "undefined"
+     * null checking happens in CALinodeCreate
+     */
+    const selectedRegion = this.props.regionsData!.find(
       region => region.id === selectedRegionID
     );
 
@@ -447,7 +471,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       return;
     }
 
-    const selectedImage = this.props.imagesData.find(
+    /**
+     * safe to ignore possibility of "undefined"
+     * null checking happens in CALinodeCreate
+     */
+    const selectedImage = this.props.imagesData!.find(
       image => image.id === selectedImageID
     );
 
@@ -476,6 +504,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
             regionsData={this.props.regionsData}
             typesData={this.props.typesData}
+            typesLoading={this.props.typesLoading}
+            typesError={this.props.typesError}
             regionsError={this.props.regionsError}
             regionsLoading={this.props.regionsLoading}
             imagesData={this.props.imagesData}
@@ -590,7 +620,9 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
       }
       return eachType.successor === null;
     })
-  )(state.__resources.types.entities)
+  )(state.__resources.types.entities),
+  typesLoading: pathOr(false, ['loading'], state.__resources.types),
+  typesError: pathOr(undefined, ['error'], state.__resources.types)
 }));
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({

@@ -21,6 +21,10 @@ export type TypeInfo =
 
 export type Info = { title: string; details?: string } | undefined;
 
+/**
+ * These props are meant purely for what is displayed in the
+ * Checkout bar
+ */
 export interface WithDisplayData {
   typeDisplayInfo?: TypeInfo;
   regionDisplayInfo?: Info;
@@ -28,26 +32,49 @@ export interface WithDisplayData {
   backupsMonthlyPrice?: number | null;
 }
 
-interface WithImagesProps {
-  imagesData: Linode.Image[];
+/**
+ * Redux Props including the error and loading states.
+ * These props are meant for the parent component that is doing
+ * the null, loading and error checking
+ */
+export interface WithImagesProps {
+  imagesData?: Linode.Image[];
   imagesLoading: boolean;
   imagesError?: string;
 }
 
 export interface WithLinodesProps {
-  linodesData: Linode.Linode[];
+  linodesData?: Linode.Linode[];
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
 
-interface WithRegions {
-  regionsData: ExtendedRegion[];
+export interface WithRegionsProps {
+  regionsData?: ExtendedRegion[];
   regionsLoading: boolean;
   regionsError?: Linode.ApiFieldError[];
 }
 
-interface WithTypesProps {
+export interface WithTypesProps {
+  typesData?: ExtendedType[];
+  typesLoading: boolean;
+  typesError?: Linode.ApiFieldError[];
+}
+
+/**
+ * Pure Data without the loading and error
+ * keys. Component with these props have already been
+ * safe-guarded with null, loading, and error checking
+ */
+export interface WithTypesRegionsAndImages {
+  regionsData: ExtendedRegion[];
   typesData: ExtendedType[];
+  imagesData: Linode.Image[];
+}
+
+export interface WithLinodesTypesRegionsAndImages
+  extends WithTypesRegionsAndImages {
+  linodesData: Linode.Linode[];
 }
 
 export interface ReduxStateProps {
@@ -125,10 +152,16 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   handleSelectUDFs: (stackScripts: any[]) => void;
 }
 
+/**
+ * additional form fields needed when create a Linode from a backup
+ * Note that it extends the _Clone_ props because creating from a backup
+ * requires the Linodes data
+ */
 export interface BackupFormStateHandlers extends CloneFormStateHandlers {
   selectedBackupID?: number;
   setBackupID: (id: number) => void;
 }
+
 export interface AppsData {
   appInstances?: CloudApp[];
   appInstancesLoading: boolean;
@@ -140,15 +173,8 @@ export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   StackScriptFormStateHandlers &
   BackupFormStateHandlers;
 
-export type WithLinodesImagesTypesAndRegions = WithImagesProps &
-  WithLinodesProps &
-  WithRegions &
-  WithTypesProps &
-  ReduxStateProps;
-
-export type WithImagesRegionsTypesAndAccountState = WithImagesProps &
-  WithRegions &
-  WithTypesProps &
-  ReduxStateProps;
-
-export type WithAll = WithImagesRegionsTypesAndAccountState & userSSHKeysProps;
+/**
+ * Additional props that don't have a logic place to live under but still
+ * need to be passed down to the children
+ */
+export type ReduxStatePropsAndSSHKeys = ReduxStateProps & userSSHKeysProps;

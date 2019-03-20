@@ -28,9 +28,7 @@ const mockProps: CombinedProps = {
   resetCreationState: jest.fn(),
   resetSSHKeys: jest.fn(),
   imagesData: [],
-  imagesLoading: false,
   regionsData: [],
-  regionsLoading: false,
   typesData: [],
   userCannotCreateLinode: false,
   userSSHKeys: []

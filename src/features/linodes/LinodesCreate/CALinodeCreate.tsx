@@ -6,7 +6,6 @@ import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { State as userSSHKeyProps } from 'src/features/linodes/userSSHKeyHoc';
 import {
   getCommunityStackscripts,
   getStackScriptsByUser
@@ -27,9 +26,12 @@ import {
 import {
   AllFormStateAndHandlers,
   AppsData,
-  WithAll,
+  ReduxStatePropsAndSSHKeys,
   WithDisplayData,
-  WithLinodesImagesTypesAndRegions
+  WithImagesProps,
+  WithLinodesProps,
+  WithRegionsProps,
+  WithTypesProps
 } from './types';
 
 interface Props {
@@ -37,12 +39,14 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  WithLinodesImagesTypesAndRegions &
+  WithImagesProps &
+  WithLinodesProps &
+  WithRegionsProps &
+  WithTypesProps &
   WithDisplayData &
-  WithAll &
   AppsData &
-  AllFormStateAndHandlers &
-  userSSHKeyProps;
+  ReduxStatePropsAndSSHKeys &
+  AllFormStateAndHandlers;
 
 interface State {
   selectedTab: number;
@@ -99,9 +103,6 @@ export class LinodeCreate extends React.PureComponent<
         /** ...rest being all the formstate props and display data */
         const {
           history,
-          linodesData,
-          linodesError,
-          linodesLoading,
           handleSelectUDFs,
           selectedUDFs,
           updateStackScript,
@@ -115,12 +116,27 @@ export class LinodeCreate extends React.PureComponent<
           appInstances,
           appInstancesError,
           appInstancesLoading,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           ...rest
         } = this.props;
         return (
           <FromImageContent
             variant="public"
             imagePanelTitle="Choose a Distribution"
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
             {...rest}
           />
         );
@@ -166,6 +182,15 @@ export class LinodeCreate extends React.PureComponent<
           linodesData,
           linodesError,
           linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           handleSelectUDFs,
           selectedUDFs,
           updateStackScript,
@@ -186,6 +211,9 @@ export class LinodeCreate extends React.PureComponent<
           <FromImageContent
             variant={'private'}
             imagePanelTitle="Choose an Image"
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
             {...rest}
           />
         );
@@ -205,9 +233,29 @@ export class LinodeCreate extends React.PureComponent<
           selectedStackScriptID,
           selectedStackScriptUsername,
           selectedStackScriptLabel,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           ...rest
         } = this.props;
-        return <FromBackupsContent {...rest} />;
+        return (
+          <FromBackupsContent
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            linodesData={linodesData!}
+            {...rest}
+          />
+        );
       }
     },
     {
@@ -227,9 +275,29 @@ export class LinodeCreate extends React.PureComponent<
           appInstances,
           appInstancesError,
           appInstancesLoading,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           ...rest
         } = this.props;
-        return <FromLinodeContent {...rest} />;
+        return (
+          <FromLinodeContent
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            linodesData={linodesData!}
+            {...rest}
+          />
+        );
       }
     },
     {
@@ -246,6 +314,18 @@ export class LinodeCreate extends React.PureComponent<
           appInstances,
           appInstancesError,
           appInstancesLoading,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           ...rest
         } = this.props;
         return (
@@ -254,6 +334,9 @@ export class LinodeCreate extends React.PureComponent<
             userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getStackScriptsByUser}
             header={'Select a StackScript'}
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
             {...rest}
           />
         );
@@ -268,12 +351,28 @@ export class LinodeCreate extends React.PureComponent<
       render: () => {
         const {
           setTab,
+          linodesData,
           linodesError,
           linodesLoading,
-          linodesData,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           ...rest
         } = this.props;
-        return <FromAppsContent {...rest} />;
+        return (
+          <FromAppsContent
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
+            {...rest}
+          />
+        );
       }
     },
     {
@@ -287,6 +386,18 @@ export class LinodeCreate extends React.PureComponent<
           updateLinodeID,
           selectedBackupID,
           setBackupID,
+          linodesData,
+          linodesError,
+          linodesLoading,
+          typesData,
+          typesError,
+          typesLoading,
+          regionsData,
+          regionsError,
+          regionsLoading,
+          imagesData,
+          imagesError,
+          imagesLoading,
           ...rest
         } = this.props;
         return (
@@ -295,6 +406,9 @@ export class LinodeCreate extends React.PureComponent<
             userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getCommunityStackscripts}
             header={'Select a StackScript'}
+            imagesData={imagesData!}
+            regionsData={regionsData!}
+            typesData={typesData!}
             {...rest}
           />
         );
@@ -315,14 +429,16 @@ export class LinodeCreate extends React.PureComponent<
       linodesLoading,
       imagesError,
       regionsError,
-      linodesError
+      linodesError,
+      typesError,
+      typesLoading
     } = this.props;
 
-    if (regionsLoading || imagesLoading || linodesLoading) {
+    if (regionsLoading || imagesLoading || linodesLoading || typesLoading) {
       return <CircleProgress />;
     }
 
-    if (regionsError || imagesError || linodesError) {
+    if (regionsError || imagesError || linodesError || typesError) {
       return (
         <ErrorState errorText="There was an issue loading Linode creation options." />
       );
@@ -331,7 +447,8 @@ export class LinodeCreate extends React.PureComponent<
     if (
       !this.props.regionsData ||
       !this.props.imagesData ||
-      !this.props.linodesData
+      !this.props.linodesData ||
+      !this.props.typesData
     ) {
       return null;
     }
