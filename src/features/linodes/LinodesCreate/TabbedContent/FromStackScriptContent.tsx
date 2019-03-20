@@ -217,7 +217,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             header={header}
             selectedId={selectedStackScriptID}
             selectedUsername={selectedStackScriptUsername}
-            updateFor={[selectedStackScriptID, errors, classes]}
+            updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
             publicImages={filterPublicImages(imagesData) || []}
             resetSelectedStackScript={() => null}
@@ -232,7 +232,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               selectedUsername={selectedStackScriptUsername || ''}
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors, classes]}
+              updateFor={[userDefinedFields, udf_data, errors]}
               udf_data={udf_data || {}}
             />
           )}
@@ -240,7 +240,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             <SelectImagePanel
               images={compatibleImages}
               handleSelection={updateImageID}
-              updateFor={[selectedImageID, compatibleImages, errors, classes]}
+              updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
               variant="public"
@@ -268,7 +268,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             regions={regionsData}
             handleSelection={updateRegionID}
             selectedID={selectedRegionID}
-            updateFor={[selectedRegionID, errors, classes]}
+            updateFor={[selectedRegionID, errors]}
             copy="Determine the best location for your Linode."
             disabled={disabled}
           />
@@ -276,7 +276,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             error={hasErrorFor('type')}
             types={typesData}
             onSelect={updateTypeID}
-            updateFor={[selectedTypeID, errors, classes]}
+            updateFor={[selectedTypeID, errors]}
             selectedID={selectedTypeID}
             disabled={disabled}
           />
@@ -294,7 +294,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               tagError: hasErrorFor('tags'),
               disabled
             }}
-            updateFor={[tags, label, errors, classes]}
+            updateFor={[tags, label, errors]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
@@ -305,13 +305,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 : ''
             }
             error={hasErrorFor('root_pass')}
-            updateFor={[
-              password,
-              errors,
-              userSSHKeys,
-              selectedImageID,
-              classes
-            ]}
+            updateFor={[password, errors, userSSHKeys, selectedImageID]}
             password={password}
             handleChange={updatePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
@@ -323,12 +317,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             privateIP={privateIPEnabled}
             changeBackups={toggleBackupsEnabled}
             changePrivateIP={togglePrivateIPEnabled}
-            updateFor={[
-              privateIPEnabled,
-              backupsEnabled,
-              selectedTypeID,
-              classes
-            ]}
+            updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
             disabled={disabled}
           />
         </Grid>

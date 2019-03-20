@@ -147,7 +147,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             images={images}
             handleSelection={this.props.updateImageID}
             selectedImageID={this.props.selectedImageID}
-            updateFor={[this.props.selectedImageID, errors, classes]}
+            updateFor={[this.props.selectedImageID, errors]}
             initTab={0}
             error={hasErrorFor('image')}
             disabled={userCannotCreateLinode}
@@ -158,7 +158,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             handleSelection={this.props.updateRegionID}
             selectedID={this.props.selectedRegionID}
             copy="Determine the best location for your Linode."
-            updateFor={[this.props.selectedRegionID, errors, classes]}
+            updateFor={[this.props.selectedRegionID, errors]}
             disabled={userCannotCreateLinode}
           />
           <SelectPlanPanel
@@ -166,7 +166,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             types={types}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
-            updateFor={[this.props.selectedTypeID, errors, classes]}
+            updateFor={[this.props.selectedTypeID, errors]}
             disabled={userCannotCreateLinode}
           />
           <LabelAndTagsPanel
@@ -183,7 +183,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               tagError: hasErrorFor('tags'),
               disabled: userCannotCreateLinode
             }}
-            updateFor={[this.props.tags, this.props.label, errors, classes]}
+            updateFor={[this.props.tags, this.props.label, errors]}
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
@@ -200,8 +200,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               this.props.password,
               errors,
               userSSHKeys,
-              this.props.selectedImageID,
-              classes
+              this.props.selectedImageID
             ]}
             users={
               userSSHKeys.length > 0 && this.props.selectedImageID
@@ -219,8 +218,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             updateFor={[
               this.props.privateIPEnabled,
               this.props.backupsEnabled,
-              this.props.selectedTypeID,
-              classes
+              this.props.selectedTypeID
             ]}
             disabled={userCannotCreateLinode}
           />

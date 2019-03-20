@@ -130,7 +130,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 selectedLinodeID={selectedLinodeID}
                 header={'Select Linode to Clone From'}
                 handleSelection={this.handleSelectLinode}
-                updateFor={[selectedLinodeID, errors, classes]}
+                updateFor={[selectedLinodeID, errors]}
                 disabled={userCannotCreateLinode}
                 notice={{
                   level: 'warning',
@@ -144,7 +144,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 handleSelection={this.props.updateRegionID}
                 selectedID={selectedRegionID}
                 copy="Determine the best location for your Linode."
-                updateFor={[selectedRegionID, errors, classes]}
+                updateFor={[selectedRegionID, errors]}
                 disabled={userCannotCreateLinode}
               />
               <SelectPlanPanel
@@ -153,7 +153,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 onSelect={this.props.updateTypeID}
                 selectedID={selectedTypeID}
                 selectedDiskSize={selectedDiskSize}
-                updateFor={[selectedDiskSize, selectedTypeID, errors, classes]}
+                updateFor={[selectedDiskSize, selectedTypeID, errors]}
                 disabled={userCannotCreateLinode}
               />
               <LabelAndTagsPanel
@@ -164,7 +164,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                   errorText: hasErrorFor('label'),
                   disabled: userCannotCreateLinode
                 }}
-                updateFor={[label, errors, classes]}
+                updateFor={[label, errors]}
               />
               <AddonsPanel
                 backups={backupsEnabled}
@@ -173,12 +173,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 privateIP={privateIPEnabled}
                 changeBackups={this.props.toggleBackupsEnabled}
                 changePrivateIP={this.props.togglePrivateIPEnabled}
-                updateFor={[
-                  privateIPEnabled,
-                  backupsEnabled,
-                  selectedTypeID,
-                  classes
-                ]}
+                updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
                 disabled={userCannotCreateLinode}
               />
             </Grid>
