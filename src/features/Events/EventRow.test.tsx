@@ -13,7 +13,8 @@ const props: RowProps = {
   type: 'linode',
   created: '2018-01-01',
   classes: {
-    root: ''
+    root: '',
+    message: ''
   }
 };
 

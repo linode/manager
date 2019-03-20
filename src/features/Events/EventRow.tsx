@@ -19,10 +19,13 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'message';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {},
+  message: {
+    wordBreak: 'break-all'
+  }
 });
 
 interface Props {
@@ -58,7 +61,7 @@ export interface RowProps extends WithStyles<ClassNames> {
 }
 
 export const Row: React.StatelessComponent<RowProps> = props => {
-  const { linkTarget, message, status, type, created } = props;
+  const { classes, linkTarget, message, status, type, created } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -75,7 +78,11 @@ export const Row: React.StatelessComponent<RowProps> = props => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
-        <Typography data-testid={'message'} variant="body1">
+        <Typography
+          className={classes.message}
+          data-testid={'message'}
+          variant="body1"
+        >
           {message}
         </Typography>
       </TableCell>
