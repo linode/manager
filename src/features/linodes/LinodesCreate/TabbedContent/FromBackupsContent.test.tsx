@@ -42,10 +42,7 @@ const mockProps: CombinedProps = {
 describe('FromBackupsContent', () => {
   const component = shallow(<FromBackupsContent {...mockProps} />);
 
-  const componentWithNotice = shallow(<FromBackupsContent {...mockProps} />);
-
   component.setState({ isGettingBackups: false }); // get rid of loading state
-  componentWithNotice.setState({ isGettingBackups: false }); // get rid of loading state
 
   it('should render Placeholder if no valid backups exist', () => {
     expect(component.find('WithStyles(Placeholder)')).toHaveLength(1);
@@ -53,9 +50,6 @@ describe('FromBackupsContent', () => {
 
   describe('FromBackupsContent When Valid Backups Exist', () => {
     beforeAll(async () => {
-      componentWithNotice.setState({ linodesWithBackups: LinodesWithBackups });
-      await componentWithNotice.update();
-
       component.setState({ linodesWithBackups: LinodesWithBackups });
       await component.update();
     });
