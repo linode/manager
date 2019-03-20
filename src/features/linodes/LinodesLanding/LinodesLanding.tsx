@@ -221,11 +221,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           selectedLinodeLabel,
           this.props.enqueueSnackbar
         );
-        this.setState({ confirmationOpen: false });
+        this.setState({ confirmationOpen: false, confirmationLoading: false });
         break;
       case 'power_down':
         powerOffLinode(selectedLinodeId!, selectedLinodeLabel);
-        this.setState({ confirmationOpen: false });
+        this.setState({ confirmationOpen: false, confirmationLoading: false });
         break;
       case 'delete':
         this.deleteLinode(selectedLinodeId!);
