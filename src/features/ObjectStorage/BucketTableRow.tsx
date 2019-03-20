@@ -1,6 +1,7 @@
 import * as prettyBytes from 'pretty-bytes';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+// @todo: uncomment this Link import when a bucket landing page exists
+// import { Link } from 'react-router-dom';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -47,28 +48,30 @@ export const BucketTableRow: React.StatelessComponent<
       className={`${classes.bucketRow} ${'fade-in-table'}`}
     >
       <TableCell parentColumn="Name">
-        <Link to={`/buckets/${label}`}>
-          <Grid container alignItems="center">
-            <Grid item>
-              {/* @todo: replace with bucket icon */}
-              <EntityIcon variant="volume" />
-            </Grid>
-            <Grid item>
-              <div className={classes.labelStatusWrapper}>
-                <Typography role="header" variant="h3" data-qa-label>
-                  {label}
-                </Typography>
-              </div>
-              <Typography
-                variant="body2"
-                className={classes.hostname}
-                data-qa-hostname
-              >
-                {hostname}
-              </Typography>
-            </Grid>
+        {/* @todo: uncomment this <Link/> when a bucket landing page exists*/}
+        {/* <Link to={`/buckets/${label}`}> */}
+        <Grid container alignItems="center">
+          <Grid item>
+            {/* @todo: replace with bucket icon */}
+            <EntityIcon variant="volume" />
           </Grid>
-        </Link>
+          <Grid item>
+            <div className={classes.labelStatusWrapper}>
+              <Typography role="header" variant="h3" data-qa-label>
+                {label}
+              </Typography>
+            </div>
+            <Typography
+              variant="body2"
+              className={classes.hostname}
+              data-qa-hostname
+            >
+              {hostname}
+            </Typography>
+          </Grid>
+        </Grid>
+        {/* @todo: uncomment this <Link/> when a bucket landing page exists*/}
+        {/* </Link> */}
       </TableCell>
       <TableCell parentColumn="Size">
         <Grid>
