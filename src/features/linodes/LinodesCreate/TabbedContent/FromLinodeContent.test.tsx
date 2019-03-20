@@ -39,28 +39,22 @@ const mockProps: CombinedProps = {
   userCannotCreateLinode: false
 };
 
-xdescribe('FromImageContent', () => {
-  const componentWithNotice = shallow(<FromLinodeContent {...mockProps} />);
-
+describe('FromImageContent', () => {
   const component = shallow(<FromLinodeContent {...mockProps} />);
 
-  const componentWithLinodes = shallow(<FromLinodeContent {...mockProps} />);
-
-  it('should render a notice when passed a Notice prop', () => {
-    expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
-  });
+  const componentWithoutLinodes = shallow(
+    <FromLinodeContent {...mockProps} linodesData={[]} />
+  );
 
   it('should render a Placeholder when linodes prop has no length', () => {
-    expect(component.find('WithStyles(Placeholder)')).toHaveLength(1);
-  });
-
-  it('should not render a notice when no notice prop passed', () => {
-    expect(componentWithLinodes.find('WithStyles(Notice)')).toHaveLength(0);
+    expect(
+      componentWithoutLinodes.find('WithStyles(Placeholder)')
+    ).toHaveLength(1);
   });
 
   it('should render SelectLinode panel', () => {
     expect(
-      componentWithLinodes.find(
+      component.find(
         'WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))'
       )
     ).toHaveLength(1);
@@ -68,7 +62,7 @@ xdescribe('FromImageContent', () => {
 
   it('should render SelectRegion panel', () => {
     expect(
-      componentWithLinodes.find(
+      component.find(
         'WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))'
       )
     ).toHaveLength(1);
@@ -76,23 +70,19 @@ xdescribe('FromImageContent', () => {
 
   it('should render SelectPlan panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))'
-      )
+      component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(WithTheme(WithRenderGuard(InfoPanel)))'
-      )
+      component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
     expect(
-      componentWithLinodes.find(
+      component.find(
         'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
       )
     ).toHaveLength(1);

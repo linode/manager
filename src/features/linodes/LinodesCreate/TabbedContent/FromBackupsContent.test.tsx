@@ -39,7 +39,7 @@ const mockProps: CombinedProps = {
   userSSHKeys: []
 };
 
-xdescribe('FromBackupsContent', () => {
+describe('FromBackupsContent', () => {
   const component = shallow(<FromBackupsContent {...mockProps} />);
 
   const componentWithNotice = shallow(<FromBackupsContent {...mockProps} />);
@@ -58,15 +58,6 @@ xdescribe('FromBackupsContent', () => {
 
       component.setState({ linodesWithBackups: LinodesWithBackups });
       await component.update();
-    });
-
-    it('should render a notice when passed a Notice prop', () => {
-      // give our components a Linode with a valid backup
-      expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
-    });
-
-    it('should not render a notice when no notice prop passed', () => {
-      expect(component.find('WithStyles(Notice)')).toHaveLength(0);
     });
 
     it('should render SelectLinode panel', () => {
