@@ -1,84 +1,51 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { LinodesWithBackups } from 'src/__data__/LinodesWithBackups';
-import withLinodeActions from 'src/__data__/withLinodeActions';
 
-import { FromBackupsContent } from './FromBackupsContent';
+import { CombinedProps, FromBackupsContent } from './FromBackupsContent';
 
-const mockProps = {
-  linodes: [],
-  types: [],
-  accountBackups: false,
-  extendLinodes: jest.fn(),
-  getBackupsMonthlyPrice: jest.fn(),
-  getTypeInfo: jest.fn(),
-  getRegionInfo: jest.fn(),
-  history: null,
-  tagObject: {
-    accountTags: [],
-    selectedTags: [],
-    newTags: [],
-    errors: [],
-    actions: {
-      addTag: jest.fn(),
-      createTag: jest.fn(),
-      getLinodeTagList: jest.fn()
-    }
+const mockProps: CombinedProps = {
+  typeDisplayInfo: undefined,
+  classes: {
+    root: '',
+    main: '',
+    sidebar: ''
   },
-  enqueueSnackbar: jest.fn(),
-  onPresentSnackbar: jest.fn(),
-  customLabel: '',
-  updateCustomLabel: jest.fn(),
-  getLabel: jest.fn()
-};
-
-const mockPropsWithNotice = {
-  notice: {
-    text: 'example text',
-    level: 'warning' as 'warning' | 'error'
-  },
-  linodes: [],
-  accountBackups: false,
-  types: [],
-  extendLinodes: jest.fn(),
-  getBackupsMonthlyPrice: jest.fn(),
-  getTypeInfo: jest.fn(),
-  getRegionInfo: jest.fn(),
-  history: null,
-  tagObject: {
-    accountTags: [],
-    selectedTags: [],
-    newTags: [],
-    errors: [],
-    actions: {
-      addTag: jest.fn(),
-      createTag: jest.fn(),
-      getLinodeTagList: jest.fn()
-    }
-  },
-  enqueueSnackbar: jest.fn(),
-  onPresentSnackbar: jest.fn(),
-  customLabel: '',
-  updateCustomLabel: jest.fn(),
-  getLabel: jest.fn()
+  updateDiskSize: jest.fn(),
+  updateImageID: jest.fn(),
+  updateLabel: jest.fn(),
+  updateLinodeID: jest.fn(),
+  updatePassword: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTags: jest.fn(),
+  updateTypeID: jest.fn(),
+  formIsSubmitting: false,
+  label: '',
+  password: '',
+  backupsEnabled: false,
+  accountBackupsEnabled: false,
+  toggleBackupsEnabled: jest.fn(),
+  togglePrivateIPEnabled: jest.fn(),
+  handleSubmitForm: jest.fn(),
+  privateIPEnabled: false,
+  resetCreationState: jest.fn(),
+  resetSSHKeys: jest.fn(),
+  imagesData: [],
+  imagesLoading: false,
+  regionsData: [],
+  regionsLoading: false,
+  typesData: [],
+  userCannotCreateLinode: false,
+  linodesData: [],
+  linodesLoading: false,
+  setBackupID: jest.fn(),
+  userSSHKeys: []
 };
 
 xdescribe('FromBackupsContent', () => {
-  const component = shallow(
-    <FromBackupsContent
-      {...withLinodeActions}
-      classes={{ root: '', main: '', sidebar: '' }}
-      {...mockProps}
-    />
-  );
+  const component = shallow(<FromBackupsContent {...mockProps} />);
 
-  const componentWithNotice = shallow(
-    <FromBackupsContent
-      {...withLinodeActions}
-      classes={{ root: '', main: '', sidebar: '' }}
-      {...mockPropsWithNotice}
-    />
-  );
+  const componentWithNotice = shallow(<FromBackupsContent {...mockProps} />);
 
   component.setState({ isGettingBackups: false }); // get rid of loading state
   componentWithNotice.setState({ isGettingBackups: false }); // get rid of loading state

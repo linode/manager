@@ -34,7 +34,7 @@ interface WithImagesProps {
   imagesError?: string;
 }
 
-interface WithLinodesProps {
+export interface WithLinodesProps {
   linodesData: Linode.Linode[];
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
@@ -43,7 +43,7 @@ interface WithLinodesProps {
 interface WithRegions {
   regionsData: ExtendedRegion[];
   regionsLoading: boolean;
-  regionsError: Linode.ApiFieldError[];
+  regionsError?: Linode.ApiFieldError[];
 }
 
 interface WithTypesProps {

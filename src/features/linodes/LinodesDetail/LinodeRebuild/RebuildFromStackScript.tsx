@@ -212,12 +212,12 @@ export const RebuildFromStackScript: React.StatelessComponent<
       )}
       {ss.images && ss.images.length > 0 ? (
         <SelectImagePanel
+          variant="all"
           images={ss.images}
           handleSelection={(selected: string) => setField('imageID', selected)}
           updateFor={[classes, form.imageID, ss.images, errors]}
           selectedImageID={form.imageID}
           error={hasErrorFor.image}
-          hideMyImages={true}
         />
       ) : (
         <Paper className={classes.emptyImagePanel}>

@@ -1,74 +1,55 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
-import withLinodeActions from 'src/__data__/withLinodeActions';
-import { FromStackScriptContent } from './FromStackScriptContent';
+import {
+  CombinedProps,
+  FromStackScriptContent
+} from './FromStackScriptContent';
 
-const mockProps = {
-  images: [],
-  regions: [],
-  types: [],
-  getBackupsMonthlyPrice: jest.fn(),
-  getRegionInfo: jest.fn(),
-  getTypeInfo: jest.fn(),
-  history: null,
-  userSSHKeys: [],
-  accountBackups: true,
-  tagObject: {
-    accountTags: [],
-    selectedTags: [],
-    newTags: [],
-    errors: [],
-    actions: {
-      addTag: jest.fn(),
-      createTag: jest.fn(),
-      getLinodeTagList: jest.fn()
-    }
+const mockProps: CombinedProps = {
+  typeDisplayInfo: undefined,
+  classes: {
+    main: '',
+    sidebar: '',
+    emptyImagePanel: '',
+    emptyImagePanelText: ''
   },
-  updateCustomLabel: jest.fn(),
-  getLabel: jest.fn(),
-  linodes: [],
-  customLabel: ''
+  updateImageID: jest.fn(),
+  updateLabel: jest.fn(),
+  updatePassword: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTags: jest.fn(),
+  updateTypeID: jest.fn(),
+  formIsSubmitting: false,
+  label: '',
+  password: '',
+  backupsEnabled: false,
+  accountBackupsEnabled: false,
+  toggleBackupsEnabled: jest.fn(),
+  togglePrivateIPEnabled: jest.fn(),
+  handleSubmitForm: jest.fn(),
+  privateIPEnabled: false,
+  resetCreationState: jest.fn(),
+  resetSSHKeys: jest.fn(),
+  imagesData: [],
+  imagesLoading: false,
+  regionsData: [],
+  regionsLoading: false,
+  typesData: [],
+  userCannotCreateLinode: false,
+  userSSHKeys: [],
+  request: jest.fn(),
+  header: '',
+  updateStackScript: jest.fn(),
+  handleSelectUDFs: jest.fn()
 };
 
 xdescribe('FromImageContent', () => {
   const componentWithNotice = shallow(
-    <FromStackScriptContent
-      {...withLinodeActions}
-      enqueueSnackbar={jest.fn()}
-      onPresentSnackbar={jest.fn()}
-      handleDisablePasswordField={jest.fn()}
-      classes={{
-        root: '',
-        main: '',
-        sidebar: '',
-        emptyImagePanel: '',
-        emptyImagePanelText: ''
-      }}
-      {...mockProps}
-      notice={{
-        text: 'hello world',
-        level: 'warning' as 'warning' | 'error'
-      }}
-    />
+    <FromStackScriptContent {...mockProps} />
   );
 
-  const component = shallow(
-    <FromStackScriptContent
-      {...withLinodeActions}
-      enqueueSnackbar={jest.fn()}
-      onPresentSnackbar={jest.fn()}
-      handleDisablePasswordField={jest.fn()}
-      classes={{
-        root: '',
-        main: '',
-        sidebar: '',
-        emptyImagePanel: '',
-        emptyImagePanelText: ''
-      }}
-      {...mockProps}
-    />
-  );
+  const component = shallow(<FromStackScriptContent {...mockProps} />);
 
   it('should render a notice when passed a Notice prop', () => {
     expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);

@@ -3,52 +3,50 @@ import * as React from 'react';
 
 import { linodes } from 'src/__data__/linodes';
 
-import { FromLinodeContent } from './FromLinodeContent';
+import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 
-const mockProps = {
-  regions: [],
-  types: [],
-  getBackupsMonthlyPrice: jest.fn(),
-  extendLinodes: jest.fn(),
-  linodes,
-  getRegionInfo: jest.fn(),
-  getTypeInfo: jest.fn(),
-  history: null,
-  accountBackups: false,
-  enqueueSnackbar: jest.fn(),
-  onPresentSnackbar: jest.fn(),
-  upsertLinode: jest.fn(),
-  updateCustomLabel: jest.fn(),
-  getLabel: jest.fn(),
-  customLabel: ''
+const mockProps: CombinedProps = {
+  typeDisplayInfo: undefined,
+  classes: {
+    root: '',
+    main: '',
+    sidebar: ''
+  },
+  updateDiskSize: jest.fn(),
+  updateImageID: jest.fn(),
+  updateLabel: jest.fn(),
+  updateLinodeID: jest.fn(),
+  updatePassword: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTags: jest.fn(),
+  updateTypeID: jest.fn(),
+  formIsSubmitting: false,
+  label: '',
+  password: '',
+  backupsEnabled: false,
+  accountBackupsEnabled: false,
+  toggleBackupsEnabled: jest.fn(),
+  togglePrivateIPEnabled: jest.fn(),
+  handleSubmitForm: jest.fn(),
+  privateIPEnabled: false,
+  resetCreationState: jest.fn(),
+  resetSSHKeys: jest.fn(),
+  imagesData: [],
+  imagesLoading: false,
+  linodesData: linodes,
+  linodesLoading: false,
+  regionsData: [],
+  regionsLoading: false,
+  typesData: [],
+  userCannotCreateLinode: false
 };
 
 xdescribe('FromImageContent', () => {
-  const componentWithNotice = shallow(
-    <FromLinodeContent
-    // classes={{ root: '', main: '', sidebar: '' }}
-    // {...mockProps}
-    // notice={{
-    //   text: 'hello world',
-    //   level: 'warning' as 'warning' | 'error'
-    // }}
-    />
-  );
+  const componentWithNotice = shallow(<FromLinodeContent {...mockProps} />);
 
-  const component = shallow(
-    <FromLinodeContent
-    // classes={{ root: '', main: '', sidebar: '' }}
-    // {...mockProps}
-    // linodes={[]}
-    />
-  );
+  const component = shallow(<FromLinodeContent {...mockProps} />);
 
-  const componentWithLinodes = shallow(
-    <FromLinodeContent
-    // classes={{ root: '', main: '', sidebar: '' }}
-    // {...mockProps}
-    />
-  );
+  const componentWithLinodes = shallow(<FromLinodeContent {...mockProps} />);
 
   it('should render a notice when passed a Notice prop', () => {
     expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
