@@ -16,6 +16,10 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState
 } from 'src/store/backupDrawer';
+import buckets, {
+  defaultState as defaultBucketsState,
+  State as BucketsState
+} from 'src/store/bucket/bucket.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -118,7 +122,8 @@ const __resourcesDefaultState = {
   profile: defaultProfileState,
   regions: defaultRegionsState,
   types: defaultTypesState,
-  volumes: defaultVolumesState
+  volumes: defaultVolumesState,
+  buckets: defaultBucketsState
 };
 
 export interface ResourcesState {
@@ -136,6 +141,7 @@ export interface ResourcesState {
   regions: RegionsState;
   types: TypesState;
   volumes: VolumesState;
+  buckets: BucketsState;
 }
 
 export interface ApplicationState {
@@ -179,7 +185,8 @@ const __resources = combineReducers({
   profile,
   regions,
   types,
-  volumes
+  volumes,
+  buckets
 });
 
 const reducers = combineReducers<ApplicationState>({

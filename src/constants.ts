@@ -35,7 +35,7 @@ export const ALGOLIA_SEARCH_KEY =
 
 // Features
 export const isObjectStorageEnabled =
-  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED || false;
+  !!process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED || false;
 
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
