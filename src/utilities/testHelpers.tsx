@@ -25,5 +25,9 @@ export const wrapWithTheme = (ui: any) => {
     </LinodeThemeWrapper>
   );
 export const renderWithTheme = (ui: any) => {
-  return render(<LinodeThemeWrapper>{ui}</LinodeThemeWrapper>);
+  return render(
+    <LinodeThemeWrapper>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </LinodeThemeWrapper>
+  );
 };

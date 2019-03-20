@@ -19,18 +19,10 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 
-type ClassNames = 'tooltipWrapper' | 'helpIcon';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  tooltipWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  helpIcon: {
-    width: 20,
-    color: theme.color.grey1,
-    marginLeft: theme.spacing.unit
-  }
+  root: {}
 });
 
 interface Props {
@@ -54,17 +46,10 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     classes
   };
 
-  /** Some event types may not be handled by our system (or new types
-   * may be added). Filter these out so we don't display blank messages to the user.
-   */
-  if (!rowProps.message) {
-    return null;
-  }
-
   return <Row {...rowProps} data-qa-events-row={event.id} />;
 };
 
-interface RowProps {
+export interface RowProps extends WithStyles<ClassNames> {
   message?: string;
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
@@ -72,10 +57,15 @@ interface RowProps {
   created: string;
 }
 
-const Row: React.StatelessComponent<
-  RowProps & WithStyles<ClassNames>
-> = props => {
+export const Row: React.StatelessComponent<RowProps> = props => {
   const { linkTarget, message, status, type, created } = props;
+
+  /** Some event types may not be handled by our system (or new types
+   * may be added). Filter these out so we don't display blank messages to the user.
+   */
+  if (!message) {
+    return null;
+  }
 
   return (
     <TableRow rowLink={linkTarget}>
@@ -85,7 +75,9 @@ const Row: React.StatelessComponent<
         </TableCell>
       </Hidden>
       <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
-        <Typography variant="body1">{message}</Typography>
+        <Typography data-testid={'message'} variant="body1">
+          {message}
+        </Typography>
       </TableCell>
       <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>
         <DateTimeDisplay value={created} humanizeCutoff={'month'} />
