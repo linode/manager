@@ -56,7 +56,7 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
 
   /** Mutate */
   if (!linodeTypeData) {
-    throw Error(`Unable to locate type information.`);
+    return null;
   }
 
   const successorId = linodeTypeData.successor;
