@@ -205,9 +205,6 @@ export class LinodeCreate extends React.PureComponent<
           selectedStackScriptID,
           selectedStackScriptUsername,
           selectedStackScriptLabel,
-          linodesLoading,
-          updateDiskSize,
-          updatePassword,
           ...rest
         } = this.props;
         return <FromBackupsContent {...rest} />;
@@ -227,10 +224,6 @@ export class LinodeCreate extends React.PureComponent<
           selectedUDFs,
           selectedStackScriptID,
           updateStackScript,
-          linodesLoading,
-          linodesError,
-          regionsLoading,
-          regionsError,
           appInstances,
           appInstancesError,
           appInstancesLoading,

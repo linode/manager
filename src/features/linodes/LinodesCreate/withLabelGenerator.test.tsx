@@ -22,19 +22,23 @@ describe('withLabelGenerator HOC', () => {
   });
 
   it('updates custom label', () => {
-    nestedComponent.props().updateCustomLabel({ target: { value: '' } });
-    expect(nestedComponent.props().customLabel).toBe('');
     nestedComponent
       .props()
-      .updateCustomLabel({ target: { value: 'hello world' } });
+      .updateCustomLabel({ target: { value: '' } } as React.ChangeEvent<
+        HTMLInputElement
+      >);
+    expect(nestedComponent.props().customLabel).toBe('');
+    nestedComponent.props().updateCustomLabel({
+      target: { value: 'hello world' }
+    } as React.ChangeEvent<HTMLInputElement>);
     expect(nestedComponent.props().customLabel).toBe('hello world');
   });
 
   it('returns custom label after custom label has been altered', () => {
     expect(nestedComponent.props().getLabel('ubuntu')).toBe('ubuntu');
-    nestedComponent
-      .props()
-      .updateCustomLabel({ target: { value: 'hello world' } });
+    nestedComponent.props().updateCustomLabel({
+      target: { value: 'hello world' }
+    } as React.ChangeEvent<HTMLInputElement>);
     expect(nestedComponent.props().getLabel('ubuntu')).toBe('hello world');
   });
 

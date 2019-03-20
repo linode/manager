@@ -1,9 +1,7 @@
 import * as Promise from 'bluebird';
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
@@ -18,10 +16,6 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import { getLinodeBackups } from 'src/services/linodes';
-import {
-  LinodeActionsProps,
-  withLinodeActions
-} from 'src/store/linodes/linode.containers';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
@@ -31,7 +25,8 @@ import {
   BackupFormStateHandlers,
   Info,
   WithAll,
-  WithDisplayData
+  WithDisplayData,
+  WithLinodesProps
 } from '../types';
 import { extendLinodes } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
@@ -49,10 +44,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  linodesData: Linode.Linode[];
-  selectedBackupFromQuery?: number;
-  selectedLinodeFromQuery?: number;
-  selectedRegionIDFromLinode?: string;
   disabled?: boolean;
 }
 
@@ -65,10 +56,9 @@ interface State {
   isGettingBackups: boolean;
 }
 
-type CombinedProps = Props &
-  LinodeActionsProps &
-  InjectedNotistackProps &
+export type CombinedProps = Props &
   BackupFormStateHandlers &
+  WithLinodesProps &
   WithAll &
   WithDisplayData &
   WithStyles<ClassNames>;
@@ -373,10 +363,4 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withSnackbar,
-  withLinodeActions
-);
-
-export default enhanced(FromBackupsContent);
+export default styled(FromBackupsContent);

@@ -1,7 +1,6 @@
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -78,7 +77,7 @@ const errorResources = {
 
 type InnerProps = Props & WithAll;
 
-type CombinedProps = InnerProps &
+export type CombinedProps = InnerProps &
   StackScriptFormStateHandlers &
   WithDisplayData &
   WithStyles<ClassNames>;
@@ -323,7 +322,12 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             privateIP={privateIPEnabled}
             changeBackups={toggleBackupsEnabled}
             changePrivateIP={togglePrivateIPEnabled}
-            updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID, classes]}
+            updateFor={[
+              privateIPEnabled,
+              backupsEnabled,
+              selectedTypeID,
+              classes
+            ]}
             disabled={disabled}
           />
         </Grid>
@@ -392,6 +396,4 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, InnerProps>(styled);
-
-export default enhanced(FromStackScriptContent);
+export default styled(FromStackScriptContent);

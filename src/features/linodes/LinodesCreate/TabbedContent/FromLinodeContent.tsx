@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -49,7 +48,7 @@ const errorResources = {
   root_pass: 'A root password'
 };
 
-type CombinedProps = WithStyles<ClassNames> &
+export type CombinedProps = WithStyles<ClassNames> &
   WithDisplayData &
   CloneFormStateHandlers &
   WithLinodesImagesTypesAndRegions;
@@ -172,7 +171,12 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 privateIP={privateIPEnabled}
                 changeBackups={this.props.toggleBackupsEnabled}
                 changePrivateIP={this.props.togglePrivateIPEnabled}
-                updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID, classes]}
+                updateFor={[
+                  privateIPEnabled,
+                  backupsEnabled,
+                  selectedTypeID,
+                  classes
+                ]}
                 disabled={userCannotCreateLinode}
               />
             </Grid>
@@ -230,6 +234,4 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, CloneFormStateHandlers>(styled);
-
-export default enhanced(FromLinodeContent);
+export default styled(FromLinodeContent);

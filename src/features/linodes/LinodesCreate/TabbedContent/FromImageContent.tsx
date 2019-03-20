@@ -2,7 +2,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Sticky, StickyProps } from 'react-sticky';
-import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
@@ -62,7 +61,7 @@ const errorResources = {
   tags: 'Tags'
 };
 
-type CombinedProps = Props &
+export type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithDisplayData &
   BaseFormStateAndHandlers &
@@ -205,7 +204,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               errors,
               userSSHKeys,
               this.props.selectedImageID,
-              classes,
+              classes
             ]}
             users={
               userSSHKeys.length > 0 && this.props.selectedImageID
@@ -301,8 +300,4 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props & WithDisplayData & WithAll>(
-  styled
-);
-
-export default enhanced(FromImageContent);
+export default styled(FromImageContent);

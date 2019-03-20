@@ -20,7 +20,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  children: React.ReactElement;
   error?: string;
   title?: string;
   className?: string;
