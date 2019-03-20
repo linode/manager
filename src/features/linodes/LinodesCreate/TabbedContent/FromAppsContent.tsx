@@ -1,7 +1,6 @@
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
-import { compose } from 'recompose';
 
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -30,9 +29,10 @@ import { renderBackupsDisplaySection } from './utils';
 
 import {
   AppsData,
+  ReduxStatePropsAndSSHKeys,
   StackScriptFormStateHandlers,
-  WithAll,
-  WithDisplayData
+  WithDisplayData,
+  WithTypesRegionsAndImages
 } from '../types';
 
 type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
@@ -62,10 +62,11 @@ const errorResources = {
   stackscript_id: 'A StackScript'
 };
 
-type InnerProps = WithDisplayData & WithAll & AppsData;
-
-type CombinedProps = InnerProps &
+type CombinedProps = WithDisplayData &
+  AppsData &
+  WithTypesRegionsAndImages &
   WithStyles<ClassNames> &
+  ReduxStatePropsAndSSHKeys &
   StackScriptFormStateHandlers;
 
 class FromAppsContent extends React.PureComponent<CombinedProps> {
@@ -368,7 +369,4 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, InnerProps>(
-  styled,
-  React.memo
-)(FromAppsContent);
+export default styled(FromAppsContent);

@@ -22,7 +22,12 @@ import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
-import { BaseFormStateAndHandlers, WithAll, WithDisplayData } from '../types';
+import {
+  BaseFormStateAndHandlers,
+  ReduxStatePropsAndSSHKeys,
+  WithDisplayData,
+  WithTypesRegionsAndImages
+} from '../types';
 
 type ClassNames = 'root' | 'main' | 'sidebarPrivate' | 'sidebarPublic';
 
@@ -47,7 +52,6 @@ interface Notice {
 }
 
 interface Props extends BaseFormStateAndHandlers {
-  notice?: Notice;
   variant?: 'public' | 'private' | 'all';
   imagePanelTitle?: string;
 }
@@ -64,8 +68,9 @@ const errorResources = {
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithDisplayData &
-  BaseFormStateAndHandlers &
-  WithAll;
+  WithTypesRegionsAndImages &
+  ReduxStatePropsAndSSHKeys &
+  BaseFormStateAndHandlers;
 
 export class FromImageContent extends React.PureComponent<CombinedProps> {
   /** create the Linode */
@@ -92,7 +97,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     const {
       accountBackupsEnabled,
       classes,
-      notice,
       typesData: types,
       regionsData: regions,
       imagesData: images,
@@ -135,13 +139,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
-          {notice && (
-            <Notice
-              text={notice.text}
-              error={notice.level === 'error'}
-              warning={notice.level === 'warning'}
-            />
-          )}
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel

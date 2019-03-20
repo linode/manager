@@ -25,8 +25,9 @@ import { extendLinodes } from '../utilities';
 
 import {
   CloneFormStateHandlers,
+  ReduxStatePropsAndSSHKeys,
   WithDisplayData,
-  WithLinodesImagesTypesAndRegions
+  WithLinodesTypesRegionsAndImages
 } from '../types';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -51,13 +52,14 @@ const errorResources = {
 export type CombinedProps = WithStyles<ClassNames> &
   WithDisplayData &
   CloneFormStateHandlers &
-  WithLinodesImagesTypesAndRegions;
+  WithLinodesTypesRegionsAndImages &
+  ReduxStatePropsAndSSHKeys;
 
 export class FromLinodeContent extends React.PureComponent<CombinedProps> {
   /** set the Linode ID and the disk size and reset the plan selection */
   handleSelectLinode = (linodeID: number) => {
     const linode = this.props.linodesData.find(
-      linode => linode.id === linodeID
+      eachLinode => eachLinode.id === linodeID
     );
     if (linode) {
       this.props.updateLinodeID(linode.id, linode.specs.disk);

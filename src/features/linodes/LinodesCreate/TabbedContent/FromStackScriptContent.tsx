@@ -28,9 +28,10 @@ import { filterPublicImages, filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
+  ReduxStatePropsAndSSHKeys,
   StackScriptFormStateHandlers,
-  WithAll,
-  WithDisplayData
+  WithDisplayData,
+  WithTypesRegionsAndImages
 } from '../types';
 
 type ClassNames =
@@ -75,10 +76,10 @@ const errorResources = {
   stackscript_id: 'A StackScript'
 };
 
-type InnerProps = Props & WithAll;
-
-export type CombinedProps = InnerProps &
+export type CombinedProps = Props &
   StackScriptFormStateHandlers &
+  ReduxStatePropsAndSSHKeys &
+  WithTypesRegionsAndImages &
   WithDisplayData &
   WithStyles<ClassNames>;
 
