@@ -48,34 +48,32 @@ describe('FromImageContent', () => {
   it('should render SelectRegion panel', () => {
     expect(
       component.find(
-        'WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))'
+        'WithTheme(WithRenderGuard(WithStyles(SelectRegionPanel)))'
       )
     ).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')
+      component.find('WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')
+      component.find('WithTheme(WithRenderGuard(WithStyles(InfoPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectPassword panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(AccessPanel)))')
+      component.find('WithTheme(WithRenderGuard(WithStyles(AccessPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
     expect(
-      component.find(
-        'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
-      )
+      component.find('WithTheme(WithRenderGuard(WithStyles(AddonsPanel)))')
     ).toHaveLength(1);
   });
 });

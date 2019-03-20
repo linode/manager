@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -10,7 +11,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 
 export interface ExtendedLinode extends Linode.Linode {
@@ -135,4 +136,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(SelectLinodePanel));
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  RenderGuard,
+  styled
+)(SelectLinodePanel);

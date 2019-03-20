@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -7,7 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
@@ -219,4 +220,7 @@ const seperateUDFsByRequiredStatus = (
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(UserDefinedFieldsPanel));
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  RenderGuard,
+  styled
+)(UserDefinedFieldsPanel);

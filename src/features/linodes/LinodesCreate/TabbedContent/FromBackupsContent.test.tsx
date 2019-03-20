@@ -57,7 +57,7 @@ describe('FromBackupsContent', () => {
     it('should render SelectLinode panel', () => {
       expect(
         component.find(
-          'WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))'
+          'WithTheme(WithRenderGuard(WithStyles(SelectLinodePanel)))'
         )
       ).toHaveLength(1);
     });
@@ -65,7 +65,7 @@ describe('FromBackupsContent', () => {
     it('should render SelectBackup panel', () => {
       expect(
         component.find(
-          'WithStyles(WithTheme(WithRenderGuard(SelectBackupPanel)))'
+          'WithTheme(WithRenderGuard(WithStyles(SelectBackupPanel)))'
         )
       ).toHaveLength(1);
     });
@@ -73,22 +73,20 @@ describe('FromBackupsContent', () => {
     it('should render SelectPlan panel', () => {
       expect(
         component.find(
-          'WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))'
+          'WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))'
         )
       ).toHaveLength(1);
     });
 
     it('should render SelectLabel panel', () => {
       expect(
-        component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')
+        component.find('WithTheme(WithRenderGuard(WithStyles(InfoPanel)))')
       ).toHaveLength(1);
     });
 
     it('should render SelectAddOns panel', () => {
       expect(
-        component.find(
-          'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
-        )
+        component.find('WithTheme(WithRenderGuard(WithStyles(AddonsPanel)))')
       ).toHaveLength(1);
     });
   });
