@@ -190,7 +190,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   };
 
   deleteLinode = (linodeId: number) => {
-    const _deleteLinode = this.props.actions.deleteLinode;
+    const _deleteLinode = this.props.deleteLinode;
     _deleteLinode(linodeId)
       .then(_ =>
         this.setState({
@@ -527,17 +527,13 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
 };
 
 interface DispatchProps {
-  actions: {
-    deleteLinode: (linodeId: number) => Promise<{}>;
-  };
+  deleteLinode: (linodeId: number) => Promise<{}>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  actions: {
-    deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId }))
-  }
+  deleteLinode: (linodeId: number) => dispatch(deleteLinode({ linodeId }))
 });
 
 interface ToggleGroupByTagsProps {

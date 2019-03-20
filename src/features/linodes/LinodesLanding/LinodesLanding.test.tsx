@@ -7,10 +7,6 @@ import { ListLinodes } from './LinodesLanding';
 
 const RoutedListLinodes = withRouter(ListLinodes);
 
-const actions = {
-  deleteLinode: jest.fn()
-};
-
 describe('ListLinodes', () => {
   const classes = {
     title: '',
@@ -40,7 +36,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
             backupsCTA={false}
-            actions={actions}
+            deleteLinode={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
@@ -68,7 +64,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
             backupsCTA={false}
-            actions={actions}
+            deleteLinode={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
@@ -101,7 +97,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
             backupsCTA={false}
-            actions={actions}
+            deleteLinode={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
