@@ -112,6 +112,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             e.preventDefault();
             e.stopPropagation();
             toggleConfirmation('delete', linodeId, linodeLabel);
+            closeMenu();
           }
         }
       ];

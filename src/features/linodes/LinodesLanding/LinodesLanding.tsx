@@ -199,7 +199,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           confirmationError: undefined
         })
       )
-      // @todo do we need to display for this? e.g. ( this.props.enqueueSnackbar('Linode deleted successfully', { variant: 'info' }))
       .catch(err =>
         this.setState({
           confirmationLoading: false,
@@ -211,7 +210,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
   };
 
-  rebootOrPowerLinode = () => {
+  executeAction = () => {
     const { actionOption, selectedLinodeId, selectedLinodeLabel } = this.state;
     this.setState({ confirmationError: undefined, confirmationLoading: true });
     switch (actionOption) {
@@ -458,7 +457,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         </Button>
         <Button
           type="primary"
-          onClick={this.rebootOrPowerLinode}
+          onClick={this.executeAction}
           data-qa-confirm-cancel
           loading={confirmationLoading}
         >
