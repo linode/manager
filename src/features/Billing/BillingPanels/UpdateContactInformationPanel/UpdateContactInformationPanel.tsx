@@ -347,6 +347,7 @@ class UpdateContactInformationPanel extends React.Component<
                 data-qa-contact-province
                 placeholder="Select a State"
                 options={regionResults}
+                isClearable={false}
               />
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -375,6 +376,7 @@ class UpdateContactInformationPanel extends React.Component<
             data-qa-contact-country
             placeholder="Select a Country"
             options={countryResults}
+            isClearable={false}
           />
         </Grid>
 
