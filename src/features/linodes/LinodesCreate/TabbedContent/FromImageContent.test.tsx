@@ -34,36 +34,14 @@ const mockProps: CombinedProps = {
   userSSHKeys: []
 };
 
-xdescribe('FromImageContent', () => {
-  const componentWithNotice = shallow(<FromImageContent {...mockProps} />);
-
+describe('FromImageContent', () => {
   const component = shallow<FromImageContent>(
     <FromImageContent {...mockProps} />
   );
 
-  const componentWithImages = shallow<FromImageContent>(
-    <FromImageContent {...mockProps} />
-  );
-
-  it('should default to Debian 9 as the selected image', () => {
-    expect(componentWithImages.prop('selectedImageID')).toBe('linode/debian9');
-  });
-
-  it('should set selectedImageID to null when initial state (from history or default) is not in images', () => {
-    expect(component.prop('selectedImageID')).toBe(null);
-  });
-
-  it('should render a notice when passed a Notice prop', () => {
-    expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
-  });
-
-  it('should not render a notice when no notice prop passed', () => {
-    expect(component.find('WithStyles(Notice)')).toHaveLength(0);
-  });
-
   it('should render SelectImage panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')
+      component.find('WithTheme(WithRenderGuard(CreateFromImage))')
     ).toHaveLength(1);
   });
 

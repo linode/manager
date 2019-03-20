@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -104,7 +103,6 @@ interface Props extends RenderGuardProps {
 
 type CombinedProps = Props &
   StateProps &
-  RouteComponentProps<{}> &
   RenderGuardProps &
   WithStyles<ClassNames>;
 
@@ -125,7 +123,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   componentDidMount() {
     const selected =
       this.props.selectedId ||
-      getParamFromUrl(this.props.location.search, 'stackScriptID');
+      getParamFromUrl(location.search, 'stackScriptID');
     if (selected) {
       this.setState({ stackScriptLoading: true });
       getStackScript(selected)
@@ -266,7 +264,6 @@ const connected = connect(mapStateToProps);
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
-  withRouter,
   connected,
   RenderGuard,
   styled

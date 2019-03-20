@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { images as mockImages } from 'src/__data__/images';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
 import {
   CombinedProps,
@@ -42,20 +43,16 @@ const mockProps: CombinedProps = {
   handleSelectUDFs: jest.fn()
 };
 
-xdescribe('FromImageContent', () => {
-  const componentWithNotice = shallow(
-    <FromStackScriptContent {...mockProps} />
-  );
-
+describe('FromImageContent', () => {
   const component = shallow(<FromStackScriptContent {...mockProps} />);
 
-  it('should render a notice when passed a Notice prop', () => {
-    expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
-  });
-
-  it('should not render a notice when no notice prop passed', () => {
-    expect(component.find('WithStyles(Notice)')).toHaveLength(0);
-  });
+  const componentWithUDFs = shallow(
+    <FromStackScriptContent
+      {...mockProps}
+      availableUserDefinedFields={mockUserDefinedFields}
+      availableStackScriptImages={mockImages}
+    />
+  );
 
   it('should render SelectStackScript panel', () => {
     expect(
@@ -66,16 +63,14 @@ xdescribe('FromImageContent', () => {
   });
 
   it('should render UserDefinedFields panel', () => {
-    component.setState({ userDefinedFields: mockUserDefinedFields }); // give us some dummy fields
     expect(
-      component.find(
+      componentWithUDFs.find(
         'WithStyles(WithTheme(WithRenderGuard(UserDefinedFieldsPanel)))'
       )
     ).toHaveLength(1);
   });
 
   it('should not render UserDefinedFields panel if no UDFs', () => {
-    component.setState({ userDefinedFields: [] }); // give us some dummy fields
     expect(
       component.find(
         'WithStyles(WithTheme(WithRenderGuard(UserDefinedFieldsPanel)))'
@@ -83,18 +78,15 @@ xdescribe('FromImageContent', () => {
     ).toHaveLength(0);
   });
 
-  it('should render SelectImage panel if no compatibleImages', () => {
+  it('should not render SelectImage panel if no compatibleImages', () => {
     expect(
       component.find('WithTheme(WithRenderGuard(WithStyles(CreateFromImage)))')
     ).toHaveLength(0);
   });
 
-  it('should render SelectImage panel if no compatibleImages', () => {
-    component.setState({
-      compatibleImages: [{ label: 'linode/centos7', is_public: true }]
-    });
+  it('should render SelectImage panel there are compatibleImages', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')
+      componentWithUDFs.find('WithTheme(WithRenderGuard(CreateFromImage))')
     ).toHaveLength(1);
   });
 
