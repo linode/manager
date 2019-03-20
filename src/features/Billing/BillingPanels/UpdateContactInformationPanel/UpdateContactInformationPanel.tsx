@@ -7,9 +7,9 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
-import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
@@ -45,15 +45,17 @@ interface State {
     address_2?: string;
     city?: string;
     company?: string;
-    country?: string;
     email?: string;
     first_name?: string;
     last_name?: string;
     phone?: string;
-    state?: string;
     tax_id?: string;
     zip?: string;
+    state?: string;
+    country?: string;
   };
+  selectedCountry: Item | string;
+  selectedRegion: Item | string;
 }
 
 type CombinedProps = Requestable<Linode.Account> & WithStyles<ClassNames>;
@@ -66,14 +68,14 @@ const L = {
     address_2: field(['address_2']),
     city: field(['city']),
     company: field(['company']),
-    country: field(['country']),
     email: field(['email']),
     first_name: field(['first_name']),
     last_name: field(['last_name']),
     phone: field(['phone']),
-    state: field(['state']),
     tax_id: field(['tax_id']),
-    zip: field(['zip'])
+    zip: field(['zip']),
+    country: field(['country']),
+    state: field(['state'])
   }
 };
 
@@ -84,7 +86,9 @@ class UpdateContactInformationPanel extends React.Component<
   state: State = {
     submitting: false,
     fields: {},
-    countryRegionItems
+    countryRegionItems,
+    selectedCountry: '',
+    selectedRegion: ''
   };
 
   composeState = composeState;
@@ -124,7 +128,9 @@ class UpdateContactInformationPanel extends React.Component<
       fields,
       submissionErrors,
       success,
-      countryRegionItems
+      countryRegionItems,
+      selectedCountry,
+      selectedRegion
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -148,14 +154,10 @@ class UpdateContactInformationPanel extends React.Component<
     const generalError = hasErrorFor('none');
 
     const countryResults = countryRegionItems.default.map((country: any) => {
-      return (
-        <MenuItem
-          value={country.countryShortCode}
-          key={country.countryShortCode}
-        >
-          {country.countryName}
-        </MenuItem>
-      );
+      return {
+        value: country.countryShortCode,
+        label: country.countryName
+      };
     });
 
     const currentCountryResult = countryRegionItems.default.filter(
@@ -167,13 +169,17 @@ class UpdateContactInformationPanel extends React.Component<
 
     const regionResults = currentCountryResult[0]['regions'].map(
       (region: any) => {
-        return (
-          <MenuItem value={region.shortCode} key={region.shortCode}>
-            {region.name}
-          </MenuItem>
-        );
+        return {
+          value: region.shortCode,
+          label: region.name
+        };
       }
     );
+
+    console.log('selectedCountry: ' + selectedCountry);
+    console.log('selectedRegion: ' + selectedRegion);
+    console.log('Account Values: ' + account.country, account.state);
+    console.log('Fields Values: ' + fields.country, fields.state);
 
     return (
       <Grid
@@ -333,17 +339,15 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
-              <TextField
+              <EnhancedSelect
                 label="State / Province"
-                value={defaultTo(account.state, fields.state)}
-                placeholder="Select a State / Province"
+                defaultInputValue={defaultTo(account.state, fields.state)}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
-                select
                 data-qa-contact-province
-              >
-                {regionResults}
-              </TextField>
+                placeholder="Select a State"
+                options={regionResults}
+              />
             </Grid>
             <Grid item xs={12} sm={5}>
               <TextField
@@ -363,16 +367,15 @@ class UpdateContactInformationPanel extends React.Component<
           sm={6}
           updateFor={[fields.country, hasErrorFor('country'), classes]}
         >
-          <TextField
+          <EnhancedSelect
             label="Country"
-            value={defaultTo(account.country, fields.country)}
+            defaultInputValue={defaultTo(account.country, fields.country)}
             errorText={hasErrorFor('country')}
             onChange={this.updateCountry}
-            select
             data-qa-contact-country
-          >
-            {countryResults}
-          </TextField>
+            placeholder="Select a Country"
+            options={countryResults}
+          />
         </Grid>
 
         <Grid
@@ -439,8 +442,8 @@ class UpdateContactInformationPanel extends React.Component<
     this.composeState([set(L.fields.company, e.target.value)]);
   };
 
-  updateCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.composeState([set(L.fields.country, e.target.value)]);
+  updateCountry = (selectedCountry: Item) => {
+    this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -459,8 +462,8 @@ class UpdateContactInformationPanel extends React.Component<
     this.composeState([set(L.fields.phone, e.target.value)]);
   };
 
-  updateState = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.composeState([set(L.fields.state, e.target.value)]);
+  updateState = (selectedRegion: Item) => {
+    this.composeState([set(L.fields.state, selectedRegion.value)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -526,7 +529,9 @@ class UpdateContactInformationPanel extends React.Component<
       fields: {},
       submissionErrors: undefined,
       submitting: false,
-      success: undefined
+      success: undefined,
+      selectedCountry: '',
+      selectedRegion: ''
     });
 }
 
