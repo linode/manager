@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { render } from 'react-testing-library';
+
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+
 
 export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
 createPromiseLoaderResponse = response => ({ response });
@@ -21,4 +24,6 @@ export const wrapWithTheme = (ui: any) => {
       <MemoryRouter>{ui}</MemoryRouter>
     </LinodeThemeWrapper>
   );
+export const renderWithTheme = (ui: any) => {
+  return render(<LinodeThemeWrapper>{ui}</LinodeThemeWrapper>);
 };

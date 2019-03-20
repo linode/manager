@@ -40,7 +40,9 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<void> & WithStyles<ClassNames>;
 
-const UserEventsList: React.StatelessComponent<CombinedProps> = props => {
+export const UserEventsList: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     events,
     closeMenu,
@@ -83,6 +85,7 @@ const UserEventsList: React.StatelessComponent<CombinedProps> = props => {
         ))}
       {/* Final list item should be a link to the events landing page */}
       <UserEventsListItem
+        data-qa-view-all-events
         title="View All Events"
         onClick={() => {
           closeMenu();
