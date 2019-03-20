@@ -10,6 +10,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -124,11 +125,11 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             <Placeholder
               title="My Images"
               copy={
-                <span>
+                <Typography variant="subtitle1">
                   You don't have any private Images. Visit the{' '}
                   <Link to="/images">Images section</Link> to create an Image
                   from one of your Linode's disks.
-                </span>
+                </Typography>
               }
             />
           </Paper>
