@@ -26,7 +26,7 @@ describe('View - Personal Access Tokens', () => {
        it('should display create drawer on create', () => {
            /** opens the create drawer */
             profile.create('token');
-            
+
             tokenCreateDrawer.baseElemsDisplay();
             tokenCreateDrawer.labelTimestamp(timestamp);
 
@@ -73,9 +73,7 @@ describe('View - Personal Access Tokens', () => {
         });
 
         it('should display token scopes drawer', () => {
-            browser.waitForVisible(`${newToken} [data-qa-action-menu]`)
-            browser.click(`${newToken} [data-qa-action-menu]`);
-            browser.click('[data-qa-action-menu-item="View Token Scopes"]');
+            profile.selectActionMenuItem($(newToken), 'View Token Scopes');
 
             browser.waitForVisible('[data-qa-row="Account"]', constants.wait.normal);
             browser.waitForVisible('[data-qa-close-drawer]');
@@ -91,16 +89,13 @@ describe('View - Personal Access Tokens', () => {
             expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
 
             browser.click('[data-qa-close-drawer]');
-
-            browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
-            browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
             it('should display edit drawer', () => {
                 browser.waitForVisible(`${newToken} [data-qa-action-menu]`, constants.wait.normal)
                 profile.selectActionMenuItem($(newToken), 'Rename Token');
-                
+
 
                 browser.waitForVisible(tokenCreateDrawer.label.selector, constants.wait.normal)
                 expect(tokenCreateDrawer.title.getText()).toBe('Edit Personal Access Token');

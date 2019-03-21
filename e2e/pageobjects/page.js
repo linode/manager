@@ -165,23 +165,21 @@ export default class Page {
     }
 
     openActionMenu(actionMenuRow) {
-        console.log()
-        actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
+        browser.waitForVisible(`${actionMenuRow.selector} ${this.actionMenu.selector}`, constants.wait.normal);
+        // actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
         try {
-          console.log(actionMenuRow);
-          console.log(this.actionMenu.selector)
-          browser.debug();
           actionMenuRow.$(this.actionMenu.selector).click();
           browser.waitUntil(() => {
               return $$('[data-qa-action-menu-item]').length > 0;
-          },constants.wait.normal);
+          }, constants.wait.normal, "Menu items failed to show up");
         } catch (e) {
-            if ( e.Error ){
-                actionMenuRow.$(this.actionMenu.selector).click();
+                /* Our attempt clicking the action menu bombed, most likely because some
+                // Element in the UI is covering it. JS Click to force the click instead
+                */
+                browser.jsClick(`${actionMenuRow.selector} ${this.actionMenu.selector}`);
                 browser.waitUntil(() => {
                     return $$('[data-qa-action-menu-item]').length > 0;
-                },constants.wait.normal);
-            }
+                }, constants.wait.normal, "Menu items failed to show up");
         }
     }
 
