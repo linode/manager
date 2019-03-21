@@ -6,6 +6,7 @@ import {
   Lens,
   lensPath,
   over,
+  pathOr,
   set,
   view
 } from 'ramda';
@@ -754,7 +755,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
       }
   */
   return errors.reduce((acc: any, error: Linode.ApiFieldError) => {
-    const errorFields = error.field!.split('|');
+    const errorFields = pathOr('', ['field'], error).split('|');
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)
     );
