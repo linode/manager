@@ -32,6 +32,12 @@ interface Props {
   event: Linode.Event;
 }
 
+export const onUnfound = (event: Linode.Event) => {
+  return `Event: ${event.action}${
+    event.entity ? ` on ${event.entity.label}` : '.'
+  }`;
+};
+
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const EventRow: React.StatelessComponent<CombinedProps> = props => {
@@ -43,7 +49,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
   const rowProps = {
     created: event.created,
     linkTarget: undefined, // no links for initial POC
-    message: eventMessageGenerator(event),
+    message: eventMessageGenerator(event, onUnfound),
     status: pathOr(undefined, ['status'], entity),
     type,
     classes
