@@ -165,8 +165,12 @@ export default class Page {
     }
 
     openActionMenu(actionMenuRow) {
+        console.log()
         actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
         try {
+          console.log(actionMenuRow);
+          console.log(this.actionMenu.selector)
+          browser.debug();
           actionMenuRow.$(this.actionMenu.selector).click();
           browser.waitUntil(() => {
               return $$('[data-qa-action-menu-item]').length > 0;
