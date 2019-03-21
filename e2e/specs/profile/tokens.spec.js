@@ -120,7 +120,7 @@ describe('View - Personal Access Tokens', () => {
             });
         });
 
-        xdescribe('Revoke Personal Access Tokens', () => {
+        describe('Revoke Personal Access Tokens', () => {
             const revokeMenu = '[data-qa-action-menu-item="Revoke"]';
 
             it('should display revoke action menu item', () => {
