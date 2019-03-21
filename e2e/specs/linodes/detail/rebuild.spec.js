@@ -34,12 +34,13 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.rebuildSelect.click();
         browser.pause(500);
         const rebuildOptions = Rebuild.selectOptions.map(options => options.getText());
-        expect(rebuildOptions.sort()).toEqual(['From Image','From StackScript']);
+        expect(rebuildOptions.sort()).toEqual(['From Image', 'From StackScript']);
         $('body').click();
     });
 
     it('should display error on create an image without selecting an image', () => {
         Rebuild.submit.click();
+        browser.waitForVisible(Rebuild.rebuildConfirmModalButton.selector)
         Rebuild.rebuildConfirmModalButton.click();
         Rebuild.waitForNotice('An image is required.', constants.wait.normal);
         browser.refresh();
@@ -49,8 +50,9 @@ describe('Linode Detail - Rebuild Suite', () => {
     it('should display error on create image without setting a password', () => {
         const errorMsg = 'Password cannot be blank.';
         Rebuild.selectImage();
-        Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
+        Rebuild.imageOption.waitForVisible(constants.wait.normal, true);
         Rebuild.submit.click();
+        browser.waitForVisible(Rebuild.rebuildConfirmModalButton.selector)
         Rebuild.rebuildConfirmModalButton.click();
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
         browser.refresh();
