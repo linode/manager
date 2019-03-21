@@ -44,6 +44,7 @@ describe('Linode Detail - Volumes Suite', () => {
     const checkVolumeDetail = (testVolume,testLinode) => {
         browser.url(constants.routes.volumes);
         browser.pause(750);
+
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         let trimSelector = VolumeDetail.volumeAttachment.selector.replace(']','')
         const linodeAttachedToCell = `${trimSelector}="${testLinode}"]`;
@@ -197,8 +198,11 @@ describe('Linode Detail - Volumes Suite', () => {
 
 
         it('volume created successfully with tag', () => {
+
             expect(VolumeDetail.volumeCellLabel.getText()).toContain(testVolume.label);
             expect(VolumeDetail.volumeCellSize.getText()).toContain(testVolume.size);
+
+            VolumeDetail.hoverVolumeTags(testVolume.label);
             VolumeDetail.checkTagsApplied([testVolume.tags]);
         });
 
