@@ -60,7 +60,7 @@ describe('Linode Detail - Volumes Suite', () => {
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();
         VolumeDetail.createButton.waitForVisible(constants.wait.long);
-        expect(VolumeDetail.placeholderText.getText()).toBe('Create a Volume');
+        expect(VolumeDetail.placeholderText.getText()).toMatch('Add Block Storage');
     }
 
     beforeAll(() => {
@@ -83,7 +83,7 @@ describe('Linode Detail - Volumes Suite', () => {
     });
 
     it('should display placeholder text and add a volume button', () => {
-        expect(VolumeDetail.placeholderText.getText()).toBe('Create a Volume');
+        expect(VolumeDetail.placeholderText.getText()).toMatch('Add Block Storage');
         expect(VolumeDetail.createButton.isVisible()).toBe(true);
     });
 
