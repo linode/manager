@@ -12,6 +12,12 @@ interface CreatorsForStatus {
 
 /** @see https://leo.stcloudstate.edu/grammar/tenses.html */
 export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
+  account_update: {
+    notification: e => `Your account settings have been updated.`
+  },
+  account_settings_update: {
+    notification: e => `Your account settings have been updated.`
+  },
   backups_cancel: {
     notification: e => `Backups have been cancelled for ${e.entity!.label}.`
   },
