@@ -40,6 +40,7 @@ describe('Linode Detail - Rebuild Suite', () => {
 
     it('should display error on create an image without selecting an image', () => {
         Rebuild.submit.click();
+        Rebuild.rebuildConfirmModalButton.click();
         Rebuild.waitForNotice('An image is required.', constants.wait.normal);
         browser.refresh();
         Rebuild.assertElemsDisplay();
@@ -50,6 +51,7 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.selectImage();
         Rebuild.imageOption.waitForVisible(constants.wait.normal,true);
         Rebuild.submit.click();
+        Rebuild.rebuildConfirmModalButton.click();
         Rebuild.waitForNotice(errorMsg, constants.wait.normal);
         browser.refresh();
         Rebuild.assertElemsDisplay();
