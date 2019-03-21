@@ -140,7 +140,8 @@ describe('View - Personal Access Tokens', () => {
                 browser.click(dialogConfirm);
                 profile.tokenBaseElems();
                 /** we've revoked the token and it should not be visible */
-                browser.waitForVisible(updatedSelector, constants.wait.long, false);
+                browser.refresh();
+                browser.waitForVisible(updatedSelector, constants.wait.normal, true);
             });
         });
     });
