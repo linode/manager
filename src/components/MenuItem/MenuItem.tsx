@@ -62,6 +62,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   helpButton: {
     width: 28,
     height: 28,
+    padding: 0,
     color: theme.palette.primary.main,
     pointerEvents: 'initial',
     '&:hover, &:focus': {
@@ -73,7 +74,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     height: 20
   },
   circleProgress: {
-    padding: theme.spacing.unit
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    margin: '0 auto'
   }
 });
 
@@ -92,11 +96,13 @@ const WrapperMenuItem: React.StatelessComponent<CombinedProps> = props => {
       {...rest}
       className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
     >
+      {isLoading && (
+        <CircularProgress size={20} className={classes.circleProgress} />
+      )}
       <span className={shouldWrapLabel && classes.labelWrapper}>
         <span className={shouldWrapLabel && classes.label}>
           {props.children}
         </span>
-        {isLoading && <CircularProgress size={20} />}
         {tooltip && !isLoading && (
           <IconButton
             className={classes.helpButton}
