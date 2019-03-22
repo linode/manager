@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { RequestableData } from 'src/store/types';
+import { RequestableRequiredData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { onStart } from '../store.helpers';
 import { getAllBucketsActions } from './bucket.actions';
@@ -10,7 +10,7 @@ import { getAllBucketsActions } from './bucket.actions';
 
 // We are unable to use the "EntityState" pattern we've adopted, since IDs
 // do not exist on buckets.
-export type State = RequestableData<Linode.Bucket[]>;
+export type State = RequestableRequiredData<Linode.Bucket[]>;
 
 export const defaultState: State = {
   data: [],

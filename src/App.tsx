@@ -43,6 +43,7 @@ import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import { isObjectStorageEnabled } from './constants';
+import BucketDrawer from './features/ObjectStorage/BucketDrawer';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions
@@ -406,6 +407,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
+                {isObjectStorageEnabled && <BucketDrawer />}
               </div>
             </>
           </React.Fragment>

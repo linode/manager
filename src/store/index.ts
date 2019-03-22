@@ -20,6 +20,10 @@ import buckets, {
   defaultState as defaultBucketsState,
   State as BucketsState
 } from 'src/store/bucket/bucket.reducer';
+import bucketDrawer, {
+  defaultState as bucketDrawerDefaultState,
+  State as BucketDrawerState
+} from 'src/store/bucketDrawer/bucketDrawer.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -154,6 +158,7 @@ export interface ApplicationState {
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
+  bucketDrawer: BucketDrawerState;
 }
 
 const defaultState: ApplicationState = {
@@ -165,7 +170,8 @@ const defaultState: ApplicationState = {
   events: eventsDefaultState,
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
-  volumeDrawer: volumeDrawerDefaultState
+  volumeDrawer: volumeDrawerDefaultState,
+  bucketDrawer: bucketDrawerDefaultState
 };
 
 /**
@@ -198,6 +204,7 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
+  bucketDrawer,
   events
 });
 
