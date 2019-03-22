@@ -1,5 +1,6 @@
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
+import CircularProgress from 'src/components/core/CircularProgress';
 import IconButton from 'src/components/core/IconButton';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import {
@@ -14,11 +15,13 @@ type CSSClasses =
   | 'labelWrapper'
   | 'label'
   | 'helpButton'
-  | 'helpIcon';
+  | 'helpIcon'
+  | 'circleProgress';
 
 interface Props {
   tooltip?: string;
   className?: string;
+  isLoading?: boolean;
 }
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
@@ -59,6 +62,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   helpButton: {
     width: 28,
     height: 28,
+    padding: 0,
     color: theme.palette.primary.main,
     pointerEvents: 'initial',
     '&:hover, &:focus': {
@@ -68,26 +72,38 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   helpIcon: {
     width: 20,
     height: 20
+  },
+  circleProgress: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    margin: '0 auto'
   }
 });
 
 const handleClick = (e: any) => {
   e.stopPropagation();
 };
-
 type CombinedProps = MenuItemProps & Props & WithStyles<CSSClasses>;
 
 const WrapperMenuItem: React.StatelessComponent<CombinedProps> = props => {
-  const { tooltip, classes, className, ...rest } = props;
+  const { tooltip, classes, className, isLoading, ...rest } = props;
+
+  const shouldWrapLabel = isLoading || tooltip;
 
   return (
     <MenuItem
       {...rest}
       className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
     >
-      <span className={tooltip && classes.labelWrapper}>
-        <span className={tooltip && classes.label}>{props.children}</span>
-        {tooltip && (
+      {isLoading && (
+        <CircularProgress size={20} className={classes.circleProgress} />
+      )}
+      <span className={shouldWrapLabel && classes.labelWrapper}>
+        <span className={shouldWrapLabel && classes.label}>
+          {props.children}
+        </span>
+        {tooltip && !isLoading && (
           <IconButton
             className={classes.helpButton}
             onClick={handleClick}
