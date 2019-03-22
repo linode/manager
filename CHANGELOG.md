@@ -4,9 +4,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.51.0] - 2019.03.25
+
+### Added:
+- Add uninvoiced balance display 
+- Delete Linode from kebab menu 
+- Support and icon for Alpine Linux 
+- Missing typography for crash message
+- New event types and account events messages
+- Card payment confirmation modal 
+- Add aria labels to inputProps for textfields and radios
+
+### Changed:
+- Update list of available timezones and fix offset sorting
+- Include pagination on clone from Linode flow 
+- Adjust dialog size to md to accommodate for api token width
+- Request notifications after migration finished 
+- Reset error state on disk and configs request
+- Improve placement of entity icons on mobile tables 
+- Make sure all radios inherit proper labeling
+- Dim main content when searching
+- iOS/Mobile Cloud Manager Welcome Screen  
+- Make CVV Optional when making a credit card payment
+- Adjust "No Results" message when searching in a Select element
+- Handle volume permissions
+- Update Auth Code
+- UI for restricted edit volumes form
+- Delete confirmation includes Linode Label 
+- Source Linode Rescue volumes/disks from redux
+- Update slave domain editing UX
+- Add props.classes for RenderGuard updateFor 
+
+### Fixed:
+- Only disable Linode Boot if there are no configs 
+- Prevent NodeBalancers from crashing during creation 
+- Linodes with no type data cause error state 
+- Kernel Select sometimes was not populated on load
+- Upgrade and Fix PayPal
+- Fix logger, add report button
+- Remove extra scrollbar on tables on Firefox
+- Request notifications after migration finished
+- Issue with Created Linodes with no image being in an indefinite loading state
+- Issue with 0600-0800 not being a valid backups timeslot
+
 ## [0.50] - 2019.03.11
 
 ### Added:
+
+- Fix Linode label update error
 - Display guidance to bottom of search bar to make it easier for users to work with enhanced search functionality
 - Add Compact Mode (theme toggle) and corresponding settings panel on PrimaryNav
 - Users can now rebuild a Linode from a StackScript
