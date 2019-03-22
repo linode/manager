@@ -24,6 +24,10 @@ import bucketDrawer, {
   defaultState as bucketDrawerDefaultState,
   State as BucketDrawerState
 } from 'src/store/bucketDrawer/bucketDrawer.reducer';
+import clusters, {
+  defaultState as defaultClustersState,
+  State as ClustersState
+} from 'src/store/clusters/clusters.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -127,7 +131,8 @@ const __resourcesDefaultState = {
   regions: defaultRegionsState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
-  buckets: defaultBucketsState
+  buckets: defaultBucketsState,
+  clusters: defaultClustersState
 };
 
 export interface ResourcesState {
@@ -146,6 +151,7 @@ export interface ResourcesState {
   types: TypesState;
   volumes: VolumesState;
   buckets: BucketsState;
+  clusters: ClustersState;
 }
 
 export interface ApplicationState {
@@ -192,7 +198,8 @@ const __resources = combineReducers({
   regions,
   types,
   volumes,
-  buckets
+  buckets,
+  clusters
 });
 
 const reducers = combineReducers<ApplicationState>({
