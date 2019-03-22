@@ -14,6 +14,7 @@ class Rebuild extends Page {
     get imageOptions() { return $$(this.imageOption.selector); }
     get imageError() { return $(`${this.imageSelectSelector}>p`); }
     get rebuildDescriptionText() { return $('[data-qa-rebuild-desc]'); }
+    get rebuildConfirmModalButton() { return $('[data-qa-submit-rebuild]') }
 
     assertElemsDisplay() {
         this.rebuildDescriptionText.waitForVisible(constants.wait.normal);
@@ -35,8 +36,8 @@ class Rebuild extends Page {
     }
 
     rebuild() {
-        const toastMessage = 'Linode rebuild started.';
         browser.jsClick(this.submit.selector);
+        browser.jsClick(this.rebuildConfirmModalButton.selector)
         this.toastDisplays('Linode rebuild started');
     }
 }

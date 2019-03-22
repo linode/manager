@@ -232,14 +232,14 @@ export const switchTab = () => {
     browser.switchTab(newTab);
 }
 
-export const getDistrobutionLabel = (distrobutionTags) => {
+export const getDistributionLabel = (distributionTags) => {
     const token = readToken(browser.options.testUser);
-    let distrobutionLabel = [];
-    distrobutionTags.forEach((distro) => {
+    let distributionLabel = [];
+    distributionTags.forEach((distro) => {
         const distroDetails = browser.getLinodeImage(token,distro.trim());
-        distrobutionLabel.push(distroDetails.label);
+        distributionLabel.push(distroDetails.label);
     });
-    return distrobutionLabel;
+    return distributionLabel;
 }
 
 export const getLocalStorageValue = (key) => {
