@@ -1,6 +1,3 @@
-/**
- * @todo Display the volume configuration information on success.
- */
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -15,6 +12,7 @@ import bucketContainer from 'src/containers/bucket.container';
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
+// @todo: Extract these utils out of Volumes
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -100,7 +98,7 @@ const CreateBucketForm: React.StatelessComponent<CombinedProps> = props => {
             {status && <Notice error>{status.generalError}</Notice>}
 
             <TextField
-              data-qa-volume-label
+              data-qa-cluster-label
               label="Label"
               name="label"
               errorText={touched.label ? errors.label : undefined}

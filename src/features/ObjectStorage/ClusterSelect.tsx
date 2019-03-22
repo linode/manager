@@ -9,7 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import clustersContainer, {
-  DefaultProps as WithClusters
+  StateProps
 } from 'src/containers/clusters.container';
 import { formatRegion } from 'src/utilities';
 
@@ -27,15 +27,22 @@ interface Props {
   error?: string;
 }
 
-type CombinedProps = Props & WithClusters & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
 
 export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
-  const { error, onChange, onBlur, clustersData } = props;
+  const { error, onChange, onBlur, clustersData, clustersError } = props;
 
   const options: Item<string>[] = clustersData.map(eachCluster => ({
     value: eachCluster.id,
     label: formatRegion(eachCluster.region)
   }));
+
+  // Error could be: 1. General Clusters error, 2. Field error, 3. Nothing
+  const errorText = clustersError
+    ? 'Error loading Clusters'
+    : error
+    ? error
+    : undefined;
 
   return (
     <FormControl fullWidth>
@@ -51,7 +58,7 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
         onBlur={onBlur}
         isSearchable={false}
         isClearable={false}
-        errorText={error}
+        errorText={errorText}
       />
     </FormControl>
   );
@@ -59,11 +66,9 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const withClusters = clustersContainer();
-
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withClusters
+  clustersContainer
 );
 
 export default enhanced(ClusterSelect);
