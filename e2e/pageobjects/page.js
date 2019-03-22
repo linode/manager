@@ -35,6 +35,7 @@ export default class Page {
     get tags() { return $$('[data-qa-tag]'); }
     get addTag() { return $('[data-qa-add-tag]'); }
     get deleteTag() { return $('[data-qa-delete-tag]'); }
+    get totalTags() { return $('[data-qa-total-tags]'); }
     get helpButton() { return $('[data-qa-help-button]'); }
     get tagsMultiSelect() { return $('[data-qa-multi-select="Type to choose or create a tag."]'); }
     get popoverMsg() { return $('[role="tooltip"]'); }
@@ -165,19 +166,21 @@ export default class Page {
     }
 
     openActionMenu(actionMenuRow) {
-        actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
+        browser.waitForVisible(`${actionMenuRow.selector} ${this.actionMenu.selector}`, constants.wait.normal);
+        // actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
         try {
           actionMenuRow.$(this.actionMenu.selector).click();
           browser.waitUntil(() => {
               return $$('[data-qa-action-menu-item]').length > 0;
-          },constants.wait.normal);
+          }, constants.wait.normal, "Menu items failed to show up");
         } catch (e) {
-            if ( e.Error ){
-                actionMenuRow.$(this.actionMenu.selector).click();
+                /* Our attempt clicking the action menu bombed, most likely because some
+                // Element in the UI is covering it. JS Click to force the click instead
+                */
+                browser.jsClick(`${actionMenuRow.selector} ${this.actionMenu.selector}`);
                 browser.waitUntil(() => {
                     return $$('[data-qa-action-menu-item]').length > 0;
-                },constants.wait.normal);
-            }
+                }, constants.wait.normal, "Menu items failed to show up");
         }
     }
 

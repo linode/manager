@@ -26,7 +26,7 @@ class ListStackScripts extends Page {
     get stackScriptRows() { return $$('[data-qa-table-row]'); }
     get stackScriptTitle() { return $('[data-qa-stackscript-title]'); }
     get stackScriptDeploys() { return $('[data-qa-stackscript-deploys]'); }
-    get stackScriptCompatibleDistrobutions() { return $('[data-qa-stackscript-images]'); }
+    get stackScriptCompatibleDistributions() { return $('[data-qa-stackscript-images]'); }
     get stackScriptActionMenu() { return $('[data-qa-action-menu]'); }
     get stackScriptActionMenuLink() { return $('[data-qa-action-menu-link]'); }
     get stackScriptRevision() { return $('[data-qa-stackscript-revision]'); }
