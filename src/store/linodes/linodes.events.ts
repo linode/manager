@@ -141,12 +141,6 @@ const handleLinodeCreation = (
   id: number,
   state: ApplicationState
 ) => {
-  const found = state.__resources.linodes.results.find(i => i === id);
-
-  if (found) {
-    return;
-  }
-
   switch (status) {
     case 'failed':
     case 'finished':
