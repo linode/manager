@@ -24,6 +24,7 @@ import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import LinodePermissionsError from '../LinodePermissionsError';
 import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume
@@ -53,6 +54,7 @@ interface ContextProps {
   linodeRegion?: string;
   linodeLabel: string;
   linodeDisks?: ExtendedDisk[];
+  permissions: Linode.GrantLevel;
 }
 
 interface StateProps {
@@ -170,7 +172,14 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
 
   render() {
     const { devices } = this.state;
-    const { diskError, volumesError, classes, linodeLabel } = this.props;
+    const {
+      diskError,
+      volumesError,
+      classes,
+      linodeLabel,
+      permissions
+    } = this.props;
+    const disabled = permissions === 'read_only';
 
     if (diskError) {
       return (
@@ -194,6 +203,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
         <Paper className={classes.root}>
+          {disabled && <LinodePermissionsError />}
           <Typography
             role="header"
             variant="h2"
@@ -217,15 +227,21 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
             }
             counter={this.state.counter}
             rescue
+            disabled={disabled}
           />
           <AddNewLink
             onClick={this.incrementCounter}
             label="Add Disk"
-            disabled={this.state.counter >= 6}
+            disabled={disabled || this.state.counter >= 6}
             left
           />
           <ActionsPanel>
-            <Button onClick={this.onSubmit} type="primary" data-qa-submit>
+            <Button
+              onClick={this.onSubmit}
+              type="primary"
+              data-qa-submit
+              disabled={disabled}
+            >
               Submit
             </Button>
           </ActionsPanel>
@@ -241,7 +257,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeRegion: linode.region,
   linodeLabel: linode.label,
-  linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk))
+  linodeDisks: linode._disks.map(disk => assoc('_id', `disk-${disk.id}`, disk)),
+  permissions: linode._permissions
 }));
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({

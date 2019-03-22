@@ -241,7 +241,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   );
 
   renderForm = (errors?: Linode.ApiFieldError[]) => {
-    const { onClose, maxMemory, classes } = this.props;
+    const { onClose, maxMemory, classes, readOnly } = this.props;
 
     const {
       kernels,
@@ -305,6 +305,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleChangeLabel}
             errorText={errorFor('label')}
             errorGroup="linode-config-drawer"
+            disabled={readOnly}
           />
 
           <TextField
@@ -315,6 +316,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             rows={3}
             errorText={errorFor('comments')}
             errorGroup="linode-config-drawer"
+            disabled={readOnly}
           />
         </Grid>
 
@@ -330,7 +332,11 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             Virtual Machine
           </Typography>
           <FormControl component={'fieldset' as 'div'}>
-            <FormLabel htmlFor="virt_mode" component="label">
+            <FormLabel
+              htmlFor="virt_mode"
+              component="label"
+              disabled={readOnly}
+            >
               VM Mode
             </FormLabel>
             <RadioGroup
@@ -342,11 +348,13 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               <FormControlLabel
                 value="paravirt"
                 label="Paravirtulization"
+                disabled={readOnly}
                 control={<Radio />}
               />
               <FormControlLabel
                 value="fullvirt"
                 label="Full-virtulization"
+                disabled={readOnly}
                 control={<Radio />}
               />
             </RadioGroup>
@@ -380,6 +388,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
+              disabled={readOnly}
             >
               <MenuItem value="none" disabled>
                 <em>Select a Kernel</em>
@@ -400,6 +409,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             updateFor={[run_level, classes]}
             fullWidth
             component={'fieldset' as 'div'}
+            disabled={readOnly}
           >
             <FormLabel htmlFor="run_level" component="label">
               Run Level
@@ -413,16 +423,19 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               <FormControlLabel
                 value="default"
                 label="Run Default Level"
+                disabled={readOnly}
                 control={<Radio />}
               />
               <FormControlLabel
                 value="single"
                 label="Single user mode"
+                disabled={readOnly}
                 control={<Radio />}
               />
               <FormControlLabel
                 value="binbash"
                 label="init=/bin/bash"
+                disabled={readOnly}
                 control={<Radio />}
               />
             </RadioGroup>
@@ -435,6 +448,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleMemoryLimitChange}
             helperText={`Max: ${maxMemory}`}
             errorText={errorFor('memory_limit')}
+            disabled={readOnly}
           />
         </Grid>
 
@@ -450,6 +464,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             onChange={this.handleDevicesChanges}
             getSelected={slot => pathOr('', [slot], this.state.fields.devices)}
             counter={99}
+            disabled={readOnly}
           />
 
           <FormControl fullWidth>
@@ -459,6 +474,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 <Toggle
                   checked={useCustomRoot}
                   onChange={this.handleUseCustomRootChange}
+                  disabled={readOnly}
                 />
               }
             />
@@ -473,6 +489,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               autoFocus={useCustomRoot && true}
               errorText={errorFor('root_device')}
               errorGroup="linode-config-drawer"
+              disabled={readOnly}
             >
               {!useCustomRoot &&
                 [
@@ -518,6 +535,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   <Toggle
                     checked={helpers.distro}
                     onChange={this.handleToggleDistroHelper}
+                    disabled={readOnly}
                   />
                 }
               />
@@ -528,6 +546,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   <Toggle
                     checked={helpers.updatedb_disabled}
                     onChange={this.handleToggleUpdateDBHelper}
+                    disabled={readOnly}
                   />
                 }
               />
@@ -538,6 +557,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   <Toggle
                     checked={helpers.modules_dep}
                     onChange={this.handleToggleModulesDepHelper}
+                    disabled={readOnly}
                   />
                 }
               />
@@ -548,6 +568,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   <Toggle
                     checked={helpers.devtmpfs_automount}
                     onChange={this.handleToggleAutoMountHelper}
+                    disabled={readOnly}
                   />
                 }
               />
@@ -558,6 +579,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                   <Toggle
                     checked={helpers.network}
                     onChange={this.handleAuthConfigureNetworkHelper}
+                    disabled={readOnly}
                   />
                 }
               />
@@ -566,7 +588,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <ActionsPanel>
-            <Button onClick={this.onSubmit} type="primary">
+            <Button onClick={this.onSubmit} type="primary" disabled={readOnly}>
               Submit
             </Button>
             <Button type="secondary" className="cancel" onClick={onClose}>
@@ -758,6 +780,7 @@ interface LinodeContextProps {
   createLinodeConfig: CreateLinodeConfig;
   updateLinodeConfig: UpdateLinodeConfig;
   getLinodeConfig: GetLinodeConfig;
+  readOnly: boolean;
 }
 
 const enhanced = compose<CombinedProps, Props>(
@@ -770,6 +793,7 @@ const enhanced = compose<CombinedProps, Props>(
         _id: `disk-${disk.id}`
       })),
       linodeId: linode.id,
+      readOnly: linode._permissions === 'read_only',
       createLinodeConfig,
       updateLinodeConfig,
       getLinodeConfig

@@ -9,6 +9,7 @@ interface Props {
   onBoot: (linodeId: number, configId: number, label: string) => void;
   config: Linode.Config;
   linodeId: number;
+  readOnly?: boolean;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -37,6 +38,10 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
   };
 
   createConfigActions = () => (closeMenu: Function): Action[] => {
+    const { readOnly } = this.props;
+    const tooltip = readOnly
+      ? "You don't permissions to perform this action"
+      : undefined;
     const actions = [
       {
         title: 'Boot This Config',
@@ -44,7 +49,9 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleBoot();
           closeMenu();
-        }
+        },
+        disabled: readOnly,
+        tooltip
       },
       {
         title: 'Edit',
@@ -60,7 +67,9 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleDelete();
           closeMenu();
-        }
+        },
+        disabled: readOnly,
+        tooltip
       }
     ];
 

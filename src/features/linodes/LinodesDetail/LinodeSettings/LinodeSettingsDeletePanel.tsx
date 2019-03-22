@@ -14,6 +14,7 @@ import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import { resetEventsPolling } from 'src/events';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -36,6 +37,7 @@ interface State {
 }
 
 type CombinedProps = Props &
+  ContextProps &
   LinodeActionsProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
@@ -75,6 +77,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
+    const { readOnly } = this.props;
     return (
       <React.Fragment>
         <ExpansionPanel heading="Delete Linode">
@@ -84,6 +87,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
             style={{ marginBottom: 8 }}
             onClick={this.openDeleteDialog}
             data-qa-delete-linode
+            disabled={readOnly}
           >
             Delete
           </Button>
@@ -130,8 +134,17 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
+interface ContextProps {
+  readOnly: boolean;
+}
+
+const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
+  readOnly: linode._permissions === 'read_only'
+}));
+
 const enhanced = compose<CombinedProps, Props>(
   errorBoundary,
+  linodeContext,
   withRouter,
   styled,
   withLinodeActions

@@ -43,6 +43,7 @@ interface WithImagesProps {
 
 interface ContextProps {
   linodeId: number;
+  permissions: Linode.GrantLevel;
 }
 
 export type CombinedProps = WithImagesProps &
@@ -62,8 +63,11 @@ export const RebuildFromImage: React.StatelessComponent<
     userSSHKeys,
     linodeId,
     enqueueSnackbar,
-    history
+    history,
+    permissions
   } = props;
+
+  const disabled = permissions === 'read_only';
 
   const [selectedImage, setSelectedImage] = React.useState<string>('');
   const [password, setPassword] = React.useState<string>('');
@@ -133,6 +137,7 @@ export const RebuildFromImage: React.StatelessComponent<
         selectedImageID={selectedImage}
         handleSelection={selected => setSelectedImage(selected)}
         data-qa-select-image
+        disabled={disabled}
       />
       <AccessPanel
         password={password}
@@ -141,6 +146,14 @@ export const RebuildFromImage: React.StatelessComponent<
         error={hasErrorFor.root_pass}
         users={userSSHKeys}
         data-qa-access-panel
+        passwordFieldDisabled={
+          disabled
+            ? {
+                disabled: true,
+                reason: "You don't have permissions to modify this Linode"
+              }
+            : undefined
+        }
       />
       <ActionsPanel>
         <Button
@@ -148,6 +161,7 @@ export const RebuildFromImage: React.StatelessComponent<
           className="destructive"
           onClick={() => setIsDialogOpen(true)}
           data-qa-rebuild
+          disabled={disabled}
         >
           Rebuild
         </Button>
@@ -165,7 +179,8 @@ export const RebuildFromImage: React.StatelessComponent<
 const styled = withStyles(styles);
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id
+  linodeId: linode.id,
+  permissions: linode._permissions
 }));
 
 const enhanced = compose<CombinedProps, {}>(
