@@ -219,7 +219,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
     });
 
-    describe('Attach Existing Volume - Detatch Volume', () => {
+    describe('Attach Existing Volume - Detach Volume', () => {
 
         it('can attach an existing volume', () => {
             VolumeDetail.createButton.click();
@@ -228,7 +228,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('volume attached successfully', () => {
-            VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+            VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
             expect(VolumeDetail.volumeCellLabel.getText()).toContain(volumeEast.label);
             expect(VolumeDetail.volumeCellSize.getText()).toContain('20');
         });
