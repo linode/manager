@@ -9,6 +9,8 @@ import { powerOnLinode } from './powerActions';
 
 import { sendEvent } from 'src/utilities/analytics';
 
+import { getLinodeConfigs } from 'src/services/linodes';
+
 interface Props {
   linodeId: number;
   linodeLabel: string;
@@ -28,7 +30,38 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class LinodeActionMenu extends React.Component<CombinedProps> {
+interface State {
+  configs: Linode.Config[];
+  hasMadeConfigsRequest: boolean;
+  configsError?: Linode.ApiFieldError[];
+}
+
+class LinodeActionMenu extends React.Component<CombinedProps, State> {
+  state: State = {
+    configs: [],
+    hasMadeConfigsRequest: false,
+    configsError: undefined
+  };
+
+  toggleOpenActionMenu = () => {
+    getLinodeConfigs(this.props.linodeId)
+      .then(configs => {
+        this.setState({
+          configs: configs.data,
+          hasMadeConfigsRequest: true,
+          configsError: undefined
+        });
+      })
+      .catch(err => {
+        this.setState({ hasMadeConfigsRequest: true, configsError: err });
+      });
+
+    sendEvent({
+      category: 'Linode Action Menu',
+      action: 'Open Action Menu'
+    });
+  };
+
   createLinodeActions = () => {
     const {
       linodeId,
@@ -37,9 +70,12 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       linodeStatus,
       openConfigDrawer,
       toggleConfirmation,
-      noImage,
       history: { push }
     } = this.props;
+    const { configs, hasMadeConfigsRequest } = this.state;
+
+    const noConfigs = hasMadeConfigsRequest && configs.length === 0;
+
     return (closeMenu: Function): Action[] => {
       const actions: Action[] = [
         {
@@ -120,9 +156,12 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       if (linodeStatus === 'offline') {
         actions.unshift({
           title: 'Power On',
-          disabled: noImage,
-          tooltip: noImage
-            ? 'An image needs to be added before powering on a Linode'
+          disabled: !hasMadeConfigsRequest || noConfigs,
+          isLoading: !hasMadeConfigsRequest,
+          tooltip: this.state.configsError
+            ? 'Could not load configs for this Linode'
+            : noConfigs
+            ? 'A config needs to be added before powering on a Linode'
             : undefined,
           onClick: e => {
             sendEvent({
@@ -191,18 +230,11 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   render() {
     return (
       <ActionMenu
-        toggleOpenCallback={toggleOpenActionMenu}
+        toggleOpenCallback={this.toggleOpenActionMenu}
         createActions={this.createLinodeActions()}
       />
     );
   }
 }
-
-const toggleOpenActionMenu = () => {
-  sendEvent({
-    category: 'Linode Action Menu',
-    action: 'Open Action Menu'
-  });
-};
 
 export default withRouter(LinodeActionMenu);
