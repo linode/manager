@@ -22,7 +22,7 @@ describe('Linode Power Control Dialogs', () => {
       label="Test Linode"
       status="running"
       openConfigDrawer={jest.fn()}
-      noImage={false}
+      noConfigs={false}
     />
   );
 

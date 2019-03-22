@@ -13,10 +13,17 @@ export interface Action {
   title: string;
   disabled?: boolean;
   tooltip?: string;
+  isLoading?: boolean;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CSSClasses = 'root' | 'item' | 'button' | 'actionSingleLink' | 'hidden';
+type CSSClasses =
+  | 'root'
+  | 'item'
+  | 'button'
+  | 'actionSingleLink'
+  | 'hidden'
+  | 'menu';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
@@ -60,6 +67,9 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   hidden: {
     height: 0,
     padding: 0
+  },
+  menu: {
+    maxWidth: theme.spacing.unit * 25
   }
 });
 
@@ -130,6 +140,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
         </IconButton>
         <Menu
           id="action-menu"
+          className={classes.menu}
           anchorEl={anchorEl}
           getContentAnchorEl={undefined}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -146,6 +157,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
               data-qa-action-menu-item={a.title}
               disabled={a.disabled}
               tooltip={a.tooltip}
+              isLoading={a.isLoading}
             >
               {a.title}
             </MenuItem>
