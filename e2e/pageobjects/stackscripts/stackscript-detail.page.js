@@ -42,8 +42,8 @@ class StackScriptDetail extends Page {
         return $(`${selector}="${stackScriptAuthor}"]`);
     }
 
-    getStackScriptCompatibleDisrobutions(){
-        this.compatibleDistrobutions.waitForVisible(constants.wait.normal);
+    getStackScriptCompatibleDistributions(){
+        this.compatibleDistributions.waitForVisible(constants.wait.normal);
         const distroListText = this.compatibleDistributions.getText();
         const cleanText = distroListText.replace('Compatible with: ','');
         return cleanText.split(',').map(distro=> distro.trim());
