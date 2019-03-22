@@ -1,6 +1,8 @@
 import * as React from 'react';
+import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
 
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -10,8 +12,6 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
-import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -31,14 +31,40 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames> & PaginationProps<Linode.Event>;
+type CombinedProps = WithStyles<ClassNames>;
 
 export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
+  const [events, setEvents] = React.useState<Linode.Event[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string | undefined>(undefined);
+  const [currentPage, setCurrentPage] = React.useState<number>(1);
+  const [isRequesting, setRequesting] = React.useState<boolean>(false);
+
+  const getNext = () => {
+    setRequesting(true);
+    setCurrentPage(currentPage + 1);
+    getEvents({ page: currentPage, pageSize: 50 }).then(
+      handleEventsRequestSuccess
+    );
+  };
+
+  const handleEventsRequestSuccess = (
+    response: Linode.ResourcePage<Linode.Event>
+  ) => {
+    setEvents([...events, ...response.data]);
+    setLoading(false);
+    setRequesting(false);
+    setError(undefined);
+  };
+
   React.useEffect(() => {
-    props.request();
+    setLoading(true);
+    setRequesting(true);
+    setError(undefined);
+    getEvents().then(handleEventsRequestSuccess);
   }, []);
 
-  const { classes, count, data, error, loading, page, pageSize } = props;
+  const { classes } = props;
 
   return (
     <>
@@ -59,26 +85,23 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
               <TableCell data-qa-events-time-header>Time</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{renderTableBody(loading, data, error)}</TableBody>
+          <TableBody>
+            {renderTableBody(loading, isRequesting, events, error)}
+          </TableBody>
         </Table>
-        <PaginationFooter
-          count={count}
-          page={page}
-          pageSize={pageSize}
-          handlePageChange={props.handlePageChange}
-          handleSizeChange={props.handlePageSizeChange}
-          eventCategory="event list"
-          padded
-        />
       </Paper>
+      <Waypoint onEnter={getNext}>
+        <div style={{ minHeight: '150px' }} />
+      </Waypoint>
     </>
   );
 };
 
 export const renderTableBody = (
   loading: boolean,
+  isRequesting: boolean,
   events?: Linode.Event[],
-  error?: Error
+  error?: string
 ) => {
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
@@ -99,22 +122,19 @@ export const renderTableBody = (
       />
     );
   } else {
-    return events.map((thisEvent, idx) => (
-      <EventRow key={`event-list-item-${idx}`} event={thisEvent} />
-    ));
+    return (
+      <>
+        {events.map((thisEvent, idx) => (
+          <EventRow key={`event-list-item-${idx}`} event={thisEvent} />
+        ))}
+        {isRequesting && <CircleProgress mini />}
+      </>
+    );
   }
 };
 
-const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) => {
-  return getEvents(params, filters).then(response => response.data);
-};
-
 const styled = withStyles(styles);
-const paginated = Pagey(updatedRequest);
 
-const enhanced = compose<CombinedProps, {}>(
-  styled,
-  paginated
-);
+const enhanced = compose<CombinedProps, {}>(styled);
 
 export default enhanced(EventsLanding);
