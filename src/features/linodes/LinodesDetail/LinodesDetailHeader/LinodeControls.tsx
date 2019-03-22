@@ -74,6 +74,8 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     setEditableLabelError
   } = props;
 
+  const disabled = linode._permissions === 'read_only';
+
   const submitConfigChoice = () => {
     if (configDrawerSelected && configDrawerAction) {
       configDrawerAction(configDrawerSelected);
@@ -127,6 +129,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           data-qa-launch-console
           disableFocusRipple={true}
           disableRipple={true}
+          disabled={disabled}
         >
           Launch Console
         </Button>
@@ -137,6 +140,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           label={linode.label}
           noConfigs={linode._configs.length === 0}
           openConfigDrawer={openConfigDrawer}
+          disabled={disabled}
         />
       </Grid>
       <LinodeConfigSelectionDrawer

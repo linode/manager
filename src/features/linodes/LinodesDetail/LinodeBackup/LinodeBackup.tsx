@@ -55,6 +55,7 @@ import { formatDate } from 'src/utilities/formatDate';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import LinodePermissionsError from '../LinodePermissionsError';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
@@ -112,6 +113,7 @@ interface ContextProps {
   backupsSchedule: Linode.LinodeBackupSchedule;
   linodeInTransition: boolean;
   linodeLabel: string;
+  permissions: Linode.GrantLevel;
 }
 
 interface PreloadedProps {
@@ -438,6 +440,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   Placeholder = (): JSX.Element | null => {
     const { enabling } = this.state;
+    const { permissions } = this.props;
+    const disabled = permissions === 'read_only';
     const backupsMonthlyPrice = path<number>(
       ['types', 'response', 'addons', 'backups', 'price', 'monthly'],
       this.props
@@ -462,16 +466,20 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     );
 
     return (
-      <Placeholder
-        icon={VolumeIcon}
-        title="Backups"
-        copy={backupPlaceholderText}
-        buttonProps={{
-          onClick: () => this.enableBackups(),
-          children: 'Enable Backups',
-          loading: enabling
-        }}
-      />
+      <React.Fragment>
+        {disabled && <LinodePermissionsError />}
+        <Placeholder
+          icon={VolumeIcon}
+          title="Backups"
+          copy={backupPlaceholderText}
+          buttonProps={{
+            onClick: () => this.enableBackups(),
+            children: 'Enable Backups',
+            loading: enabling,
+            disabled
+          }}
+        />
+      </React.Fragment>
     );
   };
 
@@ -641,13 +649,21 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   Management = (): JSX.Element | null => {
-    const { classes, linodeID, linodeRegion } = this.props;
+    const { classes, linodeID, linodeRegion, permissions } = this.props;
+    const disabled = permissions === 'read_only';
+
     const { backups: backupsResponse } = this.state;
     const backups = aggregateBackups(backupsResponse);
 
     return (
       <React.Fragment>
-        <Typography variant="h2" className={classes.title} data-qa-title>
+        {disabled && <LinodePermissionsError />}
+        <Typography
+          role="header"
+          variant="h2"
+          className={classes.title}
+          data-qa-title
+        >
           Backups
         </Typography>
         {backups.length ? (
@@ -667,6 +683,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
           data-qa-cancel
+          disabled={disabled}
         >
           Cancel Backups
         </Button>
@@ -762,7 +779,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeInTransition: isLinodeInTransition(linode.status),
   linodeLabel: linode.label,
   linodeRegion: linode.region,
-  linodeType: linode.type
+  linodeType: linode.type,
+  permissions: linode._permissions
 }));
 
 export default compose<CombinedProps, {}>(
