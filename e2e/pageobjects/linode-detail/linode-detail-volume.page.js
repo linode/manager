@@ -236,6 +236,7 @@ export class VolumeDetail extends Page {
     }
 
     detachVolume(volume, detach=true) {
+
         this.selectActionMenuItem(volume, 'Detach');
 
         const dialogTitle = $('[data-qa-dialog-title]');
@@ -389,10 +390,9 @@ export class VolumeDetail extends Page {
             .map(volume => volume.getAttribute(attribute));
     }
 
-    hoverVolumeTags(label, volId){
-        const id = volId ? volId : this.volumeRow(label).$('..').getAttribute(this.volumeCellElem.selector.slice(1,-1));
-        const selector = this.volumeCellElem.selector.replace(']','');
-        $(`${selector}="${id}"]>td:nth-child(2)`).moveToObject();
+    hoverVolumeTags(label) {
+        const volumeRow = this.volumeRow(label).$('..');
+        volumeRow.$(this.totalTags.selector).moveToObject();
     }
 }
 

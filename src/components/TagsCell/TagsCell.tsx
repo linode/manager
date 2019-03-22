@@ -50,7 +50,7 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = props => {
           leaveDelay={50}
           interactive={true}
         >
-          <div className={classes.wrapper}>
+          <div className={classes.wrapper} data-qa-total-tags>
             <a href="javascript:;" className={classes.tagLink}>
               {tags.length}
             </a>

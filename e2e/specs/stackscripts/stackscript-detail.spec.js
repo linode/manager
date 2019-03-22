@@ -1,7 +1,7 @@
 const { constants } = require('../../constants');
 import {
     apiDeleteMyStackScripts,
-    getDistrobutionLabel,
+    getDistributionLabel,
     timestamp,
     switchTab,
 } from '../../utils/common';
@@ -21,25 +21,25 @@ describe('StackScript - detail page and drawer suite', () => {
       }, constants.wait.normal);
       const titleAndAuthor = $$(`${ListStackScripts.stackScriptTitle.selector} h3`)[0].getText();
       const deploys = $$(ListStackScripts.stackScriptDeploys.selector)[0].getText();
-      const compatibleDisrobutions = $$(ListStackScripts.stackScriptCompatibleDistrobutions.selector)[0].$$('div').map(distro => distro.getText());
+      const compatibleDistributions = $$(ListStackScripts.stackScriptCompatibleDistributions.selector)[0].$$('div').map(distro => distro.getText());
       const getTitleAndAuthor = titleAndAuthor.split('/');
       const stackScriptDetails = {
           title: getTitleAndAuthor[1].trim(),
           author: getTitleAndAuthor[0].trim(),
           deploys: deploys,
-          distrobutions: compatibleDisrobutions
+          distributions: compatibleDistributions
       }
       return stackScriptDetails;
   }
 
-  const verifyStackScriptDetailPageOrDrawer = (title,author,deployments,disrobutions,description,code) => {
+  const verifyStackScriptDetailPageOrDrawer = (title,author,deployments,distributions,description,code) => {
       expect(StackScriptDetail.stackScriptTitle(title).isVisible()).toBe(true);
       expect(StackScriptDetail.stackScriptAuthor(author).isVisible()).toBe(true);
       expect(StackScriptDetail.stackScriptDeployments.getText()).toContain(deployments);
-      const selectedDistrobutionLabels = getDistrobutionLabel(disrobutions);
-      const displayedDistrobutionLabels = StackScriptDetail.getStackScriptCompatibleDisrobutions();
-      selectedDistrobutionLabels.forEach((distro) => {
-          expect(displayedDistrobutionLabels.includes(distro)).toBe(true);
+      const selectedDistributionLabels = getDistributionLabel(distributions);
+      const displayedDistributionsLabels = StackScriptDetail.getStackScriptCompatibleDistributions();
+      selectedDistributionLabels.forEach((distro) => {
+          expect(displayedDistributionsLabels.includes(distro)).toBe(true);
       });
       if(description){
           expect(StackScriptDetail.stackScriptDescription.getText()).toContain(description);
@@ -72,7 +72,7 @@ describe('StackScript - detail page and drawer suite', () => {
       });
 
       it('Verify StackScript details correspond to the row clicked', () => {
-          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distrobutions);
+          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distributions);
       });
 
       it('Breadcrumb link navigates back to StackScript landing', () => {
@@ -160,7 +160,7 @@ describe('StackScript - detail page and drawer suite', () => {
       });
 
       it('Verify StackScript drawer details correspond to the row clicked', () => {
-          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distrobutions);
+          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distributions);
           expect(StackScriptDetail.drawerTitle.getText()).toEqual(`${selectedStackScript.author} / ${selectedStackScript.title}`);
           StackScriptDetail.drawerClose.click();
           ConfigureLinode.drawerBase.waitForVisible(constants.wait.normal, true);

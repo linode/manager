@@ -26,11 +26,12 @@ class ListDomains extends Page {
 
     baseElemsDisplay(placeholder) {
         if (placeholder) {
-            const placeholderTitle = 'Add a Domain';
+            const placeholderTitle = 'Manage your Domains';
+            const buttonText = 'Add a Domain';
             this.placeholderText.waitForVisible(constants.wait.normal);
 
-            expect(this.placeholderText.getText()).toBe(placeholderTitle);
-            expect(this.createButton.getText()).toBe(placeholderTitle);
+            expect(this.placeholderText.getText()).toMatch(placeholderTitle);
+            expect(this.createButton.getText()).toMatch(buttonText);
             return this;
         }
 
