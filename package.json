@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.50.1",
+  "version": "0.51.0",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -243,7 +243,9 @@
     "yargs": "11.0.0"
   },
   "jest": {
-    "roots": ["<rootDir>/src"],
+    "roots": [
+      "<rootDir>/src"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],
