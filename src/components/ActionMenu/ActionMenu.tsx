@@ -136,6 +136,12 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
+          BackdropProps={{
+            style: {
+              backgroundColor: 'transparent'
+            },
+            'data-qa-backdrop': true
+          }}
         >
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {(actions as Action[]).map((a, idx) => (
