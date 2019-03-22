@@ -55,7 +55,7 @@ export const UserEventsList: React.StatelessComponent<
         .reduce((result, event): UserEventsListItemProps[] => {
           const title = eventMessageGenerator(
             event,
-            reportUnfoundEvent,
+            reportUnfoundEvent as any,
             reportEventError
           );
           const content = event._deleted

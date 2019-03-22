@@ -34,7 +34,7 @@ interface Props {
 
 export const onUnfound = (event: Linode.Event) => {
   return `Event: ${event.action}${
-    event.entity ? ` on ${event.entity.label}` : '.'
+    event.entity ? ` on ${event.entity.label}` : ''
   }`;
 };
 
@@ -59,7 +59,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
 };
 
 export interface RowProps extends WithStyles<ClassNames> {
-  message?: string;
+  message?: string | void;
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
