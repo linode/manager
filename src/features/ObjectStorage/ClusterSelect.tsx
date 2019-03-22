@@ -2,33 +2,19 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import InputLabel from 'src/components/core/InputLabel';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import clustersContainer, {
   StateProps
 } from 'src/containers/clusters.container';
 import { formatRegion } from 'src/utilities';
 
-export const regionSupportMessage =
-  'This region does not currently support Block Storage.';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 interface Props {
   onChange: (value: string) => void;
   onBlur: (e: any) => void;
   error?: string;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
-
+type CombinedProps = Props & StateProps;
 export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
   const { error, onChange, onBlur, clustersData, clustersError } = props;
 
@@ -64,11 +50,6 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  clustersContainer
-);
+const enhanced = compose<CombinedProps, Props>(clustersContainer);
 
 export default enhanced(ClusterSelect);

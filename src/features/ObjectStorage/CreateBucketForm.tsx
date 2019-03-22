@@ -37,7 +37,9 @@ interface Props {
 
 type CombinedProps = Props & BucketsRequests & WithStyles<ClassNames>;
 
-const CreateBucketForm: React.StatelessComponent<CombinedProps> = props => {
+export const CreateBucketForm: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { onClose, onSuccess, createBucket } = props;
 
   return (

@@ -10,7 +10,7 @@ import CreateBucketForm from './CreateBucketForm';
 
 type CombinedProps = StateProps & DispatchProps & InjectedNotistackProps;
 
-const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
+export const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
   const { isOpen, closeBucketDrawer, enqueueSnackbar } = props;
 
   const onSuccess = (bucketLabel: string) => {
