@@ -1,17 +1,15 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
-import bucketContainer, {
-  DispatchProps as BucketContainerDispatchProps
-} from 'src/containers/bucket.container';
-import { ApplicationState } from 'src/store';
+import bucketDrawerContainer, {
+  DispatchProps,
+  StateProps
+} from 'src/containers/bucketDrawer.container';
 import CreateBucketForm from './CreateBucketForm';
 
-type CombinedProps = BucketContainerDispatchProps &
-  InjectedNotistackProps &
-  StateProps;
+type CombinedProps = StateProps & DispatchProps & InjectedNotistackProps;
+
 const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
   const { isOpen, closeBucketDrawer, enqueueSnackbar } = props;
 
@@ -29,17 +27,8 @@ const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-interface StateProps {
-  isOpen: boolean;
-}
-
-const connected = connect((state: ApplicationState) => ({
-  isOpen: state.bucketDrawer.isOpen
-}));
-
 const enhanced = compose(
-  connected,
   withSnackbar,
-  bucketContainer
+  bucketDrawerContainer
 );
 export default enhanced(BucketDrawer);

@@ -16,10 +16,10 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
-import bucketContainer, {
-  DispatchProps,
-  StateProps
-} from 'src/containers/bucket.container';
+import bucketContainer, { StateProps } from 'src/containers/bucket.container';
+import bucketDrawerContainer, {
+  DispatchProps
+} from 'src/containers/bucketDrawer.container';
 import ListBuckets from './ListBuckets';
 
 type ClassNames = 'root' | 'titleWrapper' | 'title';
@@ -154,7 +154,8 @@ const enhanced = compose<CombinedProps, {}>(
   // @todo: remove withRouter HOC once bucket creation is support
   withRouter,
   styled,
-  bucketContainer
+  bucketContainer,
+  bucketDrawerContainer
 );
 
 export default enhanced(ObjectStorageLanding);
