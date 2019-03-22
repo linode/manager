@@ -146,8 +146,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
         {optionalUDFs.length !== 0 && (
           <ShowMoreExpansion
             name="Show Advanced Options"
-            /** expand the panel by default if there are no required UDFs */
-            defaultExpanded={requiredUDFs.length === 0}
+            defaultExpanded={true}
           >
             <Typography variant="body1" className={classes.advDescription}>
               These fields are additional configuration options and are not
