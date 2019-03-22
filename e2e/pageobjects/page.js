@@ -35,6 +35,7 @@ export default class Page {
     get tags() { return $$('[data-qa-tag]'); }
     get addTag() { return $('[data-qa-add-tag]'); }
     get deleteTag() { return $('[data-qa-delete-tag]'); }
+    get totalTags() { return $('[data-qa-total-tags]'); }
     get helpButton() { return $('[data-qa-help-button]'); }
     get tagsMultiSelect() { return $('[data-qa-multi-select="Type to choose or create a tag."]'); }
     get popoverMsg() { return $('[role="tooltip"]'); }
