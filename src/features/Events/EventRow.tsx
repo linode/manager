@@ -18,6 +18,7 @@ import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
+import getEventsActionLink from 'src/utilities/getEventsActionLink';
 
 type ClassNames = 'root' | 'message';
 
@@ -28,11 +29,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
-  event: Linode.Event;
+interface ExtendedEvent extends Linode.Event {
+  _deleted?: string;
 }
 
-export const onUnfound = (event: Linode.Event) => {
+interface Props {
+  event: ExtendedEvent;
+}
+
+export const onUnfound = (event: ExtendedEvent) => {
   return `Event: ${event.action}${
     event.entity ? ` on ${event.entity.label}` : ''
   }`;
@@ -45,10 +50,16 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
+  const linkTarget = getEventsActionLink(
+    event.action,
+    event.entity,
+    event._deleted,
+    (s: string) => props.history.push(s)
+  );
 
   const rowProps = {
     created: event.created,
-    linkTarget: undefined, // no links for initial POC
+    linkTarget,
     message: eventMessageGenerator(event, onUnfound),
     status: pathOr(undefined, ['status'], entity),
     type,

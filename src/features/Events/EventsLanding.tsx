@@ -18,6 +18,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getEvents } from 'src/services/account';
+import { setDeletedEvents } from 'src/store/events/event.helpers';
 
 import EventRow from './EventRow';
 
@@ -50,7 +51,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const handleEventsRequestSuccess = (
     response: Linode.ResourcePage<Linode.Event>
   ) => {
-    setEvents([...events, ...response.data]);
+    const newEvents = [...events, ...response.data];
+    const eventsWithDeletions = setDeletedEvents(newEvents);
+    setEvents(eventsWithDeletions);
     setLoading(false);
     setRequesting(false);
     setError(undefined);
