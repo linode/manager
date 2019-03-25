@@ -60,7 +60,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return (
-        <Grid item xs={12} key={field.name}>
+        <Grid item xs={12} sm={6} md={4} key={field.name}>
           <UserDefinedMultiSelect
             key={field.name}
             field={field}
@@ -144,10 +144,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
 
         {/* Optional Fields */}
         {optionalUDFs.length !== 0 && (
-          <ShowMoreExpansion
-            name="Show Advanced Options"
-            defaultExpanded={true}
-          >
+          <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
             <Typography variant="body1" className={classes.advDescription}>
               These fields are additional configuration options and are not
               required for creation.
@@ -155,7 +152,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
             <div
               className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
             >
-              <Grid container alignItems="center">
+              <Grid container alignItems="flex-start">
                 {optionalUDFs.map(
                   (field: Linode.StackScript.UserDefinedField) => {
                     const error = getError(field, this.props.errors);

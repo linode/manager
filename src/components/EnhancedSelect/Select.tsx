@@ -257,7 +257,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   small: {
     minHeight: 32,
-    minWidth: 'auto'
+    minWidth: 'auto',
+    marginTop: 0
   }
 });
 

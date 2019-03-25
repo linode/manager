@@ -34,14 +34,17 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
     const { udf_data, error, field, placeholder, isOptional } = this.props;
 
     return (
-      <TextField
-        required={!isOptional}
-        onChange={this.handleUpdateText}
-        label={field.label}
-        value={udf_data[field.name] || ''}
-        placeholder={placeholder}
-        errorText={error}
-      />
+      <React.Fragment>
+        <TextField
+          required={!isOptional}
+          onChange={this.handleUpdateText}
+          label={field.label}
+          value={udf_data[field.name] || ''}
+          errorText={error}
+          small={isOptional}
+          helperText={placeholder}
+        />
+      </React.Fragment>
     );
   };
 
@@ -66,6 +69,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         error={error}
         hideStrengthLabel
         className={!isOptional ? classes.accessPanel : ''}
+        small={isOptional}
       />
     );
   };

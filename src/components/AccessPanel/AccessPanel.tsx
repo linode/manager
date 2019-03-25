@@ -25,7 +25,9 @@ type ClassNames =
   | 'cellCheckbox'
   | 'cellUser'
   | 'userWrapper'
-  | 'gravatar';
+  | 'gravatar'
+  | 'small'
+  | 'passwordInputOuter';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -56,7 +58,22 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   gravatar: {
     borderRadius: '50%',
     marginRight: theme.spacing.unit
-  }
+  },
+  small: {
+    '&$root': {
+      marginTop: 0
+    },
+    '& $passwordInputOuter': {
+      marginTop: 0
+    },
+    '& .input': {
+      minHeight: 32,
+      '& input': {
+        padding: 8
+      }
+    }
+  },
+  passwordInputOuter: {}
 });
 
 const styled = withStyles(styles);
@@ -75,6 +92,7 @@ interface Props {
   disabledReason?: string;
   hideStrengthLabel?: boolean;
   className?: string;
+  small?: boolean;
 }
 
 export interface UserSSHKeyObject {
@@ -103,14 +121,16 @@ class AccessPanel extends React.Component<CombinedProps> {
       disabled,
       disabledReason,
       hideStrengthLabel,
-      className
+      className,
+      small
     } = this.props;
 
     return (
       <Paper
         className={classNames(
           {
-            [classes.root]: true
+            [classes.root]: true,
+            [classes.small]: small
           },
           className
         )}
@@ -118,6 +138,7 @@ class AccessPanel extends React.Component<CombinedProps> {
         <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
           {error && <Notice text={error} error />}
           <PasswordInput
+            className={classes.passwordInputOuter}
             required={required}
             disabled={disabled}
             disabledReason={disabledReason || ''}
