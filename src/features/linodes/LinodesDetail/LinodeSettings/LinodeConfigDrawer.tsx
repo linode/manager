@@ -41,6 +41,7 @@ import createDevicesFromStrings, {
   DevicesAsStrings
 } from 'src/utilities/createDevicesFromStrings';
 import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
@@ -237,7 +238,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   renderLoading = () => <CircleProgress />;
 
   renderErrorState = () => (
-    <ErrorState errorText="Unable to loading configurations." />
+    <ErrorState errorText="Unable to load configurations." />
   );
 
   renderForm = (errors?: Linode.ApiFieldError[]) => {
@@ -588,12 +589,32 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       updateLinodeConfig
     } = this.props;
 
+    /**
+     * This is client-side validation to patch an API bug.
+     * Currently, POST requests don't verify that the selected root device
+     * has a valid device attached to it. PUT requests do this, however,
+     * leading to a discrepancy. If root_device is sda and sda is null,
+     * we should head off that error before submitting the request.
+     * @todo remove once the API has fixed this behavior.
+     */
+
+    const isValid = validateConfigData(this.state.fields);
+    if (!isValid) {
+      return this.setState({
+        errors: [
+          {
+            reason: 'You must select a valid Disk as your root device.',
+            field: 'root_device'
+          }
+        ]
+      });
+    }
+
+    const configData = this.convertStateToData(this.state.fields);
+
     /** Editing */
     if (linodeConfigId) {
-      return updateLinodeConfig(
-        linodeConfigId,
-        this.convertStateToData(this.state.fields)
-      )
+      return updateLinodeConfig(linodeConfigId, configData)
         .then(_ => {
           this.props.onClose();
           this.props.onSuccess();
@@ -610,17 +631,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     }
 
     /** Creating */
-    return createLinodeConfig(this.convertStateToData(this.state.fields))
-      .then(response => {
+    return createLinodeConfig(configData)
+      .then(_ => {
         this.props.onClose();
         this.props.onSuccess();
       })
       .catch(error =>
         this.setState({
-          errors: pathOr(
-            [{ reason: 'Unable to create config. Please try again.' }],
-            ['response', 'data', 'errors'],
-            error
+          errors: getAPIErrorOrDefault(
+            error,
+            'Unable to create config. Please try again.'
           )
         })
       );
@@ -745,6 +765,17 @@ const isUsingCustomRoot = (value: string) =>
     '/dev/sdg',
     '/dev/sdh'
   ].includes(value) === false;
+
+const validateConfigData = (configData: EditableFields) => {
+  /**
+   * Whatever disk is selected for root_disk can't have a value of null ('none'
+   * in our form state).
+   *
+   */
+  const rootDevice = pathOr('none', [0], configData.root_device.match(/sd./));
+  const selectedDisk = pathOr('none', ['devices', rootDevice], configData);
+  return selectedDisk !== 'none';
+};
 
 const styled = withStyles(styles);
 

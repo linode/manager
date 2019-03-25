@@ -2,7 +2,7 @@ import createDevicesFromStrings from './createDevicesFromStrings';
 
 describe('LinodeRescue', () => {
   describe('createRescueDevicesPostObject', () => {
-    it('Returns the minumum requirement.', () => {
+    it('Returns the minimum requirement.', () => {
       const result = createDevicesFromStrings({});
       const expected = {
         sda: null,
