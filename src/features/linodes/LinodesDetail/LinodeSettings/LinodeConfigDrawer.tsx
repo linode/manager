@@ -196,7 +196,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           });
       }
       /**
-       * If the linodeConfigId is set, we're editting, so we query to get the config data and
+       * If the linodeConfigId is set, we're editing, so we query to get the config data and
        * fill out the form with the data.
        */
     }
