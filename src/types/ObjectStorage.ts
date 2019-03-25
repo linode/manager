@@ -14,4 +14,12 @@ namespace Linode {
     region: string;
     hostname: string;
   }
+
+  export interface Cluster {
+    region: string;
+    status: string; // @todo: should be enum
+    id: string;
+    domain: string;
+    static_site_domain: string;
+  }
 }
