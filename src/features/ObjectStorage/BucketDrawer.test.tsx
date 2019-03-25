@@ -8,8 +8,6 @@ describe('BucketDrawer', () => {
       isOpen={true}
       openBucketDrawer={jest.fn()}
       closeBucketDrawer={jest.fn()}
-      onPresentSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
     />
   );
 

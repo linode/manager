@@ -1,4 +1,3 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
@@ -8,27 +7,20 @@ import bucketDrawerContainer, {
 } from 'src/containers/bucketDrawer.container';
 import CreateBucketForm from './CreateBucketForm';
 
-type CombinedProps = StateProps & DispatchProps & InjectedNotistackProps;
+type CombinedProps = StateProps & DispatchProps;
 
 export const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
-  const { isOpen, closeBucketDrawer, enqueueSnackbar } = props;
-
-  const onSuccess = (bucketLabel: string) => {
-    closeBucketDrawer();
-    enqueueSnackbar(`Bucket ${bucketLabel} has been created.`, {
-      variant: 'success'
-    });
-  };
+  const { isOpen, closeBucketDrawer } = props;
 
   return (
     <Drawer onClose={closeBucketDrawer} open={isOpen} title="Create a Bucket">
-      <CreateBucketForm onClose={closeBucketDrawer} onSuccess={onSuccess} />
+      <CreateBucketForm
+        onClose={closeBucketDrawer}
+        onSuccess={() => closeBucketDrawer()}
+      />
     </Drawer>
   );
 };
 
-const enhanced = compose(
-  withSnackbar,
-  bucketDrawerContainer
-);
+const enhanced = compose(bucketDrawerContainer);
 export default enhanced(BucketDrawer);
