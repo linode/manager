@@ -135,7 +135,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           recentEvent={linode.recentEvent}
           id={linode.id}
           label={linode.label}
-          noImage={!linode.image}
+          noConfig={!linode._configs || linode._configs.length === 0}
           openConfigDrawer={openConfigDrawer}
         />
       </Grid>
