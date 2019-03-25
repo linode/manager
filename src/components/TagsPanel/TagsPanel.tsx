@@ -1,8 +1,10 @@
 import AddCircle from '@material-ui/icons/AddCircle';
+import * as classNames from 'classnames';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Button from 'src/components/core/Button';
 import {
   StyleRulesCallback,
@@ -20,7 +22,9 @@ type ClassNames =
   | 'addButtonWrapper'
   | 'addButton'
   | 'tagsPanelItemWrapper'
-  | 'selectTag';
+  | 'selectTag'
+  | 'progress'
+  | 'loading';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
@@ -60,7 +64,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   tagsPanelItemWrapper: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
+    position: 'relative'
   },
   selectTag: {
     marginTop: theme.spacing.unit,
@@ -106,6 +111,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     '& .react-select__value-container': {
       padding: '6px'
     }
+  },
+  progress: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2
+  },
+  loading: {
+    opacity: 0.25
   }
 });
 
@@ -128,6 +145,7 @@ interface State {
   isCreatingTag: boolean;
   tagInputValue: string;
   listDeletingTags: string[];
+  loading?: boolean;
 }
 
 export interface Props {
@@ -143,7 +161,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     tagError: '',
     isCreatingTag: false,
     tagInputValue: '',
-    listDeletingTags: []
+    listDeletingTags: [],
+    loading: false
   };
 
   componentDidMount() {
@@ -189,7 +208,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
      */
     this.setState(
       {
-        listDeletingTags: [...this.state.listDeletingTags, label]
+        listDeletingTags: [...this.state.listDeletingTags, label],
+        loading: true
       },
       () => {
         /*
@@ -216,7 +236,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               ],
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
-              )
+              ),
+              loading: false
             });
           })
           .catch(e => {
@@ -252,8 +273,11 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     }
 
     this.setState({
-      tagError: ''
+      tagError: '',
+      loading: true
     });
+
+    this.toggleTagInput();
 
     updateTags([...tags, value.label])
       .then(() => {
@@ -268,7 +292,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           return eachTag.label !== value.label;
         });
         this.setState({
-          tagsToSuggest: filteredTags
+          tagsToSuggest: filteredTags,
+          loading: false
         });
       })
       .catch(e => {
@@ -290,12 +315,27 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       listDeletingTags,
       tagsToSuggest,
       tagInputValue,
-      tagError
+      tagError,
+      loading
     } = this.state;
 
     return (
-      <div className={classes.root}>
-        <div className={classes.tagsPanelItemWrapper}>
+      <div
+        className={classNames({
+          [classes.root]: true
+        })}
+      >
+        <div
+          className={classNames({
+            [classes.tagsPanelItemWrapper]: true,
+            [classes.loading]: loading
+          })}
+        >
+          {loading && (
+            <div className={classes.progress}>
+              <CircleProgress mini />
+            </div>
+          )}
           {tags.map(eachTag => {
             return (
               <TagsPanelItem
