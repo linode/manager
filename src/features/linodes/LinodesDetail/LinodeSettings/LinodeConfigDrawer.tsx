@@ -603,7 +603,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       return this.setState({
         errors: [
           {
-            reason: 'You must select a valid Disk as your root device.',
+            reason:
+              'You must select a valid Disk or Volume as your root device.',
             field: 'root_device'
           }
         ]
