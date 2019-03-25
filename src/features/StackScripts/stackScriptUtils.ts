@@ -25,12 +25,12 @@ export const getMineAndAccountStackScripts = (
   filter?: any,
   stackScriptGrants?: Linode.Grant[]
 ) => {
-  /*
-    Secondary users can't see other account users but they have a list of
-    available account stackscripts in grant call.
-    If user is restricted we get the stackscripts for the list in grants.
-    Otherwise we pull all stackscripts for users on the account.
-  */
+  /**
+   * Secondary users can't see other account users but they have a list of
+   * available account stackscripts in grant call.
+   * If user is restricted we get the stackscripts for the list in grants.
+   * Otherwise we pull all stackscripts for users on the account.
+   */
   if (stackScriptGrants) {
     /**
      * don't try to get another page of stackscripts because the request to /grants
@@ -54,6 +54,12 @@ export const getMineAndAccountStackScripts = (
       };
     });
   } else {
+    /**
+     * in this case, we are unrestricted user, so instead of getting the
+     * StackScripts from the /grants meta data, need to get a list of all
+     * users on the account and make a GET /stackscripts call with the list
+     * of users as a filter
+     */
     return getUsers().then(response => {
       return getStackscripts(params, {
         ...filter,
@@ -83,18 +89,16 @@ export const getCommunityStackscripts = (
   params?: any,
   filter?: any
 ) =>
-  getUsers()
-    .then(response => {
-      return getStackscripts(params, {
-        ...filter,
-        '+and': response.data.reduce(
-          // pull all stackScripts except linode and account users
-          (acc, user) => [...acc, { username: { '+neq': user.username } }],
-          [{ username: { '+neq': 'linode' } }]
-        )
-      });
-    })
-    .catch(() => Promise.resolve(emptyResult));
+  getUsers().then(response => {
+    return getStackscripts(params, {
+      ...filter,
+      '+and': response.data.reduce(
+        // pull all stackScripts except linode and account users
+        (acc, user) => [...acc, { username: { '+neq': user.username } }],
+        [{ username: { '+neq': 'linode' } }]
+      )
+    });
+  });
 
 export type AcceptedFilters = 'username' | 'description' | 'label';
 
