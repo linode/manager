@@ -31,7 +31,7 @@ import {
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import CALinodeCreate from './CALinodeCreate';
+import LinodeCreate from './LinodeCreate';
 import { ExtendedType } from './SelectPlanPanel';
 
 import {
@@ -497,7 +497,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
               Create New Linode
             </Typography>
           </Grid>
-          <CALinodeCreate
+          <LinodeCreate
             regionDisplayInfo={this.getRegionInfo()}
             imageDisplayInfo={this.getImageInfo()}
             typeDisplayInfo={this.getTypeInfo()}

@@ -11,7 +11,7 @@ import {
   getStackScriptsByUser
 } from 'src/features/StackScripts/stackScriptUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import SubTabs, { Tab } from './CALinodeCreateSubTabs';
+import SubTabs, { Tab } from './LinodeCreateSubTabs';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
