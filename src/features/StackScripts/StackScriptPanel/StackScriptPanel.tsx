@@ -9,7 +9,10 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { MapState } from 'src/store/types';
-import { StackScriptTabs } from '../stackScriptUtils';
+import {
+  getAccountStackScripts,
+  getCommunityStackscripts
+} from '../stackScriptUtils';
 import StackScriptPanelContent from './StackScriptPanelContent';
 
 export interface ExtendedLinode extends Linode.Linode {
@@ -92,6 +95,19 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
     );
   }
 }
+
+export const StackScriptTabs = [
+  {
+    title: 'Account StackScripts',
+    request: getAccountStackScripts,
+    category: 'account'
+  },
+  {
+    title: 'Community StackScripts',
+    request: getCommunityStackscripts,
+    category: 'community'
+  }
+];
 
 interface StateProps {
   username: string;

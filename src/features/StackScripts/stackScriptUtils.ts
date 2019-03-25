@@ -92,29 +92,6 @@ export const getCommunityStackscripts = (
       })
     );
 
-export const StackScriptTabs = [
-  {
-    title: 'My StackScripts',
-    request: getStackScriptsByUser,
-    category: 'my'
-  },
-  {
-    title: 'Account StackScripts',
-    request: getAccountStackScripts,
-    category: 'account'
-  },
-  {
-    title: 'Linode StackScripts',
-    request: getStackScriptsByUser,
-    category: 'linode'
-  },
-  {
-    title: 'Community StackScripts',
-    request: getCommunityStackscripts,
-    category: 'community'
-  }
-];
-
 export type AcceptedFilters = 'username' | 'description' | 'label';
 
 export const generateSpecificFilter = (

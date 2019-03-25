@@ -16,7 +16,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
-import CASelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/CASelectStackScriptPanel';
+import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -212,7 +212,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
         <Grid item className={`${classes.main} mlMain py0`}>
           <CreateLinodeDisabled isDisabled={disabled} />
           {generalError && <Notice text={generalError} error={true} />}
-          <CASelectStackScriptPanel
+          <SelectStackScriptPanel
             error={hasErrorFor('stackscript_id')}
             header={header}
             selectedId={selectedStackScriptID}

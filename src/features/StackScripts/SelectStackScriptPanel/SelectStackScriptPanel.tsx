@@ -1,24 +1,26 @@
-import { compose, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import RenderGuard from 'src/components/RenderGuard';
-import TabbedPanel from 'src/components/TabbedPanel';
+import Notice from 'src/components/Notice';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
 import { getStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/format-date-iso8601';
+import { getParamFromUrl } from 'src/utilities/queryParams';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
-import { StackScriptTabs } from '../stackScriptUtils';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
@@ -27,7 +29,14 @@ export interface ExtendedLinode extends Linode.Linode {
   subHeadings: string[];
 }
 
-type ClassNames = 'root' | 'table' | 'link' | 'selecting';
+type ClassNames =
+  | 'root'
+  | 'table'
+  | 'link'
+  | 'selecting'
+  | 'panel'
+  | 'inner'
+  | 'header';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -51,10 +60,25 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     textAlign: 'right',
     marginBottom: 24,
     marginTop: theme.spacing.unit
+  },
+  panel: {
+    flexGrow: 1,
+    width: '100%',
+    backgroundColor: theme.color.white,
+    marginBottom: theme.spacing.unit * 3
+  },
+  inner: {
+    padding: theme.spacing.unit * 2,
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit * 3
+    }
+  },
+  header: {
+    paddingBottom: theme.spacing.unit * 2
   }
 });
 
-interface Props {
+interface Props extends RenderGuardProps {
   selectedId: number | undefined;
   selectedUsername?: string;
   error?: string;
@@ -68,9 +92,19 @@ interface Props {
   publicImages: Linode.Image[];
   resetSelectedStackScript: () => void;
   disabled?: boolean;
+  request: (
+    username: string,
+    params?: any,
+    filter?: any
+  ) => Promise<Linode.ResourcePage<any>>;
+  category: string;
+  header: string;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  StateProps &
+  RenderGuardProps &
+  WithStyles<ClassNames>;
 
 interface State {
   stackScript?: Linode.StackScript.Response;
@@ -87,9 +121,12 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   componentDidMount() {
-    if (this.props.selectedId) {
+    const selected =
+      this.props.selectedId ||
+      getParamFromUrl(location.search, 'stackScriptID');
+    if (selected) {
       this.setState({ stackScriptLoading: true });
-      getStackScript(this.props.selectedId)
+      getStackScript(selected)
         .then(stackScript => {
           this.setState({ stackScript, stackScriptLoading: false });
           this.props.onSelect(
@@ -111,22 +148,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  createTabs = StackScriptTabs.map(tab => ({
-    title: tab.title,
-    render: () => (
-      <SelectStackScriptPanelContent
-        onSelect={this.props.onSelect}
-        resetStackScriptSelection={this.props.resetSelectedStackScript}
-        publicImages={this.props.publicImages}
-        currentUser={this.props.username}
-        request={tab.request}
-        key={tab.category + '-tab'}
-        category={tab.category}
-        disabled={this.props.disabled}
-      />
-    )
-  }));
-
   handleTabChange = () => {
     /*
      * if we're coming from a query string, the stackscript will be preselected
@@ -141,7 +162,14 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { error, classes, selectedId } = this.props;
+    const {
+      category,
+      classes,
+      header,
+      request,
+      selectedId,
+      error
+    } = this.props;
     const { stackScript, stackScriptLoading, stackScriptError } = this.state;
 
     if (selectedId) {
@@ -173,17 +201,13 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, false)}
                   checked={selectedId === stackScript.id}
-                  updateFor={[selectedId === stackScript.id, classes]}
+                  updateFor={[selectedId === stackScript.id]}
                   stackScriptID={stackScript.id}
                 />
               </tbody>
             </Table>
             <div className={classes.link}>
-              <Button
-                href="/linodes/create?type=fromStackScript"
-                onClick={this.resetStackScript}
-                type="secondary"
-              >
+              <Button onClick={this.resetStackScript} type="secondary">
                 Choose another StackScript
               </Button>
             </div>
@@ -193,23 +217,36 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <React.Fragment>
-        {stackScriptError && (
-          <Typography variant="body2">
-            An error occured while loading the selected StackScript. Please
-            choose one from the list.
+      <Paper className={classes.panel}>
+        <div className={classes.inner}>
+          {error && <Notice text={error} error />}
+          <Typography
+            className={classes.header}
+            role="header"
+            variant="h2"
+            data-qa-tp-title
+          >
+            {header}
           </Typography>
-        )}
-        <TabbedPanel
-          error={error}
-          rootClass={classes.root}
-          shrinkTabContent={classes.selecting}
-          header={'Select StackScript'}
-          tabs={this.createTabs}
-          initTab={0}
-          handleTabChange={this.handleTabChange}
-        />
-      </React.Fragment>
+          {stackScriptError && (
+            <Typography variant="body2">
+              An error occured while loading the selected StackScript.
+            </Typography>
+          )}
+          <Paper className={classes.selecting}>
+            <SelectStackScriptPanelContent
+              onSelect={this.props.onSelect}
+              resetStackScriptSelection={this.props.resetSelectedStackScript}
+              publicImages={this.props.publicImages}
+              currentUser={this.props.username}
+              request={request}
+              key={category + '-tab'}
+              category={category}
+              disabled={this.props.disabled}
+            />
+          </Paper>
+        </div>
+      </Paper>
     );
   }
 }
@@ -226,12 +263,7 @@ const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose<
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny
->(
+export default compose<CombinedProps, Props>(
   connected,
   RenderGuard,
   styled
