@@ -88,7 +88,7 @@ export default withLabelGenerator;
 
 // Utilities
 
-// Searches 'existingLabels' and appends a zero-padded incrementer to the original label
+// Searches 'existingLabels' and appends a zero-padded increment-er to the original label
 export const dedupeLabel = (
   label: string,
   existingLabels: string[]

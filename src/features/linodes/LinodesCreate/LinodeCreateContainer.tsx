@@ -307,7 +307,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       arg2 = selectedRegion ? selectedRegion.id : '';
     }
 
-    arg3 = this.props.createType;
+    if (this.props.createType === 'fromLinode') {
+      // @todo handle any other custom label cases we'd like to have here
+      arg3 = 'clone';
+    }
 
     return getLabel(arg1, arg2, arg3);
   };
