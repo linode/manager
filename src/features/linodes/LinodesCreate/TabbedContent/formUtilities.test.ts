@@ -9,7 +9,7 @@ describe('Linode Create Utilities', () => {
     ).toBeTruthy();
   });
 
-  it('should filter out all errors expect UDF errors', () => {
+  it('should filter out all errors except UDF errors', () => {
     const mockErrors: Linode.ApiFieldError[] = [
       {
         field: 'label',
