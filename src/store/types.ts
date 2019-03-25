@@ -56,6 +56,10 @@ export interface RequestableData<D> {
   error?: Error | Linode.ApiFieldError[];
 }
 
+export interface RequestableRequiredData<D> extends RequestableData<D> {
+  data: D;
+}
+
 export type EventHandler = (
   event: Linode.EntityEvent,
   dispatch: Dispatch<any>,

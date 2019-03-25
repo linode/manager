@@ -3,6 +3,7 @@ import * as React from 'react';
 import { RouterProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   StyleRulesCallback,
@@ -15,9 +16,10 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
-import bucketContainer, {
-  Props as BucketContainerProps
-} from 'src/containers/bucket.container';
+import bucketContainer, { StateProps } from 'src/containers/bucket.container';
+import bucketDrawerContainer, {
+  DispatchProps
+} from 'src/containers/bucketDrawer.container';
 import ListBuckets from './ListBuckets';
 
 type ClassNames = 'root' | 'titleWrapper' | 'title';
@@ -33,7 +35,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 // @todo: remove RouterProps when bucket creation is supported
-type CombinedProps = BucketContainerProps &
+type CombinedProps = StateProps &
+  DispatchProps &
   RouterProps &
   WithStyles<ClassNames>;
 
@@ -41,7 +44,14 @@ export const ObjectStorageLanding: React.StatelessComponent<
   CombinedProps
 > = props => {
   // @todo: remove router.history prop when bucket creation is supported
-  const { classes, bucketsData, bucketsLoading, bucketsError, history } = props;
+  const {
+    classes,
+    bucketsData,
+    bucketsLoading,
+    bucketsError,
+    history,
+    openBucketDrawer
+  } = props;
 
   if (bucketsLoading) {
     return <RenderLoading data-qa-loading-state />;
@@ -80,6 +90,13 @@ export const ObjectStorageLanding: React.StatelessComponent<
           >
             Buckets
           </Typography>
+        </Grid>
+        <Grid item>
+          <Grid container>
+            <Grid item className="pt0">
+              <AddNewLink onClick={openBucketDrawer} label="Add a Bucket" />
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>
@@ -137,7 +154,8 @@ const enhanced = compose<CombinedProps, {}>(
   // @todo: remove withRouter HOC once bucket creation is support
   withRouter,
   styled,
-  bucketContainer
+  bucketContainer,
+  bucketDrawerContainer
 );
 
 export default enhanced(ObjectStorageLanding);
