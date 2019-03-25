@@ -2,7 +2,6 @@ import * as React from 'react';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
 
-import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -127,7 +126,7 @@ export const renderTableBody = (
         {events.map((thisEvent, idx) => (
           <EventRow key={`event-list-item-${idx}`} event={thisEvent} />
         ))}
-        {isRequesting && <CircleProgress mini />}
+        {isRequesting && <TableRowLoading colSpan={12} />}
       </>
     );
   }
