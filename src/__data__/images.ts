@@ -252,3 +252,30 @@ export const images: Linode.Image[] = [
     description: null
   }
 ];
+
+export const privateImages: Linode.Image[] = [
+  {
+    created_by: 'linode',
+    deprecated: false,
+    id: 'linode/debian8.7',
+    vendor: 'Debian',
+    size: 1100,
+    type: 'manual',
+    created: '2017-08-15T22:28:13',
+    is_public: false,
+    label: 'Debian 8.7',
+    description: null
+  },
+  {
+    created_by: 'linode',
+    deprecated: false,
+    id: 'linode/containerlinux',
+    vendor: 'CoreOS',
+    size: 3000,
+    type: 'manual',
+    created: '2017-08-15T22:28:13',
+    is_public: false,
+    label: 'Container Linux',
+    description: null
+  }
+];
