@@ -208,6 +208,8 @@ namespace Linode {
 
   export type BootAction = 'reboot' | 'power_down' | null;
 
+  export type KebabAction = BootAction | 'delete';
+
   interface NetStats {
     in: number[][];
     out: number[][];

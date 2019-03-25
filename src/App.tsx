@@ -43,6 +43,8 @@ import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import { isObjectStorageEnabled } from './constants';
+import BucketDrawer from './features/ObjectStorage/BucketDrawer';
+import { requestClusters } from './store/clusters/clusters.actions';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions
@@ -217,9 +219,10 @@ export class App extends React.Component<CombinedProps, State> {
       getAllNodeBalancersWithConfigs()
     ];
 
-    // Make this request only if the feature is enabled.
+    // Make these requests only if the feature is enabled.
     if (isObjectStorageEnabled) {
       dataFetchingPromises.push(actions.requestBuckets());
+      dataFetchingPromises.push(actions.requestClusters());
     }
 
     try {
@@ -406,6 +409,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
+                {isObjectStorageEnabled && <BucketDrawer />}
               </div>
             </>
           </React.Fragment>
@@ -438,6 +442,7 @@ interface DispatchProps {
     requestRegions: () => Promise<Linode.Region[]>;
     requestVolumes: () => Promise<Linode.Volume[]>;
     requestBuckets: () => Promise<Linode.Bucket[]>;
+    requestClusters: () => Promise<Linode.Cluster[]>;
   };
 }
 
@@ -455,7 +460,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
       requestVolumes: () => dispatch(getAllVolumes()),
-      requestBuckets: () => dispatch(getAllBuckets())
+      requestBuckets: () => dispatch(getAllBuckets()),
+      requestClusters: () => dispatch(requestClusters())
     }
   };
 };

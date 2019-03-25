@@ -20,7 +20,7 @@ interface Props {
     fn: (id: number) => void
   ) => void;
   toggleConfirmation: (
-    bootOption: Linode.BootAction,
+    bootOption: Linode.KebabAction,
     linodeId: number,
     linodeLabel: string
   ) => void;
@@ -100,6 +100,19 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
             e.stopPropagation();
+          }
+        },
+        {
+          title: 'Delete',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendEvent({
+              category: 'Linode Action Menu Item',
+              action: 'Delete Linode'
+            });
+            e.preventDefault();
+            e.stopPropagation();
+            toggleConfirmation('delete', linodeId, linodeLabel);
+            closeMenu();
           }
         }
       ];
