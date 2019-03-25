@@ -95,7 +95,8 @@ interface Props extends RenderGuardProps {
   request: (
     username: string,
     params?: any,
-    filter?: any
+    filter?: any,
+    stackScriptGrants?: Linode.Grant[]
   ) => Promise<Linode.ResourcePage<any>>;
   category: string;
   header: string;

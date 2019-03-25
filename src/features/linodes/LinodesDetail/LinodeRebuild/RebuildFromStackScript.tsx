@@ -33,8 +33,8 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
 import {
-  getAccountStackScripts,
-  getCommunityStackscripts
+  getCommunityStackscripts,
+  getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
@@ -212,7 +212,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         header="Select StackScript"
         request={
           props.type === 'account'
-            ? getAccountStackScripts
+            ? getMineAndAccountStackScripts
             : getCommunityStackscripts
         }
       />

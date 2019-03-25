@@ -61,7 +61,8 @@ interface Props {
   request: (
     username: string,
     params?: any,
-    filter?: any
+    filter?: any,
+    stackScriptGrants?: Linode.Grant[]
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   header: string;
 }

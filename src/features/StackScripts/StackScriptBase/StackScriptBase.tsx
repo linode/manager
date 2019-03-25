@@ -98,7 +98,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
     componentDidMount() {
       this.mounted = true;
-      return this.getDataAtPage(0);
+      return this.getDataAtPage(1);
     }
 
     componentWillUnmount() {

@@ -10,8 +10,8 @@ import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { MapState } from 'src/store/types';
 import {
-  getAccountStackScripts,
-  getCommunityStackscripts
+  getCommunityStackscripts,
+  getMineAndAccountStackScripts
 } from '../stackScriptUtils';
 import StackScriptPanelContent from './StackScriptPanelContent';
 
@@ -99,7 +99,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, {}> {
 export const StackScriptTabs = [
   {
     title: 'Account StackScripts',
-    request: getAccountStackScripts,
+    request: getMineAndAccountStackScripts,
     category: 'account'
   },
   {
