@@ -13,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
+import Notice from 'src/components/Notice';
 import { getTags } from 'src/services/tags';
 import TagsPanelItem from './TagsPanelItem';
 
@@ -20,6 +21,8 @@ type ClassNames =
   | 'root'
   | 'tag'
   | 'addButtonWrapper'
+  | 'hasError'
+  | 'errorNotice'
   | 'addButton'
   | 'tagsPanelItemWrapper'
   | 'selectTag'
@@ -52,6 +55,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit * 2 - 1,
     marginBottom: theme.spacing.unit * 2 + 1
   },
+  hasError: {
+    marginTop: 0
+  },
+  errorNotice: {
+    '& .noticeText': {
+      ...theme.typography.body1,
+      fontFamily: '"LatoWeb", sans-serif'
+    }
+  },
   addButton: {
     padding: 0,
     position: 'relative',
@@ -78,7 +90,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       marginTop: 0
     },
     '& .error-for-scroll > div': {
-      width: 'auto',
       flexDirection: 'row',
       flexWrap: 'wrap-reverse'
     },
@@ -88,20 +99,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         color: theme.color.grey1,
         borderLeft: 'none'
       }
-    },
-    '& .error-for-scroll p:last-child': {
-      padding: theme.spacing.unit,
-      marginTop: 0,
-      position: 'absolute',
-      top: '-50px',
-      left: 10,
-      maxWidth: 170,
-      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-      backgroundColor: theme.bg.offWhiteDT,
-      color: `${theme.palette.text.primary}`,
-      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
-      lineHeight: 1.2,
-      zIndex: 5
     },
     '& .react-select__input': {
       fontSize: '.9rem',
@@ -122,7 +119,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     zIndex: 2
   },
   loading: {
-    opacity: 0.25
+    opacity: 0.4
   }
 });
 
@@ -277,10 +274,10 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       loading: true
     });
 
-    this.toggleTagInput();
-
     updateTags([...tags, value.label])
       .then(() => {
+        // collapse the menu on success
+        this.toggleTagInput();
         // set the input value to blank on submit
         this.setState({ tagInputValue: '' });
         /*
@@ -297,11 +294,13 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         });
       })
       .catch(e => {
+        this.setState({ loading: false });
         const tagError = pathOr(
           'Error while creating tag',
           ['response', 'data', 'errors', 0, 'reason'],
           e
         );
+        this.toggleTagInput();
         // display the first error in the array or a generic one
         this.setState({ tagError });
       });
@@ -327,8 +326,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       >
         <div
           className={classNames({
-            [classes.tagsPanelItemWrapper]: true,
-            [classes.loading]: loading
+            [classes.tagsPanelItemWrapper]: true
           })}
         >
           {loading && (
@@ -336,31 +334,45 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               <CircleProgress mini />
             </div>
           )}
-          {tags.map(eachTag => {
-            return (
-              <TagsPanelItem
-                key={eachTag}
-                label={eachTag}
-                tagLabel={eachTag}
-                onDelete={this.handleDeleteTag}
-                className={classes.tag}
-                loading={listDeletingTags.some(inProgressTag => {
-                  /*
-                   * The tag is getting deleted if it appears in the state
-                   * which holds the list of tags queued for deletion
-                   */
-                  return eachTag === inProgressTag;
-                })}
-              />
-            );
-          })}
+          <div
+            className={classNames({
+              [classes.loading]: loading
+            })}
+          >
+            {tags.map(eachTag => {
+              return (
+                <TagsPanelItem
+                  key={eachTag}
+                  label={eachTag}
+                  tagLabel={eachTag}
+                  onDelete={this.handleDeleteTag}
+                  className={classes.tag}
+                  loading={listDeletingTags.some(inProgressTag => {
+                    /*
+                     * The tag is getting deleted if it appears in the state
+                     * which holds the list of tags queued for deletion
+                     */
+                    return eachTag === inProgressTag;
+                  })}
+                />
+              );
+            })}
+          </div>
+          {tagError && (
+            <Notice
+              text={tagError}
+              error
+              spacingBottom={0}
+              spacingTop={16}
+              className={classes.errorNotice}
+            />
+          )}
         </div>
         {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
             options={tagsToSuggest}
             variant="creatable"
-            errorText={tagError}
             onBlur={this.toggleTagInput}
             placeholder="Create or Select a Tag"
             value={tagInputValue}
@@ -368,14 +380,20 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             autoFocus
             className={classes.selectTag}
             blurInputOnSelect={false}
-            menuIsOpen={true}
+            menuIsOpen={!loading && !tagError}
           />
         ) : (
-          <div className={classes.addButtonWrapper}>
+          <div
+            className={classNames({
+              [classes.addButtonWrapper]: true,
+              [classes.hasError]: tagError
+            })}
+          >
             <Button
               onClick={this.toggleTagInput}
               className={classes.addButton}
               type="primary"
+              disabled={loading}
             >
               <AddCircle data-qa-add-tag />
               <Typography>Add New Tag</Typography>
