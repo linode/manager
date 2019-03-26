@@ -102,7 +102,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         </Table>
       </Paper>
       {loadMoreEvents ? (
-        <Waypoint onEnter={getNext} />
+        <Waypoint onEnter={getNext}>
+          <div style={{ minHeight: '150px' }} />
+        </Waypoint>
       ) : (
         <Typography className={classes.noMoreEvents}>
           No more event to show
