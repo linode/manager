@@ -8,7 +8,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import {
   getCommunityStackscripts,
-  getStackScriptsByUser
+  getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import SubTabs, { Tab } from './LinodeCreateSubTabs';
@@ -100,7 +100,7 @@ export class LinodeCreate extends React.PureComponent<
       title: 'Distributions',
       type: 'fromImage',
       render: () => {
-        /** ...rest being all the formstate props and display data */
+        /** ...rest being all the form state props and display data */
         const {
           history,
           handleSelectUDFs,
@@ -332,7 +332,7 @@ export class LinodeCreate extends React.PureComponent<
           <FromStackScriptContent
             accountBackupsEnabled={this.props.accountBackupsEnabled}
             userCannotCreateLinode={this.props.userCannotCreateLinode}
-            request={getStackScriptsByUser}
+            request={getMineAndAccountStackScripts}
             header={'Select a StackScript'}
             imagesData={imagesData!}
             regionsData={regionsData!}
