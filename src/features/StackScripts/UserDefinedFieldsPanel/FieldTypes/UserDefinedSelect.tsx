@@ -1,3 +1,4 @@
+import InputLabel from '@material-ui/core/InputLabel';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
@@ -5,17 +6,21 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'radioGroupLabel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {
+    margin: `${theme.spacing.unit * 3}px 0 0`
+  },
+  radioGroupLabel: {
+    display: 'block'
+  }
 });
 
 interface Props {
@@ -51,13 +56,13 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
     /* Display a select if there are more than 2 oneof options, otherwise display as radio. */
     if (oneof.length > 2) {
       return (
-        <div className={classes.root}>
+        <div>
           {error && <Notice error text={error} spacingTop={8} />}
           <TextField
             label={field.label}
             onChange={this.handleSelectOneOf}
             value={udf_data[field.name]}
-            small={isOptional}
+            // small={isOptional}
             select
           >
             {oneof.map((choice: string, index) => {
@@ -73,11 +78,11 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
     } else {
       return (
         <div className={classes.root}>
-          <Typography role="header" variant="h3">
+          {error && <Notice error text={error} spacingTop={8} />}
+          <InputLabel className={classes.radioGroupLabel}>
             {field.label}
             {!isOptional && ' *'}
-          </Typography>
-          {error && <Notice error text={error} spacingTop={8} />}
+          </InputLabel>
 
           {oneof.map((choice: string, index) => {
             return (

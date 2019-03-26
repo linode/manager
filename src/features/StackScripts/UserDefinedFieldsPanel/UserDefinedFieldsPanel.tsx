@@ -152,14 +152,12 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
             <div
               className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
             >
-              <Grid container alignItems="flex-start">
-                {optionalUDFs.map(
-                  (field: Linode.StackScript.UserDefinedField) => {
-                    const error = getError(field, this.props.errors);
-                    return this.renderField(field, error);
-                  }
-                )}
-              </Grid>
+              {optionalUDFs.map(
+                (field: Linode.StackScript.UserDefinedField) => {
+                  const error = getError(field, this.props.errors);
+                  return this.renderField(field, error);
+                }
+              )}
             </div>
           </ShowMoreExpansion>
         )}

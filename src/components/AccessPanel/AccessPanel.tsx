@@ -27,7 +27,8 @@ type ClassNames =
   | 'userWrapper'
   | 'gravatar'
   | 'small'
-  | 'passwordInputOuter';
+  | 'passwordInputOuter'
+  | 'isOptional';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -73,7 +74,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       }
     }
   },
-  passwordInputOuter: {}
+  passwordInputOuter: {},
+  isOptional: {
+    '& $passwordInputOuter': {
+      marginTop: 0
+    }
+  }
 });
 
 const styled = withStyles(styles);
@@ -93,6 +99,7 @@ interface Props {
   hideStrengthLabel?: boolean;
   className?: string;
   small?: boolean;
+  isOptional?: boolean;
 }
 
 export interface UserSSHKeyObject {
@@ -122,7 +129,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       disabledReason,
       hideStrengthLabel,
       className,
-      small
+      small,
+      isOptional
     } = this.props;
 
     return (
@@ -130,7 +138,8 @@ class AccessPanel extends React.Component<CombinedProps> {
         className={classNames(
           {
             [classes.root]: true,
-            [classes.small]: small
+            [classes.small]: small,
+            [classes.isOptional]: isOptional
           },
           className
         )}

@@ -41,7 +41,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
           label={field.label}
           value={udf_data[field.name] || ''}
           errorText={error}
-          small={isOptional}
+          // small={isOptional}
           helperText={placeholder}
         />
       </React.Fragment>
@@ -69,7 +69,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         error={error}
         hideStrengthLabel
         className={!isOptional ? classes.accessPanel : ''}
-        small={isOptional}
+        isOptional={isOptional}
       />
     );
   };

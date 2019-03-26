@@ -8,13 +8,10 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 
-type ClassNames = 'root' | 'toggle';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    margin: `0 0 ${theme.spacing.unit * 3}px`
-  },
-  toggle: {}
+  root: {}
 });
 
 interface Props {
@@ -65,7 +62,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
           value={valueMulti}
           onChange={this.handleChangeMulti}
           options={manyOfOptions}
-          small={isOptional}
+          // small={isOptional}
         />
       </div>
     );
