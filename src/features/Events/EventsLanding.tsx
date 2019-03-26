@@ -22,12 +22,16 @@ import { setDeletedEvents } from 'src/store/events/event.helpers';
 
 import EventRow from './EventRow';
 
-type ClassNames = 'root' | 'header';
+type ClassNames = 'root' | 'header' | 'noMoreEvents';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   header: {
     marginBottom: theme.spacing.unit
+  },
+  noMoreEvents: {
+    padding: theme.spacing.unit * 4,
+    textAlign: 'center'
   }
 });
 
@@ -36,6 +40,7 @@ type CombinedProps = WithStyles<ClassNames>;
 export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [events, setEvents] = React.useState<Linode.Event[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
@@ -53,10 +58,14 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   ) => {
     const newEvents = [...events, ...response.data];
     const eventsWithDeletions = setDeletedEvents(newEvents);
+    setLoadMoreEvents(true);
     setEvents(eventsWithDeletions);
     setLoading(false);
     setRequesting(false);
     setError(undefined);
+    if (response.pages === currentPage) {
+      setLoadMoreEvents(false);
+    }
   };
 
   React.useEffect(() => {
@@ -92,7 +101,13 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      <Waypoint onEnter={getNext} />
+      {loadMoreEvents ? (
+        <Waypoint onEnter={getNext} />
+      ) : (
+        <Typography className={classes.noMoreEvents}>
+          No more event to show
+        </Typography>
+      )}
     </>
   );
 };
