@@ -278,13 +278,13 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       });
     };
 
+    this.toggleTagInput();
+
     if (inputValue.length < 3 || inputValue.length > 50) {
-      this.toggleTagInput();
       this.setState({
         tagError: `Tag "${inputValue}" length must be 3-50 characters`
       });
     } else if (tagExists(inputValue)) {
-      this.toggleTagInput();
       this.setState({
         tagError: `Tag "${inputValue}" is a duplicate`
       });
@@ -294,7 +294,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       });
       updateTags([...tags, value.label])
         .then(() => {
-          this.toggleTagInput();
           // set the input value to blank on submit
           this.setState({ tagInputValue: '' });
           /*
