@@ -75,7 +75,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     }
     if (isOneSelect(field)) {
       return (
-        <Grid item xs={12} key={field.name}>
+        <Grid item xs={12} sm={6} md={4} key={field.name}>
           <UserDefinedSelect
             field={field}
             updateFormState={handleChange}
