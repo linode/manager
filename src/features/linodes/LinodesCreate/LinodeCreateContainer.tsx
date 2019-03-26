@@ -147,7 +147,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         // Each of these will be undefined if not included in the URL, so this will behave correctly:
         selectedStackScriptID: Number(params.stackScriptID),
         selectedStackScriptLabel: params.stackScriptLabel,
-        selectedStackScriptUsername: params.stackScriptUserName
+        selectedStackScriptUsername: params.stackScriptUserName,
+
+        // This set is for creating from a Backup
+        selectedBackupID: params.backupID,
+        selectedLinodeID: params.linodeID
       });
     }
     this.setState({ appInstancesLoading: true });
