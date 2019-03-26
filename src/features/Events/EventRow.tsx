@@ -25,7 +25,8 @@ type ClassNames = 'root' | 'message';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   message: {
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
+    paddingLeft: 4
   }
 });
 

@@ -77,7 +77,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         <Table aria-label="List of Events">
           <TableHead>
             <TableRow>
-              <TableCell style={{ padding: 0, width: 50 }} />
+              <TableCell style={{ padding: 0, width: '1%' }} />
               <TableCell
                 data-qa-events-subject-header
                 style={{ minWidth: 200 }}
@@ -92,9 +92,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      <Waypoint onEnter={getNext}>
-        <div style={{ minHeight: '150px' }} />
-      </Waypoint>
+      <Waypoint onEnter={getNext} />
     </>
   );
 };
@@ -129,7 +127,7 @@ export const renderTableBody = (
         {events.map((thisEvent, idx) => (
           <EventRow key={`event-list-item-${idx}`} event={thisEvent} />
         ))}
-        {isRequesting && <TableRowLoading colSpan={12} />}
+        {isRequesting && <TableRowLoading colSpan={12} transparent />}
       </>
     );
   }
