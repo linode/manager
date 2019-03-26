@@ -491,6 +491,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
+    const { enqueueSnackbar, onPresentSnackbar, ...restOfProps } = this.props;
+    const { label, udfs: selectedUDFs, ...restOfState } = this.state;
     return (
       <StickyContainer>
         <DocumentTitleSegment segment="Create a Linode" />
@@ -505,60 +507,25 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             imageDisplayInfo={this.getImageInfo()}
             typeDisplayInfo={this.getTypeInfo()}
             backupsMonthlyPrice={this.getBackupsMonthlyPrice()}
-            regionsData={this.props.regionsData}
-            typesData={this.props.typesData}
-            typesLoading={this.props.typesLoading}
-            typesError={this.props.typesError}
-            regionsError={this.props.regionsError}
-            regionsLoading={this.props.regionsLoading}
-            imagesData={this.props.imagesData}
-            imagesError={this.props.imagesError}
-            imagesLoading={this.props.imagesLoading}
-            linodesData={this.props.linodesData}
-            linodesError={this.props.linodesError}
-            linodesLoading={this.props.linodesLoading}
-            accountBackupsEnabled={this.props.accountBackupsEnabled}
-            userCannotCreateLinode={this.props.userCannotCreateLinode}
-            selectedRegionID={this.state.selectedRegionID}
             updateRegionID={this.setRegionID}
-            selectedImageID={this.state.selectedImageID}
             updateImageID={this.setImageID}
-            selectedTypeID={this.state.selectedTypeID}
             updateTypeID={this.setTypeID}
-            selectedLinodeID={this.state.selectedLinodeID}
             updateLinodeID={this.setLinodeID}
-            selectedDiskSize={this.state.selectedDiskSize}
             updateDiskSize={this.setDiskSize}
-            selectedUDFs={this.state.udfs}
+            selectedUDFs={selectedUDFs}
             handleSelectUDFs={this.setUDFs}
-            availableUserDefinedFields={this.state.availableUserDefinedFields}
-            availableStackScriptImages={this.state.availableStackScriptImages}
-            selectedStackScriptID={this.state.selectedStackScriptID}
-            selectedStackScriptLabel={this.state.selectedStackScriptLabel}
-            selectedStackScriptUsername={this.state.selectedStackScriptUsername}
             updateStackScript={this.setStackScript}
             label={this.generateLabel()}
             updateLabel={this.props.updateCustomLabel}
-            password={this.state.password}
             updatePassword={this.setPassword}
-            backupsEnabled={this.state.backupsEnabled}
             toggleBackupsEnabled={this.toggleBackupsEnabled}
-            privateIPEnabled={this.state.privateIPEnabled}
             togglePrivateIPEnabled={this.togglePrivateIPEnabled}
-            tags={this.state.tags}
             updateTags={this.setTags}
-            errors={this.state.errors}
-            formIsSubmitting={this.state.formIsSubmitting}
-            history={this.props.history}
             handleSubmitForm={this.submitForm}
             resetCreationState={this.clearCreationState}
-            userSSHKeys={this.props.userSSHKeys}
-            resetSSHKeys={this.props.resetSSHKeys}
-            selectedBackupID={this.state.selectedBackupID}
             setBackupID={this.setBackupID}
-            appInstances={this.state.appInstances}
-            appInstancesError={this.state.appInstancesError}
-            appInstancesLoading={this.state.appInstancesLoading}
+            {...restOfProps}
+            {...restOfState}
           />
         </Grid>
       </StickyContainer>
