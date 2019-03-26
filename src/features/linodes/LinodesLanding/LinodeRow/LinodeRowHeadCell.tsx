@@ -11,6 +11,9 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import withImages from 'src/containers/withImages.container';
+import withRecentEvent, {
+  WithRecentEvent
+} from 'src/features/linodes/LinodesLanding/withRecentEvent';
 import {
   linodeInTransition,
   transitionText
@@ -106,6 +109,7 @@ interface WithImagesProps {
 }
 
 type CombinedProps = Props &
+  WithRecentEvent &
   WithDisplayType &
   WithImagesProps &
   WithStyles<ClassNames>;
@@ -185,6 +189,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
+  withRecentEvent,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
     imagesData: imagesData.filter(i => i.is_public === true)
