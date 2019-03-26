@@ -234,7 +234,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
               ),
-              loading: false
+              loading: false,
+              tagError: ''
             });
           })
           .catch(e => {
@@ -257,6 +258,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
     const { tagsToSuggest } = this.state;
     const { tags, updateTags } = this.props;
+    const inputValue = value && value.value;
+
     /*
      * This comes from the react-select API
      * basically, we only want to make a request if the user is either
@@ -269,41 +272,57 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       return;
     }
 
-    this.setState({
-      tagError: '',
-      loading: true
-    });
-
-    updateTags([...tags, value.label])
-      .then(() => {
-        // collapse the menu on success
-        this.toggleTagInput();
-        // set the input value to blank on submit
-        this.setState({ tagInputValue: '' });
-        /*
-         * Filter out the new tag out of the auto-suggestion list
-         * since we can't attach this tag anymore
-         */
-        const cloneTagSuggestions = clone(tagsToSuggest) || [];
-        const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
-          return eachTag.label !== value.label;
-        });
-        this.setState({
-          tagsToSuggest: filteredTags,
-          loading: false
-        });
-      })
-      .catch(e => {
-        this.setState({ loading: false });
-        const tagError = pathOr(
-          'Error while creating tag',
-          ['response', 'data', 'errors', 0, 'reason'],
-          e
-        );
-        this.toggleTagInput();
-        // display the first error in the array or a generic one
-        this.setState({ tagError });
+    const tagExists = (tag: string) => {
+      return tags.some(el => {
+        return el === tag;
       });
+    };
+
+    if (inputValue.length < 3 || inputValue.length > 50) {
+      this.toggleTagInput();
+      this.setState({
+        tagError: `Tag "${inputValue}" length must be 3-50 characters`
+      });
+    } else if (tagExists(inputValue)) {
+      this.toggleTagInput();
+      this.setState({
+        tagError: `Tag "${inputValue}" is a duplicate`
+      });
+    } else {
+      this.setState({
+        loading: true
+      });
+      updateTags([...tags, value.label])
+        .then(() => {
+          this.toggleTagInput();
+          // set the input value to blank on submit
+          this.setState({ tagInputValue: '' });
+          /*
+           * Filter out the new tag out of the auto-suggestion list
+           * since we can't attach this tag anymore
+           */
+          const cloneTagSuggestions = clone(tagsToSuggest) || [];
+          const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
+            return eachTag.label !== value.label;
+          });
+          this.setState({
+            tagsToSuggest: filteredTags,
+            loading: false
+          });
+        })
+        .catch(e => {
+          this.setState({ loading: false });
+          const tagError = pathOr(
+            'Error while creating tag',
+            ['response', 'data', 'errors', 0, 'reason'],
+            e
+          );
+
+          this.toggleTagInput();
+          // display the first error in the array or a generic one
+          this.setState({ tagError });
+        });
+    }
   };
 
   render() {
