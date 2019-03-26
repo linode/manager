@@ -23,8 +23,8 @@ import SelectAppPanel from '../SelectAppPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import { filterUDFErrors } from './formUtilities';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import { filterUDFErrors } from 'src/utilities/stackscriptUtils';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
@@ -51,16 +51,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: `${theme.spacing.unit}px 0`
   }
 });
-
-const errorResources = {
-  type: 'A plan selection',
-  region: 'A region selection',
-  label: 'A label',
-  root_pass: 'A root password',
-  image: 'Image',
-  tags: 'Tags',
-  stackscript_id: 'A StackScript'
-};
 
 type CombinedProps = WithDisplayData &
   AppsData &
@@ -189,9 +179,30 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       appInstancesLoading
     } = this.props;
 
+    const fixedErrorFields = [
+      'type',
+      'region',
+      'label',
+      'root_pass',
+      'image',
+      'tags',
+      'stackscript_id',
+      'none'
+    ];
+
+    const hasErrorFor = getErrorMap(
+      [
+        ...fixedErrorFields,
+        ...(userDefinedFields || []).map(
+          (udf: Linode.StackScript.UserDefinedField) => udf.name
+        )
+      ],
+      errors
+    );
+    const generalError = hasErrorFor.none;
+    const udfErrors = filterUDFErrors(fixedErrorFields, errors);
+
     const hasBackups = backupsEnabled || accountBackupsEnabled;
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
@@ -205,13 +216,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
             handleClick={this.handleSelectStackScript}
-            error={hasErrorFor('stackscript_id')}
+            error={hasErrorFor.stackscript_id}
           />
           {!userCannotCreateLinode &&
             userDefinedFields &&
             userDefinedFields.length > 0 && (
               <UserDefinedFieldsPanel
-                errors={filterUDFErrors(errorResources, errors)}
+                errors={udfErrors}
                 selectedLabel={selectedStackScriptLabel || ''}
                 selectedUsername="Linode"
                 handleChange={this.handleChangeUDF}
@@ -228,14 +239,14 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               handleSelection={updateImageID}
               updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
-              error={hasErrorFor('image')}
+              error={hasErrorFor.image}
               variant="public"
             />
           ) : (
             <Paper className={classes.emptyImagePanel}>
               {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
+              {hasErrorFor.image && (
+                <Notice error={true} text={hasErrorFor.image} />
               )}
               <Typography role="header" variant="h2" data-qa-tp="Select Image">
                 Select Image
@@ -250,7 +261,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             </Paper>
           )}
           <SelectRegionPanel
-            error={hasErrorFor('region')}
+            error={hasErrorFor.region}
             regions={regionsData}
             handleSelection={updateRegionID}
             selectedID={selectedRegionID}
@@ -259,7 +270,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             disabled={userCannotCreateLinode}
           />
           <SelectPlanPanel
-            error={hasErrorFor('type')}
+            error={hasErrorFor.type}
             types={typesData}
             onSelect={updateTypeID}
             updateFor={[selectedTypeID, errors]}
@@ -271,13 +282,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               label: 'Linode Label',
               value: label || '',
               onChange: updateLabel,
-              errorText: hasErrorFor('label'),
+              errorText: hasErrorFor.label,
               disabled: userCannotCreateLinode
             }}
             tagsInputProps={{
               value: tags || [],
               onChange: updateTags,
-              tagError: hasErrorFor('tags'),
+              tagError: hasErrorFor.tags,
               disabled: userCannotCreateLinode
             }}
             updateFor={[tags, label, errors]}
@@ -290,7 +301,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
                 ? 'You must select an image to set a root password'
                 : ''
             }
-            error={hasErrorFor('root_pass')}
+            error={hasErrorFor.root_pass}
             updateFor={[password, errors, userSSHKeys, selectedImageID]}
             password={password}
             handleChange={updatePassword}

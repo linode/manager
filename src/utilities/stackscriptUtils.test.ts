@@ -1,7 +1,7 @@
 import { images, privateImages } from 'src/__data__/images';
-import { filterPublicImages, filterUDFErrors } from './formUtilities';
+import { filterPublicImages, filterUDFErrors } from './stackscriptUtils';
 
-describe('Linode Create Utilities', () => {
+describe('StackScript Error Utilties', () => {
   it('should filter out public Images', () => {
     const filteredImages = filterPublicImages([...images, ...privateImages]);
     expect(
@@ -25,12 +25,9 @@ describe('Linode Create Utilities', () => {
       }
     ];
 
-    const errorResources = {
-      label: 'A label',
-      ssh_keys: 'ssh_keys'
-    };
+    const nonUDFErrorKeys = ['label', 'ssh_keys'];
 
-    const filteredErrors = filterUDFErrors(errorResources, mockErrors);
+    const filteredErrors = filterUDFErrors(nonUDFErrorKeys, mockErrors);
     expect(filteredErrors[0].field).toBe('wp_password');
     expect(filteredErrors).toHaveLength(1);
   });

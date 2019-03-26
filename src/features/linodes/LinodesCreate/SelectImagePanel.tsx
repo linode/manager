@@ -76,35 +76,50 @@ export const getMyImages = compose<any, any, any>(
 type CombinedProps = Props;
 
 const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
-  const { images, error, handleSelection, disabled, title, variant, selectedImageID } = props;
+  const {
+    images,
+    error,
+    handleSelection,
+    disabled,
+    title,
+    variant,
+    selectedImageID
+  } = props;
   const publicImages = getPublicImages(images);
   const olderPublicImages = getOlderPublicImages(images);
   const myImages = getMyImages(images);
 
   const Public = (
     <Panel error={error} title={title}>
-      <PublicImages images={publicImages} oldImages={olderPublicImages} disabled={disabled} handleSelection={handleSelection} selectedImageID={selectedImageID} />
+      <PublicImages
+        images={publicImages}
+        oldImages={olderPublicImages}
+        disabled={disabled}
+        handleSelection={handleSelection}
+        selectedImageID={selectedImageID}
+      />
     </Panel>
-  )
+  );
 
   const Private = (
     <Panel error={error} title={title}>
-      <PrivateImages images={myImages} disabled={disabled} handleSelection={handleSelection} selectedImageID={selectedImageID} />
+      <PrivateImages
+        images={myImages}
+        disabled={disabled}
+        handleSelection={handleSelection}
+        selectedImageID={selectedImageID}
+      />
     </Panel>
-  )
+  );
 
   const tabs = [
     {
       title: 'Public Images',
-      render: () => (
-        Public
-      )
+      render: () => Public
     },
     {
       title: 'My Images',
-      render: () => (
-        Private
-      )
+      render: () => Private
     }
   ];
 
@@ -117,13 +132,12 @@ const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
     default:
       return (
         <TabbedPanel
-          error={error}
           header="Select Image"
           tabs={tabs}
           initTab={props.initTab}
         />
-      )
+      );
   }
 };
 
-export default (RenderGuard<Props>(CreateFromImage));
+export default RenderGuard<Props>(CreateFromImage);

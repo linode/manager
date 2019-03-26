@@ -19,12 +19,15 @@ import { Tag } from 'src/components/TagsInput';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
-import { filterPublicImages, filterUDFErrors } from './formUtilities';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import {
+  filterPublicImages,
+  filterUDFErrors
+} from 'src/utilities/stackscriptUtils';
 import { renderBackupsDisplaySection } from './utils';
 
 import {
@@ -66,16 +69,6 @@ interface Props {
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   header: string;
 }
-
-const errorResources = {
-  type: 'A plan selection',
-  region: 'region',
-  label: 'A label',
-  root_pass: 'A root password',
-  image: 'image',
-  tags: 'Tags',
-  stackscript_id: 'A StackScript'
-};
 
 export type CombinedProps = Props &
   StackScriptFormStateHandlers &
@@ -203,8 +196,28 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedUDFs: udf_data
     } = this.props;
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
+    const fixedErrorFields = [
+      'stackscript_id',
+      'root_pass',
+      'image',
+      'type',
+      'region',
+      'label',
+      'tags',
+      'none'
+    ];
+
+    const hasErrorFor = getErrorMap(
+      [
+        ...fixedErrorFields,
+        ...(userDefinedFields || []).map(
+          (udf: Linode.StackScript.UserDefinedField) => udf.name
+        )
+      ],
+      errors
+    );
+    const generalError = hasErrorFor.none;
+    const udfErrors = filterUDFErrors(fixedErrorFields, errors);
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
@@ -214,7 +227,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           <CreateLinodeDisabled isDisabled={disabled} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectStackScriptPanel
-            error={hasErrorFor('stackscript_id')}
+            error={hasErrorFor.stackscript_id}
             header={header}
             selectedId={selectedStackScriptID}
             selectedUsername={selectedStackScriptUsername}
@@ -228,7 +241,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
           />
           {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel
-              errors={filterUDFErrors(errorResources, this.props.errors)}
+              errors={udfErrors}
               selectedLabel={selectedStackScriptLabel || ''}
               selectedUsername={selectedStackScriptUsername || ''}
               handleChange={this.handleChangeUDF}
@@ -243,14 +256,14 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               handleSelection={updateImageID}
               updateFor={[selectedImageID, compatibleImages, errors]}
               selectedImageID={selectedImageID}
-              error={hasErrorFor('image')}
+              error={hasErrorFor.image}
               variant="public"
             />
           ) : (
             <Paper className={classes.emptyImagePanel}>
               {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
+              {hasErrorFor.image && (
+                <Notice error={true} text={hasErrorFor.image} />
               )}
               <Typography role="header" variant="h2" data-qa-tp="Select Image">
                 Select Image
@@ -265,7 +278,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             </Paper>
           )}
           <SelectRegionPanel
-            error={hasErrorFor('region')}
+            error={hasErrorFor.region}
             regions={regionsData}
             handleSelection={updateRegionID}
             selectedID={selectedRegionID}
@@ -274,7 +287,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             disabled={disabled}
           />
           <SelectPlanPanel
-            error={hasErrorFor('type')}
+            error={hasErrorFor.type}
             types={typesData}
             onSelect={updateTypeID}
             updateFor={[selectedTypeID, errors]}
@@ -286,13 +299,13 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               label: 'Linode Label',
               value: label || '',
               onChange: this.props.updateLabel,
-              errorText: hasErrorFor('label'),
+              errorText: hasErrorFor.label,
               disabled
             }}
             tagsInputProps={{
               value: tags || [],
               onChange: updateTags,
-              tagError: hasErrorFor('tags'),
+              tagError: hasErrorFor.tags,
               disabled
             }}
             updateFor={[tags, label, errors]}
@@ -305,7 +318,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 ? 'You must select an image to set a root password'
                 : ''
             }
-            error={hasErrorFor('root_pass')}
+            error={hasErrorFor.root_pass}
             updateFor={[password, errors, userSSHKeys, selectedImageID]}
             password={password}
             handleChange={updatePassword}

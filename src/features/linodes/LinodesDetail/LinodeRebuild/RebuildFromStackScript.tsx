@@ -22,20 +22,22 @@ import userSSHKeyHoc, {
 } from 'src/features/linodes/userSSHKeyHoc';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
+import {
+  getCommunityStackscripts,
+  getMineAndAccountStackScripts
+} from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useErrors } from 'src/hooks/useErrors';
 import { useForm } from 'src/hooks/useForm';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { rebuildLinode } from 'src/services/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import { filterPublicImages } from 'src/utilities/images';
+import {
+  filterPublicImages,
+  filterUDFErrors
+} from 'src/utilities/stackscriptUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
-
-import {
-  getCommunityStackscripts,
-  getMineAndAccountStackScripts
-} from 'src/features/StackScripts/stackScriptUtils';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
@@ -135,7 +137,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
     // request, so we need to explicitly check for it here.
     if (!ss.id) {
       setErrors([
-        { field: 'stackscript_id', reason: 'You must select a StackScript' }
+        { field: 'stackscript_id', reason: 'You must select a StackScript.' }
       ]);
       setIsDialogOpen(false);
       return;
@@ -187,7 +189,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
     errors
   );
   const generalError = hasErrorFor.none;
-  const udfErrors = getUDFErrors(fixedErrorFields, errors);
+  const udfErrors = filterUDFErrors(fixedErrorFields, errors);
 
   return (
     <Grid item className={classes.root}>
@@ -200,7 +202,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         />
       )}
       <SelectStackScriptPanel
-        error={hasErrorFor['stackscript_id']}
+        error={hasErrorFor.stackscript_id}
         selectedId={ss.id}
         selectedUsername={ss.username}
         updateFor={[classes, ss.id, errors]}
@@ -304,23 +306,3 @@ const enhanced = compose<CombinedProps, Props>(
 );
 
 export default enhanced(RebuildFromStackScript);
-
-// =============================================================================
-// Helpers
-// =============================================================================
-
-const getUDFErrors = (
-  fixedErrorFields: string[],
-  errors: Linode.ApiFieldError[] | undefined
-) => {
-  return errors
-    ? errors.filter(error => {
-        // ensure the error isn't a root_pass, image, or none
-        const isNotUDFError = fixedErrorFields.some(errorKey => {
-          return errorKey === error.field;
-        });
-        // if the 'field' prop exists and isn't any other error
-        return !!error.field && !isNotUDFError;
-      })
-    : undefined;
-};
