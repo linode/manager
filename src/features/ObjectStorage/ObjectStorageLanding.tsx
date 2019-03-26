@@ -1,6 +1,4 @@
 import * as React from 'react';
-// @todo: remove router imports when bucket creation is supported
-import { RouterProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
@@ -34,22 +32,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-// @todo: remove RouterProps when bucket creation is supported
-type CombinedProps = StateProps &
-  DispatchProps &
-  RouterProps &
-  WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 
 export const ObjectStorageLanding: React.StatelessComponent<
   CombinedProps
 > = props => {
-  // @todo: remove router.history prop when bucket creation is supported
   const {
     classes,
     bucketsData,
     bucketsLoading,
     bucketsError,
-    history,
     openBucketDrawer
   } = props;
 
@@ -62,14 +54,7 @@ export const ObjectStorageLanding: React.StatelessComponent<
   }
 
   if (bucketsData.length === 0) {
-    // Our call-to-action should be "Create a Bucket". Since that feature
-    // doesn't exist yet, the call-to-action is temporarily a link to API Tokens.
-    return (
-      <RenderEmpty
-        onClick={() => history.push(`/profile/tokens`)}
-        data-qa-empty-state
-      />
-    );
+    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
   }
 
   return (
@@ -131,17 +116,15 @@ const RenderEmpty: React.StatelessComponent<{
 }> = props => {
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Domains" />
+      <DocumentTitleSegment segment="Buckets" />
       <Placeholder
         title="Add a Bucket"
-        // NOTE: This copy is only temporary, until bucket creation exists.
-        // It will never be customer facing.
-        copy="Bucket Creation coming soon! For now, create buckets by generating an Object Storage key pair, and use with an S3-compatible client."
+        copy="Click below to add a Bucket and start using Object Storage today."
         // @todo: replace with bucket icon
         icon={VolumeIcon}
         buttonProps={{
           onClick: props.onClick,
-          children: 'Go to API Tokens'
+          children: 'Add a Bucket'
         }}
       />
     </React.Fragment>
@@ -151,8 +134,6 @@ const RenderEmpty: React.StatelessComponent<{
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
-  // @todo: remove withRouter HOC once bucket creation is support
-  withRouter,
   styled,
   bucketContainer,
   bucketDrawerContainer

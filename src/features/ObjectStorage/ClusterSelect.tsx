@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import FormControl from 'src/components/core/FormControl';
-import InputLabel from 'src/components/core/InputLabel';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import clustersContainer, {
   StateProps
@@ -31,22 +29,18 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
     : undefined;
 
   return (
-    <FormControl fullWidth>
-      <InputLabel htmlFor="cluster" disableAnimation shrink={true}>
-        Cluster
-      </InputLabel>
-      <Select
-        data-qa-select-cluster
-        name="cluster"
-        options={options}
-        placeholder="All Clusters"
-        onChange={(item: Item<string>) => onChange(item.value)}
-        onBlur={onBlur}
-        isSearchable={false}
-        isClearable={false}
-        errorText={errorText}
-      />
-    </FormControl>
+    <Select
+      data-qa-select-cluster
+      name="cluster"
+      label="Cluster"
+      options={options}
+      placeholder="All Clusters"
+      onChange={(item: Item<string>) => onChange(item.value)}
+      onBlur={onBlur}
+      isSearchable={false}
+      isClearable={false}
+      errorText={errorText}
+    />
   );
 };
 
