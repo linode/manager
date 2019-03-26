@@ -2,14 +2,9 @@ require('dotenv').config();
 
 const { readFileSync, unlinkSync } = require('fs');
 const { argv } = require('yargs');
-const {
-    login,
-    generateCreds,
-    checkoutCreds,
-    checkInCreds,
-    removeCreds,
-    cleanupAccounts,
-} = require('../utils/config-utils');
+
+const FSCredStore = require('../utils/fs-cred-store');
+const MongoCredStore = require('../utils/mongo-cred-store')
 
 const { resetAccounts } = require('../setup/cleanup');
 
@@ -51,6 +46,8 @@ const getRunnerCount = () => {
 }
 
 const parallelRunners = getRunnerCount();
+
+const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new FSCredStore('./e2e/creds.js');
 
 exports.config = {
     // Selenium Host/Port
@@ -204,6 +201,7 @@ exports.config = {
     },
 
     testUser: '', // SET IN THE BEFORE HOOK PRIOR TO EACH TEST
+
     //
     // =====
     // Hooks
@@ -218,8 +216,9 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities, user) {
-        // Generate our temporary test credentials file
-        generateCreds('./e2e/creds.js', config, parallelRunners);
+        console.log("onPrepare");
+        // Generate temporary test credentials and store for use across tests
+        credStore.generateCreds(config, parallelRunners);
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -237,6 +236,7 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     before: function (capabilities, specs) {
+        console.log("before");
         // Load up our custom commands
         require('@babel/register');
 
@@ -264,12 +264,19 @@ exports.config = {
             browser.windowHandleMaximize();
         }
 
-        /* Get test credentials from temporary creds file
-           Set "inUse:true" for account under test
-        */
-        const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
+        // inject browser object into credstore for login and a few other functions
+        credStore.setBrowser(browser);
 
-        login(testCreds.username, testCreds.password, './e2e/creds.js');
+        let creds = null;
+        browser.call(() => {
+            return credStore.checkoutCreds(specs[0])
+            .then((testCreds) => {
+                creds = testCreds;                
+            }).catch((err) => console.log(err));
+        });
+        console.log("creds are");
+        console.log(creds);
+        credStore.login(creds.username, creds.password, false);
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -347,7 +354,7 @@ exports.config = {
         }
 
         // Set "inUse:false" on the account under test in the credentials file
-        checkInCreds('./e2e/creds.js', specs[0]);
+        credStore.checkinCreds(specs[0]);
     },
     /**
      * Gets executed right after terminating the webdriver session.
