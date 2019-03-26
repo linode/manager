@@ -51,6 +51,7 @@ console.log("parallel runners: " + parallelRunners);
 // See more at:
 //   https://webdriver.io/docs/api/browser/call.html
 const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new FSCredStore('./e2e/creds.js');
+//const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new MongoCredStore('localhost');
 
 exports.config = {
     // Selenium Host/Port
@@ -357,7 +358,9 @@ exports.config = {
         }
 
         // Set "inUse:false" on the account under test in the credentials file
-        browser.call(() => credStore.checkinCreds(specs[0]));
+        browser.call(
+            () => credStore.checkinCreds(specs[0]).then((creds) => console.log(creds))
+        );
     },
     /**
      * Gets executed right after terminating the webdriver session.

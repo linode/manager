@@ -176,27 +176,12 @@ exports.deleteAll = (token, user) => {
 }
 
 exports.resetAccounts = (credsArray) => {
-  return new Promise((resolve, reject) => {
-      credsArray.forEach((cred, i) => {
-        return exports.removeAllLinodes(cred.token)
-          .then(res => {
-                console.log(`Removing all data from ${cred.username}`);
-                return exports.removeAllVolumes(cred.token)
-                  .then(res => {
-                    return exports.deleteAll(cred.token, cred.username)
-                      .catch(error => {
-                        console.log('error', error);
-                      });
-                  })
-                  .catch(error => {
-                    console.log('error', error)
-                  })
-          })
-          .catch(error => {
-            console.log(error.data)
-            reject(error)
-          });
-      });
-  });
+    return Promise.all(
+        credsArray.map((cred) => {
+            return exports.removeAllLinodes(cred.token)
+            .then((res) => exports.removeAllVolumes(cred.token))
+            .then((res) => exports.deleteAll(cred.token, cred.username))
+        })
+    );
 }
 

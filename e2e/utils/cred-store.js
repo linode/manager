@@ -30,7 +30,7 @@ class CredStore {
             return this.getAllCreds().then((credCollection) => {
                 console.log(credCollection);
                 return resetAccounts(credCollection)
-            });
+            }).catch((err) => err);
         } else {
             console.log("not cleaning up resources via API");
             return new Promise((resolve, reject) => { resolve(false) });

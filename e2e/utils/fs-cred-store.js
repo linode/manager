@@ -101,6 +101,7 @@ class FSCredStore extends CredStore {
 
     cleanupAccounts() {
         return super.cleanupAccounts()
+        .catch((err) => console.log(err))
         .then(() => {
             return new Promise((resolve, reject) => {
                 unlink(this.credsFile, (err) => {
@@ -111,7 +112,7 @@ class FSCredStore extends CredStore {
                     }
                 })
             });            
-        }).catch((err) => console.log(err));
+        })
     }
 }
 

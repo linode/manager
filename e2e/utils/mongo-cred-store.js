@@ -64,21 +64,23 @@ class MongoCredStore extends CredStore {
                 };
                 
                 const collection = mongo.db(this.dbName).collection(this.collectionName);
-                return collection.insertOne(userRecord);
+                return collection.insertOne(userRecord).then(() => userRecord);
             }
         
-            let p = setCredCollection('MANAGER_USER', '');
+            let users = [setCredCollection('MANAGER_USER', '')];
             
             if (userCount > 1) {
                 for (let i = 2; i <= userCount; i++ ) {
-                    p.then(setCredCollection('MANAGER_USER', `_${i}`));
+                    users.push(setCredCollection('MANAGER_USER', `_${i}`));
                 }
             }
-    
-            console.log("added users");
-            return p;
+            return Promise.all(users);
         })
-        .then((result) => {
+        .then((users) => {
+            console.log("adding " + users.length + " users:");
+            users.forEach((user) => {
+                console.log(user);
+            });
             console.log("closing mongo client for populating creds");
             return mongo.close();
         })        
@@ -103,15 +105,14 @@ class MongoCredStore extends CredStore {
             return mongo.db(this.dbName).collection(this.collectionName)
             .findOneAndUpdate(
                 { inUse: false },
-                { $set: { inUse: true, spec: specToRun } }
+                { $set: { inUse: true, spec: specToRun } },
+                { returnOriginal: false }
             )
             
         })
         .then((result) => {
             console.log("checked out creds");
             let creds = result.value;
-            creds.inUse = true;
-            creds.spec = specToRun;
             
             this.browser.options.testUser = creds.username;
 
@@ -132,15 +133,14 @@ class MongoCredStore extends CredStore {
             return mongo.db(this.dbName).collection(this.collectionName)
             .findOneAndUpdate(
                 { spec: specThatRan },
-                { $set: { inUse: false, spec: '' } }
+                { $set: { inUse: false, spec: '' } },
+                { returnOriginal: false }
             )
             
         })
         .then((result) => {
             console.log("checked in creds");
             let creds = result.value;
-            creds.spec = '';
-            creds.inUse = false;
             return mongo.close().then((r) => { return creds; });
         })
         .catch((err) => {
@@ -167,9 +167,12 @@ class MongoCredStore extends CredStore {
     }
 
     cleanupAccounts() {        
-        return super.cleanupAccounts().then(() => {
+        return super.cleanupAccounts()
+        .catch((err) => console.log(err))
+        .then((users) => {
             let mongo = null;
             return this._connect().then((mongoClient) => {
+                console.log("dropping mongo creds collection");
                 mongo = mongoClient;
                 mongo.db(this.dbName).collection(this.collectionName).drop()
                 .then((result) => {
@@ -177,7 +180,7 @@ class MongoCredStore extends CredStore {
                     return mongo.close();
                 });
             });
-        }).catch((err) => console.log(err));
+        })
     }
 }
 
