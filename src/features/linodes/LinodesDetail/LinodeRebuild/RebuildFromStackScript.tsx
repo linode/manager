@@ -32,6 +32,11 @@ import { filterPublicImages } from 'src/utilities/images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
+import {
+  getCommunityStackscripts,
+  getMineAndAccountStackScripts
+} from 'src/features/StackScripts/stackScriptUtils';
+
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -50,6 +55,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+interface Props {
+  type: 'community' | 'account';
+}
+
 interface ContextProps {
   linodeId: number;
 }
@@ -64,7 +73,8 @@ interface RebuildFromStackScriptForm {
   password: string;
 }
 
-export type CombinedProps = WithStyles<ClassNames> &
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
   WithImagesProps &
   ContextProps &
   UserSSHKeyProps &
@@ -198,6 +208,13 @@ export const RebuildFromStackScript: React.StatelessComponent<
         publicImages={filterPublicImages(imagesData)}
         resetSelectedStackScript={resetStackScript}
         data-qa-select-stackscript
+        category={props.type}
+        header="Select StackScript"
+        request={
+          props.type === 'account'
+            ? getMineAndAccountStackScripts
+            : getCommunityStackscripts
+        }
       />
       {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
         <UserDefinedFieldsPanel
@@ -272,7 +289,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   userSSHKeyHoc,
   styled,
