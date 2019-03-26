@@ -17,6 +17,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import ObjectStorageKeyMenu from './ObjectStorageKeyMenu';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
 
@@ -44,11 +45,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   };
 };
 
-export type Props = WithStyles<ClassNames> &
+interface Props {
+  openRevokeDialog: (objectStorageKey: Linode.ObjectStorageKey) => void;
+}
+
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
   PaginationProps<Linode.ObjectStorageKey>;
 
-export const ObjectStorageKeyTable: React.StatelessComponent<Props> = props => {
-  const { classes, data, loading, error } = props;
+export const ObjectStorageKeyTable: React.StatelessComponent<
+  CombinedProps
+> = props => {
+  const { classes, data, loading, error, openRevokeDialog } = props;
 
   const renderContent = () => {
     if (loading) {
@@ -88,6 +96,12 @@ export const ObjectStorageKeyTable: React.StatelessComponent<Props> = props => {
             />
           </Typography>
         </TableCell>
+        <TableCell>
+          <ObjectStorageKeyMenu
+            objectStorageKey={eachKey}
+            openRevokeDialog={openRevokeDialog}
+          />
+        </TableCell>
       </TableRow>
     ));
   };
@@ -104,6 +118,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<Props> = props => {
               <TableCell className={classes.labelCell} data-qa-header-key>
                 Access Key
               </TableCell>
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>{renderContent()}</TableBody>
@@ -115,8 +130,9 @@ export const ObjectStorageKeyTable: React.StatelessComponent<Props> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<Props, PaginationProps<Linode.ObjectStorageKey>>(
-  styled
-);
+const enhanced = compose<
+  CombinedProps,
+  Props & PaginationProps<Linode.ObjectStorageKey>
+>(styled);
 
 export default enhanced(ObjectStorageKeyTable);

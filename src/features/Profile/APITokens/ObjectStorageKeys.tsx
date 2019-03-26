@@ -11,16 +11,19 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
+import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   CreateObjectStorageKeyRequest,
   createObjectStorageKeys,
-  getObjectStorageKeys
+  getObjectStorageKeys,
+  revokeObjectStorageKey
 } from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import ObjectStorageKeyDisplayDialog from './ObjectStorageDisplayDialog';
 import ObjectStorageDrawer from './ObjectStorageDrawer';
-import ObjectStorageKeyDisplayDialog from './ObjectStorageKeyDisplayDialog';
 import ObjectStorageKeyTable from './ObjectStorageKeyTable';
+import ObjectStorageRevokeKeysDialog from './ObjectStorageRevokeKeysDialog';
 
 type ClassNames = 'headline';
 
@@ -41,8 +44,17 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes, ...paginationProps } = props;
 
   const [keys, setKeys] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [
+    keyToRevoke,
+    setKeyToRevoke
+  ] = React.useState<Linode.ObjectStorageKey | null>(null);
 
-  const keyDisplayDialog = useOpenClose();
+  const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
+  const [revokeErrors, setRevokeErrors] = useErrors();
+
+  const displayKeysDialog = useOpenClose();
+  const revokeKeysDialog = useOpenClose();
+
   const createDrawer = useOpenClose();
 
   React.useEffect(() => {
@@ -64,7 +76,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         paginationProps.request();
 
         createDrawer.close();
-        keyDisplayDialog.open();
+        displayKeysDialog.open();
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -81,6 +93,30 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         }
 
         setErrors(mappedErrors);
+      });
+  };
+
+  const handleRevokeKeys = () => {
+    if (!keyToRevoke) {
+      return;
+    }
+
+    setIsRevoking(true);
+
+    revokeObjectStorageKey(keyToRevoke.id)
+      .then(_ => {
+        setIsRevoking(false);
+        paginationProps.request();
+        revokeKeysDialog.close();
+      })
+      .catch(errorResponse => {
+        setIsRevoking(false);
+
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue revoking your Object Storage Key.'
+        );
+        setRevokeErrors(errors);
       });
   };
 
@@ -105,7 +141,13 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         </Grid>
       </Grid>
 
-      <ObjectStorageKeyTable {...paginationProps} />
+      <ObjectStorageKeyTable
+        {...paginationProps}
+        openRevokeDialog={(objectStorageKey: Linode.ObjectStorageKey) => {
+          setKeyToRevoke(objectStorageKey);
+          revokeKeysDialog.open();
+        }}
+      />
 
       <PaginationFooter
         page={props.page}
@@ -124,8 +166,19 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
       <ObjectStorageKeyDisplayDialog
         keys={keys}
-        isOpen={keyDisplayDialog.isOpen}
-        close={keyDisplayDialog.close}
+        isOpen={displayKeysDialog.isOpen}
+        close={displayKeysDialog.close}
+      />
+      <ObjectStorageRevokeKeysDialog
+        isOpen={revokeKeysDialog.isOpen}
+        label={(keyToRevoke && keyToRevoke.label) || ''}
+        handleClose={() => {
+          setRevokeErrors([]);
+          revokeKeysDialog.close();
+        }}
+        handleSubmit={handleRevokeKeys}
+        isLoading={isRevoking}
+        errors={revokeErrors}
       />
     </React.Fragment>
   );
