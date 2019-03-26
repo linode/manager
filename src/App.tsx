@@ -30,6 +30,7 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
@@ -41,6 +42,9 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import { isObjectStorageEnabled } from './constants';
+import BucketDrawer from './features/ObjectStorage/BucketDrawer';
+import { requestClusters } from './store/clusters/clusters.actions';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions
@@ -67,6 +71,10 @@ const Domains = DefaultLoader({
 
 const Images = DefaultLoader({
   loader: () => import('src/features/Images')
+});
+
+const ObjectStorage = DefaultLoader({
+  loader: () => import('src/features/ObjectStorage')
 });
 
 const Profile = DefaultLoader({
@@ -198,19 +206,27 @@ export class App extends React.Component<CombinedProps, State> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
+    const dataFetchingPromises: Promise<any>[] = [
+      actions.requestProfile(),
+      actions.requestDomains(),
+      actions.requestImages(),
+      actions.requestLinodes(),
+      actions.requestNotifications(),
+      actions.requestSettings(),
+      actions.requestTypes(),
+      actions.requestRegions(),
+      actions.requestVolumes(),
+      getAllNodeBalancersWithConfigs()
+    ];
+
+    // Make these requests only if the feature is enabled.
+    if (isObjectStorageEnabled) {
+      dataFetchingPromises.push(actions.requestBuckets());
+      dataFetchingPromises.push(actions.requestClusters());
+    }
+
     try {
-      await Promise.all([
-        actions.requestProfile(),
-        actions.requestDomains(),
-        actions.requestImages(),
-        actions.requestLinodes(),
-        actions.requestNotifications(),
-        actions.requestSettings(),
-        actions.requestTypes(),
-        actions.requestRegions(),
-        actions.requestVolumes(),
-        getAllNodeBalancersWithConfigs()
-      ]);
+      await Promise.all(dataFetchingPromises);
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
@@ -284,7 +300,8 @@ export class App extends React.Component<CombinedProps, State> {
       regionsError,
       volumesError,
       settingsError,
-      profileError
+      profileError,
+      bucketsError
     } = this.props;
 
     if (hasError) {
@@ -306,7 +323,8 @@ export class App extends React.Component<CombinedProps, State> {
         regionsError,
         volumesError,
         settingsError,
-        profileError
+        profileError,
+        bucketsError
       )
     ) {
       return null;
@@ -349,6 +367,12 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
+                          {isObjectStorageEnabled && (
+                            <Route
+                              path="/object-storage"
+                              component={ObjectStorage}
+                            />
+                          )}
                           <Route path="/account" component={Account} />
                           <Route
                             exact
@@ -385,6 +409,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
+                {isObjectStorageEnabled && <BucketDrawer />}
               </div>
             </>
           </React.Fragment>
@@ -416,6 +441,8 @@ interface DispatchProps {
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
     requestVolumes: () => Promise<Linode.Volume[]>;
+    requestBuckets: () => Promise<Linode.Bucket[]>;
+    requestClusters: () => Promise<Linode.Cluster[]>;
   };
 }
 
@@ -432,7 +459,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
-      requestVolumes: () => dispatch(getAllVolumes())
+      requestVolumes: () => dispatch(getAllVolumes()),
+      requestBuckets: () => dispatch(getAllBuckets()),
+      requestClusters: () => dispatch(requestClusters())
     }
   };
 };
@@ -449,6 +478,7 @@ interface StateProps {
   typesError?: Linode.ApiFieldError[];
   regionsError?: Linode.ApiFieldError[];
   volumesError?: Linode.ApiFieldError[] | Error;
+  bucketsError?: Error | Linode.ApiFieldError[];
   userId?: number;
   documentation: Linode.Doc[];
 }
@@ -465,6 +495,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
   volumesError: state.__resources.volumes.error,
+  bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation

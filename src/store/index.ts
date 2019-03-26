@@ -16,6 +16,18 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState
 } from 'src/store/backupDrawer';
+import buckets, {
+  defaultState as defaultBucketsState,
+  State as BucketsState
+} from 'src/store/bucket/bucket.reducer';
+import bucketDrawer, {
+  defaultState as bucketDrawerDefaultState,
+  State as BucketDrawerState
+} from 'src/store/bucketDrawer/bucketDrawer.reducer';
+import clusters, {
+  defaultState as defaultClustersState,
+  State as ClustersState
+} from 'src/store/clusters/clusters.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -122,7 +134,9 @@ const __resourcesDefaultState = {
   profile: defaultProfileState,
   regions: defaultRegionsState,
   types: defaultTypesState,
-  volumes: defaultVolumesState
+  volumes: defaultVolumesState,
+  buckets: defaultBucketsState,
+  clusters: defaultClustersState
 };
 
 export interface ResourcesState {
@@ -140,6 +154,8 @@ export interface ResourcesState {
   regions: RegionsState;
   types: TypesState;
   volumes: VolumesState;
+  buckets: BucketsState;
+  clusters: ClustersState;
 }
 
 export interface ApplicationState {
@@ -152,6 +168,7 @@ export interface ApplicationState {
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
+  bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
 }
 
@@ -165,6 +182,7 @@ const defaultState: ApplicationState = {
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
+  bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState
 };
 
@@ -185,7 +203,9 @@ const __resources = combineReducers({
   profile,
   regions,
   types,
-  volumes
+  volumes,
+  buckets,
+  clusters
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -197,6 +217,7 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
+  bucketDrawer,
   events,
   createLinode: linodeCreateReducer
 });
