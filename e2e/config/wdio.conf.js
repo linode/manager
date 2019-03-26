@@ -6,11 +6,8 @@ const { argv } = require('yargs');
 const FSCredStore = require('../utils/fs-cred-store');
 const MongoCredStore = require('../utils/mongo-cred-store')
 
-const { resetAccounts } = require('../setup/cleanup');
-
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
-const { constants } = require('../constants');
 const { keysIn } = require('lodash');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
 
@@ -46,7 +43,13 @@ const getRunnerCount = () => {
 }
 
 const parallelRunners = getRunnerCount();
+console.log("parallel runners: " + parallelRunners);
 
+// NOTE: credStore provides a promise-based API.  In order to work correctly with WDIO, any calls in
+// lifecycle methods *other than* onPrepare and onComplete should be wrapped using WDIO's browser.call
+// method.  This blocks execution until any promises within the function passed to call are resolved.
+// See more at:
+//   https://webdriver.io/docs/api/browser/call.html
 const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new FSCredStore('./e2e/creds.js');
 
 exports.config = {
@@ -354,7 +357,7 @@ exports.config = {
         }
 
         // Set "inUse:false" on the account under test in the credentials file
-        credStore.checkinCreds(specs[0]);
+        browser.call(() => credStore.checkinCreds(specs[0]));
     },
     /**
      * Gets executed right after terminating the webdriver session.
@@ -371,13 +374,8 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
-        // Run delete all, on every test account
-
-        /* We wait an arbitrary amount of time here for linodes to be removed
-           Otherwise, attempting to remove attached volumes will fail
-        */
-        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
-            .then(res => resolve(res))
-            .catch(error => console.error('Error:', error));
+        // delete all data created during the test and remove test credentials from
+        // the underlying store
+        return credStore.cleanupAccounts();
     }
 }

@@ -9,8 +9,8 @@ const CredStore = require('./cred-store');
  */
 class MongoCredStore extends CredStore {
 
-    constructor(dbHost, shouldCleanupUsingAPI = true, browser = { options: {} }) {
-        super(shouldCleanupUsingAPI,browser);
+    constructor(dbHost, shouldCleanupUsingAPI, browser) {
+        super(shouldCleanupUsingAPI, browser);
         console.log("connecting to mongodb host: " + dbHost);
 
         // Connection URL
@@ -27,7 +27,7 @@ class MongoCredStore extends CredStore {
         return MongoClient.connect(this.dbUrl, { useNewUrlParser: true })
         .catch((err) => {
             console.log("error connecting to mongo");
-            console.log(err)
+            console.log(err);
         });
     }
 
@@ -81,11 +81,7 @@ class MongoCredStore extends CredStore {
         .then((result) => {
             console.log("closing mongo client for populating creds");
             return mongo.close();
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-        
+        })        
     }
 
     // fetches all available creds
@@ -171,18 +167,17 @@ class MongoCredStore extends CredStore {
     }
 
     cleanupAccounts() {        
-        super.cleanupAccounts();
-
-        let mongo = null;
-        return this._connect().then((mongoClient) => {
-            mongo = mongoClient;
-            mongo.db(this.dbName).collection(this.collectionName).drop()
-            .then((result) => {
-                console.log("closing mongo client for cleanup");
-                return mongo.close();
-            })
-            .catch((err) => console.log(err))
-        });
+        return super.cleanupAccounts().then(() => {
+            let mongo = null;
+            return this._connect().then((mongoClient) => {
+                mongo = mongoClient;
+                mongo.db(this.dbName).collection(this.collectionName).drop()
+                .then((result) => {
+                    console.log("closing mongo client for cleanup");
+                    return mongo.close();
+                });
+            });
+        }).catch((err) => console.log(err));
     }
 }
 

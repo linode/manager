@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { existsSync, statSync, writeFileSync, readFileSync } = require('fs');
+const { existsSync, statSync, writeFileSync, readFileSync, unlink } = require('fs');
 
 const CredStore = require('./cred-store');
 
@@ -9,7 +9,7 @@ const CredStore = require('./cred-store');
  */
 class FSCredStore extends CredStore {
     
-    constructor(credsFile, shouldCleanupUsingAPI = true, browser = { options: {} }) {
+    constructor(credsFile, shouldCleanupUsingAPI, browser) {
         super(shouldCleanupUsingAPI, browser);
         this.credsFile = credsFile;
         console.log(this);
@@ -100,11 +100,18 @@ class FSCredStore extends CredStore {
     }
 
     cleanupAccounts() {
-        super.cleanupAccounts();
-
-        // todo: rm creds.js file?
-
-        return new Promise((resolve, reject) => { resolve(true) });
+        return super.cleanupAccounts()
+        .then(() => {
+            return new Promise((resolve, reject) => {
+                unlink(this.credsFile, (err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(this.credsFile);
+                    }
+                })
+            });            
+        }).catch((err) => console.log(err));
     }
 }
 

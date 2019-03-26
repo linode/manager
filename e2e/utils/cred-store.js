@@ -1,4 +1,4 @@
-const { deleteAll } = require('../setup/setup');
+const { resetAccounts } = require('../setup/cleanup');
 const { constants } = require('../constants');
 
 class CredStore {
@@ -6,7 +6,7 @@ class CredStore {
     // default browser object is a mock to support testing outside the context
     // of running the e2e tests.  when running under e2e browser is passed in via
     // web driver code that bootstraps the tests.
-    constructor(shouldCleanupUsingAPI, browser) {
+    constructor(shouldCleanupUsingAPI = true, browser = { options: {} }) {
         this.browser = browser;
         this.shouldCleanupUsingAPI = shouldCleanupUsingAPI;
     }
@@ -28,9 +28,8 @@ class CredStore {
         if (this.shouldCleanupUsingAPI) {
             console.log("cleaning up resources via API");
             return this.getAllCreds().then((credCollection) => {
-                credCollection.forEach(cred => {
-                    return deleteAll(cred.token).then(() => {});
-                });
+                console.log(credCollection);
+                return resetAccounts(credCollection)
             });
         } else {
             console.log("not cleaning up resources via API");
@@ -119,9 +118,9 @@ class CredStore {
         browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
     
         // TODO fix storeToken implementation
-        if (shouldStoreToken) {
-            this.storeToken(username);
-        }
+        //if (shouldStoreToken) {
+        //    this.storeToken(username);
+        //}
     }
 
 

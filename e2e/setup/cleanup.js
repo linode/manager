@@ -175,7 +175,7 @@ exports.deleteAll = (token, user) => {
     });
 }
 
-exports.resetAccounts = (credsArray, credsPath) => {
+exports.resetAccounts = (credsArray) => {
   return new Promise((resolve, reject) => {
       credsArray.forEach((cred, i) => {
         return exports.removeAllLinodes(cred.token)
@@ -184,13 +184,6 @@ exports.resetAccounts = (credsArray, credsPath) => {
                 return exports.removeAllVolumes(cred.token)
                   .then(res => {
                     return exports.deleteAll(cred.token, cred.username)
-                      .then(res => {
-                        if (i === credsArray.length -1) {
-                            unlink(credsPath, (err) => {
-                                return res;
-                            });
-                        }
-                      })
                       .catch(error => {
                         console.log('error', error);
                       });
