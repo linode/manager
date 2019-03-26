@@ -377,6 +377,7 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
+        console.log("onComplete");
         // delete all data created during the test and remove test credentials from
         // the underlying store
         return credStore.cleanupAccounts();

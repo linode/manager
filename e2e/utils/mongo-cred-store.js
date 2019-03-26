@@ -174,13 +174,13 @@ class MongoCredStore extends CredStore {
             return this._connect().then((mongoClient) => {
                 console.log("dropping mongo creds collection");
                 mongo = mongoClient;
-                mongo.db(this.dbName).collection(this.collectionName).drop()
-                .then((result) => {
-                    console.log("closing mongo client for cleanup");
-                    return mongo.close();
-                });
+                return mongo.db(this.dbName).collection(this.collectionName).drop()
+            }).then((result) => {
+                console.log("closing mongo client for cleanup");
+                return mongo.close();
             });
         })
+        .catch((err) => console.log(err));
     }
 }
 
