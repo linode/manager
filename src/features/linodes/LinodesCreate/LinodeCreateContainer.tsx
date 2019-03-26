@@ -161,7 +161,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .catch(e => {
         this.setState({
           appInstancesLoading: false,
-          appInstancesError: 'There was an error loading Cloud Apps.'
+          appInstancesError: 'There was an error loading One-Click Apps.'
         });
       });
   }

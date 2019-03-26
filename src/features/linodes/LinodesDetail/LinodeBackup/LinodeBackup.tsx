@@ -419,7 +419,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=fromBackup&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=My%20Images&subtype=Backups&backupID=${
+          backup.id
+        }&linodeID=${linodeID}`
     );
   };
 
