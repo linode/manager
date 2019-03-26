@@ -24,7 +24,8 @@ describe('ObjectStorageKeyTable', () => {
   });
 
   it('it includes a header with "Label" and "Access Key" cells', () => {
-    expect(wrapper.find('[data-qa-table-head]').children().length).toBe(2);
+    // Expect "3" here, because there is an empty table cell for the kebab menu
+    expect(wrapper.find('[data-qa-table-head]').children().length).toBe(3);
     expect(
       wrapper
         .find('[data-qa-header-label]')

@@ -43,20 +43,25 @@ export type FormikProps = FormikBag<Props, CreateObjectStorageKeyRequest>;
 export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes, ...paginationProps } = props;
 
-  const [keys, setKeys] = React.useState<Linode.ObjectStorageKey | null>(null);
+  // Key to display in Confirmation Modal upon creation
+  const [
+    keyToDisplay,
+    setKeyToDisplay
+  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+
+  // Key to revoke (by clicking on a key's kebab menu )
   const [
     keyToRevoke,
     setKeyToRevoke
   ] = React.useState<Linode.ObjectStorageKey | null>(null);
-
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
   const [revokeErrors, setRevokeErrors] = useErrors();
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-
   const createDrawer = useOpenClose();
 
+  // Request object storage key when component is first rendered
   React.useEffect(() => {
     paginationProps.request();
   }, []);
@@ -71,8 +76,9 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       .then(data => {
         setSubmitting(false);
 
-        setKeys(data);
+        setKeyToDisplay(data);
 
+        // "Refresh" keys to include the newly created key
         paginationProps.request();
 
         createDrawer.close();
@@ -97,6 +103,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   };
 
   const handleRevokeKeys = () => {
+    // This shouldn't happen, but just in case.
     if (!keyToRevoke) {
       return;
     }
@@ -106,7 +113,10 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
     revokeObjectStorageKey(keyToRevoke.id)
       .then(_ => {
         setIsRevoking(false);
+
+        // "Refresh" keys to remove the newly revoked key
         paginationProps.request();
+
         revokeKeysDialog.close();
       })
       .catch(errorResponse => {
@@ -165,7 +175,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       />
 
       <ObjectStorageKeyDisplayDialog
-        keys={keys}
+        objectStorageKey={keyToDisplay}
         isOpen={displayKeysDialog.isOpen}
         close={displayKeysDialog.close}
       />

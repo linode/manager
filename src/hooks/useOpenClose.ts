@@ -15,6 +15,9 @@ const defaultState = {
   open: false
 };
 
+// Simple hook to group "open/close" state & functionality.
+// Useful for components that render several drawers, modals, etc. which need
+// independent open/close state. This hooks provides a common interface.
 export const useOpenClose = (
   initialState: OpenCloseState = defaultState
 ): OpenClose => {

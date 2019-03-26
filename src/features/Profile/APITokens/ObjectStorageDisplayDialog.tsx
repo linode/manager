@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  keys: Linode.ObjectStorageKey | null;
+  objectStorageKey: Linode.ObjectStorageKey | null;
   isOpen: boolean;
   close: () => void;
 }
@@ -33,23 +33,21 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const ObjectStorageKeyDisplayDialog: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes, isOpen, close, keys } = props;
-
-  const confirmationDialogActions = (
-    <Button type="secondary" onClick={close} data-qa-close-dialog>
-      OK
-    </Button>
-  );
+  const { classes, objectStorageKey, isOpen, close } = props;
 
   // This should never happen, but just in case.
-  if (!keys) {
+  if (!objectStorageKey) {
     return null;
   }
 
   return (
     <ConfirmationDialog
       title="Object Storage Keys"
-      actions={confirmationDialogActions}
+      actions={
+        <Button type="secondary" onClick={close} data-qa-close-dialog>
+          OK
+        </Button>
+      }
       open={isOpen}
       onClose={close}
       className={classes.confirmationDialog}
@@ -66,7 +64,7 @@ export const ObjectStorageKeyDisplayDialog: React.StatelessComponent<
         spacingTop={16}
         typeProps={{ variant: 'body1' }}
         warning
-        text={keys.access_key}
+        text={objectStorageKey.access_key}
         breakWords
       />
 
@@ -77,7 +75,7 @@ export const ObjectStorageKeyDisplayDialog: React.StatelessComponent<
         spacingTop={16}
         typeProps={{ variant: 'body1' }}
         warning
-        text={keys.secret_key}
+        text={objectStorageKey.secret_key}
         breakWords
       />
     </ConfirmationDialog>

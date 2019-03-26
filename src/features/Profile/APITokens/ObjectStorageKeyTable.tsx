@@ -118,6 +118,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<
               <TableCell className={classes.labelCell} data-qa-header-key>
                 Access Key
               </TableCell>
+              {/* empty cell for kebab menu */}
               <TableCell />
             </TableRow>
           </TableHead>
