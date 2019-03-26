@@ -1,34 +1,40 @@
-import { compose, find, lensPath, prop, propEq, set } from 'ramda';
 import { displayType } from 'src/features/linodes/presentation';
 import { ExtendedType } from './SelectPlanPanel';
 import { ExtendedLinode } from './types';
 
+/**
+ * Literally just returning our original array of Linodes
+ * with heading and subheading keys why is this function
+ * so absurdly complicated?????
+ */
 export const extendLinodes = (
   linodes: Linode.Linode[],
-  imagesData?: Linode.Image[],
-  typesData?: ExtendedType[]
+  imagesData: Linode.Image[] = [],
+  typesData: ExtendedType[] = []
 ): ExtendedLinode[] => {
-  const images = imagesData || [];
-  const types = typesData || [];
-  return linodes.map(
-    linode =>
-      compose<Linode.Linode, Partial<ExtendedLinode>, Partial<ExtendedLinode>>(
-        set(lensPath(['heading']), linode.label),
-        set(
-          lensPath(['subHeadings']),
-          formatLinodeSubheading(
-            displayType(linode.type, types),
-            compose<Linode.Image[], Linode.Image, string>(
-              prop('label'),
-              find(propEq('id', linode.image))
-            )(images)
-          )
-        )
-      )(linode) as ExtendedLinode
-  );
+  return linodes.map(linode => {
+    /** get image data based on the Linode's image key */
+    const linodeImageMetaData = imagesData.find(
+      eachImage => eachImage.id === linode.image
+    );
+
+    return {
+      ...linode,
+      heading: linode.label,
+      subHeadings: formatLinodeSubheading(
+        displayType(linode.type, typesData),
+        linodeImageMetaData ? linodeImageMetaData.label : ''
+      )
+    };
+  });
 };
 
-const formatLinodeSubheading = (typeInfo: string, imageInfo: string) => {
-  const subheading = imageInfo ? `${typeInfo}, ${imageInfo}` : `${typeInfo}`;
+export const formatLinodeSubheading = (
+  typeLabel: string,
+  imageLabel: string
+) => {
+  const subheading = imageLabel
+    ? `${typeLabel}, ${imageLabel}`
+    : `${typeLabel}`;
   return [subheading];
 };
