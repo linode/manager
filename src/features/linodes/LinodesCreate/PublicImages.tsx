@@ -29,6 +29,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const distroIcons = {
+  Alpine: 'alpine',
   Arch: 'archlinux',
   CentOS: 'centos',
   CoreOS: 'coreos',
@@ -49,9 +50,9 @@ const PublicImages: React.StatelessComponent<CombinedProps> = props => {
     oldImages,
     selectedImageID
   } = props;
-  const renderImages = (images: Linode.Image[]) =>
-    images.length &&
-    images.map((image: Linode.Image, idx: number) => (
+  const renderImages = (imageList: Linode.Image[]) =>
+    imageList.length &&
+    imageList.map((image: Linode.Image, idx: number) => (
       <SelectionCard
         key={idx}
         checked={image.id === String(selectedImageID)}

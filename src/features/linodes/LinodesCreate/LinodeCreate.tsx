@@ -100,7 +100,7 @@ export class LinodeCreate extends React.PureComponent<
       title: 'Distributions',
       type: 'fromImage',
       render: () => {
-        /** ...rest being all the formstate props and display data */
+        /** ...rest being all the form state props and display data */
         const {
           history,
           handleSelectUDFs,
