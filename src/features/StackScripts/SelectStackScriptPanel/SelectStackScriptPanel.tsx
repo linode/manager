@@ -231,7 +231,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
           </Typography>
           {stackScriptError && (
             <Typography variant="body2">
-              An error occured while loading the selected StackScript.
+              An error occurred while loading the selected StackScript.
             </Typography>
           )}
           <Paper className={classes.selecting}>
