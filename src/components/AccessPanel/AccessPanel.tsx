@@ -1,4 +1,6 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
+import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
 import {
@@ -11,7 +13,7 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Notice from 'src/components/Notice';
 import PasswordInput from 'src/components/PasswordInput';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableHeader from 'src/components/TableHeader';
@@ -59,11 +61,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 const styled = withStyles(styles);
 
-export interface Disabled {
-  disabled?: boolean;
-  reason?: string;
-}
-
 interface Props {
   password: string | null;
   error?: string;
@@ -74,7 +71,10 @@ interface Props {
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
-  passwordFieldDisabled?: Disabled;
+  disabled?: boolean;
+  disabledReason?: string;
+  hideStrengthLabel?: boolean;
+  className?: string;
 }
 
 export interface UserSSHKeyObject {
@@ -100,24 +100,33 @@ class AccessPanel extends React.Component<CombinedProps> {
       required,
       placeholder,
       users,
-      passwordFieldDisabled
+      disabled,
+      disabledReason,
+      hideStrengthLabel,
+      className
     } = this.props;
 
     return (
-      <Paper className={classes.root}>
+      <Paper
+        className={classNames(
+          {
+            [classes.root]: true
+          },
+          className
+        )}
+      >
         <div className={!noPadding ? classes.inner : ''} data-qa-password-input>
           {error && <Notice text={error} error />}
           <PasswordInput
             required={required}
-            disabled={passwordFieldDisabled && passwordFieldDisabled.disabled}
-            disabledReason={
-              passwordFieldDisabled && passwordFieldDisabled.reason
-            }
+            disabled={disabled}
+            disabledReason={disabledReason || ''}
             autoComplete="new-password"
             value={this.props.password || ''}
             label={label || 'Root Password'}
             placeholder={placeholder || 'Enter a password.'}
             onChange={this.handleChange}
+            hideStrengthLabel={hideStrengthLabel}
           />
           {users && users.length > 0 && this.renderUserSSHKeyTable(users)}
         </div>
@@ -175,4 +184,7 @@ class AccessPanel extends React.Component<CombinedProps> {
     this.props.handleChange(e.target.value);
 }
 
-export default styled(RenderGuard<CombinedProps>(AccessPanel));
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  RenderGuard,
+  styled
+)(AccessPanel);
