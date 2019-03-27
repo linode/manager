@@ -22,6 +22,6 @@ export const filterUDFErrors = (
   return !errors
     ? []
     : errors.filter(eachError => {
-        return errorKeys.some(eachKey => eachKey !== eachError.field);
+        return !errorKeys.some(eachKey => eachKey === eachError.field);
       });
 };
