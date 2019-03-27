@@ -26,14 +26,14 @@ class CredStore {
 
     cleanupAccounts() {
         if (this.shouldCleanupUsingAPI) {
-            console.log("cleaning up resources via API");
+            console.log("cleaning up user resources via API");
             return this.getAllCreds().then((credCollection) => {
                 console.log(credCollection);
-                return resetAccounts(credCollection)
-            }).catch((err) => err);
+                return resetAccounts(credCollection);
+            });
         } else {
             console.log("not cleaning up resources via API");
-            return new Promise((resolve, reject) => { resolve(false) });
+            return Promise.resolve(false);
         }
     }
 

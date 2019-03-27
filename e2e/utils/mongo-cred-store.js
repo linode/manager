@@ -130,12 +130,13 @@ class MongoCredStore extends CredStore {
         let mongo = null;
         return this._connect().then((mongoClient) => {
             mongo = mongoClient;
+            
             return mongo.db(this.dbName).collection(this.collectionName)
             .findOneAndUpdate(
                 { spec: specThatRan },
                 { $set: { inUse: false, spec: '' } },
                 { returnOriginal: false }
-            )
+            );
             
         })
         .then((result) => {
@@ -155,10 +156,11 @@ class MongoCredStore extends CredStore {
             mongo = mongoClient;
             return mongo.db(this.dbName).collection(this.collectionName).findOne(
                 { "username": username }
-            ).then((creds) => {
-                console.log("read token for user: " + username);
-                return mongo.close().then((r) => { return creds.token; });
-            });
+            );
+        })
+        .then((creds) => {
+            console.log("read token for user: " + username);
+            return mongo.close().then((r) => creds.token);
         });
     }
 
