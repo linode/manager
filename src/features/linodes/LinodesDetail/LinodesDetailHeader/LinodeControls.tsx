@@ -115,11 +115,15 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           linkText="Linodes"
           labelTitle={linode.label}
           labelOptions={{ linkTo: getLabelLink() }}
-          onEditHandlers={{
-            onEdit: handleSubmitLabelChange,
-            onCancel: resetEditableLabel,
-            errorText: editableLabelError
-          }}
+          onEditHandlers={
+            !disabled
+              ? {
+                  onEdit: handleSubmitLabelChange,
+                  onCancel: resetEditableLabel,
+                  errorText: editableLabelError
+                }
+              : undefined
+          }
         />
       </Grid>
       <Grid item className={classes.controls}>

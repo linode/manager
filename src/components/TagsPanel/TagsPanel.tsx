@@ -148,6 +148,7 @@ interface State {
 export interface Props {
   tags: string[];
   updateTags: (tags: string[]) => Promise<void>;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & InjectedNotistackProps;
@@ -192,10 +193,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   }
 
   toggleTagInput = () => {
-    this.setState({
-      tagError: '',
-      isCreatingTag: !this.state.isCreatingTag
-    });
+    if (!this.props.disabled) {
+      this.setState({
+        tagError: '',
+        isCreatingTag: !this.state.isCreatingTag
+      });
+    }
   };
 
   handleDeleteTag = (label: string) => {
@@ -324,7 +327,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { tags, classes } = this.props;
+    const { tags, classes, disabled } = this.props;
 
     const {
       isCreatingTag,
@@ -410,7 +413,11 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               onClick={this.toggleTagInput}
               className={classes.addButton}
               type="primary"
+<<<<<<< HEAD
               disabled={loading}
+=======
+              disabled={disabled}
+>>>>>>> Fix tags and name fields read-only state
             >
               <AddCircle data-qa-add-tag />
               <Typography>Add New Tag</Typography>

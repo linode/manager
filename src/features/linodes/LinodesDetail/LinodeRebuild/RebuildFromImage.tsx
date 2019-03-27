@@ -146,12 +146,10 @@ export const RebuildFromImage: React.StatelessComponent<
         error={hasErrorFor.root_pass}
         users={userSSHKeys}
         data-qa-access-panel
-        passwordFieldDisabled={
+        disabled={disabled}
+        disabledReason={
           disabled
-            ? {
-                disabled: true,
-                reason: "You don't have permissions to modify this Linode"
-              }
+            ? "You don't have permissions to modify this Linode"
             : undefined
         }
       />

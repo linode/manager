@@ -98,7 +98,8 @@ class SummaryPanel extends React.Component<CombinedProps> {
       linodeIpv4,
       linodeIpv6,
       backupsEnabled,
-      mostRecentBackup
+      mostRecentBackup,
+      readOnly
     } = this.props;
 
     return (
@@ -154,7 +155,11 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
+          <TagsPanel
+            tags={linodeTags}
+            updateTags={this.updateTags}
+            disabled={readOnly}
+          />
         </Paper>
       </div>
     );
@@ -177,6 +182,7 @@ interface LinodeContextProps {
   mostRecentBackup: string | null;
   linodeVolumes: Linode.Volume[];
   backupsEnabled: boolean;
+  readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -187,7 +193,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeTags: linode.tags,
   linodeId: linode.id,
   backupsEnabled: linode.backups.enabled,
-  linodeVolumes: linode._volumes
+  linodeVolumes: linode._volumes,
+  readOnly: linode._permissions === 'read_only'
 }));
 
 const enhanced = compose<CombinedProps, {}>(
