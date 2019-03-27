@@ -62,19 +62,32 @@ export interface Props {
   warning?: boolean;
   error?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  className?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, title, content, warning, success, error, onClick } = props;
+  const {
+    classes,
+    title,
+    content,
+    warning,
+    success,
+    error,
+    onClick,
+    className
+  } = props;
   return (
     <ListItem
-      className={classNames({
-        [classes.root]: true,
-        [classes.unread]: error || warning || success,
-        [classes.pointer]: Boolean(onClick)
-      })}
+      className={classNames(
+        {
+          [classes.root]: true,
+          [classes.unread]: error || warning || success,
+          [classes.pointer]: Boolean(onClick)
+        },
+        className
+      )}
       component="li"
       tabIndex={1}
       onClick={onClick}

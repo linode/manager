@@ -1,7 +1,12 @@
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Fade from '@material-ui/core/Fade';
+import Popper from '@material-ui/core/Popper';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
 import ListItem from 'src/components/core/ListItem';
-import Menu from 'src/components/core/Menu';
+import MenuList from 'src/components/core/MenuList';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -11,24 +16,24 @@ import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
+import UserEventsListItem from './UserEventsListItem';
 
-type ClassNames = 'root' | 'dropDown' | 'hidden';
+type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     transform: `translate(-${theme.spacing.unit * 2}px, ${
       theme.spacing.unit
-    }px)`
+    }px)`,
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`
   },
   dropDown: {
-    position: 'absolute',
     outline: 0,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     overflowY: 'auto',
     overflowX: 'hidden',
     minHeight: 16,
     maxWidth: 250,
-    maxHeight: 300,
+    maxHeight: 360,
     [theme.breakpoints.up('sm')]: {
       maxWidth: 450
     }
@@ -36,6 +41,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   hidden: {
     height: 0,
     padding: 0
+  },
+  viewAll: {
+    backgroundColor: theme.bg.offWhiteDT,
+    borderTop: `1px solid ${theme.palette.divider}`
   }
 });
 
@@ -43,7 +52,10 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps &
+  DispatchProps &
+  RouteComponentProps<void> &
+  WithStyles<ClassNames>;
 
 class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
@@ -57,7 +69,12 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
 
   render() {
     const { anchorEl } = this.state;
-    const { classes, events, unseenCount } = this.props;
+    const {
+      classes,
+      events,
+      unseenCount,
+      history: { push }
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -67,19 +84,47 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
-        <Menu
-          anchorEl={anchorEl}
-          getContentAnchorEl={undefined}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        <Popper
           open={Boolean(anchorEl)}
-          onClose={this.closeMenu}
-          className={classes.root}
-          PaperProps={{ className: classes.dropDown }}
+          anchorEl={anchorEl}
+          transition
+          disablePortal
         >
-          <ListItem key="placeholder" className={classes.hidden} tabIndex={1} />
-          <UserEventsList events={events} closeMenu={this.closeMenu} />
-        </Menu>
+          {({ TransitionProps, placement }) => (
+            <Fade
+              {...TransitionProps}
+              style={{
+                transformOrigin:
+                  placement === 'bottom' ? 'center top' : 'center bottom'
+              }}
+            >
+              <ClickAwayListener onClickAway={this.closeMenu}>
+                <Paper className={classes.root}>
+                  <MenuList className={classes.dropDown}>
+                    <ListItem
+                      key="placeholder"
+                      className={classes.hidden}
+                      tabIndex={1}
+                    />
+                    <UserEventsList
+                      events={events}
+                      closeMenu={this.closeMenu}
+                    />
+                  </MenuList>
+                  <UserEventsListItem
+                    data-qa-view-all-events
+                    title="View All Events"
+                    className={classes.viewAll}
+                    onClick={(e: any) => {
+                      push('/events');
+                      this.closeMenu(e);
+                    }}
+                  />
+                </Paper>
+              </ClickAwayListener>
+            </Fade>
+          )}
+        </Popper>
       </React.Fragment>
     );
   }
@@ -127,4 +172,4 @@ const connected = connect(
   mapDispatchToProps
 );
 
-export default styled(connected(UserEventsMenu));
+export default styled(withRouter(connected(UserEventsMenu)));
