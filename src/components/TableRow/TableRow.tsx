@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type onClickFn = (e: React.MouseEvent<HTMLElement>) => void;
+type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
 interface Props {
   rowLink?: string | onClickFn;
@@ -45,7 +45,10 @@ type CombinedProps = Props &
   WithStyles<ClassNames>;
 
 class TableRow extends React.Component<CombinedProps> {
-  rowClick = (e: any, target: string | onClickFn) => {
+  rowClick = (
+    e: React.ChangeEvent<HTMLTableRowElement>,
+    target: string | onClickFn
+  ) => {
     const body = document.body as any;
     // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
     const isButton =
@@ -90,7 +93,7 @@ class TableRow extends React.Component<CombinedProps> {
 
     return (
       <_TableRow
-        onClick={e => rowLink && this.rowClick(e, rowLink)}
+        onClick={(e: any) => rowLink && this.rowClick(e, rowLink)}
         hover={rowLink !== undefined}
         role={role}
         className={classNames(className, {
