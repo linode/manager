@@ -148,7 +148,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   deployNewLinode = (imageID: string) => {
     const { history } = this.props;
     history.push({
-      pathname: `/linodes/create/?type=My%20Images&imageID=${imageID}`,
+      pathname: `/linodes/create/`,
+      search: `?type=My%20Images&imageID=${imageID}`,
       state: { selectedImageId: imageID }
     });
   };
