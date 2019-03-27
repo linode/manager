@@ -357,8 +357,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     history.push(`/linodes/${linodeId}/settings`);
   };
 
+  goToSupportTicket = () => {
+    const { history } = this.props;
+    history.push(`/support/tickets`);
+  };
+
   renderEmpty = () => {
-    const { linodeConfigs } = this.props;
+    const { linodeConfigs, linodeRegion } = this.props;
 
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
@@ -371,6 +376,23 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             buttonProps={{
               onClick: this.gotToSettings,
               children: 'View Linode Configurations'
+            }}
+          />
+        </React.Fragment>
+      );
+    }
+
+    if (linodeRegion === 'us-southeast') {
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Volumes" />
+          <Placeholder
+            title="Volumes are not available in this data center"
+            copy="You can request a migration to a data center with Block Storage by opening a support ticket"
+            icon={VolumesIcon}
+            buttonProps={{
+              onClick: this.goToSupportTicket,
+              children: 'Open Support Ticket'
             }}
           />
         </React.Fragment>
