@@ -388,7 +388,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="Volumes are not available in this data center"
-            copy="You can request a migration to a data center with Block Storage by opening a support ticket"
+            copy="You can request a migration to a data center with Block Storage by opening a support ticket."
             icon={VolumesIcon}
             buttonProps={{
               onClick: this.goToSupportTicket,
