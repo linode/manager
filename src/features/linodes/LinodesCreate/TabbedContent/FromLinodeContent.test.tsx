@@ -3,102 +3,86 @@ import * as React from 'react';
 
 import { linodes } from 'src/__data__/linodes';
 
-import { FromLinodeContent } from './FromLinodeContent';
+import { CombinedProps, FromLinodeContent } from './FromLinodeContent';
 
-const mockProps = {
-  regions: [],
-  types: [],
-  getBackupsMonthlyPrice: jest.fn(),
-  extendLinodes: jest.fn(),
-  linodes,
-  getRegionInfo: jest.fn(),
-  getTypeInfo: jest.fn(),
-  history: null,
-  accountBackups: false,
-  enqueueSnackbar: jest.fn(),
-  onPresentSnackbar: jest.fn(),
-  upsertLinode: jest.fn(),
-  updateCustomLabel: jest.fn(),
-  getLabel: jest.fn(),
-  customLabel: ''
+const mockProps: CombinedProps = {
+  typeDisplayInfo: undefined,
+  classes: {
+    root: '',
+    main: '',
+    sidebar: ''
+  },
+  updateDiskSize: jest.fn(),
+  updateImageID: jest.fn(),
+  updateLabel: jest.fn(),
+  updateLinodeID: jest.fn(),
+  updatePassword: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTags: jest.fn(),
+  updateTypeID: jest.fn(),
+  formIsSubmitting: false,
+  label: '',
+  password: '',
+  backupsEnabled: false,
+  accountBackupsEnabled: false,
+  toggleBackupsEnabled: jest.fn(),
+  togglePrivateIPEnabled: jest.fn(),
+  handleSubmitForm: jest.fn(),
+  privateIPEnabled: false,
+  resetCreationState: jest.fn(),
+  resetSSHKeys: jest.fn(),
+  imagesData: [],
+  linodesData: linodes,
+  regionsData: [],
+  typesData: [],
+  userSSHKeys: [],
+  userCannotCreateLinode: false
 };
 
 describe('FromImageContent', () => {
-  const componentWithNotice = shallow(
-    <FromLinodeContent
-      classes={{ root: '', main: '', sidebar: '' }}
-      {...mockProps}
-      notice={{
-        text: 'hello world',
-        level: 'warning' as 'warning' | 'error'
-      }}
-    />
-  );
+  const component = shallow(<FromLinodeContent {...mockProps} />);
 
-  const component = shallow(
-    <FromLinodeContent
-      classes={{ root: '', main: '', sidebar: '' }}
-      {...mockProps}
-      linodes={[]}
-    />
+  const componentWithoutLinodes = shallow(
+    <FromLinodeContent {...mockProps} linodesData={[]} />
   );
-
-  const componentWithLinodes = shallow(
-    <FromLinodeContent
-      classes={{ root: '', main: '', sidebar: '' }}
-      {...mockProps}
-    />
-  );
-
-  it('should render a notice when passed a Notice prop', () => {
-    expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
-  });
 
   it('should render a Placeholder when linodes prop has no length', () => {
-    expect(component.find('WithStyles(Placeholder)')).toHaveLength(1);
-  });
-
-  it('should not render a notice when no notice prop passed', () => {
-    expect(componentWithLinodes.find('WithStyles(Notice)')).toHaveLength(0);
+    expect(
+      componentWithoutLinodes.find('WithStyles(Placeholder)')
+    ).toHaveLength(1);
   });
 
   it('should render SelectLinode panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(WithTheme(WithRenderGuard(SelectLinodePanel)))'
+      component.find(
+        'WithTheme(WithRenderGuard(WithStyles(SelectLinodePanel)))'
       )
     ).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))'
+      component.find(
+        'WithTheme(WithRenderGuard(WithStyles(SelectRegionPanel)))'
       )
     ).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))'
-      )
+      component.find('WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(WithTheme(WithRenderGuard(InfoPanel)))'
-      )
+      component.find('WithTheme(WithRenderGuard(WithStyles(InfoPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
     expect(
-      componentWithLinodes.find(
-        'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
-      )
+      component.find('WithTheme(WithRenderGuard(WithStyles(AddonsPanel)))')
     ).toHaveLength(1);
   });
 });

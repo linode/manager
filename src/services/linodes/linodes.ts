@@ -12,18 +12,18 @@ type Page<T> = Linode.ResourcePage<T>;
 type Linode = Linode.Linode;
 
 export interface CreateLinodeRequest {
-  type: string | null;
-  region: string | null;
+  type?: string;
+  region?: string;
   stackscript_id?: number;
   backup_id?: number;
   swap_size?: number;
-  image?: string | null;
-  root_pass?: string | null;
+  image?: string;
+  root_pass?: string;
   authorized_keys?: string[];
   backups_enabled?: boolean;
   stackscript_data?: any;
   booted?: boolean;
-  label: string | null;
+  label?: string;
   tags?: string[];
   private_ip?: boolean;
   authorized_users?: string[];

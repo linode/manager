@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -8,7 +9,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 import { formatDate } from 'src/utilities/formatDate';
@@ -180,4 +181,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(SelectBackupPanel));
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  RenderGuard,
+  styled
+)(SelectBackupPanel);

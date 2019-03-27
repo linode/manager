@@ -6,6 +6,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -13,9 +14,7 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
+    margin: `${theme.spacing.unit * 3}px 0 0`
   }
 });
 
@@ -24,6 +23,7 @@ interface Props {
   udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
+  error?: string;
 }
 
 interface State {
@@ -46,7 +46,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { oneof } = this.state;
-    const { udf_data, field, classes, isOptional } = this.props;
+    const { udf_data, error, field, classes, isOptional } = this.props;
 
     return (
       <div className={classes.root}>
@@ -54,6 +54,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
           {field.label}
           {!isOptional && ' *'}
         </Typography>
+        {error && <Notice error text={error} spacingTop={8} />}
         {oneof.map((choice: string, index) => {
           return (
             <React.Fragment key={index}>

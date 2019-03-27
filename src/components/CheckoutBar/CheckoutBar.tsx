@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { StickyProps } from 'react-sticky';
 import Button from 'src/components/Button';
 import {
   StyleRulesCallback,
@@ -67,13 +66,12 @@ interface Props {
   onDeploy: () => void;
   heading: string;
   calculatedPrice?: number;
-  isSticky?: boolean;
   disabled?: boolean;
   isMakingRequest?: boolean;
   displaySections?: { title: string; details?: string | number }[];
 }
 
-type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class CheckoutBar extends React.Component<CombinedProps> {
   static defaultProps: Partial<Props> = {
@@ -82,13 +80,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
   render() {
     const {
-      /**
-       * Note:
-       * This 'style' prop is what gives us the "sticky" styles. Other special
-       * props are available, see https://github.com/captivationsoftware/react-sticky
-       */
-      style,
-      isSticky,
       classes,
       onDeploy,
       heading,
@@ -98,16 +89,8 @@ class CheckoutBar extends React.Component<CombinedProps> {
       isMakingRequest
     } = this.props;
 
-    let finalStyle;
-    if (isSticky) {
-      finalStyle = {
-        ...style,
-        paddingTop: 24
-      };
-    }
-
     return (
-      <div className={classes.root} style={finalStyle}>
+      <div className={classes.root}>
         <Typography
           role="header"
           variant="h2"

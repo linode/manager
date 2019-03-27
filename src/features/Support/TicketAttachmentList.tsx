@@ -84,6 +84,7 @@ export const TicketAttachmentList: React.StatelessComponent<
               name={
                 !showMoreAttachments ? 'Show More Files' : 'Show Less Files'
               }
+              defaultExpanded={false}
             >
               <TicketAttachmentRow
                 attachments={slice(5, Infinity, attachments)}
