@@ -77,15 +77,8 @@ const SelectAppPanel: React.SFC<CombinedProps> = props => {
     return null;
   }
 
-  /** hacky and bad */
-  const interceptedError = error ? 'You must select an App to create from' : '';
-
   return (
-    <Panel
-      className={classes.panel}
-      error={interceptedError}
-      title="Select App"
-    >
+    <Panel className={classes.panel} error={error} title="Select App">
       <Grid className={classes.flatImagePanelSelections} container>
         {appInstances.map(eachApp => (
           <SelectionCardWrapper

@@ -58,7 +58,9 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const handleRowClick = (
-  e: React.MouseEvent<any, MouseEvent>,
+  e:
+    | React.ChangeEvent<HTMLTableRowElement>
+    | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
   props: CombinedProps
 ) => {
   const { domain, id, type, onEdit } = props;
