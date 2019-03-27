@@ -1,10 +1,8 @@
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Fade from '@material-ui/core/Fade';
+import Modal from '@material-ui/core/Modal';
 import Popper from '@material-ui/core/Popper';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
-import ListItem from 'src/components/core/ListItem';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
 import {
@@ -22,10 +20,11 @@ type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    transform: `translate(-${theme.spacing.unit * 2}px, ${
-      theme.spacing.unit
-    }px)`,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    outline: 0,
+    position: 'absolute',
+    right: theme.spacing.unit * 2,
+    top: 40 + theme.spacing.unit * 4
   },
   dropDown: {
     outline: 0,
@@ -84,45 +83,37 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
           disabled={events.length === 0}
           className={anchorEl ? 'active' : ''}
         />
-        <Popper
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          transition
-          disablePortal
-        >
+        <Popper open={Boolean(anchorEl)} anchorEl={anchorEl} disablePortal>
           {({ TransitionProps, placement }) => (
-            <Fade
-              {...TransitionProps}
-              style={{
-                transformOrigin:
-                  placement === 'bottom' ? 'center top' : 'center bottom'
-              }}
+            <Modal
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+              open={Boolean(anchorEl)}
+              onClose={this.closeMenu}
+              BackdropProps={{ invisible: true }}
             >
-              <ClickAwayListener onClickAway={this.closeMenu}>
-                <Paper className={classes.root}>
-                  <MenuList className={classes.dropDown}>
-                    <ListItem
-                      key="placeholder"
-                      className={classes.hidden}
-                      tabIndex={1}
-                    />
-                    <UserEventsList
-                      events={events}
-                      closeMenu={this.closeMenu}
-                    />
-                  </MenuList>
-                  <UserEventsListItem
-                    data-qa-view-all-events
-                    title="View All Events"
-                    className={classes.viewAll}
-                    onClick={(e: any) => {
-                      push('/events');
-                      this.closeMenu(e);
-                    }}
-                  />
-                </Paper>
-              </ClickAwayListener>
-            </Fade>
+              <Paper
+                className={classes.root}
+                {...TransitionProps}
+                style={{
+                  transformOrigin:
+                    placement === 'bottom' ? 'center top' : 'center bottom'
+                }}
+              >
+                <MenuList className={classes.dropDown}>
+                  <UserEventsList events={events} closeMenu={this.closeMenu} />
+                </MenuList>
+                <UserEventsListItem
+                  data-qa-view-all-events
+                  title="View All Events"
+                  className={classes.viewAll}
+                  onClick={(e: any) => {
+                    push('/events');
+                    this.closeMenu(e);
+                  }}
+                />
+              </Paper>
+            </Modal>
           )}
         </Popper>
       </React.Fragment>

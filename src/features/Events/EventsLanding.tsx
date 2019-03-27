@@ -107,7 +107,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         </Waypoint>
       ) : (
         <Typography className={classes.noMoreEvents}>
-          No more event to show
+          No more events to show
         </Typography>
       )}
     </>

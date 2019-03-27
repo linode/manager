@@ -83,15 +83,6 @@ export const UserEventsList: React.StatelessComponent<
         .map((reducedProps: UserEventsListItemProps, key: number) => (
           <UserEventsListItem key={key} {...reducedProps} />
         ))}
-      {/* Final list item should be a link to the events landing page */}
-      <UserEventsListItem
-        data-qa-view-all-events
-        title="View All Events"
-        onClick={() => {
-          closeMenu();
-          push('/events');
-        }}
-      />
     </React.Fragment>
   );
 };
