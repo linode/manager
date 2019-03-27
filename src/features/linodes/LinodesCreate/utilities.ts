@@ -31,7 +31,7 @@ export const extendLinodes = (
 
 export const formatLinodeSubheading = (
   typeLabel: string,
-  imageLabel: string
+  imageLabel?: string
 ) => {
   const subheading = imageLabel
     ? `${typeLabel}, ${imageLabel}`
