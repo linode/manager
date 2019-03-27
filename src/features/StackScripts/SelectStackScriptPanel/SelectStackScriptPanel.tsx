@@ -149,15 +149,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  handleTabChange = () => {
-    /*
-     * if we're coming from a query string, the stackscript will be preselected
-     * however, we don't want the user to have their stackscript still preselected
-     * when they change StackScript tabs
-     */
-    this.props.resetSelectedStackScript();
-  };
-
   resetStackScript = () => {
     this.setState({ stackScript: undefined, stackScriptLoading: false });
   };
@@ -196,7 +187,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   label={stackScript.label}
                   stackScriptUsername={stackScript.username}
                   disabledCheckedSelect
-                  onSelect={() => {}}
                   description={truncateText(stackScript.description, 100)}
                   images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
