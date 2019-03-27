@@ -144,6 +144,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
             variant={variant}
+            data-qa-select-image-panel
             title={imagePanelTitle}
             images={images}
             handleSelection={this.props.updateImageID}
@@ -156,6 +157,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regions}
+            data-qa-select-region-panel
             handleSelection={this.props.updateRegionID}
             selectedID={this.props.selectedRegionID}
             copy="Determine the best location for your Linode."
@@ -165,12 +167,14 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <SelectPlanPanel
             error={hasErrorFor('type')}
             types={types}
+            data-qa-select-plan-panel
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
             updateFor={[this.props.selectedTypeID, errors]}
             disabled={userCannotCreateLinode}
           />
           <LabelAndTagsPanel
+            data-qa-label-and-tags-panel
             labelFieldProps={{
               label: 'Linode Label',
               value: this.props.label || '',
@@ -188,6 +192,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           />
           <AccessPanel
             /* disable the password field if we haven't selected an image */
+            data-qa-access-panel
             disabled={!this.props.selectedImageID}
             disabledReason={
               !this.props.selectedImageID
@@ -210,6 +215,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             }
           />
           <AddonsPanel
+            data-qa-addons-panel
             backups={this.props.backupsEnabled}
             accountBackups={this.props.accountBackupsEnabled}
             backupsMonthly={backupsMonthlyPrice}
@@ -275,6 +281,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
 
               return (
                 <CheckoutBar
+                  data-qa-checkout-bar
                   heading={`${this.props.label || 'Linode'} Summary`}
                   calculatedPrice={calculatedPrice}
                   isMakingRequest={this.props.formIsSubmitting}
