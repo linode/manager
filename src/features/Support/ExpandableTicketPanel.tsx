@@ -226,13 +226,15 @@ export class ExpandableTicketPanel extends React.Component<
     return data!;
   };
 
-  shouldRenderHively = (fromLinode: boolean, updated: string) => {
+  shouldRenderHively = (fromLinode: boolean, updated: string, username?: string) => {
     /* Render Hively only for replies marked as from_linode,
-     * and are on tickets less than 7 days old.
+     * and are on tickets less than 7 days old,
+     * and when the user is not "Linode"
      * Defaults to showing Hively if there are any errors parsing dates
      * or the date is invalid.
      */
     try {
+      if (username === 'Linode') return false;
       const lastUpdated = moment(updated);
       if (!lastUpdated.isValid()) {
         return true;
@@ -388,7 +390,7 @@ export class ExpandableTicketPanel extends React.Component<
               </Grid>
             )}
           </Grid>
-          {this.shouldRenderHively(data.from_linode, data.updated) &&
+          {this.shouldRenderHively(data.from_linode, data.updated, data.username) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)}
         </Paper>
       </Grid>
