@@ -22,7 +22,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         ? 'Your Linode must be fully powered down in order to perform this action'
         : undefined;
     tooltip = readOnly
-      ? "You don't permissions to perform this action"
+      ? "You don't have permissions to perform this action"
       : undefined;
     const disabledProps = tooltip
       ? {

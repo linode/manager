@@ -133,6 +133,7 @@ interface State {
 export interface Props {
   tags: string[];
   updateTags: (tags: string[]) => Promise<void>;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & InjectedNotistackProps;
@@ -176,10 +177,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   }
 
   toggleTagInput = () => {
-    this.setState({
-      tagError: '',
-      isCreatingTag: !this.state.isCreatingTag
-    });
+    if (!this.props.disabled) {
+      this.setState({
+        tagError: '',
+        isCreatingTag: !this.state.isCreatingTag
+      });
+    }
   };
 
   handleDeleteTag = (label: string) => {
@@ -283,7 +286,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { tags, classes } = this.props;
+    const { tags, classes, disabled } = this.props;
 
     const {
       isCreatingTag,
@@ -302,7 +305,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
                 key={eachTag}
                 label={eachTag}
                 tagLabel={eachTag}
-                onDelete={this.handleDeleteTag}
+                onDelete={!disabled ? this.handleDeleteTag : undefined}
                 className={classes.tag}
                 loading={listDeletingTags.some(inProgressTag => {
                   /*
@@ -336,6 +339,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               onClick={this.toggleTagInput}
               className={classes.addButton}
               type="primary"
+              disabled={disabled}
             >
               <AddCircle data-qa-add-tag />
               <Typography>Add New Tag</Typography>

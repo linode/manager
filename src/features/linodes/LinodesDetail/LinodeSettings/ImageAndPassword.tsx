@@ -69,12 +69,10 @@ export const ImageAndPassword: React.StatelessComponent<
         handleChange={onPasswordChange}
         error={passwordError}
         users={userSSHKeys}
-        passwordFieldDisabled={
+        disabled={disabled}
+        disabledReason={
           disabled
-            ? {
-                disabled: true,
-                reason: "You don't have permissions to modify this Linode"
-              }
+            ? "You don't have permissions to modify this Linode"
             : undefined
         }
       />
