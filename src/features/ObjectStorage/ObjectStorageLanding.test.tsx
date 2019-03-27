@@ -1,8 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { buckets } from 'src/__data__/buckets';
-// @todo: remove router import when bucket creation is supported
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ObjectStorageLanding } from './ObjectStorageLanding';
 
 describe('ObjectStorageLanding', () => {
@@ -11,8 +9,8 @@ describe('ObjectStorageLanding', () => {
       classes={{ root: '', title: '', titleWrapper: '' }}
       bucketsData={buckets}
       bucketsLoading={false}
-      // @todo: remove router props when bucket creation is supported
-      {...reactRouterProps}
+      openBucketDrawer={jest.fn()}
+      closeBucketDrawer={jest.fn()}
     />
   );
 

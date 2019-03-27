@@ -511,7 +511,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <SelectRegionPanel
               regions={regionsData || []}
               error={hasErrorFor('region')}
-              selectedID={nodeBalancerFields.region || null}
+              selectedID={nodeBalancerFields.region}
               handleSelection={this.regionChange}
               disabled={disabled}
             />

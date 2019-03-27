@@ -13,7 +13,7 @@ const LinodesLanding = DefaultLoader({
 });
 
 const LinodesCreate = DefaultLoader({
-  loader: () => import('./LinodesCreate')
+  loader: () => import('./LinodesCreate/LinodeCreateContainer')
 });
 
 const LinodesDetail = DefaultLoader({

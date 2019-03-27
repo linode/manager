@@ -2,7 +2,7 @@ import createDevicesFromStrings from './createDevicesFromStrings';
 
 describe('LinodeRescue', () => {
   describe('createRescueDevicesPostObject', () => {
-    it('Returns the minumum requirement.', () => {
+    it('Returns the minimum requirement.', () => {
       const result = createDevicesFromStrings({});
       const expected = {
         sda: null,
@@ -52,6 +52,24 @@ describe('LinodeRescue', () => {
         sdh: null
       };
 
+      expect(result).toEqual(expected);
+    });
+
+    it('should return null for a disk that is set to None', () => {
+      const result = createDevicesFromStrings({
+        sda: 'none',
+        sdd: 'disk-456'
+      });
+      const expected = {
+        sda: null,
+        sdb: null,
+        sdc: null,
+        sdd: { disk_id: 456 },
+        sde: null,
+        sdf: null,
+        sdg: null,
+        sdh: null
+      };
       expect(result).toEqual(expected);
     });
   });
