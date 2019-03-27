@@ -19,7 +19,7 @@ export interface DevicesAsStrings {
  * The `value` should be formatted as volume-123, disk-123, etc.,
  */
 const createTypeRecord = (value?: string): null | DiskRecord | VolumeRecord => {
-  if (isNil(value)) {
+  if (isNil(value) || value === 'none') {
     return null;
   }
 
