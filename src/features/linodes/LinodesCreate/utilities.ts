@@ -3,9 +3,7 @@ import { ExtendedType } from './SelectPlanPanel';
 import { ExtendedLinode } from './types';
 
 /**
- * Literally just returning our original array of Linodes
- * with heading and subheading keys why is this function
- * so absurdly complicated?????
+ * adds a heading and subheading key to the Linode
  */
 export const extendLinodes = (
   linodes: Linode.Linode[],
