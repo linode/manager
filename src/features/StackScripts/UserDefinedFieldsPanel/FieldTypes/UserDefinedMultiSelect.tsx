@@ -7,6 +7,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import Toggle from 'src/components/Toggle';
 
@@ -14,9 +15,7 @@ type ClassNames = 'root' | 'toggle';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
+    margin: `${theme.spacing.unit * 3}px 0 0`
   },
   toggle: {}
 });
@@ -26,6 +25,7 @@ interface Props {
   udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
+  error?: string;
 }
 
 interface State {
@@ -74,7 +74,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { manyof } = this.state;
-    const { udf_data, field, classes, isOptional } = this.props;
+    const { udf_data, error, field, classes, isOptional } = this.props;
 
     // we are setting default values in the parent component, so we want to use these
     // default values to determine what will be checked upon initial render
@@ -87,6 +87,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
           {field.label}
           {!isOptional && ' *'}
         </Typography>
+        {error && <Notice error text={error} spacingTop={8} />}
         <Grid container>
           {manyof.map((choice: string, index) => {
             return (

@@ -1,82 +1,58 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { images as mockImages } from 'src/__data__/images';
 import { UserDefinedFields as mockUserDefinedFields } from 'src/__data__/UserDefinedFields';
-import withLinodeActions from 'src/__data__/withLinodeActions';
-import { FromStackScriptContent } from './FromStackScriptContent';
+import {
+  CombinedProps,
+  FromStackScriptContent
+} from './FromStackScriptContent';
 
-const mockProps = {
-  images: [],
-  regions: [],
-  types: [],
-  getBackupsMonthlyPrice: jest.fn(),
-  getRegionInfo: jest.fn(),
-  getTypeInfo: jest.fn(),
-  history: null,
-  userSSHKeys: [],
-  accountBackups: true,
-  tagObject: {
-    accountTags: [],
-    selectedTags: [],
-    newTags: [],
-    errors: [],
-    actions: {
-      addTag: jest.fn(),
-      createTag: jest.fn(),
-      getLinodeTagList: jest.fn()
-    }
+const mockProps: CombinedProps = {
+  typeDisplayInfo: undefined,
+  classes: {
+    main: '',
+    sidebar: '',
+    emptyImagePanel: '',
+    emptyImagePanelText: ''
   },
-  updateCustomLabel: jest.fn(),
-  getLabel: jest.fn(),
-  linodes: [],
-  customLabel: ''
+  updateImageID: jest.fn(),
+  updateLabel: jest.fn(),
+  updatePassword: jest.fn(),
+  updateRegionID: jest.fn(),
+  updateTags: jest.fn(),
+  updateTypeID: jest.fn(),
+  formIsSubmitting: false,
+  label: '',
+  password: '',
+  backupsEnabled: false,
+  accountBackupsEnabled: false,
+  toggleBackupsEnabled: jest.fn(),
+  togglePrivateIPEnabled: jest.fn(),
+  handleSubmitForm: jest.fn(),
+  privateIPEnabled: false,
+  resetCreationState: jest.fn(),
+  resetSSHKeys: jest.fn(),
+  imagesData: [],
+  regionsData: [],
+  typesData: [],
+  userCannotCreateLinode: false,
+  userSSHKeys: [],
+  request: jest.fn(),
+  header: '',
+  updateStackScript: jest.fn(),
+  handleSelectUDFs: jest.fn()
 };
 
 describe('FromImageContent', () => {
-  const componentWithNotice = shallow(
+  const component = shallow(<FromStackScriptContent {...mockProps} />);
+
+  const componentWithUDFs = shallow(
     <FromStackScriptContent
-      {...withLinodeActions}
-      enqueueSnackbar={jest.fn()}
-      onPresentSnackbar={jest.fn()}
-      handleDisablePasswordField={jest.fn()}
-      classes={{
-        root: '',
-        main: '',
-        sidebar: '',
-        emptyImagePanel: '',
-        emptyImagePanelText: ''
-      }}
       {...mockProps}
-      notice={{
-        text: 'hello world',
-        level: 'warning' as 'warning' | 'error'
-      }}
+      availableUserDefinedFields={mockUserDefinedFields}
+      availableStackScriptImages={mockImages}
     />
   );
-
-  const component = shallow(
-    <FromStackScriptContent
-      {...withLinodeActions}
-      enqueueSnackbar={jest.fn()}
-      onPresentSnackbar={jest.fn()}
-      handleDisablePasswordField={jest.fn()}
-      classes={{
-        root: '',
-        main: '',
-        sidebar: '',
-        emptyImagePanel: '',
-        emptyImagePanelText: ''
-      }}
-      {...mockProps}
-    />
-  );
-
-  it('should render a notice when passed a Notice prop', () => {
-    expect(componentWithNotice.find('WithStyles(Notice)')).toHaveLength(1);
-  });
-
-  it('should not render a notice when no notice prop passed', () => {
-    expect(component.find('WithStyles(Notice)')).toHaveLength(0);
-  });
 
   it('should render SelectStackScript panel', () => {
     expect(
@@ -87,69 +63,62 @@ describe('FromImageContent', () => {
   });
 
   it('should render UserDefinedFields panel', () => {
-    component.setState({ userDefinedFields: mockUserDefinedFields }); // give us some dummy fields
     expect(
-      component.find(
-        'WithStyles(WithTheme(WithRenderGuard(UserDefinedFieldsPanel)))'
+      componentWithUDFs.find(
+        'WithTheme(WithRenderGuard(WithStyles(UserDefinedFieldsPanel)))'
       )
     ).toHaveLength(1);
   });
 
   it('should not render UserDefinedFields panel if no UDFs', () => {
-    component.setState({ userDefinedFields: [] }); // give us some dummy fields
     expect(
       component.find(
-        'WithStyles(WithTheme(WithRenderGuard(UserDefinedFieldsPanel)))'
+        'WithTheme(WithRenderGuard(WithStyles(UserDefinedFieldsPanel)))'
       )
     ).toHaveLength(0);
   });
 
-  it('should render SelectImage panel if no compatibleImages', () => {
+  it('should not render SelectImage panel if no compatibleImages', () => {
     expect(
       component.find('WithTheme(WithRenderGuard(WithStyles(CreateFromImage)))')
     ).toHaveLength(0);
   });
 
-  it('should render SelectImage panel if no compatibleImages', () => {
-    component.setState({
-      compatibleImages: [{ label: 'linode/centos7', is_public: true }]
-    });
+  it('should render SelectImage panel there are compatibleImages', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(CreateFromImage)))')
+      componentWithUDFs.find('WithTheme(WithRenderGuard(CreateFromImage))')
     ).toHaveLength(1);
   });
 
   it('should render SelectRegion panel', () => {
     expect(
       component.find(
-        'WithStyles(WithTheme(WithRenderGuard(SelectRegionPanel)))'
+        'WithTheme(WithRenderGuard(WithStyles(SelectRegionPanel)))'
       )
     ).toHaveLength(1);
   });
 
   it('should render SelectPlan panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(SelectPlanPanel)))')
+      component.find('WithTheme(WithRenderGuard(WithStyles(SelectPlanPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectLabel panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(InfoPanel)))')
+      component.find('WithTheme(WithRenderGuard(WithStyles(InfoPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectPassword panel', () => {
     expect(
-      component.find('WithStyles(WithTheme(WithRenderGuard(AccessPanel)))')
+      component.find('WithTheme(WithRenderGuard(WithStyles(AccessPanel)))')
     ).toHaveLength(1);
   });
 
   it('should render SelectAddOns panel', () => {
     expect(
-      component.find(
-        'WithStyles(withRouter(WithTheme(WithRenderGuard(AddonsPanel))))'
-      )
+      component.find('WithTheme(WithRenderGuard(WithStyles(AddonsPanel)))')
     ).toHaveLength(1);
   });
 });
