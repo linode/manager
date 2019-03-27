@@ -109,6 +109,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
     }
 
     setIsRevoking(true);
+    setRevokeErrors([]);
 
     revokeObjectStorageKey(keyToRevoke.id)
       .then(_ => {
