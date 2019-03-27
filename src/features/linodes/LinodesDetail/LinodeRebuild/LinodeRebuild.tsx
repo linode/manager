@@ -31,10 +31,14 @@ interface ContextProps {
 }
 type CombinedProps = WithStyles<ClassNames> & ContextProps;
 
-type MODES = 'fromImage' | 'fromStackScript';
+type MODES =
+  | 'fromImage'
+  | 'fromCommunityStackScript'
+  | 'fromAccountStackScript';
 const options = [
   { value: 'fromImage', label: 'From Image' },
-  { value: 'fromStackScript', label: 'From StackScript' }
+  { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
+  { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
 const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
@@ -71,7 +75,12 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
         />
       </Paper>
       {mode === 'fromImage' && <RebuildFromImage />}
-      {mode === 'fromStackScript' && <RebuildFromStackScript />}
+      {mode === 'fromCommunityStackScript' && (
+        <RebuildFromStackScript type="community" />
+      )}
+      {mode === 'fromAccountStackScript' && (
+        <RebuildFromStackScript type="account" />
+      )}
     </React.Fragment>
   );
 };
