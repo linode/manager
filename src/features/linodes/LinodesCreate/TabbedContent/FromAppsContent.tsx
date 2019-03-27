@@ -1,6 +1,8 @@
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapStateToProps } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
+import { compose } from 'recompose';
 
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -12,6 +14,8 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
+import DocsSidebar from 'src/components/DocsSidebar';
+import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -26,6 +30,10 @@ import SelectPlanPanel from '../SelectPlanPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
+
+import { AppsDocs } from 'src/documentation';
+
+import { ApplicationState } from 'src/store';
 
 import {
   AppsData,
@@ -62,12 +70,16 @@ const errorResources = {
   stackscript_id: 'The selected App'
 };
 
-type CombinedProps = WithDisplayData &
+type InnerProps = WithDisplayData &
   AppsData &
   WithTypesRegionsAndImages &
-  WithStyles<ClassNames> &
   ReduxStatePropsAndSSHKeys &
   StackScriptFormStateHandlers;
+
+type CombinedProps = WithStyles<ClassNames> &
+  InnerProps &
+  StateProps &
+  SetDocsProps;
 
 class FromAppsContent extends React.PureComponent<CombinedProps> {
   handleSelectStackScript = (
@@ -219,34 +231,34 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               />
             )}
           {!userCannotCreateLinode &&
-          compatibleImages &&
-          compatibleImages.length > 0 ? (
-            <SelectImagePanel
-              images={compatibleImages}
-              handleSelection={updateImageID}
-              updateFor={[selectedImageID, compatibleImages, errors]}
-              selectedImageID={selectedImageID}
-              error={hasErrorFor('image')}
-              variant="public"
-            />
-          ) : (
-            <Paper className={classes.emptyImagePanel}>
-              {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
-              )}
-              <Typography variant="h2" data-qa-tp="Select Image">
-                Select Image
+            compatibleImages &&
+            compatibleImages.length > 0 ? (
+              <SelectImagePanel
+                images={compatibleImages}
+                handleSelection={updateImageID}
+                updateFor={[selectedImageID, compatibleImages, errors]}
+                selectedImageID={selectedImageID}
+                error={hasErrorFor('image')}
+                variant="public"
+              />
+            ) : (
+              <Paper className={classes.emptyImagePanel}>
+                {/* empty state for images */}
+                {hasErrorFor('image') && (
+                  <Notice error={true} text={hasErrorFor('image')} />
+                )}
+                <Typography variant="h2" data-qa-tp="Select Image">
+                  Select Image
               </Typography>
-              <Typography
-                variant="body1"
-                className={classes.emptyImagePanelText}
-                data-qa-no-compatible-images
-              >
-                No Compatible Images Available
+                <Typography
+                  variant="body1"
+                  className={classes.emptyImagePanelText}
+                  data-qa-no-compatible-images
+                >
+                  No Compatible Images Available
               </Typography>
-            </Paper>
-          )}
+              </Paper>
+            )}
           <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regionsData}
@@ -347,15 +359,19 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               }
 
               return (
-                <CheckoutBar
-                  heading={`${label || 'Linode'} Summary`}
-                  calculatedPrice={calculatedPrice}
-                  isMakingRequest={formIsSubmitting}
-                  disabled={formIsSubmitting || userCannotCreateLinode}
-                  onDeploy={this.handleCreateLinode}
-                  displaySections={displaySections}
-                  {...stickyProps}
-                />
+                <div>
+                  <CheckoutBar
+                    heading={`${label || 'Linode'} Summary`}
+                    calculatedPrice={calculatedPrice}
+                    isMakingRequest={formIsSubmitting}
+                    disabled={formIsSubmitting || userCannotCreateLinode}
+                    onDeploy={this.handleCreateLinode}
+                    displaySections={displaySections}
+                  />
+                  {this.props.documentation.length > 0 && (
+                    <DocsSidebar docs={this.props.documentation} />
+                  )}
+                </div>
               );
             }}
           </Sticky>
@@ -367,4 +383,38 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(FromAppsContent);
+interface StateProps {
+  documentation: Linode.Doc[];
+}
+
+const mapStateToProps: MapStateToProps<
+  StateProps,
+  CombinedProps,
+  ApplicationState
+> = state => ({
+  documentation: state.documentation
+});
+
+const connected = connect(mapStateToProps);
+
+const generateDocs = (ownProps: InnerProps & StateProps) => {
+  if (ownProps.selectedStackScriptLabel) {
+    return AppsDocs[
+      ownProps.selectedStackScriptLabel.toLowerCase().replace(':', '')
+    ];
+  }
+  return [];
+};
+
+const updateCond = (
+  prevProps: InnerProps & StateProps,
+  nextProps: InnerProps & StateProps
+) => {
+  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
+};
+
+export default compose<CombinedProps, InnerProps>(
+  connected,
+  setDocs(generateDocs, updateCond),
+  styled
+)(FromAppsContent);
