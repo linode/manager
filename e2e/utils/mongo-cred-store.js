@@ -67,7 +67,7 @@ class MongoCredStore extends CredStore {
                 return collection.insertOne(userRecord).then(() => userRecord);
             }
         
-            let users = [setCredCollection('MANAGER_USER', '')];
+            const users = [setCredCollection('MANAGER_USER', '')];
             
             if (userCount > 1) {
                 for (let i = 2; i <= userCount; i++ ) {
@@ -112,7 +112,7 @@ class MongoCredStore extends CredStore {
         })
         .then((result) => {
             console.log("checked out creds");
-            let creds = result.value;
+            const creds = result.value;
             
             this.browser.options.testUser = creds.username;
 
@@ -141,7 +141,7 @@ class MongoCredStore extends CredStore {
         })
         .then((result) => {
             console.log("checked in creds");
-            let creds = result.value;
+            const creds = result.value;
             return mongo.close().then((r) => { return creds; });
         })
         .catch((err) => {

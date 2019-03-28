@@ -44,8 +44,8 @@ class FSCredStore extends CredStore {
 
     checkoutCreds(specFile) {
         console.log("checkoutCreds: " + specFile);
-        let credCollection = JSON.parse(readFileSync(this.credsFile));
-        let creds = credCollection.find((cred, i) => {
+        const credCollection = JSON.parse(readFileSync(this.credsFile));
+        const creds = credCollection.find((cred, i) => {
             if (!cred.inUse) {
                 credCollection[i].inUse = true;
                 credCollection[i].spec = specFile;
@@ -61,8 +61,8 @@ class FSCredStore extends CredStore {
 
     checkinCreds(specFile) {
         console.log("checkinCreds: " + specFile);
-        let credCollection = JSON.parse(readFileSync(this.credsFile));
-        let creds = credCollection.find((cred, i) => {
+        const credCollection = JSON.parse(readFileSync(this.credsFile));
+        const creds = credCollection.find((cred, i) => {
             if (cred.spec === specFile) {
                 credCollection[i].inUse = false;
                 credCollection[i].spec = '';

@@ -51,7 +51,11 @@ console.log("parallel runners: " + parallelRunners);
 // See more at:
 //   https://webdriver.io/docs/api/browser/call.html
 const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new FSCredStore('./e2e/creds.js');
-//const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new MongoCredStore('localhost');
+
+// for local testing using mongo running in docker
+// comment out assignment above, uncomment this one, and run 'docker run -d -p 27017:27017 mongo'
+// before running the tests via 'yarn e2e'
+//const credStore = new MongoCredStore('localhost');
 
 exports.config = {
     // Selenium Host/Port
