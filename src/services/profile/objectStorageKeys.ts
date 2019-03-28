@@ -9,7 +9,7 @@ import Request, {
 import { createObjectStorageKeysSchema } from './objectStorageKeys.schema';
 
 type Page<T> = Linode.ResourcePage<T>;
-export interface CreateObjectStorageKeyRequest {
+export interface ObjectStorageKeyRequest {
   label: string;
 }
 /**
@@ -30,10 +30,25 @@ export const getObjectStorageKeys = (params?: any, filters?: any) =>
  *
  * Creates an Object Storage key
  */
-export const createObjectStorageKeys = (data: CreateObjectStorageKeyRequest) =>
+export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
   Request<Linode.ObjectStorageKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}beta/account/s3-keys`),
+    setData(data, createObjectStorageKeysSchema)
+  ).then(response => response.data);
+
+/**
+ * createObjectStorageKeys
+ *
+ * Creates an Object Storage key
+ */
+export const updateObjectStorageKey = (
+  id: number,
+  data: ObjectStorageKeyRequest
+) =>
+  Request<Linode.ObjectStorageKey>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}beta/account/s3-keys/${id}`),
     setData(data, createObjectStorageKeysSchema)
   ).then(response => response.data);
 

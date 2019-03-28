@@ -9,20 +9,27 @@ interface Props {
   // prop-drilled from grandparent:
   // ObjectStorageKeys --> ObjectStorageKeyTable --> HERE
   openRevokeDialog: (key: Linode.ObjectStorageKey) => void;
+  openDrawerForEditing: (key: Linode.ObjectStorageKey) => void;
 }
 
 type CombinedProps = Props;
 
 const ObjectStorageKeyMenu: React.StatelessComponent<CombinedProps> = props => {
   const createActions = () => {
-    const { openRevokeDialog, objectStorageKey } = props;
+    const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
 
     return (closeMenu: Function): Action[] => {
       return [
-        // @todo: "Rename" action will go here
+        {
+          title: 'Rename',
+          onClick: () => {
+            openDrawerForEditing(objectStorageKey);
+            closeMenu();
+          }
+        },
         {
           title: 'Revoke',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
+          onClick: () => {
             openRevokeDialog(objectStorageKey);
             closeMenu();
           }
