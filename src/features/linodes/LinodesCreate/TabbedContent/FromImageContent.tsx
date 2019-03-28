@@ -96,10 +96,11 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
   };
 
   handleCheckoutEvent = () => {
+    const variantType = this.props.variant === 'private' ? 'image' : 'distro';
     sendEvent({
       category: 'Create Linode',
-      action: 'image',
-      label: `image-${this.props.label}`
+      action: variantType,
+      label: `${variantType}-${this.props.label}`
     });
 
     this.createLinode();
