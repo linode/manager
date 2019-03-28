@@ -93,6 +93,7 @@ const UserEventsButton: React.StatelessComponent<CombinedProps> = ({
       aria-label="User Events"
       aria-owns={open ? 'menu-list-grow' : undefined}
       aria-haspopup="true"
+      data-testid="ueb"
     >
       <NotificationIcon className={classes.icon} />
       {count && count > 0 ? (
