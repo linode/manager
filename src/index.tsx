@@ -97,8 +97,10 @@ const renderAuthentication = () => (
     <Route exact path="/nullauth" render={renderNullAuth} />
     <Route exact path="/logout" component={Logout} />
     <AuthenticationWrapper>
-      <Route path="/linodes/:linodeId/lish" render={renderLish} />
-      <Route render={renderApp} />
+      <Switch>
+        <Route path="/linodes/:linodeId/lish" render={renderLish} />
+        <Route render={renderApp} />
+      </Switch>
     </AuthenticationWrapper>
   </Switch>
 );
