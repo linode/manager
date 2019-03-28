@@ -15,6 +15,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 
+import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
@@ -79,6 +80,16 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
       },
       this.props.selectedLinodeID
     );
+  };
+
+  handleCheckoutEvent = () => {
+    sendEvent({
+      category: 'Create Linode',
+      action: 'clone',
+      label: `clone-${this.props.label}`
+    });
+
+    this.cloneLinode();
   };
 
   render() {
@@ -214,7 +225,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                       disabled={
                         this.props.formIsSubmitting || userCannotCreateLinode
                       }
-                      onDeploy={this.cloneLinode}
+                      onDeploy={this.handleCheckoutEvent}
                       displaySections={displaySections}
                       {...props}
                     />

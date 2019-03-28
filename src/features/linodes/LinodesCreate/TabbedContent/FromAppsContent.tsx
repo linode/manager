@@ -23,6 +23,7 @@ import SelectAppPanel from '../SelectAppPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
+import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
@@ -130,7 +131,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       privateIPEnabled,
       tags
     } = this.props;
-
     handleSubmitForm('createFromApp', {
       region: selectedRegionID,
       type: selectedTypeID,
@@ -147,6 +147,16 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
         .map(u => u.username),
       tags: tags ? tags.map((item: Tag) => item.value) : []
     });
+  };
+
+  handleCheckoutEvent = () => {
+    sendEvent({
+      category: 'Create Linode',
+      action: 'one-click',
+      label: `one-click-app-${this.props.label}`
+    });
+
+    this.handleCreateLinode();
   };
 
   render() {
@@ -354,7 +364,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
                   calculatedPrice={calculatedPrice}
                   isMakingRequest={formIsSubmitting}
                   disabled={formIsSubmitting || userCannotCreateLinode}
-                  onDeploy={this.handleCreateLinode}
+                  onDeploy={this.handleCheckoutEvent}
                   displaySections={displaySections}
                   {...stickyProps}
                 />
