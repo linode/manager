@@ -1,7 +1,22 @@
-import { getBuckets as _getBuckets } from 'src/services/objectStorage/buckets';
+import {
+  BucketRequestPayload,
+  createBucket as _createBucket,
+  getBuckets as _getBuckets
+} from 'src/services/objectStorage/buckets';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { getAllBucketsActions } from './bucket.actions';
+import { createBucketActions, getAllBucketsActions } from './bucket.actions';
+
+/*
+ * Create Bucket
+ */
+
+export type CreateBucketRequest = BucketRequestPayload;
+export const createBucket = createRequestThunk<
+  CreateBucketRequest,
+  Linode.Bucket,
+  Linode.ApiFieldError[]
+>(createBucketActions, data => _createBucket(data));
 
 /*
  * Get All Buckets

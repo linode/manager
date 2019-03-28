@@ -20,6 +20,14 @@ import buckets, {
   defaultState as defaultBucketsState,
   State as BucketsState
 } from 'src/store/bucket/bucket.reducer';
+import bucketDrawer, {
+  defaultState as bucketDrawerDefaultState,
+  State as BucketDrawerState
+} from 'src/store/bucketDrawer/bucketDrawer.reducer';
+import clusters, {
+  defaultState as defaultClustersState,
+  State as ClustersState
+} from 'src/store/clusters/clusters.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -41,6 +49,10 @@ import images, {
   defaultState as defaultImagesState,
   State as ImagesStata
 } from 'src/store/image/image.reducer';
+import linodeCreateReducer, {
+  defaultState as linodeCreateDefaultState,
+  State as LinodeCreateState
+} from 'src/store/linodeCreate/linodeCreate.reducer';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState
@@ -123,7 +135,8 @@ const __resourcesDefaultState = {
   regions: defaultRegionsState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
-  buckets: defaultBucketsState
+  buckets: defaultBucketsState,
+  clusters: defaultClustersState
 };
 
 export interface ResourcesState {
@@ -142,6 +155,7 @@ export interface ResourcesState {
   types: TypesState;
   volumes: VolumesState;
   buckets: BucketsState;
+  clusters: ClustersState;
 }
 
 export interface ApplicationState {
@@ -154,6 +168,8 @@ export interface ApplicationState {
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
+  bucketDrawer: BucketDrawerState;
+  createLinode: LinodeCreateState;
 }
 
 const defaultState: ApplicationState = {
@@ -165,7 +181,9 @@ const defaultState: ApplicationState = {
   events: eventsDefaultState,
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
-  volumeDrawer: volumeDrawerDefaultState
+  volumeDrawer: volumeDrawerDefaultState,
+  bucketDrawer: bucketDrawerDefaultState,
+  createLinode: linodeCreateDefaultState
 };
 
 /**
@@ -186,7 +204,8 @@ const __resources = combineReducers({
   regions,
   types,
   volumes,
-  buckets
+  buckets,
+  clusters
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -198,7 +217,9 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
-  events
+  bucketDrawer,
+  events,
+  createLinode: linodeCreateReducer
 });
 
 const enhancers = compose(
