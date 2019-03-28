@@ -39,7 +39,7 @@ exports.removeAllLinodes = token => {
                 res.data.data.map(linode => removeEntity(token, linode, linodesEndpoint))
             );
         } else {
-            return Promise.all(["No Linodes"]);
+            return ["No Linodes"];
         }
     });
 }
@@ -66,7 +66,7 @@ exports.removeAllVolumes = token => {
                     res.data.data.map(v => removeEntity(token, v, endpoint))
                 );
             } else {
-                return Promise.all(["No Volumes"]);
+                return ["No Volumes"];
             }
 
         })

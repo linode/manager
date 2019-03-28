@@ -1,5 +1,5 @@
 const moment = require('moment');
-const { existsSync, statSync, writeFileSync, readFileSync, unlink } = require('fs');
+const { existsSync, statSync, writeFile, readFile, unlink } = require('fs');
 
 const CredStore = require('./cred-store');
 
@@ -15,6 +15,30 @@ class FSCredStore extends CredStore {
         console.log(this);
     }
 
+    _readCredsFile() {
+        return new Promise((resolve, reject) => {
+            readFile(this.credsFile, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(JSON.parse(data));
+                }
+            });
+        });
+    }
+
+    _writeCredsFile(credCollection) {
+        return new Promise((resolve, reject) => {
+            writeFile(this.credsFile, JSON.stringify(credCollection), (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(true);
+                }
+            });
+        });
+    }
+
     /*
     * Not currently used, see comments in utils/cred-store.js
     *
@@ -23,55 +47,58 @@ class FSCredStore extends CredStore {
     * @returns { String } stringified local storage object
     */
     storeToken(username) {
-        let credCollection = JSON.parse(readFileSync(this.credsFile));
+        // this needs to be fixed.  won't actually update anything given current impl
+        // because it's not updating the token in credCollection.
+        return this._readCredsFile().then((credCollection) => {
+            let currentUser = credCollection.find(cred => cred.username === username);
 
-        let currentUser = credCollection.find( cred => cred.username === username );
-
-        if ( !currentUser.isPresetToken ){
-            currentUser.token = this.getTokenFromLocalStorage();
-        }
-
-        writeFileSync(this.credsFile, JSON.stringify(credCollection));
-        return new Promise((resolve, reject) => { resolve(true) });
+            if (!currentUser.isPresetToken) {
+                currentUser.token = this.getTokenFromLocalStorage();
+            }
+    
+            return this._writeCredsFile(credCollection);
+        })
     }
 
     readToken(username) {
-        const credCollection = JSON.parse(readFileSync(this.credsFile));
-        const currentUserCreds = credCollection.find(cred => cred.username === username);
-        return new Promise((resolve, reject) => { resolve(currentUserCreds['token']) });
+        return this._readCredsFile().then((credCollection) => {
+            const currentUserCreds = credCollection.find(cred => cred.username === username);
+            return currentUserCreds['token'];
+        });
     }
 
 
     checkoutCreds(specFile) {
         console.log("checkoutCreds: " + specFile);
-        const credCollection = JSON.parse(readFileSync(this.credsFile));
-        const creds = credCollection.find((cred, i) => {
-            if (!cred.inUse) {
-                credCollection[i].inUse = true;
-                credCollection[i].spec = specFile;
-                
-                this.browser.options.testUser = credCollection[i].username;
-                
-                writeFileSync(this.credsFile, JSON.stringify(credCollection));
-                return true;
-            }
+        return this._readCredsFile().then((credCollection) => {
+            const creds = credCollection.find((cred, i) => {
+                if (!cred.inUse) {
+                    credCollection[i].inUse = true;
+                    credCollection[i].spec = specFile;
+                    
+                    this.browser.options.testUser = credCollection[i].username;
+                    return true;
+                }
+            });
+            return this._writeCredsFile(credCollection).then(() => creds);
         });
-        return new Promise((resolve, reject) => { resolve(creds); });;
     }
 
     checkinCreds(specFile) {
         console.log("checkinCreds: " + specFile);
-        const credCollection = JSON.parse(readFileSync(this.credsFile));
-        const creds = credCollection.find((cred, i) => {
-            if (cred.spec === specFile) {
-                credCollection[i].inUse = false;
-                credCollection[i].spec = '';
-                // credCollection[i].token = '';
-                writeFileSync(this.credsFile, JSON.stringify(credCollection));
-                return true;
-            }
+        
+        return this._readCredsFile().then((credCollection) => {
+            const creds = credCollection.find((cred, i) => {
+                if (cred.spec === specFile) {
+                    credCollection[i].inUse = false;
+                    credCollection[i].spec = '';
+                    // credCollection[i].token = '';
+
+                    return true;
+                }
+            });
+            return this._writeCredsFile(credCollection).then(() => creds);
         });
-        return new Promise((resolve, reject) => { resolve(creds); });
     }
 
     generateCreds(config, userCount) {
@@ -91,12 +118,13 @@ class FSCredStore extends CredStore {
             }
         }
         
-        writeFileSync(this.credsFile, JSON.stringify(credCollection));
-        return new Promise((resolve, reject) => { resolve(true) });
+        console.log("adding users:");
+        console.log(credCollection);
+        return this._writeCredsFile(credCollection);
     }
 
     getAllCreds() {
-        return new Promise((resolve, reject) => { resolve(JSON.parse(readFileSync(this.credsFile))) });
+        return this._readCredsFile();
     }
 
     cleanupAccounts() {
