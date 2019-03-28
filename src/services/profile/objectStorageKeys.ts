@@ -38,9 +38,9 @@ export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
   ).then(response => response.data);
 
 /**
- * createObjectStorageKeys
+ * updateObjectStorageKeys
  *
- * Creates an Object Storage key
+ * Updates an Object Storage Key
  */
 export const updateObjectStorageKey = (
   id: number,
