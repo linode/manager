@@ -33,7 +33,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
     manyof: this.props.field.manyof!.split(',')
   };
 
-  handleSelectManyOf = (e: any) => {
+  handleSelectManyOf = () => {
     const { updateFormState, udf_data, field } = this.props;
 
     updateFormState(field.name, udf_data);
