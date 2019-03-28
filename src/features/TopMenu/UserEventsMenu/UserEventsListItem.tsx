@@ -18,7 +18,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     root: {
       ...theme.notificationList,
-      borderLeft: '5px solid transparent',
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
       display: 'block',

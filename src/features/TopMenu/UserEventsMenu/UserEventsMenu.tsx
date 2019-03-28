@@ -3,6 +3,7 @@ import Popper from '@material-ui/core/Popper';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
 import {
@@ -14,7 +15,6 @@ import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
-import UserEventsListItem from './UserEventsListItem';
 
 type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
 
@@ -43,7 +43,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   viewAll: {
     backgroundColor: theme.bg.offWhiteDT,
-    borderTop: `1px solid ${theme.palette.divider}`
+    width: '100%',
+    textAlign: 'left',
+    color: theme.color.headline,
+    '& > span': {
+      justifyContent: 'flex-start'
+    }
   }
 });
 
@@ -103,15 +108,16 @@ class UserEventsMenu extends React.Component<CombinedProps, State> {
                 <MenuList className={classes.dropDown}>
                   <UserEventsList events={events} closeMenu={this.closeMenu} />
                 </MenuList>
-                <UserEventsListItem
+                <Button
                   data-qa-view-all-events
-                  title="View All Events"
                   className={classes.viewAll}
                   onClick={(e: any) => {
                     push('/events');
                     this.closeMenu(e);
                   }}
-                />
+                >
+                  View All Events
+                </Button>
               </Paper>
             </Modal>
           )}
