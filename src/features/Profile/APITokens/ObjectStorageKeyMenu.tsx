@@ -21,7 +21,7 @@ const ObjectStorageKeyMenu: React.StatelessComponent<CombinedProps> = props => {
     return (closeMenu: Function): Action[] => {
       return [
         {
-          title: 'Rename',
+          title: 'Rename Key',
           onClick: () => {
             openDrawerForEditing(objectStorageKey);
             closeMenu();
