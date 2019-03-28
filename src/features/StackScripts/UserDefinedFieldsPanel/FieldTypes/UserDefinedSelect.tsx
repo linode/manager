@@ -81,7 +81,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
           {error && <Notice error text={error} spacingTop={8} />}
           <InputLabel className={classes.radioGroupLabel}>
             {field.label}
-            {!isOptional && ' *'}
+            {!isOptional && '*'}
           </InputLabel>
 
           {oneof.map((choice: string, index) => {
