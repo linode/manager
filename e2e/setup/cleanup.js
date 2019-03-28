@@ -87,22 +87,25 @@ exports.deleteAll = (token, user) => {
             .then(res => {
                 if (endpoint.includes('images')) {
                     privateImages = res.data.data.filter(i => i['is_public'] === false);
-                    res.data['data'] = privateImages;
-                    return res.data;
+                    res.data.data = privateImages;
                 }
 
                 if (endpoint.includes('oauth-clients')) {
-                    const appClients = res.data.data.filter(client => !client['id'] === process.env.REACT_APP_CLIENT_ID);
-                    res.data['data'] = appClients;
-                    return res.data;
+                    const appClients = res.data.data.filter(client => client['id'] !== process.env.REACT_APP_CLIENT_ID);
+                    res.data.data = appClients;
                 }
 
                 if (endpoint.includes('users')) {
                     const nonRootUsers = res.data.data.filter(u => u.username !== user);
-                    res.data['data'] = nonRootUsers;
-                    return res.data;
+                    // tack on an id and label so the general-purpose removeEntity function works
+                    // (it expects all entities to have an id and a label)
+                    nonRootUsers.forEach((user) => {
+                        user.id = user.username;
+                        user.label = user.username;
+                    })
+                    res.data.data = nonRootUsers;
                 }
-                return res.data;
+                return res;
             });
     }
 
@@ -110,13 +113,12 @@ exports.deleteAll = (token, user) => {
         return Promise.all(endpoints.map(ep => {
             return getEndpoint(ep, user)
                 .then(res => {
-                    if (res.data.length > 0) {
-                        return res.data.forEach(entity => removeEntity(token, entity, ep));
+                    if (res.data.data.length > 0) {
+                        return Promise.all(res.data.data.map(entity => removeEntity(token, entity, ep)));
                     } else {
-                        return ["No entities for " + ep]
+                        return ["No entities for " + ep];
                     }
-                })
-                .catch(error => console.error(error));
+                });
         }));
     }
 
