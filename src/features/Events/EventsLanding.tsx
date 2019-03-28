@@ -106,9 +106,11 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           <div style={{ minHeight: '150px' }} />
         </Waypoint>
       ) : (
-        <Typography className={classes.noMoreEvents}>
-          No more events to show
-        </Typography>
+        !loading && (
+          <Typography className={classes.noMoreEvents}>
+            No more events to show
+          </Typography>
+        )
       )}
     </>
   );
