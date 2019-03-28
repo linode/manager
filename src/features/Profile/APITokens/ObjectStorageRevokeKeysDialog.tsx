@@ -4,17 +4,19 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 
-interface RebuildDialogProps {
+interface RevokeKeysDialogProps {
+  label: string;
   isOpen: boolean;
   isLoading: boolean;
   handleClose: () => void;
   handleSubmit: () => void;
+  errors?: Linode.ApiFieldError[];
 }
 
-export const RebuildDialog: React.StatelessComponent<
-  RebuildDialogProps
+export const RevokeKeysDialog: React.StatelessComponent<
+  RevokeKeysDialogProps
 > = props => {
-  const { isOpen, isLoading, handleClose, handleSubmit } = props;
+  const { label, isOpen, isLoading, handleClose, handleSubmit, errors } = props;
 
   const actions = () => (
     <ActionsPanel>
@@ -25,10 +27,9 @@ export const RebuildDialog: React.StatelessComponent<
         type="secondary"
         destructive
         onClick={handleSubmit}
-        data-qa-submit-rebuild
         loading={isLoading}
       >
-        Rebuild
+        Revoke
       </Button>
     </ActionsPanel>
   );
@@ -37,13 +38,14 @@ export const RebuildDialog: React.StatelessComponent<
     <ConfirmationDialog
       open={isOpen}
       onClose={handleClose}
-      title="Confirm Linode Rebuild"
+      title={`Revoking ${label}`}
       actions={actions}
+      error={(errors || []).map(e => e.reason).join(',')}
     >
       <Typography>
-        Are you sure you want to rebuild this Linode? This will result in
-        permanent data loss.
+        Are you sure you want to revoke this Object Storage key?
       </Typography>
     </ConfirmationDialog>
   );
 };
+export default RevokeKeysDialog;

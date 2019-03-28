@@ -91,7 +91,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
       .catch(err => {
         const errors: Linode.ApiFieldError[] = getAPIErrorOrDefault(
           err,
-          'An error occured while updating label',
+          'An error occurred while updating label',
           'label'
         );
         const errorStrings: string[] = errors.map(e => e.reason);
@@ -142,7 +142,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           recentEvent={linode.recentEvent}
           id={linode.id}
           label={linode.label}
-          noImage={!linode.image}
+          noConfigs={linode._configs.length === 0}
           openConfigDrawer={openConfigDrawer}
           disabled={disabled}
         />
@@ -167,7 +167,8 @@ const enhanced = compose<CombinedProps, {}>(
   withEditableLabelState,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
-    updateLinode
+    updateLinode,
+    configs: linode._configs
   })),
   styled
 );

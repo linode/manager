@@ -151,7 +151,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
         // This set is for creating from a Backup
         selectedBackupID: params.backupID,
-        selectedLinodeID: params.linodeID
+        selectedLinodeID: params.linodeID,
+
+        // This is for coming from ImagesLanding (where a private Image will be preselected)
+        selectedImageID: params.imageID
       });
     }
     this.setState({ appInstancesLoading: true });
@@ -344,7 +347,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       /* a backup selection is also required */
       this.setState(
         {
-          errors: [{ field: 'backup_id', reason: 'You must select a Backup' }]
+          errors: [{ field: 'backup_id', reason: 'You must select a Backup.' }]
         },
         () => {
           scrollErrorIntoView();
@@ -358,7 +361,21 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         () => ({
           errors: [
             {
-              reason: 'You must select a StackScript to create from',
+              reason: 'You must select a StackScript.',
+              field: 'stackscript_id'
+            }
+          ]
+        }),
+        () => scrollErrorIntoView()
+      );
+    }
+
+    if (type === 'createFromApp' && !this.state.selectedStackScriptID) {
+      return this.setState(
+        () => ({
+          errors: [
+            {
+              reason: 'You must select a One-Click App.',
               field: 'stackscript_id'
             }
           ]

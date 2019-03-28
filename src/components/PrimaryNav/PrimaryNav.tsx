@@ -504,7 +504,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
               className={classes.menu}
-              BackdropProps={{ className: classes.settingsBackdrop }}
+              BackdropProps={{
+                className: classes.settingsBackdrop,
+                'data-qa-backdrop': true
+              }}
             >
               <ThemeToggle toggleTheme={toggleTheme} />
               <SpacingToggle toggleSpacing={toggleSpacing} />

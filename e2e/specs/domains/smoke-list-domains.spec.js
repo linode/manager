@@ -42,6 +42,7 @@ describe('Domains - List Suite', () => {
         browser.jsClick(`${domainElement} [data-qa-action-menu]`);
 
         const expectedMenuItems = [
+            'Edit',
             'Clone',
             'Remove',
             'Edit DNS Records',
