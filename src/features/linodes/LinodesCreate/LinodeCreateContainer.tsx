@@ -48,13 +48,14 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { CloudApp, getCloudApps } from 'src/services/cloud_apps';
-import { cloneLinode } from 'src/services/linodes';
+import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -322,7 +323,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (type, payload, linodeID?: number) => {
+  submitForm: HandleSubmit = (payload, linodeID?: number) => {
     const { createType } = this.props;
     /**
      * run a certain linode action based on the type
@@ -343,7 +344,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (type === 'createFromBackup' && !this.state.selectedBackupID) {
+    if (createType === 'fromBackup' && !this.state.selectedBackupID) {
       /* a backup selection is also required */
       this.setState(
         {
@@ -356,7 +357,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       return;
     }
 
-    if (type === 'createFromStackScript' && !this.state.selectedStackScriptID) {
+    if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
@@ -370,7 +371,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (type === 'createFromApp' && !this.state.selectedStackScriptID) {
+    if (createType === 'fromApp' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
@@ -399,6 +400,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         if (createType === 'fromLinode') {
           this.props.upsertLinode(response);
         }
+
+        /** handle GA Event sending */
+        handleAnalytics(
+          createType,
+          payload,
+          this.state.selectedStackScriptLabel
+        );
 
         /** show toast */
         this.props.enqueueSnackbar(
@@ -512,7 +520,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { enqueueSnackbar, onPresentSnackbar, ...restOfProps } = this.props;
+    const {
+      enqueueSnackbar,
+      createType,
+      onPresentSnackbar,
+      ...restOfProps
+    } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
     return (
       <StickyContainer>
@@ -644,3 +657,32 @@ export default recompose<CombinedProps, {}>(
   userSSHKeyHoc,
   withLabelGenerator
 )(LinodeCreateContainer);
+
+const handleAnalytics = (
+  type: CreateTypes,
+  payload: CreateLinodeRequest,
+  stackScriptLabel?: string
+) => {
+  sendEvent({
+    category: 'Create Linode',
+    action: type,
+    label: generateAnalyticsLabel(type, payload, stackScriptLabel)
+  });
+};
+
+const generateAnalyticsLabel = (
+  type: CreateTypes,
+  payload: CreateLinodeRequest,
+  stackScriptLabel?: string
+): string => {
+  const possibleImage = payload.image ? `${payload.image}, ` : '';
+  const possibleType = payload.type ? `${payload.type}, ` : '';
+  const stackScript = stackScriptLabel
+    ? stackScriptLabel
+    : `StackScript #${payload.stackscript_id}`;
+  if (type === 'fromApp' || type === 'fromStackScript') {
+    return `${stackScript}, ${possibleImage}${possibleType}${payload.region}`;
+  } else {
+    return `${possibleImage}${possibleType}${payload.region}`;
+  }
+};
