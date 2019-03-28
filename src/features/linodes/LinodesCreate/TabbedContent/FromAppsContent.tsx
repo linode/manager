@@ -153,7 +153,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
     sendEvent({
       category: 'Create Linode',
       action: 'one-click',
-      label: `one-click-app-${this.props.label}`
+      label: this.props.label
     });
 
     this.handleCreateLinode();

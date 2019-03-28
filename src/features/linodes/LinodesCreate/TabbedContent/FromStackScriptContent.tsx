@@ -169,7 +169,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     sendEvent({
       category: 'Create Linode',
       action: 'stackscript',
-      label: `stackscript-${this.props.label}`
+      label: this.props.label
     });
 
     this.handleCreateLinode();

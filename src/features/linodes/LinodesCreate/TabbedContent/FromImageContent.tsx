@@ -100,7 +100,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     sendEvent({
       category: 'Create Linode',
       action: variantType,
-      label: `${variantType}-${this.props.label}`
+      label: this.props.selectedImageID
     });
 
     this.createLinode();

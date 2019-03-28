@@ -86,7 +86,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
     sendEvent({
       category: 'Create Linode',
       action: 'clone',
-      label: `clone-${this.props.label}`
+      label: this.props.label
     });
 
     this.cloneLinode();

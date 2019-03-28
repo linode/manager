@@ -163,7 +163,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     sendEvent({
       category: 'Create Linode',
       action: 'backup',
-      label: `backup-${this.props.label}`
+      label: this.props.label
     });
 
     this.createLinode();
