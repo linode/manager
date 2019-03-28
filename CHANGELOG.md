@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.51.2] - 2019.03.28
+
+### Fixed:
+- Fix issue with Lish console not rendering correctly (#4736)
+
+
 ## [0.51.0] - 2019.03.25
 
 ### Added:
