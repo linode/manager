@@ -22,6 +22,7 @@ import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import TableRowError from 'src/components/TableRowError';
 import Toggle from 'src/components/Toggle';
+import { regionsWithoutBlockStorage } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import withVolumes, {
@@ -365,6 +366,23 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   renderEmpty = () => {
     const { linodeConfigs, linodeRegion } = this.props;
 
+    if (regionsWithoutBlockStorage.some(region => region === linodeRegion)) {
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Volumes" />
+          <Placeholder
+            title="Volumes are not available in this data center"
+            copy="You can request a migration to a data center with Block Storage by opening a support ticket."
+            icon={VolumesIcon}
+            buttonProps={{
+              onClick: this.goToSupportTicket,
+              children: 'Open Support Ticket'
+            }}
+          />
+        </React.Fragment>
+      );
+    }
+
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
         <React.Fragment>
@@ -376,23 +394,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             buttonProps={{
               onClick: this.gotToSettings,
               children: 'View Linode Configurations'
-            }}
-          />
-        </React.Fragment>
-      );
-    }
-
-    if (linodeRegion === 'us-southeast') {
-      return (
-        <React.Fragment>
-          <DocumentTitleSegment segment="Volumes" />
-          <Placeholder
-            title="Volumes are not available in this data center"
-            copy="You can request a migration to a data center with Block Storage by opening a support ticket."
-            icon={VolumesIcon}
-            buttonProps={{
-              onClick: this.goToSupportTicket,
-              children: 'Open Support Ticket'
             }}
           />
         </React.Fragment>
