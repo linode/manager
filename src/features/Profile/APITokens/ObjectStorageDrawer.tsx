@@ -61,8 +61,7 @@ export const ObjectStorageDrawer: React.StatelessComponent<
           handleChange,
           handleBlur,
           handleSubmit,
-          isSubmitting,
-          resetForm
+          isSubmitting
         }) => (
           <>
             {status && (
@@ -98,10 +97,7 @@ export const ObjectStorageDrawer: React.StatelessComponent<
                   Submit
                 </Button>
                 <Button
-                  onClick={() => {
-                    resetForm();
-                    onClose();
-                  }}
+                  onClick={onClose}
                   data-qa-cancel
                   type="secondary"
                   className="cancel"
