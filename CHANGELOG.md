@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed:
 - Fix issue with Lish console not rendering correctly (#4736)
 
-
 ## [0.51.0] - 2019.03.25
 
 ### Added:
