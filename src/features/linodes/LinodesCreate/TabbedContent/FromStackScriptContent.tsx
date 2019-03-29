@@ -19,7 +19,6 @@ import { Tag } from 'src/components/TagsInput';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
@@ -163,16 +162,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
         .map(u => u.username),
       tags: tags ? tags.map((item: Tag) => item.value) : []
     });
-  };
-
-  handleCheckoutEvent = () => {
-    sendEvent({
-      category: 'Create Linode',
-      action: 'stackscript',
-      label: this.props.label
-    });
-
-    this.handleCreateLinode();
   };
 
   render() {
@@ -382,7 +371,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                   calculatedPrice={calculatedPrice}
                   isMakingRequest={this.props.formIsSubmitting}
                   disabled={this.props.formIsSubmitting || disabled}
-                  onDeploy={this.handleCheckoutEvent}
+                  onDeploy={this.handleCreateLinode}
                   displaySections={displaySections}
                   {...props}
                 />

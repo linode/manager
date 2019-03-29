@@ -16,7 +16,6 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import { getLinodeBackups } from 'src/services/linodes';
-import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
@@ -157,16 +156,6 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       booted: true,
       tags: tagsToAdd
     });
-  };
-
-  handleCheckoutEvent = () => {
-    sendEvent({
-      category: 'Create Linode',
-      action: 'backup',
-      label: this.props.label
-    });
-
-    this.createLinode();
   };
 
   componentWillUnmount() {
@@ -358,7 +347,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     calculatedPrice={calculatedPrice}
                     isMakingRequest={isGettingBackups}
                     disabled={disabled}
-                    onDeploy={this.handleCheckoutEvent}
+                    onDeploy={this.createLinode}
                     displaySections={displaySections}
                     {...props}
                   />

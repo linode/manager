@@ -17,7 +17,6 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import { sendEvent } from 'src/utilities/analytics';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
@@ -93,17 +92,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
         .filter(u => u.selected)
         .map(u => u.username)
     });
-  };
-
-  handleCheckoutEvent = () => {
-    const variantType = this.props.variant === 'private' ? 'image' : 'distro';
-    sendEvent({
-      category: 'Create Linode',
-      action: variantType,
-      label: this.props.selectedImageID
-    });
-
-    this.createLinode();
   };
 
   render() {
@@ -293,7 +281,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                   disabled={
                     this.props.formIsSubmitting || userCannotCreateLinode
                   }
-                  onDeploy={this.handleCheckoutEvent}
+                  onDeploy={this.createLinode}
                   displaySections={displaySections}
                   {...props}
                 />
