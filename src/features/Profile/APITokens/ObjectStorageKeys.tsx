@@ -1,8 +1,7 @@
+import { FormikBag } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Button from 'src/components/core/Button';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -10,114 +9,127 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
-import { useForm } from 'src/hooks/useForm';
+import { useErrors } from 'src/hooks/useErrors';
+import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   CreateObjectStorageKeyRequest,
   createObjectStorageKeys,
-  getObjectStorageKeys
+  getObjectStorageKeys,
+  revokeObjectStorageKey
 } from 'src/services/profile/objectStorageKeys';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import ObjectStorageKeyDisplayDialog from './ObjectStorageDisplayDialog';
 import ObjectStorageDrawer from './ObjectStorageDrawer';
 import ObjectStorageKeyTable from './ObjectStorageKeyTable';
+import ObjectStorageRevokeKeysDialog from './ObjectStorageRevokeKeysDialog';
 
-type ClassNames =
-  | 'headline'
-  | 'paper'
-  | 'helperText'
-  | 'labelCell'
-  | 'createdCell'
-  | 'confirmationDialog';
+type ClassNames = 'headline';
 
 const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     headline: {
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2
-    },
-    paper: {
-      marginBottom: theme.spacing.unit * 2
-    },
-    labelCell: {
-      width: '40%'
-    },
-    createdCell: {
-      width: '30%'
-    },
-    helperText: {
-      marginBottom: theme.spacing.unit * 3
-    },
-    confirmationDialog: {
-      paddingBottom: 0,
-      marginBottom: 0
     }
   };
 };
 
-interface KeysState {
-  dialogOpen: boolean;
-  accessKey?: string;
-  secretKey?: string;
-}
-
-interface DrawerState {
-  open: boolean;
-  errors?: Linode.ApiFieldError[];
-}
-
 type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
+
+export type FormikProps = FormikBag<Props, CreateObjectStorageKeyRequest>;
 
 export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes, ...paginationProps } = props;
 
-  const [keys, setKeys] = React.useState<KeysState>({ dialogOpen: false });
-  const [form, setField, resetForm] = useForm<CreateObjectStorageKeyRequest>({
-    label: ''
-  });
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [drawer, setDrawer] = React.useState<DrawerState>({ open: false });
+  // Key to display in Confirmation Modal upon creation
+  const [
+    keyToDisplay,
+    setKeyToDisplay
+  ] = React.useState<Linode.ObjectStorageKey | null>(null);
 
-  const closeDialog = () => setKeys({ ...keys, dialogOpen: false });
-  const openDrawer = () => setDrawer({ open: true, errors: [] });
-  const closeDrawer = () => setDrawer({ open: false, errors: [] });
+  // Key to revoke (by clicking on a key's kebab menu )
+  const [
+    keyToRevoke,
+    setKeyToRevoke
+  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
+  const [revokeErrors, setRevokeErrors] = useErrors();
 
-  const handleSubmit = () => {
-    setIsLoading(true);
-    createObjectStorageKeys(form)
-      .then(data => {
-        setIsLoading(false);
-        resetForm();
+  const displayKeysDialog = useOpenClose();
+  const revokeKeysDialog = useOpenClose();
+  const createDrawer = useOpenClose();
 
-        const accessKey = data.access_key;
-        const secretKey = data.secret_key;
-
-        setKeys({ accessKey, secretKey, dialogOpen: true });
-        closeDrawer();
-        paginationProps.request();
-      })
-      .catch(err => {
-        setIsLoading(false);
-
-        const errors = getAPIErrorOrDefault(
-          err,
-          'Error generating Object Storage Key.'
-        );
-        setDrawer({ ...drawer, errors });
-      });
-  };
-
-  // Request keys on first render
+  // Request object storage key when component is first rendered
   React.useEffect(() => {
     paginationProps.request();
   }, []);
 
-  const confirmationDialogActions = (
-    <Button type="secondary" onClick={closeDialog} data-qa-close-dialog>
-      OK
-    </Button>
-  );
+  const handleSubmit = (
+    values: CreateObjectStorageKeyRequest,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    setSubmitting(true);
+
+    createObjectStorageKeys(values)
+      .then(data => {
+        setSubmitting(false);
+
+        setKeyToDisplay(data);
+
+        // "Refresh" keys to include the newly created key
+        paginationProps.request();
+
+        createDrawer.close();
+        displayKeysDialog.open();
+      })
+      .catch(errorResponse => {
+        setSubmitting(false);
+
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue creating Object Storage Keys.'
+        );
+        const mappedErrors = getErrorMap(['label'], errors);
+
+        // `status` holds general errors
+        if (mappedErrors.none) {
+          setStatus(mappedErrors.none);
+        }
+
+        setErrors(mappedErrors);
+      });
+  };
+
+  const handleRevokeKeys = () => {
+    // This shouldn't happen, but just in case.
+    if (!keyToRevoke) {
+      return;
+    }
+
+    setIsRevoking(true);
+    setRevokeErrors([]);
+
+    revokeObjectStorageKey(keyToRevoke.id)
+      .then(_ => {
+        setIsRevoking(false);
+
+        // "Refresh" keys to remove the newly revoked key
+        paginationProps.request();
+
+        revokeKeysDialog.close();
+      })
+      .catch(errorResponse => {
+        setIsRevoking(false);
+
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue revoking your Object Storage Key.'
+        );
+        setRevokeErrors(errors);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -134,13 +146,19 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         </Grid>
         <Grid item>
           <AddNewLink
-            onClick={openDrawer}
+            onClick={createDrawer.open}
             label="Create an Object Storage Key"
           />
         </Grid>
       </Grid>
 
-      <ObjectStorageKeyTable {...paginationProps} />
+      <ObjectStorageKeyTable
+        {...paginationProps}
+        openRevokeDialog={(objectStorageKey: Linode.ObjectStorageKey) => {
+          setKeyToRevoke(objectStorageKey);
+          revokeKeysDialog.open();
+        }}
+      />
 
       <PaginationFooter
         page={props.page}
@@ -152,51 +170,27 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       />
 
       <ObjectStorageDrawer
-        open={drawer.open}
-        onClose={closeDrawer}
+        open={createDrawer.isOpen}
+        onClose={createDrawer.close}
         onSubmit={handleSubmit}
-        label={form.label}
-        updateLabel={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setField('label', e.target.value)
-        }
-        isLoading={isLoading}
-        errors={drawer.errors}
       />
 
-      <ConfirmationDialog
-        title="Object Storage Keys"
-        actions={confirmationDialogActions}
-        open={keys.dialogOpen}
-        onClose={closeDrawer}
-        className={classes.confirmationDialog}
-      >
-        <Typography variant="body1" className={classes.helperText}>
-          Your Object Storage keys have been created. Store these credentials.
-          They won't be shown again.
-        </Typography>
-
-        <Typography>
-          <b>Access Key:</b>
-        </Typography>
-        <Notice
-          spacingTop={16}
-          typeProps={{ variant: 'body1' }}
-          warning
-          text={keys.accessKey}
-          breakWords
-        />
-
-        <Typography>
-          <b>Secret Key:</b>
-        </Typography>
-        <Notice
-          spacingTop={16}
-          typeProps={{ variant: 'body1' }}
-          warning
-          text={keys.secretKey}
-          breakWords
-        />
-      </ConfirmationDialog>
+      <ObjectStorageKeyDisplayDialog
+        objectStorageKey={keyToDisplay}
+        isOpen={displayKeysDialog.isOpen}
+        close={displayKeysDialog.close}
+      />
+      <ObjectStorageRevokeKeysDialog
+        isOpen={revokeKeysDialog.isOpen}
+        label={(keyToRevoke && keyToRevoke.label) || ''}
+        handleClose={() => {
+          setRevokeErrors([]);
+          revokeKeysDialog.close();
+        }}
+        handleSubmit={handleRevokeKeys}
+        isLoading={isRevoking}
+        errors={revokeErrors}
+      />
     </React.Fragment>
   );
 };

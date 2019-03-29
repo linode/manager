@@ -2,13 +2,13 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import objectStorageKeys from 'src/__data__/objectStorageKeys';
 import { pageyProps } from 'src/__data__/pageyProps';
-import { ObjectStorageKeyTable, Props } from './ObjectStorageKeyTable';
+import { CombinedProps, ObjectStorageKeyTable } from './ObjectStorageKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
-  let wrapper: ShallowWrapper<Props>;
+  let wrapper: ShallowWrapper<CombinedProps>;
 
   beforeEach(() => {
-    wrapper = shallow<Props>(
+    wrapper = shallow<CombinedProps>(
       <ObjectStorageKeyTable
         classes={{
           root: '',
@@ -17,13 +17,15 @@ describe('ObjectStorageKeyTable', () => {
           labelCell: '',
           copyIcon: ''
         }}
+        openRevokeDialog={jest.fn()}
         {...pageyProps}
       />
     );
   });
 
   it('it includes a header with "Label" and "Access Key" cells', () => {
-    expect(wrapper.find('[data-qa-table-head]').children().length).toBe(2);
+    // Expect "3" here, because there is an empty table cell for the kebab menu
+    expect(wrapper.find('[data-qa-table-head]').children().length).toBe(3);
     expect(
       wrapper
         .find('[data-qa-header-label]')
