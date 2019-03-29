@@ -126,6 +126,13 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
     // Clear out status (used for general errors)
     setStatus(null);
+
+    // If the new label is the same as the old one, no need to make an API
+    // request. Just close the drawer and return early.
+    if (values.label === keyToEdit.label) {
+      return createOrEditDrawer.close();
+    }
+
     setSubmitting(true);
 
     updateObjectStorageKey(keyToEdit.id, values)
