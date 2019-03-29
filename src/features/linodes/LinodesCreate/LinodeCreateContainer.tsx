@@ -692,9 +692,9 @@ const determineAnalyticsLabel = (
     ? `Backup #${payload.backup_id}`
     : 'Unknown Backup #';
 
-  const cloneLabel = payload.type ? `${payload.type}` : 'Unknown Clone Type';
+  const cloneLabel = payload.type ? `${payload.type}` : '';
 
-  const imageLabel = payload.image ? `${payload.image}, ` : '';
+  const imageLabel = payload.image ? `${payload.image}` : '';
 
   if (type === 'fromApp' || type === 'fromStackScript') {
     return `${stackScript}`;
