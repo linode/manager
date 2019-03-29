@@ -248,7 +248,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             this.setState({
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
-              )
+              ),
+              loading: false
             });
           });
       }
@@ -316,8 +317,6 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             ['response', 'data', 'errors', 0, 'reason'],
             e
           );
-
-          this.toggleTagInput();
           // display the first error in the array or a generic one
           this.setState({ tagError });
         });
