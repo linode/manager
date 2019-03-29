@@ -33,6 +33,8 @@ import withVolumesRequests, {
 import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
+import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
+
 import {
   openForClone,
   openForConfig,
@@ -135,6 +137,7 @@ interface Props {
   linodeRegion?: string;
   linodeConfigs?: Linode.Config[];
   recentEvent?: Linode.Event;
+  readOnly?: boolean;
 }
 
 //
@@ -268,7 +271,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       classes,
       volumesLoading,
       volumesError,
-      mappedVolumesDataWithLinodes
+      mappedVolumesDataWithLinodes,
+      readOnly
     } = this.props;
 
     if (volumesError) {
@@ -294,6 +298,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
+        {readOnly && <LinodePermissionsError />}
         <Grid
           container
           justify="space-between"
@@ -363,7 +368,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs } = this.props;
+    const { linodeConfigs, readOnly } = this.props;
 
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
@@ -385,13 +390,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
+        {readOnly && <LinodePermissionsError />}
         <Placeholder
           title="Add Block Storage!"
           copy={<EmptyCopy />}
           icon={VolumesIcon}
           buttonProps={{
             onClick: this.openCreateVolumeDrawer,
-            children: 'Add a Volume'
+            children: 'Add a Volume',
+            disabled: readOnly
           }}
         />
       </React.Fragment>

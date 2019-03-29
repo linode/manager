@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish';
@@ -10,6 +13,8 @@ import { powerOnLinode } from './powerActions';
 import { sendEvent } from 'src/utilities/analytics';
 
 import { getLinodeConfigs } from 'src/services/linodes';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { MapState } from 'src/store/types';
 
 interface Props {
   linodeId: number;
@@ -28,7 +33,7 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}> & StateProps;
 
 interface State {
   configs: Linode.Config[];
@@ -70,9 +75,18 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
       linodeStatus,
       openConfigDrawer,
       toggleConfirmation,
-      history: { push }
+      history: { push },
+      readOnly
     } = this.props;
     const { configs, hasMadeConfigsRequest } = this.state;
+
+    const readOnlyProps = readOnly
+      ? {
+          disabled: true,
+          tooltip:
+            readOnly && "You don't have permissions to modify this Linode"
+        }
+      : {};
 
     const noConfigs = hasMadeConfigsRequest && configs.length === 0;
 
@@ -88,7 +102,8 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
             lishLaunch(linodeId);
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         },
         {
           title: 'View Graphs',
@@ -112,7 +127,8 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         },
         {
           title: 'View Backups',
@@ -149,19 +165,22 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
             e.stopPropagation();
             toggleConfirmation('delete', linodeId, linodeLabel);
             closeMenu();
-          }
+          },
+          ...readOnlyProps
         }
       ];
 
       if (linodeStatus === 'offline') {
         actions.unshift({
           title: 'Power On',
-          disabled: !hasMadeConfigsRequest || noConfigs,
+          disabled: !hasMadeConfigsRequest || noConfigs || readOnly,
           isLoading: !hasMadeConfigsRequest,
           tooltip: this.state.configsError
             ? 'Could not load configs for this Linode'
             : noConfigs
             ? 'A config needs to be added before powering on a Linode'
+            : readOnly
+            ? "You don't have permissions to modify this Linode"
             : undefined,
           onClick: e => {
             sendEvent({
@@ -187,7 +206,8 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
               e.stopPropagation();
               toggleConfirmation('reboot', linodeId, linodeLabel);
               closeMenu();
-            }
+            },
+            ...readOnlyProps
           },
           {
             title: 'Power Off',
@@ -200,7 +220,8 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
               e.stopPropagation();
               toggleConfirmation('power_down', linodeId, linodeLabel);
               closeMenu();
-            }
+            },
+            ...readOnlyProps
           }
         );
       }
@@ -219,7 +240,8 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
             });
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         });
       }
 
@@ -237,4 +259,24 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
   }
 }
 
-export default withRouter(LinodeActionMenu);
+interface StateProps {
+  readOnly: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => ({
+  readOnly:
+    getPermissionsForLinode(state.__resources.profile, ownProps.linodeId) ===
+    'read_only'
+});
+
+const connected = connect(mapStateToProps);
+
+const enchanced = compose<CombinedProps, Props>(
+  connected,
+  withRouter
+);
+
+export default enchanced(LinodeActionMenu);
