@@ -130,7 +130,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       privateIPEnabled,
       tags
     } = this.props;
-
     handleSubmitForm('createFromApp', {
       region: selectedRegionID,
       type: selectedTypeID,

@@ -14,7 +14,6 @@ import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectLinodePanel from '../SelectLinodePanel';

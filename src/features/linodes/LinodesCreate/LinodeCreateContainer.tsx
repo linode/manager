@@ -48,13 +48,14 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { CloudApp, getCloudApps } from 'src/services/cloud_apps';
-import { cloneLinode } from 'src/services/linodes';
+import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -151,10 +152,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
         // This set is for creating from a Backup
         selectedBackupID: params.backupID,
-        selectedLinodeID: params.linodeID,
-
-        // This is for coming from ImagesLanding (where a private Image will be preselected)
-        selectedImageID: params.imageID
+        selectedLinodeID: params.linodeID
       });
     }
     this.setState({ appInstancesLoading: true });
@@ -400,6 +398,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.props.upsertLinode(response);
         }
 
+        /** GA creation event */
+        handleAnalytics(
+          createType,
+          payload,
+          this.state.selectedStackScriptLabel
+        );
+
         /** show toast */
         this.props.enqueueSnackbar(
           `Your Linode ${response.label} is being created.`,
@@ -644,3 +649,60 @@ export default recompose<CombinedProps, {}>(
   userSSHKeyHoc,
   withLabelGenerator
 )(LinodeCreateContainer);
+
+const handleAnalytics = (
+  type: CreateTypes,
+  payload: CreateLinodeRequest,
+  stackScriptLabel?: string
+) => {
+  sendEvent({
+    category: 'Create Linode',
+    action: determineAnalyticsAction(type),
+    label: determineAnalyticsLabel(type, payload, stackScriptLabel)
+  });
+};
+
+const determineAnalyticsAction = (type: CreateTypes) => {
+  switch (type) {
+    case 'fromApp':
+      return 'one-click';
+    case 'fromBackup':
+      return 'backup';
+    case 'fromImage':
+      return 'image';
+    case 'fromLinode':
+      return 'clone';
+    case 'fromStackScript':
+      return 'stackscript';
+    default:
+      return 'unknown-type';
+  }
+};
+
+const determineAnalyticsLabel = (
+  type: CreateTypes,
+  payload: CreateLinodeRequest,
+  stackScriptLabel?: string
+) => {
+  const stackScript = stackScriptLabel
+    ? stackScriptLabel
+    : `StackScript #${payload.stackscript_id}`;
+
+  const backupLabel = payload.backup_id
+    ? `Backup #${payload.backup_id}`
+    : 'Unknown Backup #';
+
+  const cloneLabel = payload.type ? `${payload.type}` : '';
+
+  const imageLabel = payload.image ? `${payload.image}` : '';
+
+  if (type === 'fromApp' || type === 'fromStackScript') {
+    return `${stackScript}`;
+  } else if (type === 'fromBackup') {
+    return `${backupLabel}`;
+  } else if (type === 'fromLinode') {
+    return `${cloneLabel}`;
+  } else {
+    return `${imageLabel}`;
+  }
+};
