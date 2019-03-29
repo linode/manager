@@ -166,11 +166,11 @@ if (process.argv[2] == "test-fs") {
     .then((creds) => {
         console.log("checked in creds are:");
         console.log(creds);
-        return credStore.readToken(creds.username)
+        return credStore.readToken(creds.username);
     })
     .then((token) => {
-        console.log("token is: " + token)
-        return credStore.getAllCreds()
+        console.log("token is: " + token);
+        return credStore.getAllCreds();
     }).then((allCreds) => {
         console.log("got all creds:");
         console.log(allCreds);

@@ -27,7 +27,7 @@ const {
     loadImposter,
 } = require('../utils/mb-utils');
 
-const { readToken } = require('../utils/config-utils');
+const { getToken } = require('../utils/config-utils');
 
 exports.browserCommands = () => {
     /* Overwrite the native getText function
@@ -73,7 +73,7 @@ exports.browserCommands = () => {
     });
 
     browser.addCommand('readToken', function(username) {
-        const token = readToken(username);
+        const token = getToken(username);
         return token;
     });
 

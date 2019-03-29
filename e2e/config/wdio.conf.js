@@ -274,6 +274,10 @@ exports.config = {
 
         // inject browser object into credstore for login and a few other functions
         credStore.setBrowser(browser);
+        
+        // inject credStore into browser so it can be easily accessed from test cases
+        // and utility code
+        browser.credStore = credStore;
 
         let creds = null;
         browser.call(() => {
