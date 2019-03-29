@@ -23,6 +23,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_snapshot':
     case 'linode_addip':
     case 'linode_boot':
+    case 'backups_restore':
     case 'backups_enable':
     case 'backups_cancel':
     case 'disk_imagize':
