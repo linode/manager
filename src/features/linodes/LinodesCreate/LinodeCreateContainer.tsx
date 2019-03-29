@@ -684,14 +684,24 @@ const determineAnalyticsLabel = (
   payload: CreateLinodeRequest,
   stackScriptLabel?: string
 ) => {
-  const imageLabel = payload.image ? `${payload.image}, ` : '';
-
   const stackScript = stackScriptLabel
     ? stackScriptLabel
     : `StackScript #${payload.stackscript_id}`;
 
+  const backupLabel = payload.backup_id
+    ? `Backup #${payload.backup_id}`
+    : 'Unknown Backup #';
+
+  const cloneLabel = payload.type ? `${payload.type}` : 'Unknown Clone Type';
+
+  const imageLabel = payload.image ? `${payload.image}, ` : '';
+
   if (type === 'fromApp' || type === 'fromStackScript') {
     return `${stackScript}`;
+  } else if (type === 'fromBackup') {
+    return `${backupLabel}`;
+  } else if (type === 'fromLinode') {
+    return `${cloneLabel}`;
   } else {
     return `${imageLabel}`;
   }
