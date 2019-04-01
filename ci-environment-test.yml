@@ -15,6 +15,7 @@ services:
       - selenium
   manager-e2e:
     environment:
+      - CRED_STORE_MODE=${CRED_STORE_MODE}
       - DOCKER=true
       - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
       - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
@@ -32,3 +33,6 @@ services:
     entrypoint: ["./scripts/wait-for-it.sh", "-t", "250", "-s", "selenium:4444", "--", "yarn","e2e", "--log"]
     depends_on:
       - chrome
+      - mongodb
+  mongodb:
+    image: mongo:latest

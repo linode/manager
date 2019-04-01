@@ -7,7 +7,12 @@ const { isEmpty } = require('lodash');
 const { readFileSync, unlink } = require('fs');
 
 
-const getAxiosInstance = function(token) {
+function removeEntity(token, entity, endpoint) {
+    return getAxiosInstance(token)
+        .delete(`${endpoint}/${entity.id}`)
+        .then((res) => entity.label + " - " + res.status + " " + res.statusText);
+}
+const getAxiosInstance = (token) => {
     const axiosInstance = axios.create({
       httpsAgent: new https.Agent({
           rejectUnauthorized: false
@@ -23,35 +28,19 @@ const getAxiosInstance = function(token) {
 }
 
 exports.removeAllLinodes = token => {
-    return new Promise((resolve, reject) => {
-        const linodesEndpoint = '/linode/instances';
+    
+    const linodesEndpoint = '/linode/instances';
 
-
-        const removeInstance = (linode, endpoint) => {
-            return getAxiosInstance(token).delete(`${endpoint}/${linode.id}`)
-                .then(res => {
-
-                })
-                .catch((error) => {
-                    console.error('Error was', error);
-                    reject(error);
-                });
+    return getAxiosInstance(token).get(linodesEndpoint)
+    .then(res => {
+        linodes = res.data.data;
+        if (linodes.length > 0) {
+            return Promise.all(
+                res.data.data.map(linode => removeEntity(token, linode, linodesEndpoint))
+            );
+        } else {
+            return ["No Linodes"];
         }
-
-        return getAxiosInstance(token).get(linodesEndpoint)
-            .then(res => {
-                const promiseArray =
-                    res.data.data.map(l => removeInstance(l, linodesEndpoint));
-
-                Promise.all(promiseArray)
-                .then(function(res) {
-                    resolve(res);
-                }).catch(error => {
-                    console.error(`error was`, error);
-                    reject(error);
-                })
-            })
-            .catch(error => console.log(error.response.status));
     });
 }
 
@@ -66,144 +55,97 @@ exports.pause = (volumesResponse) => {
 }
 
 exports.removeAllVolumes = token => {
-    return new Promise((resolve, reject) => {
-        const endpoint = '/volumes';
+    
+    const endpoint = '/volumes';
 
-        const removeVolume = (res, endpoint) => {
-            return getAxiosInstance(token).delete(`${endpoint}/${res.id}`)
-                .then(response => {
-                  resolve(response.status);
-                })
-                .catch(error => {
-                    if (error.includes('This volume must be detached before it can be deleted.')) {
+    return getAxiosInstance(token).get(endpoint).then(volumesResponse => {
+        return exports.pause(volumesResponse).then(res => {
+            volumes = res.data.data;
+            if (volumes.length > 0) {
+                return Promise.all(
+                    res.data.data.map(v => removeEntity(token, v, endpoint))
+                );
+            } else {
+                return ["No Volumes"];
+            }
 
-                    }
-                    reject(`Removing Volume ${res.id} failed due to ${JSON.stringify(error.response.data)}`);
-                });
-        }
-
-        return getAxiosInstance(token).get(endpoint).then(volumesResponse => {
-            return exports.pause(volumesResponse).then(res => {
-                const removeVolumesArray =
-                    res.data.data.map(v => removeVolume(v, endpoint));
-
-                Promise.all(removeVolumesArray).then(function(res) {
-                    resolve(res);
-                }).catch(error => {
-                    console.log(error.data);
-                    reject(error.data)
-                });
-            })
         })
-        .catch(error => console.log(error.response.status));
     });
 }
 
 exports.deleteAll = (token, user) => {
-    return new Promise((resolve, reject) => {
-        const endpoints = [
-            '/domains',
-            '/nodebalancers',
-            '/images',
-            '/account/users',
-            '/account/oauth-clients'
-        ];
+    const endpoints = [
+        '/domains',
+        '/nodebalancers',
+        '/images',
+        '/account/users',
+        '/account/oauth-clients'
+    ];
 
-        const getEndpoint = (endpoint, user) => {
-            return getAxiosInstance(token).get(`${API_ROOT}${endpoint}`)
-                .then(res => {
-                    if (endpoint.includes('images')) {
-                        privateImages = res.data.data.filter(i => i['is_public'] === false);
-                        res.data['data'] = privateImages;
-                        return res.data;
-                    }
+    const getEndpoint = (endpoint, user) => {
+        return getAxiosInstance(token).get(`${API_ROOT}${endpoint}`)
+            .then(res => {
+                if (endpoint.includes('images')) {
+                    privateImages = res.data.data.filter(i => i['is_public'] === false);
+                    res.data.data = privateImages;
+                }
 
-                    if (endpoint.includes('oauth-clients')) {
-                        const appClients = res.data.data.filter(client => !client['id'] === process.env.REACT_APP_CLIENT_ID);
-                        res.data['data'] = appClients;
-                        return res.data;
-                    }
+                if (endpoint.includes('oauth-clients')) {
+                    const appClients = res.data.data.filter(client => client['id'] !== process.env.REACT_APP_CLIENT_ID);
+                    res.data.data = appClients;
+                }
 
-                    if (endpoint.includes('users')) {
-                        const nonRootUsers = res.data.data.filter(u => u.username !== user);
-                        res.data['data'] = nonRootUsers;
-                        return res.data;
-                    }
-                    return res.data;
-                })
-                .catch((error) => {
-                    console.log('Error', error);
-                    // reject(error);
-                });
-        }
-
-        const removeInstance = (res, endpoint, token) => {
-            return getAxiosInstance(token).delete(`${endpoint}/${res.id ? res.id : res.username}`)
-                .then(res => res)
-                .catch((error) => {
-                    // reject(error);
-                    console.error(error);
-                });
-        }
-
-        const iterateEndpointsAndRemove = () => {
-            return endpoints.map(ep => {
-                return getEndpoint(ep, user)
-                    .then(res => {
-                        if (res.results > 0) {
-                            res.data.forEach(i => {
-                                removeInstance(i, ep, token)
-                                    .then(res => {
-                                        return res;
-                                    });
-                            });
-                        }
+                if (endpoint.includes('users')) {
+                    const nonRootUsers = res.data.data.filter(u => u.username !== user);
+                    // tack on an id and label so the general-purpose removeEntity function works
+                    // (it expects all entities to have an id and a label)
+                    nonRootUsers.forEach((user) => {
+                        user.id = user.username;
+                        user.label = user.username;
                     })
-                    .catch(error => {
-                      console.error(error);
-                      reject(error);
-                    });
+                    res.data.data = nonRootUsers;
+                }
+                return res;
             });
-        }
+    }
 
-        // Remove linodes, then remove all instances
-        return Promise.all(iterateEndpointsAndRemove())
-            .then((values) => resolve(values))
-            .catch(error => {
-                console.error('Error', reject(error));
-            });
-    });
+    const iterateEndpointsAndRemove = () => {
+        return Promise.all(endpoints.map(ep => {
+            return getEndpoint(ep, user)
+                .then(res => {
+                    if (res.data.data.length > 0) {
+                        return Promise.all(res.data.data.map(entity => removeEntity(token, entity, ep)));
+                    } else {
+                        return ["No entities for " + ep];
+                    }
+                });
+        }));
+    }
+
+    // Remove linodes, then remove all instances
+    return iterateEndpointsAndRemove();
 }
 
-exports.resetAccounts = (credsArray, credsPath) => {
-  return new Promise((resolve, reject) => {
-      credsArray.forEach((cred, i) => {
-        return exports.removeAllLinodes(cred.token)
-          .then(res => {
-                console.log(`Removing all data from ${cred.username}`);
+exports.resetAccounts = (credsArray) => {
+    return Promise.all(
+        credsArray.map((cred) => {
+            return exports.removeAllLinodes(cred.token)
+            .then((res) => {
+                console.log("removed all linodes")
+                console.log(res);
                 return exports.removeAllVolumes(cred.token)
-                  .then(res => {
-                    return exports.deleteAll(cred.token, cred.username)
-                      .then(res => {
-                        if (i === credsArray.length -1) {
-                            unlink(credsPath, (err) => {
-                                return res;
-                            });
-                        }
-                      })
-                      .catch(error => {
-                        console.log('error', error);
-                      });
-                  })
-                  .catch(error => {
-                    console.log('error', error)
-                  })
-          })
-          .catch(error => {
-            console.log(error.data)
-            reject(error)
-          });
-      });
-  });
+            })
+            .then((res) => {
+                console.log("removed all volumes")
+                console.log(res);
+                return exports.deleteAll(cred.token, cred.username)
+            })
+            .then((res) => {
+                console.log("removed everything else");
+                console.log(res);
+                return res;
+            })
+        })
+    );
 }
 
