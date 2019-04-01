@@ -31,6 +31,7 @@ services:
       - chrome
   manager-e2e:
     environment:
+      - CRED_STORE_MODE=${CRED_STORE_MODE}
       - DOCKER=true
       - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
       - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
@@ -45,6 +46,9 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./e2e/test-results:/src/e2e/test-results
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn","e2e", "--log"]
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--log"]
     depends_on:
       - manager-local
+      - mongodb
+  mongodb:
+    image: mongo:latest

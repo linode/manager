@@ -3,9 +3,12 @@ const { merge } = require('ramda');
 const { argv } = require('yargs');
 const wdioMaster = require('./wdio.conf.js');
 const { browserConf } = require('./browser-config');
+
+// TODO - update to use credstore interface for login instead of config-utils
 const {
     login
 } = require('../utils/config-utils');
+
 const { browserCommands } = require('./custom-commands');
 
 const selectedBrowser = () => {
