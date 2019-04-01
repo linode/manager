@@ -57,10 +57,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingTop: theme.spacing.unit / 2
   },
   labelCol: {
-    width: '70%'
+    width: '50%'
   },
   moreCol: {
-    width: '30%'
+    width: '25%'
   },
   actionsCol: {
     width: '10%'
@@ -217,7 +217,7 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
           </TableCell>
           <Hidden xsDown>
-            <TableCell>
+            <TableCell className={classes.moreCol}>
               {attachedLinodeLabel ? (
                 <Link to={`/linodes/${linode_id}`}>{attachedLinodeLabel}</Link>
               ) : (
