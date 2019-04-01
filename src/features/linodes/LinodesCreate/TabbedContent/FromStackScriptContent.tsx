@@ -74,7 +74,7 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'image',
   tags: 'Tags',
-  stackscript_id: 'A StackScript'
+  stackscript_id: 'This selected StackScript'
 };
 
 export type CombinedProps = Props &
