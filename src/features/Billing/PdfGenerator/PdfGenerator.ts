@@ -172,12 +172,12 @@ export const printInvoice = (
       doc.setFontSize(10);
 
       const header = [
-        { name: 'Description', prompt: 'Description', width: 235 },
+        { name: 'Description', prompt: 'Description', width: 205 },
         { name: 'From', prompt: 'From', width: 72 },
         { name: 'To', prompt: 'To', width: 72 },
         { name: 'Quantity', prompt: 'Quantity', width: 52 },
         { name: 'Unit Price', prompt: 'Unit Price', width: 67 },
-        { name: 'Amount', prompt: 'Amount', width: 52 }
+        { name: 'Amount', prompt: 'Amount (USD)', width: 82 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
       const itemRows = itemsChunk.map(item => {
