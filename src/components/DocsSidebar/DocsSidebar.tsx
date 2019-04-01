@@ -59,7 +59,6 @@ const DocsSidebar: React.StatelessComponent<CombinedProps> = props => {
     <Grid container item style={stickyStyles} className={classes.root}>
       <Grid item className={classes.gridItem}>
         <Typography
-          role="header"
           variant="h2"
           className={classes.title}
           data-qa-sidebar-title

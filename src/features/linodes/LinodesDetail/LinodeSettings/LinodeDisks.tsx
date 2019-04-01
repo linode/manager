@@ -206,7 +206,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           style={{ marginTop: 16 }}
         >
           <Grid item>
-            <Typography role="header" variant="h2" className={classes.headline}>
+            <Typography variant="h2" className={classes.headline}>
               Disks
             </Typography>
           </Grid>

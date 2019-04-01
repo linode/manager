@@ -296,9 +296,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             classes
           ]}
         >
-          <Typography role="header" variant="h3">
-            Label and Comments
-          </Typography>
+          <Typography variant="h3">Label and Comments</Typography>
           <TextField
             label="Label"
             required
@@ -327,9 +325,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           className={classes.section}
           updateFor={[virt_mode, classes]}
         >
-          <Typography role="header" variant="h3">
-            Virtual Machine
-          </Typography>
+          <Typography variant="h3">Virtual Machine</Typography>
           <FormControl component={'fieldset' as 'div'}>
             <FormLabel htmlFor="virt_mode" component="label">
               VM Mode
@@ -370,9 +366,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             classes
           ]}
         >
-          <Typography role="header" variant="h3">
-            Boot Settings
-          </Typography>
+          <Typography variant="h3">Boot Settings</Typography>
           {kernels && (
             <TextField
               label="Kernel"
@@ -442,9 +436,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Divider className={classes.divider} />
 
         <Grid item xs={12} className={classes.section}>
-          <Typography role="header" variant="h3">
-            Block Device Assignment
-          </Typography>
+          <Typography variant="h3">Block Device Assignment</Typography>
           <DeviceSelection
             slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh']}
             devices={availableDevices}
@@ -497,9 +489,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         <Divider className={classes.divider} />
 
         <Grid item xs={12} className={classes.section}>
-          <Typography role="header" variant="h3">
-            Filesystem/Boot Helpers
-          </Typography>
+          <Typography variant="h3">Filesystem/Boot Helpers</Typography>
           <FormControl
             updateFor={[
               helpers.distro,

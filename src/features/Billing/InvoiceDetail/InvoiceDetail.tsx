@@ -132,7 +132,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                   </IconButton>
                 </Link>
                 {invoice && (
-                  <Typography role="header" variant="h2" data-qa-invoice-id>
+                  <Typography variant="h2" data-qa-invoice-id>
                     Invoice #{invoice.id}
                   </Typography>
                 )}
@@ -154,11 +154,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item className={classes.titleWrapper}>
                 {invoice && (
-                  <Typography
-                    role="header"
-                    variant="h2"
-                    data-qa-total={invoice.total}
-                  >
+                  <Typography variant="h2" data-qa-total={invoice.total}>
                     Total ${Number(invoice.total).toFixed(2)}
                   </Typography>
                 )}
@@ -181,7 +177,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             <Grid container justify="flex-end">
               <Grid item className={classes.titleWrapper}>
                 {invoice && (
-                  <Typography role="header" variant="h2">
+                  <Typography variant="h2">
                     Total ${Number(invoice.total).toFixed(2)}
                   </Typography>
                 )}

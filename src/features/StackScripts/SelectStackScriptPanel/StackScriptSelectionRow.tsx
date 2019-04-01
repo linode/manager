@@ -67,7 +67,7 @@ export class StackScriptSelectionRow extends React.Component<
       };
       return (
         <React.Fragment>
-          <Typography role="header" variant="h3">
+          <Typography variant="h3">
             {stackScriptUsername && (
               <label
                 htmlFor={`${stackScriptID}`}
@@ -114,12 +114,12 @@ export class StackScriptSelectionRow extends React.Component<
             {renderLabel()}
           </TableCell>
           <TableCell>
-            <Typography role="header" variant="h3" data-qa-stackscript-deploys>
+            <Typography variant="h3" data-qa-stackscript-deploys>
               {deploymentsActive}
             </Typography>
           </TableCell>
           <TableCell>
-            <Typography role="header" variant="h3" data-qa-stackscript-revision>
+            <Typography variant="h3" data-qa-stackscript-revision>
               {updated}
             </Typography>
           </TableCell>

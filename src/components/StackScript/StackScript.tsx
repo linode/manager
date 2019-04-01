@@ -92,12 +92,7 @@ export class StackScript extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Typography
-          role="header"
-          variant="h1"
-          component="h2"
-          data-qa-stack-title={label}
-        >
+        <Typography variant="h1" component="h2" data-qa-stack-title={label}>
           {label}
         </Typography>
         <Typography

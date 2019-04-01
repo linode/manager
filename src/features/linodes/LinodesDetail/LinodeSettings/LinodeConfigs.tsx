@@ -104,7 +104,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography role="header" variant="h2" className={classes.headline}>
+            <Typography variant="h2" className={classes.headline}>
               Configuration
             </Typography>
           </Grid>

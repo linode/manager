@@ -46,7 +46,7 @@ class AccountLanding extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
-        <Typography role="header" variant="h1" data-qa-profile-header>
+        <Typography variant="h1" data-qa-profile-header>
           Account Settings
         </Typography>
         <AppBar position="static" color="default">

@@ -67,12 +67,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
                 classes.NBsummarySection
               }`}
             >
-              <Typography
-                role="header"
-                variant="h3"
-                className={classes.title}
-                data-qa-title
-              >
+              <Typography variant="h3" className={classes.title} data-qa-title>
                 NodeBalancer Details
               </Typography>
               <div className={classes.section}>
@@ -124,12 +119,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
             </Paper>
 
             <Paper className={classes.summarySection}>
-              <Typography
-                role="header"
-                variant="h3"
-                className={classes.title}
-                data-qa-title
-              >
+              <Typography variant="h3" className={classes.title} data-qa-title>
                 IP Addresses
               </Typography>
               <div className={`${classes.section}`}>
@@ -143,12 +133,7 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
             </Paper>
 
             <Paper className={classes.summarySection}>
-              <Typography
-                role="header"
-                variant="h3"
-                className={classes.title}
-                data-qa-title
-              >
+              <Typography variant="h3" className={classes.title} data-qa-title>
                 Tags
               </Typography>
               <TagsPanel tags={nodeBalancer.tags} updateTags={updateTags} />

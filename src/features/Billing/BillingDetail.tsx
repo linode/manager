@@ -125,7 +125,7 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`Account & Billing`} />
         <AccountProvider value={this.state.account}>
-          <Typography role="header" variant="h2" className={classes.heading}>
+          <Typography variant="h2" className={classes.heading}>
             Billing
           </Typography>
           <Grid container>

@@ -39,7 +39,6 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
           <React.Fragment>
             <DocumentTitleSegment segment={`${linode.label} - Settings`} />
             <Typography
-              role="header"
               variant="h2"
               className={classes.title}
               data-qa-settings-header
@@ -62,7 +61,10 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
               currentStatus={linode.watchdog_enabled}
             />
             <LinodeAdvancedConfigurationsPanel />
-            <LinodeSettingsDeletePanel linodeId={linode.id} linodeLabel={linode.label}/>
+            <LinodeSettingsDeletePanel
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+            />
           </React.Fragment>
         );
       }}
