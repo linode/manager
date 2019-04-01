@@ -53,7 +53,7 @@ console.log("parallel runners: " + parallelRunners);
 //
 // to use mongo cred store, set MONGO_HOST to either localhost (e.g., for local testing) or mongodb (for docker)
 // if it's not set the filesystem cred store will be used
-const MONGO_HOST = process.env.MONGO_HOST == "TRUE" ? true : false;
+const MONGO_HOST = process.env.MONGO_HOST ? process.env.MONGO_HOST == 'TRUE' : false;
 console.log("mongo host set to: " + MONGO_HOST);
 const credStore = MONGO_HOST ? new MongoCredStore(MONGO_HOST) : new FSCredStore('./e2e/creds.js');
 
