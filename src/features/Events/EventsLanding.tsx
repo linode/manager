@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
 
@@ -18,7 +19,9 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getEvents } from 'src/services/account';
+import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
+import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 
 import EventRow from './EventRow';
 
@@ -35,7 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = StateProps & WithStyles<ClassNames>;
 
 export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [events, setEvents] = React.useState<Linode.Event[]>([]);
@@ -75,7 +78,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     getEvents().then(handleEventsRequestSuccess);
   }, []);
 
-  const { classes } = props;
+  const { classes, entitiesLoading } = props;
+  const isLoading = loading || entitiesLoading;
 
   return (
     <>
@@ -97,7 +101,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renderTableBody(loading, isRequesting, events, error)}
+            {renderTableBody(isLoading, isRequesting, events, error)}
           </TableBody>
         </Table>
       </Paper>
@@ -154,6 +158,19 @@ export const renderTableBody = (
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled);
+interface StateProps {
+  entitiesLoading: boolean;
+}
+
+const mapStateToProps = (state: ApplicationState) => ({
+  entitiesLoading: areEntitiesLoading(state.__resources)
+});
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  connected
+);
 
 export default enhanced(EventsLanding);
