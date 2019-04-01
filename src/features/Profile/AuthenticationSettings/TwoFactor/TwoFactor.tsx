@@ -251,7 +251,6 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                   {success && <Notice success text={success} />}
                   {generalError && <Notice error text={generalError} />}
                   <Typography
-                    role="header"
                     variant="h2"
                     className={classes.title}
                     data-qa-title

@@ -37,45 +37,35 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
       {props.ip && (
         <React.Fragment>
           <div className={classes.section} data-qa-ip-address-heading>
-            <Typography role="header" variant="h3">
-              Address
-            </Typography>
+            <Typography variant="h3">Address</Typography>
             <Typography variant="body1" data-qa-ip-address>
               {props.ip.address}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-gateway-heading>
-            <Typography role="header" variant="h3">
-              Gateway
-            </Typography>
+            <Typography variant="h3">Gateway</Typography>
             <Typography variant="body1" data-qa-gateway>
               {props.ip.gateway}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-subnet-heading>
-            <Typography role="header" variant="h3">
-              Subnet Mask
-            </Typography>
+            <Typography variant="h3">Subnet Mask</Typography>
             <Typography variant="body1" data-qa-subnet>
               {props.ip.subnet_mask}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-type-heading>
-            <Typography role="header" variant="h3">
-              Type
-            </Typography>
+            <Typography variant="h3">Type</Typography>
             <Typography variant="body1" data-qa-type>
               {props.ip.type}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-public-heading>
-            <Typography role="header" variant="h3">
-              Public
-            </Typography>
+            <Typography variant="h3">Public</Typography>
             <Typography variant="body1" data-qa-public>
               {props.ip.public ? 'Yes' : 'No'}
             </Typography>
@@ -83,9 +73,7 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
 
           {props.ip.rdns && (
             <div className={classes.section} data-qa-rdns-heading>
-              <Typography role="header" variant="h3">
-                RDNS
-              </Typography>
+              <Typography variant="h3">RDNS</Typography>
               <Typography variant="body1" data-qa-rdns>
                 {props.ip.rdns}
               </Typography>
@@ -97,9 +85,7 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
             style={{ border: 0, paddingBottom: 0 }}
             data-qa-region-heading
           >
-            <Typography role="header" variant="h3">
-              Region
-            </Typography>
+            <Typography variant="h3">Region</Typography>
             <Typography variant="body1" data-qa-region>
               {formatRegion(props.ip.region)}
             </Typography>

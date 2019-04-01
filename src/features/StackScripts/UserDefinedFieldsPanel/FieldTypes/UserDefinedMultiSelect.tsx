@@ -37,11 +37,14 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   handleSelectManyOf = (selectedOptions: Item) => {
     this.setState({ selectedOptions });
-    const { updateFormState, field } = this.props;
+    const { updateFormState, udf_data, field } = this.props;
 
     const arrayToString = Array.prototype.map
       .call(selectedOptions, (opt: Item) => opt.value)
       .toString();
+
+    console.log(udf_data);
+    console.log(arrayToString);
 
     updateFormState(field.name, arrayToString);
   };

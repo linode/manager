@@ -101,11 +101,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
                         warning={notice.level === 'warning'}
                       />
                     )}
-                    <Typography
-                      role="header"
-                      variant="h2"
-                      data-qa-select-linode-header
-                    >
+                    <Typography variant="h2" data-qa-select-linode-header>
                       {!!header ? header : 'Select Linode'}
                     </Typography>
                     <Typography component="div" className={classes.panelBody}>

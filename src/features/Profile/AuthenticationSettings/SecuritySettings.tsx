@@ -113,12 +113,7 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <Typography
-            role="header"
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h2" className={classes.title} data-qa-title>
             IP Whitelisting (Legacy)
           </Typography>
           {generalError && <Notice error text={generalError} />}

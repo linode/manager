@@ -59,7 +59,7 @@ class Profile extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="My Profile" />
-        <Typography role="header" variant="h1" data-qa-profile-header>
+        <Typography variant="h1" data-qa-profile-header>
           My Profile
         </Typography>
         <AppBar position="static" color="default">

@@ -200,7 +200,6 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
               <Typography
-                role="header"
                 variant="h3"
                 className={classes.wrapHeader}
                 data-qa-label

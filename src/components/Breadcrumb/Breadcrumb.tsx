@@ -151,7 +151,6 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
 
       {onEditHandlers ? (
         <EditableText
-          role="header"
           typeVariant="h2"
           text={labelTitle}
           errorText={onEditHandlers.errorText}

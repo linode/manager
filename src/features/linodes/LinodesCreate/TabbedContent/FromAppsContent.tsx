@@ -239,7 +239,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               {hasErrorFor('image') && (
                 <Notice error={true} text={hasErrorFor('image')} />
               )}
-              <Typography role="header" variant="h2" data-qa-tp="Select Image">
+              <Typography variant="h2" data-qa-tp="Select Image">
                 Select Image
               </Typography>
               <Typography

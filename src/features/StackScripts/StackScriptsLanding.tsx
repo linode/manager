@@ -56,12 +56,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className="py0">
-            <Typography
-              role="header"
-              variant="h1"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h1" className={classes.title} data-qa-title>
               StackScripts
             </Typography>
           </Grid>

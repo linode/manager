@@ -56,7 +56,6 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
         </div>
         <Typography
           style={{ textAlign: 'center' }}
-          role="header"
           variant="h3"
           data-qa-error-msg
         >

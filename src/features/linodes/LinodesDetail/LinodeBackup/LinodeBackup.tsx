@@ -444,7 +444,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     );
 
     const backupPlaceholderText = backupsMonthlyPrice ? (
-      <React.Fragment>
+      <Typography>
         Three backup slots are executed and rotated automatically: a daily
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
         for just{' '}
@@ -452,9 +452,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <Currency quantity={backupsMonthlyPrice} /> per month
         </strong>
         , click below.
-      </React.Fragment>
+      </Typography>
     ) : (
-      'Three backup slots are executed and rotated automatically: a daily backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups just click below.'
+      <Typography>
+        Three backup slots are executed and rotated automatically: a daily
+        backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
+        just click below.
+      </Typography>
     );
 
     return (
@@ -517,7 +521,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.paper}>
           <Typography
-            role="header"
             variant="h2"
             className={classes.subTitle}
             data-qa-manual-heading
@@ -581,7 +584,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Paper className={classes.paper}>
           <Typography
-            role="header"
             variant="h2"
             className={classes.subTitle}
             data-qa-settings-heading
@@ -645,12 +647,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography
-          role="header"
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
+        <Typography variant="h2" className={classes.title} data-qa-title>
           Backups
         </Typography>
         {backups.length ? (
