@@ -1,4 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { compose as rCompose, concat, sort, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
@@ -43,6 +44,32 @@ type CombinedProps = StateProps &
   InjectedNotistackProps &
   WithStyles<ClassNames>;
 
+const sortByCreated = (prevEvent: Linode.Event, nextEvent: Linode.Event) => {
+  const a = prevEvent.created;
+  const b = nextEvent.created;
+  if (a > b) {
+    return 1;
+  }
+  if (b < a) {
+    return -1;
+  }
+  return 0;
+};
+
+const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
+  rCompose<
+    Linode.Event[],
+    Linode.Event[],
+    Linode.Event[],
+    Linode.Event[],
+    Linode.Event[]
+  >(
+    uniq, // Ensure no duplicates
+    sort(sortByCreated), // Ensure entries are sorted by date
+    concat(oldEvents), // Attach the new events
+    setDeletedEvents // Add a _deleted entry for each new event
+  )(newEvents);
+
 export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [events, setEvents] = React.useState<Linode.Event[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -69,10 +96,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const handleEventsRequestSuccess = (
     response: Linode.ResourcePage<Linode.Event>
   ) => {
-    const newEvents = [...events, ...response.data];
-    const eventsWithDeletions = setDeletedEvents(newEvents);
     setLoadMoreEvents(true);
-    setEvents(eventsWithDeletions);
+    setEvents(appendToEvents(events, response.data));
     setLoading(false);
     setRequesting(false);
     setError(undefined);
@@ -121,12 +146,12 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      {loadMoreEvents && initialLoaded ? (
+      {loadMoreEvents && (initialLoaded && !isLoading) ? (
         <Waypoint onEnter={getNext}>
           <div />
         </Waypoint>
       ) : (
-        !loading &&
+        !isLoading &&
         (!error && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
