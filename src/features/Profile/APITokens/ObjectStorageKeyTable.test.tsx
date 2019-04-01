@@ -17,6 +17,7 @@ describe('ObjectStorageKeyTable', () => {
           labelCell: '',
           copyIcon: ''
         }}
+        openDrawerForEditing={jest.fn()}
         openRevokeDialog={jest.fn()}
         {...pageyProps}
       />

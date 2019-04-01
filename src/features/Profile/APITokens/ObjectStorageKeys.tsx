@@ -14,10 +14,11 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
-  CreateObjectStorageKeyRequest,
   createObjectStorageKeys,
   getObjectStorageKeys,
-  revokeObjectStorageKey
+  ObjectStorageKeyRequest,
+  revokeObjectStorageKey,
+  updateObjectStorageKey
 } from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import ObjectStorageKeyDisplayDialog from './ObjectStorageDisplayDialog';
@@ -38,15 +39,25 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
 
 type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
 
-export type FormikProps = FormikBag<Props, CreateObjectStorageKeyRequest>;
+export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
+
+export type MODES = 'creating' | 'editing';
 
 export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
   const { classes, ...paginationProps } = props;
+
+  const [mode, setMode] = React.useState<MODES>('creating');
 
   // Key to display in Confirmation Modal upon creation
   const [
     keyToDisplay,
     setKeyToDisplay
+  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+
+  // Key to rename (by clicking on a key's kebab menu )
+  const [
+    keyToEdit,
+    setKeyToEdit
   ] = React.useState<Linode.ObjectStorageKey | null>(null);
 
   // Key to revoke (by clicking on a key's kebab menu )
@@ -59,17 +70,19 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-  const createDrawer = useOpenClose();
+  const createOrEditDrawer = useOpenClose();
 
   // Request object storage key when component is first rendered
   React.useEffect(() => {
     paginationProps.request();
   }, []);
 
-  const handleSubmit = (
-    values: CreateObjectStorageKeyRequest,
+  const handleCreateKey = (
+    values: ObjectStorageKeyRequest,
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
+    // Clear out status (used for general errors)
+    setStatus(null);
     setSubmitting(true);
 
     createObjectStorageKeys(values)
@@ -81,7 +94,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         // "Refresh" keys to include the newly created key
         paginationProps.request();
 
-        createDrawer.close();
+        createOrEditDrawer.close();
         displayKeysDialog.open();
       })
       .catch(errorResponse => {
@@ -90,6 +103,53 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         const errors = getAPIErrorOrDefault(
           errorResponse,
           'There was an issue creating Object Storage Keys.'
+        );
+        const mappedErrors = getErrorMap(['label'], errors);
+
+        // `status` holds general errors
+        if (mappedErrors.none) {
+          setStatus(mappedErrors.none);
+        }
+
+        setErrors(mappedErrors);
+      });
+  };
+
+  const handleEditKey = (
+    values: ObjectStorageKeyRequest,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    // This shouldn't happen, but just in case.
+    if (!keyToEdit) {
+      return;
+    }
+
+    // Clear out status (used for general errors)
+    setStatus(null);
+
+    // If the new label is the same as the old one, no need to make an API
+    // request. Just close the drawer and return early.
+    if (values.label === keyToEdit.label) {
+      return createOrEditDrawer.close();
+    }
+
+    setSubmitting(true);
+
+    updateObjectStorageKey(keyToEdit.id, values)
+      .then(_ => {
+        setSubmitting(false);
+
+        // "Refresh" keys to display the newly updated key
+        paginationProps.request();
+
+        createOrEditDrawer.close();
+      })
+      .catch(errorResponse => {
+        setSubmitting(false);
+
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue updating your Object Storage Key.'
         );
         const mappedErrors = getErrorMap(['label'], errors);
 
@@ -131,6 +191,27 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       });
   };
 
+  const openDrawerForCreating = () => {
+    setMode('creating');
+    createOrEditDrawer.open();
+  };
+
+  const openDrawerForEditing = (objectStorageKey: Linode.ObjectStorageKey) => {
+    setMode('editing');
+    setKeyToEdit(objectStorageKey);
+    createOrEditDrawer.open();
+  };
+
+  const openRevokeDialog = (objectStorageKey: Linode.ObjectStorageKey) => {
+    setKeyToRevoke(objectStorageKey);
+    revokeKeysDialog.open();
+  };
+
+  const closeRevokeDialog = () => {
+    setRevokeErrors([]);
+    revokeKeysDialog.close();
+  };
+
   return (
     <React.Fragment>
       <Grid container justify="space-between" alignItems="flex-end">
@@ -146,7 +227,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         </Grid>
         <Grid item>
           <AddNewLink
-            onClick={createDrawer.open}
+            onClick={openDrawerForCreating}
             label="Create an Object Storage Key"
           />
         </Grid>
@@ -154,10 +235,8 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
       <ObjectStorageKeyTable
         {...paginationProps}
-        openRevokeDialog={(objectStorageKey: Linode.ObjectStorageKey) => {
-          setKeyToRevoke(objectStorageKey);
-          revokeKeysDialog.open();
-        }}
+        openDrawerForEditing={openDrawerForEditing}
+        openRevokeDialog={openRevokeDialog}
       />
 
       <PaginationFooter
@@ -170,9 +249,11 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       />
 
       <ObjectStorageDrawer
-        open={createDrawer.isOpen}
-        onClose={createDrawer.close}
-        onSubmit={handleSubmit}
+        open={createOrEditDrawer.isOpen}
+        onClose={createOrEditDrawer.close}
+        onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
+        mode={mode}
+        objectStorageKey={keyToEdit ? keyToEdit : undefined}
       />
 
       <ObjectStorageKeyDisplayDialog
@@ -183,10 +264,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       <ObjectStorageRevokeKeysDialog
         isOpen={revokeKeysDialog.isOpen}
         label={(keyToRevoke && keyToRevoke.label) || ''}
-        handleClose={() => {
-          setRevokeErrors([]);
-          revokeKeysDialog.close();
-        }}
+        handleClose={closeRevokeDialog}
         handleSubmit={handleRevokeKeys}
         isLoading={isRevoking}
         errors={revokeErrors}
