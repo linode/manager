@@ -91,7 +91,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<
     return objectStorageKeys.map((eachKey: Linode.ObjectStorageKey) => (
       <TableRow key={eachKey.id} data-qa-table-row={eachKey.label}>
         <TableCell parentColumn="Label">
-          <Typography role="header" variant="h3" data-qa-key-label>
+          <Typography variant="h3" data-qa-key-label>
             {eachKey.label}
           </Typography>
         </TableCell>

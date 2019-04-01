@@ -72,7 +72,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = props => {
         className={classes.root}
       >
         <div className={classes.labelWrapper}>
-          <Typography className={classes.title} role="header" variant="h3">
+          <Typography className={classes.title} variant="h3">
             {stackScriptUsername && (
               <label
                 htmlFor={`${stackScriptId}`}

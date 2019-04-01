@@ -124,12 +124,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Lish" />
         <Paper className={classes.root}>
-          <Typography
-            role="header"
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h2" className={classes.title} data-qa-title>
             LISH
           </Typography>
           {success && <Notice success text={success} />}

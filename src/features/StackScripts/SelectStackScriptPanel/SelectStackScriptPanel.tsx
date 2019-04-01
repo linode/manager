@@ -211,12 +211,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       <Paper className={classes.panel}>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography
-            className={classes.header}
-            role="header"
-            variant="h2"
-            data-qa-tp-title
-          >
+          <Typography className={classes.header} variant="h2" data-qa-tp-title>
             {header}
           </Typography>
           {stackScriptError && (

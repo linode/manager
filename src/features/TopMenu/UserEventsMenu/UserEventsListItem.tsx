@@ -80,7 +80,7 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       onClick={onClick}
       button={Boolean(onClick)}
     >
-      <Typography role="header" variant="h3" className={classes.title}>
+      <Typography variant="h3" className={classes.title}>
         {title}
       </Typography>
       {content && <div className={classes.content}>{content}</div>}

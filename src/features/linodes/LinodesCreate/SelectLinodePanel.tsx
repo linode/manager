@@ -102,7 +102,6 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
                       />
                     )}
                     <Typography
-                      role="header"
                       variant="h2"
                       data-qa-select-linode-header
                     >
