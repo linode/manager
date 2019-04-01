@@ -50,7 +50,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
-  const [initialLoaded, setInitialLoaded] = React.useState<boolean>(true);
+  const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
 
   const getNext = () => {
     setRequesting(true);
