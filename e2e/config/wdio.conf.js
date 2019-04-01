@@ -53,7 +53,7 @@ console.log("parallel runners: " + parallelRunners);
 //
 // to use mongo cred store, set MONGO_HOST to either localhost (e.g., for local testing) or mongodb (for docker)
 // if it's not set the filesystem cred store will be used
-const MONGO_HOST = process.env.MONGO_HOST;
+const MONGO_HOST = process.env.MONGO_HOST == "TRUE" ? true : false;
 console.log("mongo host set to: " + MONGO_HOST);
 const credStore = MONGO_HOST ? new MongoCredStore(MONGO_HOST) : new FSCredStore('./e2e/creds.js');
 
@@ -274,7 +274,7 @@ exports.config = {
 
         // inject browser object into credstore for login and a few other functions
         credStore.setBrowser(browser);
-        
+
         // inject credStore into browser so it can be easily accessed from test cases
         // and utility code
         browser.credStore = credStore;
@@ -283,7 +283,7 @@ exports.config = {
         browser.call(() => {
             return credStore.checkoutCreds(specs[0])
             .then((testCreds) => {
-                creds = testCreds;                
+                creds = testCreds;
             }).catch((err) => console.log(err));
         });
         console.log("creds are");
