@@ -50,16 +50,12 @@ console.log("parallel runners: " + parallelRunners);
 // method.  This blocks execution until any promises within the function passed to call are resolved.
 // See more at:
 //   https://webdriver.io/docs/api/browser/call.html
-//const credStore = process.env.DOCKER ? new MongoCredStore('mongodb') : new FSCredStore('./e2e/creds.js');
-
-// for local testing using mongo running in docker
-// comment out assignment above, uncomment this one, and run 'docker run -d -p 27017:27017 mongo'
-// before running the tests via 'yarn e2e'
-//const credStore = new MongoCredStore('localhost');
-
-// temporarily forcing use of FSCredStore to see if test runs are more stable
-// in this branch
-const credStore = new FSCredStore('./e2e/creds.js');
+//
+// to use mongo cred store, set MONGO_HOST to either localhost (e.g., for local testing) or mongodb (for docker)
+// if it's not set the filesystem cred store will be used
+const MONGO_HOST = process.env.MONGO_HOST;
+console.log("mongo host set to: " + MONGO_HOST);
+const credStore = MONGO_HOST ? new MongoCredStore(MONGO_HOST) : new FSCredStore('./e2e/creds.js');
 
 exports.config = {
     // Selenium Host/Port
