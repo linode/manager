@@ -100,7 +100,7 @@ export const Row: React.StatelessComponent<RowProps> = props => {
       <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
         <Typography
           className={classes.message}
-          data-testid={'message'}
+          data-qa-event-message
           variant="body1"
         >
           {message}

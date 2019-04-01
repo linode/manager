@@ -150,7 +150,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
           /*
            * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
            * basically, if the result set after filtering out StackScripts with
-           * deprecated distos is 0, request the next page with the same filter.
+           * deprecated distros is 0, request the next page with the same filter.
            */
           const newDataWithoutDeprecatedDistros = newData.filter(stackScript =>
             this.hasNonDeprecatedImages(stackScript.images)

@@ -1,11 +1,6 @@
-import 'jest-dom/extend-expect';
+import { shallow } from 'enzyme';
 import * as React from 'react';
-import { cleanup } from 'react-testing-library';
-import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import { Row, RowProps } from './EventRow';
-
-afterEach(cleanup);
 
 const message = 'This is a message';
 const props: RowProps = {
@@ -20,14 +15,8 @@ const props: RowProps = {
 
 describe('EventRow component', () => {
   it('should render an event with a message', () => {
-    const { container } = renderWithTheme(
-      <table>
-        <tbody>
-          <Row {...props} />
-        </tbody>
-      </table>
-    );
-    expect(container).toHaveTextContent(message);
+    const row = shallow(<Row {...props} />);
+    expect(row.find('[data-qa-event-message]').contains(message)).toBe(true);
   });
 
   it("shouldn't render events without a message", () => {

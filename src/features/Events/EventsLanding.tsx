@@ -50,6 +50,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
+  const [initialLoaded, setInitialLoaded] = React.useState<boolean>(true);
 
   const getNext = () => {
     setRequesting(true);
@@ -86,6 +87,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     setError(undefined);
     getEvents()
       .then(handleEventsRequestSuccess)
+      .then(() => setInitialLoaded(true))
       .catch(() => {
         setLoading(false);
         setError('Error');
@@ -119,9 +121,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           </TableBody>
         </Table>
       </Paper>
-      {loadMoreEvents ? (
+      {loadMoreEvents && initialLoaded ? (
         <Waypoint onEnter={getNext}>
-          <div style={{ minHeight: '150px' }} />
+          <div />
         </Waypoint>
       ) : (
         !loading &&
