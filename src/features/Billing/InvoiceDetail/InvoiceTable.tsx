@@ -28,7 +28,7 @@ const InvoiceTable: React.StatelessComponent<Props> = props => {
           <TableCell noWrap data-qa-column="Unit Price">
             Unit Price
           </TableCell>
-          <TableCell data-qa-column="Amount">Amount</TableCell>
+          <TableCell data-qa-column="Amount">Amount (USD)</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
