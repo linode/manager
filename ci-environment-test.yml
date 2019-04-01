@@ -15,7 +15,7 @@ services:
       - selenium
   manager-e2e:
     environment:
-      - MONGO_HOST=${MONGO_HOST}
+      - CRED_STORE_MODE=${CRED_STORE_MODE}
       - DOCKER=true
       - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
       - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
