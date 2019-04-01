@@ -4,7 +4,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Select from 'src/components/EnhancedSelect/Select';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 
@@ -24,23 +24,30 @@ interface Props {
 
 interface State {
   manyof: string[];
+  selectedOptions: Item | Item[] | null;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
-    manyof: this.props.field.manyof!.split(',')
+    manyof: this.props.field.manyof!.split(','),
+    selectedOptions: null
   };
 
-  handleSelectManyOf = () => {
-    const { updateFormState, udf_data, field } = this.props;
+  handleSelectManyOf = (selectedOptions: Item) => {
+    this.setState({ selectedOptions });
+    const { updateFormState, field } = this.props;
 
-    updateFormState(field.name, udf_data);
+    const arrayToString = Array.prototype.map
+      .call(selectedOptions, (opt: Item) => opt.value)
+      .toString();
+
+    updateFormState(field.name, arrayToString);
   };
 
   render() {
-    const { manyof } = this.state;
+    const { manyof, selectedOptions } = this.state;
     const { error, field, classes, isOptional } = this.props;
 
     const manyOfOptions = manyof.map((choice: string) => {
@@ -55,10 +62,11 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
         {error && <Notice error text={error} spacingTop={8} />}
         <Select
           label={field.label}
-          {...!isOptional && ' *'}
+          {...!isOptional && '*'}
           isMulti={true}
           onChange={this.handleSelectManyOf}
           options={manyOfOptions}
+          value={selectedOptions}
           // small={isOptional}
         />
       </div>
