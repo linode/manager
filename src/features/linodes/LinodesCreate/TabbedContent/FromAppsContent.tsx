@@ -197,7 +197,9 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       <React.Fragment>
         <Grid item className={`mlMain py0`}>
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          {generalError && <Notice text={generalError} error={true} />}
+          {generalError && (
+            <Notice text={generalError} error={true} spacingTop={8} />
+          )}
           <SelectAppPanel
             appInstances={appInstances}
             appInstancesError={appInstancesError}
