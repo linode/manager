@@ -1,8 +1,10 @@
-import { shallow } from 'enzyme';
+import 'jest-dom/extend-expect';
 import * as React from 'react';
+import { fireEvent, render } from 'react-testing-library';
 
 import { linode1, linode2, linode3 } from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
 import {
@@ -64,12 +66,14 @@ const props = {
   updatedCount: 0
 };
 
-const component = shallow(
-  <BackupDrawer
-    onPresentSnackbar={jest.fn()}
-    enqueueSnackbar={jest.fn()}
-    {...props}
-  />
+const { rerender, getByTestId, queryByTestId } = render(
+  wrapWithTheme(
+    <BackupDrawer
+      onPresentSnackbar={jest.fn()}
+      enqueueSnackbar={jest.fn()}
+      {...props}
+    />
+  )
 );
 
 describe('BackupDrawer component', () => {
@@ -120,7 +124,16 @@ describe('BackupDrawer component', () => {
   });
   describe('Backup Drawer', () => {
     it('should close the drawer on successful submission', () => {
-      component.setProps({ enableSuccess: true });
+      rerender(
+        wrapWithTheme(
+          <BackupDrawer
+            onPresentSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            {...props}
+            enableSuccess={true}
+          />
+        )
+      );
       expect(actions.close).toHaveBeenCalled();
     });
     // it("should request un-backed-up Linodes on load, if the list is empty", () => {
@@ -133,24 +146,42 @@ describe('BackupDrawer component', () => {
     //   expect(actions.getLinodesWithoutBackups).not.toHaveBeenCalled();
     // });
     it('should display an error Notice', () => {
-      expect(component.find('WithStyles(Notice)')).toHaveLength(0);
-      component.setProps({ enableErrors: [error] });
-      expect(component.find('WithStyles(Notice)')).toHaveLength(1);
+      expect(queryByTestId('result-notice')).toBeNull();
+      rerender(
+        wrapWithTheme(
+          <BackupDrawer
+            onPresentSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            {...props}
+            enableErrors={[error]}
+          />
+        )
+      );
+      expect(getByTestId('result-notice')).toBeDefined();
     });
     it('should include the number of failures and successes in the Notice', () => {
-      component.setProps({ enableErrors: [error], updatedCount: 2 });
-      const _props = component.find('WithStyles(Notice)').props() as any;
-      expect(_props.children).toMatch('1 Linode failed');
-      expect(_props.children).toMatch('2 Linodes');
+      rerender(
+        wrapWithTheme(
+          <BackupDrawer
+            onPresentSnackbar={jest.fn()}
+            enqueueSnackbar={jest.fn()}
+            {...props}
+            enableErrors={[error]}
+            updatedCount={2}
+          />
+        )
+      );
+      expect(getByTestId('result-notice')).toHaveTextContent('1 Linode failed');
+      expect(getByTestId('result-notice')).toHaveTextContent('2 Linodes');
     });
     it('should call enrollAutoBackups on submit', () => {
-      const button = component.find('[data-qa-submit]');
-      button.simulate('click');
+      const submit = getByTestId('submit');
+      fireEvent.click(submit);
       expect(actions.enroll).toHaveBeenCalled();
     });
     it('should close the drawer on Cancel', () => {
-      const cancel = component.find('[data-qa-cancel]');
-      cancel.simulate('click');
+      const cancelButton = getByTestId('cancel');
+      fireEvent.click(cancelButton);
       expect(actions.close).toHaveBeenCalled();
     });
   });
