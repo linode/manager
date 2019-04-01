@@ -74,7 +74,7 @@ const RenderData: React.StatelessComponent<{
           <TableCell parentColumn="Unit Price" data-qa-unit-price>
             {renderUnitPrice(unit_price)}
           </TableCell>
-          <TableCell parentColumn="Amount" data-qa-amount>
+          <TableCell parentColumn="Amount (USD)" data-qa-amount>
             ${amount}
           </TableCell>
         </TableRow>
