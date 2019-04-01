@@ -1003,7 +1003,7 @@ class UpdateContactInformationPanel extends React.Component<
       Syrian Arab Republic
     </MenuItem>,
     <MenuItem value="TW" key="TW">
-      Taiwan, Province of China
+      Taiwan
     </MenuItem>,
     <MenuItem value="TJ" key="TJ">
       Tajikistan
