@@ -53,14 +53,14 @@ console.log("parallel runners: " + parallelRunners);
 //
 // to use mongo cred store, set MONGO_HOST to either localhost (e.g., for local testing) or mongodb (for docker)
 // if it's not set the filesystem cred store will be used
-let MONGO_HOST = false;
+let CRED_STORE_MODE = 'fs'
 
-if (process.env.MONGO_HOST) {
-    MONGO_HOST = process.env.MONGO_HOST == 'mongodb' ? 'mongodb' : false
+if (process.env.CRED_STORE_MODE == 'mongodb') {
+    CRED_STORE_MODE = process.env.MONGO_HOST;
 }
 
-console.log("mongo host set to: " + MONGO_HOST);
-const credStore = MONGO_HOST ? new MongoCredStore(MONGO_HOST) : new FSCredStore('./e2e/creds.js');
+console.log("Cred store mode set to: " + CRED_STORE_MODE);
+const credStore = CRED_STORE_MODE == 'mongodb' ? new MongoCredStore(CRED_STORE_MODE) : new FSCredStore('./e2e/creds.js');
 
 exports.config = {
     // Selenium Host/Port
