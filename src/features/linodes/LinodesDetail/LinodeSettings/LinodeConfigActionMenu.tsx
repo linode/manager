@@ -40,7 +40,7 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
   createConfigActions = () => (closeMenu: Function): Action[] => {
     const { readOnly } = this.props;
     const tooltip = readOnly
-      ? "You don't have permissions to perform this action"
+      ? "You don't have permission to perform this action"
       : undefined;
     const actions = [
       {
@@ -59,7 +59,9 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleEdit();
           closeMenu();
-        }
+        },
+        disabled: readOnly,
+        tooltip
       },
       {
         title: 'Delete',
