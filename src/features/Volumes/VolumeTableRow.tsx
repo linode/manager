@@ -113,7 +113,9 @@ const progressFromEvent = (e?: Linode.Event) => {
   return undefined;
 };
 
-const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
+export const VolumeTableRow: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     classes,
     isUpdating,
