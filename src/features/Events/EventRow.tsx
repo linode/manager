@@ -89,7 +89,9 @@ export const Row: React.StatelessComponent<RowProps> = props => {
   }
 
   return (
-    <TableRow rowLink={linkTarget}>
+    <TableRow rowLink={linkTarget as any}>
+      {' '}
+      {/** We don't use the event argument, so typing isn't critical here. */}
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell compact>
           <EntityIcon variant={type} status={status} size={28} marginTop={1} />
