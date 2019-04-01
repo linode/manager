@@ -1,5 +1,6 @@
 import { compose, take } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
@@ -191,34 +192,45 @@ class VolumesDashboardCard extends React.Component<CombinedProps, State> {
   renderData = (data: Linode.Volume[]) => {
     const { classes } = this.props;
 
-    return data.map(({ label, region, size, status }) => (
-      <TableRow key={label} data-qa-volume={label}>
-        <TableCell className={classes.labelCol}>
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item className="py0">
-              <EntityIcon variant="volume" />
+    return data.map(({ label, linode_id, region, size, status }) => {
+      const attachedLinodeLabel = getLinodeLabel(linode_id);
+      return (
+        <TableRow key={label} data-qa-volume={label}>
+          <TableCell className={classes.labelCol}>
+            <Grid container wrap="nowrap" alignItems="center">
+              <Grid item className="py0">
+                <EntityIcon variant="volume" />
+              </Grid>
+              <Grid item className={classes.labelGridWrapper}>
+                <Typography
+                  role="header"
+                  variant="h3"
+                  className={classes.wrapHeader}
+                  data-qa-label
+                >
+                  {label}
+                </Typography>
+                <Typography className={classes.description}>
+                  {size} GiB
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid item className={classes.labelGridWrapper}>
-              <Typography
-                variant="h3"
-                className={classes.wrapHeader}
-                data-qa-label
-              >
-                {label}
-              </Typography>
-              <Typography className={classes.description}>
-                {size} GiB
-              </Typography>
-            </Grid>
-          </Grid>
-        </TableCell>
-        <Hidden xsDown>
-          <TableCell className={classes.moreCol} data-qa-volume-region>
-            <RegionIndicator region={region} />
           </TableCell>
-        </Hidden>
-      </TableRow>
-    ));
+          <Hidden xsDown>
+            <TableCell>
+              {attachedLinodeLabel ? (
+                <Link to={`/linodes/${linode_id}`}>{attachedLinodeLabel}</Link>
+              ) : (
+                <Typography>Unattached</Typography>
+              )}
+            </TableCell>
+            <TableCell className={classes.moreCol} data-qa-volume-region>
+              <RegionIndicator region={region} />
+            </TableCell>
+          </Hidden>
+        </TableRow>
+      );
+    });
   };
 }
 
@@ -228,5 +240,12 @@ const enhanced = compose(styled);
 
 const isFoundInData = (id: number, data: Linode.Volume[] = []): boolean =>
   data.reduce((result, volume) => result || volume.id === id, false);
+
+const getLinodeLabel = (linodeId: number | null) => {
+  if (!linodeId) {
+    return null;
+  }
+  return 'Label';
+};
 
 export default enhanced(VolumesDashboardCard) as React.ComponentType<{}>;
