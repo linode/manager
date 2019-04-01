@@ -90,13 +90,13 @@ export const Row: React.StatelessComponent<RowProps> = props => {
 
   return (
     <TableRow rowLink={linkTarget as any}>
-      {' '}
-      {/** We don't use the event argument, so typing isn't critical here. */}
-      <Hidden smDown>
-        <TableCell data-qa-event-icon-cell compact>
+      <TableCell data-qa-event-icon-cell compact>
+        {' '}
+        {/** We don't use the event argument, so typing isn't critical here. */}
+        <Hidden smDown>
           <EntityIcon variant={type} status={status} size={28} marginTop={1} />
-        </TableCell>
-      </Hidden>
+        </Hidden>
+      </TableCell>
       <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
         <Typography
           className={classes.message}
