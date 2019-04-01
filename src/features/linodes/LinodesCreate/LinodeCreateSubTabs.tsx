@@ -114,9 +114,7 @@ class CALinodeCreateSubTabs extends React.Component<CombinedProps, State> {
         <Grid item className="mlMain py0">
           <Paper className={`${classes.root}`}>
             <div className={`${classes.inner}`}>
-              <Typography role="header" variant="h2">
-                Create From:
-              </Typography>
+              <Typography variant="h2">Create From:</Typography>
               <AppBar position="static" color="default">
                 <Tabs
                   value={selectedTab}

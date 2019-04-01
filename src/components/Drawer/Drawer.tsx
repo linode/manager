@@ -82,7 +82,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = props => {
         updateFor={[title, classes]}
       >
         <Grid item>
-          <Typography role="header" variant="h2" data-qa-drawer-title>
+          <Typography variant="h2" data-qa-drawer-title>
             {title}
           </Typography>
         </Grid>

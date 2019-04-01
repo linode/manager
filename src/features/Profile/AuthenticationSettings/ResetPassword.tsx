@@ -29,7 +29,7 @@ const ResetPassword: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
   return (
     <Paper className={classes.root}>
-      <Typography role="header" variant="h2" data-qa-title>
+      <Typography variant="h2" data-qa-title>
         Account Password
       </Typography>
       <Button

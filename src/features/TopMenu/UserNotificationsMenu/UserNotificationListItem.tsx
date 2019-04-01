@@ -117,7 +117,7 @@ const userNotificationListItem: React.StatelessComponent<
           [classes.innerLink]: Boolean(onClick)
         })}
       >
-        <Typography role="header" variant="h3" className={classes.innerTitle}>
+        <Typography variant="h3" className={classes.innerTitle}>
           {label}
         </Typography>
         <Typography variant="body1">{message}</Typography>

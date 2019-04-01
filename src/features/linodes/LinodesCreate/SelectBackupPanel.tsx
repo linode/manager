@@ -151,9 +151,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       <Paper className={`${classes.root}`}>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography role="header" variant="h2">
-            Select Backup
-          </Typography>
+          <Typography variant="h2">Select Backup</Typography>
           <Grid container alignItems="center" className={classes.wrapper}>
             {selectedLinodeID ? (
               <React.Fragment>

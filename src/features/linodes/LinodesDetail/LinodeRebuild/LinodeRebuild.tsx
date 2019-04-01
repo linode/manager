@@ -48,12 +48,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
     <React.Fragment>
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
-        <Typography
-          role="header"
-          variant="h2"
-          className={classes.title}
-          data-qa-title
-        >
+        <Typography variant="h2" className={classes.title} data-qa-title>
           Rebuild
         </Typography>
         <Typography data-qa-rebuild-desc>

@@ -175,12 +175,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
-          <Typography
-            role="header"
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h2" className={classes.title} data-qa-title>
             Resize
           </Typography>
           <Typography data-qa-description>
@@ -193,7 +188,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             data-qa-current-container
           >
             <Typography
-              role="header"
               variant="h3"
               className={classes.subTitle}
               data-qa-current-header

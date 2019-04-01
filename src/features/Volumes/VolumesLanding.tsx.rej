@@ -178,9 +178,9 @@ diff a/src/features/Volumes/VolumesLanding.tsx b/src/features/Volumes/VolumesLan
 +          )
 +        : mappedVolumesDataWithLinodes;
 @@ -273 +302,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
--            <Typography role="header" variant="h1" className={classes.title} data-qa-title >
+-            <Typography variant="h1" className={classes.title} data-qa-title >
 +            <Typography
-+              role="header"
++               
 +              variant="h1"
 +              className={classes.title}
 +              data-qa-title

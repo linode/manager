@@ -110,7 +110,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         <Paper className={classes.summarySection} data-qa-contact-summary>
-          <Typography role="header" variant="h3" className={classes.title}>
+          <Typography variant="h3" className={classes.title}>
             Contact Information
           </Typography>
 
@@ -147,7 +147,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         </Paper>
 
         <Paper className={classes.summarySection} data-qa-billing-summary>
-          <Typography role="header" variant="h3" className={classes.title}>
+          <Typography variant="h3" className={classes.title}>
             Billing Information
           </Typography>
           {balance_uninvoiced !== undefined && (

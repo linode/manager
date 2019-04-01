@@ -104,12 +104,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
     return (
       <div className={classes.root}>
         <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             Linode Details
           </Typography>
           <div className={classes.section}>{this.renderImage()}</div>
@@ -133,12 +128,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <LinodeNetSummary linodeId={linodeId} />
         </Paper>
         <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             IP Addresses
           </Typography>
           <div className={classes.section}>
@@ -151,12 +141,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           )}
         </Paper>
         <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             Last Backup
           </Typography>
           <BackupStatus
@@ -166,12 +151,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           />
         </Paper>
         <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
           <TagsPanel tags={linodeTags} updateTags={this.updateTags} />

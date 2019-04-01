@@ -92,7 +92,6 @@ class CheckoutBar extends React.Component<CombinedProps> {
     return (
       <div className={classes.root}>
         <Typography
-          role="header"
           variant="h2"
           className={classes.sidebarTitle}
           data-qa-order-summary
@@ -109,11 +108,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
               })}
             >
               {title && (
-                <Typography
-                  role="header"
-                  variant="h3"
-                  data-qa-subheading={title}
-                >
+                <Typography variant="h3" data-qa-subheading={title}>
                   {title}
                 </Typography>
               )}
