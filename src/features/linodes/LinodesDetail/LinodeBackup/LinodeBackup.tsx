@@ -492,7 +492,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   }: {
     backups: Linode.LinodeBackup[];
   }): JSX.Element | null => {
-    const { classes } = this.props;
+    const { classes, permissions } = this.props;
+    const disabled = isReadOnly(permissions);
 
     return (
       <React.Fragment>
@@ -513,6 +514,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 <BackupTableRow
                   key={idx}
                   backup={backup}
+                  disabled={disabled}
                   handleDeploy={this.handleDeploy}
                   handleRestore={this.handleRestore}
                 />
