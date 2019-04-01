@@ -1,3 +1,4 @@
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
@@ -38,7 +39,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = StateProps & WithStyles<ClassNames>;
+type CombinedProps = StateProps &
+  InjectedNotistackProps &
+  WithStyles<ClassNames>;
 
 export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [events, setEvents] = React.useState<Linode.Event[]>([]);
@@ -51,9 +54,15 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const getNext = () => {
     setRequesting(true);
     setCurrentPage(currentPage + 1);
-    getEvents({ page: currentPage, pageSize: 50 }).then(
-      handleEventsRequestSuccess
-    );
+    getEvents({ page: currentPage, pageSize: 50 })
+      .then(handleEventsRequestSuccess)
+      .catch(() => {
+        props.enqueueSnackbar('There was an error loading more events', {
+          variant: 'error'
+        });
+        setLoading(false);
+        setRequesting(false);
+      });
   };
 
   const handleEventsRequestSuccess = (
@@ -75,7 +84,12 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     setLoading(true);
     setRequesting(true);
     setError(undefined);
-    getEvents().then(handleEventsRequestSuccess);
+    getEvents()
+      .then(handleEventsRequestSuccess)
+      .catch(() => {
+        setLoading(false);
+        setError('Error');
+      });
   }, []);
 
   const { classes, entitiesLoading } = props;
@@ -110,11 +124,12 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           <div style={{ minHeight: '150px' }} />
         </Waypoint>
       ) : (
-        !loading && (
+        !loading &&
+        (!error && (
           <Typography className={classes.noMoreEvents}>
             No more events to show
           </Typography>
-        )
+        ))
       )}
     </>
   );
@@ -170,7 +185,8 @@ const connected = connect(mapStateToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  connected
+  connected,
+  withSnackbar
 );
 
 export default enhanced(EventsLanding);
