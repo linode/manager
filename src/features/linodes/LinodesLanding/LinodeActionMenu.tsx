@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -271,8 +272,10 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   ownProps
 ) => ({
   readOnly:
-    getPermissionsForLinode(state.__resources.profile, ownProps.linodeId) ===
-    'read_only'
+    getPermissionsForLinode(
+      pathOr(null, ['__resources', 'profile', 'data'], state),
+      ownProps.linodeId
+    ) === 'read_only'
 });
 
 const connected = connect(mapStateToProps);

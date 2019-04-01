@@ -1,11 +1,13 @@
 import { pathOr } from 'ramda';
-import { State } from 'src/store/profile/profile.reducer';
 
 export const getPermissionsForLinode = (
-  profile: State,
+  profile: Linode.Profile | null,
   linodeId: number
 ): Linode.GrantLevel => {
-  const linodesGrants = pathOr([], ['data', 'grants', 'linode'], profile);
+  if (profile === null) {
+    return 'read_write';
+  } // Default to write access
+  const linodesGrants = pathOr([], ['grants', 'linode'], profile);
   const linodeGrants = linodesGrants.find(
     (grant: Linode.Grant) => grant.id === linodeId
   );

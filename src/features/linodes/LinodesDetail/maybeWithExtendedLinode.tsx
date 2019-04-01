@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { branch, compose, renderComponent } from 'recompose';
@@ -59,7 +60,10 @@ export default compose<InnerProps, OutterProps>(
           _events: eventsForLinode(events, linodeId),
           _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
           _disks: getLinodeDisksForLinode(linodeDisks, linodeId),
-          _permissions: getPermissionsForLinode(profile, linodeId)
+          _permissions: getPermissionsForLinode(
+            pathOr(null, ['data'], profile),
+            linodeId
+          )
         }
       };
     }),
