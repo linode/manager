@@ -413,11 +413,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               onClick={this.toggleTagInput}
               className={classes.addButton}
               type="primary"
-<<<<<<< HEAD
-              disabled={loading}
-=======
-              disabled={disabled}
->>>>>>> Fix tags and name fields read-only state
+              disabled={loading || disabled}
             >
               <AddCircle data-qa-add-tag />
               <Typography>Add New Tag</Typography>

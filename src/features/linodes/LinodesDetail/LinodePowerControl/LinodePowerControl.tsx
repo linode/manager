@@ -114,12 +114,8 @@ interface Props {
   id: number;
   label: string;
   status: Linode.LinodeStatus;
-<<<<<<< HEAD
   noConfigs: boolean;
-=======
-  noImage: boolean;
   disabled?: boolean;
->>>>>>> M3-1696: configure permissions for editing linode
   recentEvent?: Linode.Event;
   openConfigDrawer: (
     config: Linode.Config[],
@@ -183,11 +179,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   };
 
   render() {
-<<<<<<< HEAD
-    const { status, classes, recentEvent, noConfigs } = this.props;
-=======
-    const { status, classes, recentEvent, noImage, disabled } = this.props;
->>>>>>> M3-1696: configure permissions for editing linode
+    const { status, classes, disabled, recentEvent, noConfigs } = this.props;
     const {
       menu: { anchorEl },
       bootOption,
