@@ -156,6 +156,10 @@ const evenize = (n: number): number => {
   return n % 2 === 0 ? n : n - 1;
 };
 
+const isReadOnly = (permissions: Linode.GrantLevel) => {
+  return permissions === 'read_only';
+};
+
 export const aggregateBackups = (
   backups: Linode.LinodeBackupsResponse
 ): Linode.LinodeBackup[] => {
@@ -441,7 +445,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   Placeholder = (): JSX.Element | null => {
     const { enabling } = this.state;
     const { permissions } = this.props;
-    const disabled = permissions === 'read_only';
+    const disabled = isReadOnly(permissions);
     const backupsMonthlyPrice = path<number>(
       ['types', 'response', 'addons', 'backups', 'price', 'monthly'],
       this.props
@@ -521,9 +525,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   SnapshotForm = (): JSX.Element | null => {
-    const { classes, linodeInTransition } = this.props;
+    const { classes, linodeInTransition, permissions } = this.props;
     const { snapshotForm } = this.state;
     const getErrorFor = getAPIErrorFor({ label: 'Label' }, snapshotForm.errors);
+
+    const disabled = isReadOnly(permissions);
 
     return (
       <React.Fragment>
@@ -555,7 +561,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                   type="primary"
                   onClick={this.takeSnapshot}
                   data-qa-snapshot-button
-                  disabled={linodeInTransition}
+                  disabled={linodeInTransition || disabled}
                 >
                   Take Snapshot
                 </Button>
@@ -571,7 +577,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   SettingsForm = (): JSX.Element | null => {
-    const { classes } = this.props;
+    const { classes, permissions } = this.props;
     const { settingsForm } = this.state;
     const getErrorFor = getAPIErrorFor(
       {
@@ -638,7 +644,12 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             </Select>
           </FormControl>
           <ActionsPanel className={classes.scheduleAction}>
-            <Button type="primary" onClick={this.saveSettings} data-qa-schedule>
+            <Button
+              type="primary"
+              onClick={this.saveSettings}
+              disabled={isReadOnly(permissions)}
+              data-qa-schedule
+            >
               Save Schedule
             </Button>
           </ActionsPanel>
@@ -650,7 +661,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   Management = (): JSX.Element | null => {
     const { classes, linodeID, linodeRegion, permissions } = this.props;
-    const disabled = permissions === 'read_only';
+    const disabled = isReadOnly(permissions);
 
     const { backups: backupsResponse } = this.state;
     const backups = aggregateBackups(backupsResponse);
@@ -766,7 +777,10 @@ interface StateProps {
   timezone: string;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => ({
   timezone: pathOr('GMT', ['data', 'timezone'], state.__resources.profile)
 });
 
