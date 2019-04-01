@@ -35,7 +35,7 @@ const Panel: React.StatelessComponent<CombinedProps> = props => {
       data-qa-tp="Select Image"
     >
       {error && <Notice text={error} error />}
-      <Typography role="header" variant="h2" data-qa-tp="Select Image">
+      <Typography variant="h2" data-qa-tp="Select Image">
         {title || 'Select an Image'}
       </Typography>
       {children}
