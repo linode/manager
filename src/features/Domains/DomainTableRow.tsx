@@ -106,7 +106,7 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
             </Grid>
             <Grid item className={classes.domainCellContainer}>
               <div className={classes.labelStatusWrapper}>
-                <Typography role="header" variant="h3" data-qa-label>
+                <Typography variant="h3" data-qa-label>
                   {domain}
                 </Typography>
               </div>

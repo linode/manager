@@ -57,7 +57,7 @@ export const BucketTableRow: React.StatelessComponent<
           </Grid>
           <Grid item>
             <div className={classes.labelStatusWrapper}>
-              <Typography role="header" variant="h3" data-qa-label>
+              <Typography variant="h3" data-qa-label>
                 {label}
               </Typography>
             </div>

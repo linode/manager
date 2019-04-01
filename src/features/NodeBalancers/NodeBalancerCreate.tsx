@@ -465,11 +465,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
-            <Typography
-              role="header"
-              variant="h1"
-              data-qa-create-nodebalancer-header
-            >
+            <Typography variant="h1" data-qa-create-nodebalancer-header>
               Create a NodeBalancer
             </Typography>
 
@@ -517,7 +513,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               disabled={disabled}
             />
             <Grid item xs={12}>
-              <Typography role="header" variant="h2" className={classes.title}>
+              <Typography variant="h2" className={classes.title}>
                 NodeBalancer Settings
               </Typography>
             </Grid>

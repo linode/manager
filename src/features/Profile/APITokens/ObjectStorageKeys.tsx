@@ -217,7 +217,6 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
       <Grid container justify="space-between" alignItems="flex-end">
         <Grid item>
           <Typography
-            role="header"
             variant="h2"
             className={classes.headline}
             data-qa-table="Object Storage Keys"

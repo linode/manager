@@ -81,12 +81,7 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<
         <Paper className={classes.root}>
           <Grid container>
             <Grid item xs={12}>
-              <Typography
-                role="header"
-                variant="h2"
-                className={classes.title}
-                data-qa-title
-              >
+              <Typography variant="h2" className={classes.title} data-qa-title>
                 Access
               </Typography>
             </Grid>

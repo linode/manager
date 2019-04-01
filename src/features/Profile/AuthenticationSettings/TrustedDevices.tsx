@@ -68,12 +68,7 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
       <ToggleState>
         {({ open: dialogOpen, toggle: toggleDialog }) => (
           <Paper className={classes.root}>
-            <Typography
-              role="header"
-              variant="h2"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h2" className={classes.title} data-qa-title>
               Trusted Devices
             </Typography>
             <Table>

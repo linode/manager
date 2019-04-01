@@ -224,12 +224,7 @@ export class NodeBalancersLanding extends React.Component<
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography
-              role="header"
-              variant="h1"
-              data-qa-title
-              className={classes.title}
-            >
+            <Typography variant="h1" data-qa-title className={classes.title}>
               NodeBalancers
             </Typography>
           </Grid>

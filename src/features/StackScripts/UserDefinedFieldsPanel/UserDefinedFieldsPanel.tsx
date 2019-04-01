@@ -129,7 +129,6 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     return (
       <Paper className={classes.root}>
         <Typography
-          role="header"
           variant="h2"
           data-qa-user-defined-field-header
         >

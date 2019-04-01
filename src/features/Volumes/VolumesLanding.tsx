@@ -301,12 +301,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography
-              role="header"
-              variant="h1"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h1" className={classes.title} data-qa-title>
               Volumes
             </Typography>
           </Grid>
