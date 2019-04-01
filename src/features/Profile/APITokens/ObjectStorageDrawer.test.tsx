@@ -1,6 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { ObjectStorageDrawer, Props } from './ObjectStorageDrawer';
+import { MODES } from './ObjectStorageKeys';
 
 describe('ObjectStorageDrawer', () => {
   const props = {
@@ -10,7 +11,8 @@ describe('ObjectStorageDrawer', () => {
     onClose: jest.fn(),
     label: 'test-label',
     updateLabel: jest.fn(),
-    isLoading: false
+    isLoading: false,
+    mode: 'creating' as MODES
   };
   const wrapper = shallow<Props>(<ObjectStorageDrawer {...props} />);
   it('renders without crashing', () => {

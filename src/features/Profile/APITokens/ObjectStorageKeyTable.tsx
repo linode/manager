@@ -47,6 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
 
 interface Props {
   openRevokeDialog: (objectStorageKey: Linode.ObjectStorageKey) => void;
+  openDrawerForEditing: (objectStorageKey: Linode.ObjectStorageKey) => void;
 }
 
 export type CombinedProps = Props &
@@ -56,7 +57,14 @@ export type CombinedProps = Props &
 export const ObjectStorageKeyTable: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes, data, loading, error, openRevokeDialog } = props;
+  const {
+    classes,
+    data,
+    loading,
+    error,
+    openRevokeDialog,
+    openDrawerForEditing
+  } = props;
 
   const renderContent = () => {
     if (loading) {
@@ -100,6 +108,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<
           <ObjectStorageKeyMenu
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
+            openDrawerForEditing={openDrawerForEditing}
           />
         </TableCell>
       </TableRow>
