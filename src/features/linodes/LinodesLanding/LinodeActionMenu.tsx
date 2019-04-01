@@ -83,8 +83,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
     const readOnlyProps = readOnly
       ? {
           disabled: true,
-          tooltip:
-            readOnly && "You don't have permissions to modify this Linode"
+          tooltip: readOnly && "You don't have permission to modify this Linode"
         }
       : {};
 
@@ -119,6 +118,10 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         },
         {
           title: 'Resize',
+          disabled: readOnly,
+          tooltip: readOnly
+            ? "You don't have permission to modify this Linode."
+            : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
@@ -156,6 +159,10 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         },
         {
           title: 'Delete',
+          disabled: readOnly,
+          tooltip: readOnly
+            ? "You don't have permission to delete this Linode."
+            : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
@@ -180,7 +187,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
             : noConfigs
             ? 'A config needs to be added before powering on a Linode'
             : readOnly
-            ? "You don't have permissions to modify this Linode"
+            ? "You don't have permission to modify this Linode"
             : undefined,
           onClick: e => {
             sendEvent({
@@ -197,6 +204,10 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         actions.unshift(
           {
             title: 'Reboot',
+            disabled: readOnly,
+            tooltip: readOnly
+              ? "You don't have permission to modify this Linode."
+              : undefined,
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               sendEvent({
                 category: 'Linode Action Menu Item',
@@ -274,9 +285,9 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 
 const connected = connect(mapStateToProps);
 
-const enchanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, Props>(
   connected,
   withRouter
 );
 
-export default enchanced(LinodeActionMenu);
+export default enhanced(LinodeActionMenu);
