@@ -56,7 +56,7 @@ console.log("parallel runners: " + parallelRunners);
 let CRED_STORE_MODE = 'fs'
 
 if (process.env.CRED_STORE_MODE == 'mongodb') {
-    CRED_STORE_MODE = process.env.MONGO_HOST;
+    CRED_STORE_MODE = process.env.CRED_STORE_MODE;
 }
 
 console.log("Cred store mode set to: " + CRED_STORE_MODE);
