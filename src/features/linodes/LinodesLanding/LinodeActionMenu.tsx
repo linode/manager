@@ -118,10 +118,6 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         },
         {
           title: 'Resize',
-          disabled: readOnly,
-          tooltip: readOnly
-            ? "You don't have permission to modify this Linode."
-            : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
@@ -159,10 +155,6 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         },
         {
           title: 'Delete',
-          disabled: readOnly,
-          tooltip: readOnly
-            ? "You don't have permission to delete this Linode."
-            : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendEvent({
               category: 'Linode Action Menu Item',
