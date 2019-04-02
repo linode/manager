@@ -675,7 +675,7 @@ const handleAnalytics = (
     const payloadLabel = payload[eventInfo['labelPayloadKey']];
     // Checking if payload label comes back as a number, if so return it as a string, otherwise event won't fire.
     if (isNaN(payloadLabel)) {
-      eventLabel = payload[eventInfo['labelPayloadKey']];
+      eventLabel = payloadLabel;
     } else {
       eventLabel = payloadLabel.toString();
     }
