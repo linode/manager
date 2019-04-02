@@ -81,7 +81,6 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
 
   const getNext = () => {
     setRequesting(true);
-    setCurrentPage(currentPage + 1);
     getEvents({ page: currentPage, pageSize: 50 })
       .then(handleEventsRequestSuccess)
       .catch(() => {
@@ -96,6 +95,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const handleEventsRequestSuccess = (
     response: Linode.ResourcePage<Linode.Event>
   ) => {
+    setCurrentPage(currentPage + 1);
     setLoadMoreEvents(true);
     setEvents(appendToEvents(events, response.data));
     setLoading(false);
@@ -147,8 +147,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         </Table>
       </Paper>
       {loadMoreEvents && (initialLoaded && !isLoading) ? (
-        <Waypoint onEnter={getNext}>
-          <div />
+        <Waypoint onEnter={getNext} topOffset={500}>
+          <div style={{ height: '10px', margin: '10px' }} />
         </Waypoint>
       ) : (
         !isLoading &&

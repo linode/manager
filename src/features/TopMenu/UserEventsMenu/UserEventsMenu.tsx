@@ -61,7 +61,7 @@ type CombinedProps = StateProps &
   RouteComponentProps<void> &
   WithStyles<ClassNames>;
 
-class UserEventsMenu extends React.Component<CombinedProps, State> {
+export class UserEventsMenu extends React.Component<CombinedProps, State> {
   state = {
     anchorEl: undefined
   };
