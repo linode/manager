@@ -11,9 +11,7 @@ import { LOGIN_ROOT } from 'src/constants';
 
 type ClassNames = 'root' | 'button';
 
-interface Props {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
