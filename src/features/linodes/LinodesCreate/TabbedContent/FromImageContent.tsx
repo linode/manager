@@ -14,7 +14,6 @@ import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
-import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -46,11 +45,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   }
 });
-
-interface Notice {
-  text: string;
-  level: 'warning' | 'error'; // most likely only going to need these two
-}
 
 interface Props extends BaseFormStateAndHandlers {
   variant?: 'public' | 'private' | 'all';
@@ -113,7 +107,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
     const privateImages = images.filter(image => !image.is_public);
@@ -141,7 +134,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          {generalError && <Notice text={generalError} error={true} />}
           <SelectImagePanel
             variant={variant}
             data-qa-select-image-panel
