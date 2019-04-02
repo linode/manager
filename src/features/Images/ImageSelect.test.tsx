@@ -30,7 +30,8 @@ const privateImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: null
 };
 
 const privateImage2 = {
@@ -44,7 +45,8 @@ const privateImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: null
 };
 
 const deprecatedImage1 = {
@@ -58,7 +60,8 @@ const deprecatedImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: null
 };
 
 const deprecatedImage2 = {
@@ -72,7 +75,8 @@ const deprecatedImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: null
 };
 
 const recommendedImage1 = {
@@ -86,7 +90,8 @@ const recommendedImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: null
 };
 
 const recommendedImage2 = {
@@ -100,7 +105,8 @@ const recommendedImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: null
 };
 
 const deletedImage1 = {
@@ -114,7 +120,8 @@ const deletedImage1 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: '2019-04-09T04:13:37'
 };
 
 const deletedImage2 = {
@@ -128,7 +135,8 @@ const deletedImage2 = {
   size: 0,
   label: '',
   is_public: false,
-  created: ''
+  created: '',
+  expiry: '2019-05-09T04:13:37'
 };
 
 describe('ImageSelect', () => {
