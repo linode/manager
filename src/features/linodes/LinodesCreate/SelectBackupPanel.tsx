@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -54,6 +55,14 @@ interface State {
   backups?: Linode.LinodeBackup[];
 }
 
+const mockBackup: Linode.LinodeBackupsResponse = {
+  snapshot: {
+    in_progress: null,
+    current: null
+  },
+  automatic: []
+};
+
 type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
@@ -68,7 +77,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     if (this.props.selectedLinodeID) {
       // the backups prop will always be an array of one beacuse a filter is happening
       // a component higher to only pass the backups for the selected Linode
-      this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
+      this.setState({
+        backups: aggregateBackups(
+          pathOr(mockBackup, [0, 'currentBackups'], backups)
+        )
+      });
     }
     this.updateBackupInfo();
   }
@@ -78,7 +91,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     if (prevProps.selectedLinodeID !== this.props.selectedLinodeID) {
       // the backups prop will always be an array of one beacuse a filter is happening
       // a component higher to only pass the backups for the selected Linode
-      this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
+      this.setState({
+        backups: aggregateBackups(
+          pathOr(mockBackup, [0, 'currentBackups'], backups)
+        )
+      });
     }
     if (
       prevProps.selectedBackupID !== this.props.selectedBackupID ||
