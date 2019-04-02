@@ -13,6 +13,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
+import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 
 type ClassNames =
   | 'root'
@@ -64,11 +65,13 @@ interface Props {
 }
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const getLinodeLabel = (linodeId: number | null) => {
+export const getLinodeLabel = (linodeId: number | null) => {
+  /** default to null unless everything works */
   if (!linodeId) {
     return null;
   }
-  return 'Label';
+  const attachedLinode: any = getEntityByIDFromStore('linode', linodeId);
+  return attachedLinode ? attachedLinode.label : null;
 };
 
 export const VolumeDashboardRow: React.StatelessComponent<
