@@ -24,19 +24,16 @@ interface Props {
 
 interface State {
   manyof: string[];
-  selectedOptions: Item | Item[] | null;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
-    manyof: this.props.field.manyof!.split(','),
-    selectedOptions: null
+    manyof: this.props.field.manyof!.split(',')
   };
 
   handleSelectManyOf = (selectedOptions: Item) => {
-    this.setState({ selectedOptions });
     const { updateFormState, field } = this.props;
 
     const arrayToString = Array.prototype.map
@@ -47,7 +44,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { manyof, selectedOptions } = this.state;
+    const { manyof } = this.state;
     const { error, field, classes, isOptional } = this.props;
 
     const manyOfOptions = manyof.map((choice: string) => {
@@ -66,7 +63,6 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
           isMulti={true}
           onChange={this.handleSelectManyOf}
           options={manyOfOptions}
-          value={selectedOptions}
           // small={isOptional}
         />
       </div>
