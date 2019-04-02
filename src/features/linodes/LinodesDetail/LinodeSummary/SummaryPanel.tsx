@@ -8,6 +8,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
@@ -155,11 +156,19 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <TagsPanel
-            tags={linodeTags}
-            updateTags={this.updateTags}
-            disabled={readOnly}
-          />
+          {readOnly ? (
+            <Tooltip title="You don't have permission to modify this Linode">
+              <div>
+                <TagsPanel
+                  tags={linodeTags}
+                  updateTags={this.updateTags}
+                  disabled
+                />
+              </div>
+            </Tooltip>
+          ) : (
+            <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
+          )}
         </Paper>
       </div>
     );
