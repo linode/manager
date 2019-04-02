@@ -116,7 +116,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root} data-qa-add-ons>
         <div className={classes.inner}>
-          <Typography role="header" variant="h2" className={classes.title}>
+          <Typography variant="h2" className={classes.title}>
             Optional Add-ons
           </Typography>
           <Grid container>

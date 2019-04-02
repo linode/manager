@@ -94,9 +94,7 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
             <ItemIcon />
           </div>
           <div className={classes.content}>
-            <Typography role="header" variant="h3">
-              {title}
-            </Typography>
+            <Typography variant="h3">{title}</Typography>
             <Typography variant="body1" className={classes.body}>
               {body}
             </Typography>

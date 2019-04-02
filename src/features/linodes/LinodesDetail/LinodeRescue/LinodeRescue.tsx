@@ -194,12 +194,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Rescue`} />
         <Paper className={classes.root}>
-          <Typography
-            role="header"
-            variant="h2"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h2" className={classes.title} data-qa-title>
             Rescue
           </Typography>
           <Typography className={classes.intro}>

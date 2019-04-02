@@ -440,11 +440,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       <div className={classes.section}>
         <Grid container className={classes.section} data-qa-billing-section>
           <Grid item>
-            <Typography
-              role="header"
-              variant="h3"
-              data-qa-permissions-header="billing"
-            >
+            <Typography variant="h3" data-qa-permissions-header="billing">
               Billing Access
             </Typography>
           </Grid>
@@ -509,7 +505,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <Paper className={classes.globalSection} data-qa-global-section>
         <Typography
-          role="header"
           variant="h2"
           data-qa-permissions-header="Global Permissions"
         >
@@ -602,7 +597,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <div key={entity} className={classes.section}>
         <Typography
-          role="header"
           variant="h3"
           className={classes.tableSubheading}
           data-qa-permissions-header={entityNameMap[entity]}
@@ -719,7 +713,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
             <Typography
-              role="header"
               variant="h2"
               data-qa-permissions-header="Specific Permissions"
             >
@@ -805,18 +798,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {generalError && <Notice error text={generalError} spacingTop={8} />}
         <Grid container alignItems="center" style={{ width: 'auto' }}>
           <Grid item>
-            <Typography
-              role="header"
-              variant="h2"
-              data-qa-restrict-access={restricted}
-            >
+            <Typography variant="h2" data-qa-restrict-access={restricted}>
               Full Account Access:
             </Typography>
           </Grid>
           <Grid item>
-            <Typography role="header" variant="h2">
-              {!restricted ? 'On' : 'Off'}
-            </Typography>
+            <Typography variant="h2">{!restricted ? 'On' : 'Off'}</Typography>
           </Grid>
           <Grid item>
             <Toggle

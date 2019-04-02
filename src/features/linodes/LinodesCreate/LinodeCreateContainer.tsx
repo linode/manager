@@ -527,7 +527,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0}>
           <Grid item xs={12}>
-            <Typography role="header" variant="h1" data-qa-create-linode-header>
+            <Typography variant="h1" data-qa-create-linode-header>
               Create New Linode
             </Typography>
           </Grid>

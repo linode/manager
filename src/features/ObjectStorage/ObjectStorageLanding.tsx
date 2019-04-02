@@ -67,12 +67,7 @@ export const ObjectStorageLanding: React.StatelessComponent<
         style={{ paddingBottom: 0 }}
       >
         <Grid item className={classes.titleWrapper}>
-          <Typography
-            role="header"
-            variant="h1"
-            data-qa-title
-            className={classes.title}
-          >
+          <Typography variant="h1" data-qa-title className={classes.title}>
             Buckets
           </Typography>
         </Grid>

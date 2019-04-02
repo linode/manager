@@ -664,21 +664,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               className={classes.headerWrapper}
             >
               <Grid item className="py0">
-                <Typography
-                  role="header"
-                  variant="h2"
-                  className={classes.graphTitle}
-                >
+                <Typography variant="h2" className={classes.graphTitle}>
                   {longLabel}
                 </Typography>
               </Grid>
               <Grid item className="py0">
                 <div className={classes.graphControls}>
-                  <Typography
-                    role="header"
-                    variant="h3"
-                    className={classes.graphTitle}
-                  >
+                  <Typography variant="h3" className={classes.graphTitle}>
                     Graphs
                   </Typography>
                   <FormControl style={{ marginTop: 0 }}>

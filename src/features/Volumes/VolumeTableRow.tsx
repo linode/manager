@@ -147,7 +147,7 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
           </Grid>
           <Grid item>
             <div className={classes.labelStatusWrapper}>
-              <Typography role="header" variant="h3" data-qa-label>
+              <Typography variant="h3" data-qa-label>
                 {label}
               </Typography>
             </div>
@@ -172,7 +172,7 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
           </Grid>
           <Grid item>
             <div className={classes.labelStatusWrapper}>
-              <Typography role="header" variant="h3" data-qa-label>
+              <Typography variant="h3" data-qa-label>
                 {volume.label}
               </Typography>
             </div>

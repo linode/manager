@@ -163,7 +163,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
               )}
               <div className={classes.labelStatusWrapper}>
                 <Typography
-                  role="header"
                   variant="h3"
                   className={classes.wrapHeader}
                   data-qa-label

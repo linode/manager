@@ -207,12 +207,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           className={`${classes.sidebar} ${classes.domainSidebar}`}
         >
           <Paper className={classes.summarySection}>
-            <Typography
-              role="header"
-              variant="h3"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h3" className={classes.title} data-qa-title>
               Tags
             </Typography>
             <TagsPanel tags={domain.tags} updateTags={this.handleUpdateTags} />
