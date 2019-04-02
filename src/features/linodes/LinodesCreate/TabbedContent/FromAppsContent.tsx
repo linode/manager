@@ -191,13 +191,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
         <Grid item className={`mlMain py0`}>
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          {generalError && <Notice text={generalError} error={true} />}
           <SelectAppPanel
             appInstances={appInstances}
             appInstancesError={appInstancesError}
