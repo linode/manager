@@ -89,7 +89,7 @@ export const dcDisplayNames = {
   'ap-south': 'Singapore, SG',
   'eu-central': 'Frankfurt, DE',
   'ap-northeast': 'Tokyo 2, JP',
-  'ca-east': 'Toronto, CA'
+  'ca-east': 'Toronto, ON'
 };
 
 export const dcDisplayCountry = {
