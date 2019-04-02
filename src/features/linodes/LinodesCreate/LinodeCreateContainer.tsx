@@ -653,59 +653,40 @@ export default recompose<CombinedProps, {}>(
   withLabelGenerator
 )(LinodeCreateContainer);
 
+const actionsAndLabels = {
+  fromApp: { action: 'one-click', labelPayloadKey: 'stackscript_id' },
+  fromBackup: { action: 'backup', labelPayloadKey: 'backup_id' },
+  fromImage: { action: 'image', labelPayloadKey: 'image' },
+  fromLinode: { action: 'clone', labelPayloadKey: 'type' },
+  fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' }
+};
+
 const handleAnalytics = (
   type: CreateTypes,
   payload: CreateLinodeRequest,
-  stackScriptLabel?: string
+  label?: string
 ) => {
+  const eventInfo = actionsAndLabels[type];
+  let eventAction = 'unknown';
+  let eventLabel = '';
+
+  if (eventInfo) {
+    eventAction = eventInfo['action'];
+    const payloadLabel = payload[eventInfo['labelPayloadKey']];
+    // Checking if payload label comes back as a number, if so return it as a string, otherwise event won't fire.
+    if (isNaN(payloadLabel)) {
+      eventLabel = payload[eventInfo['labelPayloadKey']];
+    } else {
+      eventLabel = payloadLabel.toString();
+    }
+  }
+  if (label) {
+    eventLabel = label;
+  }
+
   sendEvent({
     category: 'Create Linode',
-    action: determineAnalyticsAction(type),
-    label: determineAnalyticsLabel(type, payload, stackScriptLabel)
+    action: eventAction,
+    label: eventLabel
   });
-};
-
-const determineAnalyticsAction = (type: CreateTypes) => {
-  switch (type) {
-    case 'fromApp':
-      return 'one-click';
-    case 'fromBackup':
-      return 'backup';
-    case 'fromImage':
-      return 'image';
-    case 'fromLinode':
-      return 'clone';
-    case 'fromStackScript':
-      return 'stackscript';
-    default:
-      return 'unknown-type';
-  }
-};
-
-const determineAnalyticsLabel = (
-  type: CreateTypes,
-  payload: CreateLinodeRequest,
-  stackScriptLabel?: string
-) => {
-  const stackScript = stackScriptLabel
-    ? stackScriptLabel
-    : `StackScript #${payload.stackscript_id}`;
-
-  const backupLabel = payload.backup_id
-    ? `Backup #${payload.backup_id}`
-    : 'Unknown Backup #';
-
-  const cloneLabel = payload.type ? `${payload.type}` : '';
-
-  const imageLabel = payload.image ? `${payload.image}` : '';
-
-  if (type === 'fromApp' || type === 'fromStackScript') {
-    return `${stackScript}`;
-  } else if (type === 'fromBackup') {
-    return `${backupLabel}`;
-  } else if (type === 'fromLinode') {
-    return `${cloneLabel}`;
-  } else {
-    return `${imageLabel}`;
-  }
 };
