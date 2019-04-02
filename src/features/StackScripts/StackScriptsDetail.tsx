@@ -89,7 +89,6 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
     const url = getStackScriptUrl(
       stackScript.username,
       stackScript.id,
-      stackScript.label,
       username
     );
     history.push(url);

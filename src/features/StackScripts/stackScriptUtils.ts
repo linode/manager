@@ -137,7 +137,6 @@ export const generateCatchAllFilter = (searchTerm: string) => {
 export const getStackScriptUrl = (
   username: string,
   id: number,
-  label: string,
   currentUser?: string
 ) => {
   let type;
@@ -158,5 +157,5 @@ export const getStackScriptUrl = (
       type = 'One-Click';
       subtype = 'Community%20StackScripts';
   }
-  return `/linodes/create?type=${type}&stackScriptID=${id}&stackScriptUsername=${username}&stackScriptLabel=${label}&subtype=${subtype}`;
+  return `/linodes/create?type=${type}&subtype=${subtype}&stackScriptID=${id}`;
 };

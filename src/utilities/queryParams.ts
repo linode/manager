@@ -29,7 +29,7 @@ export const getParamFromUrl = (
   url: string,
   paramName: string,
   defaultValue: string = ''
-) => {
+): string => {
   const parsedUrl = parseUrl(url) as any;
   return getQueryParam(parsedUrl.query, paramName, defaultValue);
 };
