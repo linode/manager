@@ -38,6 +38,10 @@ storiesOf('Button', module)
         Secondary
       </Button>
       <Divider />
+      <Button disabled destructive type="primary" data-qa-button="destructive">
+        Destructive
+      </Button>
+      <Divider />
       <Button disabled type="cancel" data-qa-button="cancel">
         Cancel
       </Button>

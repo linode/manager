@@ -76,7 +76,7 @@ const styles: StyleRulesCallback = theme => ({
     borderColor: '#C44742',
     color: '#C44742',
     background: theme.color.white,
-    '&.primary': {
+    '&.primary:not(.disabled)': {
       backgroundColor: '#C44742',
       color: theme.color.white,
       '&:hover, &:focus': {
@@ -160,7 +160,8 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
             [classes.loading]: loading,
             loading,
             [classes.destructive]: destructive,
-            [classes.compact]: compact
+            [classes.compact]: compact,
+            disabled: props.disabled
           },
           className
         )}
