@@ -39,7 +39,7 @@ type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   sidebar: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       marginTop: '-130px !important'
     }
   },
