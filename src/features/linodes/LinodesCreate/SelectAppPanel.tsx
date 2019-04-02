@@ -47,7 +47,7 @@ interface Props extends AppsData {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SelectAppPanel extends React.PureComponent<CombinedProps> {
-  componentDidMount() {
+  clickAppIfQueryParamExists = () => {
     const { handleClick, appInstances } = this.props;
     const appIDFromURL = getParamFromUrl(location.search, 'appID');
     const matchedApp = appInstances
@@ -67,6 +67,17 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
         matchedApp.images,
         matchedApp.user_defined_fields
       );
+    }
+  };
+  componentDidMount() {
+    this.clickAppIfQueryParamExists();
+  }
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (
+      typeof prevProps.appInstances === 'undefined' &&
+      typeof this.props.appInstances !== 'undefined'
+    ) {
+      this.clickAppIfQueryParamExists();
     }
   }
   render() {
