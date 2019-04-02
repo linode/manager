@@ -152,6 +152,7 @@ export class LinodeCreate extends React.PureComponent<
             reset={this.props.resetCreationState}
             tabs={this.oneClickTabs()}
             handleClick={this.props.setTab}
+            errors={this.props.errors}
           />
         );
       }
@@ -166,6 +167,7 @@ export class LinodeCreate extends React.PureComponent<
             history={this.props.history}
             tabs={this.myImagesTabs()}
             handleClick={this.props.setTab}
+            errors={this.props.errors}
           />
         );
       }

@@ -121,6 +121,10 @@ const SearchLanding = DefaultLoader({
   loader: () => import('src/features/Search')
 });
 
+const EventsLanding = DefaultLoader({
+  loader: () => import('src/features/Events/EventsLanding')
+});
+
 type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
 
 const styles: StyleRulesCallback = theme => ({
@@ -392,6 +396,7 @@ export class App extends React.Component<CombinedProps, State> {
                           />
                           <Route path="/dashboard" component={Dashboard} />
                           <Route path="/search" component={SearchLanding} />
+                          <Route path="/events" component={EventsLanding} />
                           <Redirect exact from="/" to="/dashboard" />
                           <Route component={NotFound} />
                         </Switch>

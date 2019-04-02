@@ -59,7 +59,7 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'Image',
   tags: 'Tags',
-  stackscript_id: 'A StackScript'
+  stackscript_id: 'The selected App'
 };
 
 type CombinedProps = WithDisplayData &
@@ -191,15 +191,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
 
     const hasBackups = backupsEnabled || accountBackupsEnabled;
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     return (
       <React.Fragment>
         <Grid item className={`mlMain py0`}>
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          {generalError && (
-            <Notice text={generalError} error={true} spacingTop={8} />
-          )}
           <SelectAppPanel
             appInstances={appInstances}
             appInstancesError={appInstancesError}

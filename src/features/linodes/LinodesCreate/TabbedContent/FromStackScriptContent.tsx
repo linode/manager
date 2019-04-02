@@ -74,7 +74,7 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'image',
   tags: 'Tags',
-  stackscript_id: 'A StackScript'
+  stackscript_id: 'The selected StackScript'
 };
 
 export type CombinedProps = Props &
@@ -204,7 +204,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
 
     const hasBackups = Boolean(backupsEnabled || accountBackupsEnabled);
 
@@ -212,7 +211,6 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
           <CreateLinodeDisabled isDisabled={disabled} />
-          {generalError && <Notice text={generalError} error={true} />}
           <SelectStackScriptPanel
             error={hasErrorFor('stackscript_id')}
             header={header}

@@ -222,8 +222,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   ];
 
   render() {
-    const matches = (p: string) =>
-      Boolean(matchPath(this.props.location.pathname, { path: p }));
+    const matches = (pathName: string) =>
+      Boolean(matchPath(this.props.location.pathname, { path: pathName }));
     const {
       match: { path, url },
       classes

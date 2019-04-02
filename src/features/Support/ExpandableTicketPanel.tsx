@@ -166,6 +166,32 @@ interface Data {
   updated: string;
 }
 
+export const shouldRenderHively = (
+  fromLinode: boolean,
+  updated: string,
+  username?: string
+) => {
+  /* Render Hively only for replies marked as from_linode,
+   * and are on tickets less than 7 days old,
+   * and when the user is not "Linode"
+   * Defaults to showing Hively if there are any errors parsing dates
+   * or the date is invalid.
+   */
+  try {
+    if (username === 'Linode') {
+      return false;
+    }
+    const lastUpdated = moment(updated);
+    if (!lastUpdated.isValid()) {
+      return true;
+    }
+    const diff = moment.duration(moment().diff(lastUpdated));
+    return fromLinode && diff <= moment.duration(7, 'days');
+  } catch {
+    return true;
+  }
+};
+
 export class ExpandableTicketPanel extends React.Component<
   CombinedProps,
   State
@@ -224,24 +250,6 @@ export class ExpandableTicketPanel extends React.Component<
     }
 
     return data!;
-  };
-
-  shouldRenderHively = (fromLinode: boolean, updated: string) => {
-    /* Render Hively only for replies marked as from_linode,
-     * and are on tickets less than 7 days old.
-     * Defaults to showing Hively if there are any errors parsing dates
-     * or the date is invalid.
-     */
-    try {
-      const lastUpdated = moment(updated);
-      if (!lastUpdated.isValid()) {
-        return true;
-      }
-      const diff = moment.duration(moment().diff(lastUpdated));
-      return fromLinode && diff <= moment.duration(7, 'days');
-    } catch {
-      return true;
-    }
   };
 
   renderHively = (
@@ -388,7 +396,7 @@ export class ExpandableTicketPanel extends React.Component<
               </Grid>
             )}
           </Grid>
-          {this.shouldRenderHively(data.from_linode, data.updated) &&
+          {shouldRenderHively(data.from_linode, data.updated, data.username) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)}
         </Paper>
       </Grid>

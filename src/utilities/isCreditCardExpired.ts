@@ -20,7 +20,7 @@ const expirationDateFromString = (expDate: string /* MM/YYYY */) => {
 };
 
 export const hasExpirationPassedFor = (today: Date = new Date()) => (
-  expDate: string /** MM/YYYY*/
+  expDate: string /** MM/YYYY */
 ) => {
   return today >= expirationDateFromString(expDate);
 };
