@@ -59,8 +59,11 @@ class ConfigureStackScript extends Page {
     }
 
     configure(config) {
-        this.label.$('input').setValue(config.label);
-        this.description.$('textarea').setValue(config.description);
+        $(`${this.label.selector}`).waitForVisible()
+        $(`${this.description.selector}`).waitForVisible()
+
+        $(`${this.label.selector} input`).setValue(config.label);
+        $(`${this.description.selector} textarea`).setValue(config.description);
 
         // Choose an image from the multi select
 

@@ -15,7 +15,7 @@ class ConfigureLinode extends Page {
 
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
 
-    get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
+    get selectStackScriptPanel() { return $('[data-qa-panel="Select a StackScript"]'); }
     get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
     get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
     get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
@@ -81,10 +81,9 @@ class ConfigureLinode extends Page {
     }
 
     stackScriptsBaseElemsDisplay() {
-        this.selectStackScriptHeader.waitForVisible(constants.wait.normal);
+        this.selectStackScriptPanel.waitForVisible(constants.wait.normal);
         expect(this.myStackScriptTab.isVisible()).toBe(true);
         expect(this.myStackScriptTab.getAttribute('aria-selected')).toBe('true');
-        expect(this.linodeStackScriptTab.isVisible()).toBe(true);
         expect(this.communityStackScriptTab.isVisible()).toBe(true);
 
         expect(this.noCompatibleImages.getText()).toBe('No Compatible Images Available');
@@ -106,9 +105,8 @@ class ConfigureLinode extends Page {
         expect(this.addons.length).toBe(2);
     }
 
-    stackScriptRowByTitle(stackScriptTitle){
-        const selector = this.stackScriptRow.selector.replace(']','');
-        return $(`${selector}="${stackScriptTitle}"] [data-qa-radio]`);
+    selectFirstStackScript() {
+        return $(`${this.stackScriptRow.selector} [data-qa-radio]`);
     }
 
     stackScripShowDetails(title){
@@ -254,7 +252,7 @@ class ConfigureLinode extends Page {
     }
 
     createFrom(source) {
-        const sourceSelector = `[data-qa-create-from="Create from ${source}"]`;
+        const sourceSelector = `[data-qa-create-from="${source}"]`;
         $(sourceSelector).waitForVisible(constants.wait.normal);
         browser.click(sourceSelector);
         browser.waitUntil(function() {

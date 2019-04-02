@@ -210,7 +210,11 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Grid item className={`${classes.main} mlMain py0`}>
+        <Grid
+          data-qa-panel={header}
+          item
+          className={`${classes.main} mlMain py0`}
+        >
           <CreateLinodeDisabled isDisabled={disabled} />
           {generalError && <Notice text={generalError} error={true} />}
           <SelectStackScriptPanel

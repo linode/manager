@@ -1,5 +1,6 @@
 const { constants } = require('../../constants');
 
+import ConfigureStackScripts from '../../pageobjects/configure-stackscript.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
 import ListLinodes from '../../pageobjects/list-linodes';
 import {
@@ -7,6 +8,13 @@ import {
     waitForLinodeStatus,
     apiDeleteAllLinodes,
   } from '../../utils/common';
+
+const stackConfig = {
+    label: `${new Date().getTime()}-MyStackScript`,
+    description: 'test stackscript example',
+    revisionNote: new Date().getTime(),
+    script: '#!bin/bash',
+}
 
 describe('Create Linode - Create from StackScript Suite', () => {
 
@@ -19,21 +27,23 @@ describe('Create Linode - Create from StackScript Suite', () => {
        apiDeleteAllLinodes();
    });
 
-    it('should change tab to create from stackscript', () => {
-        ConfigureLinode.createFrom('StackScript');
+    xit('should change tab to create from stackscript', () => {
+        ConfigureLinode.createFrom('One-Click');
+        ConfigureLinode.createFrom('Community StackScripts');
         ConfigureLinode.stackScriptsBaseElemsDisplay();
     });
 
-    it('should display stackscript table', () => {
-        ConfigureLinode.changeTab('Linode StackScripts');
+    xit('should display stackscript table', () => {
+        ConfigureLinode.createFrom('One-Click');
+        ConfigureLinode.createFrom('Community StackScripts');
         ConfigureLinode.stackScriptTableDisplay();
     });
 
-    it('should display community stackscripts', () => {
+    xit('should display community stackscripts', () => {
         ConfigureLinode.stackScriptMetadataDisplay();
     });
 
-    it('should fail to create without selecting a stackscript', () => {
+    xit('should fail to create without selecting a stackscript', () => {
         const noticeMsg = 'You must select a StackScript';
 
         ConfigureLinode.deploy.click();
@@ -41,35 +51,61 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should display an error when creating without selecting a region', () => {
-        const linodeScript = 'StackScript Bash Library';
         const noticeMsg = 'Region is required.';
 
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
-        browser.pause(500);
+        /** create the stackscript */
+        browser.url(constants.routes.createStackScript);
+        ConfigureStackScripts.configure(stackConfig);
+        ConfigureStackScripts.create(stackConfig);
+
+        /** navigate to the Account StackScripts tab */
+        browser.url(constants.routes.create.linode);
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+
+        /** Select the first one in the list */
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
+
         ConfigureLinode.deploy.click();
-        ConfigureLinode.waitForNotice(noticeMsg);
+        browser.debug();
+        ConfigureLinode.waitForNotice(noticeMsg, constants.wait.normal);
     });
 
     it('should display an error when creating without selecting a plan', () => {
         const noticeMsg = 'Plan is required.';
 
+        /** create the stackscript */
+        browser.url(constants.routes.createStackScript);
+        ConfigureStackScripts.configure(stackConfig);
+        ConfigureStackScripts.create(stackConfig);
+
+        /** navigate to the Account StackScripts tab */
+        browser.url(constants.routes.create.linode);
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+
+        /** Select the first one in the list */
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
+        
         ConfigureLinode.regions[0].click();
         ConfigureLinode.deploy.click();
-        ConfigureLinode.waitForNotice(noticeMsg);
+        browser.debug();
+        ConfigureLinode.waitForNotice(noticeMsg, constants.wait.normal);
     });
 
-    it('should display user-defined fields on selection of a stackscript containing UD fields', () => {
+    xit('should display user-defined fields on selection of a stackscript containing UD fields', () => {
         const lampStackScript = 'LAMP Stack';
-        ConfigureLinode.stackScriptRowByTitle(lampStackScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(lampStackScript).click();
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
         ConfigureLinode.userDefinedFieldsHeader.waitForVisible(constants.wait.normal);
     });
 
-    it('should create from stackscript', () => {
+    xit('should create from stackscript', () => {
         const linodeScript = 'StackScript Bash Library';
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
         ConfigureLinode.plans[0].click();
 
         ConfigureLinode.images[0].click();
