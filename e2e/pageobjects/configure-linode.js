@@ -9,6 +9,8 @@ class ConfigureLinode extends Page {
     get createFromBackup() { return $('[data-qa-create-from="Create from Backup"]'); }
     get createFromExisting() { return $('[data-qa-create-from="Clone from Existing"]'); }
     get createFromStackscript() { return $('[data-qa-create-from="Create from StackScript"]'); }
+    get createFromMyStackScript() {return $('[data-qa-create-from="My StackScripts"]')}
+    get createFromCommunityStackScript() {return $('[data-qa-create-from="Community StackScripts"]')}
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
     get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
@@ -80,11 +82,10 @@ class ConfigureLinode extends Page {
         expect(this.deploy.isVisible()).toBe(true);
     }
 
-    stackScriptsBaseElemsDisplay() {
+    stackScriptsBaseElemsDisplay(stackScriptTab) {
         this.selectStackScriptPanel.waitForVisible(constants.wait.normal);
-        expect(this.myStackScriptTab.isVisible()).toBe(true);
-        expect(this.myStackScriptTab.getAttribute('aria-selected')).toBe('true');
-        expect(this.communityStackScriptTab.isVisible()).toBe(true);
+        expect(stackScriptTab.isVisible()).toBe(true);
+        expect(stackScriptTab.getAttribute('aria-selected')).toBe('true');
 
         expect(this.noCompatibleImages.getText()).toBe('No Compatible Images Available');
         expect(this.regionTabs.length).toBeGreaterThan(0);
