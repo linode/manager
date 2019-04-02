@@ -11,6 +11,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
+import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';
 
@@ -45,58 +46,93 @@ interface Props extends AppsData {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SelectAppPanel: React.SFC<CombinedProps> = props => {
-  const {
-    disabled,
-    selectedStackScriptID,
-    classes,
-    error,
-    appInstances,
-    appInstancesError,
-    appInstancesLoading,
-    handleClick
-  } = props;
+class SelectAppPanel extends React.PureComponent<CombinedProps> {
+  clickAppIfQueryParamExists = () => {
+    const { handleClick, appInstances } = this.props;
+    const appIDFromURL = getParamFromUrl(location.search, 'appID');
+    const matchedApp = appInstances
+      ? appInstances.find(eachApp => eachApp.id === +appIDFromURL)
+      : undefined;
 
-  if (appInstancesError) {
+    if (appIDFromURL && matchedApp) {
+      /**
+       * check the query params to see if we have an app ID in there and if
+       * so pre-select the app
+       */
+      handleClick(
+        matchedApp.stackscript_id,
+        matchedApp.label,
+        /**  username is for display purposes only but we're not showing it */
+        '',
+        matchedApp.images,
+        matchedApp.user_defined_fields
+      );
+    }
+  };
+  componentDidMount() {
+    this.clickAppIfQueryParamExists();
+  }
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (
+      typeof prevProps.appInstances === 'undefined' &&
+      typeof this.props.appInstances !== 'undefined'
+    ) {
+      this.clickAppIfQueryParamExists();
+    }
+  }
+  render() {
+    const {
+      disabled,
+      selectedStackScriptID,
+      classes,
+      error,
+      appInstances,
+      appInstancesError,
+      appInstancesLoading,
+      handleClick
+    } = this.props;
+
+    if (appInstancesError) {
+      return (
+        <Panel className={classes.panel} error={error} title="Select App">
+          <ErrorState errorText={appInstancesError} />
+        </Panel>
+      );
+    }
+
+    if (appInstancesLoading) {
+      return (
+        <Panel className={classes.panel} error={error} title="Select App">
+          <LinearProgress className={classes.loading} />
+        </Panel>
+      );
+    }
+
+    if (!appInstances) {
+      return null;
+    }
+
     return (
       <Panel className={classes.panel} error={error} title="Select App">
-        <ErrorState errorText={appInstancesError} />
+        <Grid className={classes.flatImagePanelSelections} container>
+          {appInstances.map(eachApp => (
+            <SelectionCardWrapper
+              key={eachApp.id}
+              checked={eachApp.stackscript_id === selectedStackScriptID}
+              label={eachApp.label}
+              availableImages={eachApp.images}
+              userDefinedFields={eachApp.user_defined_fields}
+              handleClick={handleClick}
+              disabled={disabled}
+              id={eachApp.stackscript_id}
+              iconUrl={eachApp.logo_url || ''}
+            />
+          ))}
+        </Grid>
       </Panel>
     );
   }
-
-  if (appInstancesLoading) {
-    return (
-      <Panel className={classes.panel} error={error} title="Select App">
-        <LinearProgress className={classes.loading} />
-      </Panel>
-    );
-  }
-
-  if (!appInstances) {
-    return null;
-  }
-
-  return (
-    <Panel className={classes.panel} error={error} title="Select App">
-      <Grid className={classes.flatImagePanelSelections} container>
-        {appInstances.map(eachApp => (
-          <SelectionCardWrapper
-            key={eachApp.id}
-            checked={eachApp.stackscript_id === selectedStackScriptID}
-            label={eachApp.label}
-            availableImages={eachApp.images}
-            userDefinedFields={eachApp.user_defined_fields}
-            handleClick={handleClick}
-            disabled={disabled}
-            id={eachApp.stackscript_id}
-            iconUrl={eachApp.logo_url || ''}
-          />
-        ))}
-      </Grid>
-    </Panel>
-  );
-};
+}
 
 const styled = withStyles(styles);
 

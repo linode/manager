@@ -46,12 +46,7 @@ const StackScriptActionMenu: React.StatelessComponent<
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(
-              getStackScriptUrl(
-                stackScriptUsername,
-                stackScriptID,
-                stackScriptLabel,
-                username
-              )
+              getStackScriptUrl(stackScriptUsername, stackScriptID, username)
             );
             e.preventDefault();
           }

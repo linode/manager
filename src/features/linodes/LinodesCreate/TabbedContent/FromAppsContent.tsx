@@ -59,7 +59,7 @@ const errorResources = {
   root_pass: 'A root password',
   image: 'Image',
   tags: 'Tags',
-  stackscript_id: 'A StackScript'
+  stackscript_id: 'The selected App'
 };
 
 type CombinedProps = WithDisplayData &

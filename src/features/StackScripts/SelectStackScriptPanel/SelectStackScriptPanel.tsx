@@ -122,10 +122,9 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
   componentDidMount() {
-    const selected =
-      this.props.selectedId ||
-      getParamFromUrl(location.search, 'stackScriptID');
-    if (selected) {
+    const selected = +getParamFromUrl(location.search, 'stackScriptID');
+    /** '' converted to a number is 0 */
+    if (!isNaN(selected) && selected !== 0) {
       this.setState({ stackScriptLoading: true });
       getStackScript(selected)
         .then(stackScript => {
