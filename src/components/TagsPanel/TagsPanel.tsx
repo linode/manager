@@ -365,7 +365,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
                   key={eachTag}
                   label={eachTag}
                   tagLabel={eachTag}
-                  onDelete={this.handleDeleteTag}
+                  onDelete={disabled ? undefined : this.handleDeleteTag}
                   className={classes.tag}
                   loading={listDeletingTags.some(inProgressTag => {
                     /*
