@@ -48,13 +48,14 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { CloudApp, getCloudApps } from 'src/services/cloud_apps';
-import { cloneLinode } from 'src/services/linodes';
+import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
+import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -395,6 +396,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           this.props.upsertLinode(response);
         }
 
+        /** GA creation event */
+        handleAnalytics(
+          createType,
+          payload,
+          this.state.selectedStackScriptLabel
+        );
+
         /** show toast */
         this.props.enqueueSnackbar(
           `Your Linode ${response.label} is being created.`,
@@ -639,3 +647,41 @@ export default recompose<CombinedProps, {}>(
   userSSHKeyHoc,
   withLabelGenerator
 )(LinodeCreateContainer);
+
+const actionsAndLabels = {
+  fromApp: { action: 'one-click', labelPayloadKey: 'stackscript_id' },
+  fromBackup: { action: 'backup', labelPayloadKey: 'backup_id' },
+  fromImage: { action: 'image', labelPayloadKey: 'image' },
+  fromLinode: { action: 'clone', labelPayloadKey: 'type' },
+  fromStackScript: { action: 'stackscript', labelPayloadKey: 'stackscript_id' }
+};
+
+const handleAnalytics = (
+  type: CreateTypes,
+  payload: CreateLinodeRequest,
+  label?: string
+) => {
+  const eventInfo = actionsAndLabels[type];
+  let eventAction = 'unknown';
+  let eventLabel = '';
+
+  if (eventInfo) {
+    eventAction = eventInfo['action'];
+    const payloadLabel = payload[eventInfo['labelPayloadKey']];
+    // Checking if payload label comes back as a number, if so return it as a string, otherwise event won't fire.
+    if (isNaN(payloadLabel)) {
+      eventLabel = payloadLabel;
+    } else {
+      eventLabel = payloadLabel.toString();
+    }
+  }
+  if (label) {
+    eventLabel = label;
+  }
+
+  sendEvent({
+    category: 'Create Linode',
+    action: eventAction,
+    label: eventLabel
+  });
+};
