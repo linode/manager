@@ -22,7 +22,7 @@ export const getEvents = (params: any = {}, filter: any = {}) =>
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
-  );
+  ).then(response => response.data);
 
 /**
  * getEvent
