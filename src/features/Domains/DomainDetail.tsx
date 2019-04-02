@@ -151,12 +151,12 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) {
       return;
     }
-
     getAllWithArguments<Linode.DomainRecord>(getDomainRecords)([+domainId])
       .then(({ data }) => {
         this.setState({ records: data });
+        throw new Error();
       })
-      .catch(console.error);
+      .catch(e => this.setState({ error: e }));
   };
 
   updateDomain = () => {
@@ -172,8 +172,9 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     getDomain(+domainId)
       .then((data: Linode.Domain) => {
         this.setState({ domain: data });
+        throw new Error();
       })
-      .catch(console.error);
+      .catch(e => this.setState({ error: e }));
   };
 
   handleUpdateTags = (tagsList: string[]) => {
