@@ -280,8 +280,6 @@ describe('event.helpers', () => {
         }
       ]);
     });
-
-    describe('when updating an event', () => {});
   });
 
   describe('updateInProgressEvents', () => {

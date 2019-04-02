@@ -17,9 +17,10 @@ import UserEventsListItem, {
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'
     ? captureException
-    : console.log('Unknown API event received.', {
+    : // tslint:disable-next-line
+      console.log('Unknown API event received.', {
         extra: { event }
-      }); /* tslint:disable-line */
+      });
 
 const reportEventError = (e: Linode.Event, err: Error) =>
   process.env.NODE_ENV === 'production'

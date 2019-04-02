@@ -200,7 +200,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
         />
       )}
       <SelectStackScriptPanel
-        error={hasErrorFor['stackscript_id']}
+        error={hasErrorFor.stackscript_id}
         selectedId={ss.id}
         selectedUsername={ss.username}
         updateFor={[classes, ss.id, errors]}

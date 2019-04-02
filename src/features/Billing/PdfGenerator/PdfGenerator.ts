@@ -38,7 +38,7 @@ const formatDescription = (desc?: string) => {
   return descChunks.reduce((acc, chunk, i) => {
     const delimiter = i === nameIndex ? ' - \n' : ' - '; // insert line break before long entity name
     if (i === 0) {
-      return chunk; // avoid inserting delimeter for the first element
+      return chunk; // avoid inserting delimiter for the first element
     }
     return acc + delimiter + chunk;
   }, '');
@@ -147,7 +147,7 @@ const addTitle = (doc: jsPDF, title: string) => {
   doc.setFontStyle('normal');
 };
 
-interface pdfResult {
+interface PdfResult {
   status: 'success' | 'error';
   error?: Error;
 }
@@ -156,7 +156,7 @@ export const printInvoice = (
   account: Linode.Account,
   invoice: Linode.Invoice,
   items: Linode.InvoiceItem[]
-): pdfResult => {
+): PdfResult => {
   try {
     const itemsPerPage = 18;
     const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
@@ -260,7 +260,6 @@ export const printInvoice = (
       status: 'success'
     };
   } catch (e) {
-    console.error(e);
     reportException(Error('Error while generating Invoice PDF.'), e);
     return {
       status: 'error',
@@ -272,7 +271,7 @@ export const printInvoice = (
 export const printPayment = (
   account: Linode.Account,
   payment: Linode.Payment
-): pdfResult => {
+): PdfResult => {
   try {
     const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
     const paymentId = payment.id;
@@ -355,7 +354,6 @@ export const printPayment = (
       status: 'success'
     };
   } catch (e) {
-    console.error(e);
     reportException(Error('Error while generating Payment PDF.'), e);
     return {
       status: 'error',

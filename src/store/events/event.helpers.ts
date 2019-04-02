@@ -13,7 +13,6 @@ type Event = ExtendedEvent;
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
 
 /**
-
  * Safely find an entity in a list of entities returning the index.
  * Will return -1 if the index is not found.
  *
