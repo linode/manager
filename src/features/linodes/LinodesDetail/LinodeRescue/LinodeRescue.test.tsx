@@ -36,6 +36,7 @@ describe('LinodeRescue', () => {
         linodeRegion="us-east"
         volumesData={extendedVolumes}
         linodeLabel=""
+        permissions="read_write"
       />
     );
     const rescueComponentProps = component.instance().props;

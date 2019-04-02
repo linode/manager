@@ -30,19 +30,21 @@ export interface Props {
   selectedImageID: string | null;
   handleSelection: (id: string) => void;
   error?: string;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
-  const { images, error, handleSelection, selectedImageID } = props;
+  const { images, error, handleSelection, selectedImageID, disabled } = props;
 
   const { recommended, older } = groupImages(images);
   const myImages = getMyImages(images);
 
   const createImagePanels = imagePanelFactory(
     String(selectedImageID),
-    handleSelection
+    handleSelection,
+    disabled
   );
 
   const tabs = [
@@ -92,13 +94,15 @@ export default styled(RenderGuard<Props>(SelectImagePanel));
 // again.
 const imagePanelFactory = (
   selectedImageID: string,
-  handleSelection: (id: string) => void
+  handleSelection: (id: string) => void,
+  disabled?: boolean
 ) => (images: Linode.Image[] = []) =>
   images.map((image, idx) => (
     <SelectionCard
       key={idx}
       checked={image.id === String(selectedImageID)}
       onClick={() => handleSelection(image.id)}
+      disabled={disabled}
       renderIcon={() => {
         const className = image.vendor
           ? `fl-${distroIcons[image.vendor as string]}`

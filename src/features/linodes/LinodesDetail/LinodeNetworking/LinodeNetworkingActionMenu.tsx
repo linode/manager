@@ -9,6 +9,7 @@ interface Props {
   onRemove?: (ip: Linode.IPAddress) => void;
   ipType: IPTypes;
   ipAddress?: Linode.IPAddress;
+  readOnly?: boolean;
 }
 
 export type IPTypes =
@@ -23,10 +24,17 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
   createActions = () => {
-    const { onView, onEdit, onRemove, ipType, ipAddress } = this.props;
+    const {
+      onView,
+      onEdit,
+      onRemove,
+      ipType,
+      ipAddress,
+      readOnly
+    } = this.props;
 
     return (closeMenu: Function): Action[] => {
-      const actions = [
+      const actions: Action[] = [
         {
           title: 'View',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -53,7 +61,11 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
             onEdit(ipAddress);
             closeMenu();
             e.preventDefault();
-          }
+          },
+          disabled: readOnly,
+          tooltip: readOnly
+            ? "You don't have permissions to modify this Linode"
+            : undefined
         });
       }
 
@@ -64,7 +76,11 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
             onRemove(ipAddress);
             closeMenu();
             e.preventDefault();
-          }
+          },
+          disabled: readOnly,
+          tooltip: readOnly
+            ? "You don't have permissions to modify this Linode"
+            : undefined
         });
       }
 

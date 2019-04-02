@@ -13,6 +13,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Toggle from 'src/components/Toggle';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -41,6 +42,7 @@ interface State {
 }
 
 type CombinedProps = Props &
+  ContextProps &
   LinodeActionsProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
@@ -87,7 +89,9 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { currentStatus, submitting, success, errors } = this.state;
-    const { classes } = this.props;
+    const { classes, permissions } = this.props;
+
+    const disabled = permissions === 'read_only';
 
     return (
       <React.Fragment>
@@ -117,7 +121,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
                   />
                 }
                 label={currentStatus ? 'Enabled' : 'Disabled'}
-                disabled={submitting}
+                disabled={submitting || disabled}
               />
             </Grid>
             <Grid item xs={12} md={10} lg={8} xl={6}>
@@ -155,9 +159,18 @@ const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
+interface ContextProps {
+  permissions: Linode.GrantLevel;
+}
+
+const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
+  permissions: linode._permissions
+}));
+
 export default compose(
   errorBoundary,
   withRouter,
   styled,
-  withLinodeActions
+  withLinodeActions,
+  linodeContext
 )(LinodeWatchdogPanel) as React.ComponentType<Props>;

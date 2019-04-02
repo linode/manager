@@ -78,13 +78,14 @@ interface Props {
   onValueChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   endAdornment: string;
+  readOnly?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class AlertSection extends React.Component<CombinedProps> {
   render() {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
 
     return (
       <React.Fragment>
@@ -101,6 +102,7 @@ class AlertSection extends React.Component<CombinedProps> {
                 <Toggle
                   checked={this.props.state}
                   onChange={this.props.onStateChange}
+                  disabled={readOnly}
                 />
               }
               label={this.props.title}
@@ -115,7 +117,7 @@ class AlertSection extends React.Component<CombinedProps> {
               label={this.props.textTitle}
               type="number"
               value={this.props.value}
-              disabled={!this.props.state}
+              disabled={!this.props.state || readOnly}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">

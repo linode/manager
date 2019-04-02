@@ -78,6 +78,8 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const labelError = hasErrorFor('label');
     const { submitting } = this.state;
+    const { permissions } = this.props;
+    const disabled = permissions === 'read_only';
     const genericError =
       this.state.errors &&
       !labelError &&
@@ -96,7 +98,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
             <Button
               onClick={this.changeLabel}
               type="primary"
-              disabled={submitting && !labelError}
+              disabled={disabled || (submitting && !labelError)}
               loading={submitting && !labelError}
               data-qa-label-save
             >
@@ -116,6 +118,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           errorGroup="linode-settings-label"
           error={Boolean(labelError)}
           data-qa-label
+          disabled={disabled}
         />
       </ExpansionPanel>
     );
@@ -129,11 +132,13 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 interface ContextProps {
   linodeLabel: string;
   updateLinode: UpdateLinode;
+  permissions: Linode.GrantLevel;
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(
   ({ linode, updateLinode }) => ({
     linodeLabel: linode.label,
+    permissions: linode._permissions,
     updateLinode
   })
 );
