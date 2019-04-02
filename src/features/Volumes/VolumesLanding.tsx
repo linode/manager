@@ -358,11 +358,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     history.push(`/linodes/${linodeId}/settings`);
   };
 
-  goToSupportTicket = () => {
-    const { history } = this.props;
-    history.push(`/support/tickets`);
-  };
-
   renderEmpty = () => {
     const { linodeConfigs, linodeRegion } = this.props;
 
@@ -372,12 +367,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           <DocumentTitleSegment segment="Volumes" />
           <Placeholder
             title="Volumes are not available in this region"
-            copy="You can request a migration to a region with Block Storage by opening a support ticket."
+            copy=""
             icon={VolumesIcon}
-            buttonProps={{
-              onClick: this.goToSupportTicket,
-              children: 'Open Support Ticket'
-            }}
           />
         </React.Fragment>
       );
