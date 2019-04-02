@@ -22,6 +22,7 @@ import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import TableRowError from 'src/components/TableRowError';
 import Toggle from 'src/components/Toggle';
+import { regionsWithoutBlockStorage } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import withVolumes, {
@@ -358,7 +359,20 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs } = this.props;
+    const { linodeConfigs, linodeRegion } = this.props;
+
+    if (regionsWithoutBlockStorage.some(region => region === linodeRegion)) {
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Volumes" />
+          <Placeholder
+            title="Volumes are not available in this region"
+            copy=""
+            icon={VolumesIcon}
+          />
+        </React.Fragment>
+      );
+    }
 
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
