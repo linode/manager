@@ -180,6 +180,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       accountBackupsEnabled,
       classes,
       errors,
+      imagesData,
       privateIPEnabled,
       selectedBackupID,
       selectedDiskSize,
@@ -231,7 +232,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
                   (linodes: Linode.LinodeWithBackups[]) =>
-                    extendLinodes(linodes),
+                    extendLinodes(linodes, imagesData, typesData),
                   filterLinodesWithBackups
                 )(linodesWithBackups!)}
                 selectedLinodeID={selectedLinodeID}
