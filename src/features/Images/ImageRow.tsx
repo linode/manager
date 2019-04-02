@@ -46,6 +46,9 @@ const ImageRow: React.StatelessComponent<CombinedProps> = props => {
       <TableCell parentColumn="Date Created" data-qa-image-date>
         {formatDate(image.created)}
       </TableCell>
+      <TableCell data-qa-image-date>
+        {image.expiry === null ? "Never" : formatDate(image.expiry)}
+      </TableCell>
       <TableCell parentColumn="Size" data-qa-image-size>
         {image.size} MB
       </TableCell>
