@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
+import { render } from 'react-testing-library';
+
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
@@ -17,6 +19,14 @@ createResourcePage = data => ({
 
 export const wrapWithTheme = (ui: any) => {
   return (
+    <LinodeThemeWrapper>
+      <MemoryRouter>{ui}</MemoryRouter>
+    </LinodeThemeWrapper>
+  );
+};
+
+export const renderWithTheme = (ui: any) => {
+  return render(
     <LinodeThemeWrapper>
       <MemoryRouter>{ui}</MemoryRouter>
     </LinodeThemeWrapper>

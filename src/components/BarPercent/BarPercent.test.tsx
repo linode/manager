@@ -23,7 +23,7 @@ describe('BarPercent', () => {
     expect(getPercentage(2150, 10000)).toBe(21.5);
   });
 
-  it(`should return loading text and an indetermindate percentage bar if
+  it(`should return loading text and an indeterminate percentage bar if
   isFetchingValue prop is true and loadingText prop is not undefined`, () => {
     expect(componentLoading.find('WithStyles(Typography)')).toBeDefined();
     expect(

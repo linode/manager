@@ -1027,7 +1027,14 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
-"@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2":
+"@babel/runtime@^7.3.4":
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.0.tgz#d523416573f19aa12784639e631257c7fc58c0aa"
+  integrity sha512-/eftZ45kD0OfOFHAmN02WP6N1NVphY+lBf8c2Q/P9VW3tj+N5NlBBAWfqOLOl96YDGMqpIBO5O/hQNx4A/lAng==
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
+"@babel/runtime@^7.4.2":
   version "7.4.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.2.tgz#f5ab6897320f16decd855eed70b705908a313fe8"
   integrity sha512-7Bl2rALb7HpvXFL7TETNzKSAeBVCPHELzc0C//9FCxN8nsiueWSJBqaF+2oIJScyILStASR/Cx5WMkXGYTiJFA==
@@ -15395,9 +15402,9 @@ w3c-xmlserializer@^1.0.1:
     xml-name-validator "^3.0.0"
 
 wait-for-expect@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/wait-for-expect/-/wait-for-expect-1.1.1.tgz#9cd10e07d52810af9e0aaf509872e38f3c3d81ae"
-  integrity sha512-vd9JOqqEcBbCDhARWhW85ecjaEcfBLuXgVBqatfS3iw6oU4kzAcs+sCNjF+TC9YHPImCW7ypsuQc+htscIAQCw==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/wait-for-expect/-/wait-for-expect-1.1.0.tgz#6607375c3f79d32add35cd2c87ce13f351a3d453"
+  integrity sha512-vQDokqxyMyknfX3luCDn16bSaRcOyH6gGuUXMIbxBLeTo6nWuEWYqMTT9a+44FmW8c2m6TRWBdNvBBjA1hwEKg==
 
 walkdir@^0.0.12:
   version "0.0.12"

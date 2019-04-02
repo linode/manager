@@ -381,7 +381,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
 
 export default (
   e: Linode.Event,
-  onUnfound?: (e: Linode.Event) => void,
+  onUnfound?: (e: Linode.Event) => string | void,
   onError?: (e: Linode.Event, err: Error) => void
 ) => {
   const fn = path<EventMessageCreator>(
@@ -391,7 +391,7 @@ export default (
 
   if (!fn) {
     if (onUnfound) {
-      onUnfound(e);
+      return onUnfound(e);
     }
     return;
   }

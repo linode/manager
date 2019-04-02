@@ -54,16 +54,16 @@ class TableRow extends React.Component<CombinedProps> {
     const isButton =
       e.target.tagName === 'BUTTON' || e.target.closest('button');
     const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
-    const hasButtonRole =
-      e.target.querySelector('[role="button"]') ||
-      e.target.closest('[role="button"]');
+    // const hasButtonRole =
+    //   e.target.querySelector('[role="button"]') ||
+    //   e.target.closest('[role="button"]');
 
     if (
       body.getAttribute('style') === null ||
       body.getAttribute('style').indexOf('overflow: hidden') !== 0 ||
       body.getAttribute('style') === ''
     ) {
-      if (!isButton && !isAnchor && !hasButtonRole) {
+      if (!isButton && !isAnchor) {
         e.stopPropagation();
         if (typeof target === 'string') {
           this.props.history.push(target);
