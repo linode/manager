@@ -35,7 +35,8 @@ const LinodesDetailNavigation: React.StatelessComponent<
     linodeLabel,
     linodeConfigs,
     linodeId,
-    linodeRegion
+    linodeRegion,
+    readOnly
   } = props;
 
   const tabs = [
@@ -95,6 +96,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
               linodeLabel={linodeLabel}
               linodeRegion={linodeRegion}
               linodeConfigs={linodeConfigs}
+              readOnly={readOnly}
               {...routeProps}
             />
           )}
@@ -145,6 +147,7 @@ interface ContextProps {
   linodeConfigs: Linode.Config[];
   linodeLabel: string;
   linodeRegion: string;
+  readOnly: boolean;
 }
 
 const enhanced = compose<CombinedProps, {}>(
@@ -153,7 +156,8 @@ const enhanced = compose<CombinedProps, {}>(
     linodeId: linode.id,
     linodeConfigs: linode._configs,
     linodeLabel: linode.label,
-    linodeRegion: linode.region
+    linodeRegion: linode.region,
+    readOnly: linode._permissions === 'read_only'
   }))
 );
 

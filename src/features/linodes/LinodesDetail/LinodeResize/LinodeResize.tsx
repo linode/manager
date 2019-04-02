@@ -25,6 +25,7 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { withNotifications } from 'src/store/notification/notification.containers';
+import LinodePermissionsError from '../LinodePermissionsError';
 
 type ClassNames = 'root' | 'title' | 'subTitle' | 'currentPlanContainer';
 
@@ -57,6 +58,7 @@ interface LinodeContextProps {
   linodeType: null | string;
   linodeStatus?: Linode.LinodeStatus;
   linodeLabel: string;
+  permissions: Linode.GrantLevel;
 }
 
 interface State {
@@ -150,11 +152,14 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       deprecatedTypesData,
       linodeType,
       linodeLabel,
+      permissions,
       classes
     } = this.props;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
     );
+
+    const disabled = permissions === 'read_only';
 
     const currentPlanHeading = linodeType
       ? type
@@ -175,7 +180,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
         <Paper className={classes.root}>
-          <Typography variant="h2" className={classes.title} data-qa-title>
+          {disabled && <LinodePermissionsError />}
+          <Typography
+            role="header"
+            variant="h2"
+            className={classes.title}
+            data-qa-title
+          >
             Resize
           </Typography>
           <Typography data-qa-description>
@@ -200,6 +211,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 checked={false}
                 heading={currentPlanHeading}
                 subheadings={currentPlanSubHeadings}
+                disabled={disabled}
               />
             }
           </div>
@@ -209,12 +221,14 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           types={this.props.currentTypesData}
           onSelect={this.handleSelectPlan}
           selectedID={this.state.selectedId}
+          disabled={disabled}
         />
         <ActionsPanel>
           <Button
             disabled={
               !this.state.selectedId ||
-              linodeInTransition(this.props.linodeStatus || '')
+              linodeInTransition(this.props.linodeStatus || '') ||
+              disabled
             }
             loading={this.state.isLoading}
             type="primary"
@@ -246,12 +260,16 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
     .map(LinodeResize.extendType)
 }));
 
-const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeId: linode.id,
-  linodeType: linode.type,
-  linodeStatus: linode.status,
-  linodeLabel: linode.label
-}));
+const linodeContext = withLinodeDetailContext(state => {
+  const { linode } = state;
+  return {
+    linodeId: linode.id,
+    linodeType: linode.type,
+    linodeStatus: linode.status,
+    linodeLabel: linode.label,
+    permissions: linode._permissions
+  };
+});
 
 export default compose<CombinedProps, {}>(
   linodeContext,

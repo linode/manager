@@ -10,6 +10,7 @@ import {
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -59,7 +60,10 @@ interface Section {
   endAdornment: string;
 }
 
-type CombinedProps = Props & LinodeActionsProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  ContextProps &
+  LinodeActionsProps &
+  WithStyles<ClassNames>;
 
 const maybeNumber = (v: string) => (v === '' ? '' : Number(v));
 
@@ -213,12 +217,14 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         false
       );
 
+    const { permissions } = this.props;
+
     return (
       <ActionsPanel>
         <Button
           type="primary"
           onClick={this.setLinodeAlertThresholds}
-          disabled={noError}
+          disabled={noError || permissions === 'read_only'}
           loading={noError}
           data-qa-alerts-save
         >
@@ -270,7 +276,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   };
 
   public render() {
-    const { classes } = this.props;
+    const { classes, permissions } = this.props;
     const alertSections: Section[] = this.renderAlertSections();
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -287,6 +293,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
             updateFor={[p.state, p.value, this.state.errors, classes]}
             key={idx}
             {...p}
+            readOnly={permissions === 'read_only'}
           />
         ))}
       </ExpansionPanel>
@@ -303,8 +310,17 @@ const errorBoundary = PanelErrorBoundary({
   heading: 'Notification Thresholds'
 });
 
+interface ContextProps {
+  permissions: Linode.GrantLevel;
+}
+
+const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
+  permissions: linode._permissions
+}));
+
 export default compose(
   errorBoundary,
+  linodeContext,
   styled,
   withLinodeActions
 )(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;
