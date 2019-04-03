@@ -82,7 +82,7 @@ export const getMineAndAccountStackScripts = (
     });
   } else {
     /**
-     * in this case, we are unrestricted user, so instead of getting the
+     * in this case, we are an unrestricted user, so instead of getting the
      * StackScripts from the /grants meta data, need to get a list of all
      * users on the account and make a GET /stackscripts call with the list
      * of users as a filter
@@ -124,6 +124,7 @@ export const getCommunityStackscripts = (
       '+and': [
         { username: { '+neq': currentUser } },
         { username: { '+neq': 'linode' } },
+        // linode-stackscripts is the account name on dev for One-Click Apps
         { username: { '+neq': 'linode-stackscripts' } }
       ]
     });
@@ -134,9 +135,9 @@ export const getCommunityStackscripts = (
         '+and': response.data.reduce(
           // pull all stackScripts except linode and account users
           (acc, user) => [...acc, { username: { '+neq': user.username } }],
-          // linode-stackscripts is the account name on dev for OCAs
           [
             { username: { '+neq': 'linode' } },
+            // linode-stackscripts is the account name on dev for One-Click Apps
             { username: { '+neq': 'linode-stackscripts' } }
           ]
         )
