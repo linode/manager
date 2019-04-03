@@ -135,10 +135,10 @@ export default class Page {
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
 
-            if (opposite) {
-                return noticeMsgDisplays.length === 0;
-            }
-
+                if (opposite) {
+                    return noticeMsgDisplays.length === 0;
+                }
+                
             return noticeMsgDisplays.length > 0;
         }, timeout, `${noticeMsg} failed to display after ${timeout}ms`);
     }
