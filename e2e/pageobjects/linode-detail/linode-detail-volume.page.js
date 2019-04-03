@@ -376,7 +376,7 @@ export class VolumeDetail extends Page {
         expect(this.createFileSystemCommand.getAttribute('value')).toEqual(`mkfs.ext4 "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}"`);
         expect(this.createMountDirCommand.getAttribute('value')).toEqual(`mkdir "/mnt/${volumeLabel}"`);
         expect(this.mountCommand.getAttribute('value')).toEqual(`mount "/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel}" "/mnt/${volumeLabel}"`);
-        expect(this.mountOnBootCommand.getAttribute('value')).toEqual(`/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel} ext4 defaults,noatime 0 2`);
+        expect(this.mountOnBootCommand.getAttribute('value')).toEqual(`/dev/disk/by-id/scsi-0Linode_Volume_${volumeLabel} /mnt/${volumeLabel} ext4 defaults,noatime,nofail 0 2`);
     }
 
     volumeRow(label){
