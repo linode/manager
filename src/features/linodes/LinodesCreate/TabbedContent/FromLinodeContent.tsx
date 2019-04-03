@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   main: {},
   sidebar: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       marginTop: '-130px !important'
     }
   }

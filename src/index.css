@@ -244,19 +244,29 @@ a.black:not(.nu):active {
   flex-basis: 100%;
   margin-top: 24px !important;
 }
+
+@media (min-width: 960px) {
+  .mlMain {
+    max-width: 70%;
+    flex-basis: 70%;
+  }
+  .mlSidebar {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    max-width: 30%;
+    padding: 8px !important;
+    margin-top: 0 !important;
+  }
+}
 @media (min-width: 1280px) {
   .mlMain {
     max-width: 78.8%;
     flex-basis: 78.8%;
   }
   .mlSidebar {
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
-    max-width: 21.2%;
     max-width: 21.2%;
     padding: 8px 24px !important;
-    margin-top: 0 !important;
   }
 }
 .p0 {
