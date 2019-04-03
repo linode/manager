@@ -144,13 +144,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     const params = getParamsFromUrl(this.props.location.search);
     if (params && params !== {}) {
+      console.log(params.backupID);
       this.setState({
         // This set is for creating from a Backup
         selectedBackupID: params.backupID,
-        selectedLinodeID: params.linodeID,
-
-        // This is for coming from ImagesLanding (where a private Image will be preselected)
-        selectedImageID: params.imageID
+        selectedLinodeID: params.linodeID
       });
     }
     this.setState({ appInstancesLoading: true });
