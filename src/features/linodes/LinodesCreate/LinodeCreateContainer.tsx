@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose, filter, map, pathOr, sort } from 'ramda';
+import { compose, filter, map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -47,10 +47,7 @@ import {
 } from './types';
 
 import { resetEventsPolling } from 'src/events';
-import {
-  getOneClickAppsScripts,
-  sortStackScriptBySequence
-} from 'src/features/StackScripts/stackScriptUtils';
+import { getOneClickAppsScripts } from 'src/features/StackScripts/stackScriptUtils';
 import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
@@ -171,8 +168,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .then(response =>
         response.data.filter(script => !script.label.match(/helpers/i))
       )
-      // One-Click apps have a sequence number that we use to order them.
-      .then(sort(sortStackScriptBySequence))
       .then(response =>
         response.map(stackscript => trimOneClickFromLabel(stackscript))
       )

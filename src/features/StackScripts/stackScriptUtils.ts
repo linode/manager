@@ -10,28 +10,19 @@ export const emptyResult: Linode.ResourcePage<StackScript> = {
   results: 0
 };
 
-const oneClickFilter = {
-  '+and': [
-    { '+or': [{ username: 'linode-stackscripts' }, { username: 'linode' }] },
-    {
-      label: {
-        '+contains': 'One-Click'
+const oneClickFilter = [
+  {
+    '+and': [
+      { '+or': [{ username: 'linode-stackscripts' }, { username: 'linode' }] },
+      {
+        label: {
+          '+contains': 'One-Click'
+        }
       }
-    }
-  ]
-};
-
-export const sortStackScriptBySequence = (a: StackScript, b: StackScript) => {
-  const left = a.sequence;
-  const right = b.sequence;
-  if (left > right) {
-    return 1;
-  }
-  if (left < right) {
-    return -1;
-  }
-  return 0;
-};
+    ]
+  },
+  { '+order_by': 'sequence' }
+];
 
 export const getOneClickAppsScripts = (params?: any) =>
   getStackScripts(params, oneClickFilter);
