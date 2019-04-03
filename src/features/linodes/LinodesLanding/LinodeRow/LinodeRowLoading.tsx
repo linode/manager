@@ -48,7 +48,12 @@ const LinodeRowLoading: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   return (
-    <TableRow key={linodeId} className={classes.bodyRow} data-qa-loading>
+    <TableRow
+      key={linodeId}
+      className={classes.bodyRow}
+      data-qa-linode={linodeId}
+      data-qa-loading
+    >
       {children}
       <TableCell colSpan={5} className={classes.bodyCell}>
         {linodeRecentEvent &&
