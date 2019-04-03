@@ -173,6 +173,11 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
 
   render() {
     const { iconUrl, id, checked, label, disabled } = this.props;
+    /**
+     * '' is the default value for a stackscript's logo_url;
+     * display a fallback image in this case, to avoid broken image icons
+     */
+
     const renderIcon =
       iconUrl === ''
         ? () => <span className="fl-tux" />
