@@ -198,3 +198,31 @@ export const getStackScriptUrl = (
   }
   return `/linodes/create?type=${type}&subtype=${subtype}&stackScriptID=${id}`;
 };
+
+export const canUserModifyStackScript = (
+  isRestrictedUser: boolean,
+  allStackScriptsPermissions: Linode.Grant[],
+  stackScriptID: number,
+  isPublic: boolean
+) => {
+  if (isPublic) {
+    return false;
+  }
+
+  if (!isRestrictedUser) {
+    return true;
+  }
+
+  const thisStackScriptPermissions = allStackScriptsPermissions.find(
+    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+  );
+
+  if (
+    thisStackScriptPermissions &&
+    thisStackScriptPermissions.permissions === 'read_only'
+  ) {
+    return false;
+  }
+
+  return true;
+};
