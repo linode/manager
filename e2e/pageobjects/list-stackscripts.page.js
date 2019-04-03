@@ -9,8 +9,7 @@ class ListStackScripts extends Page {
     get create() { return this.addIcon('Create New StackScript'); }
 
     get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
-    get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
-    get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
+    get accountStackScriptTab() { return $('[data-qa-tab="Account StackScripts"]'); }
     get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
 
 
@@ -52,8 +51,7 @@ class ListStackScripts extends Page {
         expect(this.header.getText()).toBe('StackScripts');
         expect(this.create.isVisible()).toBe(true);
         expect(this.create.getTagName()).toBe('button');
-        expect(this.myStackScriptTab.isVisible()).toBe(true);
-        expect(this.linodeStackScriptTab.isVisible()).toBe(true);
+        expect(this.accountStackScriptTab.isVisible()).toBe(true);
         expect(this.communityStackScriptTab.isVisible()).toBe(true);
     }
 
