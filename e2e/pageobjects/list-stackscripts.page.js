@@ -25,8 +25,8 @@ class ListStackScripts extends Page {
 
     get stackScriptRow() { return $('[data-qa-table-row]'); }
     get stackScriptRows() { return $$('[data-qa-table-row]'); }
-    /** index 0 is the username */
-    get stackScriptTitle() { return $$('[data-qa-stackscript-title] span'); }
+    
+    get stackScriptTitle() { return $('[data-qa-stackscript-title]'); }
     get stackScriptDescription() { return $('[data-qa-stackscript-title] > p') }
     get stackScriptDeploys() { return $('[data-qa-stackscript-deploys]'); }
     get stackScriptCompatibleDistributions() { return $('[data-qa-stackscript-images]'); }
