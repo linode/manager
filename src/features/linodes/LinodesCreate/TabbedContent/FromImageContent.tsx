@@ -35,12 +35,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   main: {},
   sidebarPrivate: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       marginTop: '-130px !important'
     }
   },
   sidebarPublic: {
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up('md')]: {
       marginTop: '0 !important'
     }
   }
