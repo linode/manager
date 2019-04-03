@@ -24,10 +24,10 @@ const oneClickFilter = {
 export const sortStackScriptBySequence = (a: StackScript, b: StackScript) => {
   const left = a.sequence;
   const right = b.sequence;
-  if (left < right) {
+  if (left > right) {
     return 1;
   }
-  if (left > right) {
+  if (left < right) {
     return -1;
   }
   return 0;
