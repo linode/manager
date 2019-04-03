@@ -144,7 +144,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   componentDidMount() {
     const params = getParamsFromUrl(this.props.location.search);
     if (params && params !== {}) {
-      console.log(params.backupID);
       this.setState({
         // This set is for creating from a Backup
         selectedBackupID: params.backupID,
