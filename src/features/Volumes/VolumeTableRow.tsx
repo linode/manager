@@ -113,7 +113,9 @@ const progressFromEvent = (e?: Linode.Event) => {
   return undefined;
 };
 
-const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
+export const VolumeTableRow: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const {
     classes,
     isUpdating,
@@ -196,13 +198,15 @@ const VolumeTableRow: React.StatelessComponent<CombinedProps> = props => {
           parentColumn="Attached To"
           data-qa-volume-cell-attachment={volume.linodeLabel}
         >
-          {volume.linodeLabel && (
+          {volume.linodeLabel ? (
             <Link
               to={`/linodes/${volume.linode_id}`}
               className="link secondaryLink"
             >
               {volume.linodeLabel}
             </Link>
+          ) : (
+            <Typography>Unattached</Typography>
           )}
         </TableCell>
       )}
