@@ -8,7 +8,7 @@ const recent = moment()
 const old = moment()
   .subtract(3, 'months')
   .format();
-const user = 'Linode'
+const user = 'Linode';
 
 describe('shouldRenderHively function', () => {
   it('should return true if an improperly formatted date is passed', () => {

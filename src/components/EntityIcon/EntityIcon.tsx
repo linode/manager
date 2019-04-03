@@ -62,7 +62,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-export type Variant = 'linode' | 'nodebalancer' | 'volume' | 'domain' | 'stackscript';
+export type Variant =
+  | 'linode'
+  | 'nodebalancer'
+  | 'volume'
+  | 'domain'
+  | 'stackscript';
 
 interface Props {
   variant: Variant;
@@ -85,8 +90,8 @@ const iconMap = {
 };
 
 const getIcon = (variant: Variant) => {
-  return pathOr(LinodeIcon, [variant], iconMap)
-}
+  return pathOr(LinodeIcon, [variant], iconMap);
+};
 
 const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
   const {

@@ -17,6 +17,7 @@ type Props = TextFieldProps & {
   required?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
+  showHelperText?: boolean;
 };
 
 interface State {
@@ -74,6 +75,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
       required,
       disabledReason,
       hideStrengthLabel,
+      showHelperText,
       ...rest
     } = this.props;
 
@@ -97,11 +99,13 @@ class PasswordInput extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Typography variant="body1" className={classes.infoText}>
-          Password must be at least 6 characters and contain each of the
-          following characters: uppercase, lowercase, numeric, and special
-          character.
-        </Typography>
+        {showHelperText && (
+          <Typography variant="body1" className={classes.infoText}>
+            Password must be at least 6 characters and contain each of the
+            following characters: uppercase, lowercase, numeric, and special
+            character.
+          </Typography>
+        )}
       </React.Fragment>
     );
   }
