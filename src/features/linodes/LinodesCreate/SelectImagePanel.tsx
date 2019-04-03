@@ -22,6 +22,8 @@ import Panel from './Panel';
 import PrivateImages from './PrivateImages';
 import PublicImages from './PublicImages';
 
+import { getParamFromUrl } from 'src/utilities/queryParams';
+
 interface Props {
   images: Linode.Image[];
   title?: string;
@@ -75,70 +77,90 @@ export const getMyImages = compose<any, any, any>(
 
 type CombinedProps = Props;
 
-const CreateFromImage: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    images,
-    error,
-    handleSelection,
-    disabled,
-    title,
-    variant,
-    selectedImageID
-  } = props;
-  const publicImages = getPublicImages(images);
-  const olderPublicImages = getOlderPublicImages(images);
-  const myImages = getMyImages(images);
+class CreateFromImage extends React.PureComponent<CombinedProps> {
+  componentDidMount() {
+    const imageIDFromURL = getParamFromUrl(location.search, 'imageID');
+    if (!!imageIDFromURL) {
+      this.props.handleSelection(imageIDFromURL);
+    }
+  }
 
-  const Public = (
-    <Panel error={error} title={title}>
-      <PublicImages
-        images={publicImages}
-        oldImages={olderPublicImages}
-        disabled={disabled}
-        handleSelection={handleSelection}
-        selectedImageID={selectedImageID}
-      />
-    </Panel>
-  );
+  Public = () => {
+    const {
+      images,
+      error,
+      handleSelection,
+      disabled,
+      title,
+      selectedImageID
+    } = this.props;
+    const publicImages = getPublicImages(images);
+    const olderPublicImages = getOlderPublicImages(images);
+    return (
+      <Panel error={error} title={title}>
+        <PublicImages
+          images={publicImages}
+          oldImages={olderPublicImages}
+          disabled={disabled}
+          handleSelection={handleSelection}
+          selectedImageID={selectedImageID}
+        />
+      </Panel>
+    );
+  };
 
-  const Private = (
-    <Panel error={error} title={title}>
-      <PrivateImages
-        images={myImages}
-        disabled={disabled}
-        handleSelection={handleSelection}
-        selectedImageID={selectedImageID}
-      />
-    </Panel>
-  );
+  Private = () => {
+    const {
+      images,
+      error,
+      handleSelection,
+      disabled,
+      title,
+      selectedImageID
+    } = this.props;
+    const myImages = getMyImages(images);
+    return (
+      <Panel error={error} title={title}>
+        <PrivateImages
+          images={myImages}
+          disabled={disabled}
+          handleSelection={handleSelection}
+          selectedImageID={selectedImageID}
+        />
+      </Panel>
+    );
+  };
 
-  const tabs = [
+  tabs = [
     {
       title: 'Public Images',
-      render: () => Public
+      render: () => this.Public()
     },
     {
       title: 'My Images',
-      render: () => Private
+      render: () => this.Private()
     }
   ];
 
-  switch (variant) {
-    case 'private':
-      return Private;
-    case 'public':
-      return Public;
-    case 'all':
-    default:
-      return (
-        <TabbedPanel
-          error={error}
-          header="Select Image"
-          tabs={tabs}
-          initTab={props.initTab}
-        />
-      );
+  render() {
+    const { error, variant } = this.props;
+    switch (variant) {
+      case 'private':
+        return this.Private();
+      case 'public':
+        return this.Public();
+      case 'all':
+      default:
+        return (
+          <TabbedPanel
+            error={error}
+            header="Select Image"
+            tabs={this.tabs}
+            initTab={this.props.initTab}
+          />
+        );
+    }
   }
-};
+}
 
 export default RenderGuard<Props>(CreateFromImage);
