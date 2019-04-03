@@ -116,7 +116,7 @@ exports.config = {
     sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: argv.logLevel ? argv.logLevel : 'silent',
+    logLevel: argv.logLevel ? argv.logLevel : 'error',
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -200,7 +200,8 @@ exports.config = {
         // an assertion fails.
         expectationResultHandler: function(passed, assertion) {
             // do something
-        }
+        },
+        stopOnSpecFailure: true
     },
 
     mountebankConfig: {
@@ -249,7 +250,6 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     before: function (capabilities, specs) {
-        console.log("before");
         // Load up our custom commands
         require('@babel/register');
 
