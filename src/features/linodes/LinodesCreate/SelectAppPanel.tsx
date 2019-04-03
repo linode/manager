@@ -173,14 +173,17 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
 
   render() {
     const { iconUrl, id, checked, label, disabled } = this.props;
+    const renderIcon =
+      iconUrl === ''
+        ? () => <span className="fl-tux" />
+        : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
+
     return (
       <SelectionCard
         key={id}
         checked={checked}
         onClick={this.handleSelectApp}
-        renderIcon={() => {
-          return <img src={`${APP_ROOT}/${iconUrl}`} />;
-        }}
+        renderIcon={renderIcon}
         heading={label}
         subheadings={['']}
         data-qa-selection-card
