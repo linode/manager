@@ -113,23 +113,37 @@ export const getMineAndAccountStackScripts = (
  */
 export const getCommunityStackscripts = (
   currentUser: string,
+  stackScriptGrants: Linode.Grant[],
   params?: any,
   filter?: any
-) =>
-  getUsers().then(response => {
+) => {
+  if (stackScriptGrants) {
+    // User is restricted, so can't ask for a list of account users
     return getStackScripts(params, {
       ...filter,
-      '+and': response.data.reduce(
-        // pull all stackScripts except linode and account users
-        (acc, user) => [...acc, { username: { '+neq': user.username } }],
-        // linode-stackscripts is the account name on dev for OCAs
-        [
-          { username: { '+neq': 'linode' } },
-          { username: { '+neq': 'linode-stackscripts' } }
-        ]
-      )
+      '+and': [
+        { username: { '+neq': currentUser } },
+        { username: { '+neq': 'linode' } },
+        { username: { '+neq': 'linode-stackscripts' } }
+      ]
     });
-  });
+  } else {
+    return getUsers().then(response => {
+      return getStackScripts(params, {
+        ...filter,
+        '+and': response.data.reduce(
+          // pull all stackScripts except linode and account users
+          (acc, user) => [...acc, { username: { '+neq': user.username } }],
+          // linode-stackscripts is the account name on dev for OCAs
+          [
+            { username: { '+neq': 'linode' } },
+            { username: { '+neq': 'linode-stackscripts' } }
+          ]
+        )
+      });
+    });
+  }
+};
 
 export type AcceptedFilters = 'username' | 'description' | 'label';
 
