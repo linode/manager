@@ -133,8 +133,8 @@ describe('Create Linode - Create from StackScript Suite', () => {
         ConfigureLinode.deploy.click();
 
         /**
-         * at this point, we've been redirected toteh Linodes detail page
-         * and we should see hte editable text on teh screen
+         * at this point, we've been redirected to the Linodes detail page
+         * and we should see the editable text on the screen
          */
         $('[data-qa-editable-text]').waitForVisible(constants.wait.normal)
         expect($('[data-qa-editable-text]').getText()).toBe(linodeLabel)
