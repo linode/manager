@@ -166,7 +166,11 @@ interface Data {
   updated: string;
 }
 
-export const shouldRenderHively = (fromLinode: boolean, updated: string, username?: string) => {
+export const shouldRenderHively = (
+  fromLinode: boolean,
+  updated: string,
+  username?: string
+) => {
   /* Render Hively only for replies marked as from_linode,
    * and are on tickets less than 7 days old,
    * and when the user is not "Linode"
@@ -187,7 +191,6 @@ export const shouldRenderHively = (fromLinode: boolean, updated: string, usernam
     return true;
   }
 };
-
 
 export class ExpandableTicketPanel extends React.Component<
   CombinedProps,

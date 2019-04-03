@@ -123,7 +123,7 @@ const SearchLanding = DefaultLoader({
 
 const EventsLanding = DefaultLoader({
   loader: () => import('src/features/Events/EventsLanding')
-})
+});
 
 type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
 
