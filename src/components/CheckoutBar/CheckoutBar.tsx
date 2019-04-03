@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     minHeight: '24px',
     minWidth: '24px',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       position: 'relative !important',
       left: '0 !important',
       bottom: '0 !important',
@@ -48,7 +48,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   sidebarTitle: {
     fontSize: '1.5rem',
-    color: theme.color.green
+    color: theme.color.green,
+    wordBreak: 'break-word'
   },
   detail: {
     fontSize: '.8rem',
