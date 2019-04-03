@@ -16,7 +16,8 @@ describe('Create Linode - Clone from Existing Suite', () => {
 
     it('should display clone elements', () => {
         ConfigureLinode.baseDisplay();
-        ConfigureLinode.createFromExisting.click();
+        ConfigureLinode.createFromMyImage.click();
+        ConfigureLinode.createFromClone.click();
         ConfigureLinode.cloneBaseElemsDisplay();
     });
 
