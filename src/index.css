@@ -244,6 +244,7 @@ a.black:not(.nu):active {
   flex-basis: 100%;
   margin-top: 24px !important;
 }
+
 @media (min-width: 960px) {
   .mlMain {
     max-width: 70%;
@@ -254,7 +255,7 @@ a.black:not(.nu):active {
     top: 0;
     align-self: flex-start;
     max-width: 30%;
-    padding: 8px 24px !important;
+    padding: 8px !important;
     margin-top: 0 !important;
   }
 }
@@ -265,6 +266,7 @@ a.black:not(.nu):active {
   }
   .mlSidebar {
     max-width: 21.2%;
+    padding: 8px 24px !important;
   }
 }
 .p0 {
