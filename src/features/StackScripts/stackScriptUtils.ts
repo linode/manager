@@ -1,7 +1,9 @@
 import { getUsers } from 'src/services/account';
 import { getStackScript, getStackScripts } from 'src/services/stackscripts';
 
-export const emptyResult: Linode.ResourcePage<Linode.StackScript.Response> = {
+type StackScript = Linode.StackScript.Response;
+
+export const emptyResult: Linode.ResourcePage<StackScript> = {
   data: [],
   page: 1,
   pages: 1,
@@ -17,6 +19,18 @@ const oneClickFilter = {
       }
     }
   ]
+};
+
+export const sortStackScriptBySequence = (a: StackScript, b: StackScript) => {
+  const left = a.sequence;
+  const right = b.sequence;
+  if (left < right) {
+    return 1;
+  }
+  if (left > right) {
+    return -1;
+  }
+  return 0;
 };
 
 export const getOneClickAppsScripts = (params?: any) =>

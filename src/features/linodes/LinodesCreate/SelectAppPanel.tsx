@@ -60,7 +60,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
        * so pre-select the app
        */
       handleClick(
-        matchedApp.stackscript_id,
+        matchedApp.id,
         matchedApp.label,
         /**  username is for display purposes only but we're not showing it */
         '',
@@ -118,13 +118,13 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
           {appInstances.map(eachApp => (
             <SelectionCardWrapper
               key={eachApp.id}
-              checked={eachApp.stackscript_id === selectedStackScriptID}
+              checked={eachApp.id === selectedStackScriptID}
               label={eachApp.label}
               availableImages={eachApp.images}
               userDefinedFields={eachApp.user_defined_fields}
               handleClick={handleClick}
               disabled={disabled}
-              id={eachApp.stackscript_id}
+              id={eachApp.id}
               iconUrl={eachApp.logo_url || ''}
             />
           ))}
