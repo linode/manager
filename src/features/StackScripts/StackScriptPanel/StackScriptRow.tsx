@@ -25,7 +25,6 @@ export interface Props {
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
   canDelete: boolean;
-  canEdit: boolean;
   isPublic: boolean;
 }
 
@@ -45,7 +44,6 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
       triggerDelete,
       triggerMakePublic,
       canDelete,
-      canEdit,
       isPublic
     } = this.props;
 
@@ -103,8 +101,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
               stackScriptLabel={label}
               triggerDelete={triggerDelete}
               triggerMakePublic={triggerMakePublic}
-              canDelete={canDelete}
-              canEdit={canEdit}
+              canModify={canDelete}
               isPublic={isPublic}
             />
           </TableCell>

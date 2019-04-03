@@ -1,4 +1,7 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   StyleRulesCallback,
@@ -8,6 +11,9 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import { canUserModifyStackScript } from 'src/features/StackScripts/stackScriptUtils';
+import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
 import truncateText from 'src/utilities/truncateText';
@@ -32,7 +38,7 @@ export interface Props {
   currentUser: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -40,8 +46,9 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
     isSorting,
     classes,
     triggerDelete,
-    currentUser,
-    triggerMakePublic
+    triggerMakePublic,
+    isRestrictedUser,
+    stackScriptGrants
   } = props;
 
   const listStackScript = (s: Linode.StackScript.Response) => (
@@ -57,32 +64,14 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
       stackScriptID={s.id}
       triggerDelete={triggerDelete}
       triggerMakePublic={triggerMakePublic}
-      canDelete={canDelete(s.username, s.is_public)}
-      canEdit={canEdit(s.username)}
+      canDelete={canUserModifyStackScript(
+        isRestrictedUser,
+        stackScriptGrants,
+        s.id,
+        s.is_public
+      )}
     />
   );
-
-  /*
-   * We can only delete a stackscript if it's ours
-   * and it's not publicly available
-   */
-  const canDelete = (stackScriptUser: string, stackScriptIsPublic: boolean) => {
-    if (stackScriptUser === currentUser && !stackScriptIsPublic) {
-      return true;
-    }
-    return false;
-  };
-
-  /*
-   * We can only edit a stackscript if it's ours
-   * it doesn't matter if it's public or not
-   */
-  const canEdit = (stackScriptUser: string) => {
-    if (stackScriptUser === currentUser) {
-      return true;
-    }
-    return false;
-  };
 
   return (
     <TableBody>
@@ -101,4 +90,27 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(StackScriptsSection) as React.StatelessComponent<Props>;
+interface StateProps {
+  isRestrictedUser: boolean;
+  stackScriptGrants: Linode.Grant[];
+}
+
+const mapStateToProps: MapState<StateProps, {}> = state => {
+  return {
+    isRestrictedUser: _isRestrictedUser(state),
+    stackScriptGrants: pathOr(
+      [],
+      ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+      state
+    )
+  };
+};
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose<CombinedProps, Props>(
+  connected,
+  styled
+);
+
+export default enhanced(StackScriptsSection);

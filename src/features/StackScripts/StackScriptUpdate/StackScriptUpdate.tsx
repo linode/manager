@@ -24,6 +24,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getStackScript, updateStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
@@ -282,7 +283,12 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, username, imagesLoading } = this.props;
+    const {
+      classes,
+      username,
+      imagesLoading,
+      userCannotEditStackScripts
+    } = this.props;
     const {
       availableImages,
       selectedImages,
@@ -323,11 +329,21 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        {userCannotEditStackScripts && (
+          <Notice
+            text={
+              "You don't have permissions to modify this StackScript. Please contact an account administrator for details."
+            }
+            error={true}
+            important
+          />
+        )}
         {imagesLoading ? (
           <CircleProgress />
         ) : (
           <ScriptForm
             currentUser={username}
+            disabled={userCannotEditStackScripts}
             images={{
               available: availableImages,
               selected: selectedImages
@@ -363,11 +379,33 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   username?: string;
+  userCannotEditStackScripts: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
-  username: path(['data', 'username'], state.__resources.profile)
-});
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => {
+  // Grab StackScriptID from the URL (query param)
+  const stackScriptID = ownProps.match.params.stackScriptID;
+
+  const allStackScriptsPermissions = pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+    state
+  );
+  const thisStackScriptPermissions = allStackScriptsPermissions.find(
+    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+  );
+
+  return {
+    username: path(['data', 'username'], state.__resources.profile),
+    userCannotEditStackScripts:
+      isRestrictedUser(state) &&
+      thisStackScriptPermissions &&
+      thisStackScriptPermissions.permissions === 'read_only'
+  };
+};
 
 const connected = connect(mapStateToProps);
 

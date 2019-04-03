@@ -14,8 +14,7 @@ interface Props {
   stackScriptLabel: string;
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
-  canDelete: boolean;
-  canEdit: boolean;
+  canModify: boolean;
   isPublic: boolean;
   // From Profile HOC
   username?: string;
@@ -33,15 +32,21 @@ const StackScriptActionMenu: React.StatelessComponent<
     triggerDelete,
     triggerMakePublic,
     stackScriptLabel,
-    canDelete,
-    canEdit,
+    canModify,
     isPublic,
     username
   } = props;
 
+  const readonlyProps = {
+    disabled: !canModify,
+    tooltip: !canModify
+      ? "You don't have permissions to modify this StackScript"
+      : undefined
+  };
+
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
-      const actions = [
+      const actions: Action[] = [
         {
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -53,9 +58,10 @@ const StackScriptActionMenu: React.StatelessComponent<
         }
       ];
 
-      if (canDelete) {
+      if (!isPublic) {
         actions.push({
           title: 'Delete',
+          ...readonlyProps,
           onClick: e => {
             closeMenu();
             triggerDelete(stackScriptID, stackScriptLabel);
@@ -63,19 +69,20 @@ const StackScriptActionMenu: React.StatelessComponent<
         });
       }
 
-      if (canEdit) {
-        actions.push({
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            history.push(`/stackscripts/${stackScriptID}/edit`);
-            e.preventDefault();
-          }
-        });
-      }
+      actions.push({
+        title: 'Edit',
+        // Not adding `readonlyProps` so that the user can still click into the
+        // "Edit" page to see available options, even if they're only read_only
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          history.push(`/stackscripts/${stackScriptID}/edit`);
+          e.preventDefault();
+        }
+      });
 
-      if (canEdit && !isPublic) {
+      if (!isPublic) {
         actions.push({
           title: 'Make StackScript Public',
+          ...readonlyProps,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             // open a modal here as well
             closeMenu();
