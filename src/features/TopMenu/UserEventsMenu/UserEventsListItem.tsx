@@ -8,7 +8,13 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root' | 'title' | 'content' | 'unread' | 'pointer';
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'content'
+  | 'unread'
+  | 'pointer'
+  | 'noLink';
 
 const styles: StyleRulesCallback<ClassNames> = theme => {
   const {
@@ -24,10 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       transition: theme.transitions.create(['border-color', 'opacity']),
       outline: 0,
       '&:hover, &:focus': {
-        backgroundColor: theme.palette.primary.main,
-        '& $title, & $content': {
-          color: 'white'
-        }
+        backgroundColor: 'transparent'
       }
     },
     title: {
@@ -36,10 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     content: {
       ...theme.typography.body1
     },
-    unread: {
-      backgroundColor: theme.bg.main,
-      opacity: 1
-    },
+    unread: {},
     warning: {
       borderLeftColor: status.warningDark
     },
@@ -47,8 +47,19 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       borderLeftColor: status.successDark
     },
     pointer: {
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.main,
+        '& $title, & $content': {
+          color: 'white'
+        }
+      },
       '& > h3': {
         lineHeight: '1.2'
+      }
+    },
+    noLink: {
+      '& $title': {
+        opacity: '.5'
       }
     }
   };
@@ -83,7 +94,8 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
         {
           [classes.root]: true,
           [classes.unread]: error || warning || success,
-          [classes.pointer]: Boolean(onClick)
+          [classes.pointer]: Boolean(onClick),
+          [classes.noLink]: Boolean(!onClick)
         },
         className
       )}
