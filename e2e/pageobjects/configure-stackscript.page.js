@@ -118,8 +118,9 @@ class ConfigureStackScript extends Page {
             ListStackScripts.stackScriptRows
                 .filter(t => t.$(ListStackScripts.stackScriptTitle.selector).getText().includes(config.label));
 
-        // expect(myStackscript.length).toBe(1);
-        expect(myStackscript[0].$(ListStackScripts.stackScriptTitle.selector).getText()).toContain(config.description);
+        expect(myStackscript.length).toBe(1);
+        expect(myStackscript[0].$(ListStackScripts.stackScriptDescription.selector).getText())
+            .toContain(config.description);
         expect(myStackscript[0].$(ListStackScripts.stackScriptDeploys.selector).getText()).toBe('0');
         expect(myStackscript[0].$(ListStackScripts.stackScriptRevision.selector).isVisible()).toBe(true);
         expect(myStackscript[0].$(ListStackScripts.stackScriptActionMenu.selector).isVisible()).toBe(true);
