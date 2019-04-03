@@ -459,6 +459,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           onClick={this.executeAction}
           data-qa-confirm-cancel
           loading={confirmationLoading}
+          destructive={actionOption === 'delete'}
         >
           {actionOption === 'reboot'
             ? 'Reboot'
