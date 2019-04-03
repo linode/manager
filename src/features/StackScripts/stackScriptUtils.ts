@@ -1,5 +1,5 @@
 import { getUsers } from 'src/services/account';
-import { getStackScript, getStackscripts } from 'src/services/stackscripts';
+import { getStackScript, getStackScripts } from 'src/services/stackscripts';
 
 export const emptyResult: Linode.ResourcePage<Linode.StackScript.Response> = {
   data: [],
@@ -8,12 +8,26 @@ export const emptyResult: Linode.ResourcePage<Linode.StackScript.Response> = {
   results: 0
 };
 
+const oneClickFilter = {
+  '+and': [
+    { '+or': [{ username: 'linode-stackscripts' }, { username: 'linode' }] },
+    {
+      label: {
+        '+contains': 'One-Click'
+      }
+    }
+  ]
+};
+
+export const getOneClickAppsScripts = (params?: any) =>
+  getStackScripts(params, oneClickFilter);
+
 export const getStackScriptsByUser = (
   username: string,
   params?: any,
   filter?: any
 ) =>
-  getStackscripts(params, {
+  getStackScripts(params, {
     ...filter,
     username
   });
@@ -60,7 +74,7 @@ export const getMineAndAccountStackScripts = (
      * of users as a filter
      */
     return getUsers().then(response => {
-      return getStackscripts(params, {
+      return getStackScripts(params, {
         ...filter,
         '+and': [
           {
@@ -89,7 +103,7 @@ export const getCommunityStackscripts = (
   filter?: any
 ) =>
   getUsers().then(response => {
-    return getStackscripts(params, {
+    return getStackScripts(params, {
       ...filter,
       '+and': response.data.reduce(
         // pull all stackScripts except linode and account users
