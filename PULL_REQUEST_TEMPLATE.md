@@ -11,7 +11,7 @@ If the any above types of change apply to this pull request, please ensure to in
 
 ## Applicable E2E Tests
 
-To run relavant E2E tests, run these commands in 3 separate terminals:
+To run relevant E2E tests, run these commands in 3 separate terminals:
 
 1. `yarn && yarn start`
 2. `yarn selenium`
