@@ -122,7 +122,11 @@ export const getCommunityStackscripts = (
       '+and': response.data.reduce(
         // pull all stackScripts except linode and account users
         (acc, user) => [...acc, { username: { '+neq': user.username } }],
-        [{ username: { '+neq': 'linode' } }]
+        // linode-stackscripts is the account name on dev for OCAs
+        [
+          { username: { '+neq': 'linode' } },
+          { username: { '+neq': 'linode-stackscripts' } }
+        ]
       )
     });
   });
