@@ -1,5 +1,6 @@
 import Backup from '@material-ui/icons/Backup';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   StyleRulesCallback,
   withStyles,
@@ -66,15 +67,15 @@ const BackupStatus: React.StatelessComponent<CombinedProps> = props => {
     return (
       <div className={classes.wrapper}>
         <Tooltip title="Edit Backups" placement={'right'}>
-          <a
+          <Link
             aria-label={'Edit Backups'}
-            href={`/linodes/${linodeId}/backup`}
+            to={`/linodes/${linodeId}/backup`}
             className={classes.backupLink}
           >
             <Typography variant="body1" className={classes.noBackupText}>
               Scheduled
             </Typography>
-          </a>
+          </Link>
         </Tooltip>
       </div>
     );
@@ -83,16 +84,16 @@ const BackupStatus: React.StatelessComponent<CombinedProps> = props => {
   return (
     <div className={classes.wrapper}>
       <Tooltip title="Enable Backups" placement={'right'}>
-        <a
+        <Link
           aria-label={'Enable Backups'}
-          href={`/linodes/${linodeId}/backup`}
+          to={`/linodes/${linodeId}/backup`}
           className={classes.backupLink}
         >
           <Typography variant="body1" className={classes.noBackupText}>
             Never
           </Typography>
           <Backup className={`${classes.icon} backupIcon`} />
-        </a>
+        </Link>
       </Tooltip>
     </div>
   );
