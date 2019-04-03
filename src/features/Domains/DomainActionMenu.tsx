@@ -120,7 +120,7 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
           }
         },
         {
-          title: 'Remove',
+          title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             this.handleRemove();
             closeMenu();
