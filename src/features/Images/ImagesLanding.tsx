@@ -333,6 +333,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                           <TableCell data-qa-image-created-header>
                             Created
                           </TableCell>
+                          <TableCell data-qa-expiry-header>
+                            Expires
+                          </TableCell>
                           <TableSortCell
                             active={orderBy === 'size'}
                             label={'size'}
