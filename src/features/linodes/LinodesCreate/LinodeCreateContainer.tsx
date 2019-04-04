@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose, filter, map, pathOr } from 'ramda';
+import { compose, filter, isEmpty, map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -143,7 +143,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidMount() {
     const params = getParamsFromUrl(this.props.location.search);
-    if (params && params !== {}) {
+    if (params && !isEmpty(params)) {
       this.setState({
         // This set is for creating from a Backup
         selectedBackupID: params.backupID,
