@@ -100,6 +100,7 @@ interface Props {
   className?: string;
   small?: boolean;
   isOptional?: boolean;
+  hideHelperText?: boolean;
 }
 
 export interface UserSSHKeyObject {
@@ -130,7 +131,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       hideStrengthLabel,
       className,
       small,
-      isOptional
+      isOptional,
+      hideHelperText
     } = this.props;
 
     return (
@@ -157,6 +159,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             placeholder={placeholder || 'Enter a password.'}
             onChange={this.handleChange}
             hideStrengthLabel={hideStrengthLabel}
+            hideHelperText={hideHelperText}
           />
           {users && users.length > 0 && this.renderUserSSHKeyTable(users)}
         </div>

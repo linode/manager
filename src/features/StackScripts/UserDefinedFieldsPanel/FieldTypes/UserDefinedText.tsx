@@ -70,6 +70,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         hideStrengthLabel
         className={!isOptional ? classes.accessPanel : ''}
         isOptional={isOptional}
+        hideHelperText
       />
     );
   };
