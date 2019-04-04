@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
@@ -9,6 +10,8 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
+import { reportException } from 'src/exceptionReporting';
 import Notice from '../Notice';
 
 type ClassNames = 'root' | 'inner' | 'copy' | 'tabs' | 'panelBody';
@@ -55,6 +58,11 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const abortAndLogError = () => {
+  reportException('Attempted to render undefined tab.');
+  return <ErrorState errorText={'An unexpected error occurred.'} />;
+};
+
 class TabbedPanel extends React.Component<CombinedProps> {
   state = { value: this.props.initTab || 0 };
 
@@ -77,7 +85,8 @@ class TabbedPanel extends React.Component<CombinedProps> {
       ...rest
     } = this.props;
     const { value } = this.state;
-    const render = tabs[value].render;
+    // if this bombs the app shouldn't crash
+    const render = pathOr(abortAndLogError, [value, 'render'], tabs);
 
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
