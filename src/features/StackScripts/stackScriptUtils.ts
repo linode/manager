@@ -24,7 +24,7 @@ const oneClickFilter = [
   { '+order_by': 'sequence' }
 ];
 
-export const getOneClickAppsScripts = (params?: any) =>
+export const getOneClickApps = (params?: any) =>
   getStackScripts(params, oneClickFilter);
 
 export const getStackScriptsByUser = (
@@ -181,12 +181,13 @@ export const getStackScriptUrl = (
   let subtype;
   switch (username) {
     case 'linode':
-      // This is a Cloud App (unless it isn't, which we are unable to handle at this time)
+      // This is a One-Click App
       type = 'One-Click';
       subtype = 'One-Click%20Apps';
       break;
     case currentUser:
       // My StackScripts
+      // @todo: handle account stackscripts
       type = 'My%20Images';
       subtype = 'My%20StackScripts';
       break;

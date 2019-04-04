@@ -47,7 +47,7 @@ import {
 } from './types';
 
 import { resetEventsPolling } from 'src/events';
-import { getOneClickAppsScripts } from 'src/features/StackScripts/stackScriptUtils';
+import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
@@ -163,7 +163,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
     }
     this.setState({ appInstancesLoading: true });
-    getOneClickAppsScripts()
+    getOneClickApps()
       // Don't display One-Click Helpers to the user
       .then(response =>
         response.data.filter(script => !script.label.match(/helpers/i))
