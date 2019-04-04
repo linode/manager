@@ -9,7 +9,6 @@ class ListStackScripts extends Page {
     get create() { return this.addIcon('Create New StackScript'); }
 
     get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
-    get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
     get accountStackScriptTab() { return $('[data-qa-tab="Account StackScripts"]'); }
     get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
     get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
