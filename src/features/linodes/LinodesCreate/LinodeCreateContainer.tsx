@@ -47,7 +47,7 @@ import {
 } from './types';
 
 import { resetEventsPolling } from 'src/events';
-import { CloudApp, getCloudApps } from 'src/services/cloud_apps';
+import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { ApplicationState } from 'src/store';
@@ -58,6 +58,8 @@ import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+type StackScript = Linode.StackScript.Response;
 
 interface State {
   selectedImageID?: string;
@@ -79,7 +81,7 @@ interface State {
   tags?: Tag[];
   errors?: Linode.ApiFieldError[];
   formIsSubmitting: boolean;
-  appInstances?: CloudApp[];
+  appInstances?: StackScript[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
 }
@@ -124,6 +126,13 @@ const getRegionIDFromLinodeID = (
   return thisLinode ? thisLinode.region : undefined;
 };
 
+const trimOneClickFromLabel = (script: StackScript) => {
+  return {
+    ...script,
+    label: script.label.replace('One-Click', '')
+  };
+};
+
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   state: State = defaultState;
 
@@ -154,14 +163,21 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
     }
     this.setState({ appInstancesLoading: true });
-    getCloudApps()
+    getOneClickApps()
+      // Don't display One-Click Helpers to the user
+      .then(response =>
+        response.data.filter(script => !script.label.match(/helpers/i))
+      )
+      .then(response =>
+        response.map(stackscript => trimOneClickFromLabel(stackscript))
+      )
       .then(response => {
         this.setState({
           appInstancesLoading: false,
-          appInstances: response.data
+          appInstances: response
         });
       })
-      .catch(e => {
+      .catch(_ => {
         this.setState({
           appInstancesLoading: false,
           appInstancesError: 'There was an error loading One-Click Apps.'

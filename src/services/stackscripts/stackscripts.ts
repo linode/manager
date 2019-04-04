@@ -28,7 +28,7 @@ interface StackScriptPayload {
  * Returns a paginated list of StackScripts.
  *
  */
-export const getStackscripts = (params?: any, filter?: any) =>
+export const getStackScripts = (params?: any, filter?: any) =>
   Request<Page<StackScript>>(
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('GET'),
