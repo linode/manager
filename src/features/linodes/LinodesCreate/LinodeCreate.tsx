@@ -478,7 +478,7 @@ export class LinodeCreate extends React.PureComponent<
                 <MUITab
                   key={idx}
                   label={tab.title}
-                  data-qa-create-from={tab.title}
+                  data-qa-create-from={tab.type}
                 />
               ))}
             </Tabs>
