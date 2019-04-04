@@ -16,6 +16,7 @@ interface Props {
   triggerMakePublic: (id: number, label: string) => void;
   canModify: boolean;
   isPublic: boolean;
+  category: string;
   // From Profile HOC
   username?: string;
 }
@@ -34,7 +35,8 @@ const StackScriptActionMenu: React.StatelessComponent<
     stackScriptLabel,
     canModify,
     isPublic,
-    username
+    username,
+    category
   } = props;
 
   const readonlyProps = {
@@ -69,15 +71,19 @@ const StackScriptActionMenu: React.StatelessComponent<
         });
       }
 
-      actions.push({
-        title: 'Edit',
-        // Not adding `readonlyProps` so that the user can still click into the
-        // "Edit" page to see available options, even if they're only read_only
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          history.push(`/stackscripts/${stackScriptID}/edit`);
-          e.preventDefault();
-        }
-      });
+      // We only add the "Edit" option if the current tab/category isn't
+      // "Community StackScripts". A user's own public StackScripts are still
+      // editable under "Account StackScripts"
+      if (category !== 'community') {
+        actions.push({
+          title: 'Edit',
+          ...readonlyProps,
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            history.push(`/stackscripts/${stackScriptID}/edit`);
+            e.preventDefault();
+          }
+        });
+      }
 
       if (!isPublic) {
         actions.push({

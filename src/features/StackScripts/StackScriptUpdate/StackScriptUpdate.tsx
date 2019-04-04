@@ -287,7 +287,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
       classes,
       username,
       imagesLoading,
-      userCannotEditStackScripts
+      userCannotModifyStackScript
     } = this.props;
     const {
       availableImages,
@@ -329,7 +329,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        {userCannotEditStackScripts && (
+        {userCannotModifyStackScript && (
           <Notice
             text={
               "You don't have permissions to modify this StackScript. Please contact an account administrator for details."
@@ -343,7 +343,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         ) : (
           <ScriptForm
             currentUser={username}
-            disabled={userCannotEditStackScripts}
+            disabled={userCannotModifyStackScript}
             images={{
               available: availableImages,
               selected: selectedImages
@@ -379,7 +379,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   username?: string;
-  userCannotEditStackScripts: boolean;
+  userCannotModifyStackScript: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (
@@ -389,21 +389,21 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
   // Grab StackScriptID from the URL (query param)
   const stackScriptID = ownProps.match.params.stackScriptID;
 
-  const allStackScriptsPermissions = pathOr(
+  const stackScriptGrants = pathOr(
     [],
     ['__resources', 'profile', 'data', 'grants', 'stackscript'],
     state
   );
-  const thisStackScriptPermissions = allStackScriptsPermissions.find(
+  const grantsForThisStackScript = stackScriptGrants.find(
     (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
   );
 
   return {
     username: path(['data', 'username'], state.__resources.profile),
-    userCannotEditStackScripts:
+    userCannotModifyStackScript:
       isRestrictedUser(state) &&
-      thisStackScriptPermissions &&
-      thisStackScriptPermissions.permissions === 'read_only'
+      grantsForThisStackScript &&
+      grantsForThisStackScript.permissions === 'read_only'
   };
 };
 

@@ -25,7 +25,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import Tag from 'src/components/Tag';
 import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import StackScriptActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
-import { canUserModifyStackScript } from 'src/features/StackScripts/stackScriptUtils';
+import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { MapState } from 'src/store/types';
 import LabelCell from '../LabelCell';
 
@@ -46,6 +46,7 @@ interface Props {
   currentUser: string;
   triggerDelete: (stackScriptID: number, stackScriptLabel: string) => void;
   triggerMakePublic: (stackScriptID: number, stackScriptLabel: string) => void;
+  category: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
@@ -58,7 +59,8 @@ export const StackScriptTableRows: React.StatelessComponent<
     triggerMakePublic,
     triggerDelete,
     isRestrictedUser,
-    stackScriptGrants
+    stackScriptGrants,
+    category
   } = props;
 
   if (loading) {
@@ -113,12 +115,12 @@ export const StackScriptTableRows: React.StatelessComponent<
                   triggerDelete={triggerDelete}
                   triggerMakePublic={triggerMakePublic}
                   isPublic={eachStackScript.is_public}
-                  canModify={canUserModifyStackScript(
+                  canModify={canUserModifyAccountStackScript(
                     isRestrictedUser,
                     stackScriptGrants,
-                    eachStackScript.id,
-                    eachStackScript.is_public
+                    eachStackScript.id
                   )}
+                  category={category}
                 />
               </TableCell>
             </TableRow>
@@ -174,16 +176,14 @@ interface StateProps {
   stackScriptGrants: Linode.Grant[];
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => {
-  return {
-    isRestrictedUser: _isRestrictedUser(state),
-    stackScriptGrants: pathOr(
-      [],
-      ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-      state
-    )
-  };
-};
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  isRestrictedUser: _isRestrictedUser(state),
+  stackScriptGrants: pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+    state
+  )
+});
 
 const connected = connect(mapStateToProps);
 

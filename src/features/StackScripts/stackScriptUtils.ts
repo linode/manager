@@ -199,30 +199,22 @@ export const getStackScriptUrl = (
   return `/linodes/create?type=${type}&subtype=${subtype}&stackScriptID=${id}`;
 };
 
-export const canUserModifyStackScript = (
+export const canUserModifyAccountStackScript = (
   isRestrictedUser: boolean,
-  allStackScriptsPermissions: Linode.Grant[],
-  stackScriptID: number,
-  isPublic: boolean
+  stackScriptGrants: Linode.Grant[],
+  stackScriptID: number
 ) => {
-  if (isPublic) {
-    return false;
-  }
-
   if (!isRestrictedUser) {
     return true;
   }
 
-  const thisStackScriptPermissions = allStackScriptsPermissions.find(
+  const grantsForThisStackScript = stackScriptGrants.find(
     (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
   );
 
-  if (
-    thisStackScriptPermissions &&
-    thisStackScriptPermissions.permissions === 'read_only'
-  ) {
+  if (!grantsForThisStackScript) {
     return false;
   }
 
-  return true;
+  return grantsForThisStackScript.permissions === 'read_write';
 };

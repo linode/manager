@@ -22,6 +22,7 @@ beforeAll(() => {
         loading: false,
         stackScripts: mockStackScripts
       }}
+      category="community"
     />
   );
 });

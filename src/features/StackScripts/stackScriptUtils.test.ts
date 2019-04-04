@@ -1,4 +1,4 @@
-import { canUserModifyStackScript } from './stackScriptUtils';
+import { canUserModifyAccountStackScript } from './stackScriptUtils';
 
 describe('canUserModifyStackScript', () => {
   let isRestrictedUser = false;
@@ -7,29 +7,14 @@ describe('canUserModifyStackScript', () => {
     { id: 2, permissions: 'read_write', label: 'my__other_stackscript' }
   ];
   let stackScriptID = 1;
-  let isPublic = true;
 
-  it('should return false if StackScript is public', () => {
-    isPublic = true;
-    expect(
-      canUserModifyStackScript(
-        isRestrictedUser,
-        stackScriptGrants,
-        stackScriptID,
-        isPublic
-      )
-    ).toBe(false);
-  });
-
-  it("should return true if the user isn't restricted and the StackScript isn't public", () => {
+  it("should return true if the user isn't restricted", () => {
     isRestrictedUser = false;
-    isPublic = false;
     expect(
-      canUserModifyStackScript(
+      canUserModifyAccountStackScript(
         isRestrictedUser,
         stackScriptGrants,
-        stackScriptID,
-        isPublic
+        stackScriptID
       )
     ).toBe(true);
   });
@@ -38,21 +23,19 @@ describe('canUserModifyStackScript', () => {
     isRestrictedUser = true;
     stackScriptID = 2;
     expect(
-      canUserModifyStackScript(
+      canUserModifyAccountStackScript(
         isRestrictedUser,
         stackScriptGrants,
-        stackScriptID,
-        isPublic
+        stackScriptID
       )
     ).toBe(true);
 
     stackScriptID = 1;
     expect(
-      canUserModifyStackScript(
+      canUserModifyAccountStackScript(
         isRestrictedUser,
         stackScriptGrants,
-        stackScriptID,
-        isPublic
+        stackScriptID
       )
     ).toBe(false);
   });
