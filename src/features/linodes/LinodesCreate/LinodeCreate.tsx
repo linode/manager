@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
+import Chip from 'src/components/core/Chip';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
@@ -348,7 +349,11 @@ export class LinodeCreate extends React.PureComponent<
 
   oneClickTabs = (): Tab[] => [
     {
-      title: 'One-Click Apps',
+      title: (
+        <div>
+          One-Click Apps <Chip label="beta" />
+        </div>
+      ),
       type: 'fromApp',
       render: () => {
         const {

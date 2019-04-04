@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 export interface Tab {
-  title: string;
+  title: string | JSX.Element;
   render: () => JSX.Element;
   type: CreateTypes;
 }
