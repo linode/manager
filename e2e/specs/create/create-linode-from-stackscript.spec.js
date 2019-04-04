@@ -27,7 +27,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
 
     it('should change tab to create from stackscript', () => {
         ConfigureLinode.createFrom('My Images');
-        ConfigureLinode.createFrom('My StackScripts');
+        ConfigureLinode.createFrom('Account StackScripts');
         ConfigureLinode.stackScriptsBaseElemsDisplay(ConfigureLinode.createFromMyStackScript);
     });
 
@@ -58,7 +58,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
         $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
         browser.url(constants.routes.create.linode);
         ConfigureLinode.createFrom('My Images');
-        ConfigureLinode.createFrom('My StackScripts');
+        ConfigureLinode.createFrom('Account StackScripts');
 
         /** Select the first one in the list */
         ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
@@ -78,7 +78,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
         $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
         browser.url(constants.routes.create.linode);
         ConfigureLinode.createFrom('My Images');
-        ConfigureLinode.createFrom('My StackScripts');
+        ConfigureLinode.createFrom('Account StackScripts');
 
         /** Select the first one in the list */
         ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
@@ -97,7 +97,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
         $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
         browser.url(constants.routes.create.linode);
         ConfigureLinode.createFrom('My Images');
-        ConfigureLinode.createFrom('My StackScripts');
+        ConfigureLinode.createFrom('Account StackScripts');
 
         ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
         ConfigureLinode.selectFirstStackScript().click();
@@ -113,7 +113,7 @@ describe('Create Linode - Create from StackScript Suite', () => {
         $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
         browser.url(constants.routes.create.linode);
         ConfigureLinode.createFrom('My Images');
-        ConfigureLinode.createFrom('My StackScripts');
+        ConfigureLinode.createFrom('Account StackScripts');
 
         ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
         ConfigureLinode.selectFirstStackScript().click();
