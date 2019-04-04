@@ -351,7 +351,8 @@ export class LinodeCreate extends React.PureComponent<
     {
       title: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          One-Click Apps <Chip label="beta" style={{ marginLeft: 8 }} />
+          One-Click Apps{' '}
+          <Chip label="beta" style={{ marginLeft: 8, cursor: 'pointer' }} />
         </div>
       ),
       type: 'fromApp',
@@ -478,7 +479,7 @@ export class LinodeCreate extends React.PureComponent<
                 <MUITab
                   key={idx}
                   label={tab.title}
-                  data-qa-create-from={tab.title}
+                  data-qa-create-from={tab.type}
                 />
               ))}
             </Tabs>
