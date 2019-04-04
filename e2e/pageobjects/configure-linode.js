@@ -5,12 +5,21 @@ import Page from './page';
 
 class ConfigureLinode extends Page {
     get createHeader() { return $('[data-qa-create-linode-header]'); }
-    get createFromImage() { return $('[data-qa-create-from="Create from Image"]'); }
-    get createFromBackup() { return $('[data-qa-create-from="Create from Backup"]'); }
-    get createFromExisting() { return $('[data-qa-create-from="Clone from Existing"]'); }
-    get createFromStackscript() { return $('[data-qa-create-from="Create from StackScript"]'); }
-    get createFromMyStackScript() {return $('[data-qa-create-from="My StackScripts"]')}
-    get createFromCommunityStackScript() {return $('[data-qa-create-from="Community StackScripts"]')}
+
+    /** parent headers */
+    get createFromDistribution() { return $('[data-qa-create-from="Distributions"]') }
+    get createFromOneClick() { return $('[data-qa-create-from=One-Click]') }
+    get createFromMyImage() { return $('[data-qa-create-from="My Images"]') }
+
+    /** subtabs under One-Click */
+    get createFromOneClickApp() { return $('[data-qa-create-from="One-Click Apps"]') }
+    get createFromCommunityStackScript() { return $('[data-qa-create-from="Community StackScripts"]') }
+
+    /** subtabs under My Images */
+    get createFromImage() { return $('[data-qa-create-from="Images"]') }
+    get createFromBackups() { return $('[data-qa-create-from="Backups"]') }
+    get createFromClone() { return $('[data-qa-create-from="Clone Linode"]') }
+    get createFromMyStackScript() { return $('[data-qa-create-from="My StackScripts"]') }
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
     get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
@@ -137,11 +146,9 @@ class ConfigureLinode extends Page {
     baseDisplay() {
         expect(this.createHeader.waitForVisible(constants.wait.normal)).toBe(true);
 
-        expect(this.createFromImage.isVisible()).toBe(true);
-        expect(this.createFromBackup.isVisible()).toBe(true);
-        expect(this.createFromExisting.isVisible()).toBe(true);
-        expect(this.createFromStackscript.isVisible()).toBe(true);
-
+        expect(this.createFromDistribution.isVisible()).toBe(true);
+        expect(this.createFromOneClick.isVisible()).toBe(true);
+        expect(this.createFromMyImage.isVisible()).toBe(true);
 
         expect(this.selectImageHeader.isVisible()).toBe(true);
         this.imageTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
