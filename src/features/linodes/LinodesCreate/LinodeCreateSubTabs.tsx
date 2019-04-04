@@ -65,6 +65,17 @@ export const determinePreselectedTab = (tabsToRender: Tab[]): number => {
   return preSelectedTab !== -1 ? preSelectedTab : 0;
 };
 
+const errorMap = [
+  'backup_id',
+  'linode_id',
+  'stackscript_id',
+  'region',
+  'type',
+  'root_pass',
+  'label',
+  'image'
+];
+
 class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
     super(props);
@@ -112,13 +123,12 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
 
     const selectedTabContentRender = tabs[selectedTab].render;
 
-    const generalError = getErrorMap([], errors).none;
+    const generalError = getErrorMap(errorMap, errors).none;
 
     return (
       <React.Fragment>
         <Grid item className="mlMain py0">
           {generalError && <Notice error spacingTop={8} text={generalError} />}
-
           <Paper className={`${classes.root}`}>
             <div className={`${classes.inner}`}>
               <Typography variant="h2">Create From:</Typography>
