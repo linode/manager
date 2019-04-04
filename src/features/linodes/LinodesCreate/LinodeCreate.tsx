@@ -11,6 +11,7 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import SubTabs, { Tab } from './LinodeCreateSubTabs';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
@@ -454,8 +455,8 @@ export class LinodeCreate extends React.PureComponent<
     ) {
       return null;
     }
-
-    const tabRender = this.tabs[selectedTab].render;
+    // if this bombs the app shouldn't crash
+    const tabRender = safeGetTabRender(this.tabs, selectedTab);
 
     return (
       <React.Fragment>
