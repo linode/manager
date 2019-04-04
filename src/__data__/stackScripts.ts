@@ -13,7 +13,9 @@ export const stackScripts: Linode.StackScript.Response[] = [
     rev_note: 'my note!',
     user_defined_fields: [],
     label: 'is_public',
-    id: 326426
+    id: 326426,
+    sequence: 1,
+    logo_url: ''
   },
   {
     username: 'mmckenna',
@@ -36,6 +38,8 @@ export const stackScripts: Linode.StackScript.Response[] = [
     rev_note: 'my note!',
     user_defined_fields: [],
     label: 'is_public',
-    id: 326432426
+    id: 326432426,
+    sequence: 1,
+    logo_url: ''
   }
 ];

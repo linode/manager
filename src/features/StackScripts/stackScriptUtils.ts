@@ -1,19 +1,38 @@
 import { getUsers } from 'src/services/account';
-import { getStackScript, getStackscripts } from 'src/services/stackscripts';
+import { getStackScript, getStackScripts } from 'src/services/stackscripts';
 
-export const emptyResult: Linode.ResourcePage<Linode.StackScript.Response> = {
+type StackScript = Linode.StackScript.Response;
+
+export const emptyResult: Linode.ResourcePage<StackScript> = {
   data: [],
   page: 1,
   pages: 1,
   results: 0
 };
 
+const oneClickFilter = [
+  {
+    '+and': [
+      { '+or': [{ username: 'linode-stackscripts' }, { username: 'linode' }] },
+      {
+        label: {
+          '+contains': 'One-Click'
+        }
+      }
+    ]
+  },
+  { '+order_by': 'sequence' }
+];
+
+export const getOneClickApps = (params?: any) =>
+  getStackScripts(params, oneClickFilter);
+
 export const getStackScriptsByUser = (
   username: string,
   params?: any,
   filter?: any
 ) =>
-  getStackscripts(params, {
+  getStackScripts(params, {
     ...filter,
     username
   });
@@ -54,13 +73,13 @@ export const getMineAndAccountStackScripts = (
     });
   } else {
     /**
-     * in this case, we are unrestricted user, so instead of getting the
+     * in this case, we are an unrestricted user, so instead of getting the
      * StackScripts from the /grants meta data, need to get a list of all
      * users on the account and make a GET /stackscripts call with the list
      * of users as a filter
      */
     return getUsers().then(response => {
-      return getStackscripts(params, {
+      return getStackScripts(params, {
         ...filter,
         '+and': [
           {
@@ -85,19 +104,38 @@ export const getMineAndAccountStackScripts = (
  */
 export const getCommunityStackscripts = (
   currentUser: string,
+  stackScriptGrants: Linode.Grant[],
   params?: any,
   filter?: any
-) =>
-  getUsers().then(response => {
-    return getStackscripts(params, {
+) => {
+  if (stackScriptGrants) {
+    // User is restricted, so can't ask for a list of account users
+    return getStackScripts(params, {
       ...filter,
-      '+and': response.data.reduce(
-        // pull all stackScripts except linode and account users
-        (acc, user) => [...acc, { username: { '+neq': user.username } }],
-        [{ username: { '+neq': 'linode' } }]
-      )
+      '+and': [
+        { username: { '+neq': currentUser } },
+        { username: { '+neq': 'linode' } },
+        // linode-stackscripts is the account name on dev for One-Click Apps
+        { username: { '+neq': 'linode-stackscripts' } }
+      ]
     });
-  });
+  } else {
+    return getUsers().then(response => {
+      return getStackScripts(params, {
+        ...filter,
+        '+and': response.data.reduce(
+          // pull all stackScripts except linode and account users
+          (acc, user) => [...acc, { username: { '+neq': user.username } }],
+          [
+            { username: { '+neq': 'linode' } },
+            // linode-stackscripts is the account name on dev for One-Click Apps
+            { username: { '+neq': 'linode-stackscripts' } }
+          ]
+        )
+      });
+    });
+  }
+};
 
 export type AcceptedFilters = 'username' | 'description' | 'label';
 
@@ -143,12 +181,13 @@ export const getStackScriptUrl = (
   let subtype;
   switch (username) {
     case 'linode':
-      // This is a Cloud App (unless it isn't, which we are unable to handle at this time)
+      // This is a One-Click App
       type = 'One-Click';
       subtype = 'One-Click%20Apps';
       break;
     case currentUser:
       // My StackScripts
+      // @todo: handle account stackscripts
       type = 'My%20Images';
       subtype = 'My%20StackScripts';
       break;

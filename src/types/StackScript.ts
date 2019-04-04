@@ -15,6 +15,8 @@ namespace Linode {
       rev_note: string;
       script: string;
       user_defined_fields: UserDefinedField[];
+      sequence: number;
+      logo_url: string;
     }
 
     export interface UserDefinedField {

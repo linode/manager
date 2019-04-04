@@ -23,7 +23,9 @@ describe('StackScript', () => {
           script: 'sudo rm -rf /etc',
           created: '2010-12-31T23:59:58',
           updated: '2010-12-31T23:59:59',
-          rev_note: 'Initial import.'
+          rev_note: 'Initial import.',
+          sequence: 1, // default value
+          logo_url: '' // default value
         }}
         classes={{
           root: '',
