@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 export interface Tab {
-  title: string;
+  title: string | JSX.Element;
   render: () => JSX.Element;
   type: CreateTypes;
 }
@@ -145,7 +145,9 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
                     <MUITab
                       key={idx}
                       label={tab.title}
-                      data-qa-create-from={tab.title}
+                      data-qa-create-from={
+                        typeof tab.title === 'string' ? tab.title : tab.type
+                      }
                     />
                   ))}
                 </Tabs>
