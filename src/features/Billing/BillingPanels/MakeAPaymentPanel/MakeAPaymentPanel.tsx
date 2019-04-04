@@ -385,7 +385,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         return response.checkout_token;
       })
       .catch(errorResponse => {
-        /** For senty purposes only */
+        /** For sentry purposes only */
         const cleanedError = getAPIErrorOrDefault(
           errorResponse,
           'Something went wrong with the call to Linode /v4/account/paypal. See tags for USD info'
