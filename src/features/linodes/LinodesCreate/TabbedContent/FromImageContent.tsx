@@ -14,9 +14,10 @@ import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import AddonsPanel from '../AddonsPanel';
 import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
@@ -51,14 +52,16 @@ interface Props extends BaseFormStateAndHandlers {
   imagePanelTitle?: string;
 }
 
-const errorResources = {
-  type: 'A plan selection',
-  region: 'region',
-  label: 'A label',
-  root_pass: 'A root password',
-  image: 'Image',
-  tags: 'Tags'
-};
+const errorMap = [
+  'backup_id',
+  'linode_id',
+  'stackscript_id',
+  'region',
+  'type',
+  'root_pass',
+  'label',
+  'image'
+];
 
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
@@ -106,8 +109,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       variant
     } = this.props;
 
-    const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-
     const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
     const privateImages = images.filter(image => !image.is_public);
 
@@ -130,9 +131,19 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       );
     }
 
+    /**
+     * subtab component handles displaying general errors internally, but the
+     * issue here is that the FromImageContent isn't nested under
+     * sub-tabs, so we need to display general errors here
+     */
+    const hasErrorFor = getErrorMap(errorMap, errors);
+
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
+          {hasErrorFor.none && (
+            <Notice error spacingTop={8} text={hasErrorFor.none} />
+          )}
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           <SelectImagePanel
             variant={variant}
@@ -143,11 +154,11 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             selectedImageID={this.props.selectedImageID}
             updateFor={[this.props.selectedImageID, errors]}
             initTab={0}
-            error={hasErrorFor('image')}
+            error={hasErrorFor.image}
             disabled={userCannotCreateLinode}
           />
           <SelectRegionPanel
-            error={hasErrorFor('region')}
+            error={hasErrorFor.region}
             regions={regions}
             data-qa-select-region-panel
             handleSelection={this.props.updateRegionID}
@@ -157,7 +168,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             disabled={userCannotCreateLinode}
           />
           <SelectPlanPanel
-            error={hasErrorFor('type')}
+            error={hasErrorFor.type}
             types={types}
             data-qa-select-plan-panel
             onSelect={this.props.updateTypeID}
@@ -171,13 +182,13 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               label: 'Linode Label',
               value: this.props.label || '',
               onChange: this.props.updateLabel,
-              errorText: hasErrorFor('label'),
+              errorText: hasErrorFor.label,
               disabled: userCannotCreateLinode
             }}
             tagsInputProps={{
               value: this.props.tags || [],
               onChange: this.props.updateTags,
-              tagError: hasErrorFor('tags'),
+              tagError: hasErrorFor.tags,
               disabled: userCannotCreateLinode
             }}
             updateFor={[this.props.tags, this.props.label, errors]}
@@ -191,7 +202,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                 ? 'You must select an image to set a root password'
                 : ''
             }
-            error={hasErrorFor('root_pass')}
+            error={hasErrorFor.root_pass}
             password={this.props.password}
             handleChange={this.props.updatePassword}
             updateFor={[
