@@ -58,7 +58,7 @@ export class ListLinodes extends Page {
     }
 
     hoverLinodeTags(linode){
-        $(`${this.getLinodeSelector(linode)}>td:nth-child(2)`).moveToObject();
+        $(`${this.getLinodeSelector(linode)}>td:nth-child(1)`).moveToObject();
     }
 
     getLinodeTags(linode){
@@ -73,8 +73,11 @@ export class ListLinodes extends Page {
     }
 
     navigateToDetail(linode) {
-       const linodeLink = linode ? $$(`${this.getLinodeSelector(linode)} a>div`)[0] : this.linode[0].$$('a>div')[0];
-       linodeLink.click();
+        $('[data-qa-linode] [data-qa-label]').waitForVisible(constants.wait.normal)
+        const linodeLink = linode
+            ? $(`${this.getLinodeSelector(linode)} [data-qa-label]`)
+            : this.linode[0].$('[data-qa-label]');
+        linodeLink.click();
     }
 
     gridElemsDisplay() {
