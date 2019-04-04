@@ -204,17 +204,21 @@ export const canUserModifyAccountStackScript = (
   stackScriptGrants: Linode.Grant[],
   stackScriptID: number
 ) => {
+  // If the user isn't restricted, they can modify any StackScript on the account
   if (!isRestrictedUser) {
     return true;
   }
 
+  // Look for permissions for this specific StackScript
   const grantsForThisStackScript = stackScriptGrants.find(
     (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
   );
 
+  // If there are no permissions for this StackScript (permissions:"none")
   if (!grantsForThisStackScript) {
     return false;
   }
 
+  // User must have "read_write" permissions to modify StackScript
   return grantsForThisStackScript.permissions === 'read_write';
 };

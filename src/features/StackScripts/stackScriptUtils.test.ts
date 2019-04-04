@@ -38,5 +38,14 @@ describe('canUserModifyStackScript', () => {
         stackScriptID
       )
     ).toBe(false);
+
+    stackScriptID = 100;
+    expect(
+      canUserModifyAccountStackScript(
+        isRestrictedUser,
+        stackScriptGrants,
+        stackScriptID
+      )
+    ).toBe(false);
   });
 });

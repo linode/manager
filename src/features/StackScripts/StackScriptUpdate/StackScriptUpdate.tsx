@@ -329,6 +329,11 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        {/* If a user doesn't have permissions to modify a StackScript, they
+        won't see an "Edit" button in the Action Menu, which means they'll most
+        likely never see this page. But if they go to /stackscripts/:id/edit,
+        they will, so we disable the forms and show an appropriate error message.
+        */}
         {userCannotModifyStackScript && (
           <Notice
             text={

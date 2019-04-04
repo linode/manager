@@ -73,7 +73,7 @@ const StackScriptActionMenu: React.StatelessComponent<
 
       // We only add the "Edit" option if the current tab/category isn't
       // "Community StackScripts". A user's own public StackScripts are still
-      // editable under "Account StackScripts"
+      // editable under "Account StackScripts".
       if (category !== 'community') {
         actions.push({
           title: 'Edit',
