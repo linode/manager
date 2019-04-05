@@ -34,7 +34,7 @@ describe('Linode Detail - Resize Suite', () => {
     });
 
     it('should display toast message on resize', () => {
-        const toastMsg = 'Linode resize started.';
+        const toastMsg = 'Linode queued for resize.';
 
         Resize.planCards[1].click();
         browser.waitUntil(() => {

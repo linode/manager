@@ -139,7 +139,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
-        <Typography role="header" variant="h1" className={classes.title}>
+        <Typography variant="h1" className={classes.title}>
           Settings
         </Typography>
         <Paper className={classes.root}>

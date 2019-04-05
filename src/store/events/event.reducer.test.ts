@@ -75,12 +75,5 @@ describe('events.reducer', () => {
         });
       });
     });
-
-    describe('UPDATE_EVENTS_AS_SEEN', () => {});
-  });
-
-  describe('async', () => {
-    describe('getEvents', () => {});
-    describe('markAllSeen', () => {});
   });
 });

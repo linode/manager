@@ -1,4 +1,8 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
+
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { lishLaunch } from 'src/features/Lish';
@@ -8,6 +12,10 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { powerOnLinode } from './powerActions';
 
 import { sendEvent } from 'src/utilities/analytics';
+
+import { getLinodeConfigs } from 'src/services/linodes';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { MapState } from 'src/store/types';
 
 interface Props {
   linodeId: number;
@@ -20,15 +28,46 @@ interface Props {
     fn: (id: number) => void
   ) => void;
   toggleConfirmation: (
-    bootOption: Linode.BootAction,
+    bootOption: Linode.KebabAction,
     linodeId: number,
     linodeLabel: string
   ) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}> & StateProps;
 
-class LinodeActionMenu extends React.Component<CombinedProps> {
+interface State {
+  configs: Linode.Config[];
+  hasMadeConfigsRequest: boolean;
+  configsError?: Linode.ApiFieldError[];
+}
+
+class LinodeActionMenu extends React.Component<CombinedProps, State> {
+  state: State = {
+    configs: [],
+    hasMadeConfigsRequest: false,
+    configsError: undefined
+  };
+
+  toggleOpenActionMenu = () => {
+    getLinodeConfigs(this.props.linodeId)
+      .then(configs => {
+        this.setState({
+          configs: configs.data,
+          hasMadeConfigsRequest: true,
+          configsError: undefined
+        });
+      })
+      .catch(err => {
+        this.setState({ hasMadeConfigsRequest: true, configsError: err });
+      });
+
+    sendEvent({
+      category: 'Linode Action Menu',
+      action: 'Open Action Menu'
+    });
+  };
+
   createLinodeActions = () => {
     const {
       linodeId,
@@ -37,9 +76,20 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
       linodeStatus,
       openConfigDrawer,
       toggleConfirmation,
-      noImage,
-      history: { push }
+      history: { push },
+      readOnly
     } = this.props;
+    const { configs, hasMadeConfigsRequest } = this.state;
+
+    const readOnlyProps = readOnly
+      ? {
+          disabled: true,
+          tooltip: readOnly && "You don't have permission to modify this Linode"
+        }
+      : {};
+
+    const noConfigs = hasMadeConfigsRequest && configs.length === 0;
+
     return (closeMenu: Function): Action[] => {
       const actions: Action[] = [
         {
@@ -52,7 +102,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             lishLaunch(linodeId);
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         },
         {
           title: 'View Graphs',
@@ -76,7 +127,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         },
         {
           title: 'View Backups',
@@ -101,15 +153,34 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             e.preventDefault();
             e.stopPropagation();
           }
+        },
+        {
+          title: 'Delete',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendEvent({
+              category: 'Linode Action Menu Item',
+              action: 'Delete Linode'
+            });
+            e.preventDefault();
+            e.stopPropagation();
+            toggleConfirmation('delete', linodeId, linodeLabel);
+            closeMenu();
+          },
+          ...readOnlyProps
         }
       ];
 
       if (linodeStatus === 'offline') {
         actions.unshift({
           title: 'Power On',
-          disabled: noImage,
-          tooltip: noImage
-            ? 'An image needs to be added before powering on a Linode'
+          disabled: !hasMadeConfigsRequest || noConfigs || readOnly,
+          isLoading: !hasMadeConfigsRequest,
+          tooltip: this.state.configsError
+            ? 'Could not load configs for this Linode'
+            : noConfigs
+            ? 'A config needs to be added before powering on a Linode'
+            : readOnly
+            ? "You don't have permission to modify this Linode"
             : undefined,
           onClick: e => {
             sendEvent({
@@ -126,6 +197,10 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         actions.unshift(
           {
             title: 'Reboot',
+            disabled: readOnly,
+            tooltip: readOnly
+              ? "You don't have permission to modify this Linode."
+              : undefined,
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               sendEvent({
                 category: 'Linode Action Menu Item',
@@ -135,7 +210,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
               e.stopPropagation();
               toggleConfirmation('reboot', linodeId, linodeLabel);
               closeMenu();
-            }
+            },
+            ...readOnlyProps
           },
           {
             title: 'Power Off',
@@ -148,7 +224,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
               e.stopPropagation();
               toggleConfirmation('power_down', linodeId, linodeLabel);
               closeMenu();
-            }
+            },
+            ...readOnlyProps
           }
         );
       }
@@ -167,7 +244,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             });
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         });
       }
 
@@ -178,18 +256,33 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   render() {
     return (
       <ActionMenu
-        toggleOpenCallback={toggleOpenActionMenu}
+        toggleOpenCallback={this.toggleOpenActionMenu}
         createActions={this.createLinodeActions()}
       />
     );
   }
 }
 
-const toggleOpenActionMenu = () => {
-  sendEvent({
-    category: 'Linode Action Menu',
-    action: 'Open Action Menu'
-  });
-};
+interface StateProps {
+  readOnly: boolean;
+}
 
-export default withRouter(LinodeActionMenu);
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => ({
+  readOnly:
+    getPermissionsForLinode(
+      pathOr(null, ['__resources', 'profile', 'data'], state),
+      ownProps.linodeId
+    ) === 'read_only'
+});
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose<CombinedProps, Props>(
+  connected,
+  withRouter
+);
+
+export default enhanced(LinodeActionMenu);

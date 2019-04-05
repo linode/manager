@@ -23,7 +23,7 @@ export const setStorage = (key: string, value: string) => {
 
 const THEME = 'themeChoice';
 const SPACING = 'spacingChoice';
-const PAGE_SIZE = 'PAGE_SIZE'
+const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
@@ -33,6 +33,10 @@ const GROUP_DOMAINS = `GROUP_DOMAINS`;
 const GROUP_NODEBALANCERS = `GROUP_NODEBALANCERS`;
 const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
+const TOKEN = 'authentication/token';
+const NONCE = 'authentication/nonce';
+const SCOPES = 'authentication/scopes';
+const EXPIRE = 'authentication/expire';
 
 type Theme = 'dark' | 'light';
 export type Spacing = 'compact' | 'normal';
@@ -40,7 +44,18 @@ export type PageSize = number;
 type Beta = 'open' | 'closed';
 type LinodeView = 'grid' | 'list';
 
+interface AuthGetAndSet {
+  get: () => any;
+  set: (value: string) => void;
+}
+
 export interface Storage {
+  authentication: {
+    token: AuthGetAndSet;
+    nonce: AuthGetAndSet;
+    scopes: AuthGetAndSet;
+    expire: AuthGetAndSet;
+  };
   theme: {
     get: () => Theme;
     set: (theme: Theme) => void;
@@ -100,6 +115,24 @@ export interface Storage {
 }
 
 export const storage: Storage = {
+  authentication: {
+    token: {
+      get: () => getStorage(TOKEN),
+      set: v => setStorage(TOKEN, v)
+    },
+    nonce: {
+      get: () => getStorage(NONCE),
+      set: v => setStorage(NONCE, v)
+    },
+    scopes: {
+      get: () => getStorage(SCOPES),
+      set: v => setStorage(SCOPES, v)
+    },
+    expire: {
+      get: () => getStorage(EXPIRE),
+      set: v => setStorage(EXPIRE, v)
+    }
+  },
   theme: {
     get: () => getStorage(THEME, 'light'),
     set: v => setStorage(THEME, v)
@@ -110,7 +143,7 @@ export const storage: Storage = {
   },
   pageSize: {
     get: () => {
-      return parseInt(getStorage(PAGE_SIZE, '25'), 10)
+      return parseInt(getStorage(PAGE_SIZE, '25'), 10);
     },
     set: v => setStorage(PAGE_SIZE, `${v}`)
   },
@@ -164,8 +197,7 @@ export const storage: Storage = {
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
-  },
-  
+  }
 };
 
-export const { theme, spacing, notifications, views } = storage;
+export const { theme, notifications, views, authentication, spacing } = storage;

@@ -1,5 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
@@ -7,7 +8,7 @@ import {
 } from 'src/components/core/styles';
 // import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
@@ -33,7 +34,7 @@ interface Props {
   types: ExtendedType[];
   error?: string;
   onSelect: (key: string) => void;
-  selectedID: string | null;
+  selectedID?: string;
   selectedDiskSize?: number;
   currentPlanHeading?: string;
   disabled?: boolean;
@@ -176,6 +177,10 @@ export class SelectPlanPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-export default styled(
-  RenderGuard<Props & WithStyles<ClassNames>>(SelectPlanPanel)
-);
+export default compose<
+  Props & WithStyles<ClassNames>,
+  Props & RenderGuardProps
+>(
+  RenderGuard,
+  styled
+)(SelectPlanPanel);

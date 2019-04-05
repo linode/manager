@@ -48,7 +48,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
     return (
       <Paper className={classes.root}>
         <DocumentTitleSegment segment="Settings" />
-        <Typography role="header" variant="h2" className={classes.title}>
+        <Typography variant="h2" className={classes.title}>
           Notifications
         </Typography>
         <Grid container alignItems="center">

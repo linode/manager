@@ -415,7 +415,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             item
             xs={12}
           >
-            <Typography role="header" variant="h2" data-qa-active-checks-header>
+            <Typography variant="h2" data-qa-active-checks-header>
               Active Health Checks
             </Typography>
           </Grid>
@@ -618,11 +618,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       <Grid item xs={12} md={6}>
         <Grid updateFor={[checkPassive, classes]} container>
           <Grid item xs={12}>
-            <Typography
-              role="header"
-              variant="h2"
-              data-qa-passive-checks-header
-            >
+            <Typography variant="h2" data-qa-passive-checks-header>
               Passive Checks
             </Typography>
           </Grid>
@@ -689,10 +685,19 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       errors
     );
 
+    const globalFormError = hasErrorFor('none');
+
     return (
       <Grid item xs={12}>
         <Paper className={classes.root} data-qa-label-header>
           <div className={classes.inner}>
+            {globalFormError && (
+              <Notice
+                className={`error-for-scroll-${configIdx}`}
+                text={globalFormError}
+                error={true}
+              />
+            )}
             <Grid
               updateFor={[
                 port,
@@ -713,11 +718,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               container
             >
               <Grid item xs={12}>
-                <Typography
-                  role="header"
-                  variant="h2"
-                  data-qa-port-config-header
-                >
+                <Typography variant="h2" data-qa-port-config-header>
                   Port Configuration
                 </Typography>
               </Grid>
@@ -880,11 +881,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Grid updateFor={[nodeMessage, classes]} item xs={12}>
                   {nodeMessage && <Notice text={nodeMessage} success />}
                 </Grid>
-                <Typography
-                  role="header"
-                  variant="h2"
-                  data-qa-backend-ip-header
-                >
+                <Typography variant="h2" data-qa-backend-ip-header>
                   Backend Nodes
                 </Typography>
                 {hasErrorFor('nodes') && (
@@ -959,7 +956,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               {node.status && (
                                 <Grid item xs={6} sm={4} lg={2}>
                                   <Typography
-                                    role="header"
                                     variant="h3"
                                     data-qa-active-checks-header
                                     className={classes.statusHeader}

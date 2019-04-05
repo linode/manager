@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     maxWidth: '85%',
     marginTop: -theme.spacing.unit * 3,
     [theme.breakpoints.up('md')]: {
-      maxWidth: 500
+      maxWidth: 800
     }
   },
   icon: {
@@ -111,7 +111,11 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         </Typography>
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
-        <Typography variant="body1">{copy}</Typography>
+        {typeof copy === 'string' ? (
+          <Typography variant="subtitle1">{copy}</Typography>
+        ) : (
+          copy
+        )}
       </Grid>
       {buttonProps && (
         <Grid item xs={12} lg={10}>

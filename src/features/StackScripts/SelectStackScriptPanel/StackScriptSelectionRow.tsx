@@ -23,7 +23,7 @@ export interface Props {
   deploymentsActive: number;
   updated: string;
   disabledCheckedSelect?: boolean;
-  onSelect: (e: any | React.ChangeEvent<HTMLElement>, value: boolean) => void;
+  onSelect?: (e: React.ChangeEvent<HTMLElement>, value: boolean) => void;
   checked?: boolean;
   stackScriptID: number;
   stackScriptUsername: string;
@@ -67,7 +67,7 @@ export class StackScriptSelectionRow extends React.Component<
       };
       return (
         <React.Fragment>
-          <Typography role="header" variant="h3">
+          <Typography variant="h3">
             {stackScriptUsername && (
               <label
                 htmlFor={`${stackScriptID}`}
@@ -97,7 +97,7 @@ export class StackScriptSelectionRow extends React.Component<
       <React.Fragment>
         <TableRow
           data-qa-table-row={label}
-          rowLink={() => onSelect({}, !checked)}
+          rowLink={onSelect ? e => onSelect(e, !checked) : undefined}
         >
           <TableCell>
             <Radio
@@ -114,12 +114,12 @@ export class StackScriptSelectionRow extends React.Component<
             {renderLabel()}
           </TableCell>
           <TableCell>
-            <Typography role="header" variant="h3" data-qa-stackscript-deploys>
+            <Typography variant="h3" data-qa-stackscript-deploys>
               {deploymentsActive}
             </Typography>
           </TableCell>
           <TableCell>
-            <Typography role="header" variant="h3" data-qa-stackscript-revision>
+            <Typography variant="h3" data-qa-stackscript-revision>
               {updated}
             </Typography>
           </TableCell>

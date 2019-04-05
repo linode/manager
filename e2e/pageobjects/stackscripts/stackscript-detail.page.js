@@ -7,7 +7,7 @@ class StackScriptDetail extends Page {
     get stackScriptDeployments() { return $('[data-qa-stack-deployments]'); }
     get deployStackScriptButton() { return $('[data-qa-stack-deploy]'); }
     get stackScriptDescription() { return $('[data-qa-stack-description]'); }
-    get compatibleDistrobutions() { return $('[data-qa-compatible-distro]'); }
+    get compatibleDistributions() { return $('[data-qa-compatible-distro]'); }
     get stackScriptCode() { return $('[data-qa-script-code]'); }
     get stackScript() { return $$('[data-qa-script]'); }
 
@@ -28,7 +28,7 @@ class StackScriptDetail extends Page {
         this.stackScriptTitleElement.waitForVisible(constants.wait.normal);
         this.stackScriptAuthorElement.waitForVisible(constants.wait.normal);
         this.stackScriptDeployments.waitForVisible(constants.wait.normal);
-        this.compatibleDistrobutions.waitForVisible(constants.wait.normal);
+        this.compatibleDistributions.waitForVisible(constants.wait.normal);
         this.stackScriptCode.waitForVisible(constants.wait.normal);
     }
 
@@ -42,9 +42,9 @@ class StackScriptDetail extends Page {
         return $(`${selector}="${stackScriptAuthor}"]`);
     }
 
-    getStackScriptCompatibleDisrobutions(){
-        this.compatibleDistrobutions.waitForVisible(constants.wait.normal);
-        const distroListText = this.compatibleDistrobutions.getText();
+    getStackScriptCompatibleDistributions(){
+        this.compatibleDistributions.waitForVisible(constants.wait.normal);
+        const distroListText = this.compatibleDistributions.getText();
         const cleanText = distroListText.replace('Compatible with: ','');
         return cleanText.split(',').map(distro=> distro.trim());
     }

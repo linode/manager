@@ -63,10 +63,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& .react-select__menu': {
       marginTop: 12,
-      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      boxShadow: `0 0 10px ${theme.color.boxShadowDark}`,
       maxHeight: 350,
       overflowY: 'auto',
-      border: 0
+      border: 0,
+      borderRadius: 4
     }
   },
   navIconHide: {

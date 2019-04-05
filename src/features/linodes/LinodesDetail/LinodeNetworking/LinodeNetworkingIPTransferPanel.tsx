@@ -87,6 +87,7 @@ interface Props {
   linodeID: number;
   linodeRegion: string;
   ipAddresses: string[];
+  readOnly?: boolean;
   refreshIPs: () => Promise<void>;
 }
 
@@ -261,7 +262,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     renderLinodeSelect?: (s: Move) => JSX.Element,
     renderIPSelect?: (s: Swap) => JSX.Element
   ) => {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     return (
       <Grid container key={state.sourceIP}>
         <Grid item xs={12}>
@@ -280,6 +281,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             onChange={this.onModeChange(state.sourceIP)}
             fullWidth={false}
             data-qa-ip-transfer-action-menu
+            disabled={readOnly}
           >
             <MenuItem value="none">Select Action</MenuItem>
             <MenuItem value="move" data-qa-transfer-action="move">
@@ -297,11 +299,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   };
 
   linodeSelect = ({ mode, sourceIP, selectedLinodeID }: Move) => {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     return (
       <Grid item xs={12} className={classes.autoGridsm}>
         <Select
-          disabled={this.state.linodes.length === 1}
+          disabled={readOnly || this.state.linodes.length === 1}
           value={selectedLinodeID}
           onChange={this.onSelectedLinodeChange(sourceIP)}
           fullWidth={false}
@@ -317,11 +319,11 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   };
 
   ipSelect = ({ sourceIP, selectedIP, selectedLinodesIPs }: Swap) => {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     return (
       <Grid item xs={12} className={classes.autoGridsm}>
         <Select
-          disabled={selectedLinodesIPs.length === 1}
+          disabled={readOnly || selectedLinodesIPs.length === 1}
           value={selectedIP}
           fullWidth={false}
           onChange={this.onSelectedIPChange(sourceIP)}
@@ -483,13 +485,14 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
   };
 
   transferActions = () => {
+    const { readOnly } = this.props;
     return (
       <ActionsPanel>
         <Button
           loading={this.state.submitting}
           onClick={this.onSubmit}
           type="primary"
-          disabled={this.state.linodes.length === 0}
+          disabled={readOnly || this.state.linodes.length === 0}
           data-qa-ip-transfer-save
         >
           Save

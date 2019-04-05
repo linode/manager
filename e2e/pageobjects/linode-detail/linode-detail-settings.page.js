@@ -1,7 +1,7 @@
 const { constants } = require('../../constants');
 const {
     generatePassword,
-    getDistrobutionLabel,
+    getDistributionLabel
  } = require('../../utils/common')
 
 import Page from '../page';
@@ -82,7 +82,7 @@ class Settings extends Page {
         imageSelect.waitForVisible(constants.wait.normal);
         this.diskLabelInput.setValue(diskLabel);
         imageSelect.click();
-        const displayImage = getDistrobutionLabel([imageId])[0];
+        const displayImage = getDistributionLabel([imageId])[0];
         imageSelect.setValue(displayImage);
         const imageSelection = `[data-qa-option="linode/${imageId}"]`;
         $(imageSelection).waitForVisible(constants.wait.normal);
@@ -118,8 +118,9 @@ class Settings extends Page {
     }
 
     remove() {
-        const linodeLabel = browser.getText('[data-qa-label]');
-        const confirmTitle = 'Confirm Deletion';
+        /** linode label sourced from the editable text H1 in the header */
+        const linodeLabel = browser.getText('[data-qa-editable-text]');
+        const confirmTitle = `Confirm Deletion of ${linodeLabel}`;
         const confirmContent = 'Deleting a Linode will result in permanent data loss. Are you sure?';
         this.delete.click();
         this.deleteDialogTitle.waitForText();

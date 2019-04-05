@@ -10,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import LinodePermissionsError from '../LinodePermissionsError';
 import RebuildFromImage from './RebuildFromImage';
 import RebuildFromStackScript from './RebuildFromStackScript';
 
@@ -26,17 +27,23 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface ContextProps {
   linodeLabel: string;
+  permissions: Linode.GrantLevel;
 }
 type CombinedProps = WithStyles<ClassNames> & ContextProps;
 
-type MODES = 'fromImage' | 'fromStackScript';
+type MODES =
+  | 'fromImage'
+  | 'fromCommunityStackScript'
+  | 'fromAccountStackScript';
 const options = [
   { value: 'fromImage', label: 'From Image' },
-  { value: 'fromStackScript', label: 'From StackScript' }
+  { value: 'fromCommunityStackScript', label: 'From Community StackScript' },
+  { value: 'fromAccountStackScript', label: 'From Account StackScript' }
 ];
 
 const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, linodeLabel } = props;
+  const { classes, linodeLabel, permissions } = props;
+  const disabled = permissions === 'read_only';
 
   const [mode, setMode] = React.useState<MODES>('fromImage');
 
@@ -44,6 +51,7 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
     <React.Fragment>
       <DocumentTitleSegment segment={`${linodeLabel} - Rebuild`} />
       <Paper className={classes.root}>
+        {disabled && <LinodePermissionsError />}
         <Typography
           role="header"
           variant="h2"
@@ -63,16 +71,23 @@ const LinodeRebuild: React.StatelessComponent<CombinedProps> = props => {
           defaultValue={options[0]}
           onChange={(selected: Item<MODES>) => setMode(selected.value)}
           isClearable={false}
+          disabled={disabled}
         />
       </Paper>
       {mode === 'fromImage' && <RebuildFromImage />}
-      {mode === 'fromStackScript' && <RebuildFromStackScript />}
+      {mode === 'fromCommunityStackScript' && (
+        <RebuildFromStackScript type="community" />
+      )}
+      {mode === 'fromAccountStackScript' && (
+        <RebuildFromStackScript type="account" />
+      )}
     </React.Fragment>
   );
 };
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeLabel: linode.label
+  linodeLabel: linode.label,
+  permissions: linode._permissions
 }));
 
 const styled = withStyles(styles);

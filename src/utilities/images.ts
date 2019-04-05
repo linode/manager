@@ -14,6 +14,7 @@ import {
 } from 'ramda';
 
 export const distroIcons = {
+  Alpine: 'alpine',
   Arch: 'archlinux',
   CentOS: 'centos',
   CoreOS: 'coreos',

@@ -27,11 +27,6 @@ import App from './App';
 import './events';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
-import {
-  initialize as sessionInitialize,
-  refreshOAuthOnUserInteraction,
-  refreshOAuthToken
-} from './session';
 
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish')
@@ -67,12 +62,6 @@ createBrowserHistory().listen(({ pathname }) => {
   }
 });
 
-sessionInitialize();
-if (!isPathOneOf(['/oauth', '/null', '/login'], window.location.pathname)) {
-  refreshOAuthToken();
-}
-refreshOAuthOnUserInteraction();
-
 const renderNullAuth = () => <span>null auth route</span>;
 
 const renderNull = () => <span>null route</span>;
@@ -102,16 +91,18 @@ const renderApp = (props: RouteProps) => (
 );
 
 const renderAuthentication = () => (
-  <AuthenticationWrapper>
-    <Switch>
-      <Route path="/linodes/:linodeId/lish" render={renderLish} />
-      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-      <Route exact path="/nullauth" render={renderNullAuth} />
-      <Route exact path="/logout" component={Logout} />
-      <Route render={renderApp} />
-    </Switch>
-  </AuthenticationWrapper>
+  <Switch>
+    <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+    {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+    <Route exact path="/nullauth" render={renderNullAuth} />
+    <Route exact path="/logout" component={Logout} />
+    <AuthenticationWrapper>
+      <Switch>
+        <Route path="/linodes/:linodeId/lish" render={renderLish} />
+        <Route render={renderApp} />
+      </Switch>
+    </AuthenticationWrapper>
+  </Switch>
 );
 
 ReactDOM.render(

@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type onClickFn = (e: React.MouseEvent<HTMLElement>) => void;
+type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
 interface Props {
   rowLink?: string | onClickFn;
@@ -45,30 +45,33 @@ type CombinedProps = Props &
   WithStyles<ClassNames>;
 
 class TableRow extends React.Component<CombinedProps> {
-  rowClick = (e: any, target: string | onClickFn) => {
+  rowClick = (
+    e: React.ChangeEvent<HTMLTableRowElement>,
+    target: string | onClickFn
+  ) => {
     const body = document.body as any;
     // Inherit the ROW click unless the element is a <button> or an <a> or is contained within them
     const isButton =
       e.target.tagName === 'BUTTON' || e.target.closest('button');
     const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
-    const hasButtonRole =
-      e.target.querySelector('[role="button"]') ||
-      e.target.closest('[role="button"]');
+    // const hasButtonRole =
+    //   e.target.querySelector('[role="button"]') ||
+    //   e.target.closest('[role="button"]');
 
     if (
       body.getAttribute('style') === null ||
       body.getAttribute('style').indexOf('overflow: hidden') !== 0 ||
       body.getAttribute('style') === ''
     ) {
-      if (!isButton && !isAnchor && !hasButtonRole) {
+      if (!isButton && !isAnchor) {
         e.stopPropagation();
         if (typeof target === 'string') {
           this.props.history.push(target);
           // return if a modal is open
         }
-      }
-      if (typeof target === 'function') {
-        target(e);
+        if (typeof target === 'function') {
+          target(e);
+        }
       }
     }
   };
@@ -76,11 +79,23 @@ class TableRow extends React.Component<CombinedProps> {
   render() {
     const { classes, className, rowLink, staticContext, ...rest } = this.props;
 
+    let role;
+    switch (typeof rowLink) {
+      case 'string':
+        role = 'link';
+        break;
+      case 'function':
+        role = 'button';
+        break;
+      default:
+        role = undefined;
+    }
+
     return (
       <_TableRow
-        onClick={e => rowLink && this.rowClick(e, rowLink)}
+        onClick={(e: any) => rowLink && this.rowClick(e, rowLink)}
         hover={rowLink !== undefined}
-        role={rowLink && 'link'}
+        role={role}
         className={classNames(className, {
           [classes.root]: true
         })}

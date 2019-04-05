@@ -17,7 +17,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props extends TagProps {
   tagLabel: string;
   loading: boolean;
-  onDelete: (tag: string) => void;
+  onDelete?: (tag: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -47,12 +47,12 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { tagLabel, loading, ...restOfProps } = this.props;
+    const { tagLabel, loading, onDelete, ...restOfProps } = this.props;
     return (
       <Tag
         {...restOfProps}
         deleteIcon={this.renderIcon()}
-        onDelete={this.handleDelete}
+        onDelete={onDelete ? this.handleDelete : undefined}
         component={'button' as 'div'}
         colorVariant="lightBlue"
       />

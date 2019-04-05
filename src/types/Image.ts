@@ -10,5 +10,6 @@ namespace Linode {
     created_by: null | string;
     vendor: string | null;
     deprecated: Boolean;
+    expiry: null | string;
   }
 }

@@ -16,6 +16,7 @@ import { changeLinodeDiskPassword, getLinodeDisks } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
+import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root';
 
@@ -42,7 +43,11 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+
+interface ContextProps {
+  permissions: Linode.GrantLevel;
+}
 
 class LinodeSettingsPasswordPanel extends React.Component<
   CombinedProps,
@@ -99,7 +104,8 @@ class LinodeSettingsPasswordPanel extends React.Component<
 
   renderExpansionActions = () => {
     const { submitting } = this.state;
-    const { linodeStatus } = this.props;
+    const { linodeStatus, permissions } = this.props;
+    const disabled = permissions === 'read_only';
 
     return (
       <ActionsPanel>
@@ -107,7 +113,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           type="primary"
           onClick={this.changeDiskPassword}
           loading={submitting}
-          disabled={linodeStatus !== 'offline' || submitting}
+          disabled={disabled || linodeStatus !== 'offline' || submitting}
           data-qa-password-save
           tooltipText={
             linodeStatus !== 'offline'
@@ -192,7 +198,9 @@ class LinodeSettingsPasswordPanel extends React.Component<
 
   render() {
     const { diskId, disks, disksError, disksLoading } = this.state;
+    const { permissions } = this.props;
     const selectedDisk = diskId ? this.getSelectedDisk(diskId) : null;
+    const disabled = permissions === 'read_only';
 
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const passwordError = hasErrorFor('password');
@@ -217,6 +225,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           onInputChange={this.onInputChange}
           value={selectedDisk}
           data-qa-select-linode
+          disabled={disabled}
         />
         <PasswordInput
           autoComplete="new-password"
@@ -227,6 +236,12 @@ class LinodeSettingsPasswordPanel extends React.Component<
           errorGroup="linode-settings-password"
           error={Boolean(passwordError)}
           data-qa-password-input
+          disabled={disabled}
+          disabledReason={
+            disabled
+              ? "You don't have permissions to modify this Linode"
+              : undefined
+          }
         />
       </ExpansionPanel>
     );
@@ -235,9 +250,14 @@ class LinodeSettingsPasswordPanel extends React.Component<
 
 const styled = withStyles(styles);
 
+const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
+  permissions: linode._permissions
+}));
+
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
 export default compose(
   errorBoundary,
+  linodeContext,
   styled
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

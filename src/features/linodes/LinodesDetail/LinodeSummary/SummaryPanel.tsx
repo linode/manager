@@ -8,6 +8,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
@@ -98,18 +99,14 @@ class SummaryPanel extends React.Component<CombinedProps> {
       linodeIpv4,
       linodeIpv6,
       backupsEnabled,
-      mostRecentBackup
+      mostRecentBackup,
+      readOnly
     } = this.props;
 
     return (
       <div className={classes.root}>
         <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             Linode Details
           </Typography>
           <div className={classes.section}>{this.renderImage()}</div>
@@ -133,12 +130,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <LinodeNetSummary linodeId={linodeId} />
         </Paper>
         <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             IP Addresses
           </Typography>
           <div className={classes.section}>
@@ -151,12 +143,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           )}
         </Paper>
         <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             Last Backup
           </Typography>
           <BackupStatus
@@ -166,15 +153,22 @@ class SummaryPanel extends React.Component<CombinedProps> {
           />
         </Paper>
         <Paper className={classes.summarySection}>
-          <Typography
-            role="header"
-            variant="h3"
-            className={classes.title}
-            data-qa-title
-          >
+          <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
+          {readOnly ? (
+            <Tooltip title="You don't have permission to modify this Linode">
+              <div>
+                <TagsPanel
+                  tags={linodeTags}
+                  updateTags={this.updateTags}
+                  disabled
+                />
+              </div>
+            </Tooltip>
+          ) : (
+            <TagsPanel tags={linodeTags} updateTags={this.updateTags} />
+          )}
         </Paper>
       </div>
     );
@@ -197,6 +191,7 @@ interface LinodeContextProps {
   mostRecentBackup: string | null;
   linodeVolumes: Linode.Volume[];
   backupsEnabled: boolean;
+  readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -207,7 +202,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeTags: linode.tags,
   linodeId: linode.id,
   backupsEnabled: linode.backups.enabled,
-  linodeVolumes: linode._volumes
+  linodeVolumes: linode._volumes,
+  readOnly: linode._permissions === 'read_only'
 }));
 
 const enhanced = compose<CombinedProps, {}>(

@@ -35,6 +35,7 @@ export default class Page {
     get tags() { return $$('[data-qa-tag]'); }
     get addTag() { return $('[data-qa-add-tag]'); }
     get deleteTag() { return $('[data-qa-delete-tag]'); }
+    get totalTags() { return $('[data-qa-total-tags]'); }
     get helpButton() { return $('[data-qa-help-button]'); }
     get tagsMultiSelect() { return $('[data-qa-multi-select="Type to choose or create a tag."]'); }
     get popoverMsg() { return $('[role="tooltip"]'); }
@@ -58,8 +59,16 @@ export default class Page {
     get groupByTagsToggle() { return $$('span').find(it => it.getText().includes('Group by Tag')).$('..'); }
     get tagHeaderSelector() { return 'data-qa-tag-header'; }
     get tagHeaders() { return $$(`[${this.tagHeaderSelector}]`); }
+    get toolTipIcon() { return $('[data-qa-tooltip-icon]'); }
+    get toolTipMessage() { return $('[data-qa-tooltip]'); }
     get enterKey() { return '\uE007'; }
     get upArrowKey() { return '\ue013'; }
+
+    //Shared in create linode and rebuild flow
+    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
+    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
+    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
+    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
 
     logout() {
         this.userMenu.waitForVisible(constants.wait.normal);
@@ -126,10 +135,10 @@ export default class Page {
             const noticeMsgDisplays = $$('[data-qa-notice]')
                 .filter(n => !!n.getText().match(noticeRegex));
 
-            if (opposite) {
-                return noticeMsgDisplays.length === 0;
-            }
-
+                if (opposite) {
+                    return noticeMsgDisplays.length === 0;
+                }
+                
             return noticeMsgDisplays.length > 0;
         }, timeout, `${noticeMsg} failed to display after ${timeout}ms`);
     }
@@ -157,19 +166,21 @@ export default class Page {
     }
 
     openActionMenu(actionMenuRow) {
-        actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
+        browser.waitForVisible(`${actionMenuRow.selector} ${this.actionMenu.selector}`, constants.wait.normal);
+        // actionMenuRow.$(this.actionMenu.selector).waitForVisible(constants.wait.normal);
         try {
           actionMenuRow.$(this.actionMenu.selector).click();
           browser.waitUntil(() => {
               return $$('[data-qa-action-menu-item]').length > 0;
-          },constants.wait.normal);
+          }, constants.wait.normal, "Menu items failed to show up");
         } catch (e) {
-            if ( e.Error ){
-                actionMenuRow.$(this.actionMenu.selector).click();
+                /* Our attempt clicking the action menu bombed, most likely because some
+                // Element in the UI is covering it. JS Click to force the click instead
+                */
+                browser.jsClick(`${actionMenuRow.selector} ${this.actionMenu.selector}`);
                 browser.waitUntil(() => {
                     return $$('[data-qa-action-menu-item]').length > 0;
-                },constants.wait.normal);
-            }
+                }, constants.wait.normal, "Menu items failed to show up");
         }
     }
 
@@ -268,6 +279,6 @@ export default class Page {
     tagGroupsInAlphabeticalOrder(tags){
         const tagHeaders = this.tagHeaders
             .map(header => header.getAttribute(this.tagHeaderSelector));
-        expect(tagHeaders).toEqual(tags.sort());
+        expect(tagHeaders).toEqual(tagHeaders.sort());
     }
 }

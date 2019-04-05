@@ -36,6 +36,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
             backupsCTA={false}
+            deleteLinode={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
@@ -63,6 +64,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
             backupsCTA={false}
+            deleteLinode={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
@@ -95,6 +97,7 @@ describe('ListLinodes', () => {
             setDocs={setDocs}
             toggleGroupByTag={jest.fn()}
             backupsCTA={false}
+            deleteLinode={jest.fn()}
           />
         </StaticRouter>
       </LinodeThemeWrapper>

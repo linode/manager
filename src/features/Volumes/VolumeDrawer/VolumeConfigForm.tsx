@@ -82,7 +82,7 @@ const VolumeConfigDrawer: React.StatelessComponent<CombinedProps> = props => {
           className={classes.copyField}
           value={`${props.volumePath} /mnt/${
             props.volumeLabel
-          } ext4 defaults,noatime 0 2`}
+          } ext4 defaults,noatime,nofail 0 2`}
           data-qa-boot-mount
         />
       </div>

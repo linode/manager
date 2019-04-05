@@ -7,6 +7,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
+import LinodePermissionsError from '../LinodePermissionsError';
 import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
@@ -35,11 +36,16 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
           return null;
         }
 
+        const permissionsError =
+          linode._permissions === 'read_only' ? (
+            <LinodePermissionsError />
+          ) : null;
+
         return (
           <React.Fragment>
             <DocumentTitleSegment segment={`${linode.label} - Settings`} />
+            {permissionsError}
             <Typography
-              role="header"
               variant="h2"
               className={classes.title}
               data-qa-settings-header
@@ -62,7 +68,10 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
               currentStatus={linode.watchdog_enabled}
             />
             <LinodeAdvancedConfigurationsPanel />
-            <LinodeSettingsDeletePanel linodeId={linode.id} />
+            <LinodeSettingsDeletePanel
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+            />
           </React.Fragment>
         );
       }}

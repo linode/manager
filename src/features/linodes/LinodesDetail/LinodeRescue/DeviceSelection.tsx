@@ -35,12 +35,21 @@ interface Props {
   counter?: number;
   slots: string[];
   rescue?: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
-  const { devices, onChange, getSelected, slots, rescue, classes } = props;
+  const {
+    devices,
+    onChange,
+    getSelected,
+    slots,
+    rescue,
+    classes,
+    disabled
+  } = props;
 
   const counter = defaultTo(0, props.counter);
 
@@ -57,6 +66,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
               htmlFor={`rescueDevice_${slot}`}
               disableAnimation
               shrink={true}
+              disabled={disabled}
             >
               /dev/{slot}
             </InputLabel>
@@ -68,6 +78,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
                 name: `rescueDevice_${slot}`,
                 id: `rescueDevice_${slot}`
               }}
+              disabled={disabled}
             >
               <MenuItem value="none">None</MenuItem>
               {Object.entries(devices).map(([type, items]) => [
@@ -95,6 +106,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
             htmlFor={`rescueDevice_sdh`}
             disableAnimation
             shrink={true}
+            disabled={disabled}
           >
             /dev/sdh
           </InputLabel>

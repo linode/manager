@@ -27,7 +27,12 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { cloneDomain } from 'src/services/domains';
 import { ApplicationState } from 'src/store';
-import { CLONING, CREATING, resetDrawer } from 'src/store/domainDrawer';
+import {
+  CLONING,
+  CREATING,
+  EDITING,
+  resetDrawer
+} from 'src/store/domainDrawer';
 import {
   DomainActionsProps,
   withDomainActions
@@ -36,12 +41,15 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'masterIPErrorNotice';
+type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   masterIPErrorNotice: {
     marginTop: theme.spacing.unit * 2
+  },
+  addIP: {
+    left: -theme.spacing.unit * 2 + 3
   }
 });
 
@@ -79,7 +87,7 @@ const masterIPsCountLens = lensPath(['masterIPsCount']);
 const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) =>
   over(masterIPsCountLens, fn, obj);
 
-class DomainCreateDrawer extends React.Component<CombinedProps, State> {
+class DomainDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   defaultState: State = {
     domain: '',
@@ -112,6 +120,31 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     ) {
       this.setState({ domain: this.props.domain || '' });
     }
+
+    if (
+      this.props.domainProps && // there are domain props for an update and ...
+      (!prevProps.domainProps || // it just appeared
+        prevProps.domainProps.id !== this.props.domainProps.id)
+    ) {
+      // or the domain for editing has changed
+
+      // then put it props into state to populate fields
+      const {
+        domain,
+        tags,
+        master_ips,
+        type,
+        soa_email
+      } = this.props.domainProps;
+      this.setState({
+        tags: tags.map(tag => ({ label: tag, value: tag })),
+        masterIPsCount: master_ips.length,
+        type,
+        domain,
+        master_ips,
+        soaEmail: soa_email
+      });
+    }
   }
 
   render() {
@@ -131,8 +164,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     const generalError = errorFor('none');
     const masterIPsError = errorFor('master_ips');
 
+    const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
+
     return (
-      <Drawer title="Add a new Domain" open={open} onClose={this.closeDrawer}>
+      <Drawer title={title} open={open} onClose={this.closeDrawer}>
         {generalError && !disabled && (
           <Notice error spacingTop={8}>
             {generalError}
@@ -159,18 +194,20 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             label="Master"
             control={<Radio />}
             data-qa-domain-radio="Master"
-            disabled={disabled}
+            disabled={mode === EDITING || disabled}
           />
           <FormControlLabel
             value="slave"
             label="Slave"
             control={<Radio />}
             data-qa-domain-radio="Slave"
-            disabled={disabled}
+            disabled={mode === EDITING || disabled}
           />
         </RadioGroup>
         <TextField
-          errorText={(mode === CREATING || '') && errorFor('domain')}
+          errorText={
+            (mode === CREATING || mode === EDITING || '') && errorFor('domain')
+          }
           value={domain}
           disabled={mode === CLONING || disabled}
           label="Domain"
@@ -187,7 +224,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {mode === CREATING && type === 'master' && (
+        {(mode === CREATING || mode === EDITING) && type === 'master' && (
           <TextField
             errorText={errorFor('soa_email')}
             value={soaEmail}
@@ -197,7 +234,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {mode === CREATING && type === 'slave' && (
+        {(mode === CREATING || mode === EDITING) && type === 'slave' && (
           <React.Fragment>
             {masterIPsError && (
               <Notice
@@ -219,9 +256,9 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
             ))}
             <AddNewLink
               onClick={this.addIPField}
+              className={classes.addIP}
               label="Add IP"
               data-qa-add-master-ip-field
-              left
               disabled={disabled}
             />
           </React.Fragment>
@@ -240,7 +277,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
               data-qa-submit
               disabled={disabled}
             >
-              Create
+              {mode === EDITING ? 'Update' : 'Create'}
             </Button>
           ) : (
             <Button type="secondary" disabled className="loading">
@@ -304,7 +341,11 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        this.redirect(domainData.id || '');
+        if (type === 'master' && domainData.id) {
+          this.redirect(domainData.id);
+        } else {
+          this.redirect('');
+        }
         this.closeDrawer();
       })
       .catch(err => {
@@ -324,10 +365,10 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
   };
 
   clone = () => {
-    const { cloneId } = this.props;
+    const { id } = this.props;
     const { cloneName } = this.state;
 
-    if (!cloneId) {
+    if (!id) {
       this.closeDrawer();
       this.props.enqueueSnackbar('Error cloning domain', {
         variant: 'error'
@@ -336,7 +377,7 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
     }
 
     this.setState({ submitting: true });
-    cloneDomain(cloneId, cloneName)
+    cloneDomain(id, cloneName)
       .then(data => {
         if (!this.mounted) {
           return;
@@ -360,11 +401,70 @@ class DomainCreateDrawer extends React.Component<CombinedProps, State> {
       });
   };
 
+  update = () => {
+    const { domain, type, soaEmail, master_ips } = this.state;
+    const { domainActions, id } = this.props;
+    const tags = this.state.tags.map(tag => tag.value);
+
+    if (!id) {
+      // weird case if the id was not passed
+      this.closeDrawer();
+      return;
+    }
+
+    const finalMasterIPs = master_ips.filter(v => v !== '');
+
+    if (type === 'slave' && finalMasterIPs.length === 0) {
+      this.setState({
+        submitting: false,
+        errors: [
+          {
+            field: 'master_ips',
+            reason: 'You must provide at least one Master Nameserver IP Address'
+          }
+        ]
+      });
+      return;
+    }
+
+    const data =
+      type === 'master'
+        ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
+          { domain, tags, soa_email: soaEmail, domainId: id }
+        : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
+
+    this.setState({ submitting: true });
+    domainActions
+      .updateDomain(data)
+      .then((domainData: Linode.Domain) => {
+        if (!this.mounted) {
+          return;
+        }
+        this.closeDrawer();
+      })
+      .catch(err => {
+        if (!this.mounted) {
+          return;
+        }
+        this.setState(
+          {
+            submitting: false,
+            errors: getAPIErrorOrDefault(err)
+          },
+          () => {
+            scrollErrorIntoView();
+          }
+        );
+      });
+  };
+
   submit = () => {
     if (this.props.mode === CREATING) {
       this.create();
     } else if (this.props.mode === CLONING) {
       this.clone();
+    } else if (this.props.mode === EDITING) {
+      this.update();
     }
   };
 
@@ -408,21 +508,34 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) =>
   bindActionCreators({ resetDrawer }, dispatch);
 
 interface StateProps {
-  mode: typeof CLONING | typeof CREATING;
+  mode: typeof CLONING | typeof CREATING | typeof EDITING;
   open: boolean;
   domain?: string;
-  cloneId?: number;
+  domainProps?: Linode.Domain;
+  id?: number;
   disabled: boolean;
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
-  open: pathOr(false, ['domainDrawer', 'open'], state),
-  domain: path(['domainDrawer', 'domain'], state),
-  cloneId: path(['domainDrawer', 'cloneId'], state),
-  // disabled if the profile is restricted and doesn't have add_domains grant
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains')
-});
+const mapStateToProps = (state: ApplicationState) => {
+  const id = path(['domainDrawer', 'id'], state);
+  const domainEntities = pathOr(
+    [],
+    ['__resources', 'domains', 'entities'],
+    state
+  );
+  const domainProps = domainEntities.find(
+    (domain: Linode.Domain) => domain.id === path(['domainDrawer', 'id'], state)
+  );
+  return {
+    mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),
+    open: pathOr(false, ['domainDrawer', 'open'], state),
+    domain: path(['domainDrawer', 'domain'], state),
+    domainProps,
+    id,
+    // disabled if the profile is restricted and doesn't have add_domains grant
+    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains')
+  };
+};
 
 const connected = connect(
   mapStateToProps,
@@ -435,4 +548,4 @@ export default compose<CombinedProps, {}>(
   connected,
   withRouter,
   withSnackbar
-)(DomainCreateDrawer);
+)(DomainDrawer);

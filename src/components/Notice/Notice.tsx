@@ -158,7 +158,7 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
       {...typeProps}
       component="div"
       onClick={onClick}
-      className={classes.noticeText}
+      className={`${classes.noticeText} noticeText`}
     >
       {text && text}
       {children && children}

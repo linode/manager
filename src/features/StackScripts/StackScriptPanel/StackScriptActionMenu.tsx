@@ -1,7 +1,12 @@
+import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import withProfile from 'src/containers/profile.container';
+
+import { getStackScriptUrl } from '../stackScriptUtils';
 
 interface Props {
   stackScriptID: number;
@@ -12,6 +17,8 @@ interface Props {
   canDelete: boolean;
   canEdit: boolean;
   isPublic: boolean;
+  // From Profile HOC
+  username?: string;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
@@ -28,7 +35,8 @@ const StackScriptActionMenu: React.StatelessComponent<
     stackScriptLabel,
     canDelete,
     canEdit,
-    isPublic
+    isPublic,
+    username
   } = props;
 
   const createActions = () => {
@@ -38,8 +46,7 @@ const StackScriptActionMenu: React.StatelessComponent<
           title: 'Deploy New Linode',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(
-              `/linodes/create?type=fromStackScript` +
-                `&stackScriptID=${stackScriptID}&stackScriptUsername=${stackScriptUsername}`
+              getStackScriptUrl(stackScriptUsername, stackScriptID, username)
             );
             e.preventDefault();
           }
@@ -83,4 +90,14 @@ const StackScriptActionMenu: React.StatelessComponent<
   return <ActionMenu createActions={createActions()} />;
 };
 
-export default withRouter(StackScriptActionMenu);
+const enhanced = compose<CombinedProps, Props>(
+  withRouter,
+  withProfile((ownProps, profile) => {
+    return {
+      ...ownProps,
+      username: path(['username'], profile)
+    };
+  })
+);
+
+export default enhanced(StackScriptActionMenu);

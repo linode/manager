@@ -2,20 +2,12 @@ require('dotenv').config();
 
 const { readFileSync, unlinkSync } = require('fs');
 const { argv } = require('yargs');
-const {
-    login,
-    generateCreds,
-    checkoutCreds,
-    checkInCreds,
-    removeCreds,
-    cleanupAccounts,
-} = require('../utils/config-utils');
 
-const { resetAccounts } = require('../setup/cleanup');
+const FSCredStore = require('../utils/fs-cred-store');
+const MongoCredStore = require('../utils/mongo-cred-store')
 
 const { browserCommands } = require('./custom-commands');
 const { browserConf } = require('./browser-config');
-const { constants } = require('../constants');
 const { keysIn } = require('lodash');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
 
@@ -51,6 +43,24 @@ const getRunnerCount = () => {
 }
 
 const parallelRunners = getRunnerCount();
+console.log("parallel runners: " + parallelRunners);
+
+// NOTE: credStore provides a promise-based API.  In order to work correctly with WDIO, any calls in
+// lifecycle methods *other than* onPrepare and onComplete should be wrapped using WDIO's browser.call
+// method.  This blocks execution until any promises within the function passed to call are resolved.
+// See more at:
+//   https://webdriver.io/docs/api/browser/call.html
+//
+// to use mongo cred store, set MONGO_HOST to either localhost (e.g., for local testing) or mongodb (for docker)
+// if it's not set the filesystem cred store will be used
+let CRED_STORE_MODE = 'fs'
+
+if (process.env.CRED_STORE_MODE == 'mongodb') {
+    CRED_STORE_MODE = process.env.CRED_STORE_MODE;
+}
+
+console.log("Cred store mode set to: " + CRED_STORE_MODE);
+const credStore = CRED_STORE_MODE == 'mongodb' ? new MongoCredStore(CRED_STORE_MODE) : new FSCredStore('./e2e/creds.js');
 
 exports.config = {
     // Selenium Host/Port
@@ -106,7 +116,7 @@ exports.config = {
     sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: argv.logLevel ? argv.logLevel : 'silent',
+    logLevel: argv.logLevel ? argv.logLevel : 'error',
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -135,7 +145,7 @@ exports.config = {
     connectionRetryTimeout: 90000,
     //
     // Default request retries count
-    connectionRetryCount: 3,
+    connectionRetryCount: 10,
     //
     // Initialize the browser instance with a WebdriverIO plugin. The object should have the
     // plugin name as key and the desired plugin options as properties. Make sure you have
@@ -183,14 +193,15 @@ exports.config = {
     jasmineNodeOpts: {
         //
         // Jasmine default timeout
-        defaultTimeoutInterval: 60000 * 60,
+        defaultTimeoutInterval: 60000 * 10,
         //
         // The Jasmine framework allows interception of each assertion in order to log the state of the application
         // or website depending on the result. For example, it is pretty handy to take a screenshot every time
         // an assertion fails.
         expectationResultHandler: function(passed, assertion) {
             // do something
-        }
+        },
+        stopOnSpecFailure: true
     },
 
     mountebankConfig: {
@@ -204,6 +215,7 @@ exports.config = {
     },
 
     testUser: '', // SET IN THE BEFORE HOOK PRIOR TO EACH TEST
+
     //
     // =====
     // Hooks
@@ -218,8 +230,9 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities, user) {
-        // Generate our temporary test credentials file
-        generateCreds('./e2e/creds.js', config, parallelRunners);
+        console.log("onPrepare");
+        // Generate temporary test credentials and store for use across tests
+        credStore.generateCreds(config, parallelRunners);
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -264,12 +277,23 @@ exports.config = {
             browser.windowHandleMaximize();
         }
 
-        /* Get test credentials from temporary creds file
-           Set "inUse:true" for account under test
-        */
-        const testCreds = checkoutCreds('./e2e/creds.js', specs[0]);
+        // inject browser object into credstore for login and a few other functions
+        credStore.setBrowser(browser);
 
-        login(testCreds.username, testCreds.password, './e2e/creds.js');
+        // inject credStore into browser so it can be easily accessed from test cases
+        // and utility code
+        browser.credStore = credStore;
+
+        let creds = null;
+        browser.call(() => {
+            return credStore.checkoutCreds(specs[0])
+            .then((testCreds) => {
+                creds = testCreds;
+            }).catch((err) => console.log(err));
+        });
+        console.log("creds are");
+        console.log(creds);
+        credStore.login(creds.username, creds.password, false);
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -347,7 +371,9 @@ exports.config = {
         }
 
         // Set "inUse:false" on the account under test in the credentials file
-        checkInCreds('./e2e/creds.js', specs[0]);
+        browser.call(
+            () => credStore.checkinCreds(specs[0]).then((creds) => console.log(creds))
+        );
     },
     /**
      * Gets executed right after terminating the webdriver session.
@@ -364,13 +390,9 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
-        // Run delete all, on every test account
-
-        /* We wait an arbitrary amount of time here for linodes to be removed
-           Otherwise, attempting to remove attached volumes will fail
-        */
-        return resetAccounts(JSON.parse(readFileSync('./e2e/creds.js')), './e2e/creds.js')
-            .then(res => resolve(res))
-            .catch(error => console.error('Error:', error));
-    } 
+        console.log("onComplete");
+        // delete all data created during the test and remove test credentials from
+        // the underlying store
+        return credStore.cleanupAccounts();
+    }
 }

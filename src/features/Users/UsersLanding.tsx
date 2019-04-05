@@ -237,12 +237,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Users" />
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography
-              role="header"
-              variant="h2"
-              data-qa-title
-              className={classes.title}
-            >
+            <Typography variant="h2" data-qa-title className={classes.title}>
               Users
             </Typography>
           </Grid>

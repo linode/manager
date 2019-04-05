@@ -1,4 +1,4 @@
-import { compose, lensPath, set } from 'ramda';
+import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -9,12 +9,14 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import TextField from 'src/components/TextField';
 import {
   UpdateLinode,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -43,22 +45,28 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
 
   changeLabel = () => {
     const { updateLinode } = this.props;
-    this.setState(set(lensPath(['submitting']), true));
-    this.setState(set(lensPath(['success']), undefined));
-    this.setState(set(lensPath(['errors']), undefined));
+    this.setState({
+      submitting: true,
+      success: undefined,
+      errors: undefined
+    });
 
     updateLinode({ label: this.state.updatedValue })
       .then(linode => {
-        this.setState(
-          compose(
-            set(lensPath(['success']), `Linode label changed successfully.`),
-            set(lensPath(['submitting']), false)
-          )
-        );
+        this.setState({
+          success: 'Linode label changed successfully.',
+          submitting: false
+        });
       })
       .catch(error => {
         this.setState(
-          set(lensPath(['errors']), error.response.data.errors),
+          {
+            submitting: false,
+            errors: getAPIErrorOrDefault(
+              error,
+              'An error occured while updating label'
+            )
+          },
           () => {
             scrollErrorIntoView('linode-settings-label');
           }
@@ -70,6 +78,16 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const labelError = hasErrorFor('label');
     const { submitting } = this.state;
+    const { permissions } = this.props;
+    const disabled = permissions === 'read_only';
+    const genericError =
+      this.state.errors &&
+      !labelError &&
+      pathOr(
+        'An error occured while updating label',
+        [0, 'reason'],
+        this.state.errors
+      );
 
     return (
       <ExpansionPanel
@@ -80,7 +98,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
             <Button
               onClick={this.changeLabel}
               type="primary"
-              disabled={submitting && !labelError}
+              disabled={disabled || (submitting && !labelError)}
               loading={submitting && !labelError}
               data-qa-label-save
             >
@@ -89,6 +107,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           </ActionsPanel>
         )}
       >
+        {genericError && <Notice error text={genericError} />}
         <TextField
           label="Label"
           value={this.state.updatedValue}
@@ -99,6 +118,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           errorGroup="linode-settings-label"
           error={Boolean(labelError)}
           data-qa-label
+          disabled={disabled}
         />
       </ExpansionPanel>
     );
@@ -112,11 +132,13 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 interface ContextProps {
   linodeLabel: string;
   updateLinode: UpdateLinode;
+  permissions: Linode.GrantLevel;
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(
   ({ linode, updateLinode }) => ({
     linodeLabel: linode.label,
+    permissions: linode._permissions,
     updateLinode
   })
 );

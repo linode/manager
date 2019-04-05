@@ -24,6 +24,7 @@ import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import LinodePermissionsError from '../LinodePermissionsError';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
 import CreateIPv6Drawer from './CreateIPv6Drawer';
 import DeleteIPConfirm from './DeleteIPConfirm';
@@ -211,7 +212,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPRow(ip: Linode.IPAddress, type: IPTypes) {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
 
     return (
       <TableRow key={ip.address} data-qa-ip={ip.address}>
@@ -232,6 +233,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             ipType={type}
             ipAddress={ip}
             onRemove={this.openRemoveIPDialog}
+            readOnly={readOnly}
           />
         </TableCell>
       </TableRow>
@@ -298,10 +300,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      id: linodeID,
-      label: linodeLabel,
-      region: linodeRegion
-    } = this.props.linode;
+      readOnly,
+      linode: { id: linodeID, label: linodeLabel, region: linodeRegion }
+    } = this.props;
     const { linodeIPs, initialLoading, IPRequestError } = this.state;
     const firstPublicIPAddress = getFirstPublicIPv4FromResponse(linodeIPs);
 
@@ -323,6 +324,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
+        {readOnly && <LinodePermissionsError />}
         <LinodeNetworkingSummaryPanel
           linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
           sshIPAddress={firstPublicIPAddress}
@@ -388,7 +390,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPv4 = () => {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     const ipv4 = path<Linode.LinodeIPsResponseIPV4>(
       ['linodeIPs', 'ipv4'],
       this.state
@@ -405,7 +407,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item className={classes.ipv4TitleContainer}>
             <Typography
-              role="header"
               variant="h2"
               className={classes.ipv4Title}
               data-qa-ipv4-subheading
@@ -424,7 +425,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               <div>
                 <AddNewLink
                   onClick={this.openCreatePrivateIPv4Drawer}
-                  disabled={Boolean(this.hasPrivateIPAddress())}
+                  disabled={Boolean(this.hasPrivateIPAddress()) || readOnly}
                   label="Add Private IPv4"
                 />
               </div>
@@ -433,6 +434,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           <Grid item>
             <AddNewLink
               onClick={this.openCreatePublicIPv4Drawer}
+              disabled={readOnly}
               label="Add Public IPv4"
             />
           </Grid>
@@ -470,7 +472,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   };
 
   renderIPv6 = () => {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     const ipv6 = path<Linode.LinodeIPsResponseIPV6>(
       ['linodeIPs', 'ipv6'],
       this.state
@@ -487,7 +489,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography
-              role="header"
               variant="h2"
               className={classes.ipv4Title}
               data-qa-ipv6-subheading
@@ -496,7 +497,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </Typography>
           </Grid>
           <Grid item>
-            <AddNewLink onClick={this.openCreateIPv6Drawer} label="Add IPv6" />
+            <AddNewLink
+              onClick={this.openCreateIPv6Drawer}
+              label="Add IPv6"
+              disabled={readOnly}
+            />
           </Grid>
         </Grid>
         <Paper style={{ padding: 0 }}>
@@ -531,7 +536,8 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   renderNetworkActions = () => {
     const {
       classes,
-      linode: { id: linodeID, region: linodeRegion }
+      linode: { id: linodeID, region: linodeRegion },
+      readOnly
     } = this.props;
     const { linodeIPs } = this.state;
 
@@ -549,7 +555,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       <Grid container>
         <Grid item xs={12}>
           <Typography
-            role="header"
             variant="h2"
             className={classes.netActionsTitle}
             data-qa-network-actions-title
@@ -561,6 +566,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linodeRegion={linodeRegion}
             refreshIPs={this.refreshIPs}
             ipAddresses={[...publicIPs, ...privateIPs]}
+            readOnly={readOnly}
           />
           <IPSharingPanel
             linodeID={linodeID}
@@ -569,6 +575,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             linodeRegion={linodeRegion}
             refreshIPs={this.refreshIPs}
             updateFor={[publicIPs, sharedIPs, linodeID, linodeRegion, classes]}
+            readOnly={readOnly}
           />
         </Grid>
       </Grid>
@@ -586,11 +593,13 @@ const getFirstPublicIPv4FromResponse = compose(
 
 interface ContextProps {
   linode: Linode.Linode;
+  readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   /** actually needs the whole linode for the purposes */
-  linode
+  linode,
+  readOnly: linode._permissions === 'read_only'
 }));
 
 interface DispatchProps {

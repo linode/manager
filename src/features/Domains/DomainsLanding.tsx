@@ -30,7 +30,11 @@ import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
-import { openForCloning, openForCreating } from 'src/store/domainDrawer';
+import {
+  openForCloning,
+  openForCreating,
+  openForEditing
+} from 'src/store/domainDrawer';
 import {
   DomainActionsProps,
   withDomainActions
@@ -81,7 +85,7 @@ interface State {
     open: boolean;
     mode: 'clone' | 'create';
     domain?: string;
-    cloneID?: number;
+    id?: number;
   };
   removeDialog: {
     open: boolean;
@@ -222,12 +226,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography
-              role="header"
-              variant="h1"
-              data-qa-title
-              className={classes.title}
-            >
+            <Typography variant="h1" data-qa-title className={classes.title}>
               Domains
             </Typography>
           </Grid>
@@ -273,6 +272,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
                 handleOrderChange,
                 data: orderedData,
                 onClone: this.props.openForCloning,
+                onEdit: this.props.openForEditing,
                 onRemove: this.openRemoveDialog
               };
 
@@ -312,6 +312,27 @@ const RenderError: React.StatelessComponent<{}> = () => {
   );
 };
 
+const EmptyCopy = () => (
+  <>
+    <Typography variant="subtitle1">
+      Create a Domain, add Domain records, import zones and domains.
+    </Typography>
+    <Typography variant="subtitle1">
+      <a
+        href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
+        target="_blank"
+        className="h-u"
+      >
+        Find out how to setup your domains associated with your Linodes
+      </a>
+      &nbsp;or&nbsp;
+      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+        visit our guides and tutorials.
+      </a>
+    </Typography>
+  </>
+);
+
 const RenderEmpty: React.StatelessComponent<{
   onClick: () => void;
 }> = props => {
@@ -319,8 +340,8 @@ const RenderEmpty: React.StatelessComponent<{
     <React.Fragment>
       <DocumentTitleSegment segment="Domains" />
       <Placeholder
-        title="Add a Domain"
-        copy="Adding a new domain is easy. Click below to add a domain."
+        title="Manage your Domains"
+        copy={<EmptyCopy />}
         icon={DomainIcon}
         buttonProps={{
           onClick: props.onClick,
@@ -334,7 +355,8 @@ const RenderEmpty: React.StatelessComponent<{
 const styled = withStyles(styles);
 
 interface DispatchProps {
-  openForCloning: (domain: string, cloneId: number) => void;
+  openForCloning: (domain: string, id: number) => void;
+  openForEditing: (domain: string, id: number) => void;
   openForCreating: () => void;
 }
 
@@ -379,7 +401,7 @@ const withLocalStorage = localStorageContainer<
 
 export const connected = connect(
   undefined,
-  { openForCreating, openForCloning }
+  { openForCreating, openForCloning, openForEditing }
 );
 
 export default compose<CombinedProps, {}>(

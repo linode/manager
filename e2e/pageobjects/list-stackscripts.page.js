@@ -5,11 +5,12 @@ import ConfigureLinode from './configure-linode';
 
 class ListStackScripts extends Page {
 
-    get header() { return this.pageTitle; }
+    get landingHeader() { return this.pageTitle; }
     get create() { return this.addIcon('Create New StackScript'); }
 
     get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
     get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
+    get accountStackScriptTab() { return $('[data-qa-tab="Account StackScripts"]'); }
     get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
     get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
 
@@ -24,9 +25,11 @@ class ListStackScripts extends Page {
 
     get stackScriptRow() { return $('[data-qa-table-row]'); }
     get stackScriptRows() { return $$('[data-qa-table-row]'); }
+    
     get stackScriptTitle() { return $('[data-qa-stackscript-title]'); }
+    get stackScriptDescription() { return $('[data-qa-stackscript-title] > p') }
     get stackScriptDeploys() { return $('[data-qa-stackscript-deploys]'); }
-    get stackScriptCompatibleDistrobutions() { return $('[data-qa-stackscript-images]'); }
+    get stackScriptCompatibleDistributions() { return $('[data-qa-stackscript-images]'); }
     get stackScriptActionMenu() { return $('[data-qa-action-menu]'); }
     get stackScriptActionMenuLink() { return $('[data-qa-action-menu-link]'); }
     get stackScriptRevision() { return $('[data-qa-stackscript-revision]'); }
@@ -47,14 +50,12 @@ class ListStackScripts extends Page {
     }
 
     baseElementsDisplay() {
-        this.header.waitForVisible(constants.wait.normal);
-        expect(this.sidebarTitle.isVisible()).toBe(true);
+        this.landingHeader.waitForVisible(constants.wait.normal);
         expect(this.stackScriptTable.isVisible()).toBe(true);
-        expect(this.header.getText()).toBe('StackScripts');
+        expect(this.landingHeader.getText()).toBe('StackScripts');
         expect(this.create.isVisible()).toBe(true);
         expect(this.create.getTagName()).toBe('button');
-        expect(this.myStackScriptTab.isVisible()).toBe(true);
-        expect(this.linodeStackScriptTab.isVisible()).toBe(true);
+        expect(this.accountStackScriptTab.isVisible()).toBe(true);
         expect(this.communityStackScriptTab.isVisible()).toBe(true);
     }
 

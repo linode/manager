@@ -32,6 +32,11 @@ import { filterPublicImages } from 'src/utilities/images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
 
+import {
+  getCommunityStackscripts,
+  getMineAndAccountStackScripts
+} from 'src/features/StackScripts/stackScriptUtils';
+
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -50,6 +55,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+interface Props {
+  type: 'community' | 'account';
+}
+
 interface ContextProps {
   linodeId: number;
 }
@@ -64,7 +73,8 @@ interface RebuildFromStackScriptForm {
   password: string;
 }
 
-export type CombinedProps = WithStyles<ClassNames> &
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
   WithImagesProps &
   ContextProps &
   UserSSHKeyProps &
@@ -127,6 +137,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
       setErrors([
         { field: 'stackscript_id', reason: 'You must select a StackScript' }
       ]);
+      setIsDialogOpen(false);
       return;
     }
 
@@ -189,14 +200,21 @@ export const RebuildFromStackScript: React.StatelessComponent<
         />
       )}
       <SelectStackScriptPanel
-        error={hasErrorFor['stackscript_id']}
+        error={hasErrorFor.stackscript_id}
         selectedId={ss.id}
         selectedUsername={ss.username}
-        updateFor={[ss.id, errors]}
+        updateFor={[classes, ss.id, errors]}
         onSelect={handleSelect}
         publicImages={filterPublicImages(imagesData)}
         resetSelectedStackScript={resetStackScript}
         data-qa-select-stackscript
+        category={props.type}
+        header="Select StackScript"
+        request={
+          props.type === 'account'
+            ? getMineAndAccountStackScripts
+            : getCommunityStackscripts
+        }
       />
       {ss.user_defined_fields && ss.user_defined_fields.length > 0 && (
         <UserDefinedFieldsPanel
@@ -205,18 +223,18 @@ export const RebuildFromStackScript: React.StatelessComponent<
           selectedUsername={ss.username}
           handleChange={handleChangeUDF}
           userDefinedFields={ss.user_defined_fields}
-          updateFor={[ss.user_defined_fields, ss.udf_data, errors]}
+          updateFor={[classes, ss.user_defined_fields, ss.udf_data, errors]}
           udf_data={ss.udf_data}
         />
       )}
       {ss.images && ss.images.length > 0 ? (
         <SelectImagePanel
+          variant="all"
           images={ss.images}
           handleSelection={(selected: string) => setField('imageID', selected)}
-          updateFor={[form.imageID, ss.images, errors]}
+          updateFor={[classes, form.imageID, ss.images, errors]}
           selectedImageID={form.imageID}
           error={hasErrorFor.image}
-          hideMyImages={true}
         />
       ) : (
         <Paper className={classes.emptyImagePanel}>
@@ -224,7 +242,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
           {hasErrorFor.image && (
             <Notice error={true} text={hasErrorFor.image} />
           )}
-          <Typography role="header" variant="h2" data-qa-tp="Select Image">
+          <Typography variant="h2" data-qa-tp="Select Image">
             Select Image
           </Typography>
           <Typography
@@ -271,7 +289,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
   userSSHKeyHoc,
   styled,

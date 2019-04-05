@@ -6,6 +6,7 @@ import {
   Lens,
   lensPath,
   over,
+  pathOr,
   set,
   view
 } from 'ramda';
@@ -464,11 +465,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container>
           <Grid item className={`${classes.main} mlMain`}>
-            <Typography
-              role="header"
-              variant="h1"
-              data-qa-create-nodebalancer-header
-            >
+            <Typography variant="h1" data-qa-create-nodebalancer-header>
               Create a NodeBalancer
             </Typography>
 
@@ -511,12 +508,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
             <SelectRegionPanel
               regions={regionsData || []}
               error={hasErrorFor('region')}
-              selectedID={nodeBalancerFields.region || null}
+              selectedID={nodeBalancerFields.region}
               handleSelection={this.regionChange}
               disabled={disabled}
             />
             <Grid item xs={12}>
-              <Typography role="header" variant="h2" className={classes.title}>
+              <Typography variant="h2" className={classes.title}>
                 NodeBalancer Settings
               </Typography>
             </Grid>
@@ -754,7 +751,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
       }
   */
   return errors.reduce((acc: any, error: Linode.ApiFieldError) => {
-    const errorFields = error.field!.split('|');
+    const errorFields = pathOr('', ['field'], error).split('|');
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)
     );

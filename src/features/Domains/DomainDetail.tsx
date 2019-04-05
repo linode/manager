@@ -151,11 +151,11 @@ class DomainDetail extends React.Component<CombinedProps, State> {
     if (!domainId) {
       return;
     }
-
     getAllWithArguments<Linode.DomainRecord>(getDomainRecords)([+domainId])
       .then(({ data }) => {
         this.setState({ records: data });
       })
+      // tslint:disable-next-line
       .catch(console.error);
   };
 
@@ -173,6 +173,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
       .then((data: Linode.Domain) => {
         this.setState({ domain: data });
       })
+      // tslint:disable-next-line
       .catch(console.error);
   };
 
@@ -207,12 +208,7 @@ class DomainDetail extends React.Component<CombinedProps, State> {
           className={`${classes.sidebar} ${classes.domainSidebar}`}
         >
           <Paper className={classes.summarySection}>
-            <Typography
-              role="header"
-              variant="h3"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h3" className={classes.title} data-qa-title>
               Tags
             </Typography>
             <TagsPanel tags={domain.tags} updateTags={this.handleUpdateTags} />

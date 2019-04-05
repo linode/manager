@@ -5,4 +5,5 @@ export interface ExtendedLinode extends Linode.Linode {
   _notifications: Linode.Notification[];
   _volumes: Linode.Volume[];
   _type?: null | Linode.LinodeType;
+  _permissions: Linode.GrantLevel;
 }

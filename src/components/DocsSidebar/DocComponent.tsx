@@ -46,7 +46,7 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
     return (
       <React.Fragment>
         <div className={classes.root} data-qa-doc={title}>
-          <Typography role="header" variant="h3" className={classes.title}>
+          <Typography variant="h3" className={classes.title}>
             <a href={src} target="_blank" className={classes.titleLink}>
               {title}
             </a>

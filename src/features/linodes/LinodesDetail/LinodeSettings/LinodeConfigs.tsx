@@ -98,13 +98,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
 
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography role="header" variant="h2" className={classes.headline}>
+            <Typography variant="h2" className={classes.headline}>
               Configuration
             </Typography>
           </Grid>
@@ -112,6 +112,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
               label="Add a Configuration"
+              disabled={readOnly}
             />
           </Grid>
         </Grid>
@@ -325,6 +326,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
             onBoot={this.handleBoot}
             onEdit={this.openForEditing}
             onDelete={this.confirmDelete}
+            readOnly={this.props.readOnly}
           />
         </TableCell>
       </TableRow>
@@ -347,6 +349,7 @@ interface LinodeContext {
   linodeStatus: string;
   linodeTotalDisk: number;
   deleteLinodeConfig: DeleteLinodeConfig;
+  readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext<LinodeContext>(
@@ -358,6 +361,7 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     linodeRegion: linode.region,
     linodeStatus: linode.status,
     linodeTotalDisk: linode.specs.disk,
+    readOnly: linode._permissions === 'read_only',
     deleteLinodeConfig
   })
 );

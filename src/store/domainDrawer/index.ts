@@ -4,13 +4,14 @@ import { Action } from 'redux';
 export const OPEN = '@manager/domains/OPEN';
 export const CLOSE = '@manager/domains/CLOSE';
 export const CREATING = '@manager/domains/CREATING';
+export const EDITING = '@manager/domains/EDITING';
 export const CLONING = '@manager/domains/CLONING';
 export const RESET = '@manager/domains/RESET';
 
 export interface State {
   open: boolean;
   mode: string;
-  cloneId?: number;
+  id?: number;
   domain?: string;
 }
 
@@ -19,7 +20,13 @@ interface Creating extends Action {
 }
 interface Cloning extends Action {
   type: typeof CLONING;
-  cloneId: number;
+  id: number;
+  domain: string;
+}
+
+interface Editing extends Action {
+  type: typeof EDITING;
+  id: number;
   domain: string;
 }
 
@@ -37,13 +44,21 @@ type ActionCreator = (...args: any[]) => Action;
 export const openForCreating: ActionCreator = (): Creating => ({
   type: CREATING
 });
+export const openForEditing: ActionCreator = (
+  domain: string,
+  id: number
+): Editing => ({
+  type: EDITING,
+  domain,
+  id
+});
 export const openForCloning: ActionCreator = (
   domain: string,
-  cloneId: number
+  id: number
 ): Cloning => ({
   type: CLONING,
   domain,
-  cloneId
+  id
 });
 export const closeDrawer: ActionCreator = (): Close => ({ type: CLOSE });
 export const resetDrawer: ActionCreator = (): Reset => ({ type: RESET });
@@ -54,19 +69,27 @@ export const defaultState: State = {
   mode: CREATING
 };
 
-type ActionTypes = Creating | Cloning | Close | Reset;
+type ActionTypes = Creating | Editing | Cloning | Close | Reset;
 
 export default (state: State = defaultState, action: ActionTypes) => {
   switch (action.type) {
     case CREATING:
       return { mode: CREATING, open: true };
 
+    case EDITING:
+      return {
+        open: true,
+        mode: EDITING,
+        domain: action.domain,
+        id: action.id
+      };
+
     case CLONING:
       return {
         open: true,
         mode: CLONING,
         domain: action.domain,
-        cloneId: action.cloneId
+        id: action.id
       };
 
     case CLOSE:

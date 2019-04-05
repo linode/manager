@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -239,13 +239,13 @@ export class UserMenu extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  userEmail?: string;
-  username?: string;
+  userEmail: string;
+  username: string;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
-  userEmail: path(['data', 'email'], state.__resources.profile),
-  username: path(['data', 'username'], state.__resources.profile)
+  userEmail: pathOr('', ['data', 'email'], state.__resources.profile),
+  username: pathOr('', ['data', 'username'], state.__resources.profile)
 });
 
 export default compose<

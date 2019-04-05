@@ -1,4 +1,6 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -8,7 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import { aggregateBackups } from 'src/features/linodes/LinodesDetail/LinodeBackup';
 import { formatDate } from 'src/utilities/formatDate';
@@ -53,6 +55,14 @@ interface State {
   backups?: Linode.LinodeBackup[];
 }
 
+const mockBackup: Linode.LinodeBackupsResponse = {
+  snapshot: {
+    in_progress: null,
+    current: null
+  },
+  automatic: []
+};
+
 type StyledProps = Props & WithStyles<ClassNames>;
 
 type CombinedProps = StyledProps;
@@ -67,7 +77,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     if (this.props.selectedLinodeID) {
       // the backups prop will always be an array of one beacuse a filter is happening
       // a component higher to only pass the backups for the selected Linode
-      this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
+      this.setState({
+        backups: aggregateBackups(
+          pathOr(mockBackup, [0, 'currentBackups'], backups)
+        )
+      });
     }
     this.updateBackupInfo();
   }
@@ -77,7 +91,11 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     if (prevProps.selectedLinodeID !== this.props.selectedLinodeID) {
       // the backups prop will always be an array of one beacuse a filter is happening
       // a component higher to only pass the backups for the selected Linode
-      this.setState({ backups: aggregateBackups(backups[0].currentBackups) });
+      this.setState({
+        backups: aggregateBackups(
+          pathOr(mockBackup, [0, 'currentBackups'], backups)
+        )
+      });
     }
     if (
       prevProps.selectedBackupID !== this.props.selectedBackupID ||
@@ -150,9 +168,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
       <Paper className={`${classes.root}`}>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography role="header" variant="h2">
-            Select Backup
-          </Typography>
+          <Typography variant="h2">Select Backup</Typography>
           <Grid container alignItems="center" className={classes.wrapper}>
             {selectedLinodeID ? (
               <React.Fragment>
@@ -180,4 +196,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<CombinedProps>(SelectBackupPanel));
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  RenderGuard,
+  styled
+)(SelectBackupPanel);

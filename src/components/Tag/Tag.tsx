@@ -113,8 +113,8 @@ class Tag extends React.Component<CombinedProps, {}> {
 
   handleClick = (e: React.MouseEvent<any>) => {
     e.preventDefault();
+    e.stopPropagation();
     if (this.props.asSuggestion) {
-      e.stopPropagation();
       this.props.closeMenu();
     }
     const { history, label } = this.props;
@@ -144,9 +144,13 @@ class Tag extends React.Component<CombinedProps, {}> {
           [classes.root]: true
         })}
         deleteIcon={
-          <Button data-qa-delete-tag className={classes.deleteButton}>
-            <Close />
-          </Button>
+          chipProps.onDelete ? (
+            <Button data-qa-delete-tag className={classes.deleteButton}>
+              <Close />
+            </Button>
+          ) : (
+            undefined
+          )
         }
         classes={{ label: classes.label, deletable: classes[colorVariant!] }}
         onClick={this.handleClick}

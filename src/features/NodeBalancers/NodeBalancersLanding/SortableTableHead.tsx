@@ -77,6 +77,7 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
           label="label"
           direction={order}
           handleClick={handleOrderChange}
+          data-qa-nb-label={order}
         >
           Name
         </TableSortCell>

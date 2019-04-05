@@ -73,6 +73,7 @@ interface Props {
   linodeRegion: string;
   linodeIPs: string[];
   linodeSharedIPs: string[];
+  readOnly?: boolean;
   refreshIPs: () => Promise<void>;
 }
 
@@ -210,7 +211,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   };
 
   renderShareIPRow = (ip: string, idx: number) => {
-    const { classes } = this.props;
+    const { classes, readOnly } = this.props;
     return (
       <Grid container key={idx}>
         <Grid item xs={12}>
@@ -222,6 +223,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             onChange={this.onIPSelect(idx)}
             fullWidth={false}
             className={classes.ipField}
+            data-qa-share-ip
+            disabled={readOnly}
           >
             {this.remainingChoices(ip).map(
               (ipChoice: string, choiceIdx: number) => (
@@ -237,6 +240,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             type="remove"
             onClick={this.onIPDelete(idx)}
             className={classes.remove}
+            data-qa-remove-shared-ip
+            disabled={readOnly}
           />
         </Grid>
       </Grid>
@@ -307,15 +312,17 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   };
 
   renderActions = () => {
+    const { readOnly } = this.props;
     const { submitting, loading } = this.state;
     const noChoices = this.state.ipChoices.length <= 1;
     return (
       <ActionsPanel>
         <Button
           loading={submitting}
-          disabled={loading || noChoices}
+          disabled={readOnly || loading || noChoices}
           onClick={this.onSubmit}
           type="primary"
+          data-qa-submit
         >
           Save
         </Button>
@@ -323,6 +330,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           disabled={submitting || loading || noChoices}
           onClick={this.onCancel}
           type="secondary"
+          data-qa-cancel
         >
           Cancel
         </Button>
@@ -331,7 +339,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, linodeIPs } = this.props;
+    const { classes, linodeIPs, readOnly } = this.props;
     const {
       errors,
       successMessage,
@@ -384,6 +392,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
                   <div className={classes.addNewButton}>
                     <AddNewLink
                       label="Add IP Address"
+                      disabled={readOnly}
                       onClick={this.addIPToShare}
                       left
                     />

@@ -20,8 +20,8 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { reportException } from 'src/exceptionReporting';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import createMailto from 'src/features/Footer/createMailto';
 import { getInvoiceItems, getInvoices } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
@@ -39,6 +39,7 @@ type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 interface PdfGenerationError {
   itemId: number | undefined;
+  error?: any;
 }
 
 interface State {
@@ -60,10 +61,11 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     }
   }
 
-  setPdfError(itemId: number | undefined) {
+  setPdfError(itemId: number | undefined, error?: any) {
     this.setState({
       pdfGenerationError: {
-        itemId
+        itemId,
+        error
       }
     });
   }
@@ -106,15 +108,14 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
     getInvoiceItems(item.id)
       .then(response => {
         const invoiceItems = response.data;
-        try {
-          printInvoice(account, item, invoiceItems);
-        } catch (e) {
-          reportException(Error('Error while generating PDF.'), e);
-          this.setPdfError(item.id);
+        const result = printInvoice(account, item, invoiceItems);
+
+        if (result.status === 'error') {
+          this.setPdfError(item.id, result.error);
         }
       })
-      .catch(() => {
-        this.setPdfError(item.id);
+      .catch(e => {
+        this.setPdfError(item.id, e);
       });
   }
 
@@ -181,7 +182,13 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
             </a>
           )}
           {pdfGenerationError.itemId === item.id && (
-            <Notice error={true} text="Failed generating PDF." />
+            <Notice
+              error={true}
+              html={`Failed generating PDF. <a href="${createMailto(
+                pdfGenerationError.error && pdfGenerationError.error.stack
+              )}"
+            > Send report</a>`}
+            />
           )}
         </TableCell>
       </TableRow>

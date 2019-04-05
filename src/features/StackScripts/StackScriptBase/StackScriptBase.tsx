@@ -13,12 +13,15 @@ import Table from 'src/components/Table';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
+import {
+  getAPIErrorOrDefault,
+  handleUnauthorizedErrors
+} from 'src/utilities/errorUtils';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
   generateCatchAllFilter,
-  generateSpecificFilter,
-  getErrorText
+  generateSpecificFilter
 } from '../stackScriptUtils';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
@@ -45,7 +48,7 @@ export interface State {
   currentFilter: any; // @TODO type correctly
   currentSearchFilter: any;
   isSorting: boolean;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   fieldError: Linode.ApiFieldError | undefined;
   isSearching: boolean;
   didSearch: boolean;
@@ -98,7 +101,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
     componentDidMount() {
       this.mounted = true;
-      return this.getDataAtPage(0);
+      return this.getDataAtPage(1);
     }
 
     componentWillUnmount() {
@@ -147,7 +150,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
           /*
            * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
            * basically, if the result set after filtering out StackScripts with
-           * deprecated distos is 0, request the next page with the same filter.
+           * deprecated distros is 0, request the next page with the same filter.
            */
           const newDataWithoutDeprecatedDistros = newData.filter(stackScript =>
             this.hasNonDeprecatedImages(stackScript.images)
@@ -180,7 +183,10 @@ const withStackScriptBase = (isSelecting: boolean) => (
             this.setState({ getMoreStackScriptsFailed: true });
           }
           this.setState({
-            error: e.response,
+            error: getAPIErrorOrDefault(
+              e,
+              'There was an error loading StackScripts'
+            ),
             loading: false,
             gettingMoreStackScripts: false
           });
@@ -356,7 +362,13 @@ const withStackScriptBase = (isSelecting: boolean) => (
           if (!this.mounted) {
             return;
           }
-          this.setState({ error: e, isSearching: false });
+          this.setState({
+            error: getAPIErrorOrDefault(
+              e,
+              'There was an error loading StackScripts'
+            ),
+            isSearching: false
+          });
         });
     };
 
@@ -381,7 +393,14 @@ const withStackScriptBase = (isSelecting: boolean) => (
       if (error) {
         return (
           <div style={{ overflow: 'hidden' }}>
-            <ErrorState errorText={getErrorText(error)} />
+            <ErrorState
+              errorText={
+                handleUnauthorizedErrors(
+                  error,
+                  'You are not authorized to view StackScripts for this account.'
+                )[0].reason
+              }
+            />
           </div>
         );
       }

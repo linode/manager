@@ -8,13 +8,12 @@ import {
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'accessPanel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    paddingBottom: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
+  root: {},
+  accessPanel: {
+    marginTop: 0
   }
 });
 
@@ -25,27 +24,39 @@ interface Props {
   udf_data: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
   placeholder?: string;
+  error?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedText extends React.Component<CombinedProps, {}> {
   renderTextField = () => {
-    const { udf_data, field, placeholder, isOptional } = this.props;
+    const { udf_data, error, field, placeholder, isOptional } = this.props;
 
     return (
-      <TextField
-        required={!isOptional}
-        onChange={this.handleUpdateText}
-        label={field.label}
-        value={udf_data[field.name] || ''}
-        placeholder={placeholder}
-      />
+      <React.Fragment>
+        <TextField
+          required={!isOptional}
+          onChange={this.handleUpdateText}
+          label={field.label}
+          value={udf_data[field.name] || ''}
+          errorText={error}
+          // small={isOptional}
+          helperText={placeholder}
+        />
+      </React.Fragment>
     );
   };
 
   renderPasswordField = () => {
-    const { udf_data, field, placeholder, isOptional } = this.props;
+    const {
+      udf_data,
+      error,
+      field,
+      placeholder,
+      isOptional,
+      classes
+    } = this.props;
 
     return (
       <AccessPanel
@@ -55,6 +66,11 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         label={field.label}
         noPadding
         placeholder={placeholder}
+        error={error}
+        hideStrengthLabel
+        className={!isOptional ? classes.accessPanel : ''}
+        isOptional={isOptional}
+        hideHelperText
       />
     );
   };

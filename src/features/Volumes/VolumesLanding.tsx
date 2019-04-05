@@ -22,6 +22,7 @@ import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import TableRowError from 'src/components/TableRowError';
 import Toggle from 'src/components/Toggle';
+import { regionsWithoutBlockStorage } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import withVolumes, {
@@ -33,6 +34,8 @@ import withVolumesRequests, {
 import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
+import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
+
 import {
   openForClone,
   openForConfig,
@@ -135,6 +138,7 @@ interface Props {
   linodeRegion?: string;
   linodeConfigs?: Linode.Config[];
   recentEvent?: Linode.Event;
+  readOnly?: boolean;
 }
 
 //
@@ -268,7 +272,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       classes,
       volumesLoading,
       volumesError,
-      mappedVolumesDataWithLinodes
+      mappedVolumesDataWithLinodes,
+      readOnly
     } = this.props;
 
     if (volumesError) {
@@ -294,6 +299,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
+        {readOnly && <LinodePermissionsError />}
         <Grid
           container
           justify="space-between"
@@ -301,12 +307,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography
-              role="header"
-              variant="h1"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h1" className={classes.title} data-qa-title>
               Volumes
             </Typography>
           </Grid>
@@ -330,7 +331,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
               <Grid item className="pt0">
                 <AddNewLink
                   onClick={this.openCreateVolumeDrawer}
-                  label="Create a Volume"
+                  label="Add a Volume"
                 />
               </Grid>
             </Grid>
@@ -363,7 +364,20 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs } = this.props;
+    const { linodeConfigs, linodeRegion, readOnly } = this.props;
+
+    if (regionsWithoutBlockStorage.some(region => region === linodeRegion)) {
+      return (
+        <React.Fragment>
+          <DocumentTitleSegment segment="Volumes" />
+          <Placeholder
+            title="Volumes are not available in this region"
+            copy=""
+            icon={VolumesIcon}
+          />
+        </React.Fragment>
+      );
+    }
 
     if (linodeConfigs && linodeConfigs.length === 0) {
       return (
@@ -385,13 +399,15 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Volumes" />
+        {readOnly && <LinodePermissionsError />}
         <Placeholder
-          title="Create a Volume"
-          copy="Add storage to your Linodes using the resilient Volumes service for $0.10/GiB per month."
+          title="Add Block Storage!"
+          copy={<EmptyCopy />}
           icon={VolumesIcon}
           buttonProps={{
             onClick: this.openCreateVolumeDrawer,
-            children: 'Create a Volume'
+            children: 'Add a Volume',
+            disabled: readOnly
           }}
         />
       </React.Fragment>
@@ -502,6 +518,25 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       });
   };
 }
+
+const EmptyCopy = () => (
+  <>
+    <Typography variant="subtitle1">Need additional storage?</Typography>
+    <Typography variant="subtitle1">
+      <a
+        href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
+        target="_blank"
+        className="h-u"
+      >
+        Here's how to use Block Storage with your Linode
+      </a>
+      &nbsp;or&nbsp;
+      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+        visit our guides and tutorials.
+      </a>
+    </Typography>
+  </>
+);
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) =>
   bindActionCreators(

@@ -1,6 +1,6 @@
 import { types } from './types';
 
-const extendType = () => {
+const extendTypes = () => {
   return types.map(type => {
     return {
       ...type,
@@ -10,4 +10,4 @@ const extendType = () => {
   });
 };
 
-export const ExtendedType = extendType();
+export const extendedTypes = extendTypes();

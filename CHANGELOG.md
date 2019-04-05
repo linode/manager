@@ -4,6 +4,105 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.51.2] - 2019.03.28
+
+### Fixed:
+- Fix issue with Lish console not rendering correctly (#4736)
+
+## [0.51.0] - 2019.03.25
+
+### Added:
+- Add uninvoiced balance display 
+- Delete Linode from kebab menu 
+- Support and icon for Alpine Linux 
+- Missing typography for crash message
+- New event types and account events messages
+- Card payment confirmation modal 
+- Add aria labels to inputProps for textfields and radios
+
+### Changed:
+- Update list of available timezones and fix offset sorting
+- Include pagination on clone from Linode flow 
+- Adjust dialog size to md to accommodate for api token width
+- Request notifications after migration finished 
+- Reset error state on disk and configs request
+- Improve placement of entity icons on mobile tables 
+- Make sure all radios inherit proper labeling
+- Dim main content when searching
+- iOS/Mobile Cloud Manager Welcome Screen  
+- Make CVV Optional when making a credit card payment
+- Adjust "No Results" message when searching in a Select element
+- Handle volume permissions
+- Update Auth Code
+- UI for restricted edit volumes form
+- Delete confirmation includes Linode Label 
+- Source Linode Rescue volumes/disks from redux
+- Update slave domain editing UX
+- Add props.classes for RenderGuard updateFor 
+
+### Fixed:
+- Only disable Linode Boot if there are no configs 
+- Prevent NodeBalancers from crashing during creation 
+- Linodes with no type data cause error state 
+- Kernel Select sometimes was not populated on load
+- Upgrade and Fix PayPal
+- Fix logger, add report button
+- Remove extra scrollbar on tables on Firefox
+- Request notifications after migration finished
+- Issue with Created Linodes with no image being in an indefinite loading state
+- Issue with 0600-0800 not being a valid backups timeslot
+
+## [0.50] - 2019.03.11
+
+### Added:
+
+- Fix Linode label update error
+- Display guidance to bottom of search bar to make it easier for users to work with enhanced search functionality
+- Add Compact Mode (theme toggle) and corresponding settings panel on PrimaryNav
+- Users can now rebuild a Linode from a StackScript
+- Backup mode support for NB nodes
+- Support for Toronto region  
+- Improve spacing of Domain table
+- Password requirements to the PasswordInputField  
+- Add last auth IP address and last auth time to trusted devices table  
+- Include transfer stats to Linode summary panel  
+- Additional helper text for Volumes creation drawer  
+- Helper text when creating NodeBalancers  
+- Enable user to Remove Public IP Addresses  
+- Add tags column to NBs and volumes  
+- Filter volume select based on grants  
+- Apply convention for HEX values in theme files  
+- Updated-by column to support tickets  
+- Adjustments for Dark Theme in account pdf links  
+
+### Changed:
+- Display confirmation dialog before rebuilding Linode
+- For Backups creation flow, only reset selection if different Linode is clicked  
+- Linode Resize flow adjusted to follow API changes (resizing Linodes now enter the migration queue) 
+- Rebuild Linode image select now uses tiles instead of a dropdown  
+- Update list of whitelisted events to include new event types returned by the API  
+- Update all instances of updateFor to include props.classes
+- Remove Tokyo 1 as an option when creating Linodes and NodeBalancers 
+- Pre-populate payment amount to the current Balance 
+- Add disk imagize events to show progress  
+- Volume Labels Sorting
+- Hide global backups setting from managed users  
+
+### Fixed:
+- Request notifications after migration finished  
+- Keyboard scrolling on custom MenuList component  
+- Regression with pagination dropdown
+- Show error message when a Linode on the user's account is jailed.
+- 2FA panel
+- Creation workflow styles
+- Instances of renderGuard not updating components
+- React-select isClearable logic  
+- Dashboard spacing
+- PDF generation failure 
+- Error handling for SSL certificate and key when creating a NodeBalancer.
+- Default lastFour (credit card digits) to empty string to prevent visual bug  
+- Graphs need better breakpoints
+
 ## [0.49.0] - 2019.02.25
 
 ### Added:
@@ -179,54 +278,54 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.42.0] - 2018.12.17
 
 ### Added:
-- Add Total Traffic to stats (#4221)
-- Styling for Stats/Units (#4220)
-- Paypal Client-Side Validation (#4222)
-- Revert  error poc (#4212) (#4223)
+- Add Total Traffic to stats  
+- Styling for Stats/Units  
+- Paypal Client-Side Validation  
+- Revert  error poc  
 - Reorder providers. Convert ThemeProvider to renderChildren.
 - style toast messages
 - create component abstraction for toasts
 - add: toasts story
 - pass props to tags to close suggestion menu on click\
-- error poc (#4212)
-- make CVV field optional (#4214)
-- Add analytics to GetAllEntities() (#4203)
-- Correct permission decision logic in API token utils. (#4204)
+- error poc  
+- make CVV field optional  
+- Add analytics to GetAllEntities()  
+- Correct permission decision logic in API token utils.  
 - code cleanup and destructure new asSuggestion prop
 - style tags inside search result suggestion
 - event propagation and focus styles
-- Stats/Units on graphs (#4205)
+- Stats/Units on graphs  
 - make tags in selects consistent with new styles
 - refactor tag button styles
-- Tag links (#4195)
-- updating back up data section for dark theme (#4199)
-- updating copy icon component colors, removing the override from IP address component (#4198)
+- Tag links  
+- updating back up data section for dark theme  
+- updating copy icon component colors, removing the override from IP address component  
 - better padding for dashboard table cells
 - Make clickable row UX more consistent
-- switch volume columns (#4197)
-- add search data (#4182)
-- Upgrade Typography component consistent with @material-ui/core@3.5.1 (#4180)
-- Display resize instructions on form submission. (#4189)
-- Add SSH key event message... (#4190)
-- Refresh volumes list on volume_clone event. (#4191)
-- Report counts of successes and failures for backups (#4187)
-- Remove sendToast for enqueSnacback (#4185)
-- Replace Toasts with Notistack (#4163)
+- switch volume columns  
+- add search data  
+- Upgrade Typography component consistent with @material-ui/core@3.5.1  
+- Display resize instructions on form submission.  
+- Add SSH key event message...  
+- Refresh volumes list on volume_clone event.  
+- Report counts of successes and failures for backups  
+- Remove sendToast for enqueSnacback  
+- Replace Toasts with Notistack  
 
 ### Changed:
 - reduce main nav items padding under medium breakpoint
-- update progress bar for linodes (#4230)
-- Update docs links to Cloud Manager versions. (#4224)
+- update progress bar for linodes  
+- Update docs links to Cloud Manager versions.  
 - update notistck version and remove unecessary declaration
-- Update email notification setting label for clarity (#4216)
-- Events polling updated. (#4181)
+- Update email notification setting label for clarity  
+- Events polling updated.  
 
 ### Fixed:
-- fix: send config id with attach volume request (#4228)
-- Edit SOA drawer loading button styling bug (#4210)
+- fix: send config id with attach volume request  
+- Edit SOA drawer loading button styling bug  
 - fix typing for notistack
-- Fix NodeBalancer Tag Error (#4194)
-- Fix mutation error handling (#4179)
+- Fix NodeBalancer Tag Error  
+- Fix mutation error handling  
 
 ## [0.41.0] - 2018.12.04
 

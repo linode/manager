@@ -1,1036 +1,1758 @@
-/* Timezones are borrowed from Google Calendar */
 /* This file borrowed from https://github.com/vahnag/react-timezone */
+/* Timezones are borrowed from Google Calendar */
 
 // eslint-disable-next-line max-len
 // [...$0.children].map(el => ({ label: (el.getAttribute('aria-label')|| '').replace(/\(.*?\)(.+)/, '$1').trim(), name: el.getAttribute('data-value'), offset: +(el.getAttribute('aria-label')|| '').replace(/\(.*?(-?[0-9]{2}):([0-9]{2})\).*/, (all, one, two) => +one + (two / 60) * (one > 0 ? 1 : -1)) }))
 
 export default [
   {
-    label: 'Niue',
-    name: 'Pacific/Niue'
+    label: 'Niue Time',
+    name: 'Pacific/Niue',
+    offset: -11
   },
   {
-    label: 'Pago Pago',
-    name: 'Pacific/Pago_Pago'
+    label: 'Samoa Standard Time',
+    name: 'Pacific/Pago_Pago',
+    offset: -11
   },
   {
-    label: 'Hawaii Time',
-    name: 'Pacific/Honolulu'
+    label: 'Cook Islands Standard Time',
+    name: 'Pacific/Rarotonga',
+    offset: -10
   },
   {
-    label: 'Rarotonga',
-    name: 'Pacific/Rarotonga'
+    label: 'Hawaii-Aleutian Standard Time',
+    name: 'Pacific/Honolulu',
+    offset: -10
   },
   {
-    label: 'Tahiti',
-    name: 'Pacific/Tahiti'
+    label: 'Hawaii-Aleutian Time',
+    name: 'America/Adak',
+    offset: -10
   },
   {
-    label: 'Marquesas',
-    name: 'Pacific/Marquesas'
+    label: 'Tahiti Time',
+    name: 'Pacific/Tahiti',
+    offset: -10
   },
   {
-    label: 'Gambier',
-    name: 'Pacific/Gambier'
+    label: 'Marquesas Time',
+    name: 'Pacific/Marquesas',
+    offset: -9.5
   },
   {
-    label: 'Alaska Time',
-    name: 'America/Anchorage'
+    label: 'Alaska Time - Anchorage',
+    name: 'America/Anchorage',
+    offset: -9
   },
   {
-    label: 'Pitcairn',
-    name: 'Pacific/Pitcairn'
+    label: 'Alaska Time - Juneau',
+    name: 'America/Juneau',
+    offset: -9
   },
   {
-    label: 'Dawson',
-    name: 'America/Dawson'
+    label: 'Alaska Time - Nome',
+    name: 'America/Nome',
+    offset: -9
   },
   {
-    label: 'Mountain Time - Arizona',
-    name: 'America/Phoenix'
+    label: 'Alaska Time - Sitka',
+    name: 'America/Sitka',
+    offset: -9
   },
   {
-    label: 'Mountain Time - Dawson Creek',
-    name: 'America/Dawson_Creek'
+    label: 'Alaska Time - Yakutat',
+    name: 'America/Yakutat',
+    offset: -9
   },
   {
-    label: 'Mountain Time - Hermosillo',
-    name: 'America/Hermosillo'
+    label: 'Gambier Time',
+    name: 'Pacific/Gambier',
+    offset: -9
   },
   {
-    label: 'Pacific Time',
-    name: 'America/Los_Angeles'
+    label: 'Pacific Time - Dawson',
+    name: 'America/Dawson',
+    offset: -8
+  },
+  {
+    label: 'Pacific Time - Los Angeles',
+    name: 'America/Los_Angeles',
+    offset: -8
+  },
+  {
+    label: 'Pacific Time - Metlakatla',
+    name: 'America/Metlakatla',
+    offset: -8
   },
   {
     label: 'Pacific Time - Tijuana',
-    name: 'America/Tijuana'
+    name: 'America/Tijuana',
+    offset: -8
   },
   {
     label: 'Pacific Time - Vancouver',
-    name: 'America/Vancouver'
+    name: 'America/Vancouver',
+    offset: -8
   },
   {
     label: 'Pacific Time - Whitehorse',
-    name: 'America/Whitehorse'
+    name: 'America/Whitehorse',
+    offset: -8
   },
   {
-    label: 'Belize',
-    name: 'America/Belize'
+    label: 'Pitcairn Time',
+    name: 'Pacific/Pitcairn',
+    offset: -8
   },
   {
-    label: 'Boise',
-    name: 'America/Boise'
+    label: 'Mexican Pacific Standard Time',
+    name: 'America/Hermosillo',
+    offset: -7
   },
   {
-    label: 'Central Time - Regina',
-    name: 'America/Regina'
+    label: 'Mexican Pacific Time - Chihuahua',
+    name: 'America/Chihuahua',
+    offset: -7
   },
   {
-    label: 'Central Time - Tegucigalpa',
-    name: 'America/Tegucigalpa'
+    label: 'Mexican Pacific Time - Mazatlan',
+    name: 'America/Mazatlan',
+    offset: -7
   },
   {
-    label: 'Costa Rica',
-    name: 'America/Costa_Rica'
+    label: 'Mountain Standard Time - Creston',
+    name: 'America/Creston',
+    offset: -7
   },
   {
-    label: 'Easter Island',
-    name: 'Pacific/Easter'
+    label: 'Mountain Standard Time - Dawson Creek',
+    name: 'America/Dawson_Creek',
+    offset: -7
   },
   {
-    label: 'El Salvador',
-    name: 'America/El_Salvador'
+    label: 'Mountain Standard Time - Fort Nelson',
+    name: 'America/Fort_Nelson',
+    offset: -7
   },
   {
-    label: 'Galapagos',
-    name: 'Pacific/Galapagos'
+    label: 'Mountain Standard Time - Phoenix',
+    name: 'America/Phoenix',
+    offset: -7
   },
   {
-    label: 'Guatemala',
-    name: 'America/Guatemala'
+    label: 'Mountain Time - Boise',
+    name: 'America/Boise',
+    offset: -7
   },
   {
-    label: 'Managua',
-    name: 'America/Managua'
+    label: 'Mountain Time - Cambridge Bay',
+    name: 'America/Cambridge_Bay',
+    offset: -7
   },
   {
-    label: 'Mountain Time',
-    name: 'America/Denver'
-  },
-  {
-    label: 'Mountain Time - Chihuahua, Mazatlan',
-    name: 'America/Mazatlan'
+    label: 'Mountain Time - Denver',
+    name: 'America/Denver',
+    offset: -7
   },
   {
     label: 'Mountain Time - Edmonton',
-    name: 'America/Edmonton'
+    name: 'America/Edmonton',
+    offset: -7
+  },
+  {
+    label: 'Mountain Time - Inuvik',
+    name: 'America/Inuvik',
+    offset: -7
+  },
+  {
+    label: 'Mountain Time - Ojinaga',
+    name: 'America/Ojinaga',
+    offset: -7
   },
   {
     label: 'Mountain Time - Yellowknife',
-    name: 'America/Yellowknife'
+    name: 'America/Yellowknife',
+    offset: -7
   },
   {
-    label: 'America Cancun',
-    name: 'America/Cancun'
+    label: 'Central Standard Time - Belize',
+    name: 'America/Belize',
+    offset: -6
   },
   {
-    label: 'Bogota',
-    name: 'America/Bogota'
+    label: 'Central Standard Time - Costa Rica',
+    name: 'America/Costa_Rica',
+    offset: -6
   },
   {
-    label: 'Central Time',
-    name: 'America/Chicago'
+    label: 'Central Standard Time - El Salvador',
+    name: 'America/El_Salvador',
+    offset: -6
+  },
+  {
+    label: 'Central Standard Time - Guatemala',
+    name: 'America/Guatemala',
+    offset: -6
+  },
+  {
+    label: 'Central Standard Time - Managua',
+    name: 'America/Managua',
+    offset: -6
+  },
+  {
+    label: 'Central Standard Time - Regina',
+    name: 'America/Regina',
+    offset: -6
+  },
+  {
+    label: 'Central Standard Time - Swift Current',
+    name: 'America/Swift_Current',
+    offset: -6
+  },
+  {
+    label: 'Central Standard Time - Tegucigalpa',
+    name: 'America/Tegucigalpa',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Bahia Banderas',
+    name: 'America/Bahia_Banderas',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Beulah, North Dakota',
+    name: 'America/North_Dakota/Beulah',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Center, North Dakota',
+    name: 'America/North_Dakota/Center',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Chicago',
+    name: 'America/Chicago',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Knox, Indiana',
+    name: 'America/Indiana/Knox',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Matamoros',
+    name: 'America/Matamoros',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Menominee',
+    name: 'America/Menominee',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Merida',
+    name: 'America/Merida',
+    offset: -6
   },
   {
     label: 'Central Time - Mexico City',
-    name: 'America/Mexico_City'
+    name: 'America/Mexico_City',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Monterrey',
+    name: 'America/Monterrey',
+    offset: -6
+  },
+  {
+    label: 'Central Time - New Salem, North Dakota',
+    name: 'America/North_Dakota/New_Salem',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Rainy River',
+    name: 'America/Rainy_River',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Rankin Inlet',
+    name: 'America/Rankin_Inlet',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Resolute',
+    name: 'America/Resolute',
+    offset: -6
+  },
+  {
+    label: 'Central Time - Tell City, Indiana',
+    name: 'America/Indiana/Tell_City',
+    offset: -6
   },
   {
     label: 'Central Time - Winnipeg',
-    name: 'America/Winnipeg'
+    name: 'America/Winnipeg',
+    offset: -6
   },
   {
-    label: 'Guayaquil',
-    name: 'America/Guayaquil'
+    label: 'Galapagos Time',
+    name: 'Pacific/Galapagos',
+    offset: -6
   },
   {
-    label: 'Jamaica',
-    name: 'America/Jamaica'
+    label: 'Acre Standard Time - Eirunepe',
+    name: 'America/Eirunepe',
+    offset: -5
   },
   {
-    label: 'Lima',
-    name: 'America/Lima'
+    label: 'Acre Standard Time - Rio Branco',
+    name: 'America/Rio_Branco',
+    offset: -5
   },
   {
-    label: 'Panama',
-    name: 'America/Panama'
+    label: 'Colombia Standard Time',
+    name: 'America/Bogota',
+    offset: -5
   },
   {
-    label: 'Rio Branco',
-    name: 'America/Rio_Branco'
+    label: 'Cuba Time',
+    name: 'America/Havana',
+    offset: -5
   },
   {
-    label: 'Asuncion',
-    name: 'America/Asuncion'
+    label: 'Easter Island Time',
+    name: 'Pacific/Easter',
+    offset: -5
   },
   {
-    label: 'Barbados',
-    name: 'America/Barbados'
+    label: 'Eastern Standard Time - Atikokan',
+    name: 'America/Atikokan',
+    offset: -5
   },
   {
-    label: 'Boa Vista',
-    name: 'America/Boa_Vista'
+    label: 'Eastern Standard Time - Cancun',
+    name: 'America/Cancun',
+    offset: -5
   },
   {
-    label: 'Campo Grande',
-    name: 'America/Campo_Grande'
+    label: 'Eastern Standard Time - Jamaica',
+    name: 'America/Jamaica',
+    offset: -5
   },
   {
-    label: 'Caracas',
-    name: 'America/Caracas'
+    label: 'Eastern Standard Time - Panama',
+    name: 'America/Panama',
+    offset: -5
   },
   {
-    label: 'Cuiaba',
-    name: 'America/Cuiaba'
+    label: 'Eastern Time - Detroit',
+    name: 'America/Detroit',
+    offset: -5
   },
   {
-    label: 'Curacao',
-    name: 'America/Curacao'
+    label: 'Eastern Time - Grand Turk',
+    name: 'America/Grand_Turk',
+    offset: -5
   },
   {
-    label: 'Detroit',
-    name: 'America/Detroit'
-  },
-  {
-    label: 'Eastern Time',
-    name: 'America/New_York'
+    label: 'Eastern Time - Indianapolis',
+    name: 'America/Indiana/Indianapolis',
+    offset: -5
   },
   {
     label: 'Eastern Time - Iqaluit',
-    name: 'America/Iqaluit'
+    name: 'America/Iqaluit',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Louisville',
+    name: 'America/Kentucky/Louisville',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Marengo, Indiana',
+    name: 'America/Indiana/Marengo',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Monticello, Kentucky',
+    name: 'America/Kentucky/Monticello',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Nassau',
+    name: 'America/Nassau',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - New York',
+    name: 'America/New_York',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Nipigon',
+    name: 'America/Nipigon',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Pangnirtung',
+    name: 'America/Pangnirtung',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Petersburg, Indiana',
+    name: 'America/Indiana/Petersburg',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Port-au-Prince',
+    name: 'America/Port-au-Prince',
+    offset: -5
+  },
+  {
+    label: 'Eastern Time - Thunder Bay',
+    name: 'America/Thunder_Bay',
+    offset: -5
   },
   {
     label: 'Eastern Time - Toronto',
-    name: 'America/Toronto'
+    name: 'America/Toronto',
+    offset: -5
   },
   {
-    label: 'Grand Turk',
-    name: 'America/Grand_Turk'
+    label: 'Eastern Time - Vevay, Indiana',
+    name: 'America/Indiana/Vevay',
+    offset: -5
   },
   {
-    label: 'Guyana',
-    name: 'America/Guyana'
+    label: 'Eastern Time - Vincennes, Indiana',
+    name: 'America/Indiana/Vincennes',
+    offset: -5
   },
   {
-    label: 'Havana',
-    name: 'America/Havana'
+    label: 'Eastern Time - Winamac, Indiana',
+    name: 'America/Indiana/Winamac',
+    offset: -5
   },
   {
-    label: 'La Paz',
-    name: 'America/La_Paz'
+    label: 'Ecuador Time',
+    name: 'America/Guayaquil',
+    offset: -5
   },
   {
-    label: 'Manaus',
-    name: 'America/Manaus'
+    label: 'Peru Standard Time',
+    name: 'America/Lima',
+    offset: -5
   },
   {
-    label: 'Martinique',
-    name: 'America/Martinique'
+    label: 'Amazon Standard Time - Boa Vista',
+    name: 'America/Boa_Vista',
+    offset: -4
   },
   {
-    label: 'Nassau',
-    name: 'America/Nassau'
+    label: 'Amazon Standard Time - Manaus',
+    name: 'America/Manaus',
+    offset: -4
   },
   {
-    label: 'Port of Spain',
-    name: 'America/Port_of_Spain'
+    label: 'Amazon Standard Time - Porto Velho',
+    name: 'America/Porto_Velho',
+    offset: -4
   },
   {
-    label: 'Port-au-Prince',
-    name: 'America/Port-au-Prince'
+    label: 'Atlantic Standard Time - Barbados',
+    name: 'America/Barbados',
+    offset: -4
   },
   {
-    label: 'Porto Velho',
-    name: 'America/Porto_Velho'
+    label: 'Atlantic Standard Time - Blanc-Sablon',
+    name: 'America/Blanc-Sablon',
+    offset: -4
   },
   {
-    label: 'Puerto Rico',
-    name: 'America/Puerto_Rico'
+    label: 'Atlantic Standard Time - Curaçao',
+    name: 'America/Curacao',
+    offset: -4
   },
   {
-    label: 'Santiago',
-    name: 'America/Santiago'
+    label: 'Atlantic Standard Time - Martinique',
+    name: 'America/Martinique',
+    offset: -4
   },
   {
-    label: 'Santo Domingo',
-    name: 'America/Santo_Domingo'
+    label: 'Atlantic Standard Time - Port of Spain',
+    name: 'America/Port_of_Spain',
+    offset: -4
   },
   {
-    label: 'Araguaina',
-    name: 'America/Araguaina'
+    label: 'Atlantic Standard Time - Puerto Rico',
+    name: 'America/Puerto_Rico',
+    offset: -4
+  },
+  {
+    label: 'Atlantic Standard Time - Santo Domingo',
+    name: 'America/Santo_Domingo',
+    offset: -4
+  },
+  {
+    label: 'Atlantic Time - Bermuda',
+    name: 'Atlantic/Bermuda',
+    offset: -4
+  },
+  {
+    label: 'Atlantic Time - Glace Bay',
+    name: 'America/Glace_Bay',
+    offset: -4
+  },
+  {
+    label: 'Atlantic Time - Goose Bay',
+    name: 'America/Goose_Bay',
+    offset: -4
   },
   {
     label: 'Atlantic Time - Halifax',
-    name: 'America/Halifax'
+    name: 'America/Halifax',
+    offset: -4
   },
   {
-    label: 'Belem',
-    name: 'America/Belem'
+    label: 'Atlantic Time - Moncton',
+    name: 'America/Moncton',
+    offset: -4
   },
   {
-    label: 'Bermuda',
-    name: 'Atlantic/Bermuda'
+    label: 'Atlantic Time - Thule',
+    name: 'America/Thule',
+    offset: -4
   },
   {
-    label: 'Buenos Aires',
-    name: 'America/Argentina/Buenos_Aires'
+    label: 'Bolivia Time',
+    name: 'America/La_Paz',
+    offset: -4
   },
   {
-    label: 'Cayenne',
-    name: 'America/Cayenne'
+    label: 'Guyana Time',
+    name: 'America/Guyana',
+    offset: -4
   },
   {
-    label: 'Cordoba',
-    name: 'America/Argentina/Cordoba'
+    label: 'Venezuela Time',
+    name: 'America/Caracas',
+    offset: -4
   },
   {
-    label: 'Fortaleza',
-    name: 'America/Fortaleza'
+    label: 'Newfoundland Time',
+    name: 'America/St_Johns',
+    offset: -3.5
   },
   {
-    label: 'Maceio',
-    name: 'America/Maceio'
+    label: 'Amazon Time (Campo Grande)',
+    name: 'America/Campo_Grande',
+    offset: -3
   },
   {
-    label: 'Montevideo',
-    name: 'America/Montevideo'
+    label: 'Amazon Time (Cuiaba)',
+    name: 'America/Cuiaba',
+    offset: -3
   },
   {
-    label: 'Palmer',
-    name: 'Antarctica/Palmer'
+    label: 'Argentina Standard Time - Buenos Aires',
+    name: 'America/Argentina/Buenos_Aires',
+    offset: -3
   },
   {
-    label: 'Paramaribo',
-    name: 'America/Paramaribo'
+    label: 'Argentina Standard Time - Catamarca',
+    name: 'America/Argentina/Catamarca',
+    offset: -3
   },
   {
-    label: 'Punta Arenas',
-    name: 'America/Punta_Arenas'
+    label: 'Argentina Standard Time - Cordoba',
+    name: 'America/Argentina/Cordoba',
+    offset: -3
   },
   {
-    label: 'Recife',
-    name: 'America/Recife'
+    label: 'Argentina Standard Time - Jujuy',
+    name: 'America/Argentina/Jujuy',
+    offset: -3
   },
   {
-    label: 'Rothera',
-    name: 'Antarctica/Rothera'
+    label: 'Argentina Standard Time - La Rioja',
+    name: 'America/Argentina/La_Rioja',
+    offset: -3
   },
   {
-    label: 'Salvador',
-    name: 'America/Bahia'
+    label: 'Argentina Standard Time - Mendoza',
+    name: 'America/Argentina/Mendoza',
+    offset: -3
   },
   {
-    label: 'Sao Paulo',
-    name: 'America/Sao_Paulo'
+    label: 'Argentina Standard Time - Rio Gallegos',
+    name: 'America/Argentina/Rio_Gallegos',
+    offset: -3
   },
   {
-    label: 'Stanley',
-    name: 'Atlantic/Stanley'
+    label: 'Argentina Standard Time - Salta',
+    name: 'America/Argentina/Salta',
+    offset: -3
   },
   {
-    label: 'Thule',
-    name: 'America/Thule'
+    label: 'Argentina Standard Time - San Juan',
+    name: 'America/Argentina/San_Juan',
+    offset: -3
   },
   {
-    label: 'Newfoundland Time - St. Johns',
-    name: 'America/St_Johns'
+    label: 'Argentina Standard Time - Tucuman',
+    name: 'America/Argentina/Tucuman',
+    offset: -3
   },
   {
-    label: 'Godthab',
-    name: 'America/Godthab'
+    label: 'Argentina Standard Time - Ushuaia',
+    name: 'America/Argentina/Ushuaia',
+    offset: -3
   },
   {
-    label: 'Miquelon',
-    name: 'America/Miquelon'
+    label: 'Brasilia Standard Time - Araguaina',
+    name: 'America/Araguaina',
+    offset: -3
   },
   {
-    label: 'Noronha',
-    name: 'America/Noronha'
+    label: 'Brasilia Standard Time - Bahia',
+    name: 'America/Bahia',
+    offset: -3
   },
   {
-    label: 'South Georgia',
-    name: 'Atlantic/South_Georgia'
+    label: 'Brasilia Standard Time - Belem',
+    name: 'America/Belem',
+    offset: -3
   },
   {
-    label: 'Cape Verde',
-    name: 'Atlantic/Cape_Verde'
+    label: 'Brasilia Standard Time - Fortaleza',
+    name: 'America/Fortaleza',
+    offset: -3
   },
   {
-    label: 'Abidjan',
-    name: 'Africa/Abidjan'
+    label: 'Brasilia Standard Time - Maceio',
+    name: 'America/Maceio',
+    offset: -3
   },
   {
-    label: 'Accra',
-    name: 'Africa/Accra'
+    label: 'Brasilia Standard Time - Recife',
+    name: 'America/Recife',
+    offset: -3
   },
   {
-    label: 'Azores',
-    name: 'Atlantic/Azores'
+    label: 'Brasilia Standard Time - Santarem',
+    name: 'America/Santarem',
+    offset: -3
   },
   {
-    label: 'Bissau',
-    name: 'Africa/Bissau'
+    label: 'Chile Time',
+    name: 'America/Santiago',
+    offset: -3
   },
   {
-    label: 'Casablanca',
-    name: 'Africa/Casablanca'
+    label: 'Falkland Islands Standard Time',
+    name: 'Atlantic/Stanley',
+    offset: -3
   },
   {
-    label: 'Danmarkshavn',
-    name: 'America/Danmarkshavn'
+    label: 'French Guiana Time',
+    name: 'America/Cayenne',
+    offset: -3
   },
   {
-    label: 'El Aaiun',
-    name: 'Africa/El_Aaiun'
+    label: 'Palmer Time',
+    name: 'Antarctica/Palmer',
+    offset: -3
   },
   {
-    label: 'GMT (no daylight saving)',
-    name: 'Etc/GMT'
+    label: 'Paraguay Time',
+    name: 'America/Asuncion',
+    offset: -3
   },
   {
-    label: 'Monrovia',
-    name: 'Africa/Monrovia'
+    label: 'Punta Arenas Time',
+    name: 'America/Punta_Arenas',
+    offset: -3
   },
   {
-    label: 'Reykjavik',
-    name: 'Atlantic/Reykjavik'
+    label: 'Rothera Time',
+    name: 'Antarctica/Rothera',
+    offset: -3
   },
   {
-    label: 'Scoresbysund',
-    name: 'America/Scoresbysund'
+    label: 'St. Pierre & Miquelon Time',
+    name: 'America/Miquelon',
+    offset: -3
   },
   {
-    label: 'UTC',
-    name: 'UTC'
+    label: 'Suriname Time',
+    name: 'America/Paramaribo',
+    offset: -3
   },
   {
-    label: 'Algiers',
-    name: 'Africa/Algiers'
+    label: 'Uruguay Standard Time',
+    name: 'America/Montevideo',
+    offset: -3
   },
   {
-    label: 'Canary Islands',
-    name: 'Atlantic/Canary'
+    label: 'West Greenland Time',
+    name: 'America/Godthab',
+    offset: -3
   },
   {
-    label: 'Dublin',
-    name: 'Europe/Dublin'
+    label: 'Western Argentina Standard Time',
+    name: 'America/Argentina/San_Luis',
+    offset: -3
   },
   {
-    label: 'Faeroe',
-    name: 'Atlantic/Faroe'
+    label: 'Brasilia Time',
+    name: 'America/Sao_Paulo',
+    offset: -2
   },
   {
-    label: 'Lagos',
-    name: 'Africa/Lagos'
+    label: 'Fernando de Noronha Standard Time',
+    name: 'America/Noronha',
+    offset: -2
   },
   {
-    label: 'Lisbon',
-    name: 'Europe/Lisbon'
+    label: 'South Georgia Time',
+    name: 'Atlantic/South_Georgia',
+    offset: -2
   },
   {
-    label: 'London',
-    name: 'Europe/London'
+    label: 'Azores Time',
+    name: 'Atlantic/Azores',
+    offset: -1
   },
   {
-    label: 'Ndjamena',
-    name: 'Africa/Ndjamena'
+    label: 'Cape Verde Standard Time',
+    name: 'Atlantic/Cape_Verde',
+    offset: -1
   },
   {
-    label: 'Sao Tome',
-    name: 'Africa/Sao_Tome'
+    label: 'East Greenland Time',
+    name: 'America/Scoresbysund',
+    offset: -1
   },
   {
-    label: 'Tunis',
-    name: 'Africa/Tunis'
+    label: 'Coordinated Universal Time',
+    name: 'UTC',
+    offset: 0
   },
   {
-    label: 'Amsterdam',
-    name: 'Europe/Amsterdam'
+    label: 'Greenwich Mean Time',
+    name: 'Etc/GMT',
+    offset: 0
   },
   {
-    label: 'Andorra',
-    name: 'Europe/Andorra'
+    label: 'Greenwich Mean Time - Abidjan',
+    name: 'Africa/Abidjan',
+    offset: 0
   },
   {
-    label: 'Berlin',
-    name: 'Europe/Berlin'
+    label: 'Greenwich Mean Time - Accra',
+    name: 'Africa/Accra',
+    offset: 0
   },
   {
-    label: 'Brussels',
-    name: 'Europe/Brussels'
+    label: 'Greenwich Mean Time - Bissau',
+    name: 'Africa/Bissau',
+    offset: 0
   },
   {
-    label: 'Budapest',
-    name: 'Europe/Budapest'
+    label: 'Greenwich Mean Time - Danmarkshavn',
+    name: 'America/Danmarkshavn',
+    offset: 0
   },
   {
-    label: 'Cairo',
-    name: 'Africa/Cairo'
+    label: 'Greenwich Mean Time - Monrovia',
+    name: 'Africa/Monrovia',
+    offset: 0
+  },
+  {
+    label: 'Greenwich Mean Time - Reykjavik',
+    name: 'Atlantic/Reykjavik',
+    offset: 0
+  },
+  {
+    label: 'Greenwich Mean Time - São Tomé',
+    name: 'Africa/Sao_Tome',
+    offset: 0
+  },
+  {
+    label: 'Ireland Time',
+    name: 'Europe/Dublin',
+    offset: 0
+  },
+  {
+    label: 'Troll Time',
+    name: 'Antarctica/Troll',
+    offset: 0
+  },
+  {
+    label: 'United Kingdom Time',
+    name: 'Europe/London',
+    offset: 0
+  },
+  {
+    label: 'Western European Time - Canary',
+    name: 'Atlantic/Canary',
+    offset: 0
+  },
+  {
+    label: 'Western European Time - Faroe',
+    name: 'Atlantic/Faroe',
+    offset: 0
+  },
+  {
+    label: 'Western European Time - Lisbon',
+    name: 'Europe/Lisbon',
+    offset: 0
+  },
+  {
+    label: 'Western European Time - Madeira',
+    name: 'Atlantic/Madeira',
+    offset: 0
+  },
+  {
+    label: 'Central European Standard Time - Algiers',
+    name: 'Africa/Algiers',
+    offset: 1
+  },
+  {
+    label: 'Central European Standard Time - Tunis',
+    name: 'Africa/Tunis',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Amsterdam',
+    name: 'Europe/Amsterdam',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Andorra',
+    name: 'Europe/Andorra',
+    offset: 1
   },
   {
     label: 'Central European Time - Belgrade',
-    name: 'Europe/Belgrade'
+    name: 'Europe/Belgrade',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Berlin',
+    name: 'Europe/Berlin',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Brussels',
+    name: 'Europe/Brussels',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Budapest',
+    name: 'Europe/Budapest',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Ceuta',
+    name: 'Africa/Ceuta',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Copenhagen',
+    name: 'Europe/Copenhagen',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Gibraltar',
+    name: 'Europe/Gibraltar',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Luxembourg',
+    name: 'Europe/Luxembourg',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Madrid',
+    name: 'Europe/Madrid',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Malta',
+    name: 'Europe/Malta',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Monaco',
+    name: 'Europe/Monaco',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Oslo',
+    name: 'Europe/Oslo',
+    offset: 1
+  },
+  {
+    label: 'Central European Time - Paris',
+    name: 'Europe/Paris',
+    offset: 1
   },
   {
     label: 'Central European Time - Prague',
-    name: 'Europe/Prague'
+    name: 'Europe/Prague',
+    offset: 1
   },
   {
-    label: 'Ceuta',
-    name: 'Africa/Ceuta'
+    label: 'Central European Time - Rome',
+    name: 'Europe/Rome',
+    offset: 1
   },
   {
-    label: 'Copenhagen',
-    name: 'Europe/Copenhagen'
+    label: 'Central European Time - Stockholm',
+    name: 'Europe/Stockholm',
+    offset: 1
   },
   {
-    label: 'Gibraltar',
-    name: 'Europe/Gibraltar'
+    label: 'Central European Time - Tirane',
+    name: 'Europe/Tirane',
+    offset: 1
   },
   {
-    label: 'Johannesburg',
-    name: 'Africa/Johannesburg'
+    label: 'Central European Time - Vienna',
+    name: 'Europe/Vienna',
+    offset: 1
   },
   {
-    label: 'Khartoum',
-    name: 'Africa/Khartoum'
+    label: 'Central European Time - Warsaw',
+    name: 'Europe/Warsaw',
+    offset: 1
   },
   {
-    label: 'Luxembourg',
-    name: 'Europe/Luxembourg'
+    label: 'Central European Time - Zurich',
+    name: 'Europe/Zurich',
+    offset: 1
   },
   {
-    label: 'Madrid',
-    name: 'Europe/Madrid'
+    label: 'Morocco Time',
+    name: 'Africa/Casablanca',
+    offset: 1
   },
   {
-    label: 'Malta',
-    name: 'Europe/Malta'
+    label: 'West Africa Standard Time - Lagos',
+    name: 'Africa/Lagos',
+    offset: 1
   },
   {
-    label: 'Maputo',
-    name: 'Africa/Maputo'
+    label: 'West Africa Standard Time - Ndjamena',
+    name: 'Africa/Ndjamena',
+    offset: 1
   },
   {
-    label: 'Monaco',
-    name: 'Europe/Monaco'
+    label: 'Western Sahara Time',
+    name: 'Africa/El_Aaiun',
+    offset: 1
   },
   {
-    label: 'Moscow-01 - Kaliningrad',
-    name: 'Europe/Kaliningrad'
+    label: 'Central Africa Time - Khartoum',
+    name: 'Africa/Khartoum',
+    offset: 2
   },
   {
-    label: 'Oslo',
-    name: 'Europe/Oslo'
+    label: 'Central Africa Time - Maputo',
+    name: 'Africa/Maputo',
+    offset: 2
   },
   {
-    label: 'Paris',
-    name: 'Europe/Paris'
+    label: 'Central Africa Time - Windhoek',
+    name: 'Africa/Windhoek',
+    offset: 2
   },
   {
-    label: 'Rome',
-    name: 'Europe/Rome'
+    label: 'Eastern European Standard Time - Cairo',
+    name: 'Africa/Cairo',
+    offset: 2
   },
   {
-    label: 'Stockholm',
-    name: 'Europe/Stockholm'
+    label: 'Eastern European Standard Time - Kaliningrad',
+    name: 'Europe/Kaliningrad',
+    offset: 2
   },
   {
-    label: 'Tirane',
-    name: 'Europe/Tirane'
+    label: 'Eastern European Standard Time - Tripoli',
+    name: 'Africa/Tripoli',
+    offset: 2
   },
   {
-    label: 'Tripoli',
-    name: 'Africa/Tripoli'
+    label: 'Eastern European Time - Amman',
+    name: 'Asia/Amman',
+    offset: 2
   },
   {
-    label: 'Vienna',
-    name: 'Europe/Vienna'
+    label: 'Eastern European Time - Athens',
+    name: 'Europe/Athens',
+    offset: 2
   },
   {
-    label: 'Warsaw',
-    name: 'Europe/Warsaw'
+    label: 'Eastern European Time - Beirut',
+    name: 'Asia/Beirut',
+    offset: 2
   },
   {
-    label: 'Windhoek',
-    name: 'Africa/Windhoek'
+    label: 'Eastern European Time - Bucharest',
+    name: 'Europe/Bucharest',
+    offset: 2
   },
   {
-    label: 'Zurich',
-    name: 'Europe/Zurich'
+    label: 'Eastern European Time - Chisinau',
+    name: 'Europe/Chisinau',
+    offset: 2
   },
   {
-    label: 'Amman',
-    name: 'Asia/Amman'
+    label: 'Eastern European Time - Damascus',
+    name: 'Asia/Damascus',
+    offset: 2
   },
   {
-    label: 'Athens',
-    name: 'Europe/Athens'
+    label: 'Eastern European Time - Gaza',
+    name: 'Asia/Gaza',
+    offset: 2
   },
   {
-    label: 'Baghdad',
-    name: 'Asia/Baghdad'
+    label: 'Eastern European Time - Hebron',
+    name: 'Asia/Hebron',
+    offset: 2
   },
   {
-    label: 'Beirut',
-    name: 'Asia/Beirut'
+    label: 'Eastern European Time - Helsinki',
+    name: 'Europe/Helsinki',
+    offset: 2
   },
   {
-    label: 'Bucharest',
-    name: 'Europe/Bucharest'
+    label: 'Eastern European Time - Kiev',
+    name: 'Europe/Kiev',
+    offset: 2
   },
   {
-    label: 'Chisinau',
-    name: 'Europe/Chisinau'
+    label: 'Eastern European Time - Nicosia',
+    name: 'Asia/Nicosia',
+    offset: 2
   },
   {
-    label: 'Damascus',
-    name: 'Asia/Damascus'
+    label: 'Eastern European Time - Riga',
+    name: 'Europe/Riga',
+    offset: 2
   },
   {
-    label: 'Gaza',
-    name: 'Asia/Gaza'
+    label: 'Eastern European Time - Sofia',
+    name: 'Europe/Sofia',
+    offset: 2
   },
   {
-    label: 'Helsinki',
-    name: 'Europe/Helsinki'
+    label: 'Eastern European Time - Tallinn',
+    name: 'Europe/Tallinn',
+    offset: 2
   },
   {
-    label: 'Istanbul',
-    name: 'Europe/Istanbul'
+    label: 'Eastern European Time - Uzhhorod',
+    name: 'Europe/Uzhgorod',
+    offset: 2
   },
   {
-    label: 'Jerusalem',
-    name: 'Asia/Jerusalem'
+    label: 'Eastern European Time - Vilnius',
+    name: 'Europe/Vilnius',
+    offset: 2
   },
   {
-    label: 'Kiev',
-    name: 'Europe/Kiev'
+    label: 'Eastern European Time - Zaporozhye',
+    name: 'Europe/Zaporozhye',
+    offset: 2
   },
   {
-    label: 'Minsk',
-    name: 'Europe/Minsk'
+    label: 'Famagusta Time',
+    name: 'Asia/Famagusta',
+    offset: 2
   },
   {
-    label: 'Moscow+00 - Moscow',
-    name: 'Europe/Moscow'
+    label: 'Israel Time',
+    name: 'Asia/Jerusalem',
+    offset: 2
   },
   {
-    label: 'Nairobi',
-    name: 'Africa/Nairobi'
+    label: 'South Africa Standard Time',
+    name: 'Africa/Johannesburg',
+    offset: 2
   },
   {
-    label: 'Nicosia',
-    name: 'Asia/Nicosia'
+    label: 'Arabian Standard Time - Baghdad',
+    name: 'Asia/Baghdad',
+    offset: 3
   },
   {
-    label: 'Qatar',
-    name: 'Asia/Qatar'
+    label: 'Arabian Standard Time - Qatar',
+    name: 'Asia/Qatar',
+    offset: 3
   },
   {
-    label: 'Riga',
-    name: 'Europe/Riga'
+    label: 'Arabian Standard Time - Riyadh',
+    name: 'Asia/Riyadh',
+    offset: 3
   },
   {
-    label: 'Riyadh',
-    name: 'Asia/Riyadh'
+    label: 'East Africa Time - Juba',
+    name: 'Africa/Juba',
+    offset: 3
   },
   {
-    label: 'Sofia',
-    name: 'Europe/Sofia'
+    label: 'East Africa Time - Nairobi',
+    name: 'Africa/Nairobi',
+    offset: 3
   },
   {
-    label: 'Syowa',
-    name: 'Antarctica/Syowa'
+    label: 'Kirov Time',
+    name: 'Europe/Kirov',
+    offset: 3
   },
   {
-    label: 'Tallinn',
-    name: 'Europe/Tallinn'
+    label: 'Moscow Standard Time - Minsk',
+    name: 'Europe/Minsk',
+    offset: 3
   },
   {
-    label: 'Vilnius',
-    name: 'Europe/Vilnius'
+    label: 'Moscow Standard Time - Moscow',
+    name: 'Europe/Moscow',
+    offset: 3
   },
   {
-    label: 'Baku',
-    name: 'Asia/Baku'
+    label: 'Moscow Standard Time - Simferopol',
+    name: 'Europe/Simferopol',
+    offset: 3
   },
   {
-    label: 'Dubai',
-    name: 'Asia/Dubai'
+    label: 'Syowa Time',
+    name: 'Antarctica/Syowa',
+    offset: 3
   },
   {
-    label: 'Mahe',
-    name: 'Indian/Mahe'
+    label: 'Turkey Time',
+    name: 'Europe/Istanbul',
+    offset: 3
   },
   {
-    label: 'Mauritius',
-    name: 'Indian/Mauritius'
+    label: 'Iran Time',
+    name: 'Asia/Tehran',
+    offset: 3.5
   },
   {
-    label: 'Moscow+01 - Samara',
-    name: 'Europe/Samara'
+    label: 'Armenia Standard Time',
+    name: 'Asia/Yerevan',
+    offset: 4
   },
   {
-    label: 'Reunion',
-    name: 'Indian/Reunion'
+    label: 'Astrakhan Time',
+    name: 'Europe/Astrakhan',
+    offset: 4
   },
   {
-    label: 'Tbilisi',
-    name: 'Asia/Tbilisi'
+    label: 'Azerbaijan Standard Time',
+    name: 'Asia/Baku',
+    offset: 4
   },
   {
-    label: 'Yerevan',
-    name: 'Asia/Yerevan'
+    label: 'Georgia Standard Time',
+    name: 'Asia/Tbilisi',
+    offset: 4
   },
   {
-    label: 'Kabul',
-    name: 'Asia/Kabul'
+    label: 'Gulf Standard Time',
+    name: 'Asia/Dubai',
+    offset: 4
   },
   {
-    label: 'Tehran',
-    name: 'Asia/Tehran'
+    label: 'Mauritius Standard Time',
+    name: 'Indian/Mauritius',
+    offset: 4
   },
   {
-    label: 'Aqtau',
-    name: 'Asia/Aqtau'
+    label: 'Réunion Time',
+    name: 'Indian/Reunion',
+    offset: 4
   },
   {
-    label: 'Aqtobe',
-    name: 'Asia/Aqtobe'
+    label: 'Samara Standard Time',
+    name: 'Europe/Samara',
+    offset: 4
   },
   {
-    label: 'Ashgabat',
-    name: 'Asia/Ashgabat'
+    label: 'Saratov Time',
+    name: 'Europe/Saratov',
+    offset: 4
   },
   {
-    label: 'Dushanbe',
-    name: 'Asia/Dushanbe'
+    label: 'Seychelles Time',
+    name: 'Indian/Mahe',
+    offset: 4
   },
   {
-    label: 'Karachi',
-    name: 'Asia/Karachi'
+    label: 'Ulyanovsk Time',
+    name: 'Europe/Ulyanovsk',
+    offset: 4
   },
   {
-    label: 'Kerguelen',
-    name: 'Indian/Kerguelen'
+    label: 'Volgograd Standard Time',
+    name: 'Europe/Volgograd',
+    offset: 4
   },
   {
-    label: 'Maldives',
-    name: 'Indian/Maldives'
+    label: 'Afghanistan Time',
+    name: 'Asia/Kabul',
+    offset: 4.5
   },
   {
-    label: 'Mawson',
-    name: 'Antarctica/Mawson'
+    label: 'French Southern & Antarctic Time',
+    name: 'Indian/Kerguelen',
+    offset: 5
   },
   {
-    label: 'Moscow+02 - Yekaterinburg',
-    name: 'Asia/Yekaterinburg'
+    label: 'Maldives Time',
+    name: 'Indian/Maldives',
+    offset: 5
   },
   {
-    label: 'Tashkent',
-    name: 'Asia/Tashkent'
+    label: 'Mawson Time',
+    name: 'Antarctica/Mawson',
+    offset: 5
   },
   {
-    label: 'Colombo',
-    name: 'Asia/Colombo'
+    label: 'Pakistan Standard Time',
+    name: 'Asia/Karachi',
+    offset: 5
   },
   {
-    label: 'India Standard Time',
-    name: 'Asia/Calcutta'
+    label: 'Tajikistan Time',
+    name: 'Asia/Dushanbe',
+    offset: 5
   },
   {
-    label: 'Katmandu',
-    name: 'Asia/Katmandu'
+    label: 'Turkmenistan Standard Time',
+    name: 'Asia/Ashgabat',
+    offset: 5
   },
   {
-    label: 'Almaty',
-    name: 'Asia/Almaty'
+    label: 'Uzbekistan Standard Time - Samarkand',
+    name: 'Asia/Samarkand',
+    offset: 5
   },
   {
-    label: 'Bishkek',
-    name: 'Asia/Bishkek'
+    label: 'Uzbekistan Standard Time - Tashkent',
+    name: 'Asia/Tashkent',
+    offset: 5
   },
   {
-    label: 'Chagos',
-    name: 'Indian/Chagos'
+    label: 'West Kazakhstan Time - Aqtau',
+    name: 'Asia/Aqtau',
+    offset: 5
   },
   {
-    label: 'Dhaka',
-    name: 'Asia/Dhaka'
+    label: 'West Kazakhstan Time - Aqtobe',
+    name: 'Asia/Aqtobe',
+    offset: 5
   },
   {
-    label: 'Moscow+03 - Omsk',
-    name: 'Asia/Omsk'
+    label: 'West Kazakhstan Time - Atyrau',
+    name: 'Asia/Atyrau',
+    offset: 5
   },
   {
-    label: 'Thimphu',
-    name: 'Asia/Thimphu'
+    label: 'West Kazakhstan Time - Oral',
+    name: 'Asia/Oral',
+    offset: 5
   },
   {
-    label: 'Vostok',
-    name: 'Antarctica/Vostok'
+    label: 'West Kazakhstan Time - Qyzylorda',
+    name: 'Asia/Qyzylorda',
+    offset: 5
   },
   {
-    label: 'Cocos',
-    name: 'Indian/Cocos'
+    label: 'Yekaterinburg Standard Time',
+    name: 'Asia/Yekaterinburg',
+    offset: 5
   },
   {
-    label: 'Rangoon',
-    name: 'Asia/Yangon'
+    label: 'India Standard Time - Colombo',
+    name: 'Asia/Colombo',
+    offset: 5.5
   },
   {
-    label: 'Bangkok',
-    name: 'Asia/Bangkok'
+    label: 'India Standard Time - Kolkata',
+    name: 'Asia/Kolkata',
+    offset: 5.5
   },
   {
-    label: 'Christmas',
-    name: 'Indian/Christmas'
+    label: 'Nepal Time',
+    name: 'Asia/Kathmandu',
+    offset: 5.75
   },
   {
-    label: 'Davis',
-    name: 'Antarctica/Davis'
+    label: 'Bangladesh Standard Time',
+    name: 'Asia/Dhaka',
+    offset: 6
   },
   {
-    label: 'Hanoi',
-    name: 'Asia/Saigon'
+    label: 'Bhutan Time',
+    name: 'Asia/Thimphu',
+    offset: 6
   },
   {
-    label: 'Hovd',
-    name: 'Asia/Hovd'
+    label: 'East Kazakhstan Time - Almaty',
+    name: 'Asia/Almaty',
+    offset: 6
   },
   {
-    label: 'Jakarta',
-    name: 'Asia/Jakarta'
+    label: 'East Kazakhstan Time - Qostanay',
+    name: 'Asia/Qostanay',
+    offset: 6
   },
   {
-    label: 'Moscow+04 - Krasnoyarsk',
-    name: 'Asia/Krasnoyarsk'
+    label: 'Indian Ocean Time',
+    name: 'Indian/Chagos',
+    offset: 6
   },
   {
-    label: 'Brunei',
-    name: 'Asia/Brunei'
+    label: 'Kyrgyzstan Time',
+    name: 'Asia/Bishkek',
+    offset: 6
   },
   {
-    label: 'Casey',
-    name: 'Antarctica/Casey'
+    label: 'Omsk Standard Time',
+    name: 'Asia/Omsk',
+    offset: 6
   },
   {
-    label: 'China Time - Beijing',
-    name: 'Asia/Shanghai'
+    label: 'Urumqi Time',
+    name: 'Asia/Urumqi',
+    offset: 6
   },
   {
-    label: 'Choibalsan',
-    name: 'Asia/Choibalsan'
+    label: 'Vostok Time',
+    name: 'Antarctica/Vostok',
+    offset: 6
   },
   {
-    label: 'Hong Kong',
-    name: 'Asia/Hong_Kong'
+    label: 'Cocos Islands Time',
+    name: 'Indian/Cocos',
+    offset: 6.5
   },
   {
-    label: 'Kuala Lumpur',
-    name: 'Asia/Kuala_Lumpur'
+    label: 'Myanmar Time',
+    name: 'Asia/Yangon',
+    offset: 6.5
   },
   {
-    label: 'Macau',
-    name: 'Asia/Macau'
+    label: 'Barnaul Time',
+    name: 'Asia/Barnaul',
+    offset: 7
   },
   {
-    label: 'Makassar',
-    name: 'Asia/Makassar'
+    label: 'Christmas Island Time',
+    name: 'Indian/Christmas',
+    offset: 7
   },
   {
-    label: 'Manila',
-    name: 'Asia/Manila'
+    label: 'Davis Time',
+    name: 'Antarctica/Davis',
+    offset: 7
   },
   {
-    label: 'Moscow+05 - Irkutsk',
-    name: 'Asia/Irkutsk'
+    label: 'Hovd Standard Time',
+    name: 'Asia/Hovd',
+    offset: 7
   },
   {
-    label: 'Singapore',
-    name: 'Asia/Singapore'
+    label: 'Indochina Time - Bangkok',
+    name: 'Asia/Bangkok',
+    offset: 7
   },
   {
-    label: 'Taipei',
-    name: 'Asia/Taipei'
+    label: 'Indochina Time - Ho Chi Minh City',
+    name: 'Asia/Ho_Chi_Minh',
+    offset: 7
   },
   {
-    label: 'Ulaanbaatar',
-    name: 'Asia/Ulaanbaatar'
+    label: 'Krasnoyarsk Standard Time - Krasnoyarsk',
+    name: 'Asia/Krasnoyarsk',
+    offset: 7
   },
   {
-    label: 'Western Time - Perth',
-    name: 'Australia/Perth'
+    label: 'Krasnoyarsk Standard Time - Novokuznetsk',
+    name: 'Asia/Novokuznetsk',
+    offset: 7
   },
   {
-    label: 'Dili',
-    name: 'Asia/Dili'
+    label: 'Novosibirsk Standard Time',
+    name: 'Asia/Novosibirsk',
+    offset: 7
   },
   {
-    label: 'Jayapura',
-    name: 'Asia/Jayapura'
+    label: 'Tomsk Time',
+    name: 'Asia/Tomsk',
+    offset: 7
   },
   {
-    label: 'Moscow+06 - Yakutsk',
-    name: 'Asia/Yakutsk'
+    label: 'Western Indonesia Time - Jakarta',
+    name: 'Asia/Jakarta',
+    offset: 7
   },
   {
-    label: 'Palau',
-    name: 'Pacific/Palau'
+    label: 'Western Indonesia Time - Pontianak',
+    name: 'Asia/Pontianak',
+    offset: 7
   },
   {
-    label: 'Pyongyang',
-    name: 'Asia/Pyongyang'
+    label: 'Australian Western Standard Time - Casey',
+    name: 'Antarctica/Casey',
+    offset: 8
   },
   {
-    label: 'Seoul',
-    name: 'Asia/Seoul'
+    label: 'Australian Western Standard Time - Perth',
+    name: 'Australia/Perth',
+    offset: 8
   },
   {
-    label: 'Tokyo',
-    name: 'Asia/Tokyo'
+    label: 'Brunei Darussalam Time',
+    name: 'Asia/Brunei',
+    offset: 8
   },
   {
-    label: 'Central Time - Adelaide',
-    name: 'Australia/Adelaide'
+    label: 'Central Indonesia Time',
+    name: 'Asia/Makassar',
+    offset: 8
   },
   {
-    label: 'Central Time - Darwin',
-    name: 'Australia/Darwin'
+    label: 'China Standard Time - Macau',
+    name: 'Asia/Macau',
+    offset: 8
   },
   {
-    label: "Dumont D'Urville",
-    name: 'Antarctica/DumontDUrville'
+    label: 'China Standard Time - Shanghai',
+    name: 'Asia/Shanghai',
+    offset: 8
   },
   {
-    label: 'Eastern Time - Brisbane',
-    name: 'Australia/Brisbane'
+    label: 'Choibalsan Standard Time',
+    name: 'Asia/Choibalsan',
+    offset: 8
   },
   {
-    label: 'Eastern Time - Hobart',
-    name: 'Australia/Hobart'
+    label: 'Hong Kong Standard Time',
+    name: 'Asia/Hong_Kong',
+    offset: 8
   },
   {
-    label: 'Eastern Time - Melbourne',
-    name: 'Australia/Melbourne'
+    label: 'Irkutsk Standard Time',
+    name: 'Asia/Irkutsk',
+    offset: 8
   },
   {
-    label: 'Eastern Time - Melbourne, Sydney',
-    name: 'Australia/Sydney'
+    label: 'Malaysia Time - Kuala Lumpur',
+    name: 'Asia/Kuala_Lumpur',
+    offset: 8
   },
   {
-    label: 'Guam',
-    name: 'Pacific/Guam'
+    label: 'Malaysia Time - Kuching',
+    name: 'Asia/Kuching',
+    offset: 8
   },
   {
-    label: 'Moscow+07 - Vladivostok',
-    name: 'Asia/Vladivostok'
+    label: 'Philippine Standard Time',
+    name: 'Asia/Manila',
+    offset: 8
   },
   {
-    label: 'Port Moresby',
-    name: 'Pacific/Port_Moresby'
+    label: 'Singapore Standard Time',
+    name: 'Asia/Singapore',
+    offset: 8
   },
   {
-    label: 'Truk',
-    name: 'Pacific/Chuuk'
+    label: 'Taipei Standard Time',
+    name: 'Asia/Taipei',
+    offset: 8
   },
   {
-    label: 'Efate',
-    name: 'Pacific/Efate'
+    label: 'Ulaanbaatar Standard Time',
+    name: 'Asia/Ulaanbaatar',
+    offset: 8
   },
   {
-    label: 'Guadalcanal',
-    name: 'Pacific/Guadalcanal'
+    label: 'Australian Central Western Standard Time',
+    name: 'Australia/Eucla',
+    offset: 8.75
   },
   {
-    label: 'Kosrae',
-    name: 'Pacific/Kosrae'
+    label: 'East Timor Time',
+    name: 'Asia/Dili',
+    offset: 9
   },
   {
-    label: 'Moscow+08 - Magadan',
-    name: 'Asia/Magadan'
+    label: 'Eastern Indonesia Time',
+    name: 'Asia/Jayapura',
+    offset: 9
   },
   {
-    label: 'Norfolk',
-    name: 'Pacific/Norfolk'
+    label: 'Japan Standard Time',
+    name: 'Asia/Tokyo',
+    offset: 9
   },
   {
-    label: 'Noumea',
-    name: 'Pacific/Noumea'
+    label: 'Korean Standard Time - Pyongyang',
+    name: 'Asia/Pyongyang',
+    offset: 9
   },
   {
-    label: 'Ponape',
-    name: 'Pacific/Pohnpei'
+    label: 'Korean Standard Time - Seoul',
+    name: 'Asia/Seoul',
+    offset: 9
   },
   {
-    label: 'Auckland',
-    name: 'Pacific/Auckland'
+    label: 'Palau Time',
+    name: 'Pacific/Palau',
+    offset: 9
   },
   {
-    label: 'Fiji',
-    name: 'Pacific/Fiji'
+    label: 'Yakutsk Standard Time - Chita',
+    name: 'Asia/Chita',
+    offset: 9
   },
   {
-    label: 'Funafuti',
-    name: 'Pacific/Funafuti'
+    label: 'Yakutsk Standard Time - Khandyga',
+    name: 'Asia/Khandyga',
+    offset: 9
   },
   {
-    label: 'Kwajalein',
-    name: 'Pacific/Kwajalein'
+    label: 'Yakutsk Standard Time - Yakutsk',
+    name: 'Asia/Yakutsk',
+    offset: 9
   },
   {
-    label: 'Majuro',
-    name: 'Pacific/Majuro'
+    label: 'Australian Central Standard Time',
+    name: 'Australia/Darwin',
+    offset: 9.5
   },
   {
-    label: 'Moscow+09 - Petropavlovsk-Kamchatskiy',
-    name: 'Asia/Kamchatka'
+    label: 'Australian Eastern Standard Time - Brisbane',
+    name: 'Australia/Brisbane',
+    offset: 10
   },
   {
-    label: 'Nauru',
-    name: 'Pacific/Nauru'
+    label: 'Australian Eastern Standard Time - Lindeman',
+    name: 'Australia/Lindeman',
+    offset: 10
   },
   {
-    label: 'Tarawa',
-    name: 'Pacific/Tarawa'
+    label: 'Chamorro Standard Time',
+    name: 'Pacific/Guam',
+    offset: 10
   },
   {
-    label: 'Wake',
-    name: 'Pacific/Wake'
+    label: 'Chuuk Time',
+    name: 'Pacific/Chuuk',
+    offset: 10
   },
   {
-    label: 'Wallis',
-    name: 'Pacific/Wallis'
+    label: 'Dumont-d’Urville Time',
+    name: 'Antarctica/DumontDUrville',
+    offset: 10
   },
   {
-    label: 'Apia',
-    name: 'Pacific/Apia'
+    label: 'Papua New Guinea Time',
+    name: 'Pacific/Port_Moresby',
+    offset: 10
   },
   {
-    label: 'Enderbury',
-    name: 'Pacific/Enderbury'
+    label: 'Vladivostok Standard Time - Ust-Nera',
+    name: 'Asia/Ust-Nera',
+    offset: 10
   },
   {
-    label: 'Fakaofo',
-    name: 'Pacific/Fakaofo'
+    label: 'Vladivostok Standard Time - Vladivostok',
+    name: 'Asia/Vladivostok',
+    offset: 10
   },
   {
-    label: 'Tongatapu',
-    name: 'Pacific/Tongatapu'
+    label: 'Central Australia Time - Adelaide',
+    name: 'Australia/Adelaide',
+    offset: 10.5
   },
   {
-    label: 'Kiritimati',
-    name: 'Pacific/Kiritimati'
+    label: 'Central Australia Time - Broken Hill',
+    name: 'Australia/Broken_Hill',
+    offset: 10.5
+  },
+  {
+    label: 'Bougainville Time',
+    name: 'Pacific/Bougainville',
+    offset: 11
+  },
+  {
+    label: 'Eastern Australia Time - Currie',
+    name: 'Australia/Currie',
+    offset: 11
+  },
+  {
+    label: 'Eastern Australia Time - Hobart',
+    name: 'Australia/Hobart',
+    offset: 11
+  },
+  {
+    label: 'Eastern Australia Time - Melbourne',
+    name: 'Australia/Melbourne',
+    offset: 11
+  },
+  {
+    label: 'Eastern Australia Time - Sydney',
+    name: 'Australia/Sydney',
+    offset: 11
+  },
+  {
+    label: 'Kosrae Time',
+    name: 'Pacific/Kosrae',
+    offset: 11
+  },
+  {
+    label: 'Lord Howe Time',
+    name: 'Australia/Lord_Howe',
+    offset: 11
+  },
+  {
+    label: 'Macquarie Island Time',
+    name: 'Antarctica/Macquarie',
+    offset: 11
+  },
+  {
+    label: 'Magadan Standard Time',
+    name: 'Asia/Magadan',
+    offset: 11
+  },
+  {
+    label: 'New Caledonia Standard Time',
+    name: 'Pacific/Noumea',
+    offset: 11
+  },
+  {
+    label: 'Norfolk Island Time',
+    name: 'Pacific/Norfolk',
+    offset: 11
+  },
+  {
+    label: 'Ponape Time',
+    name: 'Pacific/Pohnpei',
+    offset: 11
+  },
+  {
+    label: 'Sakhalin Standard Time',
+    name: 'Asia/Sakhalin',
+    offset: 11
+  },
+  {
+    label: 'Solomon Islands Time',
+    name: 'Pacific/Guadalcanal',
+    offset: 11
+  },
+  {
+    label: 'Srednekolymsk Time',
+    name: 'Asia/Srednekolymsk',
+    offset: 11
+  },
+  {
+    label: 'Vanuatu Standard Time',
+    name: 'Pacific/Efate',
+    offset: 11
+  },
+  {
+    label: 'Anadyr Standard Time',
+    name: 'Asia/Anadyr',
+    offset: 12
+  },
+  {
+    label: 'Fiji Time',
+    name: 'Pacific/Fiji',
+    offset: 12
+  },
+  {
+    label: 'Gilbert Islands Time',
+    name: 'Pacific/Tarawa',
+    offset: 12
+  },
+  {
+    label: 'Marshall Islands Time - Kwajalein',
+    name: 'Pacific/Kwajalein',
+    offset: 12
+  },
+  {
+    label: 'Marshall Islands Time - Majuro',
+    name: 'Pacific/Majuro',
+    offset: 12
+  },
+  {
+    label: 'Nauru Time',
+    name: 'Pacific/Nauru',
+    offset: 12
+  },
+  {
+    label: 'Petropavlovsk-Kamchatski Standard Time',
+    name: 'Asia/Kamchatka',
+    offset: 12
+  },
+  {
+    label: 'Tuvalu Time',
+    name: 'Pacific/Funafuti',
+    offset: 12
+  },
+  {
+    label: 'Wake Island Time',
+    name: 'Pacific/Wake',
+    offset: 12
+  },
+  {
+    label: 'Wallis & Futuna Time',
+    name: 'Pacific/Wallis',
+    offset: 12
+  },
+  {
+    label: 'New Zealand Time',
+    name: 'Pacific/Auckland',
+    offset: 13
+  },
+  {
+    label: 'Phoenix Islands Time',
+    name: 'Pacific/Enderbury',
+    offset: 13
+  },
+  {
+    label: 'Tokelau Time',
+    name: 'Pacific/Fakaofo',
+    offset: 13
+  },
+  {
+    label: 'Tonga Standard Time',
+    name: 'Pacific/Tongatapu',
+    offset: 13
+  },
+  {
+    label: 'Chatham Time',
+    name: 'Pacific/Chatham',
+    offset: 13.75
+  },
+  {
+    label: 'Apia Time',
+    name: 'Pacific/Apia',
+    offset: 14
+  },
+  {
+    label: 'Line Islands Time',
+    name: 'Pacific/Kiritimati',
+    offset: 14
   }
 ];

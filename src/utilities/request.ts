@@ -1,24 +1,24 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { path } from 'ramda';
 
-import { expire } from 'src/session';
 import store from 'src/store';
+import { handleLogout } from 'src/store/authentication/authentication.actions';
 
 const handleSuccess = (response: AxiosResponse) => {
   if (!!response.headers['x-maintenance-mode']) {
-    expire();
+    store.dispatch(handleLogout());
     Promise.reject(response);
   }
 
   return response;
 };
 
-const handleError = (error: AxiosError) => {
+export const handleError = (error: AxiosError) => {
   if (
     !!error.config.headers['x-maintenance-mode'] ||
     (error.response && error.response.status === 401)
   ) {
-    expire();
+    store.dispatch(handleLogout());
   }
 
   return Promise.reject(error);

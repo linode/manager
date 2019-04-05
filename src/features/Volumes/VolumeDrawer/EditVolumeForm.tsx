@@ -1,11 +1,12 @@
+import { Form, Formik } from 'formik';
+import * as React from 'react';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
-import { Form, Formik } from 'formik';
-import * as React from 'react';
-import { compose } from 'recompose';
+} from 'src/components/core/styles';
+import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
   VolumesRequests
@@ -28,6 +29,7 @@ interface Props {
   volumeLabel: string;
   volumeTags: Tag[];
   volumeId: number;
+  readOnly?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & VolumesRequests;
@@ -40,7 +42,14 @@ interface FormState {
 }
 
 const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
-  const { volumeId, volumeLabel, volumeTags, onClose, updateVolume } = props;
+  const {
+    volumeId,
+    volumeLabel,
+    volumeTags,
+    onClose,
+    updateVolume,
+    readOnly
+  } = props;
   const initialValues: FormState = { label: volumeLabel, tags: volumeTags };
 
   return (
@@ -100,6 +109,13 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 error={status.generalError}
               />
             )}
+            {readOnly && (
+              <Notice
+                text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
+                error={true}
+                important
+              />
+            )}
 
             <LabelField
               error={errors.label}
@@ -107,6 +123,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.label}
+              disabled={readOnly}
             />
 
             <TagsInput
@@ -121,11 +138,13 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               label="Tags"
               onChange={selected => setFieldValue('tags', selected)}
               value={values.tags}
+              disabled={readOnly}
             />
 
             <VolumesActionsPanel
               isSubmitting={isSubmitting}
               onSubmit={handleSubmit}
+              disabled={readOnly}
               onCancel={() => {
                 resetForm();
                 onClose();

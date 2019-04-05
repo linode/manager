@@ -33,7 +33,6 @@ const TableHeader: React.StatelessComponent<CombinedProps> = ({
     <Grid container justify="space-between" alignItems="flex-end">
       <Grid item>
         <Typography
-          role="header"
           variant="h2"
           className={classes.title}
           data-qa-table={title}

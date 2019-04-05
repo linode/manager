@@ -1,4 +1,4 @@
-import { last, pathOr } from 'ramda';
+import { last } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -11,6 +11,7 @@ import {
 import Grid from 'src/components/Grid';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { lishLaunch } from 'src/features/Lish';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   LinodeDetailContext,
@@ -30,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   controls: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: 9 - theme.spacing.unit / 2, // 4
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',
@@ -38,8 +39,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   launchButton: {
-    position: 'relative',
-    top: 1,
     lineHeight: 1,
     '&:hover': {
       backgroundColor: 'transparent',
@@ -56,7 +55,7 @@ type CombinedProps = LinodeDetailContext &
   EditableLabelProps &
   WithStyles<ClassNames>;
 
-const Thingy: React.StatelessComponent<CombinedProps> = props => {
+const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
   const {
     classes,
     linode,
@@ -75,6 +74,8 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
     setEditableLabelError
   } = props;
 
+  const disabled = linode._permissions === 'read_only';
+
   const submitConfigChoice = () => {
     if (configDrawerSelected && configDrawerAction) {
       configDrawerAction(configDrawerSelected);
@@ -88,10 +89,10 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
         resetEditableLabel();
       })
       .catch(err => {
-        const errors: Linode.ApiFieldError[] = pathOr(
-          [],
-          ['response', 'data', 'errors'],
-          err
+        const errors: Linode.ApiFieldError[] = getAPIErrorOrDefault(
+          err,
+          'An error occurred while updating label',
+          'label'
         );
         const errorStrings: string[] = errors.map(e => e.reason);
         setEditableLabelError(errorStrings[0]);
@@ -114,11 +115,15 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
           linkText="Linodes"
           labelTitle={linode.label}
           labelOptions={{ linkTo: getLabelLink() }}
-          onEditHandlers={{
-            onEdit: handleSubmitLabelChange,
-            onCancel: resetEditableLabel,
-            errorText: editableLabelError
-          }}
+          onEditHandlers={
+            !disabled
+              ? {
+                  onEdit: handleSubmitLabelChange,
+                  onCancel: resetEditableLabel,
+                  errorText: editableLabelError
+                }
+              : undefined
+          }
         />
       </Grid>
       <Grid item className={classes.controls}>
@@ -128,6 +133,7 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
           data-qa-launch-console
           disableFocusRipple={true}
           disableRipple={true}
+          disabled={disabled}
         >
           Launch Console
         </Button>
@@ -136,8 +142,9 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
           recentEvent={linode.recentEvent}
           id={linode.id}
           label={linode.label}
-          noImage={!linode.image}
+          noConfigs={linode._configs.length === 0}
           openConfigDrawer={openConfigDrawer}
+          disabled={disabled}
         />
       </Grid>
       <LinodeConfigSelectionDrawer
@@ -156,13 +163,14 @@ const Thingy: React.StatelessComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   withConfigDrawerState,
   withEditableLabelState,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
-    updateLinode
-  }))
+    updateLinode,
+    configs: linode._configs
+  })),
+  styled
 );
 
-export default enhanced(Thingy);
+export default enhanced(LinodeControls);

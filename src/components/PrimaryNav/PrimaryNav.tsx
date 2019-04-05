@@ -16,6 +16,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import SpacingToggle from './SpacingToggle';
@@ -66,7 +67,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   fadeContainer: {
     width: '100%',
-    height: '100%',
+    height: 'calc(100% - 80px)',
     display: 'flex',
     flexDirection: 'column'
   },
@@ -301,6 +302,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
     // }
 
+    if (isObjectStorageEnabled) {
+      primaryLinks.push({
+        display: 'Object Storage',
+        href: '/object-storage',
+        key: 'objectStorage'
+      });
+    }
+
     if (hasAccountAccess) {
       primaryLinks.push({
         display: 'Account',
@@ -495,7 +504,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
               transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
               className={classes.menu}
-              BackdropProps={{ className: classes.settingsBackdrop }}
+              BackdropProps={{
+                className: classes.settingsBackdrop,
+                'data-qa-backdrop': true
+              }}
             >
               <ThemeToggle toggleTheme={toggleTheme} />
               <SpacingToggle toggleSpacing={toggleSpacing} />

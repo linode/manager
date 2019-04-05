@@ -233,7 +233,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Typography role="header" variant="h3" className={classes.header}>
+        <Typography variant="h3" className={classes.header}>
           Connections (5 min avg.)
         </Typography>
         <React.Fragment>
@@ -293,7 +293,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
     }
     return (
       <React.Fragment>
-        <Typography role="header" variant="h3" className={classes.header}>
+        <Typography variant="h3" className={classes.header}>
           Traffic (5 min avg.)
         </Typography>
         <React.Fragment>
@@ -345,9 +345,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <React.Fragment>
           <div className={classes.graphControls}>
-            <Typography role="header" variant="h2">
-              Graphs
-            </Typography>
+            <Typography variant="h2">Graphs</Typography>
           </div>
           <Paper className={classes.panel}>
             {this.renderConnectionsChart(statsError, loadingStats)}

@@ -3,6 +3,8 @@ import { splitEvery } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 import LinodeLogo from './LinodeLogo';
 
+import { reportException } from 'src/exceptionReporting';
+
 const leftPadding = 15;
 const baseFont = 'Times';
 const tableBodyStart = 155;
@@ -36,7 +38,7 @@ const formatDescription = (desc?: string) => {
   return descChunks.reduce((acc, chunk, i) => {
     const delimiter = i === nameIndex ? ' - \n' : ' - '; // insert line break before long entity name
     if (i === 0) {
-      return chunk; // avoid inserting delimeter for the first element
+      return chunk; // avoid inserting delimiter for the first element
     }
     return acc + delimiter + chunk;
   }, '');
@@ -145,11 +147,16 @@ const addTitle = (doc: jsPDF, title: string) => {
   doc.setFontStyle('normal');
 };
 
+interface PdfResult {
+  status: 'success' | 'error';
+  error?: Error;
+}
+
 export const printInvoice = (
   account: Linode.Account,
   invoice: Linode.Invoice,
   items: Linode.InvoiceItem[]
-) => {
+): PdfResult => {
   try {
     const itemsPerPage = 18;
     const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
@@ -157,7 +164,6 @@ export const printInvoice = (
     const itemsChunks = items ? splitEvery(itemsPerPage, items) : [[]];
     const tableEnd =
       tableBodyStart + cellHeight * itemsChunks[itemsChunks.length - 1].length;
-
     const doc = new jsPDF({
       unit: 'px'
     });
@@ -166,12 +172,12 @@ export const printInvoice = (
       doc.setFontSize(10);
 
       const header = [
-        { name: 'Description', prompt: 'Description', width: 235 },
+        { name: 'Description', prompt: 'Description', width: 205 },
         { name: 'From', prompt: 'From', width: 72 },
         { name: 'To', prompt: 'To', width: 72 },
         { name: 'Quantity', prompt: 'Quantity', width: 52 },
         { name: 'Unit Price', prompt: 'Unit Price', width: 67 },
-        { name: 'Amount', prompt: 'Amount', width: 52 }
+        { name: 'Amount', prompt: 'Amount (USD)', width: 82 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
       const itemRows = itemsChunk.map(item => {
@@ -250,15 +256,22 @@ export const printInvoice = (
     addTotalAmount();
 
     doc.save(`invoice-${date}.pdf`);
+    return {
+      status: 'success'
+    };
   } catch (e) {
-    console.error(e);
+    reportException(Error('Error while generating Invoice PDF.'), e);
+    return {
+      status: 'error',
+      error: e
+    };
   }
 };
 
 export const printPayment = (
   account: Linode.Account,
   payment: Linode.Payment
-) => {
+): PdfResult => {
   try {
     const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
     const paymentId = payment.id;
@@ -336,7 +349,15 @@ export const printPayment = (
     addTotalAmount();
 
     doc.save(`payment-${date}.pdf`);
+
+    return {
+      status: 'success'
+    };
   } catch (e) {
-    console.error(e);
+    reportException(Error('Error while generating Payment PDF.'), e);
+    return {
+      status: 'error',
+      error: e
+    };
   }
 };

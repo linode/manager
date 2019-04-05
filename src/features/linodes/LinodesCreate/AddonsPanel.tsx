@@ -1,6 +1,6 @@
-import { compose } from 'ramda';
 import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -13,7 +13,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 type ClassNames =
   | 'root'
@@ -82,14 +82,14 @@ const styled = withStyles(styles);
 interface Props {
   backups: boolean;
   accountBackups: boolean;
-  backupsMonthly: number | null;
+  backupsMonthly?: number | null;
   privateIP: boolean;
   changeBackups: () => void;
   changePrivateIP: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 class AddonsPanel extends React.Component<CombinedProps> {
   renderBackupsPrice = () => {
     const { classes, backupsMonthly } = this.props;
@@ -116,7 +116,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
     return (
       <Paper className={classes.root} data-qa-add-ons>
         <div className={classes.inner}>
-          <Typography role="header" variant="h2" className={classes.title}>
+          <Typography variant="h2" className={classes.title}>
             Optional Add-ons
           </Typography>
           <Grid container>
@@ -184,10 +184,7 @@ class AddonsPanel extends React.Component<CombinedProps> {
   }
 }
 
-const enhanced: any = compose(
-  styled,
-  withRouter,
-  RenderGuard
+export default compose<CombinedProps, Props & RenderGuardProps>(
+  RenderGuard,
+  styled
 )(AddonsPanel);
-
-export default enhanced;

@@ -32,9 +32,9 @@ class Networking extends Page {
 
     // drawer elements
     get serviceNotice() { return $('[data-qa-service-notice]'); }
-    get allocate() { return $(this.submitButton.selector); }
-    get submit() { return $(this.submitButton.selector); }
-    get cancel() { return $(this.cancelButton.selector); }
+    get allocate() { return $(`${this.drawerBase.selector} ${this.submitButton.selector}`); }
+    get submit() { return $(`${this.drawerBase.selector} ${this.submitButton.selector}`); }
+    get cancel() { return $(`${this.drawerBase.selector} ${this.cancelButton.selector}`); }
 
     // view ip elements
     get configIpHeading() { return $('[data-qa-ip-address-heading]'); }
@@ -54,8 +54,12 @@ class Networking extends Page {
 
     get domainName() { return $('[data-qa-domain-name]'); }
     get lookupError() { return $('[data-qa-error]'); }
+    get shareIpSelect() { return $('[data-qa-share-ip]>div>div'); }
+    get ipShareOption() { return $('[data-ip-idx]'); }
+    get removeSharedIp() { return $('[data-qa-remove-shared-ip]'); }
 
     landingElemsDisplay() {
+        this.ip.waitForVisible(constants.wait.normal);
         expect(this.heading.getText()).toBe('Access');
         expect(this.ipv4Subheading.getText()).toBe('IPv4');
         expect(this.ipv6Subheading.getText()).toBe('IPv6');
@@ -71,7 +75,6 @@ class Networking extends Page {
         this.drawerTitle.waitForVisible(constants.wait.normal);
         expect(this.serviceNotice.isVisible()).toBe(true);
         expect(this.allocate.isVisible()).toBe(true);
-        expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
     }
 
@@ -168,6 +171,29 @@ class Networking extends Page {
 
     delete(ip) {
         // not implemented yet
+    }
+
+    expandIpSharing(){
+        this.expandPanel('IP Sharing');
+        this.addIcon('Add IP Address').waitForVisible(constants.wait.normal);
+    }
+
+    selectIpForSharing(ipValue){
+        this.shareIpSelect.waitForVisible(constants.wait.normal);
+        this.shareIpSelect.click();
+        this.ipShareSelection(ipValue).waitForVisible(constants.wait.normal);
+        this.ipShareSelection(ipValue).click();
+        browser.pause(500);
+        this.submitButton.click();
+        this.waitForNotice('IP Sharing updated successfully');
+    }
+
+    ipShareSelection(ipValue){
+        return $(`[data-ip-idx][data-value="${ipValue}"]`);
+    }
+
+    ipTableRow(ipValue){
+        return $(`[data-qa-ip="${ipValue}"]`);
     }
 }
 

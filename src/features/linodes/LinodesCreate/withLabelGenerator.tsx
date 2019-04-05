@@ -5,7 +5,11 @@ import { deriveDefaultLabel, LabelArgTypes } from './deriveDefaultLabel';
 
 export interface LabelProps {
   customLabel: string;
-  updateCustomLabel: (e: any) => void;
+  updateCustomLabel: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
   getLabel: (...args: any[]) => string;
 }
 
@@ -84,7 +88,7 @@ export default withLabelGenerator;
 
 // Utilities
 
-// Searches 'existingLabels' and appends a zero-padded incrementer to the original label
+// Searches 'existingLabels' and appends a zero-padded increment-er to the original label
 export const dedupeLabel = (
   label: string,
   existingLabels: string[]

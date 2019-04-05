@@ -54,6 +54,7 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
         <React.Fragment>
           <Paper>
             <Table
+              removeLabelonMobile
               aria-label="List of your Volumes"
               className={
                 renderProps.isVolumesLanding

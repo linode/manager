@@ -4,7 +4,7 @@ import Typography from 'src/components/core/Typography';
 import ShowMoreExpansion from './ShowMoreExpansion';
 
 storiesOf('ShowMoreExpansion', module).add('default', () => (
-  <ShowMoreExpansion name="Show Older Images">
+  <ShowMoreExpansion name="Show Older Images" defaultExpanded={false}>
     <Typography>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
       tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim

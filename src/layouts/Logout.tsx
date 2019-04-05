@@ -1,24 +1,13 @@
 import { Component } from 'react';
-import { connect, Dispatch } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { LOGIN_ROOT } from 'src/constants';
-import * as session from 'src/session';
-import { ApplicationState } from 'src/store';
-import { logout } from 'src/store/authentication';
+import { handleLogout } from 'src/store/authentication/authentication.actions';
 
-interface Props {
-  dispatch: Dispatch<ApplicationState>;
-}
-
-export class Logout extends Component<Props> {
+export class Logout extends Component<DispatchProps> {
   componentDidMount() {
-    const { dispatch } = this.props;
+    this.props.dispatchLogout();
 
-    // Drop session info
-    session.expire();
-
-    // Reset state
-    dispatch(logout());
-
+    /** send the user back to login */
     window.location.assign(`${LOGIN_ROOT}/logout`);
   }
 
@@ -27,4 +16,19 @@ export class Logout extends Component<Props> {
   }
 }
 
-export default connect()<Props>(Logout);
+interface DispatchProps {
+  dispatchLogout: () => void;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
+  return {
+    dispatchLogout: () => dispatch(handleLogout())
+  };
+};
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
+
+export default connected(Logout);

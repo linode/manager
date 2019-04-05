@@ -15,7 +15,7 @@ import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
-type ClassNames = 'expired' | 'balance' | 'positive' | 'negative';
+type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -37,6 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   negative: {
     color: theme.color.red
+  },
+  wordWrap: {
+    wordBreak: 'break-all'
   }
 });
 
@@ -47,6 +50,7 @@ interface AccountContextProps {
   data?: Linode.Account;
   accountLoading: boolean;
   balance: false | number;
+  balance_uninvoiced?: number;
 }
 
 type CombinedProps = AccountContextProps & StyleProps & WithStyles<ClassNames>;
@@ -96,6 +100,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         zip
       },
       balance,
+      balance_uninvoiced,
       accountLoading,
       classes
     } = this.props;
@@ -104,19 +109,21 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Paper className={classes.summarySection}>
-          <Typography role="header" variant="h3" className={classes.title}>
+        <Paper className={classes.summarySection} data-qa-contact-summary>
+          <Typography variant="h3" className={classes.title}>
             Contact Information
           </Typography>
 
           <div className={classes.section} data-qa-company>
             <strong>Company Name:&nbsp;</strong>
-            {company ? company : 'None'}
+            <div className={classes.wordWrap}>{company ? company : 'None'}</div>
           </div>
           <div className={classes.section} data-qa-contact-name>
             <strong>Name:&nbsp;</strong>
             {!(first_name || last_name) && 'None'}
-            {`${first_name} ${last_name}`}
+            <div
+              className={classes.wordWrap}
+            >{`${first_name} ${last_name}`}</div>
           </div>
           <div className={classes.section} data-qa-contact-address>
             <div>
@@ -131,7 +138,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           </div>
           <div className={classes.section} data-qa-contact-email>
             <strong>Email:&nbsp;</strong>
-            {email}
+            <div className={classes.wordWrap}>{email}</div>
           </div>
           <div className={classes.section} data-qa-contact-phone>
             <strong>Phone Number:&nbsp;</strong>
@@ -139,13 +146,21 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           </div>
         </Paper>
 
-        <Paper className={classes.summarySection}>
-          <Typography role="header" variant="h3" className={classes.title}>
+        <Paper className={classes.summarySection} data-qa-billing-summary>
+          <Typography variant="h3" className={classes.title}>
             Billing Information
           </Typography>
-
-          <div className={`${classes.section} ${classes.balance}`}>
-            <strong>Balance:&nbsp;</strong>
+          {balance_uninvoiced !== undefined && (
+            <div className={classes.section} data-qa-contact-cc>
+              <strong>Uninvoiced Balance:&nbsp;</strong>
+              <Currency quantity={balance_uninvoiced} />
+            </div>
+          )}
+          <div
+            className={`${classes.section} ${classes.balance}`}
+            data-qa-current-balance
+          >
+            <strong>Current Balance:&nbsp;</strong>
             <Typography
               component={'span'}
               className={classNames({
@@ -182,6 +197,7 @@ const accountContext = withAccount(
   ({ data, errors, loading, lastUpdated }) => ({
     accountLoading: loading,
     balance: data && data.balance,
+    balance_uninvoiced: data && data.balance_uninvoiced,
     errors,
     lastUpdated,
     loading,

@@ -247,9 +247,9 @@ module.exports = {
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeRedundantAttributes: true,
+        removeRedundantAttributes: false,
         useShortDoctype: true,
-        removeEmptyAttributes: true,
+        removeEmptyAttributes: false,
         removeStyleLinkTypeAttributes: true,
         keepClosingSlash: true,
         minifyJS: true,

@@ -5,21 +5,28 @@ import Page from './page';
 
 class ConfigureLinode extends Page {
     get createHeader() { return $('[data-qa-create-linode-header]'); }
-    get createFromImage() { return $('[data-qa-create-from="Create from Image"]'); }
-    get createFromBackup() { return $('[data-qa-create-from="Create from Backup"]'); }
-    get createFromExisting() { return $('[data-qa-create-from="Clone from Existing"]'); }
-    get createFromStackscript() { return $('[data-qa-create-from="Create from StackScript"]'); }
+
+    /** parent headers */
+    get createFromDistribution() { return $('[data-qa-create-from="Distributions"]') }
+    get createFromOneClick() { return $('[data-qa-create-from=One-Click]') }
+    get createFromMyImage() { return $('[data-qa-create-from="My Images"]') }
+
+    /** subtabs under One-Click */
+    get createFromOneClickApp() { return $('[data-qa-create-from="One-Click Apps"]') }
+    get createFromCommunityStackScript() { return $('[data-qa-create-from="Community StackScripts"]') }
+
+    /** subtabs under My Images */
+    get createFromImage() { return $('[data-qa-create-from="Images"]') }
+    get createFromBackups() { return $('[data-qa-create-from="Backups"]') }
+    get createFromClone() { return $('[data-qa-create-from="Clone Linode"]') }
+    get createFromMyStackScript() { return $('[data-qa-create-from="My StackScripts"]') }
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
-    get selectImageHeader() { return $('[data-qa-tp="Select Image"]'); }
-    get imageTabs() { return  $$('[data-qa-tp="Select Image"] [data-qa-tab]'); }
-    get images() { return $$('[data-qa-tp="Select Image"] [data-qa-selection-card]'); }
-    get imageNames() { return $$('[data-qa-tp="Select Image"] [data-qa-select-card-heading]'); }
     get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
 
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
 
-    get selectStackScriptHeader() { return $('[data-qa-tp="Select StackScript"]'); }
+    get selectStackScriptPanel() { return $('[data-qa-panel="Select a StackScript"]'); }
     get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
     get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
     get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
@@ -84,12 +91,10 @@ class ConfigureLinode extends Page {
         expect(this.deploy.isVisible()).toBe(true);
     }
 
-    stackScriptsBaseElemsDisplay() {
-        this.selectStackScriptHeader.waitForVisible(constants.wait.normal);
-        expect(this.myStackScriptTab.isVisible()).toBe(true);
-        expect(this.myStackScriptTab.getAttribute('aria-selected')).toBe('true');
-        expect(this.linodeStackScriptTab.isVisible()).toBe(true);
-        expect(this.communityStackScriptTab.isVisible()).toBe(true);
+    stackScriptsBaseElemsDisplay(stackScriptTab) {
+        this.selectStackScriptPanel.waitForVisible(constants.wait.normal);
+        expect(stackScriptTab.isVisible()).toBe(true);
+        expect(stackScriptTab.getAttribute('aria-selected')).toBe('true');
 
         expect(this.noCompatibleImages.getText()).toBe('No Compatible Images Available');
         expect(this.regionTabs.length).toBeGreaterThan(0);
@@ -97,7 +102,7 @@ class ConfigureLinode extends Page {
         expect(this.selectRegionHeader.isVisible()).toBe(true);
 
         expect(this.planHeader.isVisible()).toBe(true);
-        expect(this.planTabs.length).toBe(3);
+        expect(this.planTabs.length).toBe(4);
         expect(this.plans.length).toBeGreaterThan(0);
 
         expect(this.label.isVisible()).toBe(true);
@@ -110,9 +115,8 @@ class ConfigureLinode extends Page {
         expect(this.addons.length).toBe(2);
     }
 
-    stackScriptRowByTitle(stackScriptTitle){
-        const selector = this.stackScriptRow.selector.replace(']','');
-        return $(`${selector}="${stackScriptTitle}"] [data-qa-radio]`);
+    selectFirstStackScript() {
+        return $(`${this.stackScriptRow.selector} [data-qa-radio]`);
     }
 
     stackScripShowDetails(title){
@@ -126,10 +130,9 @@ class ConfigureLinode extends Page {
 
     stackScriptTableDisplay() {
         this.stackScriptTableHeader.waitForVisible(constants.wait.normal);
-        expect(this.stackScriptTableHeader.getText()).toBe('StackScript');
-        expect(this.stackScriptDeploysHeader.getText()).toBe('Active Deploys');
-        expect(this.stackScriptRevisionsHeader.getText()).toBe('Last Revision');
-        expect(this.stackScriptCompatibleImagesHeader.getText()).toBe('Compatible Images');
+        this.stackScriptDeploysHeader.waitForVisible(constants.wait.normal);
+        this.stackScriptRevisionsHeader.waitForVisible(constants.wait.normal);
+        this.stackScriptCompatibleImagesHeader.waitForVisible(constants.wait.normal);
     }
 
     stackScriptMetadataDisplay() {
@@ -143,11 +146,9 @@ class ConfigureLinode extends Page {
     baseDisplay() {
         expect(this.createHeader.waitForVisible(constants.wait.normal)).toBe(true);
 
-        expect(this.createFromImage.isVisible()).toBe(true);
-        expect(this.createFromBackup.isVisible()).toBe(true);
-        expect(this.createFromExisting.isVisible()).toBe(true);
-        expect(this.createFromStackscript.isVisible()).toBe(true);
-
+        expect(this.createFromDistribution.isVisible()).toBe(true);
+        expect(this.createFromOneClick.isVisible()).toBe(true);
+        expect(this.createFromMyImage.isVisible()).toBe(true);
 
         expect(this.selectImageHeader.isVisible()).toBe(true);
         this.imageTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
@@ -259,7 +260,8 @@ class ConfigureLinode extends Page {
     }
 
     createFrom(source) {
-        const sourceSelector = `[data-qa-create-from="Create from ${source}"]`;
+        const sourceSelector = `[data-qa-create-from="${source}"]`;
+        $(sourceSelector).waitForVisible(constants.wait.normal);
         browser.click(sourceSelector);
         browser.waitUntil(function() {
             return browser.getAttribute(sourceSelector, 'aria-selected').includes('true');

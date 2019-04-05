@@ -8,7 +8,8 @@ const classes = {
   button: '',
   hidden: '',
   item: '',
-  root: ''
+  root: '',
+  menu: ''
 };
 
 describe('ActionMenu', () => {

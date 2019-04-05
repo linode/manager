@@ -1,2 +1,2 @@
-import LinodesCreate from './LinodesCreate';
+import LinodesCreate from './LinodeCreateContainer';
 export default LinodesCreate;

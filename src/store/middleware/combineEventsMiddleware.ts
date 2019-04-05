@@ -50,12 +50,8 @@ const eventsMiddlewareFactory = (
        * interval to keep things moving quickly.
        */
       if (isInProgressEvent(event)) {
-        /**
-         * purely experimental - no real reason for the number 4
-         * the main point here is we don't want to poll the events endpoint
-         * excessively
-         */
-        resetEventsPolling(4);
+        // If the event is in_progress, we poll more aggressively
+        resetEventsPolling();
       }
     }
   }

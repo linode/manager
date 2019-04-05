@@ -94,6 +94,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   };
 
   onClose = () => {
+    document.body.classList.remove('searchOverlay');
     this.setState({
       searchActive: false,
       menuOpen: false
@@ -101,6 +102,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
   };
 
   onOpen = () => {
+    document.body.classList.add('searchOverlay');
     this.setState({
       searchActive: true,
       menuOpen: true

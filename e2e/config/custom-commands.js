@@ -17,6 +17,7 @@ const {
     createVolume,
     getLinodeImage,
     createDomain,
+    createNodeBalancer,
 } = require('../setup/setup');
 
 const {
@@ -26,7 +27,7 @@ const {
     loadImposter,
 } = require('../utils/mb-utils');
 
-const { readToken } = require('../utils/config-utils');
+const { getToken } = require('../utils/config-utils');
 
 exports.browserCommands = () => {
     /* Overwrite the native getText function
@@ -72,12 +73,12 @@ exports.browserCommands = () => {
     });
 
     browser.addCommand('readToken', function(username) {
-        const token = readToken(username);
+        const token = getToken(username);
         return token;
     });
 
-    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[], type, region, group) {
-        return createLinode(token, password, linodeLabel, tags, type, region, group)
+    browser.addCommand('createLinode', function async(token, password, linodeLabel=false, tags=[], type, region, group, image) {
+        return createLinode(token, password, linodeLabel, tags, type, region, group, image)
             .then(res => res)
             .catch(err => err);
     });
@@ -228,4 +229,9 @@ exports.browserCommands = () => {
         return createDomain(token,type,domain,tags,group)
             .then(res => res);
     });
+
+    browser.addCommand('createNodeBalancer', function async(token,label,region,tags) {
+        return createNodeBalancer(token,label,region,tags)
+            .then(res => res);
+    })
 }

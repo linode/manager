@@ -44,6 +44,7 @@ describe('Linode Detail - Volumes Suite', () => {
     const checkVolumeDetail = (testVolume,testLinode) => {
         browser.url(constants.routes.volumes);
         browser.pause(750);
+
         VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
         let trimSelector = VolumeDetail.volumeAttachment.selector.replace(']','')
         const linodeAttachedToCell = `${trimSelector}="${testLinode}"]`;
@@ -59,8 +60,8 @@ describe('Linode Detail - Volumes Suite', () => {
     const detachVolume = () => {
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();
-        VolumeDetail.createButton.waitForVisible(constants.wait.normal);
-        expect(VolumeDetail.placeholderText.getText()).toBe('Create a Volume');
+        VolumeDetail.createButton.waitForVisible(constants.wait.long);
+        expect(VolumeDetail.placeholderText.getText()).toMatch('Add Block Storage');
     }
 
     beforeAll(() => {
@@ -83,7 +84,7 @@ describe('Linode Detail - Volumes Suite', () => {
     });
 
     it('should display placeholder text and add a volume button', () => {
-        expect(VolumeDetail.placeholderText.getText()).toBe('Create a Volume');
+        expect(VolumeDetail.placeholderText.getText()).toMatch('Add Block Storage');
         expect(VolumeDetail.createButton.isVisible()).toBe(true);
     });
 
@@ -197,8 +198,11 @@ describe('Linode Detail - Volumes Suite', () => {
 
 
         it('volume created successfully with tag', () => {
+
             expect(VolumeDetail.volumeCellLabel.getText()).toContain(testVolume.label);
             expect(VolumeDetail.volumeCellSize.getText()).toContain(testVolume.size);
+
+            VolumeDetail.hoverVolumeTags(testVolume.label);
             VolumeDetail.checkTagsApplied([testVolume.tags]);
         });
 
@@ -215,7 +219,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
     });
 
-    describe('Attach Existing Volume - Detatch Volume', () => {
+    describe('Attach Existing Volume - Detach Volume', () => {
 
         it('can attach an existing volume', () => {
             VolumeDetail.createButton.click();
@@ -224,7 +228,7 @@ describe('Linode Detail - Volumes Suite', () => {
         });
 
         it('volume attached successfully', () => {
-            VolumeDetail.volumeCellElem.waitForVisible(constants.wait.normal);
+            VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
             expect(VolumeDetail.volumeCellLabel.getText()).toContain(volumeEast.label);
             expect(VolumeDetail.volumeCellSize.getText()).toContain('20');
         });

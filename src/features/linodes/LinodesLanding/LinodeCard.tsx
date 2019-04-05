@@ -284,12 +284,7 @@ export const RenderTitle: React.StatelessComponent<{
           />
         </Grid>
         <Grid item className={classes.cardHeader + ' py0'}>
-          <Typography
-            role="header"
-            className={classes.wrapHeader}
-            variant="h3"
-            data-qa-label
-          >
+          <Typography className={classes.wrapHeader} variant="h3" data-qa-label>
             {linodeLabel}
           </Typography>
         </Grid>

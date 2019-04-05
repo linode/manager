@@ -25,6 +25,7 @@ export const RebuildDialog: React.StatelessComponent<
         type="secondary"
         destructive
         onClick={handleSubmit}
+        data-qa-submit-rebuild
         loading={isLoading}
       >
         Rebuild

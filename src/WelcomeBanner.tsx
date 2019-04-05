@@ -1,3 +1,6 @@
+import Hidden from '@material-ui/core/Hidden';
+import Close from '@material-ui/icons/Close';
+
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -22,7 +25,8 @@ type ClassNames =
   | 'itemTitle'
   | 'itemDesc'
   | 'icon'
-  | 'actions';
+  | 'actions'
+  | 'closeIcon';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   dialog: {
@@ -76,6 +80,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   actions: {
     marginTop: theme.spacing.unit * 2
+  },
+  closeIcon: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    fill: theme.palette.text.primary,
+    cursor: 'pointer'
   }
 });
 
@@ -111,7 +122,11 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
         className={classes.dialog}
         onClose={this.props.onClose}
         maxWidth={false}
+        onBackdropClick={this.props.onClose}
       >
+        <Hidden mdUp>
+          <Close className={classes.closeIcon} onClick={this.props.onClose} />
+        </Hidden>
         <Grid container className={classes.content}>
           <Grid item xs={12}>
             <Typography>

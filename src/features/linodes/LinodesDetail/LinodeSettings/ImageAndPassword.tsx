@@ -10,12 +10,18 @@ import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
+import { withLinodeDetailContext } from '../linodeDetailContext';
+import LinodePermissionsError from '../LinodePermissionsError';
 
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
+
+interface ContextProps {
+  permissions: Linode.GrantLevel;
+}
 
 interface Props {
   onImageChange: (selected: Item<string>) => void;
@@ -28,7 +34,7 @@ interface Props {
   userSSHKeys: UserSSHKeyObject[];
 }
 
-type CombinedProps = Props & WithImages & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithImages & WithStyles<ClassNames>;
 
 export const ImageAndPassword: React.StatelessComponent<
   CombinedProps
@@ -41,16 +47,21 @@ export const ImageAndPassword: React.StatelessComponent<
     onPasswordChange,
     password,
     passwordError,
-    userSSHKeys
+    userSSHKeys,
+    permissions
   } = props;
+
+  const disabled = permissions === 'read_only';
 
   return (
     <React.Fragment>
+      {disabled && <LinodePermissionsError />}
       <ImageSelect
         images={images}
         imageError={imageError}
         imageFieldError={imageFieldError}
         onSelect={onImageChange}
+        disabled={disabled}
       />
       <AccessPanel
         noPadding
@@ -58,6 +69,12 @@ export const ImageAndPassword: React.StatelessComponent<
         handleChange={onPasswordChange}
         error={passwordError}
         users={userSSHKeys}
+        disabled={disabled}
+        disabledReason={
+          disabled
+            ? "You don't have permissions to modify this Linode"
+            : undefined
+        }
       />
     </React.Fragment>
   );
@@ -65,10 +82,15 @@ export const ImageAndPassword: React.StatelessComponent<
 
 const styled = withStyles(styles);
 
+const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
+  permissions: linode._permissions
+}));
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withImages((ownProps, images, imagesLoading, imageError) => ({
     ...ownProps,
+    linodeContext,
     images,
     imagesLoading,
     imageError

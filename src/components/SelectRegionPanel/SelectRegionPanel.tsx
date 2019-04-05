@@ -6,13 +6,14 @@ import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
@@ -50,7 +51,7 @@ interface Props {
   copy?: string;
   error?: string;
   handleSelection: (id: string) => void;
-  selectedID: string | null;
+  selectedID?: string;
   disabled?: boolean;
 }
 
@@ -64,8 +65,8 @@ const getASRegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(jp|sg)/.test(r.country));
 
 const renderCard = (
-  selectedID: string | null,
   handleSelection: Function,
+  selectedID?: string,
   disabled?: boolean
 ) => (region: ExtendedRegion, idx: number) => (
   <SelectionCard
@@ -95,7 +96,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container spacing={16}>
-              {na.map(renderCard(selectedID, handleSelection, disabled))}
+              {na.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
         }
@@ -108,7 +109,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container spacing={16}>
-              {eu.map(renderCard(selectedID, handleSelection, disabled))}
+              {eu.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
         }
@@ -121,7 +122,7 @@ class SelectRegionPanel extends React.Component<
         render: () => {
           return (
             <Grid container>
-              {as.map(renderCard(selectedID, handleSelection, disabled))}
+              {as.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
         }
@@ -149,6 +150,10 @@ class SelectRegionPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-export default styled(
-  RenderGuard<Props & WithStyles<ClassNames>>(SelectRegionPanel)
-);
+export default compose<
+  Props & WithStyles<ClassNames>,
+  Props & RenderGuardProps
+>(
+  RenderGuard,
+  styled
+)(SelectRegionPanel);

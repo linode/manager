@@ -36,6 +36,7 @@ interface Props {
   isMulti?: boolean;
   helperText?: string;
   value?: Item | Item[];
+  disabled?: boolean;
   onSelect: (selected: Item<any> | Item<any>[]) => void;
 }
 
@@ -80,7 +81,8 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
       imageFieldError,
       isMulti,
       onSelect,
-      value
+      value,
+      disabled
     } = this.props;
     const { renderedImages } = this.state;
     return (
@@ -99,7 +101,7 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               value={value}
               isMulti={Boolean(isMulti)}
               errorText={imageError || imageFieldError}
-              disabled={Boolean(imageError)}
+              disabled={disabled || Boolean(imageError)}
               onChange={onSelect}
               options={renderedImages as any}
               placeholder="Select an Image"

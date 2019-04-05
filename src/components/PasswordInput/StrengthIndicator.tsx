@@ -11,6 +11,7 @@ import Grid from 'src/components/Grid';
 
 interface Props {
   strength: null | 0 | 1 | 2 | 3;
+  hideStrengthLabel?: boolean;
 }
 type ClassNames = 'root' | 'block' | 'strengthText' | 'strengthLabel';
 
@@ -49,7 +50,7 @@ const styled = withStyles<ClassNames>(styles);
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const StrengthIndicator: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, strength } = props;
+  const { classes, strength, hideStrengthLabel } = props;
 
   return (
     <Grid
@@ -75,7 +76,9 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = props => {
           className={classes.strengthText}
           data-qa-password-strength
         >
-          <span className={classes.strengthLabel}>Strength:</span>
+          {!hideStrengthLabel && (
+            <span className={classes.strengthLabel}>Strength:</span>
+          )}
           {strength
             ? (strength === 1 && ' Weak') ||
               (strength === 2 && ' Fair') ||

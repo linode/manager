@@ -66,6 +66,8 @@ class LinodeDetail extends Page {
 
         return this;
     }
+
+    
 }
 
 export default new LinodeDetail();

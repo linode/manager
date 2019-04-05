@@ -19,6 +19,8 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { ApplicationState } from 'src/store';
+import { openForEditing } from 'src/store/domainDrawer';
+
 import {
   isEntityEvent,
   isInProgressEvent
@@ -68,7 +70,9 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = WithStyles<ClassNames> & WithUpdatingDomainsProps;
+type CombinedProps = WithStyles<ClassNames> &
+  WithUpdatingDomainsProps &
+  DispatchProps;
 
 class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   render() {
@@ -81,6 +85,18 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
         </Paper>
       </DashboardCard>
     );
+  }
+
+  handleRowClick(
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    id: number,
+    domain: string,
+    type: string
+  ) {
+    if (type === 'slave') {
+      e.preventDefault();
+      this.props.openForEditing(domain, id);
+    }
   }
 
   renderAction = () =>
@@ -125,7 +141,11 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     return data.map(({ id, domain, type, status }) => (
       <TableRow key={domain} rowLink={`/domains/${id}/records`}>
         <TableCell className={classes.labelCol}>
-          <Link to={`/domains/${id}/records`} className={'black nu block'}>
+          <Link
+            onClick={e => this.handleRowClick(e, id, domain, type)}
+            to={`/domains/${id}/records`}
+            className={'black nu block'}
+          >
             <Grid container wrap="nowrap" alignItems="center">
               <Grid item className="py0">
                 <EntityIcon
@@ -138,7 +158,6 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
               <Grid item className={classes.labelGridWrapper}>
                 <div className={classes.labelStatusWrapper}>
                   <Typography
-                    role="header"
                     variant="h3"
                     className={classes.wrapHeader}
                     data-qa-label
@@ -203,7 +222,17 @@ const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
   return false;
 };
 
+interface DispatchProps {
+  openForEditing: (domain: string, id: number) => void;
+}
+
+const connected = connect(
+  undefined,
+  { openForEditing }
+);
+
 const enhanced = compose(
+  connected,
   styled,
   withUpdatingDomains
 );

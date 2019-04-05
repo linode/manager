@@ -29,6 +29,42 @@ export const getAPIErrorOrDefault = (
   return pathOr(_defaultError, ['response', 'data', 'errors'], errorResponse);
 };
 
+export const handleUnauthorizedErrors = (
+  e: Linode.ApiFieldError[],
+  unauthedMessage: string
+) => {
+  /**
+   * filter out errors that match the following
+   * {
+   *   reason: "Unauthorized"
+   * }
+   *
+   * and if any of these errors exist, set the hasUnauthorizedError
+   * flag to true
+   */
+  let hasUnauthorizedError = false;
+  const filteredErrors = e.filter(eachError => {
+    if (eachError.reason.toLowerCase().includes('unauthorized')) {
+      hasUnauthorizedError = true;
+      return false;
+    }
+    return true;
+  });
+
+  /**
+   * if we found an unauthorized error, add on the new message in the API
+   * Error format
+   */
+  return hasUnauthorizedError
+    ? [
+        {
+          reason: unauthedMessage
+        },
+        ...filteredErrors
+      ]
+    : filteredErrors;
+};
+
 export const getErrorStringOrDefault = (
   errors: Linode.ApiFieldError[] | string,
   defaultError: string = 'An unexpected error occurred.'

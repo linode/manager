@@ -1,11 +1,13 @@
 const { constants } = require('../../constants');
 
+import ConfigureStackScripts from '../../pageobjects/configure-stackscript.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
 import ListLinodes from '../../pageobjects/list-linodes';
 import {
     timestamp,
     waitForLinodeStatus,
     apiDeleteAllLinodes,
+    apiDeleteMyStackScripts
   } from '../../utils/common';
 
 describe('Create Linode - Create from StackScript Suite', () => {
@@ -17,15 +19,21 @@ describe('Create Linode - Create from StackScript Suite', () => {
 
     afterAll(() => {
        apiDeleteAllLinodes();
-   });
+    });
+
+    afterEach(() => {
+        apiDeleteMyStackScripts();
+    })
 
     it('should change tab to create from stackscript', () => {
-        ConfigureLinode.createFrom('StackScript');
-        ConfigureLinode.stackScriptsBaseElemsDisplay();
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+        ConfigureLinode.stackScriptsBaseElemsDisplay(ConfigureLinode.createFromMyStackScript);
     });
 
     it('should display stackscript table', () => {
-        ConfigureLinode.changeTab('Linode StackScripts');
+        ConfigureLinode.createFrom('One-Click');
+        ConfigureLinode.createFrom('Community StackScripts');
         ConfigureLinode.stackScriptTableDisplay();
     });
 
@@ -41,38 +49,80 @@ describe('Create Linode - Create from StackScript Suite', () => {
     });
 
     it('should display an error when creating without selecting a region', () => {
-        const linodeScript = 'StackScript Bash Library';
-        const noticeMsg = 'Region is required.';
+        const regionErr = 'Region is required.';
 
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
-        browser.pause(500);
+        /** create the stackscript */
+        ConfigureStackScripts.createStackScriptNoUDFs()
+
+        /** navigate to the Account StackScripts tab */
+        $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
+        browser.url(constants.routes.create.linode);
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+
+        /** Select the first one in the list */
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
+
         ConfigureLinode.deploy.click();
-        ConfigureLinode.waitForNotice(noticeMsg);
+        ConfigureLinode.waitForNotice(regionErr, constants.wait.normal);
     });
 
     it('should display an error when creating without selecting a plan', () => {
-        const noticeMsg = 'Plan is required.';
+        const planError = 'Plan is required.';
 
+        /** create the stackscript */
+        ConfigureStackScripts.createStackScriptNoUDFs()
+
+        /** navigate to the Account StackScripts tab */
+        $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
+        browser.url(constants.routes.create.linode);
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+
+        /** Select the first one in the list */
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
         ConfigureLinode.regions[0].click();
         ConfigureLinode.deploy.click();
-        ConfigureLinode.waitForNotice(noticeMsg);
+        ConfigureLinode.waitForNotice(planError, constants.wait.normal)
     });
 
     it('should display user-defined fields on selection of a stackscript containing UD fields', () => {
-        const lampStackScript = 'LAMP Stack';
-        ConfigureLinode.stackScriptRowByTitle(lampStackScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(lampStackScript).click();
+
+        /** create the stackscript */
+        ConfigureStackScripts.createStackScriptWithRequiredUDFs()
+
+        /** navigate to the Account StackScripts tab */
+        $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
+        browser.url(constants.routes.create.linode);
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
         ConfigureLinode.userDefinedFieldsHeader.waitForVisible(constants.wait.normal);
     });
 
     it('should create from stackscript', () => {
-        const linodeScript = 'StackScript Bash Library';
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).waitForVisible(constants.wait.normal);
-        ConfigureLinode.stackScriptRowByTitle(linodeScript).click();
-        ConfigureLinode.plans[0].click();
 
-        ConfigureLinode.images[0].click();
+        /** create the stackscript */
+        ConfigureStackScripts.createStackScriptNoUDFs();
+
+        /** navigate to the Account StackScripts tab */
+        $('[data-qa-icon-text-link="Create New StackScript"]').waitForVisible(constants.wait.normal)
+        browser.url(constants.routes.create.linode);
+        ConfigureLinode.createFrom('My Images');
+        ConfigureLinode.createFrom('My StackScripts');
+
+        ConfigureLinode.selectFirstStackScript().waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectFirstStackScript().click();
+
+        ConfigureLinode.regions[0].click();
+        ConfigureLinode.plans[0].click();
+        /** image is already pre-selected */
+        // ConfigureLinode.images[0].click();
+
         const imageName = ConfigureLinode.images[0].$('[data-qa-select-card-subheading]').getText();
 
         ConfigureLinode.randomPassword();
@@ -82,12 +132,12 @@ describe('Create Linode - Create from StackScript Suite', () => {
 
         ConfigureLinode.deploy.click();
 
-        waitForLinodeStatus(linodeLabel, 'running');
-        ListLinodes.gridToggle.click();
-        ListLinodes.gridElemsDisplay();
+        /**
+         * at this point, we've been redirected to the Linodes detail page
+         * and we should see the editable text on the screen
+         */
+        $('[data-qa-editable-text]').waitForVisible(constants.wait.normal)
+        expect($('[data-qa-editable-text]').getText()).toBe(linodeLabel)
 
-        const labelAttribute = ListLinodes.linodeElem.selector.replace(/[\[\]']+/g,'')
-        const listingImageName = ListLinodes.linode.find( linode => linode.getAttribute(labelAttribute) === linodeLabel).$(ListLinodes.image.selector).getText();
-        expect(listingImageName).toBe(imageName);
     });
 });

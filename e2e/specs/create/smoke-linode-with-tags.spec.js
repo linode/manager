@@ -44,13 +44,14 @@ describe('Create Linode from Image - With Tags Suite', () => {
 
     it('should select an available tag', () => {
         ConfigureLinode.multiOption.click();
-        availableTagName = ConfigureLinode.selectOptions[0].getText();
+        const selectOptions = ConfigureLinode.selectOptions
+        availableTagName = selectOptions[selectOptions.length - 1].getText();
 
         // Put our added tags into the addedTags array for later useage
-        addedTags.push(availableTagName);
         addedTags.push(customTagName);
+        addedTags.push(availableTagName);
 
-        ConfigureLinode.selectOptions[0].click();
+        selectOptions[selectOptions.length - 1].click();
 
         ConfigureLinode.selectOption.waitForVisible(constants.wait.normal, true);
         ConfigureLinode.multiOption.waitForVisible(constants.wait.normal);
@@ -61,27 +62,55 @@ describe('Create Linode from Image - With Tags Suite', () => {
         expect(selectedTags).toContain(customTagName);
     });
 
+    it('should successfully remove the tag', () => {
+        /** 
+         * remove the available tag name from context 
+         * because it's possbile this available tag might keep us
+         * from deploying a Linode successfully
+         */
+        addedTags.pop();
+        $$('.react-select__multi-value__remove')[1].click();
+
+        const selectedTags = $$(ConfigureLinode.multiOption.selector)
+            .map(tag => tag.getText());
+
+        expect(selectedTags).not.toContain(availableTagName);
+    });
+
     it('should deploy the tagged linode', () => {
         ConfigureLinode.generic(linodeName);
         ConfigureLinode.deploy.click();
-        waitForLinodeStatus(linodeName, 'running');
+        $('[data-qa-editable-text]').waitForVisible();
+        expect($('[data-qa-editable-text]').getText()).toBe(linodeName)
     });
 
     describe('List Linodes - Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
+            /** 
+             * we should now be on the Linodes detail screen 
+             * so we need to navigate to the landing page
+             */
+            browser.url(constants.routes.linodes)
+            $('[data-qa-label]').waitForVisible();
+
+            /** make sure we're on the grid view */
+            ListLinodes.gridToggle.click();
+            ListLinodes.rebootButton.waitForVisible(constants.wait.normal);
+
             assertTagsDisplay(addedTags);
         });
 
         it('should display the linode with tags on list view', () => {
             ListLinodes.listToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
+            ListLinodes.hoverLinodeTags(linodeName);
             assertTagsDisplay(addedTags);
         });
     });
 
     describe('Linode Detail - Tags Suite', () => {
         it('should navigate to linode detail', () => {
-            ListLinodes.navigateToDetail(linodeName);
+            ListLinodes.navigateToDetail();
             LinodeDetail.landingElemsDisplay();
         });
 

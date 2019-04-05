@@ -171,6 +171,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       black: '#222',
       offBlack: primaryColors.offBlack,
       boxShadow: '#ddd',
+      boxShadowDark: '#aaa',
       focusBorder: '#999',
       absWhite: '#fff',
       blueDTwhite: '#3683dc',
@@ -256,6 +257,10 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           fontSize: '2.5rem',
           lineHeight: '2.5rem'
         }
+      },
+      subtitle1: {
+        fontSize: '1.075rem',
+        lineHeight: '1.5rem'
       }
     },
     overrides: {

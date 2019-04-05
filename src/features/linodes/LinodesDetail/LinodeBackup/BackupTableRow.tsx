@@ -7,6 +7,7 @@ import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 
 interface Props {
   backup: Linode.LinodeBackup;
+  disabled: boolean;
   handleRestore: (backup: Linode.LinodeBackup) => void;
   handleDeploy: (backup: Linode.LinodeBackup) => void;
 }
@@ -20,7 +21,7 @@ const BackupTableRow: React.StatelessComponent<Props> = props => {
   const onDeploy = () => {
     props.handleDeploy(props.backup);
   };
-  const { backup, handleRestore } = props;
+  const { backup, disabled, handleRestore } = props;
   return (
     <TableRow key={backup.id} data-qa-backup>
       <TableCell
@@ -51,6 +52,7 @@ const BackupTableRow: React.StatelessComponent<Props> = props => {
       <TableCell>
         <LinodeBackupActionMenu
           backup={backup}
+          disabled={disabled}
           onRestore={handleRestore}
           onDeploy={onDeploy}
         />

@@ -24,7 +24,9 @@ describe('View - Personal Access Tokens', () => {
 
     describe('Create - Personal Access Tokens', () => {
        it('should display create drawer on create', () => {
+           /** opens the create drawer */
             profile.create('token');
+
             tokenCreateDrawer.baseElemsDisplay();
             tokenCreateDrawer.labelTimestamp(timestamp);
 
@@ -56,11 +58,13 @@ describe('View - Personal Access Tokens', () => {
 
         it('should display new token in table', () => {
             tokenCreateDrawer.closeDialog.click();
-            const expectedExpiration = 'in 6 months';
-            expect(browser.waitForVisible(newToken)).toBe(true);
-            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toBe(expectedExpiration);
-            expect($(`${newToken} [data-qa-token-type]`).getText()).toBe('Personal Access Token');
-
+            const now = new Date();
+            const sixMonths = new Date();
+            sixMonths.setMonth(now.getMonth() + 6);
+            sixMonths.setDate(sixMonths.getDate());
+            browser.waitForVisible(newToken)
+            // $(newToken).waitForVisible();
+            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,8));
         });
 
         it('should display tokens', () => {
@@ -69,10 +73,9 @@ describe('View - Personal Access Tokens', () => {
         });
 
         it('should display token scopes drawer', () => {
-            browser.click(`${newToken} [data-qa-action-menu]`);
-            browser.click('[data-qa-action-menu-item="View Token Scopes"]');
+            profile.selectActionMenuItem($(newToken), 'View Token Scopes');
 
-            browser.waitForVisible('[data-qa-row="Account"]');
+            browser.waitForVisible('[data-qa-row="Account"]', constants.wait.normal);
             browser.waitForVisible('[data-qa-close-drawer]');
 
             const accountPermission = $('[data-qa-row="Account"] [data-qa-perm-rw-radio]');
@@ -84,21 +87,20 @@ describe('View - Personal Access Tokens', () => {
             expect(domainPermission.getAttribute('data-qa-perm-none-radio')).toBe('true');
             expect(eventsPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
             expect(imagesPermission.getAttribute('data-qa-perm-rw-radio')).toBe('true');
-            
+
             browser.click('[data-qa-close-drawer]');
-            
-            browser.waitForVisible('[data-qa-close-drawer]', constants.wait.normal, true);
-            browser.waitForExist('[data-qa-drawer]', constants.wait.normal, true);
         });
 
         describe('Edit - Personal Access Tokens', () => {
             it('should display edit drawer', () => {
-                profile.selectActionMenuItem($(newToken), 'Rename Token')
-                
-                expect(tokenCreateDrawer.label.waitForVisible()).toBe(true);
+                browser.waitForVisible(`${newToken} [data-qa-action-menu]`, constants.wait.normal)
+                profile.selectActionMenuItem($(newToken), 'Rename Token');
+
+
+                browser.waitForVisible(tokenCreateDrawer.label.selector, constants.wait.normal)
                 expect(tokenCreateDrawer.title.getText()).toBe('Edit Personal Access Token');
-                expect(tokenCreateDrawer.submit.isVisible()).toBe(true);
-                expect(tokenCreateDrawer.cancel.isVisible()).toBe(true);
+                browser.waitForVisible(tokenCreateDrawer.submit.selector, constants.wait.normal)
+                browser.waitForVisible(tokenCreateDrawer.cancel.selector, constants.wait.normal)
             });
 
             it('should update label on edit', () => {
@@ -137,7 +139,9 @@ describe('View - Personal Access Tokens', () => {
             it('should revoke on remove', () => {
                 browser.click(dialogConfirm);
                 profile.tokenBaseElems();
-                browser.waitForVisible(updatedSelector, constants.wait.long, true);
+                /** we've revoked the token and it should not be visible */
+                browser.refresh();
+                browser.waitForVisible(updatedSelector, constants.wait.normal, true);
             });
         });
     });

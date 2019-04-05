@@ -65,10 +65,8 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             {eachPage}
           </PageNumber>
         ))}
-        {/**
-         * if we have more than 5 pages and we're on a page that is
-         * not one of the last 5 pages, show " ... lastPage# "
-         */
+        {/* if we have more than 5 pages and we're on a page that is
+        not one of the last 5 pages, show " ... lastPage# " */
         numOfPages > 5 && currentPage <= numOfPages - 4 ? (
           <React.Fragment>
             <div className={classes.ellipses}>

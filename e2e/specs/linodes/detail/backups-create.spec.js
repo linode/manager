@@ -18,7 +18,7 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
     let linodes;
 
     const openRestoreDrawerGetLinodeOptions = () => {
-      const backupRow = $(`[data-qa-backup-name=${snapshot}]`).$('..');
+      const backupRow = Backups.firstBackupRow;
       Backups.selectActionMenuItem(backupRow,'Restore to Existing Linode');
       Backups.restoreToExistingDrawerDisplays();
       $(`${Backups.restoreToLinodeSelect.selector} div div`).click();
@@ -46,6 +46,7 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
         }
         apiCreateMultipleLinodes([linode1,linode2]);
         ListLinodes.navigateToDetail(linodeLabel);
+        browser.pause(500);
         LinodeDetail.launchConsole.waitForVisible(constants.wait.normal);
     });
 
@@ -66,7 +67,7 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
     });
 
     it('Backups can be deployed to new linodes', () => {
-        const backupRow = $(`[data-qa-backup-name=${snapshot}]`).$('..');
+        const backupRow = Backups.firstBackupRow;
         Backups.actionMenuOptionExists(backupRow,['Deploy New Linode']);
         $('body').click();
     });

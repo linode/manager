@@ -1,3 +1,4 @@
+import { Formik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -10,8 +11,9 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { CreateObjectStorageKeysRequest } from 'src/services/profile/objectStorageKeys';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { ObjectStorageKeyRequest } from 'src/services/profile/objectStorageKeys';
+import { createObjectStorageKeysSchema } from 'src/services/profile/objectStorageKeys.schema';
+import { MODES } from './ObjectStorageKeys';
 
 type ClassNames = 'root';
 
@@ -22,68 +24,91 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 export interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: () => void;
-  updateLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  isLoading: boolean;
-  errors?: Linode.ApiFieldError[];
+  onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
+  mode: MODES;
+  // If the mode is 'editing', we should have an ObjectStorageKey to edit
+  objectStorageKey?: Linode.ObjectStorageKey;
 }
 
-type CombinedProps = Props &
-  CreateObjectStorageKeysRequest &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const ObjectStorageDrawer: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const {
-    open,
-    onClose,
-    onSubmit,
-    label,
-    updateLabel,
-    isLoading,
-    errors
-  } = props;
+  const { open, onClose, onSubmit, mode, objectStorageKey } = props;
 
-  const hasErrorFor = getErrorMap(['label'], errors);
-  const generalError = hasErrorFor.none;
+  const title =
+    mode === 'creating'
+      ? 'Create an Object Storage Key'
+      : 'Edit Object Storage Key';
+
+  const initialLabelValue =
+    mode === 'editing' && objectStorageKey ? objectStorageKey.label : '';
+
   return (
-    <Drawer title="Create an Object Storage Key" open={open} onClose={onClose}>
-      {generalError && (
-        <Notice key={generalError} text={generalError} error data-qa-error />
-      )}
-      <Typography>
-        Generate an Object Storage key pair for use with an S3-compatible
-        client.
-      </Typography>
+    <Drawer title={title} open={open} onClose={onClose}>
+      <Formik
+        initialValues={{ label: initialLabelValue }}
+        validationSchema={createObjectStorageKeysSchema}
+        validateOnChange={false}
+        validateOnBlur={true}
+        onSubmit={onSubmit}
+      >
+        {({
+          values,
+          errors,
+          status,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting
+        }) => (
+          <>
+            {status && (
+              <Notice key={status} text={status} error data-qa-error />
+            )}
 
-      <TextField
-        label="Label"
-        data-qa-add-label
-        value={label}
-        error={!!hasErrorFor.label}
-        errorText={hasErrorFor.label}
-        onChange={updateLabel}
-      />
+            {/* Explainer copy if we're in 'creating' mode */}
+            {mode === 'creating' && (
+              <Typography>
+                Generate an Object Storage key pair for use with an
+                S3-compatible client.
+              </Typography>
+            )}
 
-      <ActionsPanel>
-        <Button
-          type="primary"
-          onClick={onSubmit}
-          loading={isLoading}
-          data-qa-submit
-        >
-          Submit
-        </Button>
-        <Button
-          onClick={onClose}
-          data-qa-cancel
-          type="secondary"
-          className="cancel"
-        >
-          Cancel
-        </Button>
-      </ActionsPanel>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                name="label"
+                label="Label"
+                data-qa-add-label
+                value={values.label}
+                error={!!errors.label}
+                errorText={errors.label}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <ActionsPanel>
+                <Button
+                  type="primary"
+                  onClick={() => handleSubmit()}
+                  loading={isSubmitting}
+                  data-qa-submit
+                >
+                  Submit
+                </Button>
+                <Button
+                  onClick={onClose}
+                  data-qa-cancel
+                  type="secondary"
+                  className="cancel"
+                >
+                  Cancel
+                </Button>
+              </ActionsPanel>
+            </form>
+          </>
+        )}
+      </Formik>
     </Drawer>
   );
 };

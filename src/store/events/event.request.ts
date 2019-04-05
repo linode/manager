@@ -26,7 +26,7 @@ export const getEvents: ThunkActionCreator<Promise<Linode.Event[]>> = () => (
 
   return (
     _getEvents({ page_size: 25 }, filters)
-      .then(response => response.data.data)
+      .then(response => response.data)
       /**
        * There is where we set _initial on the events. In the default state of events the
        * mostRecentEventTime is set to epoch. On the completion of the first successful events
@@ -48,7 +48,7 @@ export const getEvents: ThunkActionCreator<Promise<Linode.Event[]>> = () => (
 
 /**
  * Send a request to mark all currently stored events as seen, then call updateEventsAsSeen which
- * iterates the evnts and marks them seen.
+ * iterates the events and marks them seen.
  */
 export const markAllSeen: ThunkActionCreator<Promise<any>> = () => (
   dispatch,

@@ -13,7 +13,7 @@ export const useErrors = (): [
     if (errors) {
       scrollErrorIntoView();
     }
-  });
+  }, [errors]);
 
   const resetErrors = () => setErrors([]);
 

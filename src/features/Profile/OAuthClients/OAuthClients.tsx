@@ -292,7 +292,6 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Typography
-              role="header"
               className={classes.title}
               variant="h2"
               data-qa-table={classes.title}

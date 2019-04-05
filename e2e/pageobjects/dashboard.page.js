@@ -33,7 +33,7 @@ export class Dashboard extends Page {
     get blogPosts() { return $$('[data-qa-blog-post]'); }
     get postDescription() { return $('[data-qa-post-desc]'); }
 
-    get readMore() { return $('[data-qa-read-more]'); }
+    get readMore() { return $$(`${this.blogCard.selector} a`).find( it => it.getText() === 'Read More'); }
     get autoBackupEnrollmentCTA() { return $('[data-qa-account-link]'); }
     get backupExistingLinodes() { return $(this.enableAllBackups.selector); }
     get backupExistingMessage() { return $('[data-qa-linodes-message]'); }
@@ -50,6 +50,15 @@ export class Dashboard extends Page {
         this.blogCard.waitForVisible(constants.wait.normal);
         expect(this.blogCard.isVisible()).toBe(true);
         expect(this.readMore.isVisible()).toBe(true);
+    }
+
+    entityCount(entity){
+        const countAttribute = 'data-qa-entity-count';
+        return $(`[data-qa-card="${entity}"] [${countAttribute}]`).getAttribute(countAttribute);
+    }
+
+    viewAllLink(entity){
+        return $(`[data-qa-card="${entity}"] [data-qa-view-all-link]`)
     }
 }
 

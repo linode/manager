@@ -48,12 +48,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
         <DocumentTitleSegment segment="Referrals" />
         <Grid container>
           <Grid item xs={12}>
-            <Typography
-              role="header"
-              variant="h2"
-              className={classes.title}
-              data-qa-title
-            >
+            <Typography variant="h2" className={classes.title} data-qa-title>
               Referrals
             </Typography>
           </Grid>
@@ -70,11 +65,7 @@ class Referrals extends React.Component<CombinedProps, {}> {
           ) : (
             <React.Fragment>
               <Grid item>
-                <Typography
-                  role="header"
-                  variant="h3"
-                  className={classes.results}
-                >
+                <Typography variant="h3" className={classes.results}>
                   You have {total} total referrals: {completed} completed ($
                   {credit} ) and {pending} pending.
                 </Typography>

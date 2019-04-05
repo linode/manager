@@ -158,7 +158,8 @@ namespace Linode {
     | 'provisioning'
     | 'deleting'
     | 'migrating'
-    | 'cloning';
+    | 'cloning'
+    | 'restoring';
 
   export interface Config {
     id: number;
@@ -207,6 +208,8 @@ namespace Linode {
   }
 
   export type BootAction = 'reboot' | 'power_down' | null;
+
+  export type KebabAction = BootAction | 'delete';
 
   interface NetStats {
     in: number[][];

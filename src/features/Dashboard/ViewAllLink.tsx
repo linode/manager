@@ -41,7 +41,11 @@ const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
     <>
       {count && (
         <span className={classes.count}>
-          (<span className={classes.countNumber}>{count}</span>)
+          (
+          <span className={classes.countNumber} data-qa-entity-count={count}>
+            {count}
+          </span>
+          )
         </span>
       )}
       {!external ? (
@@ -51,6 +55,7 @@ const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
             [classes.link]: true,
             [classes.noCount]: !count
           })}
+          data-qa-view-all-link
         >
           {text}
         </Link>
@@ -61,6 +66,7 @@ const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
             [classes.link]: true,
             [classes.noCount]: !count
           })}
+          data-qa-view-all-link
           target="_blank"
         >
           {text}

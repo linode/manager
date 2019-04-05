@@ -75,7 +75,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
         return (
           <TableRow
             key={nodeBalancer.id}
-            data-qa-nodebalancer-cell
+            data-qa-nodebalancer-cell={nodeBalancer.label}
             rowLink={`/nodebalancers/${nodeBalancer.id}`}
             className="fade-in-table"
             aria-label={nodeBalancer.label}

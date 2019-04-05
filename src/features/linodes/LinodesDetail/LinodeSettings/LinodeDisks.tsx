@@ -194,7 +194,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       error,
       loading,
       linodeStatus,
-      linodeTotalDisk
+      linodeTotalDisk,
+      readOnly
     } = this.props;
 
     return (
@@ -206,7 +207,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           style={{ marginTop: 16 }}
         >
           <Grid item>
-            <Typography role="header" variant="h2" className={classes.headline}>
+            <Typography variant="h2" className={classes.headline}>
               Disks
             </Typography>
           </Grid>
@@ -214,6 +215,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             <AddNewLink
               onClick={this.openDrawerForCreation}
               label="Add a Disk"
+              disabled={readOnly}
             />
           </Grid>
         </Grid>
@@ -266,6 +268,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     error?: Error,
     data?: Linode.Disk[]
   ) => {
+    const { readOnly } = this.props;
     if (loading) {
       return <TableRowLoading colSpan={3} />;
     }
@@ -292,6 +295,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             onResize={this.openDrawerForResize(disk)}
             onImagize={this.openImagizeDrawer(disk)}
             onDelete={this.openConfirmDelete(disk)}
+            readOnly={readOnly}
           />
         </TableCell>
       </TableRow>
@@ -728,6 +732,7 @@ interface LinodeContextProps {
   updateLinodeDisk: UpdateLinodeDisk;
   createLinodeDisk: CreateLinodeDisk;
   resizeLinodeDisk: ResizeLinodeDisk;
+  readOnly: boolean;
 }
 
 const linodeContext = withLinodeDetailContext(
@@ -744,7 +749,8 @@ const linodeContext = withLinodeDetailContext(
     deleteLinodeDisk,
     updateLinodeDisk,
     createLinodeDisk,
-    resizeLinodeDisk
+    resizeLinodeDisk,
+    readOnly: linode._permissions === 'read_only'
   })
 );
 

@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.49.1",
+  "version": "0.51.2",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -42,6 +42,9 @@
     "moment-timezone": "^0.5.16",
     "notistack": "^0.4.1",
     "novnc-node": "^0.5.3",
+    "patch-package": "^6.1.0",
+    "postinstall-postinstall": "^2.0.0",
+    "pretty-bytes": "^5.1.0",
     "promise": "8.0.1",
     "promise.prototype.finally": "^3.1.0",
     "qrcode.react": "^0.8.0",
@@ -73,12 +76,14 @@
     "typeface-lato": "^0.0.54",
     "typeface-ubuntu-mono": "^0.0.54",
     "typescript-fsa": "^3.0.0-beta-2",
+    "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
     "xterm": "^3.3.0",
     "yup": "^0.26.3",
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
+    "postinstall": "patch-package",
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
     "format": "prettier 'src/**/*.{ts,tsx}' --write",
     "compare": "./scripts/jira-changelog.sh",
@@ -94,7 +99,7 @@
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js --env=jsdom",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand --env=jsdom",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
     "storyshots": "docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && docker-compose -f storyshots.yml down -v",
@@ -150,6 +155,7 @@
     "@types/moment-timezone": "^0.5.4",
     "@types/node": "^9.4.6",
     "@types/normalizr": "^2.0.18",
+    "@types/pretty-bytes": "^5.1.0",
     "@types/promise.prototype.finally": "^2.0.2",
     "@types/qrcode.react": "^0.8.0",
     "@types/qs": "^6.5.1",
@@ -198,16 +204,20 @@
     "husky": "^1.3.1",
     "inert": "^5.1.0",
     "inquirer": "^6.2.0",
-    "jest": "^24.1.0",
+    "jest": "^24.5.0",
+    "jest-dom": "^3.1.3",
     "lint-staged": "^8.1.0",
     "madge": "^3.4.3",
     "mini-css-extract-plugin": "^0.5.0",
+    "mongodb": "^3.1.13",
     "mountebank": "^1.14.1",
     "otplib": "^10.0.1",
     "postcss-flexbugs-fixes": "^4.1.0",
     "postcss-loader": "^3.0.0",
     "prettier": "1.16.1",
     "react-dev-utils": "^7.0.3",
+    "react-hooks-testing-library": "^0.3.8",
+    "react-testing-library": "^6.0.3",
     "reselect-tools": "^0.0.7",
     "selenium-standalone": "^6.13.0",
     "source-map-loader": "^0.2.4",
@@ -239,6 +249,9 @@
     "yargs": "11.0.0"
   },
   "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}"
     ],

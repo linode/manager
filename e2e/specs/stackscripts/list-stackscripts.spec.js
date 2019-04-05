@@ -12,7 +12,7 @@ describe('StackScripts - List Suite', () => {
     });
 
     it('should display my stackscripts preselected', () => {
-        expect(ListStackScripts.myStackScriptTab.getAttribute('aria-selected')).toBe('true');
+        expect(ListStackScripts.accountStackScriptTab.getAttribute('aria-selected')).toBe('true');
     });
 
     it('should change tab to community stackscripts and display stackscripts', () => {
@@ -22,7 +22,7 @@ describe('StackScripts - List Suite', () => {
     });
 
     it('should pre-select stackscript on selecting a stackscript to deploy on a new linode ', () => {
-        const stackScriptToDeploy = $$(`${ListStackScripts.stackScriptTitle.selector}`)[0].getText();
+        const stackScriptToDeploy = ListStackScripts.stackScriptTitle.getText();
         ListStackScripts.selectActionMenuItemV2(ListStackScripts.stackScriptRow.selector, 'Deploy New Linode');
         ConfigureLinode.stackScriptTableDisplay();
         const selectedStackScript = ConfigureLinode.stackScriptRows.find(row => row.$('[data-qa-radio="true"]'));
@@ -30,7 +30,8 @@ describe('StackScripts - List Suite', () => {
     });
 
     it('should contain the deploy with stackscript query params in the create url', () => {
-        expect(browser.getUrl()).toMatch(/\?type=fromStackScript&stackScriptID=\d*&stackScriptUsername=.*/ig);
+        expect(browser.getUrl())
+            .toMatch(/\??type=One-Click&subtype=Community%20StackScripts&stackScriptID\d*/ig);
     });
 
     it('should display compatible images', () => {

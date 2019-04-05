@@ -177,11 +177,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
           {last_four && (
             <Grid item xs={12}>
               <div className={classes.currentccContainer}>
-                <Typography
-                  role="header"
-                  variant="h2"
-                  className={classes.currentCCTitle}
-                >
+                <Typography variant="h2" className={classes.currentCCTitle}>
                   Current Credit Card
                 </Typography>
                 <Grid container>
@@ -206,9 +202,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
           )}
           <Grid item xs={12}>
             <div className={classes.newccContainer}>
-              <Typography role="header" variant="h2">
-                New Credit Card
-              </Typography>
+              <Typography variant="h2">New Credit Card</Typography>
               {generalError && (
                 <Notice error spacingTop={24} spacingBottom={8}>
                   {generalError}

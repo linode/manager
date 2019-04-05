@@ -5,7 +5,7 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
  * This function will transform a given promise into an observable
  * but also cancel the previous inner observable in favor of the new one
  *
- * This lets us prevent overlapping network requests from occuring
+ * This lets us prevent overlapping network requests from occurring
  *
  * learn more about switchMap:
  * https://www.learnrxjs.io/operators/transformation/switchmap.html
@@ -16,7 +16,7 @@ import { fromPromise } from 'rxjs/observable/fromPromise';
  *      .subscribe(
  *          () => console.log('onSuccess'),
  *          () => console.log('onFailure),
- *          () => console.log('onComletion')
+ *          () => console.log('onCompletion')
  *       )
  * @param promiseFn a function that returns a promise (i.e )
  */

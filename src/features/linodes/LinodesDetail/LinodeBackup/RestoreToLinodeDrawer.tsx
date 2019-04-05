@@ -1,5 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
@@ -16,7 +17,9 @@ import Drawer from 'src/components/Drawer';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Select from 'src/components/Select';
+import withProfile, { ProfileProps } from 'src/containers/profile.container';
 import { getLinodes, restoreBackup } from 'src/services/linodes';
+import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -43,8 +46,14 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & ProfileProps & WithStyles<ClassNames>;
 
+const canEditLinode = (
+  profile: Linode.Profile | null,
+  linodeId: number
+): boolean => {
+  return getPermissionsForLinode(profile, linodeId) === 'read_only';
+};
 export class RestoreToLinodeDrawer extends React.Component<
   CombinedProps,
   State
@@ -142,13 +151,16 @@ export class RestoreToLinodeDrawer extends React.Component<
   };
 
   render() {
-    const { open, backupCreated } = this.props;
+    const { open, backupCreated, profile } = this.props;
     const { linodes, selectedLinode, overwrite, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
     const linodeError = hasErrorFor('linode_id');
     const overwriteError = hasErrorFor('overwrite');
     const generalError = hasErrorFor('none');
+
+    const readOnly = canEditLinode(profile || null, Number(selectedLinode));
+    const selectError = Boolean(linodeError) || readOnly;
 
     return (
       <Drawer
@@ -169,7 +181,7 @@ export class RestoreToLinodeDrawer extends React.Component<
             value={selectedLinode || ''}
             onChange={this.handleSelectLinode}
             inputProps={{ name: 'linode', id: 'linode' }}
-            error={Boolean(linodeError)}
+            error={selectError}
           >
             <MenuItem value="none" disabled>
               Select a Linode
@@ -183,8 +195,10 @@ export class RestoreToLinodeDrawer extends React.Component<
                 );
               })}
           </Select>
-          {Boolean(linodeError) && (
-            <FormHelperText error>{linodeError}</FormHelperText>
+          {selectError && (
+            <FormHelperText error>
+              {linodeError || "You don't have permission to edit this Linode."}
+            </FormHelperText>
           )}
         </FormControl>
         <FormControlLabel
@@ -213,6 +227,7 @@ export class RestoreToLinodeDrawer extends React.Component<
             type="primary"
             onClick={this.restoreToLinode}
             data-qa-restore-submit
+            disabled={readOnly}
           >
             Restore
           </Button>
@@ -227,4 +242,14 @@ export class RestoreToLinodeDrawer extends React.Component<
 
 const styled = withStyles(styles);
 
-export default styled(RestoreToLinodeDrawer);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withProfile((ownProps, profile) => {
+    return {
+      ...ownProps,
+      profile
+    };
+  })
+);
+
+export default enhanced(RestoreToLinodeDrawer);

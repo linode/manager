@@ -141,6 +141,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
         <TableRow key={label} rowLink={`/linodes/${id}`} data-qa-linode>
           <LinodeRowHeadCell
             loading={false}
+            recentEvent={linode.recentEvent}
             backups={linode.backups}
             id={linode.id}
             ipv4={linode.ipv4}

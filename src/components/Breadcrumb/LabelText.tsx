@@ -38,12 +38,7 @@ export const LabelText: React.StatelessComponent<CombinedProps> = props => {
   const { classes, title, subtitle, titleLink } = props;
 
   const labelTitle = (
-    <Typography
-      role="header"
-      variant="h1"
-      className={classes.labelTitle}
-      data-qa-label-title
-    >
+    <Typography variant="h1" className={classes.labelTitle} data-qa-label-title>
       {title}
     </Typography>
   );

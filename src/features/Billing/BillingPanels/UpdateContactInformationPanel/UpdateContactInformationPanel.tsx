@@ -128,9 +128,7 @@ class UpdateContactInformationPanel extends React.Component<
       fields,
       submissionErrors,
       success,
-      countryRegionItems,
-      selectedCountry,
-      selectedRegion
+      countryRegionItems
     } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
@@ -167,19 +165,12 @@ class UpdateContactInformationPanel extends React.Component<
           : country.countryShortCode === account.country
     );
 
-    const regionResults = currentCountryResult[0]['regions'].map(
-      (region: any) => {
-        return {
-          value: region.shortCode,
-          label: region.name
-        };
-      }
-    );
-
-    console.log('selectedCountry: ' + selectedCountry);
-    console.log('selectedRegion: ' + selectedRegion);
-    console.log('Account Values: ' + account.country, account.state);
-    console.log('Fields Values: ' + fields.country, fields.state);
+    const regionResults = currentCountryResult[0].regions.map((region: any) => {
+      return {
+        value: region.shortCode,
+        label: region.name
+      };
+    });
 
     return (
       <Grid

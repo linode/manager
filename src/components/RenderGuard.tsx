@@ -21,7 +21,8 @@ const renderGuard = <P extends {}>(
         // this is a deep comparison
         return (
           !equals(this.props.updateFor, nextProps.updateFor) ||
-          this.props.theme.name !== nextProps.theme.name
+          this.props.theme.name !== nextProps.theme.name ||
+          this.props.theme.spacing.unit !== nextProps.theme.spacing.unit
         );
       }
       // if updateFor isn't provided, always update (this is React's default behavior)

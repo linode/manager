@@ -114,7 +114,8 @@ interface Props {
   id: number;
   label: string;
   status: Linode.LinodeStatus;
-  noImage: boolean;
+  noConfigs: boolean;
+  disabled?: boolean;
   recentEvent?: Linode.Event;
   openConfigDrawer: (
     config: Linode.Config[],
@@ -178,7 +179,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { status, classes, recentEvent, noImage } = this.props;
+    const { status, classes, disabled, recentEvent, noConfigs } = this.props;
     const {
       menu: { anchorEl },
       bootOption,
@@ -250,6 +251,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               onClick={this.toggleRebootDialog}
               className={classes.menuItem}
               data-qa-set-power="reboot"
+              disabled={disabled}
             >
               <div className={classes.menuItemInner}>
                 <EntityIcon
@@ -268,6 +270,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               onClick={this.togglePowerDownDialog}
               className={classes.menuItem}
               data-qa-set-power="powerOff"
+              disabled={disabled}
             >
               <div className={classes.menuItemInner}>
                 <EntityIcon
@@ -286,10 +289,10 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               onClick={this.powerOn}
               className={classes.menuItem}
               data-qa-set-power="powerOn"
-              disabled={noImage}
+              disabled={noConfigs || disabled}
               tooltip={
-                noImage
-                  ? 'An image needs to be added before powering on a Linode'
+                noConfigs
+                  ? 'A config needs to be added before powering on a Linode'
                   : undefined
               }
             >

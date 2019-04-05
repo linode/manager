@@ -8,14 +8,26 @@ import accountSettings, {
   defaultState as defaultAccountSettingsState,
   State as AccountSettingsState
 } from 'src/store/accountSettings/accountSettings.reducer';
+import { State as AuthState } from 'src/store/authentication';
 import authentication, {
-  defaultState as authenticationDefaultState,
-  State as AuthState
-} from 'src/store/authentication';
+  defaultState as authenticationDefaultState
+} from 'src/store/authentication/authentication.reducer';
 import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState
 } from 'src/store/backupDrawer';
+import buckets, {
+  defaultState as defaultBucketsState,
+  State as BucketsState
+} from 'src/store/bucket/bucket.reducer';
+import bucketDrawer, {
+  defaultState as bucketDrawerDefaultState,
+  State as BucketDrawerState
+} from 'src/store/bucketDrawer/bucketDrawer.reducer';
+import clusters, {
+  defaultState as defaultClustersState,
+  State as ClustersState
+} from 'src/store/clusters/clusters.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState
@@ -37,6 +49,10 @@ import images, {
   defaultState as defaultImagesState,
   State as ImagesStata
 } from 'src/store/image/image.reducer';
+import linodeCreateReducer, {
+  defaultState as linodeCreateDefaultState,
+  State as LinodeCreateState
+} from 'src/store/linodeCreate/linodeCreate.reducer';
 import linodeConfigs, {
   defaultState as defaultLinodeConfigsState,
   State as LinodeConfigsState
@@ -118,7 +134,9 @@ const __resourcesDefaultState = {
   profile: defaultProfileState,
   regions: defaultRegionsState,
   types: defaultTypesState,
-  volumes: defaultVolumesState
+  volumes: defaultVolumesState,
+  buckets: defaultBucketsState,
+  clusters: defaultClustersState
 };
 
 export interface ResourcesState {
@@ -136,6 +154,8 @@ export interface ResourcesState {
   regions: RegionsState;
   types: TypesState;
   volumes: VolumesState;
+  buckets: BucketsState;
+  clusters: ClustersState;
 }
 
 export interface ApplicationState {
@@ -148,6 +168,8 @@ export interface ApplicationState {
   stackScriptDrawer: StackScriptDrawerState;
   tagImportDrawer: TagImportDrawerState;
   volumeDrawer: VolumeDrawerState;
+  bucketDrawer: BucketDrawerState;
+  createLinode: LinodeCreateState;
 }
 
 const defaultState: ApplicationState = {
@@ -159,7 +181,9 @@ const defaultState: ApplicationState = {
   events: eventsDefaultState,
   stackScriptDrawer: stackScriptDrawerDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
-  volumeDrawer: volumeDrawerDefaultState
+  volumeDrawer: volumeDrawerDefaultState,
+  bucketDrawer: bucketDrawerDefaultState,
+  createLinode: linodeCreateDefaultState
 };
 
 /**
@@ -179,7 +203,9 @@ const __resources = combineReducers({
   profile,
   regions,
   types,
-  volumes
+  volumes,
+  buckets,
+  clusters
 });
 
 const reducers = combineReducers<ApplicationState>({
@@ -191,7 +217,9 @@ const reducers = combineReducers<ApplicationState>({
   stackScriptDrawer,
   tagImportDrawer,
   volumeDrawer,
-  events
+  bucketDrawer,
+  events,
+  createLinode: linodeCreateReducer
 });
 
 const enhancers = compose(

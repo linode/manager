@@ -11,9 +11,7 @@ import { LOGIN_ROOT } from 'src/constants';
 
 type ClassNames = 'root' | 'button';
 
-interface Props {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -29,7 +27,7 @@ const ResetPassword: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
   return (
     <Paper className={classes.root}>
-      <Typography role="header" variant="h2" data-qa-title>
+      <Typography variant="h2" data-qa-title>
         Account Password
       </Typography>
       <Button

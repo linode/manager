@@ -23,6 +23,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_snapshot':
     case 'linode_addip':
     case 'linode_boot':
+    case 'backups_restore':
     case 'backups_enable':
     case 'backups_cancel':
     case 'disk_imagize':
@@ -141,12 +142,6 @@ const handleLinodeCreation = (
   id: number,
   state: ApplicationState
 ) => {
-  const found = state.__resources.linodes.results.find(i => i === id);
-
-  if (found) {
-    return;
-  }
-
   switch (status) {
     case 'failed':
     case 'finished':

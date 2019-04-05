@@ -1,6 +1,6 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { shim } from 'promise.prototype.finally';
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
@@ -22,7 +22,7 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
-import DomainCreateDrawer from 'src/features/Domains/DomainCreateDrawer';
+import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
@@ -30,6 +30,7 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { ApplicationState } from 'src/store';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linodes.actions';
@@ -41,6 +42,9 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import { isObjectStorageEnabled } from './constants';
+import BucketDrawer from './features/ObjectStorage/BucketDrawer';
+import { requestClusters } from './store/clusters/clusters.actions';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions
@@ -67,6 +71,10 @@ const Domains = DefaultLoader({
 
 const Images = DefaultLoader({
   loader: () => import('src/features/Images')
+});
+
+const ObjectStorage = DefaultLoader({
+  loader: () => import('src/features/ObjectStorage')
 });
 
 const Profile = DefaultLoader({
@@ -113,6 +121,10 @@ const SearchLanding = DefaultLoader({
   loader: () => import('src/features/Search')
 });
 
+const EventsLanding = DefaultLoader({
+  loader: () => import('src/features/Events/EventsLanding')
+});
+
 type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
 
 const styles: StyleRulesCallback = theme => ({
@@ -134,6 +146,7 @@ const styles: StyleRulesCallback = theme => ({
   },
   wrapper: {
     padding: theme.spacing.unit * 3,
+    transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
       paddingTop: theme.spacing.unit * 2,
       paddingLeft: theme.spacing.unit * 2,
@@ -197,19 +210,27 @@ export class App extends React.Component<CombinedProps, State> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
+    const dataFetchingPromises: Promise<any>[] = [
+      actions.requestProfile(),
+      actions.requestDomains(),
+      actions.requestImages(),
+      actions.requestLinodes(),
+      actions.requestNotifications(),
+      actions.requestSettings(),
+      actions.requestTypes(),
+      actions.requestRegions(),
+      actions.requestVolumes(),
+      getAllNodeBalancersWithConfigs()
+    ];
+
+    // Make these requests only if the feature is enabled.
+    if (isObjectStorageEnabled) {
+      dataFetchingPromises.push(actions.requestBuckets());
+      dataFetchingPromises.push(actions.requestClusters());
+    }
+
     try {
-      await Promise.all([
-        actions.requestProfile(),
-        actions.requestDomains(),
-        actions.requestImages(),
-        actions.requestLinodes(),
-        actions.requestNotifications(),
-        actions.requestSettings(),
-        actions.requestTypes(),
-        actions.requestRegions(),
-        actions.requestVolumes(),
-        getAllNodeBalancersWithConfigs()
-      ]);
+      await Promise.all(dataFetchingPromises);
     } catch (error) {
       /** We choose to do nothing, relying on the Redux error state. */
     }
@@ -275,11 +296,42 @@ export class App extends React.Component<CombinedProps, State> {
       toggleSpacing,
       toggleTheme,
       profileLoading,
-      profileError
+      linodesError,
+      domainsError,
+      typesError,
+      imagesError,
+      notificationsError,
+      regionsError,
+      volumesError,
+      settingsError,
+      profileError,
+      bucketsError
     } = this.props;
 
-    if (profileError || hasError) {
+    if (hasError) {
       return <TheApplicationIsOnFire />;
+    }
+
+    /**
+     * basically, if we get an "invalid oauth token"
+     * error from the API, just render nothing because the user is
+     * about to get shot off to login
+     */
+    if (
+      hasOauthError(
+        linodesError,
+        domainsError,
+        typesError,
+        imagesError,
+        notificationsError,
+        regionsError,
+        volumesError,
+        settingsError,
+        profileError,
+        bucketsError
+      )
+    ) {
+      return null;
     }
 
     return (
@@ -319,6 +371,12 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
+                          {isObjectStorageEnabled && (
+                            <Route
+                              path="/object-storage"
+                              component={ObjectStorage}
+                            />
+                          )}
                           <Route path="/account" component={Account} />
                           <Route
                             exact
@@ -338,6 +396,7 @@ export class App extends React.Component<CombinedProps, State> {
                           />
                           <Route path="/dashboard" component={Dashboard} />
                           <Route path="/search" component={SearchLanding} />
+                          <Route path="/events" component={EventsLanding} />
                           <Redirect exact from="/" to="/dashboard" />
                           <Route component={NotFound} />
                         </Switch>
@@ -352,9 +411,10 @@ export class App extends React.Component<CombinedProps, State> {
                   data-qa-beta-notice
                 />
                 <ToastNotifications />
-                <DomainCreateDrawer />
+                <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
+                {isObjectStorageEnabled && <BucketDrawer />}
               </div>
             </>
           </React.Fragment>
@@ -386,6 +446,8 @@ interface DispatchProps {
     requestTypes: () => Promise<Linode.LinodeType[]>;
     requestRegions: () => Promise<Linode.Region[]>;
     requestVolumes: () => Promise<Linode.Volume[]>;
+    requestBuckets: () => Promise<Linode.Bucket[]>;
+    requestClusters: () => Promise<Linode.Cluster[]>;
   };
 }
 
@@ -402,7 +464,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
       requestSettings: () => dispatch(requestAccountSettings()),
       requestTypes: () => dispatch(requestTypes()),
       requestRegions: () => dispatch(requestRegions()),
-      requestVolumes: () => dispatch(getAllVolumes())
+      requestVolumes: () => dispatch(getAllVolumes()),
+      requestBuckets: () => dispatch(getAllBuckets()),
+      requestClusters: () => dispatch(requestClusters())
     }
   };
 };
@@ -411,8 +475,16 @@ interface StateProps {
   /** Profile */
   profileLoading: boolean;
   profileError?: Error | Linode.ApiFieldError[];
+  linodesError?: Linode.ApiFieldError[];
+  domainsError?: Linode.ApiFieldError[];
+  imagesError?: Linode.ApiFieldError[];
+  notificationsError?: Linode.ApiFieldError[] | Error;
+  settingsError?: Linode.ApiFieldError[] | Error;
+  typesError?: Linode.ApiFieldError[];
+  regionsError?: Linode.ApiFieldError[];
+  volumesError?: Linode.ApiFieldError[] | Error;
+  bucketsError?: Error | Linode.ApiFieldError[];
   userId?: number;
-
   documentation: Linode.Doc[];
 }
 
@@ -420,6 +492,15 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: state.__resources.profile.error,
+  linodesError: state.__resources.linodes.error,
+  domainsError: state.__resources.domains.error,
+  imagesError: state.__resources.images.error,
+  notificationsError: state.__resources.notifications.error,
+  settingsError: state.__resources.accountSettings.error,
+  typesError: state.__resources.types.error,
+  regionsError: state.__resources.regions.error,
+  volumesError: state.__resources.volumes.error,
+  bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
 
   documentation: state.documentation
@@ -439,3 +520,13 @@ export default compose(
   withSnackbar,
   withNodeBalancerActions
 )(App);
+
+export const hasOauthError = (
+  ...args: (Error | Linode.ApiFieldError[] | undefined)[]
+) => {
+  return args.some(eachError => {
+    return pathOr('', [0, 'reason'], eachError)
+      .toLowerCase()
+      .includes('oauth');
+  });
+};

@@ -1,8 +1,10 @@
 import AddCircle from '@material-ui/icons/AddCircle';
+import * as classNames from 'classnames';
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Button from 'src/components/core/Button';
 import {
   StyleRulesCallback,
@@ -11,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
+import Notice from 'src/components/Notice';
 import { getTags } from 'src/services/tags';
 import TagsPanelItem from './TagsPanelItem';
 
@@ -18,9 +21,13 @@ type ClassNames =
   | 'root'
   | 'tag'
   | 'addButtonWrapper'
+  | 'hasError'
+  | 'errorNotice'
   | 'addButton'
   | 'tagsPanelItemWrapper'
-  | 'selectTag';
+  | 'selectTag'
+  | 'progress'
+  | 'loading';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
@@ -48,6 +55,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit * 2 - 1,
     marginBottom: theme.spacing.unit * 2 + 1
   },
+  hasError: {
+    marginTop: 0
+  },
+  errorNotice: {
+    '& .noticeText': {
+      ...theme.typography.body1,
+      fontFamily: '"LatoWeb", sans-serif'
+    }
+  },
   addButton: {
     padding: 0,
     position: 'relative',
@@ -60,7 +76,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   tagsPanelItemWrapper: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
+    position: 'relative'
   },
   selectTag: {
     marginTop: theme.spacing.unit,
@@ -73,7 +90,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       marginTop: 0
     },
     '& .error-for-scroll > div': {
-      width: 'auto',
       flexDirection: 'row',
       flexWrap: 'wrap-reverse'
     },
@@ -84,20 +100,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         borderLeft: 'none'
       }
     },
-    '& .error-for-scroll p:last-child': {
-      padding: theme.spacing.unit,
-      marginTop: 0,
-      position: 'absolute',
-      top: '-50px',
-      left: 10,
-      maxWidth: 170,
-      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-      backgroundColor: theme.bg.offWhiteDT,
-      color: `${theme.palette.text.primary}`,
-      borderLeft: `5px solid ${theme.palette.status.errorDark}`,
-      lineHeight: 1.2,
-      zIndex: 5
-    },
     '& .react-select__input': {
       fontSize: '.9rem',
       color: theme.palette.text.primary,
@@ -106,6 +108,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     '& .react-select__value-container': {
       padding: '6px'
     }
+  },
+  progress: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2
+  },
+  loading: {
+    opacity: 0.4
   }
 });
 
@@ -128,11 +142,13 @@ interface State {
   isCreatingTag: boolean;
   tagInputValue: string;
   listDeletingTags: string[];
+  loading?: boolean;
 }
 
 export interface Props {
   tags: string[];
   updateTags: (tags: string[]) => Promise<void>;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & InjectedNotistackProps;
@@ -143,7 +159,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
     tagError: '',
     isCreatingTag: false,
     tagInputValue: '',
-    listDeletingTags: []
+    listDeletingTags: [],
+    loading: false
   };
 
   componentDidMount() {
@@ -176,10 +193,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   }
 
   toggleTagInput = () => {
-    this.setState({
-      tagError: '',
-      isCreatingTag: !this.state.isCreatingTag
-    });
+    if (!this.props.disabled) {
+      this.setState({
+        tagError: '',
+        isCreatingTag: !this.state.isCreatingTag
+      });
+    }
   };
 
   handleDeleteTag = (label: string) => {
@@ -189,7 +208,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
      */
     this.setState(
       {
-        listDeletingTags: [...this.state.listDeletingTags, label]
+        listDeletingTags: [...this.state.listDeletingTags, label],
+        loading: true
       },
       () => {
         /*
@@ -216,7 +236,9 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               ],
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
-              )
+              ),
+              loading: false,
+              tagError: ''
             });
           })
           .catch(e => {
@@ -229,7 +251,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             this.setState({
               listDeletingTags: this.state.listDeletingTags.filter(
                 eachTag => eachTag !== label
-              )
+              ),
+              loading: false
             });
           });
       }
@@ -239,6 +262,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
     const { tagsToSuggest } = this.state;
     const { tags, updateTags } = this.props;
+    const inputValue = value && value.value;
+
     /*
      * This comes from the react-select API
      * basically, we only want to make a request if the user is either
@@ -251,76 +276,123 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       return;
     }
 
-    this.setState({
-      tagError: ''
-    });
-
-    updateTags([...tags, value.label])
-      .then(() => {
-        // set the input value to blank on submit
-        this.setState({ tagInputValue: '' });
-        /*
-         * Filter out the new tag out of the auto-suggestion list
-         * since we can't attach this tag anymore
-         */
-        const cloneTagSuggestions = clone(tagsToSuggest) || [];
-        const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
-          return eachTag.label !== value.label;
-        });
-        this.setState({
-          tagsToSuggest: filteredTags
-        });
-      })
-      .catch(e => {
-        const tagError = pathOr(
-          'Error while creating tag',
-          ['response', 'data', 'errors', 0, 'reason'],
-          e
-        );
-        // display the first error in the array or a generic one
-        this.setState({ tagError });
+    const tagExists = (tag: string) => {
+      return tags.some(el => {
+        return el === tag;
       });
+    };
+
+    this.toggleTagInput();
+
+    if (inputValue.length < 3 || inputValue.length > 50) {
+      this.setState({
+        tagError: `Tag "${inputValue}" length must be 3-50 characters`
+      });
+    } else if (tagExists(inputValue)) {
+      this.setState({
+        tagError: `Tag "${inputValue}" is a duplicate`
+      });
+    } else {
+      this.setState({
+        loading: true
+      });
+      updateTags([...tags, value.label])
+        .then(() => {
+          // set the input value to blank on submit
+          this.setState({ tagInputValue: '' });
+          /*
+           * Filter out the new tag out of the auto-suggestion list
+           * since we can't attach this tag anymore
+           */
+          const cloneTagSuggestions = clone(tagsToSuggest) || [];
+          const filteredTags = cloneTagSuggestions.filter((eachTag: Item) => {
+            return eachTag.label !== value.label;
+          });
+          this.setState({
+            tagsToSuggest: filteredTags,
+            loading: false
+          });
+        })
+        .catch(e => {
+          this.setState({ loading: false });
+          const tagError = pathOr(
+            'Error while creating tag',
+            ['response', 'data', 'errors', 0, 'reason'],
+            e
+          );
+          // display the first error in the array or a generic one
+          this.setState({ tagError });
+        });
+    }
   };
 
   render() {
-    const { tags, classes } = this.props;
+    const { tags, classes, disabled } = this.props;
 
     const {
       isCreatingTag,
       listDeletingTags,
       tagsToSuggest,
       tagInputValue,
-      tagError
+      tagError,
+      loading
     } = this.state;
 
     return (
-      <div className={classes.root}>
-        <div className={classes.tagsPanelItemWrapper}>
-          {tags.map(eachTag => {
-            return (
-              <TagsPanelItem
-                key={eachTag}
-                label={eachTag}
-                tagLabel={eachTag}
-                onDelete={this.handleDeleteTag}
-                className={classes.tag}
-                loading={listDeletingTags.some(inProgressTag => {
-                  /*
-                   * The tag is getting deleted if it appears in the state
-                   * which holds the list of tags queued for deletion
-                   */
-                  return eachTag === inProgressTag;
-                })}
-              />
-            );
+      <div
+        className={classNames({
+          [classes.root]: true
+        })}
+      >
+        <div
+          className={classNames({
+            [classes.tagsPanelItemWrapper]: true
           })}
+        >
+          {loading && (
+            <div className={classes.progress}>
+              <CircleProgress mini />
+            </div>
+          )}
+          <div
+            className={classNames({
+              [classes.loading]: loading
+            })}
+          >
+            {tags.map(eachTag => {
+              return (
+                <TagsPanelItem
+                  key={eachTag}
+                  label={eachTag}
+                  tagLabel={eachTag}
+                  onDelete={disabled ? undefined : this.handleDeleteTag}
+                  className={classes.tag}
+                  loading={listDeletingTags.some(inProgressTag => {
+                    /*
+                     * The tag is getting deleted if it appears in the state
+                     * which holds the list of tags queued for deletion
+                     */
+                    return eachTag === inProgressTag;
+                  })}
+                />
+              );
+            })}
+          </div>
+          {tagError && (
+            <Notice
+              text={tagError}
+              error
+              spacingBottom={0}
+              spacingTop={16}
+              className={classes.errorNotice}
+            />
+          )}
         </div>
         {isCreatingTag ? (
           <Select
             onChange={this.handleCreateTag}
             options={tagsToSuggest}
             variant="creatable"
-            errorText={tagError}
             onBlur={this.toggleTagInput}
             placeholder="Create or Select a Tag"
             value={tagInputValue}
@@ -328,14 +400,20 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             autoFocus
             className={classes.selectTag}
             blurInputOnSelect={false}
-            menuIsOpen={true}
+            menuIsOpen={!loading && !tagError}
           />
         ) : (
-          <div className={classes.addButtonWrapper}>
+          <div
+            className={classNames({
+              [classes.addButtonWrapper]: true,
+              [classes.hasError]: tagError
+            })}
+          >
             <Button
               onClick={this.toggleTagInput}
               className={classes.addButton}
               type="primary"
+              disabled={loading || disabled}
             >
               <AddCircle data-qa-add-tag />
               <Typography>Add New Tag</Typography>

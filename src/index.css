@@ -18,6 +18,10 @@ body {
   font-family: 'LatoWeb', sans-serif;
 }
 
+body.searchOverlay #main-content {
+  opacity: 0.5;
+}
+
 @media screen and (min-width: 960px) {
   body {
     /* fix for scrollbar compoensation */
@@ -139,6 +143,10 @@ a {
   cursor: pointer;
 }
 
+a.h-u:hover {
+  text-decoration: underline;
+}
+
 .secondaryLink:hover {
   text-decoration: underline;
 }
@@ -236,6 +244,21 @@ a.black:not(.nu):active {
   flex-basis: 100%;
   margin-top: 24px !important;
 }
+
+@media (min-width: 960px) {
+  .mlMain {
+    max-width: 70%;
+    flex-basis: 70%;
+  }
+  .mlSidebar {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    max-width: 30%;
+    padding: 8px !important;
+    margin-top: 0 !important;
+  }
+}
 @media (min-width: 1280px) {
   .mlMain {
     max-width: 78.8%;
@@ -243,9 +266,7 @@ a.black:not(.nu):active {
   }
   .mlSidebar {
     max-width: 21.2%;
-    max-width: 21.2%;
-    padding-left: 16px !important;
-    margin-top: 0 !important;
+    padding: 8px 24px !important;
   }
 }
 .p0 {

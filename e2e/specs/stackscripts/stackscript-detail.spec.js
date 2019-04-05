@@ -1,7 +1,7 @@
 const { constants } = require('../../constants');
 import {
     apiDeleteMyStackScripts,
-    getDistrobutionLabel,
+    getDistributionLabel,
     timestamp,
     switchTab,
 } from '../../utils/common';
@@ -21,25 +21,25 @@ describe('StackScript - detail page and drawer suite', () => {
       }, constants.wait.normal);
       const titleAndAuthor = $$(`${ListStackScripts.stackScriptTitle.selector} h3`)[0].getText();
       const deploys = $$(ListStackScripts.stackScriptDeploys.selector)[0].getText();
-      const compatibleDisrobutions = $$(ListStackScripts.stackScriptCompatibleDistrobutions.selector)[0].$$('div').map( distro => distro.getText());
+      const compatibleDistributions = $$(ListStackScripts.stackScriptCompatibleDistributions.selector)[0].$$('div').map(distro => distro.getText());
       const getTitleAndAuthor = titleAndAuthor.split('/');
       const stackScriptDetails = {
           title: getTitleAndAuthor[1].trim(),
           author: getTitleAndAuthor[0].trim(),
           deploys: deploys,
-          distrobutions: compatibleDisrobutions
+          distributions: compatibleDistributions
       }
       return stackScriptDetails;
   }
 
-  const verifyStackScriptDetailPageOrDrawer = (title,author,deployments,disrobutions,description,code) => {
+  const verifyStackScriptDetailPageOrDrawer = (title,author,deployments,distributions,description,code) => {
       expect(StackScriptDetail.stackScriptTitle(title).isVisible()).toBe(true);
       expect(StackScriptDetail.stackScriptAuthor(author).isVisible()).toBe(true);
       expect(StackScriptDetail.stackScriptDeployments.getText()).toContain(deployments);
-      const selectedDistrobutionLabels = getDistrobutionLabel(disrobutions);
-      const displayedDistrobutionLabels = StackScriptDetail.getStackScriptCompatibleDisrobutions();
-      selectedDistrobutionLabels.forEach((distro) => {
-          expect(displayedDistrobutionLabels.includes(distro)).toBe(true);
+      const selectedDistributionLabels = getDistributionLabel(distributions);
+      const displayedDistributionsLabels = StackScriptDetail.getStackScriptCompatibleDistributions();
+      selectedDistributionLabels.forEach((distro) => {
+          expect(displayedDistributionsLabels.includes(distro)).toBe(true);
       });
       if(description){
           expect(StackScriptDetail.stackScriptDescription.getText()).toContain(description);
@@ -72,7 +72,7 @@ describe('StackScript - detail page and drawer suite', () => {
       });
 
       it('Verify StackScript details correspond to the row clicked', () => {
-          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distrobutions);
+          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distributions);
       });
 
       it('Breadcrumb link navigates back to StackScript landing', () => {
@@ -84,65 +84,73 @@ describe('StackScript - detail page and drawer suite', () => {
 
   describe('Created StackScript - detail page and detail drawer', () => {
 
-    const stackConfig = {
-        label: `AutoStackScript${timestamp()}`,
-        description: 'test stackscript example',
-        images: ['debian9', 'arch', 'containerlinux'],
-        script: '#!/bin/bash\necho "Hello Linode"',
-    }
+      const stackConfig = {
+          label: `AutoStackScript${timestamp()}`,
+          description: 'test stackscript example',
+          images: ['debian9', 'arch', 'containerlinux'],
+          script: '#!/bin/bash\necho "Hello Linode"',
+      }
 
-    beforeAll(() => {
-        ListStackScripts.create.click();
-        ConfigureStackScripts.baseElementsDisplay();
-        ConfigureStackScripts.configure(stackConfig);
-    });
+     beforeAll(() => {
+          ListStackScripts.create.click();
+          ConfigureStackScripts.baseElementsDisplay();
+          ConfigureStackScripts.configure(stackConfig);
+      });
 
-    it('StackScript detail page displays for created StackScript', () => {
-        ConfigureStackScripts.create(stackConfig);
-        ListStackScripts.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.true);
-        ListStackScripts.stackScriptDetailPage(stackConfig.label);
-        StackScriptDetail.stackScriptDetailPageDisplays();
-    });
+      it('StackScript detail page displays for created StackScript', () => {
+          ConfigureStackScripts.create(stackConfig);
+          ListStackScripts.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.true);
+          ListStackScripts.stackScriptDetailPage(stackConfig.label);
+          StackScriptDetail.stackScriptDetailPageDisplays();
+      });
 
-    it('Verify StackScript detail page displays the correct data for created StackScript', () => {
-        verifyStackScriptDetailPageOrDrawer(stackConfig.label,browser.options.testUser,'0',stackConfig.images,stackConfig.description,stackConfig.script);
-        expect(StackScriptDetail.breadcrumbStaticText.getText()).toEqual(`${browser.options.testUser} / ${stackConfig.label}`);
-    });
+      it('Verify StackScript detail page displays the correct data for created StackScript', () => {
+          verifyStackScriptDetailPageOrDrawer(stackConfig.label,browser.options.testUser,'0',stackConfig.images,stackConfig.description,stackConfig.script);
+          expect(StackScriptDetail.breadcrumbStaticText.getText()).toEqual(`${browser.options.testUser} / ${stackConfig.label}`);
+      });
 
-    it('Author text links to the community StackScripts page', () => {
-        StackScriptDetail.stackScriptAuthor(browser.options.testUser).$('a').click();
-        switchTab();
-        expect(browser.getTitle()).toContain('StackScripts -');
-        expect(browser.getUrl()).toContain(`linode.com/stackscripts/profile/${browser.options.testUser}`);
-        browser.close();
-        StackScriptDetail.stackScriptDetailPageDisplays();
-    });
+      it('Author text links to the community StackScripts page', () => {
+          StackScriptDetail.stackScriptAuthor(browser.options.testUser).$('a').click();
+          switchTab();
+          expect(browser.getTitle()).toContain('StackScripts -');
+          expect(browser.getUrl()).toContain(`linode.com/stackscripts/profile/${browser.options.testUser}`);
+          browser.close();
+          StackScriptDetail.stackScriptDetailPageDisplays();
+      });
 
-    it('Deploy to StackScript button navigates to cofigure Linode from StackScript page', () => {
-        StackScriptDetail.deployStackScriptButton.click();
-        ConfigureLinode.stackScriptTableDisplay();
-        ConfigureLinode.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.normal);
-        expect(ConfigureLinode.stackScriptRowByTitle(stackConfig.label).getAttribute('data-qa-radio')).toBe('true');
-    });
+      it('Deploy to StackScript button navigates to cofigure Linode from StackScript page', () => {
+          StackScriptDetail.deployStackScriptButton.click();
+          browser.pause(2000);
+          ConfigureLinode.stackScriptRowByTitle(stackConfig.label).waitForVisible(constants.wait.normal);
+          expect(ConfigureLinode.stackScriptRowByTitle(stackConfig.label).getAttribute('data-qa-radio')).toBe('true');
+      });
 
-    it('StackScript detail drawer opens from the StackScri[pt] table on the configure Linode page', () => {
-        ConfigureLinode.stackScripShowDetails(stackConfig.label);
-        StackScriptDetail.stackScriptDetailDrawerDisplays();
-    });
+      it('StackScript detail drawer opens from the StackScri[pt] table on the configure Linode page', () => {
+          ConfigureLinode.stackScripShowDetails(stackConfig.label);
+          StackScriptDetail.stackScriptDetailDrawerDisplays();
+      });
 
-    it('StackScript detail drawer displays correct StackScript details ', () => {
-        verifyStackScriptDetailPageOrDrawer(stackConfig.label,browser.options.testUser,'0',stackConfig.images,stackConfig.description,stackConfig.script);
-        expect(StackScriptDetail.drawerTitle.getText()).toEqual(`${browser.options.testUser} / ${stackConfig.label}`);
-        StackScriptDetail.drawerClose.click();
-        ConfigureLinode.drawerBase.waitForVisible(constants.wait.normal, true);
-    });
+      it('StackScript detail drawer displays correct StackScript details ', () => {
+          verifyStackScriptDetailPageOrDrawer(stackConfig.label,browser.options.testUser,'0',stackConfig.images,stackConfig.description,stackConfig.script);
+          expect(StackScriptDetail.drawerTitle.getText()).toEqual(`${browser.options.testUser} / ${stackConfig.label}`);
+          StackScriptDetail.drawerClose.click();
+          ConfigureLinode.drawerBase.waitForVisible(constants.wait.normal, true);
+      });
 
+      it('Can dismiss selected StackScript', () => {
+          const chooseFromOthers = $$('a span').find(it => it.getText() === 'Choose another StackScript');
+          expect(chooseFromOthers.isVisible()).toBe(true);
+          chooseFromOthers.click();
+          browser.pause(500);
+          ConfigureLinode.stackScriptsBaseElemsDisplay();
+      });
   });
 
   describe('Community StackScript detail drawer', () => {
 
       beforeAll(() => {
           ConfigureLinode.changeTab('Community StackScripts');
+          browser.pause(500);
       });
 
       it('StackScript detail drawer displays', () => {
@@ -152,7 +160,7 @@ describe('StackScript - detail page and drawer suite', () => {
       });
 
       it('Verify StackScript drawer details correspond to the row clicked', () => {
-          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distrobutions);
+          verifyStackScriptDetailPageOrDrawer(selectedStackScript.title,selectedStackScript.author,selectedStackScript.deploys,selectedStackScript.distributions);
           expect(StackScriptDetail.drawerTitle.getText()).toEqual(`${selectedStackScript.author} / ${selectedStackScript.title}`);
           StackScriptDetail.drawerClose.click();
           ConfigureLinode.drawerBase.waitForVisible(constants.wait.normal, true);

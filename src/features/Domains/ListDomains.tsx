@@ -30,7 +30,8 @@ interface Props {
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
   onRemove: (domain: string, domainID: number) => void;
-  onClone: (domain: string, cloneId: number) => void;
+  onClone: (domain: string, id: number) => void;
+  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -49,7 +50,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table aria-label="List of your Domains">
+            <Table removeLabelonMobile aria-label="List of your Domains">
               <TableHead>
                 <TableRow>
                   <TableSortCell
@@ -78,6 +79,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                 <RenderData
                   data={paginatedData}
                   onClone={props.onClone}
+                  onEdit={props.onEdit}
                   onRemove={props.onRemove}
                 />
               </TableBody>
@@ -100,11 +102,12 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
 interface RenderDataProps {
   data: Linode.Domain[];
   onRemove: (domain: string, domainID: number) => void;
-  onClone: (domain: string, cloneId: number) => void;
+  onClone: (domain: string, id: number) => void;
+  onEdit: (domain: string, id: number) => void;
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = props => {
-  const { data, onClone, onRemove } = props;
+  const { data, onClone, onEdit, onRemove } = props;
 
   return (
     <>
@@ -114,6 +117,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           id={domain.id}
           key={domain.domain}
           onClone={onClone}
+          onEdit={onEdit}
           onRemove={onRemove}
           tags={domain.tags}
           type={domain.type}

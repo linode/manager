@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
   StyleRulesCallback,
@@ -61,8 +62,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+export type Variant =
+  | 'linode'
+  | 'nodebalancer'
+  | 'volume'
+  | 'domain'
+  | 'stackscript';
+
 interface Props {
-  variant: 'linode' | 'nodebalancer' | 'volume' | 'domain' | 'stackscript';
+  variant: Variant;
   status?: string;
   loading?: boolean;
   size?: number;
@@ -72,6 +80,18 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
+
+const iconMap = {
+  linode: LinodeIcon,
+  nodebalancer: NodeBalancerIcon,
+  volume: VolumeIcon,
+  domain: DomainIcon,
+  stackscript: StackScriptIcon
+};
+
+const getIcon = (variant: Variant) => {
+  return pathOr(LinodeIcon, [variant], iconMap);
+};
 
 const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -90,15 +110,8 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
     : themeSpacingStorage.get() === 'compact'
     ? 34
     : 40;
-  const iconMap = {
-    linode: LinodeIcon,
-    nodebalancer: NodeBalancerIcon,
-    volume: VolumeIcon,
-    domain: DomainIcon,
-    stackscript: StackScriptIcon
-  };
 
-  const Icon = iconMap[variant];
+  const Icon = getIcon(variant);
 
   const getStatusForDomain = (dStatus: string) => {
     switch (dStatus) {
