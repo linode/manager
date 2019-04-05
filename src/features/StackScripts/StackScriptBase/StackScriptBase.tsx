@@ -10,7 +10,10 @@ import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
 import {
@@ -57,6 +60,7 @@ export interface State {
 
 interface StoreProps {
   stackScriptGrants?: Linode.Grant[];
+  userCannotCreateStackScripts: boolean;
 }
 
 type CombinedProps = StyleProps & StoreProps & any;
@@ -388,7 +392,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         getMoreStackScriptsFailed
       } = this.state;
 
-      const { classes } = this.props;
+      const { classes, userCannotCreateStackScripts } = this.props;
 
       if (error) {
         return (
@@ -424,8 +428,13 @@ const withStackScriptBase = (isSelecting: boolean) => (
           listOfStackScripts &&
           listOfStackScripts.length === 0 ? (
             <div className={classes.emptyState} data-qa-stackscript-empty-msg>
-              You do not have any StackScripts to select from. You must first
-              <Link to="/stackscripts/create"> create one.</Link>
+              You do not have any StackScripts to select from.
+              {!userCannotCreateStackScripts && (
+                <>
+                  You must first
+                  <Link to="/stackscripts/create"> create one.</Link>
+                </>
+              )}
             </div>
           ) : (
             <React.Fragment>
@@ -518,7 +527,9 @@ const withStackScriptBase = (isSelecting: boolean) => (
           ['__resources', 'profile', 'data', 'grants', 'stackscript'],
           state
         )
-      : undefined
+      : undefined,
+    userCannotCreateStackScripts:
+      isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts')
   });
 
   const connected = connect(mapStateToProps);
