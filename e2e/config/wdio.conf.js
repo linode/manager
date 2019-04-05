@@ -57,7 +57,7 @@ const credStores = {
     mongolocal: new MongoCredStore('localhost')
 };
 
-let CRED_STORE_MODE = process.env.CRED_STORE_MODE;
+let CRED_STORE_MODE = process.env.CRED_STORE_MODE ? process.env.CRED_STORE_MODE : 'fs';
 console.log("process.env.CRED_STORE_MODE set to: " + CRED_STORE_MODE);
 
 if (!(CRED_STORE_MODE in credStores)) {
