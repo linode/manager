@@ -22,6 +22,7 @@ class Backups extends Page {
     get cancelDialogClose() { return $('[data-qa-cancel-cancel]'); }
 
 
+    get firstBackupRow() { return $('[data-qa-backup]'); }
     get backupInstances() { return $$('[data-qa-backup]'); }
     get label() { return $('[data-qa-backup-name]'); }
     get dateCreated() { return $('[data-qa-date-created]'); }
