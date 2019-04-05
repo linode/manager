@@ -51,16 +51,23 @@ console.log("parallel runners: " + parallelRunners);
 // See more at:
 //   https://webdriver.io/docs/api/browser/call.html
 //
-// to use mongo cred store, set MONGO_HOST to either localhost (e.g., for local testing) or mongodb (for docker)
-// if it's not set the filesystem cred store will be used
-let CRED_STORE_MODE = 'fs'
+const credStores = {
+    fs: new FSCredStore('./e2e/creds.js'),
+    mongodb: new MongoCredStore('mongodb'),
+    mongolocal: new MongoCredStore('localhost')
+};
 
-if (process.env.CRED_STORE_MODE == 'mongodb') {
-    CRED_STORE_MODE = process.env.CRED_STORE_MODE;
+let CRED_STORE_MODE = process.env.CRED_STORE_MODE;
+console.log("process.env.CRED_STORE_MODE set to: " + CRED_STORE_MODE);
+
+if (!(CRED_STORE_MODE in credStores)) {
+    let msg = "CRED_STORE_MODE must be one of: ";
+    for (cs in credStores) {
+        msg += cs + " ";
+    }
+    throw new Error(msg);
 }
-
-console.log("Cred store mode set to: " + CRED_STORE_MODE);
-const credStore = CRED_STORE_MODE == 'mongodb' ? new MongoCredStore(CRED_STORE_MODE) : new FSCredStore('./e2e/creds.js');
+const credStore = credStores[CRED_STORE_MODE];
 
 exports.config = {
     // Selenium Host/Port
@@ -231,8 +238,19 @@ exports.config = {
      */
     onPrepare: function (config, capabilities, user) {
         console.log("onPrepare");
+
+        if ((parallelRunners > 1) && (CRED_STORE_MODE === 'fs')) {
+            throw new Error("***** Can't use filesystem cred store when parallelRunners > 1.\n***** Set CRED_STORE_MODE=mongolocal in .env and launch mongodb by running: docker run -d -p 27017:27017 mongo");
+        }
+
         // Generate temporary test credentials and store for use across tests
-        credStore.generateCreds(config, parallelRunners);
+        credStore.generateCreds(config, parallelRunners)
+        .catch((e) => {
+            // if we got here, most likely mongo isn't running locally
+            if (CRED_STORE_MODE === 'mongolocal') {
+                console.error("***** MAKE SURE MONGO IS RUNNING, do: docker run -d -p 27017:27017 mongo *****");
+            }
+        });
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
