@@ -21,8 +21,8 @@ export const safeGetTabRender = (tabs: Tab[], selectedTab: number) => {
      */
 
     configureScope(scope => {
-      scope.setExtra('Selected tab', selectedTab),
-        scope.setExtra('Location', window.location.search);
+      scope.setExtra('Selected tab', selectedTab);
+      scope.setExtra('Location', window.location.search);
     });
 
     reportException('Attempted to render undefined tab.');
