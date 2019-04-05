@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.52.0] - 2019.04.08
+
+### Added:
+
+- Feature: One-Click Apps
+- Events landing page
+- Image expiry date to Image table
+- Drop-shadow on "Create" menu
+- Setup GA to track usage of Linode create screens
+- Missing typography for backup placeholder text
+- Front-end validation for tag input error
+- Loading states to tag panel
+- Added "nofail" to Volume Config Form
+
+### Changed:
+
+- Do not show Hively icons from Linode user
+- Removed Linode StackScripts from StackScript Landing page
+- Combined My StackScripts and Account StackScripts under one tab
+- UDF Style Updates
+- Hide helper text for UDFs so it will display for Linode Root Password
+- Update Linode Detail permissions
+- Change Toronto display from CA to ON
+- Update Volume Landing on Linode Details
+- Update label for Taiwan in the Update Contact info panel
+
+### Fixed:
+
+- User events dropdown items styles
+- Delete Linode button modal button style
+- Backup CTA link
+- Backups creation error display
+- Styling for disabled destructive buttons
+- Wrong header for accessibility tags
+- Settings icon placement
+- Restore process finished event handling
+- Config updating bug
+- Non-field errors for NodeBalancers
+
 ## [v0.51.2] - 2019.03.28
 
 ### Fixed:
@@ -12,38 +51,38 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.51.0] - 2019.03.25
 
 ### Added:
-- Add uninvoiced balance display 
-- Delete Linode from kebab menu 
-- Support and icon for Alpine Linux 
+- Add uninvoiced balance display
+- Delete Linode from kebab menu
+- Support and icon for Alpine Linux
 - Missing typography for crash message
 - New event types and account events messages
-- Card payment confirmation modal 
+- Card payment confirmation modal
 - Add aria labels to inputProps for textfields and radios
 
 ### Changed:
 - Update list of available timezones and fix offset sorting
-- Include pagination on clone from Linode flow 
+- Include pagination on clone from Linode flow
 - Adjust dialog size to md to accommodate for api token width
-- Request notifications after migration finished 
+- Request notifications after migration finished
 - Reset error state on disk and configs request
-- Improve placement of entity icons on mobile tables 
+- Improve placement of entity icons on mobile tables
 - Make sure all radios inherit proper labeling
 - Dim main content when searching
-- iOS/Mobile Cloud Manager Welcome Screen  
+- iOS/Mobile Cloud Manager Welcome Screen
 - Make CVV Optional when making a credit card payment
 - Adjust "No Results" message when searching in a Select element
 - Handle volume permissions
 - Update Auth Code
 - UI for restricted edit volumes form
-- Delete confirmation includes Linode Label 
+- Delete confirmation includes Linode Label
 - Source Linode Rescue volumes/disks from redux
 - Update slave domain editing UX
-- Add props.classes for RenderGuard updateFor 
+- Add props.classes for RenderGuard updateFor
 
 ### Fixed:
-- Only disable Linode Boot if there are no configs 
-- Prevent NodeBalancers from crashing during creation 
-- Linodes with no type data cause error state 
+- Only disable Linode Boot if there are no configs
+- Prevent NodeBalancers from crashing during creation
+- Linodes with no type data cause error state
 - Kernel Select sometimes was not populated on load
 - Upgrade and Fix PayPal
 - Fix logger, add report button
@@ -61,46 +100,46 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add Compact Mode (theme toggle) and corresponding settings panel on PrimaryNav
 - Users can now rebuild a Linode from a StackScript
 - Backup mode support for NB nodes
-- Support for Toronto region  
+- Support for Toronto region
 - Improve spacing of Domain table
-- Password requirements to the PasswordInputField  
-- Add last auth IP address and last auth time to trusted devices table  
-- Include transfer stats to Linode summary panel  
-- Additional helper text for Volumes creation drawer  
-- Helper text when creating NodeBalancers  
-- Enable user to Remove Public IP Addresses  
-- Add tags column to NBs and volumes  
-- Filter volume select based on grants  
-- Apply convention for HEX values in theme files  
-- Updated-by column to support tickets  
-- Adjustments for Dark Theme in account pdf links  
+- Password requirements to the PasswordInputField
+- Add last auth IP address and last auth time to trusted devices table
+- Include transfer stats to Linode summary panel
+- Additional helper text for Volumes creation drawer
+- Helper text when creating NodeBalancers
+- Enable user to Remove Public IP Addresses
+- Add tags column to NBs and volumes
+- Filter volume select based on grants
+- Apply convention for HEX values in theme files
+- Updated-by column to support tickets
+- Adjustments for Dark Theme in account pdf links
 
 ### Changed:
 - Display confirmation dialog before rebuilding Linode
-- For Backups creation flow, only reset selection if different Linode is clicked  
-- Linode Resize flow adjusted to follow API changes (resizing Linodes now enter the migration queue) 
-- Rebuild Linode image select now uses tiles instead of a dropdown  
-- Update list of whitelisted events to include new event types returned by the API  
+- For Backups creation flow, only reset selection if different Linode is clicked
+- Linode Resize flow adjusted to follow API changes (resizing Linodes now enter the migration queue)
+- Rebuild Linode image select now uses tiles instead of a dropdown
+- Update list of whitelisted events to include new event types returned by the API
 - Update all instances of updateFor to include props.classes
-- Remove Tokyo 1 as an option when creating Linodes and NodeBalancers 
-- Pre-populate payment amount to the current Balance 
-- Add disk imagize events to show progress  
+- Remove Tokyo 1 as an option when creating Linodes and NodeBalancers
+- Pre-populate payment amount to the current Balance
+- Add disk imagize events to show progress
 - Volume Labels Sorting
-- Hide global backups setting from managed users  
+- Hide global backups setting from managed users
 
 ### Fixed:
-- Request notifications after migration finished  
-- Keyboard scrolling on custom MenuList component  
+- Request notifications after migration finished
+- Keyboard scrolling on custom MenuList component
 - Regression with pagination dropdown
 - Show error message when a Linode on the user's account is jailed.
 - 2FA panel
 - Creation workflow styles
 - Instances of renderGuard not updating components
-- React-select isClearable logic  
+- React-select isClearable logic
 - Dashboard spacing
-- PDF generation failure 
+- PDF generation failure
 - Error handling for SSL certificate and key when creating a NodeBalancer.
-- Default lastFour (credit card digits) to empty string to prevent visual bug  
+- Default lastFour (credit card digits) to empty string to prevent visual bug
 - Graphs need better breakpoints
 
 ## [0.49.0] - 2019.02.25
@@ -278,54 +317,54 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.42.0] - 2018.12.17
 
 ### Added:
-- Add Total Traffic to stats  
-- Styling for Stats/Units  
-- Paypal Client-Side Validation  
-- Revert  error poc  
+- Add Total Traffic to stats
+- Styling for Stats/Units
+- Paypal Client-Side Validation
+- Revert  error poc
 - Reorder providers. Convert ThemeProvider to renderChildren.
 - style toast messages
 - create component abstraction for toasts
 - add: toasts story
 - pass props to tags to close suggestion menu on click\
-- error poc  
-- make CVV field optional  
-- Add analytics to GetAllEntities()  
-- Correct permission decision logic in API token utils.  
+- error poc
+- make CVV field optional
+- Add analytics to GetAllEntities()
+- Correct permission decision logic in API token utils.
 - code cleanup and destructure new asSuggestion prop
 - style tags inside search result suggestion
 - event propagation and focus styles
-- Stats/Units on graphs  
+- Stats/Units on graphs
 - make tags in selects consistent with new styles
 - refactor tag button styles
-- Tag links  
-- updating back up data section for dark theme  
-- updating copy icon component colors, removing the override from IP address component  
+- Tag links
+- updating back up data section for dark theme
+- updating copy icon component colors, removing the override from IP address component
 - better padding for dashboard table cells
 - Make clickable row UX more consistent
-- switch volume columns  
-- add search data  
-- Upgrade Typography component consistent with @material-ui/core@3.5.1  
-- Display resize instructions on form submission.  
-- Add SSH key event message...  
-- Refresh volumes list on volume_clone event.  
-- Report counts of successes and failures for backups  
-- Remove sendToast for enqueSnacback  
-- Replace Toasts with Notistack  
+- switch volume columns
+- add search data
+- Upgrade Typography component consistent with @material-ui/core@3.5.1
+- Display resize instructions on form submission.
+- Add SSH key event message...
+- Refresh volumes list on volume_clone event.
+- Report counts of successes and failures for backups
+- Remove sendToast for enqueSnacback
+- Replace Toasts with Notistack
 
 ### Changed:
 - reduce main nav items padding under medium breakpoint
-- update progress bar for linodes  
-- Update docs links to Cloud Manager versions.  
+- update progress bar for linodes
+- Update docs links to Cloud Manager versions.
 - update notistck version and remove unecessary declaration
-- Update email notification setting label for clarity  
-- Events polling updated.  
+- Update email notification setting label for clarity
+- Events polling updated.
 
 ### Fixed:
-- fix: send config id with attach volume request  
-- Edit SOA drawer loading button styling bug  
+- fix: send config id with attach volume request
+- Edit SOA drawer loading button styling bug
 - fix typing for notistack
-- Fix NodeBalancer Tag Error  
-- Fix mutation error handling  
+- Fix NodeBalancer Tag Error
+- Fix mutation error handling
 
 ## [0.41.0] - 2018.12.04
 
