@@ -44,7 +44,7 @@ const styles: StyleRulesCallback = theme => ({
   paper: {
     maxWidth: 450,
     position: 'absolute',
-    boxShadow: '0 0 5px #ddd'
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`
   },
   button: {
     position: 'relative',
