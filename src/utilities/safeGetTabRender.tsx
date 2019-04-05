@@ -7,7 +7,7 @@ import { reportException } from 'src/exceptionReporting';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 
 export interface Tab {
-  title: string;
+  title: string | JSX.Element;
   render: any;
   type?: CreateTypes;
 }
