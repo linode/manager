@@ -34,7 +34,13 @@ describe('Linode Detail - Rebuild Suite', () => {
         Rebuild.rebuildSelect.click();
         browser.pause(500);
         const rebuildOptions = Rebuild.selectOptions.map(options => options.getText());
-        expect(rebuildOptions.sort()).toEqual(['From Image', 'From StackScript']);
+        expect(rebuildOptions.sort()).toEqual(
+            [
+                'From Account StackScript',
+                'From Community StackScript',
+                'From Image',
+            ]
+        );
         $('body').click();
     });
 
