@@ -11,7 +11,10 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
-import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  hasGrant,
+  isRestrictedUser as _isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import {
   canUserModifyAccountStackScript,
   StackScriptCategory
@@ -57,7 +60,8 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
     triggerMakePublic,
     isRestrictedUser,
     stackScriptGrants,
-    category
+    category,
+    userCannotAddLinodes
   } = props;
 
   const listStackScript = (s: Linode.StackScript.Response) => (
@@ -78,6 +82,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
         stackScriptGrants,
         s.id
       )}
+      canAddLinodes={!userCannotAddLinodes}
       category={category}
     />
   );
@@ -102,6 +107,7 @@ const styled = withStyles(styles);
 interface StateProps {
   isRestrictedUser: boolean;
   stackScriptGrants: Linode.Grant[];
+  userCannotAddLinodes: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
@@ -110,7 +116,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     [],
     ['__resources', 'profile', 'data', 'grants', 'stackscript'],
     state
-  )
+  ),
+  userCannotAddLinodes:
+    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
 });
 
 const connected = connect(mapStateToProps);

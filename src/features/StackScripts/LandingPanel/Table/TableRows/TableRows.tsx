@@ -23,7 +23,10 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import Tag from 'src/components/Tag';
-import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import {
+  hasGrant,
+  isRestrictedUser as _isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import StackScriptActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
 import { MapState } from 'src/store/types';
@@ -60,7 +63,8 @@ export const StackScriptTableRows: React.StatelessComponent<
     triggerDelete,
     isRestrictedUser,
     stackScriptGrants,
-    category
+    category,
+    userCannotAddLinodes
   } = props;
 
   if (loading) {
@@ -120,6 +124,7 @@ export const StackScriptTableRows: React.StatelessComponent<
                     stackScriptGrants,
                     eachStackScript.id
                   )}
+                  canAddLinodes={!userCannotAddLinodes}
                   category={category}
                 />
               </TableCell>
@@ -174,6 +179,7 @@ const styled = withStyles(styles);
 interface StateProps {
   isRestrictedUser: boolean;
   stackScriptGrants: Linode.Grant[];
+  userCannotAddLinodes: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
@@ -182,7 +188,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     [],
     ['__resources', 'profile', 'data', 'grants', 'stackscript'],
     state
-  )
+  ),
+  userCannotAddLinodes:
+    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
 });
 
 const connected = connect(mapStateToProps);

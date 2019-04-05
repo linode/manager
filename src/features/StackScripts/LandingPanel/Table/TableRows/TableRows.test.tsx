@@ -23,6 +23,7 @@ beforeAll(() => {
         stackScripts: mockStackScripts
       }}
       category="community"
+      userCannotAddLinodes={false}
     />
   );
 });

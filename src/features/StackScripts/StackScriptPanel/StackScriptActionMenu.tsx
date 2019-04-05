@@ -15,6 +15,7 @@ interface Props {
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
   canModify: boolean;
+  canAddLinodes: boolean;
   isPublic: boolean;
   // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
   // Leaving this in as an escape hatch now, since there's a bunch of code in
@@ -40,7 +41,8 @@ const StackScriptActionMenu: React.StatelessComponent<
     canModify,
     isPublic,
     username,
-    category
+    category,
+    canAddLinodes
   } = props;
 
   const readonlyProps = {
@@ -55,6 +57,10 @@ const StackScriptActionMenu: React.StatelessComponent<
       const actions: Action[] = [
         {
           title: 'Deploy New Linode',
+          disabled: !canAddLinodes,
+          tooltip: !canAddLinodes
+            ? "You don't have permissions to add Linodes"
+            : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(
               getStackScriptUrl(stackScriptUsername, stackScriptID, username)

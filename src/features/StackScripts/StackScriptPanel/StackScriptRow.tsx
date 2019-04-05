@@ -25,6 +25,7 @@ export interface Props {
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
   canModify: boolean;
+  canAddLinodes: boolean;
   isPublic: boolean;
   // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
   // Leaving this in as an escape hatch now, since there's a bunch of code in
@@ -50,7 +51,8 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
       triggerMakePublic,
       canModify,
       isPublic,
-      category
+      category,
+      canAddLinodes
     } = this.props;
 
     const renderLabel = () => {
@@ -108,6 +110,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
               triggerDelete={triggerDelete}
               triggerMakePublic={triggerMakePublic}
               canModify={canModify}
+              canAddLinodes={canAddLinodes}
               isPublic={isPublic}
               category={category}
             />
