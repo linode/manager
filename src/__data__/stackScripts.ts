@@ -14,7 +14,7 @@ export const stackScripts: Linode.StackScript.Response[] = [
     user_defined_fields: [],
     label: 'is_public',
     id: 326426,
-    ordinal: 1,
+    sequence: 1,
     logo_url: ''
   },
   {
@@ -39,7 +39,7 @@ export const stackScripts: Linode.StackScript.Response[] = [
     user_defined_fields: [],
     label: 'is_public',
     id: 326432426,
-    ordinal: 1,
+    sequence: 1,
     logo_url: ''
   }
 ];

@@ -21,7 +21,7 @@ const oneClickFilter = [
       }
     ]
   },
-  { '+order_by': 'ordinal' }
+  { '+order_by': 'sequence' }
 ];
 
 export const getOneClickApps = (params?: any) =>
