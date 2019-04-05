@@ -12,7 +12,10 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import { isRestrictedUser as _isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  canUserModifyAccountStackScript,
+  StackScriptCategory
+} from 'src/features/StackScripts/stackScriptUtils';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import stripImageName from 'src/utilities/stripImageName';
@@ -36,7 +39,11 @@ export interface Props {
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
   currentUser: string;
-  category: string;
+  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
+  // Leaving this in as an escape hatch now, since there's a bunch of code in
+  // /LandingPanel that uses different values for categories that we shouldn't
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & StateProps;

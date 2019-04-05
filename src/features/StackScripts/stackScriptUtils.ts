@@ -3,6 +3,8 @@ import { getStackScript, getStackScripts } from 'src/services/stackscripts';
 
 type StackScript = Linode.StackScript.Response;
 
+export type StackScriptCategory = 'account' | 'community';
+
 export const emptyResult: Linode.ResourcePage<StackScript> = {
   data: [],
   page: 1,

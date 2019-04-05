@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import withProfile from 'src/containers/profile.container';
 
-import { getStackScriptUrl } from '../stackScriptUtils';
+import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 interface Props {
   stackScriptID: number;
@@ -16,7 +16,11 @@ interface Props {
   triggerMakePublic: (id: number, label: string) => void;
   canModify: boolean;
   isPublic: boolean;
-  category: string;
+  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
+  // Leaving this in as an escape hatch now, since there's a bunch of code in
+  // /LandingPanel that uses different values for categories that we shouldn't
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
   // From Profile HOC
   username?: string;
 }
