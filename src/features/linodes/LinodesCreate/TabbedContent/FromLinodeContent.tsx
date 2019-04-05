@@ -192,6 +192,13 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                     displaySections.push(typeInfo);
                   }
 
+                  if (label) {
+                    displaySections.push({
+                      title: 'Linode Label',
+                      details: label
+                    });
+                  }
+
                   if (hasBackups && typeInfo && typeInfo.backupsMonthly) {
                     displaySections.push(
                       renderBackupsDisplaySection(
@@ -208,7 +215,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
                   return (
                     <CheckoutBar
-                      heading={`${label || 'Linode'} Summary`}
+                      heading="Linode Summary"
                       calculatedPrice={calculatedPrice}
                       isMakingRequest={this.props.formIsSubmitting}
                       disabled={

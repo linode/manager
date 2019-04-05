@@ -353,6 +353,13 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 displaySections.push(typeDisplayInfo);
               }
 
+              if (label) {
+                displaySections.push({
+                  title: 'Linode Label',
+                  details: label
+                });
+              }
+
               if (hasBackups && typeDisplayInfo && backupsMonthlyPrice) {
                 displaySections.push(
                   renderBackupsDisplaySection(
@@ -369,7 +376,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
 
               return (
                 <CheckoutBar
-                  heading={`${label || 'Linode'} Summary`}
+                  heading="Linode Summary"
                   calculatedPrice={calculatedPrice}
                   isMakingRequest={this.props.formIsSubmitting}
                   disabled={this.props.formIsSubmitting || disabled}

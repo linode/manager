@@ -320,6 +320,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   displaySections.push(typeDisplayInfo);
                 }
 
+                if (label) {
+                  displaySections.push({
+                    title: 'Linode Label',
+                    details: label
+                  });
+                }
+
                 if (
                   hasBackups &&
                   typeDisplayInfo &&
@@ -344,7 +351,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
                 return (
                   <CheckoutBar
-                    heading={`${label || 'Linode'} Summary`}
+                    heading="Linode Summary"
                     calculatedPrice={calculatedPrice}
                     isMakingRequest={isGettingBackups}
                     disabled={disabled}
