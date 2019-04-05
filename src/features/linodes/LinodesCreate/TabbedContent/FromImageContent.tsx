@@ -260,6 +260,13 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                 displaySections.push(typeDisplayInfo);
               }
 
+              if (this.props.label) {
+                displaySections.push({
+                  title: 'Linode Label',
+                  details: this.props.label
+                });
+              }
+
               if (
                 hasBackups &&
                 typeDisplayInfo &&
@@ -285,7 +292,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
               return (
                 <CheckoutBar
                   data-qa-checkout-bar
-                  heading={`${this.props.label || 'Linode'} Summary`}
+                  heading="Linode Summary"
                   calculatedPrice={calculatedPrice}
                   isMakingRequest={this.props.formIsSubmitting}
                   disabled={
