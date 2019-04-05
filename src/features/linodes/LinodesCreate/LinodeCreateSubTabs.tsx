@@ -14,6 +14,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 
 type ClassNames = 'root' | 'inner';
 
@@ -121,7 +122,7 @@ class LinodeCreateSubTabs extends React.Component<CombinedProps, State> {
      */
     const selectedTab = !queryParams.subtype ? 0 : selectedTabFromState;
 
-    const selectedTabContentRender = tabs[selectedTab].render;
+    const selectedTabContentRender = safeGetTabRender(tabs, selectedTab);
 
     const generalError = getErrorMap(errorMap, errors).none;
 
