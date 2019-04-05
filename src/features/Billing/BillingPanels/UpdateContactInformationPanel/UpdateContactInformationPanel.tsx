@@ -332,7 +332,7 @@ class UpdateContactInformationPanel extends React.Component<
             <Grid item xs={12} sm={7}>
               <EnhancedSelect
                 label="State / Province"
-                value={defaultTo(account.state, fields.state)}
+                defaultInputValue={defaultTo(account.state, fields.state)}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
                 data-qa-contact-province
@@ -361,7 +361,7 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <EnhancedSelect
             label="Country"
-            value={defaultTo(account.country, fields.country)}
+            defaultInputValue={defaultTo(account.country, fields.country)}
             errorText={hasErrorFor('country')}
             onChange={this.updateCountry}
             data-qa-contact-country
