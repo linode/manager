@@ -65,6 +65,7 @@ interface Props {
     stackScriptGrants?: Linode.Grant[]
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   header: string;
+  category: 'community' | 'account';
 }
 
 const errorResources = {
@@ -226,7 +227,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             resetSelectedStackScript={() => null}
             disabled={disabled}
             request={request}
-            category={'apps'}
+            category={this.props.category}
           />
           {!disabled && userDefinedFields && userDefinedFields.length > 0 && (
             <UserDefinedFieldsPanel
