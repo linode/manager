@@ -104,9 +104,9 @@ export const getMineAndAccountStackScripts = (
  */
 export const getCommunityStackscripts = (
   currentUser: string,
-  stackScriptGrants: Linode.Grant[],
   params?: any,
-  filter?: any
+  filter?: any,
+  stackScriptGrants?: Linode.Grant[]
 ) => {
   if (stackScriptGrants) {
     // User is restricted, so can't ask for a list of account users
@@ -189,7 +189,7 @@ export const getStackScriptUrl = (
       // My StackScripts
       // @todo: handle account stackscripts
       type = 'My%20Images';
-      subtype = 'My%20StackScripts';
+      subtype = 'Account%20StackScripts';
       break;
     default:
       // Community StackScripts

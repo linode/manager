@@ -304,7 +304,7 @@ export class LinodeCreate extends React.PureComponent<
       }
     },
     {
-      title: 'My StackScripts',
+      title: 'Account StackScripts',
       type: 'fromStackScript',
       render: () => {
         const {
@@ -333,6 +333,7 @@ export class LinodeCreate extends React.PureComponent<
         } = this.props;
         return (
           <FromStackScriptContent
+            category="account"
             accountBackupsEnabled={this.props.accountBackupsEnabled}
             userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getMineAndAccountStackScripts}
@@ -410,6 +411,7 @@ export class LinodeCreate extends React.PureComponent<
         } = this.props;
         return (
           <FromStackScriptContent
+            category="community"
             accountBackupsEnabled={this.props.accountBackupsEnabled}
             userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getCommunityStackscripts}

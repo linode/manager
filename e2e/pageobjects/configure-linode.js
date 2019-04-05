@@ -19,7 +19,7 @@ class ConfigureLinode extends Page {
     get createFromImage() { return $('[data-qa-create-from="Images"]') }
     get createFromBackups() { return $('[data-qa-create-from="Backups"]') }
     get createFromClone() { return $('[data-qa-create-from="Clone Linode"]') }
-    get createFromMyStackScript() { return $('[data-qa-create-from="My StackScripts"]') }
+    get createFromMyStackScript() { return $('[data-qa-create-from="Account StackScripts"]') }
 
     get selectLinodeHeader() { return $('[data-qa-select-linode-header]'); }
     get noCompatibleImages() { return $('[data-qa-no-compatible-images]'); }
@@ -27,7 +27,7 @@ class ConfigureLinode extends Page {
     get showOlderImages() { return $('[data-qa-show-more-expanded]'); }
 
     get selectStackScriptPanel() { return $('[data-qa-panel="Select a StackScript"]'); }
-    get myStackScriptTab() { return $('[data-qa-tab="My StackScripts"]'); }
+    get accountStackScriptTab() { return $('[data-qa-tab="Account StackScripts"]'); }
     get linodeStackScriptTab() { return $('[data-qa-tab="Linode StackScripts"]'); }
     get communityStackScriptTab() { return $('[data-qa-tab="Community StackScripts"]'); }
 
