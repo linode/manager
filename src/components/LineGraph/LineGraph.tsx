@@ -1,4 +1,5 @@
-import { clone } from 'ramda';
+import * as moment from 'moment-timezone'
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
 import {
@@ -7,6 +8,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import { setUpCharts } from 'src/utilities/charts';
+
+import store from 'src/store';
 
 setUpCharts();
 
@@ -104,6 +107,10 @@ const lineOptions: ChartData<any> = {
   pointHitRadius: 10
 };
 
+// pull timezone from redux to use when in formatData()
+const reduxProfile = store.getState().__resources.profile;
+const userTimezone = pathOr('UTC', ['data', 'timezone'], reduxProfile)
+
 class LineGraph extends React.Component<CombinedProps, {}> {
   getChartOptions = (suggestedMax?: number) => {
     const finalChartOptions = clone(chartOptions);
@@ -133,7 +140,7 @@ class LineGraph extends React.Component<CombinedProps, {}> {
 
     return data.map(dataSet => {
       const timeData = dataSet.data.reduce((acc: any, point: any) => {
-        acc.push({ t: point[0], y: point[1] });
+        acc.push({ t: moment.tz(point[0], userTimezone), y: point[1] });
         return acc;
       }, []);
 
