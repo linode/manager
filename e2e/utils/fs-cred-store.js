@@ -12,7 +12,7 @@ class FSCredStore extends CredStore {
     constructor(credsFile, shouldCleanupUsingAPI, browser) {
         super(shouldCleanupUsingAPI, browser);
         this.credsFile = credsFile;
-        console.log(this);
+        //console.log(this);
     }
 
     _readCredsFile() {
