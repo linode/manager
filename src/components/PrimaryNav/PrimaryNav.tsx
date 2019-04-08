@@ -18,6 +18,7 @@ import {
 import Grid from 'src/components/Grid';
 import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
+import { sendEvent } from 'src/utilities/analytics';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
@@ -370,6 +371,19 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   };
 
+  handleSpacingToggle = () => {
+    const { toggleSpacing, theme } = this.props;
+    const { spacing: spacingUnit } = theme;
+    const eventLabel = spacingUnit.unit === 8 ? 'compact' : 'normal';
+
+    toggleSpacing();
+    sendEvent({
+      category: 'Theme Choice',
+      action: 'Spacing Toggle',
+      label: eventLabel
+    });
+  };
+
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes } = this.props;
 
@@ -400,7 +414,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, toggleSpacing, toggleTheme, theme } = this.props;
+    const { classes, toggleTheme, theme } = this.props;
     const { expandedMenus, anchorEl } = this.state;
     const { spacing: spacingUnit } = theme;
 
@@ -510,7 +524,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               }}
             >
               <ThemeToggle toggleTheme={toggleTheme} />
-              <SpacingToggle toggleSpacing={toggleSpacing} />
+              <SpacingToggle toggleSpacing={this.handleSpacingToggle} />
             </Menu>
           </div>
         </Grid>
