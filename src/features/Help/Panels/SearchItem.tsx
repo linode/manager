@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   source: {
     marginTop: theme.spacing.unit / 2,
-    fontFamily: 'LatoWebBold'
+    color: theme.color.headline
   },
   row: {
     display: 'flex',

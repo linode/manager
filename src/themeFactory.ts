@@ -784,7 +784,6 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             backgroundColor: 'transparent',
             color: primaryColors.main
           },
-
           '&.selectHeader': {
             opacity: 1,
             fontFamily: 'LatoWebBold',
