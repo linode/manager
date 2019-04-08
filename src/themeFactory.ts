@@ -227,13 +227,13 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       h2: {
         color: primaryColors.headline,
         fontSize: '1.125rem',
-        fontFamily: 'LatoWebBold',
+        fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
         lineHeight: '1.5rem'
       },
       h3: {
         color: primaryColors.headline,
         fontSize: '1rem',
-        fontFamily: 'LatoWebBold',
+        fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
         lineHeight: '1rem'
       },
       body1: {
@@ -283,7 +283,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           borderRadius: 0,
           fontSize: '1rem',
           lineHeight: 1,
-          fontFamily: 'LatoWebBold',
+          fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
           color: primaryColors.main,
           padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
             spacingUnit / 2}px ${spacingUnit * 2}px`,
@@ -620,7 +620,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiFormLabel: {
         root: {
           color: '#555',
-          fontFamily: 'LatoWebBold',
+          fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
           fontSize: '.9rem',
           marginBottom: 2,
           '&$focused': {
