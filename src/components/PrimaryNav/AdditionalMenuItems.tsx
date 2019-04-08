@@ -6,10 +6,9 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-// import ListItem from 'src/components/core/ListItem';
+import Divider from 'src/components/core/Divider';
+import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-
-// import { linkIsActive } from './utils';
 
 type ClassNames = 'root';
 
@@ -20,8 +19,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   closeMenu: () => void;
   navigate: (href: string) => void;
-  linkClasses: (href: string) => string;
+  linkClasses: (href?: string) => string;
   listItemClasses: string;
+  dividerClasses: string;
 }
 
 interface State {
@@ -67,7 +67,7 @@ class AdditionalMenuItems extends React.PureComponent<CombinedProps, State> {
   };
 
   links: PrimaryLink[] = [
-    { display: 'Help', href: '/support', key: 'help' },
+    { display: 'Get Help', href: '/support', key: 'help' },
     { display: 'Chat', key: 'chat', onClick: this.handleAdaInit }
   ];
 
@@ -88,22 +88,42 @@ class AdditionalMenuItems extends React.PureComponent<CombinedProps, State> {
            href takes priority here. So if an href and onClick 
            so if an href and onClick is provided, the onClick will not be applied
           */
-          return eachLink.href ? (
-            <Link
-              role="menuitem"
-              to={eachLink.href}
-              onClick={this.props.closeMenu}
-              data-qa-nav-item={eachLink.key}
-              className={this.props.linkClasses(eachLink.href)}
-            >
-              <ListItemText
-                primary={eachLink.display}
-                disableTypography={true}
-                className={this.props.listItemClasses}
-              />
-            </Link>
-          ) : (
-            <div>hello world</div>
+          return (
+            <React.Fragment key={eachLink.key}>
+              {eachLink.href ? (
+                <Link
+                  role="menuitem"
+                  to={eachLink.href}
+                  onClick={this.props.closeMenu}
+                  data-qa-nav-item={eachLink.key}
+                  className={this.props.linkClasses(eachLink.href)}
+                >
+                  <ListItemText
+                    primary={eachLink.display}
+                    disableTypography={true}
+                    className={this.props.listItemClasses}
+                  />
+                </Link>
+              ) : (
+                <ListItem
+                  role="menuitem"
+                  onClick={() => {
+                    this.props.closeMenu();
+                    /** disregarding undefined is fine here becasue of the error thrown above */
+                    eachLink.onClick!();
+                  }}
+                  data-qa-nav-item={eachLink.key}
+                  className={this.props.linkClasses()}
+                >
+                  <ListItemText
+                    primary={eachLink.display}
+                    disableTypography={true}
+                    className={this.props.listItemClasses}
+                  />
+                </ListItem>
+              )}
+              <Divider className={this.props.dividerClasses} />
+            </React.Fragment>
           );
         })}
       </React.Fragment>

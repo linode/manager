@@ -321,12 +321,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       });
     }
 
-    primaryLinks.push({
-      display: 'Get Help',
-      href: '/support',
-      key: 'support'
-    });
-
     this.setState({ primaryLinks });
   };
 
@@ -467,11 +461,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               this.renderPrimaryLink(primaryLink, id === arr.length - 1)
             )}
 
+            {/** menu items under the main navigation links */}
             <AdditionalMenuItems
-              linkClasses={(href: string) =>
+              linkClasses={(href?: string) =>
                 classNames({
                   [classes.listItem]: true,
-                  [classes.active]: linkIsActive(href)
+                  [classes.active]: href ? linkIsActive(href) : false
                 })
               }
               listItemClasses={classNames({
@@ -479,6 +474,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               })}
               navigate={this.navigate}
               closeMenu={this.props.closeMenu}
+              dividerClasses={classes.divider}
             />
 
             <Hidden mdUp>
