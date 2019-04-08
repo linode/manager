@@ -164,7 +164,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
 
     return (
       <div className={`${!showAll && 'dif'} ${classes.root}`}>
-        {!showAll && showMore
+        {!showAll
           ? this.renderIP(formattedIPS[0], copyRight)
           : formattedIPS.map((a, i) => {
               return this.renderIP(a, copyRight, i);
