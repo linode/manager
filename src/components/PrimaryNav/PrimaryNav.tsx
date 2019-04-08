@@ -113,7 +113,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   linkItem: {
     transition: theme.transitions.create(['color']),
     color: '#C9CACB',
-    fontFamily: theme.font.bold
+    fontFamily: 'LatoWebBold' // we keep this bold at all times
   },
   active: {
     transition: 'border-color .7s ease-in-out',

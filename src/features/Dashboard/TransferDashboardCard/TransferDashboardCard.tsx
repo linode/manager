@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   used: {
     fontSize: '1.5rem',
-    fontFamily: 'LatoWebBold',
+    fontFamily: theme.font.bold,
     color: theme.color.green
   },
   quota: {
