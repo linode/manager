@@ -58,7 +58,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   title: {
-    fontFamily: 'LatoWebBold',
+    fontFamily: theme.font.bold,
     textAlign: 'center'
   }
 });

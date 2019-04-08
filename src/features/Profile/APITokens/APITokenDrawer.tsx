@@ -77,7 +77,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit * 3
   },
   selectCell: {
-    fontFamily: 'LatoWebBold',
+    fontFamily: 'LatoWebBold', // we keep this bold at all times
     fontSize: '.9rem'
   },
   accessCell: {

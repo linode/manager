@@ -61,10 +61,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   cardHeader: {
-    fontFamily: 'LatoWebBold',
+    fontFamily: theme.font.bold,
     color: 'black',
     marginLeft: theme.spacing.unit,
-    // This is necessary for text to ellipsis responsively without the need for a hard set width value that won't play well with flexbox.
+    // This is necessary for text to ellipsis responsively
+    // without the need for a hard set width value that won't play well with flexbox.
     minWidth: 0
   },
   cardContent: {
