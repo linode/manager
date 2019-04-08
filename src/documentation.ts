@@ -125,82 +125,83 @@ export const AppsDocs: Linode.Doc[] = [
     title: 'Deploy Wordpress with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-wordpress-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy Drupal with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-drupal-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy WooCommerce with One-Click Apps',
     src: 'https://linode.com/docs/platform/one-click/one-click-woocommerce/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy Gitlab with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploy-gitlab-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy LAMP with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy MERN with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploy-mern-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy OpenVPN with One-Click Apps',
     src: 'https://linode.com/docs/platform/one-click/one-click-openvpn/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy WireGuard with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploy-wireguard-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy Minecraft with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-minecraft-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
-    title: 'Deploy Counter-Strike: Global Offensive with One-Click Apps',
+    title:
+      'Deploy Counter-Strike: Global Offensive (CS:GO) with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-cs-go-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
-    title: 'Deploy Team Fortress 2 with One-Click Apps',
+    title: 'Deploy Team Fortress 2 (TF2) with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-team-fortress-2-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy Ark with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-ark-survival-evolved-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy Rust with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-rust-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   },
   {
     title: 'Deploy Terraria with One-Click Apps',
     src:
       'https://linode.com/docs/platform/one-click/deploying-terraria-with-one-click-apps/',
-    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+    body: 'Create Custom Instances and Automate Deployment with One-Click Apps.'
   }
 ];

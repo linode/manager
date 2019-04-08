@@ -398,11 +398,16 @@ const mapStateToProps: MapStateToProps<
 const connected = connect(mapStateToProps);
 
 const generateDocs = (ownProps: InnerProps & StateProps) => {
-  if (ownProps.selectedStackScriptLabel) {
+  const { selectedStackScriptLabel } = ownProps;
+  if (!!selectedStackScriptLabel) {
     const foundDocs = AppsDocs.filter(eachDoc => {
-      return ownProps
-        .selectedStackScriptLabel!.toLowerCase()
-        .includes(eachDoc.title);
+      return eachDoc.title
+        .toLowerCase()
+        .includes(
+          selectedStackScriptLabel
+            .substr(0, selectedStackScriptLabel.indexOf(' '))
+            .toLowerCase()
+        );
     });
     return foundDocs.length ? foundDocs : [];
   }
