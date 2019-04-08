@@ -6,10 +6,10 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import ListItem from 'src/components/core/ListItem';
+// import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
 
-import { linkIsActive } from './utils';
+// import { linkIsActive } from './utils';
 
 type ClassNames = 'root';
 
