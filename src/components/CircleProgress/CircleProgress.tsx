@@ -90,7 +90,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   valueInside: {
     position: 'absolute',
-    marginTop: theme.spacing.unit / 2
+    marginTop: 4
   },
   hasValueInside: {},
   green: {

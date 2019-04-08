@@ -23,7 +23,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.palette.primary.main,
     position: 'relative',
     left: theme.spacing.unit,
-    opacity: 0
+    opacity: 0,
+    width: 14,
+    height: 14
   },
   absoluteIcon: {
     display: 'inline',
