@@ -18,7 +18,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     padding: theme.spacing.unit + theme.spacing.unit / 2,
     color: theme.palette.primary.main,
     transition: theme.transitions.create(['color']),
-    margin: `0 -${theme.spacing.unit + theme.spacing.unit / 2}px 4px 0`,
+    margin: `0 -${theme.spacing.unit + theme.spacing.unit / 2}px 2px 0`,
     minHeight: 'auto',
     '&:hover': {
       color: theme.palette.primary.light,
@@ -48,8 +48,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     fontSize: 18,
     marginRight: theme.spacing.unit + 1,
     color: theme.palette.primary.main,
-    position: 'relative',
-    top: 2,
     '& .border': {
       transition: theme.transitions.create(['color'])
     }
