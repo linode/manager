@@ -14,6 +14,10 @@ describe('Domains - List Suite', () => {
     ListDomains.progressBar.waitForVisible(constants.wait.normal, true);
   });
 
+  afterAll(() => {
+    apiDeleteAllDomains();
+  });
+
   it('should display domains base elements', () => {
     ListDomains.baseElemsDisplay(true);
   });
