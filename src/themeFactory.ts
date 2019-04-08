@@ -44,6 +44,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    font?: any;
     animateCircleIcon?: any;
     notificationList: any;
     status: any;
@@ -55,6 +56,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    font?: any;
     animateCircleIcon?: any;
     notificationList?: any;
     status?: any;
@@ -183,6 +185,10 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
       label: '#555',
       disabledText: '#c9cacb'
+    },
+    font: {
+      normal: '"LatoWeb", sans-serif',
+      bold: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold'
     },
     animateCircleIcon: {
       ...iconCircleAnimation
