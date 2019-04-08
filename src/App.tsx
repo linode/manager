@@ -138,7 +138,7 @@ const styles: StyleRulesCallback = theme => ({
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing.unit * 15 + 95 // 215
+      marginLeft: theme.spacing.unit * 14 + 103 // 215
     },
     [theme.breakpoints.up('xl')]: {
       marginLeft: theme.spacing.unit * 22 + 99 // 275
