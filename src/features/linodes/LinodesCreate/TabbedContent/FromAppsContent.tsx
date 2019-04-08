@@ -231,34 +231,34 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               />
             )}
           {!userCannotCreateLinode &&
-            compatibleImages &&
-            compatibleImages.length > 0 ? (
-              <SelectImagePanel
-                images={compatibleImages}
-                handleSelection={updateImageID}
-                updateFor={[selectedImageID, compatibleImages, errors]}
-                selectedImageID={selectedImageID}
-                error={hasErrorFor('image')}
-                variant="public"
-              />
-            ) : (
-              <Paper className={classes.emptyImagePanel}>
-                {/* empty state for images */}
-                {hasErrorFor('image') && (
-                  <Notice error={true} text={hasErrorFor('image')} />
-                )}
-                <Typography variant="h2" data-qa-tp="Select Image">
-                  Select Image
+          compatibleImages &&
+          compatibleImages.length > 0 ? (
+            <SelectImagePanel
+              images={compatibleImages}
+              handleSelection={updateImageID}
+              updateFor={[selectedImageID, compatibleImages, errors]}
+              selectedImageID={selectedImageID}
+              error={hasErrorFor('image')}
+              variant="public"
+            />
+          ) : (
+            <Paper className={classes.emptyImagePanel}>
+              {/* empty state for images */}
+              {hasErrorFor('image') && (
+                <Notice error={true} text={hasErrorFor('image')} />
+              )}
+              <Typography variant="h2" data-qa-tp="Select Image">
+                Select Image
               </Typography>
-                <Typography
-                  variant="body1"
-                  className={classes.emptyImagePanelText}
-                  data-qa-no-compatible-images
-                >
-                  No Compatible Images Available
+              <Typography
+                variant="body1"
+                className={classes.emptyImagePanelText}
+                data-qa-no-compatible-images
+              >
+                No Compatible Images Available
               </Typography>
-              </Paper>
-            )}
+            </Paper>
+          )}
           <SelectRegionPanel
             error={hasErrorFor('region')}
             regions={regionsData}
@@ -399,9 +399,12 @@ const connected = connect(mapStateToProps);
 
 const generateDocs = (ownProps: InnerProps & StateProps) => {
   if (ownProps.selectedStackScriptLabel) {
-    return AppsDocs[
-      ownProps.selectedStackScriptLabel.toLowerCase().replace(':', '')
-    ];
+    const foundDocs = AppsDocs.filter(eachDoc => {
+      return ownProps
+        .selectedStackScriptLabel!.toLowerCase()
+        .includes(eachDoc.title);
+    });
+    return foundDocs.length ? foundDocs : [];
   }
   return [];
 };

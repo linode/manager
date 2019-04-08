@@ -120,120 +120,87 @@ export const SecuringYourServer: Linode.Doc = {
   and disabling unused network services.`
 };
 
-interface AppsDocs {
-  wordpress: Linode.Doc[];
-  drupal: Linode.Doc[];
-  woocommerce: Linode.Doc[];
-  gitlab: Linode.Doc[];
-  lamp: Linode.Doc[];
-  mern: Linode.Doc[];
-  openvpn: Linode.Doc[];
-  wireguard: Linode.Doc[];
-  minecraft: Linode.Doc[];
-  csgo: Linode.Doc[];
-  tf2: Linode.Doc[];
-  ark: Linode.Doc[];
-  rust: Linode.Doc[];
-  terraria: Linode.Doc[];
-}
-
-export const AppsDocs: AppsDocs = {
-  wordpress: [
-    {
-      title: 'Wordpress Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  drupal: [
-    {
-      title: 'Drupal Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  woocommerce: [
-    {
-      title: 'WooCommerce Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  gitlab: [
-    {
-      title: 'Gitlab Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  lamp: [
-    {
-      title: 'LAMP Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  mern: [
-    {
-      title: 'MERN Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  openvpn: [
-    {
-      title: 'OpenVPN Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  wireguard: [
-    {
-      title: 'WireGuard Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  minecraft: [
-    {
-      title: 'Minecraft Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  csgo: [
-    {
-      title: 'CS:GO Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  tf2: [
-    {
-      title: 'TF2 Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  ark: [
-    {
-      title: 'Ark Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  rust: [
-    {
-      title: 'Rust Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ],
-  terraria: [
-    {
-      title: 'Terraria Doc',
-      src: 'https://www.linode.com/docs/platform/stackscripts/',
-      body: 'Create Custom Instances and Automate Deployment with StackScripts.'
-    }
-  ]
-};
+export const AppsDocs: Linode.Doc[] = [
+  {
+    title: 'Deploy Wordpress with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-wordpress-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Drupal with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-drupal-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy WooCommerce with One-Click Apps',
+    src: 'https://linode.com/docs/platform/one-click/one-click-woocommerce/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Gitlab with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploy-gitlab-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy LAMP with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy MERN with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploy-mern-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy OpenVPN with One-Click Apps',
+    src: 'https://linode.com/docs/platform/one-click/one-click-openvpn/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy WireGuard with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploy-wireguard-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Minecraft with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-minecraft-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Counter-Strike: Global Offensive with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-cs-go-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Team Fortress 2 with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-team-fortress-2-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Ark with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-ark-survival-evolved-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Rust with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-rust-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  },
+  {
+    title: 'Deploy Terraria with One-Click Apps',
+    src:
+      'https://linode.com/docs/platform/one-click/deploying-terraria-with-one-click-apps/',
+    body: 'Create Custom Instances and Automate Deployment with StackScripts.'
+  }
+];
