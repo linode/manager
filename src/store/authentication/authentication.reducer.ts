@@ -6,7 +6,8 @@ import {
   handleInitTokens,
   handleLogout,
   handleRefreshTokens,
-  handleStartSession
+  handleStartSession,
+  handleStartSessionAsCustomer
 } from './authentication.actions';
 import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
@@ -14,13 +15,15 @@ import { State } from './index';
 export const defaultState: State = {
   token: null,
   scopes: null,
-  expiration: null
+  expiration: null,
+  loggedInAsCustomer: false
 };
 
 const {
   token: tokenInLocalStorage,
   scopes: scopesInLocalStorage,
-  expire: expiryInLocalStorage
+  expire: expiryInLocalStorage,
+  loggedInAsCustomer: loggedInAsCustomerInLocalStorage
 } = authentication;
 
 const reducer = reducerWithInitialState(defaultState)
@@ -38,6 +41,24 @@ const reducer = reducerWithInitialState(defaultState)
       token: token || null,
       scopes: scopes || null,
       expiration: expires || null
+    };
+  })
+  .case(handleStartSessionAsCustomer, (state, payload) => {
+    const { token, expires } = payload;
+
+    /** set local storage */
+    scopesInLocalStorage.set('*');
+    tokenInLocalStorage.set(token || '');
+    expiryInLocalStorage.set(expires || '');
+    loggedInAsCustomerInLocalStorage.set('true');
+
+    /** set redux state */
+    return {
+      ...state,
+      token: token || null,
+      scopes: '*',
+      expiration: expires,
+      loggedInAsCustomer: true
     };
   })
   .case(handleInitTokens, state => {
@@ -66,6 +87,7 @@ const reducer = reducerWithInitialState(defaultState)
      */
     const token = tokenInLocalStorage.get();
     const scopes = scopesInLocalStorage.get();
+    const loggedInAsCustomer = loggedInAsCustomerInLocalStorage.get();
 
     /** if we have no token in local storage, send us to login */
     if (!token) {
@@ -76,7 +98,8 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       token,
       scopes,
-      expiration: expiryTime
+      expiration: expiryTime,
+      loggedInAsCustomer
     };
   })
   .cases([handleExpireTokens, handleLogout], state => {

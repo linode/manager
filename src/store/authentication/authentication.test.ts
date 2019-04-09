@@ -1,6 +1,10 @@
 import store from 'src/store';
 import { authentication } from 'src/utilities/storage';
-import { handleLogout, handleStartSession } from './authentication.actions';
+import {
+  handleLogout,
+  handleStartSession,
+  handleStartSessionAsCustomer
+} from './authentication.actions';
 
 describe('Authentication', () => {
   authentication.expire.set('hello world');
@@ -19,7 +23,8 @@ describe('Authentication', () => {
     expect(store.getState().authentication).toEqual({
       token: 'helloworld',
       scopes: '*',
-      expiration: 'never'
+      expiration: 'never',
+      loggedInAsCustomer: false
     });
   });
 
@@ -39,7 +44,23 @@ describe('Authentication', () => {
     expect(store.getState().authentication).toEqual({
       token: null,
       scopes: null,
-      expiration: null
+      expiration: null,
+      loggedInAsCustomer: false
+    });
+  });
+
+  it('should correctly set loggedInAsCustomer when handleStartSessionAsCustomer is invoked', () => {
+    store.dispatch(
+      handleStartSessionAsCustomer({
+        token: 'helloworld',
+        expires: '123'
+      })
+    );
+    expect(store.getState().authentication).toEqual({
+      token: 'helloworld',
+      scopes: '*',
+      expiration: '123',
+      loggedInAsCustomer: true
     });
   });
 });

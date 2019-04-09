@@ -10,10 +10,11 @@ import { authentication } from 'src/utilities/storage';
 type CombinedProps = DispatchProps & RouteComponentProps;
 
 interface OAuthQueryParams {
-  access_token: string;
+  access_token: string; // token for auth
+  token_type: string; // token prefix AKA "Bearer"
   scope: string;
-  expires_in: string;
-  state: string;
+  expires_in: string; // amount of time (in seconds) the token has before expiry
+  state: string; // nonce
   return: string;
 }
 
@@ -37,6 +38,7 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
      * 'location.hash = `#access_token=something&token_type=something˙&expires_in=something&scope=something&state=something&return=the-url-we-are-now-at?returnTo=where-to-redirect-when-done`
      *
      */
+
     const { location, history } = this.props;
 
     /**

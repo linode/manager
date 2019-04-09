@@ -15,6 +15,7 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
 import { GA_ID, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
+import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
@@ -93,6 +94,7 @@ const renderApp = (props: RouteProps) => (
 const renderAuthentication = () => (
   <Switch>
     <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+    <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
     {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
     <Route exact path="/nullauth" render={renderNullAuth} />
     <Route exact path="/logout" component={Logout} />

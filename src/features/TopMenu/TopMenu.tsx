@@ -8,6 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Toolbar from 'src/components/core/Toolbar';
+import Typography from 'src/components/core/Typography';
 import AddNewMenu from './AddNewMenu';
 import SearchBar from './SearchBar';
 import UserEventsMenu from './UserEventsMenu';
@@ -54,6 +55,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   openSideMenu: () => void;
+  isLoggedInAsCustomer: boolean;
+  username: string;
 }
 
 type PropsWithStyles = Props & WithStyles<ClassNames>;
@@ -63,23 +66,39 @@ class TopMenu extends React.Component<PropsWithStyles> {
     const { classes, openSideMenu } = this.props;
 
     return (
-      <AppBar className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            color="inherit"
-            aria-label="open menu"
-            onClick={openSideMenu}
-            className={classes.navIconHide}
+      <React.Fragment>
+        {this.props.isLoggedInAsCustomer && (
+          <div
+            style={{
+              backgroundColor: 'pink',
+              padding: '1em',
+              textAlign: 'center'
+            }}
           >
-            <MenuIcon />
-          </IconButton>
-          <AddNewMenu />
-          <SearchBar />
-          <UserMenu />
-          <UserNotificationsMenu />
-          <UserEventsMenu />
-        </Toolbar>
-      </AppBar>
+            <Typography style={{ fontSize: '1.2em', color: 'black' }}>
+              You are logged in as customer:{' '}
+              <strong>{this.props.username}</strong>
+            </Typography>
+          </div>
+        )}
+        <AppBar className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              color="inherit"
+              aria-label="open menu"
+              onClick={openSideMenu}
+              className={classes.navIconHide}
+            >
+              <MenuIcon />
+            </IconButton>
+            <AddNewMenu />
+            <SearchBar />
+            <UserMenu />
+            <UserNotificationsMenu />
+            <UserEventsMenu />
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
     );
   }
 }

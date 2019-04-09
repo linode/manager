@@ -31,7 +31,20 @@ Axios.interceptors.request.use(
     const state = store.getState();
     const token =
       ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
-    const tokenPrefix = TOKEN_PREFIX || 'Bearer';
+
+    /*
+     if we're logged in as a customer, our authentication header needs 
+     to look like this:
+     
+     "Admin 123123213"
+
+     otherwise, we use the "Bearer" prefix
+     */
+    const tokenPrefix =
+      TOKEN_PREFIX ||
+      pathOr(false, ['authentication', 'loggedInAsCustomer'], store.getState())
+        ? 'Admin'
+        : 'Bearer';
 
     return {
       ...config,
