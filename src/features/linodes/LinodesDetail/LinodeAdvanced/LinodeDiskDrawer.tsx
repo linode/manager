@@ -19,7 +19,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
-import ImageAndPassword from './ImageAndPassword';
+import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
 type ClassNames = 'root' | 'section' | 'divider';
 
