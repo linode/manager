@@ -9,6 +9,7 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import Notice from '../Notice';
 
 type ClassNames = 'root' | 'inner' | 'copy' | 'tabs' | 'panelBody';
@@ -77,7 +78,8 @@ class TabbedPanel extends React.Component<CombinedProps> {
       ...rest
     } = this.props;
     const { value } = this.state;
-    const render = tabs[value].render;
+    // if this bombs the app shouldn't crash
+    const render = safeGetTabRender(tabs, value);
 
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>

@@ -34,14 +34,8 @@ export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 
 // Features
-
-// @todo: IMPORTANT: THIS DEFINITION IS ONLY TEMPORARY.
 export const isObjectStorageEnabled =
-  window.location.hostname !== 'cloud.linode.com';
-
-// @todo: IMPORTANT: THIS COMMENTED-OUT DEFINITION IS THE CORRECT ONE
-// export const isObjectStorageEnabled =
-// process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
+  process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
 
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
