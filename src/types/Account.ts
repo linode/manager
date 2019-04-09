@@ -8,6 +8,7 @@ namespace Linode {
   }
 
   export interface Account {
+    active_since: string;
     address_2: string;
     email: string;
     first_name: string;
