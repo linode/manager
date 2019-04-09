@@ -19,7 +19,8 @@ describe('SummaryPanel', () => {
     tax_id: '',
     country: '',
     balance: 0,
-    balance_uninvoiced: 0
+    balance_uninvoiced: 0,
+    active_since: 'hello world'
   };
 
   const mockClasses: any = {
