@@ -17,7 +17,7 @@ const styles: StyleRulesCallback = theme => ({
     backgroundColor: 'transparent !important',
     display: 'flex',
     alignItems: 'center',
-    fontFamily: 'LatoWebBold',
+    fontFamily: theme.font.bold,
     width: 'auto',
     color: theme.color.headline,
     transition: theme.transitions.create('color'),

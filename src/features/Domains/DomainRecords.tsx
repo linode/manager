@@ -63,7 +63,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   linkContainer: {
     position: 'relative',
-    top: 10,
+    top: theme.spacing.unit + 2,
     [theme.breakpoints.down('xs')]: {
       top: -10,
       '& button': {

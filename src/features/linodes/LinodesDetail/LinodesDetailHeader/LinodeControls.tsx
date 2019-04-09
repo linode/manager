@@ -108,7 +108,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
   };
 
   return (
-    <Grid container justify="space-between">
+    <Grid container justify="space-between" data-qa-linode={linode.label}>
       <Grid item className={classes.titleWrapper}>
         <Breadcrumb
           linkTo="/linodes"

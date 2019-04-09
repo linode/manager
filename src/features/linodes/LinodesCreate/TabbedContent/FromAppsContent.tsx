@@ -336,6 +336,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
                 displaySections.push(typeDisplayInfo);
               }
 
+              if (label) {
+                displaySections.push({
+                  title: 'Linode Label',
+                  details: label
+                });
+              }
+
               if (
                 hasBackups &&
                 typeDisplayInfo &&
@@ -361,7 +368,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
               return (
                 <div>
                   <CheckoutBar
-                    heading={`${label || 'Linode'} Summary`}
+                    heading="Linode Summary"
                     calculatedPrice={calculatedPrice}
                     isMakingRequest={formIsSubmitting}
                     disabled={formIsSubmitting || userCannotCreateLinode}

@@ -55,7 +55,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   label: {
     '& > span:last-child': {
       color: theme.color.headline,
-      fontFamily: 'LatoWebBold',
+      fontFamily: theme.font.bold,
       fontSize: '1rem',
       lineHeight: '1.2em',
       [theme.breakpoints.up('md')]: {
