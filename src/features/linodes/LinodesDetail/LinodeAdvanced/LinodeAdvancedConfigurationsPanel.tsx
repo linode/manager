@@ -18,6 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   paper: {
     padding: theme.spacing.unit * 3,
+    paddingTop: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 3
   }
 });
