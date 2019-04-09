@@ -34,7 +34,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   labelStatusWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center'
+    alignItems: 'center',
+    wordBreak: 'break-all'
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
