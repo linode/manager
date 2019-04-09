@@ -82,6 +82,11 @@ const primaryColors = {
   white: '#fff'
 };
 
+const primaryFonts = {
+  normal: '"LatoWeb", sans-serif',
+  bold: '"LatoWebBold", sans-serif'
+};
+
 const iconCircleAnimation = {
   '& .circle': {
     fill: primaryColors.main,
@@ -187,8 +192,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       disabledText: '#c9cacb'
     },
     font: {
-      normal: '"LatoWeb", sans-serif',
-      bold: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold'
+      normal: primaryFonts.normal,
+      bold: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold
     },
     animateCircleIcon: {
       ...iconCircleAnimation
@@ -218,13 +223,13 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
     },
     typography: {
       useNextVariants: true,
-      fontFamily: '"LatoWeb", sans-serif',
+      fontFamily: primaryFonts.normal,
       fontSize: 16,
       h1: {
         color: primaryColors.headline,
         fontSize: '1.25rem',
         lineHeight: '1.75rem',
-        fontFamily: 'LatoWebBold',
+        fontFamily: primaryFonts.bold,
         [breakpoints.up('lg')]: {
           fontSize: '1.5rem',
           lineHeight: '1.875rem'
@@ -233,13 +238,13 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       h2: {
         color: primaryColors.headline,
         fontSize: '1.125rem',
-        fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
+        fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
         lineHeight: '1.5rem'
       },
       h3: {
         color: primaryColors.headline,
         fontSize: '1rem',
-        fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
+        fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
         lineHeight: '1rem'
       },
       body1: {
@@ -289,7 +294,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           borderRadius: 0,
           fontSize: '1rem',
           lineHeight: 1,
-          fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
+          fontFamily:
+            spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           color: primaryColors.main,
           padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
             spacingUnit / 2}px ${spacingUnit * 2}px`,
@@ -626,7 +632,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiFormLabel: {
         root: {
           color: '#555',
-          fontFamily: spacingUnit === 4 ? 'LatoWeb' : 'LatoWebBold',
+          fontFamily:
+            spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           fontSize: '.9rem',
           marginBottom: 2,
           '&$focused': {
@@ -786,7 +793,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           },
           '&.selectHeader': {
             opacity: 1,
-            fontFamily: 'LatoWebBold',
+            fontFamily: primaryFonts.bold,
             fontSize: '1rem',
             color: primaryColors.text
           }
@@ -831,7 +838,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiMenuItem: {
         root: {
           height: 'auto',
-          fontFamily: 'LatoWeb',
+          fontFamily: primaryFonts.normal,
           fontSize: '.9rem',
           whiteSpace: 'initial',
           textOverflow: 'initial',
@@ -1026,7 +1033,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             minWidth: 75
           },
           '&$selected, &$selected:hover': {
-            fontFamily: 'LatoWebBold',
+            fontFamily: primaryFonts.bold,
             color: primaryColors.headline
           },
           '&:hover': {
