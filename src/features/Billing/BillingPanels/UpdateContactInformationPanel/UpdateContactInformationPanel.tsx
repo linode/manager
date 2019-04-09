@@ -54,8 +54,6 @@ interface State {
     state?: string;
     country?: string;
   };
-  selectedCountry: Item | string;
-  selectedRegion: Item | string;
 }
 
 type CombinedProps = Requestable<Linode.Account> & WithStyles<ClassNames>;
@@ -86,9 +84,7 @@ class UpdateContactInformationPanel extends React.Component<
   state: State = {
     submitting: false,
     fields: {},
-    countryRegionItems,
-    selectedCountry: '',
-    selectedRegion: ''
+    countryRegionItems
   };
 
   composeState = composeState;
@@ -332,7 +328,6 @@ class UpdateContactInformationPanel extends React.Component<
             <Grid item xs={12} sm={7}>
               <EnhancedSelect
                 label="State / Province"
-                value={defaultTo(account.state, fields.state)}
                 errorText={hasErrorFor('state')}
                 onChange={this.updateState}
                 data-qa-contact-province
@@ -361,7 +356,6 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <EnhancedSelect
             label="Country"
-            value={defaultTo(account.country, fields.country)}
             errorText={hasErrorFor('country')}
             onChange={this.updateCountry}
             data-qa-contact-country
@@ -435,10 +429,6 @@ class UpdateContactInformationPanel extends React.Component<
     this.composeState([set(L.fields.company, e.target.value)]);
   };
 
-  updateCountry = (selectedCountry: Item) => {
-    this.composeState([set(L.fields.country, selectedCountry.value)]);
-  };
-
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.composeState([set(L.fields.email, e.target.value)]);
   };
@@ -457,6 +447,10 @@ class UpdateContactInformationPanel extends React.Component<
 
   updateState = (selectedRegion: Item) => {
     this.composeState([set(L.fields.state, selectedRegion.value)]);
+  };
+
+  updateCountry = (selectedCountry: Item) => {
+    this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -522,9 +516,7 @@ class UpdateContactInformationPanel extends React.Component<
       fields: {},
       submissionErrors: undefined,
       submitting: false,
-      success: undefined,
-      selectedCountry: '',
-      selectedRegion: ''
+      success: undefined
     });
 }
 
