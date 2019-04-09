@@ -35,8 +35,8 @@ import {
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getLinodeConfigs, linodeReboot } from 'src/services/linodes';
-import LinodeConfigActionMenu from './LinodeConfigActionMenu';
-import LinodeConfigDrawer from './LinodeConfigDrawer';
+import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
+import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
 
 type ClassNames = 'root' | 'headline';
 

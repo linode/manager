@@ -8,7 +8,6 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-import LinodeAdvancedConfigurationsPanel from './LinodeAdvancedConfigurationsPanel';
 import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
@@ -67,7 +66,6 @@ const LinodeSettings: React.StatelessComponent<CombinedProps> = props => {
               linodeId={linode.id}
               currentStatus={linode.watchdog_enabled}
             />
-            <LinodeAdvancedConfigurationsPanel />
             <LinodeSettingsDeletePanel
               linodeId={linode.id}
               linodeLabel={linode.label}
