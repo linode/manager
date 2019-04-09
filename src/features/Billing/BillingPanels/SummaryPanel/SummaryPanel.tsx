@@ -10,9 +10,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ErrorState from 'src/components/ErrorState';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
-import { formatDate } from 'src/utilities/formatDate';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
@@ -148,7 +148,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           </div>
           <div className={classes.section}>
             <strong>Active Since:&nbsp;</strong>
-            {formatDate(active_since)}
+            <DateTimeDisplay value={active_since} format="MMMM D, YYYY" />
           </div>
         </Paper>
 
