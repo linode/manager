@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
+import Chip from 'src/components/core/Chip';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
@@ -11,6 +12,7 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import SubTabs, { Tab } from './LinodeCreateSubTabs';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
@@ -303,7 +305,7 @@ export class LinodeCreate extends React.PureComponent<
       }
     },
     {
-      title: 'My StackScripts',
+      title: 'Account StackScripts',
       type: 'fromStackScript',
       render: () => {
         const {
@@ -332,6 +334,7 @@ export class LinodeCreate extends React.PureComponent<
         } = this.props;
         return (
           <FromStackScriptContent
+            category="account"
             accountBackupsEnabled={this.props.accountBackupsEnabled}
             userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getMineAndAccountStackScripts}
@@ -348,7 +351,12 @@ export class LinodeCreate extends React.PureComponent<
 
   oneClickTabs = (): Tab[] => [
     {
-      title: 'One-Click Apps',
+      title: (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          One-Click Apps{' '}
+          <Chip label="beta" style={{ marginLeft: 8, cursor: 'pointer' }} />
+        </div>
+      ),
       type: 'fromApp',
       render: () => {
         const {
@@ -404,6 +412,7 @@ export class LinodeCreate extends React.PureComponent<
         } = this.props;
         return (
           <FromStackScriptContent
+            category="community"
             accountBackupsEnabled={this.props.accountBackupsEnabled}
             userCannotCreateLinode={this.props.userCannotCreateLinode}
             request={getCommunityStackscripts}
@@ -454,8 +463,8 @@ export class LinodeCreate extends React.PureComponent<
     ) {
       return null;
     }
-
-    const tabRender = this.tabs[selectedTab].render;
+    // if this bombs the app shouldn't crash
+    const tabRender = safeGetTabRender(this.tabs, selectedTab);
 
     return (
       <React.Fragment>
