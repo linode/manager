@@ -14,6 +14,7 @@ const classes = {
   right: '',
   icon: '',
   row: '',
+  multipleAddresses: '',
   ip: '',
   ipLink: '',
   hide: 'hide'
@@ -24,7 +25,8 @@ const component = shallow(
 );
 
 describe('IPAddress', () => {
-  it('should render without error and display and IP address', () => {
+  it('should render without error and display one IP address if showAll is false', () => {
+    component.setProps({ showMore: true, showAll: false });
     const rendered = component.find('[data-qa-ip-main]');
     const ipText = rendered.text();
 
@@ -32,7 +34,8 @@ describe('IPAddress', () => {
     expect(ipText).toBe('8.8.8.8');
   });
 
-  it('should not display ShowMore button unless the showMore prop is passed', () => {
+  it('should not display ShowMore button unless the showMore prop is true', () => {
+    component.setProps({ showMore: false, showAll: false });
     expect(component.find('[data-qa-ip-more]')).toHaveLength(0);
   });
 
