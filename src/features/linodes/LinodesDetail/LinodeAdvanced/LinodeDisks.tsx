@@ -45,18 +45,25 @@ import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskSpace from './LinodeDiskSpace';
 
-type ClassNames = 'root' | 'headline' | 'loadingContainer' | 'diskSpaceWrapper';
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'loadingContainer'
+  | 'tableContainer'
+  | 'diskSpaceWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   headline: {
-    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2
   },
   loadingContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  tableContainer: {
+    marginTop: -theme.spacing.unit * 2
   },
   diskSpaceWrapper: {
     backgroundColor: theme.bg.tableHeader,
@@ -108,12 +115,7 @@ interface State {
   confirmDelete: ConfirmDeleteState;
 }
 
-interface DisksProps {
-  active: boolean;
-}
-
-type CombinedProps = DisksProps &
-  UserSSHKeyProps &
+type CombinedProps = UserSSHKeyProps &
   PaginationProps<Linode.Disk> &
   LinodeContextProps &
   WithStyles<ClassNames> &
@@ -169,10 +171,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       .subscribe(e => this.props.request());
   }
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate() {
     const disks = path(['data'], this.props);
-    const activating = !prevProps.active && this.props.active;
-    if (activating && !disks) {
+    if (!disks) {
       this.props.handleOrderChange('label');
     }
   }
@@ -200,14 +201,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ marginTop: 16 }}
-        >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography variant="h2" className={classes.headline}>
+            <Typography variant="h3" className={classes.headline}>
               Disks
             </Typography>
           </Grid>
@@ -219,9 +215,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container className={classes.tableContainer}>
           <Grid item xs={12} md={8} sm={12}>
-            <Table isResponsive={false} aria-label="List of Disks">
+            <Table isResponsive={false} aria-label="List of Disks" border>
               <TableHead>
                 <TableRow>
                   <TableCell>Label</TableCell>
@@ -758,7 +754,7 @@ const paginated = Pagey((ownProps, params, filters) => {
   return getLinodeDisks(ownProps.linodeId, params, filters);
 });
 
-const enhanced = compose<CombinedProps, DisksProps>(
+const enhanced = compose<CombinedProps, any>(
   styled,
   linodeContext,
   paginated,
