@@ -137,7 +137,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
               <TableCell style={{ padding: 0, width: '1%' }} />
               <TableCell
                 data-qa-events-subject-header
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 200, paddingLeft: 10 }}
               >
                 Event
               </TableCell>

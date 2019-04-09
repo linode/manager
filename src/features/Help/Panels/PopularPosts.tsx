@@ -33,17 +33,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   wrapper: {},
   postTitle: {
-    ...theme.typography.body1,
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing.unit * 2
   },
   post: {
-    marginBottom: theme.spacing.unit / 2
+    marginBottom: theme.spacing.unit / 2,
+    ...theme.typography.body1
   },
   postLink: {
-    color: theme.color.headline,
-    fontSize: '1rem',
-    fontFamily: 'LatoWebBold',
-    lineHeight: '1.2em',
     '&:hover': {
       textDecoration: 'underline'
     }

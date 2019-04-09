@@ -44,6 +44,7 @@ type ClassNames =
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
+  | 'graphSelectTitle'
   | 'graphControls'
   | 'totalTraffic';
 
@@ -99,6 +100,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     graphTitle: {
       marginRight: theme.spacing.unit * 2
+    },
+    graphSelectTitle: {
+      marginRight: theme.spacing.unit,
+      position: 'relative',
+      color: theme.color.headline,
+      top: -1
     },
     graphControls: {
       display: 'flex',
@@ -670,7 +677,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item className="py0">
                 <div className={classes.graphControls}>
-                  <Typography variant="h3" className={classes.graphTitle}>
+                  <Typography
+                    variant="body1"
+                    className={classes.graphSelectTitle}
+                  >
                     Graphs
                   </Typography>
                   <FormControl style={{ marginTop: 0 }}>
