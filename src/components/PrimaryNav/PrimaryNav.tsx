@@ -374,6 +374,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   handleSpacingToggle = () => {
     const { toggleSpacing, theme } = this.props;
     const { spacing: spacingUnit } = theme;
+    // Checking the previous spacingUnit value to determine which way to switch.
     const eventLabel = spacingUnit.unit === 8 ? 'compact' : 'normal';
 
     toggleSpacing();
