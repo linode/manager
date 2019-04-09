@@ -19,6 +19,7 @@ describe('LinodeSummary', () => {
         bottomLegend: '',
         graphControls: '',
         graphTitle: '',
+        graphSelectTitle: '',
         totalTraffic: ''
       }}
       typesData={[]}

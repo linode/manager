@@ -66,7 +66,7 @@ const styles: StyleRulesCallback = theme => {
     },
     noticeText: {
       color: theme.palette.text.primary,
-      fontFamily: 'LatoWebBold'
+      fontFamily: theme.font.bold
     },
     critical: {
       borderLeft: `5px solid ${status.errorDark}`

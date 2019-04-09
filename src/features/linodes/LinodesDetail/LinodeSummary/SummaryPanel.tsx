@@ -134,11 +134,11 @@ class SummaryPanel extends React.Component<CombinedProps> {
             IP Addresses
           </Typography>
           <div className={classes.section}>
-            <IPAddress ips={linodeIpv4} copyRight showMore />
+            <IPAddress ips={linodeIpv4} copyRight showAll />
           </div>
           {linodeIpv6 && (
             <div className={classes.section}>
-              <IPAddress ips={[linodeIpv6]} copyRight showMore />
+              <IPAddress ips={[linodeIpv6]} copyRight showAll />
             </div>
           )}
         </Paper>

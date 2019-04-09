@@ -10,6 +10,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ErrorState from 'src/components/ErrorState';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
@@ -97,7 +98,8 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         credit_card: { expiry, last_four },
         city,
         state,
-        zip
+        zip,
+        active_since
       },
       balance,
       balance_uninvoiced,
@@ -143,6 +145,10 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           <div className={classes.section} data-qa-contact-phone>
             <strong>Phone Number:&nbsp;</strong>
             {phone ? phone : 'None'}
+          </div>
+          <div className={classes.section}>
+            <strong>Active Since:&nbsp;</strong>
+            <DateTimeDisplay value={active_since} format="MMMM D, YYYY" />
           </div>
         </Paper>
 

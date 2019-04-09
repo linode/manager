@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit / 2
   },
   countNumber: {
-    fontFamily: 'LatoWebBold'
+    fontFamily: theme.font.bold
   }
 });
 

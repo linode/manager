@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     marginRight: theme.spacing.unit,
     whiteSpace: 'nowrap',
     float: 'right',
-    fontFamily: 'LatoWebBold'
+    fontFamily: theme.font.bold
   },
   hidden: {
     height: 0,
