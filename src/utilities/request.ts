@@ -1,5 +1,7 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { path } from 'ramda';
+import { pathOr } from 'ramda';
+
+import { ACCESS_TOKEN, TOKEN_PREFIX } from 'src/constants';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
@@ -27,13 +29,15 @@ export const handleError = (error: AxiosError) => {
 Axios.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
     const state = store.getState();
-    const token = path(['authentication', 'token'], state);
+    const token =
+      ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
+    const tokenPrefix = TOKEN_PREFIX || 'Bearer';
 
     return {
       ...config,
       headers: {
         ...config.headers,
-        ...(token && { Authorization: `Bearer ${token}` })
+        ...(token && { Authorization: `${tokenPrefix} ${token}` })
       }
     };
   }
