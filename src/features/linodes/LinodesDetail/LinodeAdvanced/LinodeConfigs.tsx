@@ -43,7 +43,6 @@ type ClassNames = 'root' | 'headline';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   headline: {
-    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2
   }
 });
@@ -104,7 +103,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography variant="h2" className={classes.headline}>
+            <Typography variant="h3" className={classes.headline}>
               Configuration
             </Typography>
           </Grid>
@@ -270,7 +269,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   linodeConfigsTable = () => {
     return (
       <React.Fragment>
-        <Table isResponsive={false} aria-label="List of Configurations">
+        <Table isResponsive={false} aria-label="List of Configurations" border>
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>

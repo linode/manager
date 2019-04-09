@@ -1,23 +1,31 @@
 import * as React from 'react';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import ExpansionPanel from 'src/components/ExpansionPanel';
+import Typography from 'src/components/core/Typography';
 import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'title' | 'paper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {},
+  title: {
+    marginBottom: theme.spacing.unit * 2
+  },
+  paper: {
+    padding: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3
+  }
 });
 
 type CombinedProps = WithStyles<ClassNames>;
 
 interface State {
-  panelOpen: boolean;
+  loaded: boolean;
 }
 
 class LinodeAdvancedConfigurationsPanel extends React.Component<
@@ -25,26 +33,27 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<
   State
 > {
   state: State = {
-    panelOpen: false
+    loaded: false
   };
 
-  handlePanelChange = (e: React.ChangeEvent<{}>, open: boolean) => {
-    this.setState({ panelOpen: open });
+  componentDidMount = () => {
+    this.setState({ loaded: true });
   };
 
   render() {
-    const { panelOpen } = this.state;
+    const { classes } = this.props;
+    const { loaded } = this.state;
     return (
       <React.Fragment>
-        {
-          <ExpansionPanel
-            heading="Advanced Configurations"
-            onChange={this.handlePanelChange}
-          >
-            <LinodeConfigs active={panelOpen} />
-            <LinodeDisks active={panelOpen} />
-          </ExpansionPanel>
-        }
+        <Typography variant="h2" className={classes.title}>
+          Advanced Configurations
+        </Typography>
+        <Paper className={classes.paper}>
+          <LinodeConfigs active={loaded} />
+        </Paper>
+        <Paper className={classes.paper}>
+          <LinodeDisks active={loaded} />
+        </Paper>
       </React.Fragment>
     );
   }
