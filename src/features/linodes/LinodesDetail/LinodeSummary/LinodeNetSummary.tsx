@@ -139,14 +139,15 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
           <Typography
             className={classes.itemText + ' ' + classes.itemTextFirst}
           >
-            Free: <strong>{Math.floor(total - usedInGb)}</strong> GB
+            Total: <strong>{total}</strong> GB
           </Typography>
+
           <Typography className={classes.itemText}>
             Used: <strong>{usedInGb}</strong> GB
           </Typography>
           <Divider className={classes.divider} />
           <Typography className={classes.itemText}>
-            Total: <strong>{total}</strong> GB
+            Free: <strong>{Math.floor(total - usedInGb)}</strong> GB
           </Typography>
         </Grid>
       </Grid>
