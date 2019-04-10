@@ -14,17 +14,13 @@
 This is the new Linode Manager. It provides a web interface for managing your Linode account. 
 Currently this software is *early-access* and is available at [cloud.linode.com](https://cloud.linode.com).
 
+## Running the App
+
+To get started running the app locally, please [see here.](GETTING_STARTED.md)
+
 ## Contributing
 
 Read the [contributing guidelines](CONTRIBUTING.md) to get started.
-
-Come chat with us in [#linode-next on
-irc.oftc.net](https://webchat.oftc.net/?channels=linode-next&uio=d4) if you're
-interested in helping out with this. We'd love to have community input on how
-the new manager takes shape. This is your chance to help build the features you
-need into it! We'll take pull requests in the usual way. We're still learning
-about the technologies in use here ourselves, so bear with us as we figure out
-the right patterns - some large scale refactorings may be in order.
 
 ## License
 

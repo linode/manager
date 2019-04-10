@@ -152,3 +152,32 @@ The axe-core accessibility testing script has been integrated into the webdriver
      yarn axe
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
+
+
+### Commands
+To run tests:
+
+    yarn test
+    yarn test:watch
+
+To test a specific file or files found in a  folder:
+
+    yarn test MyFile.spec.js
+    yarn test src/some-folder
+
+## Testing React Components
+
+React Components are testable using [storybook](https://github.com/storybooks/storybook). To access
+the manager storybook:
+
+    yarn storybook
+
+Or, using Docker:
+
+    docker build -f Dockerfile . -t 'storybook'
+    docker run -it --rm -p 6006:6006 -v $(pwd)/src:/src/src storybook storybook
+
+    ## If you have installed yarn,
+    ## you can call the following convenience script:
+
+    yarn docker:storybook
