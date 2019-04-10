@@ -22,7 +22,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import { theme } from 'src/utilities/storage';
+import { spacing, theme } from 'src/utilities/storage';
 import App from './App';
 import './events';
 import './index.css';
@@ -48,6 +48,20 @@ if (theme.get() === 'dark') {
   sendEvent({
     category: 'Theme Choice',
     action: 'Light Theme',
+    label: location.pathname
+  });
+}
+
+if (spacing.get() === 'compact') {
+  sendEvent({
+    category: 'Theme Choice',
+    action: 'Compact Mode',
+    label: location.pathname
+  });
+} else {
+  sendEvent({
+    category: 'Theme Choice',
+    action: 'Normal Mode',
     label: location.pathname
   });
 }

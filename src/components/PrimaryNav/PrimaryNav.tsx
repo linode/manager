@@ -376,11 +376,23 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const { spacing: spacingUnit } = theme;
     // Checking the previous spacingUnit value to determine which way to switch.
     const eventLabel = spacingUnit.unit === 8 ? 'compact' : 'normal';
-
     toggleSpacing();
     sendEvent({
       category: 'Theme Choice',
       action: 'Spacing Toggle',
+      label: eventLabel
+    });
+  };
+
+  handleThemeToggle = () => {
+    const { toggleTheme, theme } = this.props;
+    // Checking the previous theme.name value to determine which way to switch.
+    const eventLabel = theme.name === 'darkTheme' ? 'light' : 'dark';
+
+    toggleTheme();
+    sendEvent({
+      category: 'Theme Choice',
+      action: 'Theme Toggle',
       label: eventLabel
     });
   };
@@ -415,7 +427,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, toggleTheme, theme } = this.props;
+    const { classes, theme } = this.props;
     const { expandedMenus, anchorEl } = this.state;
     const { spacing: spacingUnit } = theme;
 
@@ -524,7 +536,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 'data-qa-backdrop': true
               }}
             >
-              <ThemeToggle toggleTheme={toggleTheme} />
+              <ThemeToggle toggleTheme={this.handleThemeToggle} />
               <SpacingToggle toggleSpacing={this.handleSpacingToggle} />
             </Menu>
           </div>
