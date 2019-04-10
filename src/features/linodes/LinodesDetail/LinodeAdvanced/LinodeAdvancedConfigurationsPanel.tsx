@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -6,8 +7,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
+import LinodeDiskSpace from './LinodeDiskSpace';
 
 type ClassNames = 'root' | 'title' | 'paper';
 
@@ -23,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = LinodeContextProps & WithStyles<ClassNames>;
 
 interface State {
   loaded: boolean;
@@ -42,8 +45,9 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, disks, linodeTotalDisk } = this.props;
     const { loaded } = this.state;
+
     return (
       <React.Fragment>
         <Typography variant="h2" className={classes.title}>
@@ -55,11 +59,33 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<
         <Paper className={classes.paper}>
           <LinodeDisks active={loaded} />
         </Paper>
+        <Paper className={classes.paper}>
+          <LinodeDiskSpace
+            disks={disks}
+            loading={!loaded}
+            totalDiskSpace={linodeTotalDisk}
+          />
+        </Paper>
       </React.Fragment>
     );
   }
 }
 
+interface LinodeContextProps {
+  linodeTotalDisk?: number;
+  disks: Linode.Disk[] | undefined;
+}
+
+const linodeContext = withLinodeDetailContext(({ linode }) => ({
+  linodeTotalDisk: linode.specs.disk,
+  disks: linode._disks
+}));
+
 const styled = withStyles<ClassNames>(styles);
 
-export default styled(LinodeAdvancedConfigurationsPanel);
+const enhanced = compose<CombinedProps, any>(
+  styled,
+  linodeContext
+);
+
+export default enhanced(LinodeAdvancedConfigurationsPanel);

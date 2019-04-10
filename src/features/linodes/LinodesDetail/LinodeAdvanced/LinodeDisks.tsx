@@ -7,7 +7,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -43,7 +42,6 @@ import { getLinodeDisks } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
-import LinodeDiskSpace from './LinodeDiskSpace';
 
 type ClassNames =
   | 'root'
@@ -195,7 +193,6 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       error,
       loading,
       linodeStatus,
-      linodeTotalDisk,
       readOnly
     } = this.props;
 
@@ -216,7 +213,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <Grid container className={classes.tableContainer}>
-          <Grid item xs={12} md={8} sm={12}>
+          <Grid item xs={12}>
             <Table isResponsive={false} aria-label="List of Disks" border>
               <TableHead>
                 <TableRow>
@@ -226,21 +223,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                   <TableCell />
                 </TableRow>
               </TableHead>
-
               <TableBody>
                 {this.renderTableContent(loading, linodeStatus, error, data)}
               </TableBody>
             </Table>
-          </Grid>
-          <Grid item xs={12} md={4} sm={12}>
-            <Paper classes={{ root: classes.diskSpaceWrapper }}>
-              <LinodeDiskSpace
-                disks={data}
-                error={error}
-                loading={loading}
-                totalDiskSpace={linodeTotalDisk}
-              />
-            </Paper>
           </Grid>
         </Grid>
         <PaginationFooter
