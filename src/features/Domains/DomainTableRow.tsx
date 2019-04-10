@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -98,28 +97,26 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
       }
     >
       <TableCell parentColumn="Domain" data-qa-domain-label>
-        <Link to={`/domains/${id}`} onClick={e => handleRowClick(e, props)}>
-          <Grid container wrap="nowrap" alignItems="center">
-            <Grid item className="py0">
-              <EntityIcon
-                variant="domain"
-                status={status}
-                marginTop={1}
-                loading={status === 'edit_mode'}
-              />
-            </Grid>
-            <Grid item className={classes.domainCellContainer}>
-              <div className={classes.labelStatusWrapper}>
-                <Typography variant="h3" data-qa-label>
-                  {domain}
-                </Typography>
-              </div>
-              <div className={classes.tagWrapper}>
-                <Tags tags={tags} />
-              </div>
-            </Grid>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <EntityIcon
+              variant="domain"
+              status={status}
+              marginTop={1}
+              loading={status === 'edit_mode'}
+            />
           </Grid>
-        </Link>
+          <Grid item className={classes.domainCellContainer}>
+            <div className={classes.labelStatusWrapper}>
+              <Typography variant="h3" data-qa-label>
+                {domain}
+              </Typography>
+            </div>
+            <div className={classes.tagWrapper}>
+              <Tags tags={tags} />
+            </div>
+          </Grid>
+        </Grid>
       </TableCell>
       <TableCell parentColumn="Type" data-qa-domain-type>
         {type}

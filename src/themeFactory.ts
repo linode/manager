@@ -1124,7 +1124,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           '&:before': {
             borderLeftColor: 'white'
           },
-          '&:hover': {
+          '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
               '&:before': {
