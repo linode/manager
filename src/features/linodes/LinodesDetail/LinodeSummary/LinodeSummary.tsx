@@ -77,8 +77,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     leftLegend: {
       position: 'absolute',
-      left: -8,
-      bottom: '50%',
+      left: -18,
+      bottom: 48,
       transform: 'rotate(-90deg)',
       color: '#777',
       fontSize: 14
@@ -574,9 +574,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend} style={{ left: -18, bottom: 48 }}>
-            blocks/sec
-          </div>
+          <div className={classes.leftLegend}>blocks/sec</div>
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
