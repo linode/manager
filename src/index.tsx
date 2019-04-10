@@ -38,33 +38,15 @@ const Lish = DefaultLoader({
 initAnalytics(GA_ID, isProduction);
 initTagManager(GTM_ID);
 
-if (theme.get() === 'dark') {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Dark Theme',
-    label: location.pathname
-  });
-} else {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Light Theme',
-    label: location.pathname
-  });
-}
+const themeChoice = theme.get() === 'dark' ? 'Dark Theme' : 'Light Theme';
+const spacingMode =
+  spacing.get() === 'compact' ? 'Compact Mode' : 'Normal Mode';
 
-if (spacing.get() === 'compact') {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Compact Mode',
-    label: location.pathname
-  });
-} else {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Normal Mode',
-    label: location.pathname
-  });
-}
+sendEvent({
+  category: 'Theme Choice',
+  action: `${themeChoice} | ${spacingMode}`,
+  label: location.pathname
+});
 
 /**
  * Send pageviews unless blacklisted.
