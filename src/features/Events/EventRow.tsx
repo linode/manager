@@ -36,6 +36,7 @@ interface ExtendedEvent extends Linode.Event {
 
 interface Props {
   event: ExtendedEvent;
+  shouldBeLink?: boolean;
 }
 
 export const onUnfound = (event: ExtendedEvent) => {
@@ -47,7 +48,7 @@ export const onUnfound = (event: ExtendedEvent) => {
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const EventRow: React.StatelessComponent<CombinedProps> = props => {
-  const { event, classes } = props;
+  const { event, shouldBeLink, classes } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
@@ -64,6 +65,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     message: eventMessageGenerator(event, onUnfound),
     status: pathOr(undefined, ['status'], entity),
     type,
+    shouldBeLink,
     classes
   };
 
@@ -72,6 +74,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
 
 export interface RowProps extends WithStyles<ClassNames> {
   message?: string | void;
+  shouldBeLink?: boolean;
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
@@ -79,7 +82,15 @@ export interface RowProps extends WithStyles<ClassNames> {
 }
 
 export const Row: React.StatelessComponent<RowProps> = props => {
-  const { classes, linkTarget, message, status, type, created } = props;
+  const {
+    classes,
+    shouldBeLink,
+    linkTarget,
+    message,
+    status,
+    type,
+    created
+  } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -89,7 +100,9 @@ export const Row: React.StatelessComponent<RowProps> = props => {
   }
 
   return (
-    <TableRow rowLink={linkTarget as any}>
+    <TableRow
+      rowLink={shouldBeLink === false ? undefined : (linkTarget as any)}
+    >
       <TableCell data-qa-event-icon-cell compact>
         {' '}
         {/** We don't use the event argument, so typing isn't critical here. */}

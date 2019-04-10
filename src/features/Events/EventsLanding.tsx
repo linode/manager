@@ -40,7 +40,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = StateProps &
+interface Props {
+  title?: string;
+  getEventsRequest?: typeof getEvents;
+  isEntitySpecific?: boolean;
+}
+
+type CombinedProps = Props &
+  StateProps &
   InjectedNotistackProps &
   WithStyles<ClassNames>;
 
@@ -84,7 +91,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       return;
     }
     setRequesting(true);
-    getEvents({ page: currentPage, pageSize: 50 })
+
+    const getEventsRequest = props.getEventsRequest || getEvents;
+
+    getEventsRequest({ page: currentPage, pageSize: 50 })
       .then(handleEventsRequestSuccess)
       .catch(() => {
         props.enqueueSnackbar('There was an error loading more events', {
@@ -113,7 +123,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     setLoading(true);
     setRequesting(true);
     setError(undefined);
-    getEvents()
+
+    const getEventsRequest = props.getEventsRequest || getEvents;
+
+    getEventsRequest()
       .then(handleEventsRequestSuccess)
       .then(() => setInitialLoaded(true))
       .catch(() => {
@@ -122,13 +135,13 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   }, []);
 
-  const { classes, entitiesLoading } = props;
+  const { classes, entitiesLoading, isEntitySpecific } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
     <>
       <Typography variant="h1" className={classes.header}>
-        Events
+        {props.title || 'Events'}
       </Typography>
       <Paper>
         <Table aria-label="List of Events">
@@ -145,7 +158,13 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renderTableBody(isLoading, isRequesting, events, error)}
+            {renderTableBody(
+              isLoading,
+              isRequesting,
+              events,
+              error,
+              isEntitySpecific
+            )}
           </TableBody>
         </Table>
       </Paper>
@@ -169,7 +188,8 @@ export const renderTableBody = (
   loading: boolean,
   isRequesting: boolean,
   events?: Linode.Event[],
-  error?: string
+  error?: string,
+  isEntitySpecific?: boolean
 ) => {
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
@@ -193,7 +213,11 @@ export const renderTableBody = (
     return (
       <>
         {events.map((thisEvent, idx) => (
-          <EventRow key={`event-list-item-${idx}`} event={thisEvent} />
+          <EventRow
+            key={`event-list-item-${idx}`}
+            event={thisEvent}
+            shouldBeLink={!isEntitySpecific}
+          />
         ))}
         {isRequesting && <TableRowLoading colSpan={12} transparent />}
       </>
@@ -213,7 +237,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
   withSnackbar

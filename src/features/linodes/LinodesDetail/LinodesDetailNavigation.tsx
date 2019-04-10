@@ -14,6 +14,7 @@ import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
 import LinodeAdvanced from './LinodeAdvanced';
+import LinodeActivity from './LinodeActivity';
 import LinodeBackup from './LinodeBackup';
 import { withLinodeDetailContext } from './linodeDetailContext';
 import LinodeNetworking from './LinodeNetworking';
@@ -49,6 +50,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
     { routeName: `${url}/rescue`, title: 'Rescue' },
     { routeName: `${url}/rebuild`, title: 'Rebuild' },
     { routeName: `${url}/backup`, title: 'Backups' },
+    { routeName: `${url}/activity`, title: 'Activity' },
     { routeName: `${url}/settings`, title: 'Settings' },
     { routeName: `${url}/advanced`, title: 'Advanced' }
   ];
@@ -127,6 +129,11 @@ const LinodesDetailNavigation: React.StatelessComponent<
           exact
           path={`/linodes/:linodeId/backup`}
           component={LinodeBackup}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/activity`}
+          component={LinodeActivity}
         />
         <Route
           exact
