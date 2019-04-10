@@ -1,8 +1,8 @@
-## Running Cloud Manager Locally
+# Running Cloud Manager Locally
 
 Keep in mind these instructions assume you already have an account with Linode.com. If you do not have an account, [please create one here](https://login.linode.com/signup)
 
-### Creating a Client ID
+## Creating a Client ID
 
 The first step in getting the Manager running locally is to create an OAuth Client.
 [You can create one here.](https://cloud.linode.com/profile/clients). On this screen, click _Create an OAuth App_
@@ -18,13 +18,13 @@ Finally, keep the client ID in the table row handy. You'll need it later:
 ![Screen Shot 2019-04-10 at 3 04 02 PM](https://user-images.githubusercontent.com/7387001/55906313-fc2a3e80-5ba1-11e9-8f8a-6323649c301d.png)
 
 
-### Creating an `.env` file
+## Creating an `.env` file
 
 Please refer to the [`.env.example` file](.env.example) in this directory. This will get you started in creating you own `.env` file so you can run the Manager.
 
 Here are a list of all the required and optional environment variables the Manager leverages:
 
-#### Required Variables
+### Required Variables
 
 `REACT_APP_APP_ROOT`: The root location where you will be running the app
 * e.g. `http://localhost:3000`
@@ -41,7 +41,7 @@ Here are a list of all the required and optional environment variables the Manag
 `REACT_APP_CLIENT_ID`: The Client ID you created above in the first step
 
 
-#### Optional Variables
+### Optional Variables
 
 `REACT_APP_ALGOLIA_APPLICATION_ID`: The ID that matches with the Algolia index
 
@@ -58,7 +58,7 @@ e.g `Bearer 1232313` or `Admin 1231423`
 
 `REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
 
-#### Testing Variables
+### Testing Variables
 
 These are environment variables that can be used for automated testing processes
 
@@ -68,7 +68,7 @@ These are environment variables that can be used for automated testing processes
 
 `MANAGER_OAUTH`: OAuth Token of the account on which end-to-end tests should run
 
-### Running the App
+## Running the App
 
 Running the app requires a working [Node environment](https://nodejs.org/en/) to be installed. We recommend you
 install some version greater than `8.11.2`
