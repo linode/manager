@@ -22,8 +22,8 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   header: {
-    marginBottom: 15,
-    textAlign: 'center'
+    marginTop: theme.spacing.unit + 6,
+    marginBottom: theme.spacing.unit
   },
   bar: {
     marginBottom: theme.spacing.unit
@@ -86,7 +86,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Typography className={classes.header} variant="h2">
+        <Typography className={classes.header} variant="h3">
           Disk Storage
         </Typography>
         <BarPercent
@@ -103,7 +103,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
         <Divider className={classes.divider} />
         <div className={classes.textOuter}>
           <Typography variant="subtitle2">
-            Free: <strong>{freeDiskSpace} MB</strong>
+            Total: <strong>{totalDiskSpace} MB</strong>
           </Typography>
           <Typography variant="subtitle2">
             Used: <strong>{usedDiskSpace} MB</strong>
@@ -111,7 +111,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
         </div>
         <Divider className={classes.divider} />
         <Typography variant="subtitle2" className={classes.text}>
-          Total: <strong>{totalDiskSpace} MB</strong>
+          Free: <strong>{freeDiskSpace} MB</strong>
         </Typography>
         <Typography className={classes.text}>
           <strong>Note: </strong> This section represents your plan's available
