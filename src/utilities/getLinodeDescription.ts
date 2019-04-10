@@ -11,7 +11,7 @@ export const linodeDescription = (
 ) => {
   const imageDesc = safeGetImageLabel(images, imageId);
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
-  return `${imageDesc}, ${typeDesc}`;
+  return `${imageDesc} ${typeDesc}`;
 };
 
 export default linodeDescription;
