@@ -94,12 +94,16 @@ class TableRow extends React.Component<CombinedProps> {
     return (
       <_TableRow
         onClick={(e: any) => rowLink && this.rowClick(e, rowLink)}
+        onKeyUp={(e: any) =>
+          rowLink && e.keyCode === 13 && this.rowClick(e, rowLink)
+        }
         hover={rowLink !== undefined}
         role={role}
         className={classNames(className, {
           [classes.root]: true
         })}
         {...rest}
+        tabIndex={rowLink ? 0 : -1}
       >
         {this.props.children}
       </_TableRow>
