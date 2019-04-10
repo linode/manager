@@ -29,7 +29,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.bg.white
   },
   domainCellContainer: {
-    padding: `${theme.spacing.unit}px !important`
+    padding: `${theme.spacing.unit}px !important`,
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'left'
+    }
   },
   labelStatusWrapper: {
     display: 'flex',
