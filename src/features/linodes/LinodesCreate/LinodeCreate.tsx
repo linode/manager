@@ -354,7 +354,11 @@ export class LinodeCreate extends React.PureComponent<
       title: (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           One-Click Apps{' '}
-          <Chip label="beta" style={{ marginLeft: 8, cursor: 'pointer' }} />
+          <Chip
+            color="primary"
+            label="beta"
+            style={{ marginLeft: 8, cursor: 'pointer' }}
+          />
         </div>
       ),
       type: 'fromApp',
