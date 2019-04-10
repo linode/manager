@@ -333,6 +333,7 @@ class UpdateContactInformationPanel extends React.Component<
                 data-qa-contact-province
                 placeholder="Select a State"
                 options={regionResults}
+                defaultInputValue={account.state}
                 isClearable={false}
               />
             </Grid>
@@ -361,6 +362,7 @@ class UpdateContactInformationPanel extends React.Component<
             data-qa-contact-country
             placeholder="Select a Country"
             options={countryResults}
+            defaultInputValue={account.country}
             isClearable={false}
           />
         </Grid>
