@@ -8,19 +8,9 @@ interface TokensWithExpiry {
   expires: string;
 }
 
-interface Token {
-  token: string;
-  expires: string;
-}
-
 /** user is coming to the app for the first time */
 export const handleStartSession = actionCreator<TokensWithExpiry>(
   'START_SESSION'
-);
-
-/** user is coming to the app from Admin and wants to login as customer */
-export const handleStartSessionAsCustomer = actionCreator<Token>(
-  'START_SESSION_AS_CUSTOMER'
 );
 
 /** user is refreshing the page and redux state needs to be synced with local storage */

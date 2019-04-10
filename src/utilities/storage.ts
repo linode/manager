@@ -37,7 +37,6 @@ const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
-const LOGIN_AS_CUSTOMER = 'authentication/login_as_customer';
 
 type Theme = 'dark' | 'light';
 export type Spacing = 'compact' | 'normal';
@@ -56,7 +55,6 @@ export interface Storage {
     nonce: AuthGetAndSet;
     scopes: AuthGetAndSet;
     expire: AuthGetAndSet;
-    loggedInAsCustomer: AuthGetAndSet;
   };
   theme: {
     get: () => Theme;
@@ -118,10 +116,6 @@ export interface Storage {
 
 export const storage: Storage = {
   authentication: {
-    loggedInAsCustomer: {
-      get: () => getStorage(LOGIN_AS_CUSTOMER),
-      set: v => setStorage(LOGIN_AS_CUSTOMER, v)
-    },
     token: {
       get: () => getStorage(TOKEN),
       set: v => setStorage(TOKEN, v)

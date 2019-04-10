@@ -59,7 +59,8 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
       scope: scopes,
       expires_in: expiresIn,
       state: nonce,
-      return: returnParam
+      return: returnParam,
+      token_type: tokenType
     } = hashParams;
 
     /** If the access token wasn't returned, something is wrong and we should bail. */
@@ -95,7 +96,12 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     /**
      * We have all the information we need and can persist it to localStorage and Redux.
      */
-    this.props.dispatchStartSession(accessToken, scopes, expireDate.toString());
+    this.props.dispatchStartSession(
+      accessToken,
+      tokenType,
+      scopes,
+      expireDate.toString()
+    );
 
     /**
      * All done, redirect this bad-boy to the returnTo URL we generated earlier.
@@ -109,15 +115,22 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
 }
 
 interface DispatchProps {
-  dispatchStartSession: (token: string, scopes: string, expiry: string) => void;
+  dispatchStartSession: (
+    token: string,
+    tokenType: string,
+    scopes: string,
+    expiry: string
+  ) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
-    dispatchStartSession: (token, scopes, expiry) =>
+    dispatchStartSession: (token, tokenType, scopes, expiry) =>
       dispatch(
         handleStartSession({
-          token,
+          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
+            1
+          )} ${token}`,
           scopes,
           expires: expiry
         })

@@ -32,10 +32,8 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
 export const GA_ID = process.env.REACT_APP_GA_ID;
 export const GTM_ID = process.env.REACT_APP_GTM_ID;
-/** for hardcoding token used for API Requests */
+/** for hardcoding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
-export const TOKEN_PREFIX: 'Bearer' | 'Admin' | undefined = process.env
-  .REACT_APP_TOKEN_PREFIX as 'Bearer' | 'Admin';
 
 // Features
 

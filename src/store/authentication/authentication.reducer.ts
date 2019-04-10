@@ -6,8 +6,7 @@ import {
   handleInitTokens,
   handleLogout,
   handleRefreshTokens,
-  handleStartSession,
-  handleStartSessionAsCustomer
+  handleStartSession
 } from './authentication.actions';
 import { clearLocalStorage } from './authentication.helpers';
 import { State } from './index';
@@ -22,8 +21,7 @@ export const defaultState: State = {
 const {
   token: tokenInLocalStorage,
   scopes: scopesInLocalStorage,
-  expire: expiryInLocalStorage,
-  loggedInAsCustomer: loggedInAsCustomerInLocalStorage
+  expire: expiryInLocalStorage
 } = authentication;
 
 const reducer = reducerWithInitialState(defaultState)
@@ -43,31 +41,15 @@ const reducer = reducerWithInitialState(defaultState)
       expiration: expires || null
     };
   })
-  .case(handleStartSessionAsCustomer, (state, payload) => {
-    const { token, expires } = payload;
-
-    /** set local storage */
-    scopesInLocalStorage.set('*');
-    tokenInLocalStorage.set(token || '');
-    expiryInLocalStorage.set(expires || '');
-    loggedInAsCustomerInLocalStorage.set('true');
-
-    /** set redux state */
-    return {
-      ...state,
-      token: token || null,
-      scopes: '*',
-      expiration: expires,
-      loggedInAsCustomer: true
-    };
-  })
   .case(handleInitTokens, state => {
     /**
      * if our token is expired, clear local storage
      * and redux state
      */
-    const expiryTime = expiryInLocalStorage.get();
-    if (expiryTime && new Date(expiryTime) < new Date()) {
+    const expiryTimeFromLocalStorage = expiryInLocalStorage.get();
+    const expiryDate = new Date();
+    expiryDate.setTime(expiryDate.getTime() + +expiryTimeFromLocalStorage);
+    if (expiryTimeFromLocalStorage && expiryDate < new Date()) {
       /**
        * the case where the user refreshes the page and has a expiry time in localstorage
        * but it's  expired
@@ -87,19 +69,21 @@ const reducer = reducerWithInitialState(defaultState)
      */
     const token = tokenInLocalStorage.get();
     const scopes = scopesInLocalStorage.get();
-    const loggedInAsCustomer = loggedInAsCustomerInLocalStorage.get();
 
     /** if we have no token in local storage, send us to login */
     if (!token) {
       redirectToLogin(location.pathname, location.search);
     }
 
+    /** token will either be "Admin: 1234" or "Bearer: 1234" */
+    const isLoggedInAsCustomer = (token || '').toLowerCase().includes('admin');
+
     return {
       ...state,
       token,
       scopes,
-      expiration: expiryTime,
-      loggedInAsCustomer
+      expiration: expiryTimeFromLocalStorage,
+      loggedInAsCustomer: isLoggedInAsCustomer
     };
   })
   .cases([handleExpireTokens, handleLogout], state => {
@@ -109,7 +93,8 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       scopes: null,
       token: null,
-      expiration: null
+      expiration: null,
+      loggedInAsCustomer: false
     };
   })
   .case(handleRefreshTokens, state => {

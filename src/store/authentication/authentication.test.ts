@@ -1,9 +1,9 @@
 import store from 'src/store';
 import { authentication } from 'src/utilities/storage';
 import {
+  handleInitTokens,
   handleLogout,
-  handleStartSession,
-  handleStartSessionAsCustomer
+  handleStartSession
 } from './authentication.actions';
 
 describe('Authentication', () => {
@@ -49,18 +49,35 @@ describe('Authentication', () => {
     });
   });
 
-  it('should correctly set loggedInAsCustomer when handleStartSessionAsCustomer is invoked', () => {
-    store.dispatch(
-      handleStartSessionAsCustomer({
-        token: 'helloworld',
-        expires: '123'
-      })
-    );
+  it('should set loggedInAsCustomer to true if token contains "admin"', () => {
+    authentication.expire.set('7200');
+    authentication.nonce.set('hello world');
+    authentication.scopes.set('hello world');
+    authentication.token.set('Admin');
+
+    store.dispatch(handleInitTokens());
+
     expect(store.getState().authentication).toEqual({
-      token: 'helloworld',
-      scopes: '*',
-      expiration: '123',
+      token: 'Admin',
+      scopes: 'hello world',
+      expiration: 7200,
       loggedInAsCustomer: true
+    });
+  });
+
+  it('should set loggedInAsCustomer to false if token does not contain "admin"', () => {
+    authentication.expire.set('7200');
+    authentication.nonce.set('hello world');
+    authentication.scopes.set('hello world');
+    authentication.token.set('bearer');
+
+    store.dispatch(handleInitTokens());
+
+    expect(store.getState().authentication).toEqual({
+      token: 'bearer',
+      scopes: 'hello world',
+      expiration: 7200,
+      loggedInAsCustomer: false
     });
   });
 });

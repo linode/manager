@@ -1,7 +1,7 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { pathOr } from 'ramda';
 
-import { ACCESS_TOKEN, TOKEN_PREFIX } from 'src/constants';
+import { ACCESS_TOKEN } from 'src/constants';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
@@ -29,28 +29,15 @@ export const handleError = (error: AxiosError) => {
 Axios.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
     const state = store.getState();
+    /** Will end up being "Admin: 1234" or "Bearer 1234" */
     const token =
       ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
-
-    /*
-     if we're logged in as a customer, our authentication header needs 
-     to look like this:
-     
-     "Admin 123123213"
-
-     otherwise, we use the "Bearer" prefix
-     */
-    const tokenPrefix =
-      TOKEN_PREFIX ||
-      pathOr(false, ['authentication', 'loggedInAsCustomer'], store.getState())
-        ? 'Admin'
-        : 'Bearer';
 
     return {
       ...config,
       headers: {
         ...config.headers,
-        ...(token && { Authorization: `${tokenPrefix} ${token}` })
+        ...(token && { Authorization: `${token}` })
       }
     };
   }

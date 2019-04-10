@@ -3,13 +3,14 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { handleStartSessionAsCustomer } from 'src/store/authentication/authentication.actions';
+import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import { parseQueryParams } from 'src/utilities/queryParams';
 
 type CombinedProps = DispatchProps & RouteComponentProps;
 
 interface QueryParams {
   access_token: string;
+  token_type: string;
   destination: string;
   expires_in: string;
 }
@@ -21,7 +22,7 @@ export class OAuthCallbackPage extends PureComponent<CombinedProps> {
      * the data we need and should bounce.
      * location.hash is a string which starts with # and is followed by a basic query params stype string.
      *
-     * 'location.hash = `#access_token=something&destination=/linodes/1234`
+     * 'location.hash = `#access_token=something&token_type=Admin&destination=linodes/1234`
      *
      */
     const { location, history } = this.props;
@@ -40,6 +41,7 @@ export class OAuthCallbackPage extends PureComponent<CombinedProps> {
     const {
       access_token: accessToken,
       destination,
+      token_type: tokenType,
       expires_in: expiresIn
     } = hashParams;
 
@@ -58,7 +60,11 @@ export class OAuthCallbackPage extends PureComponent<CombinedProps> {
     /**
      * We have all the information we need and can persist it to localStorage and Redux.
      */
-    this.props.dispatchStartSession(accessToken, expireDate.toString());
+    this.props.dispatchStartSession(
+      accessToken,
+      tokenType,
+      expireDate.toString()
+    );
 
     /**
      * All done, redirect to the destination from the hash params
@@ -73,15 +79,22 @@ export class OAuthCallbackPage extends PureComponent<CombinedProps> {
 }
 
 interface DispatchProps {
-  dispatchStartSession: (token: string, expires: string) => void;
+  dispatchStartSession: (
+    token: string,
+    tokenType: string,
+    expires: string
+  ) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => {
   return {
-    dispatchStartSession: (token, expires) =>
+    dispatchStartSession: (token, tokenType, expires) =>
       dispatch(
-        handleStartSessionAsCustomer({
-          token,
+        handleStartSession({
+          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
+            1
+          )} ${token}`,
+          scopes: '*',
           expires
         })
       )
