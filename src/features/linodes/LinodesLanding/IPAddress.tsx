@@ -84,7 +84,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     transition: theme.transitions.create(['color'])
   },
   hide: {
-    opacity: 0, // Hide until the component is hovered, when props.showCopyOnHover is true
+    [theme.breakpoints.up('md')]: {
+      // Hide until the component is hovered, when props.showCopyOnHover is true (only on desktop)
+      opacity: 0
+    },
     transition: theme.transitions.create(['opacity']),
     '&:focus': {
       opacity: 1

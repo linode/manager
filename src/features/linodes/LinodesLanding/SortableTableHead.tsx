@@ -67,7 +67,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
           handleClick={handleOrderChange}
           direction={order}
         >
-          IP Addresses
+          IP Address
         </TableSortCell>
         <TableSortCell
           label="region"

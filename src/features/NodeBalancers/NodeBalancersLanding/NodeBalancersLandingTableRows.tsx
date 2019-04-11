@@ -92,8 +92,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
             </TableCell>
             <TagsCell tags={nodeBalancer.tags} />
             <TableCell parentColumn="Node Status" data-qa-node-status>
-              <span>{nodesUp} up</span> <br />
-              <span>{nodesDown} down</span>
+              <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
             </TableCell>
             <TableCell parentColumn="Transferred" data-qa-transferred>
               {convertMegabytesTo(nodeBalancer.transfer.total)}
@@ -114,12 +113,9 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                 </React.Fragment>
               ))}
             </TableCell>
-            <TableCell parentColumn="IP Addresses" data-qa-nodebalancer-ips>
+            <TableCell parentColumn="IP Address" data-qa-nodebalancer-ips>
               <div className={classes.ipsWrapper}>
                 <IPAddress ips={[nodeBalancer.ipv4]} copyRight showMore />
-                {nodeBalancer.ipv6 && (
-                  <IPAddress ips={[nodeBalancer.ipv6]} copyRight showMore />
-                )}
               </div>
             </TableCell>
             <TableCell parentColumn="Region" data-qa-region>
