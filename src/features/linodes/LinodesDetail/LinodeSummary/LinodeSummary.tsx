@@ -29,6 +29,7 @@ import {
   getMetrics,
   getTotalTraffic
 } from 'src/utilities/statMetrics';
+import ActivitySummary from './ActivitySummary';
 import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
@@ -699,6 +700,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 </div>
               </Grid>
             </Grid>
+
+            <ActivitySummary />
 
             <StatsPanel
               title="CPU Usage"
