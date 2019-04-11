@@ -7,7 +7,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
@@ -43,20 +42,38 @@ import { getLinodeDisks } from 'src/services/linodes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
-import LinodeDiskSpace from './LinodeDiskSpace';
 
-type ClassNames = 'root' | 'headline' | 'loadingContainer' | 'diskSpaceWrapper';
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'addNewWrapper'
+  | 'loadingContainer'
+  | 'tableContainer'
+  | 'diskSpaceWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   headline: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 0,
+      marginTop: theme.spacing.unit * 2
+    }
+  },
+  addNewWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      marginLeft: -(theme.spacing.unit + theme.spacing.unit / 2),
+      marginTop: -theme.spacing.unit
+    }
   },
   loadingContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  tableContainer: {
+    marginTop: -theme.spacing.unit * 2
   },
   diskSpaceWrapper: {
     backgroundColor: theme.bg.tableHeader,
@@ -194,24 +211,18 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       error,
       loading,
       linodeStatus,
-      linodeTotalDisk,
       readOnly
     } = this.props;
 
     return (
       <React.Fragment>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ marginTop: 16 }}
-        >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography variant="h2" className={classes.headline}>
+            <Typography variant="h3" className={classes.headline}>
               Disks
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openDrawerForCreation}
               label="Add a Disk"
@@ -219,9 +230,9 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Grid container>
-          <Grid item xs={12} md={8} sm={12}>
-            <Table isResponsive={false} aria-label="List of Disks">
+        <Grid container className={classes.tableContainer}>
+          <Grid item xs={12}>
+            <Table isResponsive={false} aria-label="List of Disks" border>
               <TableHead>
                 <TableRow>
                   <TableCell>Label</TableCell>
@@ -230,21 +241,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                   <TableCell />
                 </TableRow>
               </TableHead>
-
               <TableBody>
                 {this.renderTableContent(loading, linodeStatus, error, data)}
               </TableBody>
             </Table>
-          </Grid>
-          <Grid item xs={12} md={4} sm={12}>
-            <Paper classes={{ root: classes.diskSpaceWrapper }}>
-              <LinodeDiskSpace
-                disks={data}
-                error={error}
-                loading={loading}
-                totalDiskSpace={linodeTotalDisk}
-              />
-            </Paper>
           </Grid>
         </Grid>
         <PaginationFooter

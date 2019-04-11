@@ -13,6 +13,7 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
+import LinodeAdvanced from './LinodeAdvanced';
 import LinodeBackup from './LinodeBackup';
 import { withLinodeDetailContext } from './linodeDetailContext';
 import LinodeNetworking from './LinodeNetworking';
@@ -48,7 +49,8 @@ const LinodesDetailNavigation: React.StatelessComponent<
     { routeName: `${url}/rescue`, title: 'Rescue' },
     { routeName: `${url}/rebuild`, title: 'Rebuild' },
     { routeName: `${url}/backup`, title: 'Backups' },
-    { routeName: `${url}/settings`, title: 'Settings' }
+    { routeName: `${url}/settings`, title: 'Settings' },
+    { routeName: `${url}/advanced`, title: 'Advanced' }
   ];
 
   const handleTabChange = (
@@ -130,6 +132,11 @@ const LinodesDetailNavigation: React.StatelessComponent<
           exact
           path={`/linodes/:linodeId/settings`}
           component={LinodeSettings}
+        />
+        <Route
+          exact
+          path={`/linodes/:linodeId/advanced`}
+          component={LinodeAdvanced}
         />
         {/* 404 */}
         <Redirect to={`${url}/summary`} />
