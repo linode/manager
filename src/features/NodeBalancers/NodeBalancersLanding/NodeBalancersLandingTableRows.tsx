@@ -81,16 +81,14 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
             aria-label={nodeBalancer.label}
           >
             <TableCell parentColumn="Name" data-qa-nodebalancer-label>
-              <Link to={`/nodebalancers/${nodeBalancer.id}`}>
-                <Grid container wrap="nowrap" alignItems="center">
-                  <Grid item className="py0">
-                    <EntityIcon variant="nodebalancer" marginTop={1} />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="h3">{nodeBalancer.label}</Typography>
-                  </Grid>
+              <Grid container wrap="nowrap" alignItems="center">
+                <Grid item className="py0">
+                  <EntityIcon variant="nodebalancer" marginTop={1} />
                 </Grid>
-              </Link>
+                <Grid item>
+                  <Typography variant="h3">{nodeBalancer.label}</Typography>
+                </Grid>
+              </Grid>
             </TableCell>
             <TagsCell tags={nodeBalancer.tags} />
             <TableCell parentColumn="Node Status" data-qa-node-status>
