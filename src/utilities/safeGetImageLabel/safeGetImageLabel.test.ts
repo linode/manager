@@ -6,11 +6,11 @@ describe('safeGetImageLabel', () => {
     expect(safeGetImageLabel(images, null)).toBe('');
   });
 
-  it('should return "Unknown Image," if the slug does not exist in the image data', () => {
-    expect(safeGetImageLabel(images, 'duhhhhhhhhhh')).toBe('Unknown Image,');
+  it('should return "Unknown Image" if the slug does not exist in the image data', () => {
+    expect(safeGetImageLabel(images, 'duhhhhhhhhhh')).toBe('Unknown Image');
   });
 
-  it('should return "Fedora 23,"', () => {
-    expect(safeGetImageLabel(images, 'linode/Fedora23')).toBe('Fedora 23,');
+  it('should return "Fedora 23"', () => {
+    expect(safeGetImageLabel(images, 'linode/Fedora23')).toBe('Fedora 23');
   });
 });

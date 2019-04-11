@@ -15,5 +15,5 @@ export const safeGetImageLabel = (
     return '';
   }
   const iv = images.find(i => i.id === slug);
-  return iv ? iv.label + ',' : 'Unknown Image,';
+  return iv ? iv.label : 'Unknown Image';
 };
