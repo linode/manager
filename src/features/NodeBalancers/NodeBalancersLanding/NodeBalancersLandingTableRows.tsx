@@ -10,19 +10,14 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TagsCell from 'src/components/TagsCell';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
-type ClassNames = 'ip' | 'tagWrapper' | 'ipsWrapper' | 'icon';
+type ClassNames = 'tagWrapper' | 'ipsWrapper' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  ip: {
-    width: '30%',
-    minWidth: 200
-  },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
     '& [class*="MuiChip"]': {
@@ -90,7 +85,6 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                 </Grid>
               </Grid>
             </TableCell>
-            <TagsCell tags={nodeBalancer.tags} />
             <TableCell parentColumn="Node Status" data-qa-node-status>
               <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
             </TableCell>

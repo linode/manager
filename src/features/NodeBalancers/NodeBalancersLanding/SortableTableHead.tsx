@@ -14,50 +14,35 @@ type ClassNames =
   | 'ip'
   | 'nameCell'
   | 'nodeStatus'
-  | 'tags'
   | 'ports'
-  | 'tagGroup'
-  | 'title'
   | 'transferred'
   | 'region';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  ip: {
-    width: '30%',
-    minWidth: 200
-  },
   nameCell: {
-    width: '15%',
+    width: '20%',
     minWidth: 150,
     paddingLeft: theme.spacing.unit * 2 + 49
+  },
+  nodeStatus: {
+    width: '15%',
+    minWidth: 100
+  },
+  transferred: {
+    width: '15%',
+    minWidth: 100
+  },
+  ports: {
+    width: '15%',
+    minWidth: 50
+  },
+  ip: {
+    width: '15%',
+    minWidth: 200
   },
   region: {
     width: '15%',
     minWidth: 150
-  },
-  tags: {
-    width: '10%',
-    minWidth: 100,
-    textAlign: 'center'
-  },
-  nodeStatus: {
-    width: '10%',
-    minWidth: 100
-  },
-  ports: {
-    width: '10%',
-    minWidth: 50
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit - 2
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  transferred: {
-    width: '10%',
-    minWidth: 100
   }
 });
 
@@ -81,9 +66,6 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
         >
           Name
         </TableSortCell>
-        <TableCell className={classes.tags} noWrap>
-          Tags
-        </TableCell>
         <TableCell className={classes.nodeStatus} noWrap>
           Node Status
         </TableCell>
