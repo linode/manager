@@ -64,7 +64,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: 4
   },
   ipCell: {
-    width: '25%',
+    width: '15%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     }
@@ -80,7 +80,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   regionCell: {
-    width: '10%',
+    width: '15%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     }
