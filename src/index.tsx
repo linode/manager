@@ -22,7 +22,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import { spacing, theme } from 'src/utilities/storage';
+import { spacing as spacingChoice, theme } from 'src/utilities/storage';
 import App from './App';
 import './events';
 import './index.css';
@@ -40,7 +40,7 @@ initTagManager(GTM_ID);
 
 const themeChoice = theme.get() === 'dark' ? 'Dark Theme' : 'Light Theme';
 const spacingMode =
-  spacing.get() === 'compact' ? 'Compact Mode' : 'Normal Mode';
+  spacingChoice.get() === 'compact' ? 'Compact Mode' : 'Normal Mode';
 
 sendEvent({
   category: 'Theme Choice',
