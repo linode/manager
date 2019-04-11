@@ -1,5 +1,8 @@
+import HelpOutline from '@material-ui/icons/HelpOutline';
+import * as classNames from 'classnames';
 import * as React from 'react';
-import { StickyProps } from 'react-sticky';
+import Hidden from 'src/components/core/Hidden';
+import IconButton from 'src/components/core/IconButton';
 import {
   StyleRulesCallback,
   withStyles,
@@ -9,68 +12,119 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import DocComponent, { Doc } from './DocComponent';
 
-type ClassNames = 'root' | 'title' | 'gridItem';
+type ClassNames =
+  | 'root'
+  | 'gridItem'
+  | 'title'
+  | 'mobileActive'
+  | 'toggleButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    [theme.breakpoints.down('md')]: {
-      position: 'relative !important',
-      left: `${theme.spacing.unit}px !important`,
-      width: '100%',
-      paddingTop: theme.spacing.unit * 3
+    [theme.breakpoints.up('md')]: {
+      marginTop: theme.spacing.unit * 3
+    },
+    [theme.breakpoints.down('sm')]: {
+      position: 'fixed !important',
+      right: 0,
+      width: '90%',
+      bottom: 24,
+      display: 'flex',
+      flexWrap: 'nowrap',
+      justifyContent: 'flex-end'
     }
   },
   title: {
-    fontSize: '1.5rem',
-    color: theme.color.green
+    fontSize: '1.2rem'
   },
   gridItem: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
+      position: 'relative',
+      right: 56,
+      backgroundColor: theme.bg.white,
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      display: 'none',
       width: '100%'
     }
+  },
+  mobileActive: {
+    display: 'block'
+  },
+  toggleButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 10
   }
 });
 
 interface Props {
   docs: Doc[];
-  isSticky?: boolean;
 }
 
-type CombinedProps = Props & StickyProps & WithStyles<ClassNames>;
+interface State {
+  open: Boolean;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const styled = withStyles(styles);
 
-const DocsSidebar: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, docs, style, isSticky } = props;
+class DocsSidebar extends React.Component<CombinedProps, State> {
+  state = {
+    open: false
+  };
 
-  if (docs.length === 0) {
-    return null;
-  }
+  toggleHelp = () => {
+    this.setState({
+      open: !this.state.open
+    });
+  };
 
-  let stickyStyles;
-  if (isSticky) {
-    stickyStyles = {
-      ...style,
-      paddingTop: 24
-    };
-  }
+  render() {
+    const { classes, docs } = this.props;
+    const { open } = this.state;
 
-  return (
-    <Grid container item style={stickyStyles} className={classes.root}>
-      <Grid item className={classes.gridItem}>
-        <Typography
-          variant="h2"
-          className={classes.title}
-          data-qa-sidebar-title
+    if (docs.length === 0) {
+      return null;
+    }
+
+    return (
+      <Grid
+        container
+        item
+        className={classNames({
+          [classes.root]: true
+        })}
+      >
+        <Grid
+          item
+          className={classNames({
+            [classes.gridItem]: true,
+            [classes.mobileActive]: open
+          })}
         >
-          Linode Docs
-        </Typography>
-        {docs.map((doc, idx) => (
-          <DocComponent key={idx} {...doc} />
-        ))}
+          <Typography
+            variant="h3"
+            className={classes.title}
+            data-qa-sidebar-title
+          >
+            Linode Docs
+          </Typography>
+          {docs.map((doc, idx) => (
+            <DocComponent key={idx} {...doc} />
+          ))}
+        </Grid>
+        <Hidden mdUp>
+          <IconButton
+            onClick={this.toggleHelp}
+            className={classes.toggleButton}
+          >
+            <HelpOutline />
+          </IconButton>
+        </Hidden>
       </Grid>
-    </Grid>
-  );
-};
+    );
+  }
+}
 
 export default styled(DocsSidebar);
