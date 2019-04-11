@@ -22,9 +22,9 @@ import { equals } from 'ramda'
 class MyComponent extends React.Component<MyProps> {
   shouldComponentUpdate(prevProps: MyProps) {
     if(equals(prevProps, this.props)) {
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 }
 ```
@@ -34,8 +34,11 @@ Worse
 class MyComponent extends React.Component<MyProps> {}
 ```
 
-Function components have their place, but in this project we recommend you don't use them unless
-you plan on memoizing the component. In fact, [function components are treated as Classes under the hood in React](https://twitter.com/dan_abramov/status/755343749983657986?lang=en), so really, you don't gain much by writing a function component versus a Class.
+Function components have their place, but please keep in mind [function components are treated as Classes under the hood in React](https://twitter.com/dan_abramov/status/755343749983657986?lang=en), so really, you're not getting any performance boost from writing a function component versus a class.
+
+That being, said with the [introduction of hooks](https://reactjs.org/docs/hooks-intro.html), function components have become a lot more valuable, so you may find yourself writing them more often than you would a PureComponent. With that in mind, nearly all function components should be memoized with the invocation of `React.memo()` in order to gain the same benefit that PureComponents do.
+
+Like PureComponents, function componenets wrapped in `React.memo()` have a shallow prop and state comparison implemented by default. You can also create your own update conditions as the second argument passed to `React.memo()`
 
 Okay
 ```js
@@ -48,6 +51,25 @@ const MyComponent: React.FC<MyProps> = (props) => ()
 
 /** this is what we need to export */
 const EnhancedComponent = React.memo(MyComponent);
+```
+
+With custom update conditions
+```js
+import { equals } from 'ramda'
+
+const MyComponent: React.FC<MyProps> = (props) => ()
+
+/*
+ return true if passing nextProps to render would return
+ the same result as passing prevProps to render,
+ otherwise return false
+*/
+const areEqual = (prevProps: MyProps, nextProps: MyProps) => {
+  return equals(prevProps, nexProps)
+}
+
+/** this is what we need to export */
+const EnhancedComponent = React.memo(MyComponent, areEqual);
 ```
 
 ## Testing Memoized components
