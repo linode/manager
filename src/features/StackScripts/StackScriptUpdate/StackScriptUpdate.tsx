@@ -24,6 +24,7 @@ import PromiseLoader from 'src/components/PromiseLoader';
 import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
+import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { getStackScript, updateStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
@@ -282,7 +283,12 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, username, imagesLoading } = this.props;
+    const {
+      classes,
+      username,
+      imagesLoading,
+      userCannotModifyStackScript
+    } = this.props;
     const {
       availableImages,
       selectedImages,
@@ -323,11 +329,26 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        {/* If a user doesn't have permissions to modify a StackScript, they
+        won't see an "Edit" button in the Action Menu, which means they'll most
+        likely never see this page. But if they go to /stackscripts/:id/edit,
+        they will, so we disable the forms and show an appropriate error message.
+        */}
+        {userCannotModifyStackScript && (
+          <Notice
+            text={
+              "You don't have permissions to modify this StackScript. Please contact an account administrator for details."
+            }
+            error={true}
+            important
+          />
+        )}
         {imagesLoading ? (
           <CircleProgress />
         ) : (
           <ScriptForm
             currentUser={username}
+            disabled={userCannotModifyStackScript}
             images={{
               available: availableImages,
               selected: selectedImages
@@ -363,11 +384,33 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   username?: string;
+  userCannotModifyStackScript: boolean;
 }
 
-const mapStateToProps: MapState<StateProps, {}> = state => ({
-  username: path(['data', 'username'], state.__resources.profile)
-});
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => {
+  // Grab StackScriptID from the URL (query param)
+  const stackScriptID = ownProps.match.params.stackScriptID;
+
+  const stackScriptGrants = pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+    state
+  );
+  const grantsForThisStackScript = stackScriptGrants.find(
+    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+  );
+
+  return {
+    username: path(['data', 'username'], state.__resources.profile),
+    userCannotModifyStackScript:
+      isRestrictedUser(state) &&
+      grantsForThisStackScript &&
+      grantsForThisStackScript.permissions === 'read_only'
+  };
+};
 
 const connected = connect(mapStateToProps);
 
