@@ -15,7 +15,7 @@ type ClassNames = 'root' | 'label' | 'tagHeader';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
-    paddingLeft: theme.spacing.unit * 4 + 33
+    paddingLeft: theme.spacing.unit * 2 + 49
   },
   tagHeader: {
     textAlign: 'center'
@@ -42,15 +42,6 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
           className={classes.label}
         >
           Linode
-        </TableSortCell>
-        <TableSortCell
-          label="tags"
-          direction={order}
-          active={isActive('tags')}
-          handleClick={handleOrderChange}
-          className={classes.tagHeader}
-        >
-          Tags
         </TableSortCell>
         <TableSortCell
           noWrap

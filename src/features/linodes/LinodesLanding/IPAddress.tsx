@@ -67,7 +67,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   icon: {
     '& svg': {
-      top: 1,
       width: 12,
       height: 12
     }
@@ -78,14 +77,15 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   ipLink: {
     color: theme.palette.primary.main,
+    top: -1,
     position: 'relative',
     display: 'inline-block',
-    width: 28,
     transition: theme.transitions.create(['color'])
   },
   hide: {
     [theme.breakpoints.up('md')]: {
-      // Hide until the component is hovered, when props.showCopyOnHover is true (only on desktop)
+      // Hide until the component is hovered,
+      // when props.showCopyOnHover is true (only on desktop)
       opacity: 0
     },
     transition: theme.transitions.create(['opacity']),

@@ -4,7 +4,6 @@ import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TagsCell from 'src/components/TagsCell';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import hasMutationAvailable, {
@@ -123,7 +122,6 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
         aria-label={label}
       >
         {!loading && headCell}
-        <TagsCell tags={tags} />
         <LinodeRowBackupCell
           linodeId={id}
           backupsEnabled={backups.enabled || false}

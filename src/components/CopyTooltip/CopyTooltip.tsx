@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   root: {
     position: 'relative',
-    padding: 2,
+    padding: 4,
     transition: theme.transitions.create(['background-color']),
     borderRadius: 4,
     color: theme.color.grey1,
