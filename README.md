@@ -16,11 +16,21 @@ Currently this software is *early-access* and is available at [cloud.linode.com]
 
 ## Running the App
 
-To get started running the app locally, please [see here.](GETTING_STARTED.md)
+To get started running the app locally, please [see the _Getting Started_ documentation.](GETTING_STARTED.md)
 
 ## Contributing
 
-Read the [contributing guidelines](CONTRIBUTING.md) to get started.
+Read the [contributing guidelines](CONTRIBUTING.md) to get help in making your first PR.
+
+## Reaching Out
+
+You can submit feedback in two ways
+
+1. Submit feedback to feedback@linode.com
+2. Create a GitHub Issue
+
+Both are monitored by the developers and product owners and we make a point to respond and take
+action upon feedback.
 
 ## License
 
