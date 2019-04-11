@@ -21,35 +21,8 @@ for the coding style is "imitate the code that's already there". When in doubt,
 apply the [Airbnb style guide](https://github.com/airbnb/javascript) or just let
 the linter do its thing.
 
-### Importing and Structuring Dependencies
-
-This project relies on a number of third-party dependencies. It us important that when importing those
-dependencies you import only the necessary files. For example, if I needed to create an Observable
-using RxJS I would import only Observable and the type of Observable I want to create. This keeps bundle
-size down substantially.
-```
-/** Good */
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
-
-/** Bad */
-import { Observable } from 'rxjs/Rx';
-```
-Additionally we order imports alphabetically within certain blocks. The blocks are;
-```
-/** Third Party Libs /**
-import * as React from 'react';
-
-/** Material UI Imports /**
-import { WithStyles } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-
-/** Source Components /**
-import { getLinodes } from 'src/services/linodes';
-
-/** Relative Imports /**
-import something from '../some/where/nearby';
-```
+If you're interested in learning how we write code and want to follow our guidelines, please
+see our [code style documentation.](CODE_STYLE.md)
 
 ### Testing
 This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking.
@@ -62,17 +35,17 @@ For everything related to writing and running tests, [please see the documentati
 
 ### Creating and Commiting to a New Branch
 
-When creating a new feature, you should attempt to create a descriptive branch name. All branch names must be prefixed with `M3`, which stands for Manager 3, as this is the 3 iteration of this product.
+When creating a new feature, you should attempt to create a descriptive branch name. All branch names must be prefixed with `M3`, which stands for Manager 3, as this is the third iteration of this product.
 
 For example `M3-my-cool-feature`
 
 Once you have made all your changes, you can commit them.
 
-We use [pre-commit](https://www.npmjs.com/package/pre-commit) to perform the following tasks:
+We use [Husky](https://github.com/typicode/husky) to perform the following tasks before the commit succeeds:
 
 1. Linting
 2. Unit testing
-3. Storybook end-to-end component testing
+3. [Storybook](https://github.com/storybooks/storybook) end-to-end component testing
 4. [Circular dependency check](https://github.com/pahen/madge)
 5. Type Checking (as we're using TypeScript in the src code)
 
@@ -85,15 +58,15 @@ Merge conflicts happen, and when they do, we reccommend rebasing.
 
 `git rebase -i develop` will allow you to interactively pick which commits you want to keep and then you can address the conflicts as they appear.
 
-If you absolutely must merge the two branches, that is fine as we will squash all commits once the PR is merged.
+If you absolutely must merge the two branches, that is fine as we will squash all commits once the PR is merged, so we aren't that stressed about merge commits.
 
 ### Deploying
 
 We are following a CI/CD (continuous integration / continuous deployment) process for Cloud Manager. This means:
-1. `develop` branch gets automatically deployed to out development environment
-2. `testing` branch gets automatically deployed to out testing environment
-3. `staging` branch gets automatically deployed to out staging environment
-4. `master` branch gets automatically deployed to out production environment, AKA https://cloud.linode.com
+1. `develop` branch gets automatically deployed to our development environment
+2. `testing` branch gets automatically deployed to our testing environment
+3. `staging` branch gets automatically deployed to our staging environment
+4. `master` branch gets automatically deployed to our production environment, AKA https://cloud.linode.com
 
 This means we can deploy features quickly and efficiently.
 
@@ -105,28 +78,35 @@ Once your code from the `develop` branch has been merged into `testing` and you 
 
 1. Pull down the latest `testing` branch locally
 2. Run `yarn version --new-version vX.X.X` (replace the X's with the appropriate version number)
-* this will apply the Git tags and update the version number in the `package.json`
+  * this will apply the Git tags and update the version number in the `package.json`
 3. [Generate the Changelog](#generating-the-changelog)
-4. Review changelog and update manually if necessary
-5. Stage and commit the version bump and changelog addition with the commit message,`vX.X.X`
+4. Review the Changelog and update manually if necessary
+5. Stage and commit the version bump and changelog addition with the commit message, which should be as simple as: `vX.X.X`
 6. Push up the changes to the `testing` branch with `git push origin testing`
+7. Finally, follow the merge flow. Merge from `testing` to `staging` and finally to `master`
 
 ### Generating the changelog
 Get a Python 3 installation with pip. On a Mac
 
 `brew install python` (Python 3 is now the default)
 
-The changelog is generated by the script generate_changelog.py, this script can only run once a local release branch has been created.
+The Changelog is generated by the script `generate_changelog.py`. This script should ideally only be run on the `testing` branch
 
 The script accepts 3 parameters: 
 1. `${release version}`
-* `vX.X.X` for example
+  * `vX.X.X` for example
 2. `${release-date yyyy.MM.dd}`
-* `2019-09-17` for example 
+  * `2019-09-17` for example 
 3. `${mangerRemote}`
-* `origin` for example
+  * `origin` for example
 
-Does a git log diff of manager/master...HEAD, printing only the commit subject. Strips any reference to a jira ticket, and disregards any testing or automation ticket, and updates the CHANGELOG.md Added, Breaking, Fixed, Change based on keywords in the commit subject.
+So altogether, the command should look like: 
+
+```
+python generate_changelog.py v0.52.0 2019-09-17 origin
+```
+
+This script does a git log diff of manager/master...HEAD, printing only the commit subject. Strips any reference to a JIRA ticket, and disregards any testing or automation ticket, and updates the CHANGELOG.md Added, Breaking, Fixed, Change based on keywords in the commit subject.
 
 ## Other Things
 
