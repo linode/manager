@@ -20,6 +20,10 @@ export const handleError = (error: AxiosError) => {
     !!error.config.headers['x-maintenance-mode'] ||
     (error.response && error.response.status === 401)
   ) {
+    /**
+     * this will blow out redux state and the componentDidUpdate in the
+     * AuthenticationWrapper.tsx will be responsible for redirecting to Login
+     */
     store.dispatch(handleLogout());
   }
 

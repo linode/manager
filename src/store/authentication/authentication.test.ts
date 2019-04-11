@@ -50,7 +50,9 @@ describe('Authentication', () => {
   });
 
   it('should set loggedInAsCustomer to true if token contains "admin"', () => {
-    authentication.expire.set('7200');
+    authentication.expire.set(
+      'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)'
+    );
     authentication.nonce.set('hello world');
     authentication.scopes.set('hello world');
     authentication.token.set('Admin');
@@ -60,13 +62,15 @@ describe('Authentication', () => {
     expect(store.getState().authentication).toEqual({
       token: 'Admin',
       scopes: 'hello world',
-      expiration: 7200,
+      expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
       loggedInAsCustomer: true
     });
   });
 
   it('should set loggedInAsCustomer to false if token does not contain "admin"', () => {
-    authentication.expire.set('7200');
+    authentication.expire.set(
+      'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)'
+    );
     authentication.nonce.set('hello world');
     authentication.scopes.set('hello world');
     authentication.token.set('bearer');
@@ -76,7 +80,7 @@ describe('Authentication', () => {
     expect(store.getState().authentication).toEqual({
       token: 'bearer',
       scopes: 'hello world',
-      expiration: 7200,
+      expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
       loggedInAsCustomer: false
     });
   });

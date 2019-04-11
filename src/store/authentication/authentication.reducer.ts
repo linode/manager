@@ -46,10 +46,9 @@ const reducer = reducerWithInitialState(defaultState)
      * if our token is expired, clear local storage
      * and redux state
      */
-    const expiryTimeFromLocalStorage = expiryInLocalStorage.get();
-    const expiryDate = new Date();
-    expiryDate.setTime(expiryDate.getTime() + +expiryTimeFromLocalStorage);
-    if (expiryTimeFromLocalStorage && expiryDate < new Date()) {
+    const expiryDateFromLocalStorage = expiryInLocalStorage.get();
+    const expiryDate = new Date(expiryDateFromLocalStorage);
+    if (expiryDateFromLocalStorage && expiryDate < new Date()) {
       /**
        * the case where the user refreshes the page and has a expiry time in localstorage
        * but it's  expired
@@ -82,7 +81,7 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       token,
       scopes,
-      expiration: expiryTimeFromLocalStorage,
+      expiration: expiryDateFromLocalStorage,
       loggedInAsCustomer: isLoggedInAsCustomer
     };
   })
