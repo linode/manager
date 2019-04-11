@@ -574,7 +574,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>blocks/sec</div>
+          <div className={classes.leftLegend} style={{ left: -24 }}>
+            blocks/sec
+          </div>
           <LineGraph
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
