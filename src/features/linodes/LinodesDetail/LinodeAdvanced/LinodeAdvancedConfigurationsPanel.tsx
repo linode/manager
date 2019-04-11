@@ -95,7 +95,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles<ClassNames>(styles);
 
-const enhanced = compose<CombinedProps, any>(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   linodeContext
 );

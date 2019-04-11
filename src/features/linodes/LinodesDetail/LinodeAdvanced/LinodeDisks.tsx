@@ -125,7 +125,12 @@ interface State {
   confirmDelete: ConfirmDeleteState;
 }
 
-type CombinedProps = UserSSHKeyProps &
+interface DisksProps {
+  active: boolean;
+}
+
+type CombinedProps = DisksProps &
+  UserSSHKeyProps &
   PaginationProps<Linode.Disk> &
   LinodeContextProps &
   WithStyles<ClassNames> &
@@ -181,9 +186,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       .subscribe(e => this.props.request());
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: CombinedProps) {
     const disks = path(['data'], this.props);
-    if (!disks) {
+    const activating = !prevProps.active && this.props.active;
+    if (activating && !disks) {
       this.props.handleOrderChange('label');
     }
   }
@@ -752,7 +758,7 @@ const paginated = Pagey((ownProps, params, filters) => {
   return getLinodeDisks(ownProps.linodeId, params, filters);
 });
 
-const enhanced = compose<CombinedProps, any>(
+const enhanced = compose<CombinedProps, DisksProps>(
   styled,
   linodeContext,
   paginated,
