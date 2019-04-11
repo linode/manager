@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import withProfile from 'src/containers/profile.container';
 
-import { getStackScriptUrl } from '../stackScriptUtils';
+import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
 
 interface Props {
   stackScriptID: number;
@@ -14,9 +14,14 @@ interface Props {
   stackScriptLabel: string;
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
-  canDelete: boolean;
-  canEdit: boolean;
+  canModify: boolean;
+  canAddLinodes: boolean;
   isPublic: boolean;
+  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
+  // Leaving this in as an escape hatch now, since there's a bunch of code in
+  // /LandingPanel that uses different values for categories that we shouldn't
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
   // From Profile HOC
   username?: string;
 }
@@ -33,17 +38,29 @@ const StackScriptActionMenu: React.StatelessComponent<
     triggerDelete,
     triggerMakePublic,
     stackScriptLabel,
-    canDelete,
-    canEdit,
+    canModify,
     isPublic,
-    username
+    username,
+    category,
+    canAddLinodes
   } = props;
+
+  const readonlyProps = {
+    disabled: !canModify,
+    tooltip: !canModify
+      ? "You don't have permissions to modify this StackScript"
+      : undefined
+  };
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
-      const actions = [
+      const actions: Action[] = [
         {
           title: 'Deploy New Linode',
+          disabled: !canAddLinodes,
+          tooltip: !canAddLinodes
+            ? "You don't have permissions to add Linodes"
+            : undefined,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(
               getStackScriptUrl(stackScriptUsername, stackScriptID, username)
@@ -53,9 +70,10 @@ const StackScriptActionMenu: React.StatelessComponent<
         }
       ];
 
-      if (canDelete) {
+      if (!isPublic) {
         actions.push({
           title: 'Delete',
+          ...readonlyProps,
           onClick: e => {
             closeMenu();
             triggerDelete(stackScriptID, stackScriptLabel);
@@ -63,9 +81,13 @@ const StackScriptActionMenu: React.StatelessComponent<
         });
       }
 
-      if (canEdit) {
+      // We only add the "Edit" option if the current tab/category isn't
+      // "Community StackScripts". A user's own public StackScripts are still
+      // editable under "Account StackScripts".
+      if (category !== 'community') {
         actions.push({
           title: 'Edit',
+          ...readonlyProps,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             history.push(`/stackscripts/${stackScriptID}/edit`);
             e.preventDefault();
@@ -73,9 +95,10 @@ const StackScriptActionMenu: React.StatelessComponent<
         });
       }
 
-      if (canEdit && !isPublic) {
+      if (!isPublic) {
         actions.push({
           title: 'Make StackScript Public',
+          ...readonlyProps,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             // open a modal here as well
             closeMenu();

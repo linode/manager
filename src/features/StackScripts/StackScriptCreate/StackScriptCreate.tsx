@@ -21,6 +21,10 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withImages from 'src/containers/withImages.container';
 import { StackScripts } from 'src/documentation';
+import {
+  hasGrant,
+  isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
 import { createStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
@@ -234,7 +238,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, username } = this.props;
+    const { classes, username, userCannotCreateStackScripts } = this.props;
     const {
       selectedImages,
       script,
@@ -271,8 +275,18 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        {userCannotCreateStackScripts && (
+          <Notice
+            text={
+              "You don't have permissions to create a new StackScript. Please contact an account administrator for details."
+            }
+            error={true}
+            important
+          />
+        )}
         <ScriptForm
           currentUser={username}
+          disabled={userCannotCreateStackScripts}
           images={{
             available: availableImages,
             selected: selectedImages
@@ -307,9 +321,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   username?: string;
+  userCannotCreateStackScripts: boolean;
 }
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  username: path(['data', 'username'], state.__resources.profile)
+  username: path(['data', 'username'], state.__resources.profile),
+  userCannotCreateStackScripts:
+    isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts')
 });
 
 const connected = connect(mapStateToProps);

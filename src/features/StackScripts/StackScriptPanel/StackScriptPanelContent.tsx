@@ -282,6 +282,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
           triggerDelete={this.handleOpenDeleteDialog}
           triggerMakePublic={this.handleOpenMakePublicDialog}
           currentUser={this.props.currentUser}
+          category={this.props.category}
         />
         {this.renderDeleteStackScriptDialog()}
         {this.renderMakePublicDialog()}

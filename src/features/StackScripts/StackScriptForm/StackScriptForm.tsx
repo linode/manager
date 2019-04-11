@@ -126,6 +126,7 @@ interface Props {
   onCancel: () => void;
   onSelectChange: (image: Item<string>[]) => void;
   isSubmitting: boolean;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -152,7 +153,8 @@ export class StackScriptForm extends React.Component<CombinedProps> {
       onSubmit,
       onCancel,
       isSubmitting,
-      images
+      images,
+      disabled
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -179,6 +181,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 errorText={hasErrorFor('label')}
                 tooltipText="Give your StackScript a label"
                 className={classes.labelField}
+                disabled={disabled}
                 data-qa-stackscript-label
               />
               <TextField
@@ -189,6 +192,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 onChange={description.handler}
                 value={description.value}
                 tooltipText="Give your StackScript a description"
+                disabled={disabled}
                 data-qa-stackscript-description
               />
               <FormControl fullWidth>
@@ -196,6 +200,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                   htmlFor="image"
                   disableAnimation
                   shrink={true}
+                  disabled={disabled}
                   required
                 >
                   Target Images
@@ -209,6 +214,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                   helperText={
                     'Select which images are compatible with this StackScript.'
                   }
+                  disabled={disabled}
                   data-qa-stackscript-target-select
                 />
               </FormControl>
@@ -239,6 +245,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             errorText={hasErrorFor('script')}
             required
             InputProps={{ className: classes.scriptTextarea }}
+            disabled={disabled}
             data-qa-stackscript-script
           />
           <TextField
@@ -247,6 +254,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             onChange={revision.handler}
             value={revision.value}
             InputProps={{ className: classes.revisionTextarea }}
+            disabled={disabled}
             data-qa-stackscript-revision
           />
           <ActionsPanel style={{ paddingBottom: 0 }}>
@@ -254,6 +262,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
               onClick={onSubmit}
               type="primary"
               loading={isSubmitting}
+              disabled={disabled}
               data-qa-save
             >
               Save
@@ -262,6 +271,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
               onClick={onCancel}
               type="secondary"
               className="cancel"
+              disabled={disabled}
               data-qa-cancel
             >
               Cancel
