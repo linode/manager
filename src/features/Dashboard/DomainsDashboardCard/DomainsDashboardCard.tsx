@@ -1,7 +1,6 @@
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -141,34 +140,28 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     return data.map(({ id, domain, type, status }) => (
       <TableRow key={domain} rowLink={`/domains/${id}/records`}>
         <TableCell className={classes.labelCol}>
-          <Link
-            onClick={e => this.handleRowClick(e, id, domain, type)}
-            to={`/domains/${id}/records`}
-            className={'black nu block'}
-          >
-            <Grid container wrap="nowrap" alignItems="center">
-              <Grid item className="py0">
-                <EntityIcon
-                  variant="domain"
-                  status={status}
-                  marginTop={1}
-                  loading={status === 'edit_mode'}
-                />
-              </Grid>
-              <Grid item className={classes.labelGridWrapper}>
-                <div className={classes.labelStatusWrapper}>
-                  <Typography
-                    variant="h3"
-                    className={classes.wrapHeader}
-                    data-qa-label
-                  >
-                    {domain}
-                  </Typography>
-                </div>
-                <Typography className={classes.description}>{type}</Typography>
-              </Grid>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item className="py0">
+              <EntityIcon
+                variant="domain"
+                status={status}
+                marginTop={1}
+                loading={status === 'edit_mode'}
+              />
             </Grid>
-          </Link>
+            <Grid item className={classes.labelGridWrapper}>
+              <div className={classes.labelStatusWrapper}>
+                <Typography
+                  variant="h3"
+                  className={classes.wrapHeader}
+                  data-qa-label
+                >
+                  {domain}
+                </Typography>
+              </div>
+              <Typography className={classes.description}>{type}</Typography>
+            </Grid>
+          </Grid>
         </TableCell>
         <TableCell className={classes.actionsCol} />
       </TableRow>

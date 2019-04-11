@@ -1,6 +1,5 @@
 import { compose, take } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { Subscription } from 'rxjs/Subscription';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
@@ -194,25 +193,23 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
     return data.map(({ id, label, region, hostname }) => (
       <TableRow key={label} rowLink={`/nodebalancers/${id}`}>
         <TableCell className={classes.labelCol}>
-          <Link to={`/nodebalancers/${id}`} className={'black nu block'}>
-            <Grid container wrap="nowrap" alignItems="center">
-              <Grid item className="py0">
-                <EntityIcon variant="nodebalancer" />
-              </Grid>
-              <Grid item className={classes.labelGridWrapper}>
-                <Typography
-                  variant="h3"
-                  className={classes.wrapHeader}
-                  data-qa-label
-                >
-                  {label}
-                </Typography>
-                <Typography className={classes.description}>
-                  {hostname}
-                </Typography>
-              </Grid>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item className="py0">
+              <EntityIcon variant="nodebalancer" />
             </Grid>
-          </Link>
+            <Grid item className={classes.labelGridWrapper}>
+              <Typography
+                variant="h3"
+                className={classes.wrapHeader}
+                data-qa-label
+              >
+                {label}
+              </Typography>
+              <Typography className={classes.description}>
+                {hostname}
+              </Typography>
+            </Grid>
+          </Grid>
         </TableCell>
         <Hidden xsDown>
           <TableCell className={classes.moreCol} data-qa-node-region>
