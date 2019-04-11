@@ -5,33 +5,47 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import EventsLanding from 'src/features/Events/EventsLanding';
 import { getEvents } from 'src/services/account';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = () => ({
-  root: {}
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
+  title: {
+    marginBottom: theme.spacing.unit * 2
+  }
 });
 
-interface Props {}
-type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
+type CombinedProps = WithStyles<ClassNames> & StateProps;
 
 export const LinodeActivity: React.StatelessComponent<
   CombinedProps
 > = props => {
+  const { classes } = props;
+
   return (
-    <EventsLanding
-      title="Activity Feed"
-      getEventsRequest={(params: any = {}) =>
-        getEvents(params, {
-          'entity.type': 'linode',
-          'entity.id': props.linodeID
-        })
-      }
-      isEntitySpecific={true}
-    />
+    <React.Fragment>
+      <Typography
+        variant="h2"
+        className={classes.title}
+        data-qa-settings-header
+      >
+        Activity Feed
+      </Typography>
+      <EventsLanding
+        getEventsRequest={(params: any = {}) =>
+          getEvents(params, {
+            'entity.type': 'linode',
+            'entity.id': props.linodeID
+          })
+        }
+        isEventsLandingForEntity={true}
+        data-qa-events-landing-for-linode
+      />
+    </React.Fragment>
   );
 };
 
@@ -44,7 +58,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   linodeContext,
   styled
 );

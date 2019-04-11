@@ -41,9 +41,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  title?: string;
   getEventsRequest?: typeof getEvents;
-  isEntitySpecific?: boolean;
+  isEventsLandingForEntity?: boolean;
 }
 
 type CombinedProps = Props &
@@ -135,14 +134,17 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   }, []);
 
-  const { classes, entitiesLoading, isEntitySpecific } = props;
+  const { classes, entitiesLoading, isEventsLandingForEntity } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
     <>
-      <Typography variant="h1" className={classes.header}>
-        {props.title || 'Events'}
-      </Typography>
+      {/* Only display this title on the main Events landing page */}
+      {!isEventsLandingForEntity && (
+        <Typography variant="h1" className={classes.header}>
+          Events
+        </Typography>
+      )}
       <Paper>
         <Table aria-label="List of Events">
           <TableHead>
@@ -161,9 +163,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
             {renderTableBody(
               isLoading,
               isRequesting,
+              isEventsLandingForEntity,
               events,
-              error,
-              isEntitySpecific
+              error
             )}
           </TableBody>
         </Table>
@@ -187,9 +189,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
 export const renderTableBody = (
   loading: boolean,
   isRequesting: boolean,
+  isEventsLandingForEntity: boolean = false,
   events?: Linode.Event[],
-  error?: string,
-  isEntitySpecific?: boolean
+  error?: string
 ) => {
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
@@ -216,7 +218,7 @@ export const renderTableBody = (
           <EventRow
             key={`event-list-item-${idx}`}
             event={thisEvent}
-            shouldBeLink={!isEntitySpecific}
+            isEventsLandingForEntity={isEventsLandingForEntity}
           />
         ))}
         {isRequesting && <TableRowLoading colSpan={12} transparent />}

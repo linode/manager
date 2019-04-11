@@ -36,7 +36,7 @@ interface ExtendedEvent extends Linode.Event {
 
 interface Props {
   event: ExtendedEvent;
-  shouldBeLink?: boolean;
+  isEventsLandingForEntity: boolean;
 }
 
 export const onUnfound = (event: ExtendedEvent) => {
@@ -48,7 +48,7 @@ export const onUnfound = (event: ExtendedEvent) => {
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const EventRow: React.StatelessComponent<CombinedProps> = props => {
-  const { event, shouldBeLink, classes } = props;
+  const { event, isEventsLandingForEntity, classes } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
@@ -65,7 +65,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     message: eventMessageGenerator(event, onUnfound),
     status: pathOr(undefined, ['status'], entity),
     type,
-    shouldBeLink,
+    isEventsLandingForEntity,
     classes
   };
 
@@ -74,7 +74,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
 
 export interface RowProps extends WithStyles<ClassNames> {
   message?: string | void;
-  shouldBeLink?: boolean;
+  isEventsLandingForEntity: boolean;
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
@@ -84,7 +84,7 @@ export interface RowProps extends WithStyles<ClassNames> {
 export const Row: React.StatelessComponent<RowProps> = props => {
   const {
     classes,
-    shouldBeLink,
+    isEventsLandingForEntity,
     linkTarget,
     message,
     status,
@@ -101,14 +101,21 @@ export const Row: React.StatelessComponent<RowProps> = props => {
 
   return (
     <TableRow
-      rowLink={shouldBeLink === false ? undefined : (linkTarget as any)}
+      rowLink={isEventsLandingForEntity ? undefined : (linkTarget as any)}
     >
       <TableCell data-qa-event-icon-cell compact>
         {' '}
         {/** We don't use the event argument, so typing isn't critical here. */}
-        <Hidden smDown>
-          <EntityIcon variant={type} status={status} size={28} marginTop={1} />
-        </Hidden>
+        {!isEventsLandingForEntity && (
+          <Hidden smDown data-qa-entity-icon>
+            <EntityIcon
+              variant={type}
+              status={status}
+              size={28}
+              marginTop={1}
+            />
+          </Hidden>
+        )}
       </TableCell>
       <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
         <Typography
