@@ -130,13 +130,12 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
           mostRecentBackup={mostRecentBackup || ''}
         />
         <TableCell
-          parentColumn="IP Addresses"
+          parentColumn="IP Address"
           className={classes.ipCell}
           data-qa-ips
         >
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={ipv4} copyRight showCopyOnHover />
-            <IPAddress ips={[ipv6]} copyRight showCopyOnHover />
           </div>
         </TableCell>
         <TableCell

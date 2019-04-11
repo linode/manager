@@ -90,7 +90,7 @@ const SortableTableHead: React.StatelessComponent<CombinedProps> = props => {
         <TableCell className={classes.transferred}>Transferred</TableCell>
         <TableCell className={classes.ports}>Ports</TableCell>
         <TableCell className={classes.ip} noWrap>
-          IP Addresses
+          IP Address
         </TableCell>
         <TableSortCell
           className={classes.region}
