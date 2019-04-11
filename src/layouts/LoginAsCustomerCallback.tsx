@@ -1,3 +1,11 @@
+/**
+ * This component is similar to the OAuth comonent, in that it's main
+ * purpose is to consume the data given from the hash params provided from
+ * where the user was navigated from. In the case of this component, the user
+ * was navigated from Admin and the query params differ from what they would be
+ * if the user was navgiated from Login. Further, we are doing no nonce checking here
+ */
+
 import { PureComponent } from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -15,7 +23,7 @@ interface QueryParams {
   expires_in: string;
 }
 
-export class OAuthCallbackPage extends PureComponent<CombinedProps> {
+export class LoginAsCustomerCallback extends PureComponent<CombinedProps> {
   componentDidMount() {
     /**
      * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
@@ -109,4 +117,4 @@ const connected = connect(
 export default compose<CombinedProps, {}>(
   connected,
   withRouter
-)(OAuthCallbackPage);
+)(LoginAsCustomerCallback);
