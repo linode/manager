@@ -126,6 +126,19 @@ class SearchBar extends React.Component<CombinedProps, State> {
     history.push(item.data.path);
   };
 
+  onKeyDown = (e: any) => {
+    const { searchText } = this.state;
+    if (e.keyCode === 13) {
+      const { combinedResults, history } = this.props;
+      if (!combinedResults || combinedResults.length < 1) {
+        history.push({
+          pathname: `/search`,
+          search: `?query=${encodeURIComponent(searchText)}`
+        });
+      }
+    }
+  };
+
   guidanceText = () => {
     return (
       <>
@@ -172,6 +185,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
             options={finalOptions}
             onChange={this.onSelect}
             onInputChange={this.handleSearchChange}
+            onKeyDown={this.onKeyDown}
             placeholder={
               searchActive
                 ? 'Search'
