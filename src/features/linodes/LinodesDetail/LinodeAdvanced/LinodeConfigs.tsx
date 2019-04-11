@@ -35,16 +35,26 @@ import {
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { getLinodeConfigs, linodeReboot } from 'src/services/linodes';
-import LinodeConfigActionMenu from './LinodeConfigActionMenu';
-import LinodeConfigDrawer from './LinodeConfigDrawer';
+import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
+import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
 
-type ClassNames = 'root' | 'headline';
+type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   headline: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: 0,
+      marginTop: theme.spacing.unit * 2
+    }
+  },
+  addNewWrapper: {
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+      marginLeft: -(theme.spacing.unit + theme.spacing.unit / 2),
+      marginTop: -theme.spacing.unit
+    }
   }
 });
 
@@ -104,11 +114,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
-            <Typography variant="h2" className={classes.headline}>
+            <Typography variant="h3" className={classes.headline}>
               Configuration
             </Typography>
           </Grid>
-          <Grid item>
+          <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
               label="Add a Configuration"
@@ -270,7 +280,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
   linodeConfigsTable = () => {
     return (
       <React.Fragment>
-        <Table isResponsive={false} aria-label="List of Configurations">
+        <Table isResponsive={false} aria-label="List of Configurations" border>
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>
