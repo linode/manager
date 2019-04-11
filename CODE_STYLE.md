@@ -7,15 +7,16 @@ This document aims to give general guidelines of how code is written and structu
 When it comes to writing a React component, there are some clear optimizations you should be making
 to your code.
 
-As a rule, if you're writing a class component and do not intend on writing any `shouldComponentUpdate` logic yourself, write a PureComponent
+As a rule, if you're writing a class component and do not intend on writing any `shouldComponentUpdate` logic yourself, write a PureComponent. PureComponents implement a shallow comparison of props and state by default
+so this should encourage you to pass down props and use state that is flat and doesn't need any deep checking.
 
+Good
 ```js
-/** Good */
 class MyComponent extends React.PureComponent<MyProps> {}
+```
 
-...
-
-/** Also good */
+Also good
+```js
 import { equals } from 'ramda'
 
 class MyComponent extends React.Component<MyProps> {
@@ -28,19 +29,21 @@ class MyComponent extends React.Component<MyProps> {
 }
 ```
 
+Worse
 ```js
-/** Worse */
 class MyComponent extends React.Component<MyProps> {}
 ```
 
 Function components have their place, but in this project we recommend you don't use them unless
 you plan on memoizing the component. In fact, [function components are treated as Classes under the hood in React](https://twitter.com/dan_abramov/status/755343749983657986?lang=en), so really, you don't gain much by writing a function component versus a Class.
 
+Okay
 ```js
-/** Okay */
 const MyComponent: React.FC<MyProps> = (props) => ()
+```
 
-/** Much Better */
+Much better
+```js
 const MyComponent: React.FC<MyProps> = (props) => ()
 
 /** this is what we need to export */
@@ -48,7 +51,7 @@ const EnhancedComponent = React.memo(MyComponent);
 ```
 
 ## Testing Memoized components
-Testing memoized components is little tricky, since they dont return JSX wehn shallow rendered, but instead return an object. This means when you try
+Testing memoized components is little tricky, since they dont return JSX when shallow rendered, but instead return an object. This means when you try
 
 ```js
 const MyChildComponent = React.memo(props => {
@@ -116,8 +119,6 @@ const Component = shallow(<MyComponent />); // all systems go
 
 expect(Component.find('[data-qa-child-component]')); // our test is passing!!! woooo
 ```
-
-That should cover how to effectively smoke test React.memo components
 
 ## Avoiding instance methods that could be made into components.
 Everytime an instance of a component is created so are all the instance methods, just like
@@ -214,8 +215,8 @@ Abstracting code is a great way to not repeat yourself and keep the code DRY. It
 
 1. Any functions that are inside a React Class/function that don't rely on state or props should be abstracted out
 
+Bad
 ```js
-/** Bad */
 class MyComponent extends React.PureComponent<MyProps> {
   /** no reason for this to be attached to the Class */
   filterOutNumbers = (arrayOfNumbers: number[]) => {
@@ -224,8 +225,10 @@ class MyComponent extends React.PureComponent<MyProps> {
 
   return <div />
 }
+```
 
-/** Good */
+Good
+```js
 class MyComponent extends React.PureComponent<MyProps> {
   return <div />
 }
@@ -238,8 +241,8 @@ const filterOutNumbers = (arrayOfNumbers: number[]) => {
 
 2. Any logic that is being duplicated or even used more than twice should live in it's own file (ideally in the `/utilities` dir)
 
+Bad
 ```js
-/** Bad */
 class MyComponent extends React.PureComponent<MyProps> {
   return (
     <h1>
@@ -262,9 +265,8 @@ class MyComponent extends React.PureComponent<MyProps> {
 }
 ```
 
-
+Good
 ```js
-/** Good */
 import { capitalizeAllWords } from 'src/utilities/word-formatting-utils'
 
 class MyComponent extends React.PureComponent<MyProps> {
@@ -275,7 +277,7 @@ class MyComponent extends React.PureComponent<MyProps> {
 }
 ```
 
-3. Try your best to abstract even componets imported from external libraries
+3. Try your best to abstract even components imported from external libraries
 
 We're creating abstractions of all external components, even if that's just an immediate exporting
 of the component `export { default } from '@material-ui/core'`. We're doing this for the following
@@ -304,28 +306,15 @@ dependencies you import only the necessary files. For example, if I needed to cr
 using RxJS I would import only Observable and the type of Observable I want to create. This keeps bundle
 size down substantially.
 
+Bad
 ```js
-/** Good */
-import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
-
-/** Bad */
 import { Observable } from 'rxjs/Rx';
 ```
-Additionally we order imports alphabetically within certain blocks. The blocks are;
+
+Good
 ```js
-/** Third Party Libs */
-import * as React from 'react';
-
-/** Material UI Imports */
-import { WithStyles } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
-
-/** Source Components */
-import { getLinodes } from 'src/services/linodes';
-
-/** Relative Imports */
-import something from '../some/where/nearby';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 ```
 
 ## Other Things
