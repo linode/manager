@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -10,13 +9,12 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
 import { getEvents } from 'src/services/account';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import ActivityRow from './ActivityRow';
+import ActivitySummaryContent from './ActivitySummaryContent';
 
-type ClassNames = 'root' | 'header';
+type ClassNames = 'root' | 'header' | 'emptyState';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -24,6 +22,9 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   header: {
     marginBottom: theme.spacing.unit * 2
+  },
+  emptyState: {
+    padding: theme.spacing.unit * 2
   }
 });
 
@@ -73,36 +74,14 @@ export const ActivitySummary: React.StatelessComponent<
         </Grid>
       </Grid>
       <Paper className={classes.root}>
-        {renderContentLoadingOrError(events, loading, error)}
+        <ActivitySummaryContent
+          events={events}
+          error={error}
+          loading={loading}
+        />
       </Paper>
     </>
   );
-};
-
-const renderContentLoadingOrError = (
-  events: Linode.Event[],
-  loading: boolean,
-  error?: string
-) => {
-  if (error) {
-    return <ErrorState errorText={error} />;
-  }
-
-  if (loading) {
-    return <CircleProgress />;
-  }
-
-  if (events.length === 0) {
-    return (
-      <Typography variant="body2">
-        No recent activity for this Linode.
-      </Typography>
-    );
-  }
-
-  return events.map((event, idx) => (
-    <ActivityRow event={event} key={`activity-summary-row-${idx}`} />
-  ));
 };
 
 const styled = withStyles(styles);
