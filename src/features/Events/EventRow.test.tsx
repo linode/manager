@@ -10,17 +10,40 @@ const props: RowProps = {
   classes: {
     root: '',
     message: ''
-  }
+  },
+  linkTarget: jest.fn(),
+  isEventsLandingForEntity: false
 };
 
 describe('EventRow component', () => {
+  const row = shallow<RowProps>(<Row {...props} />);
+
   it('should render an event with a message', () => {
-    const row = shallow(<Row {...props} />);
     expect(row.find('[data-qa-event-message]').contains(message)).toBe(true);
   });
 
   it("shouldn't render events without a message", () => {
     const emptyMessageProps = { ...props, message: undefined };
     expect(Row(emptyMessageProps)).toBeNull();
+  });
+
+  it("should only render an entity icon if it's not an events page for a specific entity", () => {
+    row.setProps({ isEventsLandingForEntity: true });
+    expect(row.find('[data-qa-entity-icon]')).toHaveLength(0);
+
+    row.setProps({ isEventsLandingForEntity: false });
+    expect(row.find('[data-qa-entity-icon]')).toHaveLength(1);
+  });
+
+  it("should only include a link if it's not an events page for a specific entity", () => {
+    row.setProps({ isEventsLandingForEntity: true });
+    let tableRowProps: any = row
+      .find('WithStyles(withRouter(TableRow))')
+      .props();
+    expect(tableRowProps.rowLink).toBe(undefined);
+
+    row.setProps({ isEventsLandingForEntity: false });
+    tableRowProps = row.find('WithStyles(withRouter(TableRow))').props();
+    expect(tableRowProps.rowLink).toBeDefined();
   });
 });
