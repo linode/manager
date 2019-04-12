@@ -20,7 +20,7 @@ type ClassNames = 'root' | 'header';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 4
   },
   header: {
     marginBottom: theme.spacing.unit * 2
@@ -62,11 +62,14 @@ export const ActivitySummary: React.StatelessComponent<
   const { classes, linodeId } = props;
   return (
     <>
-      <Grid container alignItems={'center'} justify={'space-between'}>
+      <Grid
+        container
+        alignItems={'center'}
+        justify={'space-between'}
+        className={classes.header}
+      >
         <Grid item>
-          <Typography className={classes.header} variant="h2">
-            Activity Feed
-          </Typography>
+          <Typography variant="h2">Activity Feed</Typography>
         </Grid>
         <Grid item>
           <Link to={`/linodes/${linodeId}/activity`}>View More Activity</Link>
@@ -94,7 +97,7 @@ const renderContentLoadingOrError = (
 
   if (events.length === 0) {
     return (
-      <Typography variant="caption">
+      <Typography variant="body2">
         No recent activity for this Linode.
       </Typography>
     );

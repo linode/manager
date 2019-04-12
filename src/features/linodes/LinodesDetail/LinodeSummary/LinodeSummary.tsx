@@ -110,7 +110,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     graphControls: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginTop: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit * 2
     },
     totalTraffic: {
       margin: '12px'
@@ -676,32 +678,29 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {longLabel}
                 </Typography>
               </Grid>
-              <Grid item className="py0">
-                <div className={classes.graphControls}>
-                  <Typography
-                    variant="body1"
-                    className={classes.graphSelectTitle}
-                  >
-                    Graphs
-                  </Typography>
-                  <FormControl style={{ marginTop: 0 }}>
-                    <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                      Select Time Range
-                    </InputLabel>
-                    <Select
-                      value={rangeSelection}
-                      onChange={this.handleChartRangeChange}
-                      inputProps={{ name: 'chartRange', id: 'chartRange' }}
-                      small
-                    >
-                      {this.rangeSelectOptions}
-                    </Select>
-                  </FormControl>
-                </div>
-              </Grid>
             </Grid>
 
-            <ActivitySummary linodeId={linode.id} />
+            <Grid item>
+              <ActivitySummary linodeId={linode.id} />
+            </Grid>
+
+            <Grid item className="py0">
+              <div className={classes.graphControls}>
+                <FormControl>
+                  <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                    Select Time Range
+                  </InputLabel>
+                  <Select
+                    value={rangeSelection}
+                    onChange={this.handleChartRangeChange}
+                    inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                    small
+                  >
+                    {this.rangeSelectOptions}
+                  </Select>
+                </FormControl>
+              </div>
+            </Grid>
 
             <StatsPanel
               title="CPU Usage"
